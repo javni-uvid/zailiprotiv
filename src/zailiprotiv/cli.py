@@ -113,6 +113,10 @@ def memoranda(args) -> int:
                                          ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
             read += 1
         memo = json.loads(target.read_text(encoding="utf-8"))
+        again_read = bills.articles(memo.get("sections", {}).get("basis", ""))  # rules may have changed
+        if again_read != memo.get("articles"):
+            memo["articles"] = again_read
+            target.write_text(json.dumps(memo, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         law["bill_file"] = target.name
         law["constitution"] = memo["articles"]
         law["areas"] = kinds.areas(memo["articles"])

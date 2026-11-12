@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from zailiprotiv import bills
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -55,3 +57,20 @@ def test_bills_command(tmp_path, monkeypatch):
     law = json.loads(laws.read_text())["laws"]["L"]
     assert law["bill_file"] == "14_saziv_2560-26_lat.json"
     assert law["constitution"] == [{"article": 99, "paragraph": 1, "points": [4]}] and law["areas"] == []
+
+
+@pytest.mark.parametrize("basis,expected", [
+    ("Ustavni osnov za donošenje ovog zakona sadržan je u članu 97. Ustava Republike Srbije, kojim je između ostalog, "
+     "u tački 2. predviđeno da Republika Srbija uređuje", [{"article": 97, "paragraph": None, "points": [2]}]),
+    ("Ustavni osnov sadržan je u članu 97. stav 1. tač. 6, 13. i 17. Ustava Republike Srbije",
+     [{"article": 97, "paragraph": 1, "points": [6, 13, 17]}]),
+    ("Ustavni osnov sadržan je u odredbama člana 97. tač. 6, 7, 12. i 17. Ustava Republike Srbije",
+     [{"article": 97, "paragraph": None, "points": [6, 7, 12, 17]}]),
+    ("Ustavni osnov sadržan je u članu 97. stav 10. Ustava Republike Srbije", [{"article": 97, "paragraph": None,
+                                                                              "points": [10]}]),
+    ("Уставни основ садржан је у члану 99. став 1. тачка 4. Устава", [{"article": 99, "paragraph": 1, "points": [4]}]),
+    ("Ustavni osnov sadržan je u članu 100. stav 1. i članu 102. stav 4. Ustava",
+     [{"article": 100, "paragraph": 1, "points": []}, {"article": 102, "paragraph": 4, "points": []}]),
+])
+def test_constitutional_basis_in_its_many_spellings(basis, expected):
+    assert bills.articles(basis) == expected

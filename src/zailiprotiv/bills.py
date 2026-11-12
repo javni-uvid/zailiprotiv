@@ -76,22 +76,32 @@ def memorandum(text: str) -> Memorandum:
     return out
 
 
-_ARTICLE = re.compile(r"(?:član|clan)\w*\s+(\d+)\.?((?:\s*(?:,|i|stav|tačk|tack)\w*\.?\s*\d+\.?)*)", re.I)
+_ARTICLE = re.compile(r"\b(?:član|clan)\w*\s+(\d+)\.?", re.I)
+_PARAGRAPH = re.compile(r"^\s*,?\s*(?:stav|st)\w*\.?\s*(\d+)", re.I)
+_POINTS = re.compile(r"(?:ta[čc]k\w*|ta[čc])\.?\s*((?:\d+\)?\.?(?:\s*(?:,|i|и)\s*)?)+)", re.I)
 
 
 def articles(basis: str) -> list[dict]:
-    """The Constitution's articles, paragraphs and points the basis cites: "члан 97. тачка 6. и 7." → 97, [6, 7]."""
+    """The Constitution's articles, paragraphs and points the basis cites. Bills write them in many ways:
+    "члан 97. тачка 6. и 7.", "člana 97. tač. 6, 7, 12. i 17.", "članu 97. Ustava …, u tački 2.", and for
+    Article 97, whose points stand in one paragraph, "članu 97. stav 10." meaning point 10."""
     text = re.sub(r"\s+", " ", latin(basis))
     if "ustav" not in text.lower():
         return []
     out = []
-    for m in _ARTICLE.finditer(text):
-        rest = m.group(2) or ""
-        paragraph = re.search(r"stav\w*\.?\s*(\d+)", rest, re.I)
-        points_at = re.search(r"ta[čc]k\w*\.?\s*(.*)$", rest, re.I)
+    found = list(_ARTICLE.finditer(text))
+    for i, m in enumerate(found):
+        article = int(m.group(1))
+        stop = found[i + 1].start() if i + 1 < len(found) else len(text)
+        after = text[m.end():stop]
+        near = after[:40]
+        paragraph = _PARAGRAPH.match(near)
+        points_at = _POINTS.search(after[:60] if not article == 97 else after[:250])
         points = [int(n) for n in re.findall(r"\d+", points_at.group(1))] if points_at else []
-        out.append({"article": int(m.group(1)), "paragraph": int(paragraph.group(1)) if paragraph else None,
-                    "points": points})
+        par = int(paragraph.group(1)) if paragraph else None
+        if article == 97 and not points and par and par > 1:  # "član 97. stav 10." is its point 10
+            points, par = [par], None
+        out.append({"article": article, "paragraph": par, "points": points})
     return out
 
 
