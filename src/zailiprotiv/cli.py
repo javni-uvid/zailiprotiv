@@ -442,6 +442,50 @@ def debates_export(args) -> int:
     return 0
 
 
+def profiles_export(args) -> int:
+    """The speeches of every MP with enough of them in the notes read, one JSON file each, for overviews written in
+    a session (rules: data/profiles/RULES.md). MPs who have an overview are skipped unless --again."""
+    from zailiprotiv import profiles
+    to = Path(args.to)
+    to.mkdir(parents=True, exist_ok=True)
+    n = 0
+    for key, own in sorted(profiles.speeches(ROOT).items()):
+        long = [s for s in own if len(s["text"].split()) >= profiles.LONG]
+        name = key.replace(" ", "-") + ".json"
+        if len(long) < args.min or ((ROOT / "profiles" / name).exists() and not args.again):
+            continue
+        (to / name).write_text(json.dumps({"mp": key, "total_speeches": len(own), "speeches": profiles.selection(own)},
+                                          ensure_ascii=False, indent=1), encoding="utf-8")
+        n += 1
+    print(f"exported: {n} to {to}")
+    return 0
+
+
+def profiles_import(args) -> int:
+    """Overviews written in a session (DIR/out/<name>.json beside the exported DIR/<name>.json), checked and saved to
+    data/profiles/. With --check FILE: only say what is wrong with one reply."""
+    from zailiprotiv import profiles
+    src = Path(args.dir)
+    files = [Path(args.check)] if args.check else sorted((src / "out").glob("*.json"))
+    saved = refused = 0
+    for f in files:
+        try:
+            reply, material = json.loads(f.read_text(encoding="utf-8")), json.loads((src / f.name).read_text(encoding="utf-8"))
+            bad = profiles.check(reply, material)
+        except (ValueError, KeyError, TypeError, OSError) as e:
+            bad = [f"nečitljivo: {e}"]
+        if bad:
+            refused += 1
+            print(f"  {f.name}: " + "; ".join(bad))
+        elif not args.check:
+            (ROOT / "profiles").mkdir(exist_ok=True)
+            (ROOT / "profiles" / f.name).write_text(json.dumps(profiles.record(reply, material, args.model), ensure_ascii=False,
+                                                               indent=1) + "\n", encoding="utf-8")
+            saved += 1
+    print("OK" if args.check and not refused else f"saved: {saved}, refused: {refused}")
+    return 1 if refused else 0
+
+
 def debates_import(args) -> int:
     """Debate summaries written in a session (JSON Lines: {"bill_file", "debate"}): quotes checked against the notes
     word for word, saved to data/<N>/debates/<bill file>.json."""
@@ -545,6 +589,16 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--to", required=True)
     p.add_argument("--top", type=int, default=20)
     p.set_defaults(run=debates_export)
+    p = commands.add_parser("profiles-export", help="MPs' speeches from the notes read, for overviews written in a session")
+    p.add_argument("--to", required=True)
+    p.add_argument("--min", type=int, default=10, help="speeches of some length an MP needs")
+    p.add_argument("--again", action="store_true")
+    p.set_defaults(run=profiles_export)
+    p = commands.add_parser("profiles-import", help="save overviews of MPs' speeches written in a session")
+    p.add_argument("dir")
+    p.add_argument("--model", default="")
+    p.add_argument("--check", default="", help="check one reply only")
+    p.set_defaults(run=profiles_import)
     p = commands.add_parser("debates-import", help="save debate summaries written in a session")
     p.add_argument("file")
     p.add_argument("--model", required=True)
