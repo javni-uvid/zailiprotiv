@@ -89,6 +89,19 @@ These are the project's promises to its readers. Never change them without the m
 - **A law's summary is Claude's summary of the proposer's memorandum** (reasons, analysis of effects, funds
   needed), labelled as such and linked to the bill (the maintainer's decision, 12 Nov 2026).
 
+### Links between laws and votes
+
+- `link.py`: a roll call's act is named by its **PDF**, never by the sitting page's link text, which is sometimes
+  out of step with the PDF behind it (on 13 March 2025 the link for the visa agreement with Venezuela opens the
+  vote on Guatemala's). Names are compared by their words only (no quotes, dashes, commas, item numbers or
+  proposer); Latin look-alikes are read as Cyrillic only in words that mix the scripts.
+- A vote is on a law when its name is the law's (or starts with it) between the bill's submission and the law's
+  passing; the final vote is that on the day passed, on the act as a whole where the PDF says so. A law left
+  without one takes that day's vote sharing 90% of its words, or 95% of its letters (typos), when unambiguous and
+  not taken by another law: marked `"matched": "close"`.
+- Fourteenth convocation (12 Nov 2026): 394 of 395 laws have their final vote (388 exact, 6 close). The Venezuela
+  visa agreement (passed 13 March 2025) has no roll call among the PDFs the Assembly links for that day.
+
 ### Scope
 
 - The current convocation first, then the older ones (the maintainer's decision, 12 Nov 2026).

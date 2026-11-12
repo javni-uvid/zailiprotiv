@@ -51,3 +51,26 @@ def test_close_names_are_linked_once_and_marked():
     out = link.link(laws, votes)
     assert out["A"] == {"votes": ["v"], "final_vote": "v", "matched": "close"}
     assert out["B"]["final_vote"] is None
+
+
+def test_the_pdfs_own_name_wins_over_the_link_text():
+    laws = {"V": {"title": "Zakon o potvrđivanju Sporazuma sa Venecuelom", "passed": "2025-03-13"},
+            "G": {"title": "Zakon o potvrđivanju Sporazuma sa Gvatemalom", "passed": "2025-03-13"}}
+    votes = {"g": {"when": "2025-03-13T17:29:51", "kind": "",
+                   "item": "5. Предлог закона о потврђивању Споразума са Гватемалом",
+                   "listed_as": "Предлог закона о потврђивању Споразума са Венецуелом"}}
+    out = link.link(laws, votes)
+    assert out["G"]["final_vote"] == "g" and out["V"]["final_vote"] is None
+
+
+def test_a_typo_in_a_long_name_is_close_but_another_country_isnt():
+    a = link.act_name("Zakon o zaduživanju Republike Srbije kod AikBank akcionarsko društvo Beograd, OTP Banka Srbija "
+                      "akcionarsko društvo Novi Sad, Banca Intesa a.d. Beograd i UniCredit Bank Srbija")
+    b = link.act_name("Предлог закона о задуживању Републике Србије код AikBanka аksionarsko друштво Београд, OTP Banka "
+                      "Србија акционарско друштво Нови Сад, Banca Intesa a.d. Београд и UniCredit Bank Srbija")
+    assert link.closeness(a, b) >= link.CLOSE
+    v = link.act_name("Zakon o potvrđivanju Sporazuma između Republike Srbije i Bolivarske Republike Venecuele o "
+                      "ukidanju viza za nosioce običnih pasoša")
+    g = link.act_name("Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Gvatemale o "
+                      "ukidanju viza za nosioce običnih pasoša")
+    assert link.closeness(v, g) < link.CLOSE

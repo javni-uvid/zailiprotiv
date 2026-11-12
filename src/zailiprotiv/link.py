@@ -10,6 +10,7 @@ law passed, on the act as a whole where the PDF says so, otherwise that day's la
 
 from __future__ import annotations
 
+import difflib
 import re
 
 from zailiprotiv.kinds import _plain
@@ -34,9 +35,17 @@ def words(text: str) -> str:
 
 
 def closeness(a: str, b: str) -> float:
-    """The share of words two names have in common (Jaccard)."""
+    """How alike two names are: the share of words they have in common (Jaccard), or, for a typo in a long name
+    ("aksionarsko"), the share of their letters in common (difflib), whichever is higher, letters counting only
+    from LETTERS up."""
     x, y = set(a.split()), set(b.split())
-    return len(x & y) / len(x | y) if x | y else 0.0
+    words_ = len(x & y) / len(x | y) if x | y else 0.0
+    letters = difflib.SequenceMatcher(None, a, b).ratio()
+    return max(words_, letters if letters >= LETTERS else 0.0)
+
+
+# Two names this alike letter by letter differ by typos, not by what they name.
+LETTERS = 0.95
 
 
 def matches(vote_item: str, law_title: str) -> bool:
@@ -45,6 +54,13 @@ def matches(vote_item: str, law_title: str) -> bool:
 
 
 FINAL_KIND = "у целини"
+
+
+def _name_of(vote: dict) -> str:
+    """The act a roll call was on, as its PDF names it. The sitting page's link text ("listed_as") is used only
+    when the PDF names nothing: on some pages the links' texts and their PDFs are out of step (a vote on visas for
+    Guatemala's citizens linked under Venezuela's)."""
+    return vote["item"] or vote.get("listed_as", "")
 
 
 def link(laws: dict[str, dict], votes: dict[str, dict]) -> dict[str, dict]:
@@ -56,7 +72,7 @@ def link(laws: dict[str, dict], votes: dict[str, dict]) -> dict[str, dict]:
     for key, law in laws.items():
         lo, hi = law.get("submitted") or "0000", law.get("passed") or "9999"
         on = sorted((k for day, ks in by_day.items() if lo <= day <= hi for k in ks
-                     if matches(votes[k]["item"], law["title"]) or matches(votes[k].get("listed_as", ""), law["title"])),
+                     if matches(_name_of(votes[k]), law["title"])),
                     key=lambda k: votes[k]["when"])
         that_day = [k for k in on if votes[k]["when"][:10] == law.get("passed")]
         whole = [k for k in that_day if FINAL_KIND in votes[k].get("kind", "") or FINAL_KIND in votes[k]["item"]]
@@ -74,8 +90,7 @@ def _close(laws, votes, by_day, out) -> None:
         if out[key]["final_vote"]:
             continue
         name = act_name(law["title"])
-        scored = sorted(((max(closeness(name, act_name(votes[k]["item"])),
-                              closeness(name, act_name(votes[k].get("listed_as", "")))), k)
+        scored = sorted(((closeness(name, act_name(_name_of(votes[k]))), k)
                          for k in by_day.get(law.get("passed"), []) if k not in taken), reverse=True)
         if not scored or scored[0][0] < CLOSE:
             continue
