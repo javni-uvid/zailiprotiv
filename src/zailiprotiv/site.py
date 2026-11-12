@@ -407,6 +407,12 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                 if k and q.get("grupa") != debates_.GOVERNMENT:
                     days_ = (it["debate"] or {}).get("all_days") or []
                     said_by[k].append({"it": it, "q": q, "day": days_[q["dan"] - 1] if 0 < q["dan"] <= len(days_) else None})
+    # What an MP most often says in the debates read (an AI model's overview, each point with a verbatim quote).
+    profiles = {}
+    for f in sorted((root / "profiles").glob("*.json")):
+        p = json.loads(f.read_text(encoding="utf-8"))
+        if (k := loose_keys.get(debates_.loose(p["mp"]))):
+            profiles[k] = p
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -444,6 +450,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
+            profile=profiles.get(mp.key),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:

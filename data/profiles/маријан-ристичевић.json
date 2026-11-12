@@ -1,0 +1,54 @@
+{
+ "mp": "маријан ристичевић",
+ "model": "claude-fable-5-2",
+ "read": 28,
+ "speeches": 189,
+ "sittings": 17,
+ "points": [
+  {
+   "tekst": "Наводи да су прекогранични телевизијски канали „Јунајтед медије“ само фиктивно регистровани у Луксембургу, да у Србији не плаћају накнаде и порезе и противзаконито емитују домаће рекламе, и замера РЕМ-у што то не спречава.",
+   "govora": 5,
+   "citat": {
+    "tekst": "Те телевизије се не региструју у Србији, домаће телевизије које емитују програм из Србије се региструје и зато морају да плаћају све накнаде од СОКОЈ-а, РАТЕЛ-а, РЕМ-а итд, све порезе итд.",
+    "date": "2021-05-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Dvanaesta sednica Prvog redovnog zasedanja NSRS 20.05.2021..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су подстицаји у пољопривреди и аграрни буџет вишеструко већи него до 2012. године и тражи да се подстицаји усмере на развој сточарства и прерађивачке индустрије.",
+   "govora": 6,
+   "citat": {
+    "tekst": "Само да вас подсетим да су подстицаји до 2012. године у максималном износу били од 122 милиона евра до 186 милиона евра у том периоду. Дакле, ово је негде и три пута више на годишњем нивоу него што се некада издвајало за пољопривреду.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је садашња власт 2012. године затекла „разваљену“ државу и да су од тада буџет, плате и БДП вишеструко порасли, а претходној власти замера приватизацију, отпуштања радника и задуживање.",
+   "govora": 5,
+   "citat": {
+    "tekst": "Даме и господо, ми смо 2012. године затекли потпуно разваљену државу, економски и војно немоћну, без икаквих шанси за тадашње и будуће генерације.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се, како каже, део судија и тужилаца понаша као опозициони политичари и наводи да је тај део правосуђа везан за странке бивше власти.",
+   "govora": 3,
+   "citat": {
+    "tekst": "Даме и господо народни посланици, нису лоши закони, лоше су судије и тужиоци. Велика већина, част изузецима, али велики део правосуђа се понаша као да су политички лидери опозиционих странака.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани експлоатацију литијума по највишим европским стандардима и наводи да онај ко тражи чист ваздух не може бити против литијума и електричних аутомобила.",
+   "govora": 3,
+   "citat": {
+    "tekst": "Ја сам за то и дан данас да се експлоатација литијума врши по највишим европским стандардима, а знате ли због чега? Због животне средине.",
+    "date": "2024-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Prvog vanrednog zasedanja NSRS, odrzane 24. jula 2024. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

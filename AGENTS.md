@@ -162,6 +162,17 @@ These are the project's promises to its readers. Never change them without the m
   against the notes, and against its speaker, and dropped if not found. `zailiprotiv debates-export` / `debates-import`
   for summaries written in a session; kept in `data/<N>/debates/<bill file>.json`.
 
+- **What an MP most often says** (the maintainer, 12 Nov 2026; a first batch of nine MPs, the ones who spoke most in the
+  notes read, as a trial): `data/profiles/<name>.json`, three to five points a model wrote from a selection of the MP's
+  speeches (the longest from each sitting in turn, up to about 18,000 words, each cut at 700), under
+  `data/profiles/RULES.md`: only what recurs in two or more speeches, as the MP's claim ("Navodi da …"), content not
+  tone, no labels or assessments, no persons, charged terms quoted, one verbatim quote per point checked word for word.
+  The page says how many speeches were read and that the site doesn't judge the claims. Labels for MPs ("populist",
+  "pro-European") were considered and rejected as judgements. Speakers who spoke mostly as members of the Government
+  are left out (by hand so far: a rule is needed before this is widened). The MP page also shows the quotes chosen
+  for the laws' debates ("Iz rasprava") and, from the roll calls, how often the MP voted as most of each group did
+  ("Sa kim glasa isto": votes where both voted, ten or more).
+
 ### Links between laws and votes
 
 - `link.py`: a roll call's act is named by its **PDF**, never by the sitting page's link text, which is sometimes

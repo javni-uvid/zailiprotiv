@@ -1,0 +1,54 @@
+{
+ "mp": "алексић мирослав",
+ "model": "claude-fable-5-2",
+ "read": 29,
+ "speeches": 132,
+ "sittings": 13,
+ "points": [
+  {
+   "tekst": "Наводи да власт стално повећава јавни дуг и покрива буџетски мањак новим задуживањем, и замера што се дуг приказује као проценат БДП-а уместо у апсолутном износу.",
+   "govora": 7,
+   "citat": {
+    "tekst": "Кад дођу дугови да се враћају, као што је вама дошао зајам за следећу годину четири милијарде да враћате. То се враћа у парама, не у процентима. Немојте да обмањујете грађане Србије.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су правосуђе и друге институције под политичком контролом власти и да тужилаштво не поступа по пријавама против функционера, због чега нема одговорности.",
+   "govora": 7,
+   "citat": {
+    "tekst": "Суштина је да су разорене институције, а разорене су зато што је разорено правосуђе. Када правосуђе не ради свој посао, онда ниједна друга институција не ради свој посао.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се јавни новац кроз јавне набавке, инфраструктурне пројекте и јавна предузећа преплаћује и прелива фирмама блиским власти, и тражи да надлежни органи то испитају.",
+   "govora": 6,
+   "citat": {
+    "tekst": "Рокови су кратки, тендери насликани за одређене понуђаче и поштује се само форма, а не суштина, који су иначе унапред обавештени. Радови се због тога преплаћују и по два, три пута више.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што држава недовољно улаже у пољопривреду, наводи да опадају број газдинстава и производња а расте увоз хране, и тражи веће подстицаје.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Дакле, већа су издвајања за камате на кредите него за подстицај у пољопривреди. Немојте да манипулишете па користите цео буџет за пољопривреду и тако даље, јер пољопривредници немају корист од тога што ће неко да прими плату у администрацији.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да избори нису регуларни и да их власт „краде“, и замера што се дуго чекало на комисију за контролу бирачког списка.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Две године вам је требало натезања, притисака, приче да дођемо до те фамозне Комисије за ревизију и контролу бирачког списка.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  }
+ ]
+}

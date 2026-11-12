@@ -1,0 +1,54 @@
+{
+ "mp": "миленко јованов",
+ "model": "claude-fable-5-2",
+ "read": 28,
+ "speeches": 558,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Брани резултате Владе и наводи да раст плата и пензија, инвестиције и помоћ грађанима показују да су мере власти биле добре.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Већ новембра месеца ће бити раст пензија од 9%, а од нове године 12,1%, а минимална цена рада ће бити, по први пут, 40 хиљада динара. То су веома важни и добри резултати.",
+    "date": "2022-10-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што, како наводи, не познаје Пословник и подноси амандмане који нису у складу са њим или немају везе са тачком дневног реда.",
+   "govora": 3,
+   "citat": {
+    "tekst": "Нећемо то да радимо, него по Пословнику. Ако амандман ваља, ваља, ако не ваља, не ваља. Три хиљаде напишите, о три хиљаде ћемо расправљати 10 сати, а ви размислите како ћете да их објасните.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су оптужбе које опозиција износи на рачун њега и власти неистините и тражи да се за њих изнесу докази.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Мислите да ће то да вам прође? Па, неће. Добићете одговор увек. На ваше неистине, на ваше измишљотине, на ваше лажи, добићете аргументоване чињенице.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се протести одвијају по раније виђеном сценарију иза ког стоје опозициони политичари и да нису усмерени против литијума него против председника Републике.",
+   "govora": 2,
+   "citat": {
+    "tekst": "Дакле, организује се више протеста, никад у истом дану, у целој Србији зато што селе једне те исте људе у круг.",
+    "date": "2024-07-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog varednog zasedanja NSRS, odrzane 30. jula 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани став да Србија не треба да се сврстава ни на једну страну у сукобима великих сила, да није увела санкције Русији и да води рачуна о сопственим интересима.",
+   "govora": 3,
+   "citat": {
+    "tekst": "Дакле, једни хоће да нас угурају у сукоб на једну страну, други хоће да нас угурају у сукоб на другу страну. Поента је у томе да ми сукоб нећемо.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

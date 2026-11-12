@@ -1,0 +1,54 @@
+{
+ "mp": "наташа јовановић",
+ "model": "claude-fable-5-2",
+ "read": 34,
+ "speeches": 60,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Наводи да Србија под влашћу Српске напредне странке има стабилне јавне финансије, привредни раст, нове инвестиције и веће плате и пензије, и да је економски најјача у региону.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Поносно може да се каже свима да је Србија напредовала у свим доменима и у свим сферама друштва, од зачеља је дошла до лидера у региону.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што, како каже, нема политику, програм ни одговорност, већ само оптужује и опструише.",
+   "govora": 5,
+   "citat": {
+    "tekst": "Сви аргументи који долазе са супротне стране су завист, непознавање реалне ситуације, немања политике, онога шта ће да понуде, како Крагујевчанима тако и свим грађанима Србије на изборима који ће вероватно доћи следеће године.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Крагујевац уз помоћ Владе добија нове пројекте: клинички центар, северну обилазницу, котлове на гас, канализацију и обновљене улице.",
+   "govora": 5,
+   "citat": {
+    "tekst": "Не само да ће бити направљен нови најмодернији клинички центар у Крагујевцу, већ и ново породилиште, као и нова болница за рехабилитацију свих оних којима је помоћ неопходна.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је претходна власт, она од 2000. до 2012. године, оставила дугове, угашене фабрике, отпуштене раднике и војску без станова, и да је садашња власт то исправљала.",
+   "govora": 6,
+   "citat": {
+    "tekst": "У току су ревитализације потпуне и по највишим стандардима главних саобраћајница у граду и за то нам је требало доста времена, али и новца у буџету, јер је претходна власт у граду Крагујевцу оставила огромне дугове нашем граду, које смо ми успешно вратили.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су блокаде и протести после пада надстрешнице у Новом Саду били покушај „обојене револуције“ са циљем да се уруши држава, и да се Србија томе одупрла.",
+   "govora": 5,
+   "citat": {
+    "tekst": "И ту долазимо до почетка покушаја обојене револуције и свега онога што је грађане Србије задесило у протеклих 12 месеци. Ми смо успели и као држава и као народ, већински народ, да се са тим изборимо.",
+    "date": "2025-11-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 5. novembra 2025. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

@@ -228,3 +228,7 @@ button.link { border: 0; background: none; padding: .6rem 0; margin-right: 1rem;
 .meter { display: block; height: .5rem; background: var(--line); }
 .meter span { display: block; height: 100%; background: var(--muted); }
 table.agree tr.own td:first-child { font-weight: 600; }
+.points { list-style: none; padding: 0; max-width: 46rem; }
+.points li { margin: 0 0 1.1rem; }
+.points p { margin: 0 0 .3rem; }
+.points blockquote { margin: 0; padding-left: .9rem; border-left: 2px solid var(--line); color: var(--muted); font-size: .95rem; }

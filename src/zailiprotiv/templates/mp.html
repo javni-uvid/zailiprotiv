@@ -37,6 +37,19 @@
   <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
 </section>
 
+{% if profile %}
+<section class="profile">
+  <h2>Šta najčešće iznosi u raspravama</h2>
+  <ul class="points">
+  {% for t in profile.points %}
+    <li><p>{{ t.tekst|latin }} <span class="meta">({{ t.govora }} {{ plural(t.govora, "govor", "govora", "govora") }})</span></p>
+      <blockquote>„{{ t.citat.tekst|latin }}“ <a class="meta" href="{{ t.citat.url }}">stenogram{% if t.citat.date %}, {{ t.citat.date|day }}{% endif %}</a></blockquote></li>
+  {% endfor %}
+  </ul>
+  <p class="label">Pregled je napisao AI model ({{ profile.model }}) iz {{ profile.read }} najdužih od {{ profile.speeches }} govora poslanika na {{ profile.sittings }} sednica čije stenografske beleške imamo (rasprave o zakonima sa najviše glasova protiv); duži govori čitani su do 700. reči. Navedeno je samo ono što se ponavlja u najmanje dva govora, kao poslanikova tvrdnja: sajt ne ocenjuje da li je tačna i ne preuzima nijedan stav. Citati su provereni reč po reč. Pregled može da sadrži grešku; merodavne su beleške.</p>
+</section>
+{% endif %}
+
 {% if said %}
 <section>
   <h2>Iz rasprava <span class="count">{{ said|length }}</span></h2>

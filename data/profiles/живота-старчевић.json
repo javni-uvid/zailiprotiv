@@ -1,0 +1,54 @@
+{
+ "mp": "живота старчевић",
+ "model": "claude-fable-5-2",
+ "read": 30,
+ "speeches": 62,
+ "sittings": 20,
+ "points": [
+  {
+   "tekst": "Наводи да привреда Србије расте и у кризним годинама, да су јавне финансије стабилне, незапосленост ниска, а да директне стране инвестиције покрећу тај раст.",
+   "govora": 5,
+   "citat": {
+    "tekst": "Довођење страних инвестиција мора бити приоритетан посао и у наредном периоду јер је то један од мотора развоја наше економије, раста животног стандарда наших грађана.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера делу опозиције што, како каже, износи неистине и „манипулише“ осећањима грађана и несрећама ради „јефтиних политичких поена“, уместо да говори о тачкама дневног реда.",
+   "govora": 6,
+   "citat": {
+    "tekst": "Свака власт хоће добру опозицију, али проблем је када ви застраните у свом опозиционом деловању и постанете опозиција грађанима Србије, јер уношењем страха, панике, манипулацијом са најфинијим и најтананијим осећањима грађана Србије ви у ствари постајете временом опозиција самој Србији.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи Јагодину као пример добре локалне политике: давања за рађање, награде ученицима, уређене школе и села, стране инвестиције и улагања у животну средину.",
+   "govora": 6,
+   "citat": {
+    "tekst": "Када говоримо о свему томе, Јагодина је као последицу свих тих давања у задњих 10 година, сваке године уписала по једно одељење ђака првака више.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Тражи национално јединство и политичку стабилност као одговор на светске кризе и спољне притиске на Србију, укључујући питање Косова и Метохије.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Одговор Србије мора бити, пре свега, постизање што веће политичке стабилности кроз постизање најширег могућег националног јединства.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани улагања у образовање и тврди да су школе обновљене и опремљене информатичком опремом, а да образовни систем мора стално да се прилагођава новим потребама.",
+   "govora": 4,
+   "citat": {
+    "tekst": "Ми из Јединствене Србије сматрамо да је свака инвестиција у образовање одлична инвестиција, јер је свакако незнање најскупље.",
+    "date": "2020-12-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Sedma sednica Drugog redovnog zasedanja NSRS 16.12.2020..docx"
+   }
+  }
+ ]
+}
