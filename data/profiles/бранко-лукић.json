@@ -1,0 +1,69 @@
+{
+ "mp": "бранко лукић",
+ "model": "claude-fable-5-2",
+ "read": 38,
+ "speeches": 76,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да је предложени закон о оружју и муницији усмерен против легалних власника оружја и да им додатно ограничава набавку, држање и ношење оружја за личну безбедност.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овај закон о оружју и муницији се управо бави легалним и усмерен је према легалних власника оружја. То јесте проблем и ми заступамо само легалне власнике оружја.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се енергетски прописи усклађују са „Зеленом агендом“ и тврди да Србија стабилан енергетски систем може да има само уз домаћи угаљ и термоелектране.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, овим предлогом закона усклађује се енергетски систем Србије са глобалистичком Зеленом агендом и све се ради штету Србије и њених грађана.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се изменама правосудних закона извршној власти даје утицај на јавно тужилаштво и да се закони мењају због кадровских решења, а не ради уређења система.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, овде се директно утиче и покушава да се има уплив да извршна власт кроз министра има утицај на доношење одлука у оквиру јавног тужилаштва који је орган правосуђа.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Противи се рушењу зграде Генералштаба и скидању заштите са културних добара у центру Београда и тврди да је то противно законима и Уставу.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Очување овог простора у његовом постојећем статусу јесте питање културног достојанства државе, јавног интереса и историјске одговорности.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се закони доносе на брзину, без јавне расправе и мишљења струке, и што се седнице заказују у последњи час.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прегледали смо, ниједна седница није заказана седам дана унапред, као што предвиђају правила, као Пословник што предвиђа и никада нисмо добили ваљано образложење зашто се то ради у последњи моменат.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  }
+ ]
+}

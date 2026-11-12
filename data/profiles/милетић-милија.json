@@ -1,0 +1,75 @@
+{
+ "mp": "милетић милија",
+ "model": "claude-fable-5-2",
+ "read": 30,
+ "speeches": 63,
+ "sittings": 16,
+ "points": [
+  {
+   "tekst": "Тражи да се за неразвијене и демографски угрожене општине на југоистоку Србије издвоји више новца из буџета и да се њихови пројекти и захтеви одобравају лакше и брже.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Подржаћу све позитивне ствари и мислим да је потребно да се у буџету за 2023. годину обезбеди више средстава за југоисток Србије, за неразвијена подручја.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да давања за новорођену децу и незапослене породиље буду већа у подручјима где се рађа мало деце и да се породиљско одсуство продужи.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Према томе, акценат у наредном периоду би требао да се стави на та подручја, да издвајања, што се тиче деце, буду већа за таква подручја, макар 30% за свако рођено дете, за незапослену породиљу.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да жене и деца на селу живе теже него у граду и тражи да им држава да већу, пре свега финансијску, подршку.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Та наша деца која се роде и које живе у сеоским подручјима, верујте ми, њима није исти живот као што живе деца у граду.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи улагања у саобраћај на југоистоку Србије: трећу траку на државном путу од Ниша преко Сврљига ка Књажевцу, уређење пружног прелаза у Сврљигу и проширење нишког аеродрома.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Надам се да ћемо имати могућност да кроз овај буџет обезбедимо изградњу и државног пута од Сврљига према Нишу и од Књажевца према Сврљигу. Ту треба трећа трака.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је предложио закон о хитној медицинској помоћи и тражи да свака општина, и она са мало становника, има службу хитне помоћи.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Предложио сам закон о хитној медицинској помоћи пошто до сада немамо тај закон, а сви знамо колико је то битно да хитна медицинска помоћ може да стигне до сваког човека, до сваке општине.",
+    "date": "2025-11-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 04.11.2025..docx"
+   }
+  }
+ ]
+}

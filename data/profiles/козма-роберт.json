@@ -1,0 +1,72 @@
+{
+ "mp": "козма роберт",
+ "model": "claude-fable-5-2",
+ "read": 42,
+ "speeches": 110,
+ "sittings": 13,
+ "points": [
+  {
+   "tekst": "Наводи да власт посебним законима („лекс специјалис“) и бесплатном конверзијом земљишта јавну имовину и културно наслеђе поклања „тајкунима“ и инвеститорима, а као примере наводи „Београд на води“, ЕКСПО и Генералштаб.",
+   "govora": 9,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви настављате са вашим лекс специјалисима који служе за уништавање јавног интереса, за бесплатно поклањање нашег земљишта, за нетранспарентно трошење јавних финансија и ово последње за уништавање нашег југословенског и српског културног наслеђа.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се повећају плате наставника и улагања у школе и наводи да новца за то у буџету има, јер се издваја за ЕКСПО, Национални стадион и авионе „Рафал“.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми се залажемо да се плате просветара моментално повећају, да се почетна плата наставника изједначи са просечном платом у Србији. Одмах да кажемо, пара за то у буџету има, то је свега 5,5 милијарди динара за последње тромесечје ове године.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да хиљаде грађана годишње прерано умре због загађења ваздуха и замера што предложени закони о заштити ваздуха и контроли загађивања то неће решити, јер се ваздух не мери свуда, а постројења се не контролишу.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато што имамо горући проблем, 15.000 грађана на годишњем нивоу раније премине услед загађења ваздуха, 60% грађана живи у подручјима Србије, у градовима где је ваздух прекомерно загађен.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да већина младих живи код родитеља и једва зарађује за основне трошкове и замера што се из буџета за младе издваја све мање.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Млади и пунолетни грађани Србије најчешће живе у домовима својих родитеља. Њих 65% живи код родитеља јер не могу да изнајме или да купе стан.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што правосудни закони и даље омогућавају утицај извршне власти на судије и тужиоце.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Међутим, онако како су постављени ови правосудни закони и како је урађена измена Устава Србије прошле године, то и даље омогућава СНС, владајућем режиму да утиче на правосуђе, односно на судије и на тужиоце.",
+    "date": "2023-02-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 5. februar 2023. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

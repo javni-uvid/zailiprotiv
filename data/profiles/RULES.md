@@ -14,6 +14,9 @@ Pravila:
   „Brani …“, „Traži da …“. Ne tvrdi da je ono što kaže tačno ili netačno.
 - Bez imena osoba (drugih poslanika, ministara, predsednika, građana). Stranke i institucije mogu („vladajuća
   većina“, „opozicija“, „Vlada“, naziv stranke ako ga sam govornik koristi).
+- Ne piši tačku koja je u suštini o jednoj osobi (njenoj imovini, postupcima, porodici), ni kad je ne imenuješ
+  („jedan opozicioni političar“). Funkcija u Vladi ili Skupštini može („ministar“, „predsedavajući“).
+- Svaki deo rečenice mora da stoji u najmanje 2 navedena govora, ne samo njen prvi deo.
 - Uvredljive ili nabijene izraze ne preuzimaj svojim rečima; ako su suština tačke, stavi ih pod navodnike kao
   govornikove.
 - Uz svaku tačku jedan DOSLOVAN citat (15 do 45 reči), prepisan slovo po slovo iz jednog od navedenih govora,

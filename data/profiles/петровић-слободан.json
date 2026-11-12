@@ -1,0 +1,69 @@
+{
+ "mp": "петровић слободан",
+ "model": "claude-fable-5-2",
+ "read": 46,
+ "speeches": 63,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да се фабрике у Врању затварају, да власт износи нетачне податке о запошљавању отпуштених радника, и тражи да министри приме раднике и одговоре им.",
+   "govora": 7,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Госпођа, државна секретарка каже – према евиденцији Националне службе за запошљавање до сада је запослено 37 бивших радника „Кентаура“ док је 167 лица на евиденцији Националне службе за запошљавање.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да обећања власти општинама на југу Србије о инвеститорима, путевима, школама и другим објектима годинама остају неиспуњена.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Од најаве је прошли више од три године, а реконструкције школе у Рајчиловцима није урађена, нити је било шта такнуто да се ради.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Предлаже амандманима да се новац намењен пројекту ЕКСПО и Националном стадиону преусмери на социјалне и комуналне потребе општина на југу Србије.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, амандманом предлажемо да се део новца за изградњу националног стадиона преусмери за решавање наведених проблема у Бујановцу, јер услови у којима људи у Бујановцу живе морају да буду важнији од изградње било ког фудбалског стадиона.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да предложене измене правосудних закона слабе самосталност јавног тужилаштва и да им је циљ да власт стави тужилаштво под своју контролу.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Забрана поновног избора главног јавног тужиоца у истом јавном тужилаштву представља важну гаранцију самосталности, спречавање персоналне концентрације моћи и очување професионалне независности јавног тужилаштва.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што министри не одговарају на посланичка питања и тражи да на њих одговоре.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нису они овде да постављају питања, него да на њих одговарају. Ми народни посланици смо ти који постављају питања. Грађани преко нас постављају питања министрима шта је са обећањима која су им дата.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  }
+ ]
+}

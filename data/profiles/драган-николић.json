@@ -1,0 +1,71 @@
+{
+ "mp": "драган николић",
+ "model": "claude-fable-5-2",
+ "read": 43,
+ "speeches": 71,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Указује на повреде Пословника и тражи од председавајућег да прекида говорнике који не говоре о тачки дневног реда или вређају и да има исте аршине према свим посланицима.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја бих вас молио да стварно опоменете сваког посланика и нас из опозиције, али наравно из владајуће странке. Ја вас разумем да сте из истог посланичког клуба, али вас молим да имате исте аршине према свима нама.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се врати министарство за Косово и Метохију уместо канцеларије, наводи да је Бриселски споразум „мртав“ и тражи да о Косову и Метохији одлучује Народна скупштина.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, канцеларија која се бави најважнијим питањем у овом тренутку је у рангу Канцеларије за борбу против наркоманије.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера уставне промене у правосуђу којима је избор судија и тужилаца измештен из Народне скупштине и прихватање смерница Венецијанске комисије, а реформу правосуђа из 2009. године наводи као пример штете.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо направили велику грешку зато што смо прихватили одлуке Венецијанске комисије, што смо прихватили њихове смернице. Довели смо себе у ситуацију да нам они буду врховни судија који нам одобрава шта можемо, шта не можемо.",
+    "date": "2023-02-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 5. februar 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера делу тужилаштва и судова што, како наводи, не поступа по кривичним пријавама, не одређује притвор и допушта да из предмета цуре подаци, и каже да су се „отуђили од државе“.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Покушавате сада да укаљате и образ правосуђа и тужилаца, а ми указујемо само на оне који су се отуђили од државе, који не раде по Уставу и који не раде по закону.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи улагања државе у Врању (болница, школа, Александровачко језеро, Марково кале) и тврди да ће радници који су тамо остали без посла бити запослени.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, Градска болница у Врању представља један од 200 објеката из здравственог система Србије који се обнављају, који су реконструисани или који се граде као нови, а ту посебно мислим на клиничке центре којих до сада у Србији није било.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  }
+ ]
+}

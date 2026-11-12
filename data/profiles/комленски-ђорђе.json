@@ -1,0 +1,71 @@
+{
+ "mp": "комленски ђорђе",
+ "model": "claude-fable-5-2",
+ "read": 39,
+ "speeches": 96,
+ "sittings": 18,
+ "points": [
+  {
+   "tekst": "Наводи да је био против уставних промена у правосуђу, јер сматра да Високи савет судства који не бира Скупштина не представља грађане и да те промене имају штетне последице.",
+   "govora": 5,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Високи савет судства који ће бити формиран на начин како се то предлаже ако ови амандмани буду прошли не представља грађане Републике Србије.",
+    "date": "2021-11-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osma posebna sednica NSRS u Dvanaestom sazivu 30.11.2021..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Европска унија, коју назива „принудна управа из Брисела“, одустала од европског пута и да његову странку приступање Европској унији не занима.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "На моју жалост владајућа коалиција још увек није одустала од европског пута, али оно што са правом могу да кажем то је да је ЕУ или боље речено принудна управа из Брисела одавно одустала од европског пута.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се прекограничне телевизије које реемитују програм у Србији региструју у Србији и раде по њеним прописима или да им РЕМ забрани реемитовање.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Или ће ти медији радити онако како је то у складу са прописима на основу којих овде реемитују програм или их треба једноставно угасити, показати да је Србија на правом путу.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се у законе уводи појам „цивилно друштво“, који по њему ниједан закон не дефинише.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ни једним јединим законом у Републици Србији па ни овим није дефинисано шта би тај појам требао да представља, шта он означава, кога обухвата и ко све ту може да спада.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се више новца издваја за Војску Србије и да се врати обавезно служење војног рока.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нико рат не жели и да рата не било, и да наши суграђани и сународници на Косову и Метохији не би били терорисани и злостављани, Војска Србије мора да јача.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

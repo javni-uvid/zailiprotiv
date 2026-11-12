@@ -1,0 +1,69 @@
+{
+ "mp": "митровић пеђа",
+ "model": "claude-fable-5-2",
+ "read": 22,
+ "speeches": 73,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да су ЕКСПО и национални стадион губитак јавног новца и тражи да се та средства преусмере на здравство, образовање и инфраструктуру.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Национални стадион и ЕКСПО не доводе до привредног раста Србије и заправо представљају траћење јавних средстава.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је привредни раст Србије од доласка СНС на власт просечан у поређењу са земљама централне и источне Европе и да не омогућава сустизање њиховог животног стандарда.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Погледајте, стопа раста Србије, односно раст БДП Србије од кад сте ви дошли на власт до данас седми сте од 12 земаља централне источне Европе.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што измене Закона о државним службеницима спуштају критеријуме за пријем и напредовање и наводи да служе лакшем запошљавању чланова СНС.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, овај закон је једна формалност која само треба да олакша примање у службу чланова СНС.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да Агенција за спречавање корупције надзире финансирање кампање док она траје и наводи да предложене измене закона суштински не испуњавају препоруке ОДИХР-а.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наш амандман каже да агенција треба да има план мониторинга и надзор над изборном кампањом, да реагује док је изборна кампања у току зато што се онда неправилности могу отклонити у самом току изборне кампање и да немају више утицај на изборни резултат.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се уклони „ћациленд“ испред Народне скупштине и наводи да је он безбедносни ризик и место насиља.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тако да, тај ваш безбедносни ризик који станује испред Народне скупштине време је да се коначно склони и апсолутно му није место више овде.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

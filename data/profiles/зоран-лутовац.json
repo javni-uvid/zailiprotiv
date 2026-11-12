@@ -1,0 +1,73 @@
+{
+ "mp": "зоран лутовац",
+ "model": "claude-fable-5-2",
+ "read": 50,
+ "speeches": 143,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да извршна власт контролише Скупштину уместо да Скупштина контролише њу, и замера што министри у Скупштини „држе лекције“ посланицима уместо да одговарају на питања и полажу рачун.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, да ли неко може у Србији да каже да парламент контролише извршну власт? Не може да каже, зато што парламент не контролише извршну власт, дешава се управо обрнуто.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се закони и седнице заказују по хитном поступку без основа и што се велики број тачака дневног реда обједињује у једну расправу, па посланици немају времена да о њима говоре.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја се извињавам, али које су то околности које нису могле да се предвиде да ћете формирати Владу, да ћете променити Закон о министарствима, које су то околности које нису могле да се предвиде?",
+    "date": "2022-10-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су цене основних намирница порасле много више него што показује званична инфлација и да то највише погађа најсиромашније, да велики број деце живи у сиромаштву и да људи одлазе из Србије.",
+   "govora": 7,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Што се тиче буџета и главних тема, преко 400 хиљада деце нема сва три оброка, нити основне ствари за личну хигијену. Приоритет свих приоритета јесте хитно смањивање сиромаштва код деце.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се држава задужује на терет будућих генерација и што се новац троши на национални стадион и друге грађевинске пројекте, а тражи да се више издваја за образовање, науку и социјална давања.",
+   "govora": 7,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "То су наше паре, и не само наше, то су паре наше деце, то су паре наших унука. Јер, они су се толико узајмили да ће морати те паре да враћају сви они.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да РТС није јавни сервис него служи једној политичкој опцији и да власт управља медијима, па се противи повећању таксе за јавни медијски сервис.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Према томе, грађани нису у обавези да плаћају пропаганду у корист једне политичке опције, него да плаћају јавни сервис који их обавештава о свим важним питањима у друштву.",
+    "date": "2024-07-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog varednog zasedanja NSRS, odrzane 30. jula 2024. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

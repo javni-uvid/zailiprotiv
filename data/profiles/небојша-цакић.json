@@ -1,0 +1,69 @@
+{
+ "mp": "небојша цакић",
+ "model": "claude-fable-5-2",
+ "read": 30,
+ "speeches": 66,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да су Лесковац и југ Србије последњи по зарадама и да се становништво одатле исељава, и замера власти што нема политику регионалног развоја.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Последице свега тога су да град Лесковац по званичним подацима, не по претпоставкама, има 18 хиљада људи мање за последњих 10 година.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да буџет највише пуне најсиромашнији грађани кроз ПДВ и акцизе, а да најбогатији плаћају најмање пореза и добијају субвенције.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Што се још тиче буџета, најсиромашнији грађани пуне буџет а најбогатији га троше. Од како сте ви дошли, причали сте о сиромашним људима којима ћете помоћи, а за вашег вакта никад веће разлике између богатих и сиромашних нису биле.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што буџет оставља Влади и министрима да велике износе троше по свом нахођењу, без критеријума, и назива га „коруптивним“.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Цео овај буџет омогућава људима у извршној власти да обављају коруптивне послове, нема ни једног услова, критеријума како се нешто ради.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт врши политички утицај на правосуђе и да се кривични поступци против функционера развлаче, застаревају или завршавају одлагањем кривичног гоњења.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "До дана данашњег је, почевши од овог дома па до највиших функционера државне власти, притисак на правосуђе евидентан и ми смо сведоци свакодневно филозофије – па шта.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи већу јавност рада тужилаштва и Високог савета тужилаштва, да грађани знају шта се десило са предметима и кривичним пријавама.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, нити новинари, нити било ко може да добије генерално било какве информације од Јавног тужилаштва, зато сматрам да треба да се крене од ВСТ, па да иде надаље.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  }
+ ]
+}

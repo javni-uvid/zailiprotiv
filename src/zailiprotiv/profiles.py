@@ -95,6 +95,7 @@ def check(reply: dict, material: dict) -> list[str]:
 def record(reply: dict, material: dict, model: str) -> dict:
     by_id = {s["id"]: s for s in material["speeches"]}
     points = [{"tekst": t["tekst"].strip(), "govora": len(set(t["govori"])),
+               "sazivi": sorted({i.split("/")[0] for i in t["govori"]}, key=int),
                "citat": {"tekst": t["citat"]["tekst"].strip(), "date": by_id[t["citat"]["govor"]]["date"],
                          "url": by_id[t["citat"]["govor"]]["url"]}} for t in reply["tacke"]]
     return {"mp": material["mp"], "model": model, "read": len(material["speeches"]), "speeches": material["total_speeches"],

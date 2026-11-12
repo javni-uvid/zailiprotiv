@@ -1,0 +1,72 @@
+{
+ "mp": "лазовић радомир",
+ "model": "claude-fable-5-2",
+ "read": 38,
+ "speeches": 164,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Наводи да од последица загађења ваздуха у Србији годишње премине око 15.000 људи и тражи да власт каже које је мере предузела да се загађење смањи.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми годинама упозоравамо, али ево и опет да кажемо исто, 15.000 људи годишње премине од загађења ваздуха, а милион људи има респираторне проблеме.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се важне седнице заказују по хитном поступку, уз 24 сата за припрему амандмана, и што се опозицији ускраћују реплике и време за расправу.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Поштовани председавајући, поштовани грађани, ми опет овде имамо ситуацију да се важне седнице, попут оне о Влади, заказују по хитном поступку и достављате нам важне и обимне материјале прекасно.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да грађани живе све теже због цена хране, енергената и закупа станова, да је велики број људи на ивици сиромаштва и да су економске неједнакости у Србији највеће у Европи.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Србија има цене хране које су на нивоу просека ЕУ, али доходак грађана је половина од дохотка грађана ЕУ. Због тога наши грађани су додатно оптерећени са ценама и трошковима живота.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  },
+  {
+   "tekst": "Замера што владајућа већина на питања о загађењу, сиромаштву и ценама не одговара аргументима, већ опозицију назива „страним плаћеницима“ и „издајницима“.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Када кажемо објасните шта сте урадили за загађење ваздуха, ви нас нападате. Када кажемо шта сте урадили у експозеу, земља са највећим економским неједнакостима у Европи, а у експозеу једне речи нема о томе.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи одговоре и одговорност министра унутрашњих послова због мафијашких обрачуна и због тога што се, како наводи, полиција користи против студената и грађана.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Двадесет мафијашких обрачуна од почетка године. Па зар не заслужује то одговор некога ко је можда задужен за то, попут министра?",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  }
+ ]
+}

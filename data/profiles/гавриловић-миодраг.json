@@ -1,0 +1,69 @@
+{
+ "mp": "гавриловић миодраг",
+ "model": "claude-fable-5-2",
+ "read": 64,
+ "speeches": 142,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Замера што се закони доносе у журби и по хитном поступку, што се више закона обједињује у једну расправу и што одбори о њима расправљају кратко или никако.",
+   "govora": 6,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Зашто смо објединили целу расправу? Зашто смо све ове законе стрпали само под једну расправу? Зашто нисмо мало то поделили?",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се амандмани опозиције одбијају или одбацују без правог образложења, и наводи да се одбијају само зато што долазе од опозиције.",
+   "govora": 7,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Читали смо буџет који сте ви направили, прочитали сваки ред, сваку реченицу. Конструктивно покушали нешто да предложимо, а ви сте то одбили само зато што су то опозициони амандмани.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да предложени правосудни закони остављају извршној власти и владајућој већини утицај на судство и тужилаштво, и тражи да о питањима судства одлучује Високи савет судства, без простора за самовољу.",
+   "govora": 6,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Где ћете директни утицај на судство, него кроз Министарство? Онда после реците да није Влада доминантна и да извршна власт није доминантна.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да рад тужилаштва буде доступан јавности, кроз портпарола, обуку тужилаца за односе са јавношћу и извештавање о комуникацији са јавношћу.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Можемо да причамо о томе да нам није или јесте потребан портпарол, али ја не знам како је законодавац, онај који је предложио овај текст, мислио да постоји та конекција између јавности рада. Ово није тајно него јавно државно тужилаштво.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера повећање буџетског дефицита и задуживање, наводи да је дефицит добрим делом последица губитака у Електропривреди Србије, и амандманима тражи мањи дефицит.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Доста се задужујемо и ово је начин да и ви покажете да планове које сте имали прошле године можете да испуните. Без икакве потребе повећавамо ову ставку толико да повећавамо дефицит у самом буџету.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

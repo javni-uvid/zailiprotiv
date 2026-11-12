@@ -1,0 +1,72 @@
+{
+ "mp": "миливојевић срђан",
+ "model": "claude-fable-5-2",
+ "read": 42,
+ "speeches": 156,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да постоји спрега организованог криминала и врха власти, а Српску напредну странку назива „политичким крилом организованог криминала“.",
+   "govora": 9,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Нажалост, безбедносни систем Србије је начет. Србија је по глобалном индексу организованог криминала прва у Европи, подвлачим, прва у Европи и међу 10 првих земаља у свету.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се буџетски новац и кредити расипају и завршавају код људи из власти, и замера издвајања за национални стадион и прескупе ауто-путеве.",
+   "govora": 9,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "За национални стадион ова власт је предвидела 900 милиона евра. Толико ће коштати национални стадион, јер они су вас убедили да смо прваци света у фудбалу.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера председнику Скупштине и владајућој већини што опозицији онемогућавају да предлаже допуне дневног реда, анкетне одборе и амандмане и да реплицира.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ми смо ту да вам помогнемо да Скупштина сачува и поврати пољуљани углед. Разумем да ви не можете да се навикнете да овде има опозиције, али вас позивам да не опструирате и покушавате да опструирате рад и напоре опозиције.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Противи се ископавању литијума и пројекту „Јадар“ и наводи да власт избегава седницу о забрани рударења литијума.",
+   "govora": 8,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Када не будемо могли да вратимо дугове, ви ћете казати – у реду је, морамо сада Јадар и Рађевину да дамо за ископавање литијума. То је ваша стратегија.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су странке садашње власти владале и деведесетих и подсећа на тадашњу инфлацију, бонове за основне намирнице и губитак радних места.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сећате ли се, грађани Србије, бонова за бензин? То су нам оставили. Опљачкали су 36 пољопривредних пензија. То је неко морао да врати.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

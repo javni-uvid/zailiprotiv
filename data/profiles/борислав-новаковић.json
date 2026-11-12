@@ -1,0 +1,71 @@
+{
+ "mp": "борислав новаковић",
+ "model": "claude-fable-5-2",
+ "read": 56,
+ "speeches": 74,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Тражи да се новац намењен националном фудбалском стадиону преусмери на друге намене, попут вртића, домова здравља, мостова, пољопривреде и противпожарне заштите, јер наводи да стадион не доноси развој.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Национални стадион неће се исплатити, неће развити ништа, нити ће произвести ефекат развојности и под три, он не значи поправљање квалитета живота.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се јавни послови додељују повлашћеним фирмама и пита одакле разлика између процењене и уговорене вредности моста у Новом Саду и Фрушкогорског коридора.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Поставио сам питање и нисам добио одговор – одакле 45,5 милиона евра коруптивне разлике у Новом Саду између премера радова и онога што је уговорена вредност моста?",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да пензије не покривају трошкове живота, посебно пензије пољопривредника од око 24.000 динара, и тражи да се за њих издвоји више новца.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, просечна корпа је дупло већа, него што је просечна пензија. Из тога проистиче, заиста катастрофална чињеница, да пензионери у Србији не живе, него преживљавају.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Србија сваке године губи десетине хиљада становника и замера што послодавци жене при запошљавању питају да ли планирају породицу и децу.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, у Србији и даље више људи умре него што има новорођених. У Србији на годишњем нивоу останемо без око 50 хиљада људи.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи, позивајући се на извештај Европске комисије, да владајућа већина добија 94 одсто времена у информативним емисијама РТС-а, а опозиција 6 одсто.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, у Извештају Европске комисије за 2024. годину констатује се да, када су у питању централне информативне емисије на РТС-у, заступљеност владајуће већине је 94%, а опозиције, односно другачијег става 6%.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  }
+ ]
+}

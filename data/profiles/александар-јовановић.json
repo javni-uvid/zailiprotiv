@@ -1,0 +1,73 @@
+{
+ "mp": "александар јовановић",
+ "model": "claude-fable-5-2",
+ "read": 46,
+ "speeches": 140,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да пројекат „Јадар“ компаније Рио Тинто подразумева расељавање становника Горњих Недељица и уништавање плодне земље и воде, и да ископавања литијума тамо неће бити.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Уместо тога, ми смо овде имали то што смо имали и на Газели и по читавој Србији, око онога што се зове Рио Тинто, пројекат „Јадар“, у коме јасно стоји да је за потребе пројекта „Јадар“ неопходно извршити релокацију становништва.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера властима што се, како наводи, гради и копа без дозвола, планских аката и процене утицаја на животну средину, а реке због малих хидроелектрана „гурају у цеви“, и тражи да се закони о заштити природе спроведу.",
+   "govora": 6,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ваш проблем је у томе што ви у старту кршите закон, не поштујући Закон о заштити природе кога брутално кршите.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што Србији од руда остаје рудна рента од око 5 одсто и што су стране рударске компаније уписане као власници земље, и тражи да се уговори с њима објаве.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зашто да за 5% продамо оно што припада свима – злато, бакар, све што вреди испод земље?",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да велики број грађана нема чисту пијаћу воду и тражи да се улаже у водоснабдевање и да се на референдуму одлучи да право на воду уђе у Устав.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Шта вас спречава да покренете референдум где ће грађанима бити постављено једно просто питање – да ли сте за то да вода припада сваком грађанину ове земље подједнако и да не може бити предмет било какве трговине?",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера председавајућима што, како наводи, крше Пословник и закон: одузимају реч посланицима, укинут је пренос седнице одбора, а народна иницијатива са 38.000 потписа за забрану експлоатације литијума и бора није стављена на дневни ред.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Јел знате да сте дужни по Закону о Скупштини да вршите директан пренос сваког одбора који се овде дешава?",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

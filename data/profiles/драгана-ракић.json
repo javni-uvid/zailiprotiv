@@ -1,0 +1,70 @@
+{
+ "mp": "драгана ракић",
+ "model": "claude-fable-5-2",
+ "read": 47,
+ "speeches": 63,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да су деца у Пећинцима избачена из вртића зато што им родитељи нису чланови Српске напредне странке и да се без чланске карте те странке не може бити директор школе.",
+   "govora": 7,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "У Пећинцима не постоји никакав проблем са смештајним капацитетима. Тамо је отворен нов вртић. Тамо се ради о политичком прогону родитеља. Деца су искоришћена као средство одмазде над родитељима и то је оно застрашујуће.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да судство и тужилаштво нису независни, да тужилаштво не ради свој посао и да закони не важе једнако за све.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Судство и тужилаштво ће и даље бити под контролом извршне власти, само на други начин. Устав и закони ће се и даље кршити.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Противи се новом задуживању за ауто-путеве и национални стадион и наводи да су ти пројекти прескупи због „корупције и криминала“.",
+   "govora": 7,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми нисмо против изградње ауто-путева и сами смо их градили за време наше власти, ми смо против изградње најскупљих ауто-путева на свету, ми смо против корупције и криминала.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanredno zasedanja NSRS, odrzane 31.jul 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да четвртина становништва живи у сиромаштву и замера што се једнократна новчана помоћ за децу дели свима једнако, позивајући се на оцене Фискалног савета.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Много већи проблем је што четвртина нашег становништва живи у сиромаштву, што према статистици УНИЦЕФ-а, дакле међународне организације, чак 122.000 деце у Србији гладује и живи у апсолутном сиромаштву.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Замера што Скупштина не расправља о иницијативи грађана за забрану ископавања литијума и бора и противи се пројекту „Јадар“.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прави проблем јесте зашто ви иницијативу коју је потписало 40 хиљада грађана не стављате на дневни ред. Зашто се у Народној скупштини не разговара о рударењу литијума и бора?",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

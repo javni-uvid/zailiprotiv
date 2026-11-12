@@ -1,0 +1,69 @@
+{
+ "mp": "ахмедин шкријељ",
+ "model": "claude-fable-5-2",
+ "read": 44,
+ "speeches": 121,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да Бошњаци нису заступљени у полицији, судовима, тужилаштвима и другим државним органима сразмерно свом уделу у становништву санџачких општина, и тражи да Влада то усклади.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Подсећам вас и на то да Бошњаци у Републици Србији не могу да остваре своја Уставом гарантована права као што је право на сразмерну заступљеност у полицији, судству и тужилаштву.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су санџачке општине неразвијене и да буџет не испуњава уставну обавезу равномерног регионалног развоја, па амандманима тражи новац за струјну мрежу, школе, депоније и друге пројекте у Санџаку.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Где су најниже просечне зараде на територији Републике Србије? Код нас. Где је највећи проценат незапослености? Код нас.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се оснују судови и тужилаштва у Тутину, Прешеву и Сјеници и замера што се за те општине не примењују исти критеријуми као за друге.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зашто за општине где живе Бошњаци важе друга правила у односу на остале општине у Републици Србији? Ми немамо ништа против да у свим општинама постоје судови и јавна тужилаштва, али тражимо да се исти овај принцип примени и на санџачке општине.",
+    "date": "2026-01-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Sestog vanrednog zasedanja NSRS, 22. januar 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се доврши Владин програм повратка избеглих и расељених Бошњака у општину Прибој и да се уреди статус жртава и породица жртава из Сјеверина, Штрбаца и Кукуровића.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тај програм је донела Влада Републике Србије и обавезе које су њиме преузете, а нису извршене морају бити завршене.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Бошњаци не могу да остваре права на информисање и образовање на матерњем језику, као ни службену употребу босанског језика у Прибоју, иако су за то, како каже, испуњени законски услови.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, испуњени су сви услови да се у општини Прибој, босански језик уведе у службену употребу. Међутим, локална власт у Прибоју то одбија да уради.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  }
+ ]
+}

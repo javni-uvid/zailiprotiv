@@ -412,6 +412,9 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     for f in sorted((root / "profiles").glob("*.json")):
         p = json.loads(f.read_text(encoding="utf-8"))
         if (k := loose_keys.get(debates_.loose(p["mp"]))):
+            spans = {c for t in p["points"] for c in t.get("sazivi", [])}
+            for t in p["points"]:  # when the points come from several convocations, each says which
+                t["when"] = ", ".join(years(c) for c in t.get("sazivi", [])) if len(spans) > 1 else ""
             profiles[k] = p
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):

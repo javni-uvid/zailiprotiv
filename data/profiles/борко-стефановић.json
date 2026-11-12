@@ -1,0 +1,73 @@
+{
+ "mp": "борко стефановић",
+ "model": "claude-fable-5-2",
+ "read": 52,
+ "speeches": 78,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Замера што власт одбацује или одбија амандмане опозиције и наводи да тиме посланицима опозиције ускраћује могућност да утичу на предлоге закона.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, поштоване колеге, власт је из мени непознатог разлога одбацила огроман број амандман из опозиције, иако је исте те у истоветном тексту, у истој форми прихватила за ребаланс буџета.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт правосудним законима задржава утицај на избор судија и тужилаца и да тужилаштво ставља под контролу владајуће странке.",
+   "govora": 7,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо кроз ове предлоге закона добили суштински промењену форму контроле правосуђа од стране владајуће странке.",
+    "date": "2023-02-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 5. februar 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да тужилаштво буде обавезно да редовно, сваке недеље, обавештава јавност о свом раду и о случајевима који привлаче пажњу јавности.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ово је један од елемената да се то не дешава, да јавност може да чује кога гоните, какви су резултати, докле сте стигли или рецимо зашто се о неком важном кривичном делу ништа не дешава.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера Влади раст јавног дуга и задуживања и наводи да се новим задуживањем покривају губици у енергетском сектору.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наставља се енормно задуживање. Сада смо већ дошли до пројектованих осам милијарди евра додатног задуживања илити 919 милијарди динара.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Указујући на повреду Пословника, замера председавајућима што не реагују када министри и посланици већине посланике опозиције означавају као плаћене са стране или као „непријатеље ове земље и овог народа“.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не замерам ништа, али тако нешто рећи је крајње увредљиво, дубоко нарушава достојанство Народне скупштине, црта мете људима на чело.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

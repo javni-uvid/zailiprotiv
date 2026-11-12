@@ -42,7 +42,7 @@
   <h2>Šta najčešće iznosi u raspravama</h2>
   <ul class="points">
   {% for t in profile.points %}
-    <li><p>{{ t.tekst|latin }} <span class="meta">({{ t.govora }} {{ plural(t.govora, "govor", "govora", "govora") }})</span></p>
+    <li><p>{{ t.tekst|latin }} <span class="meta">({{ t.govora }} {{ plural(t.govora, "govor", "govora", "govora") }}{% if t.when %}, {{ t.when }}{% endif %})</span></p>
       <blockquote>„{{ t.citat.tekst|latin }}“ <a class="meta" href="{{ t.citat.url }}">stenogram{% if t.citat.date %}, {{ t.citat.date|day }}{% endif %}</a></blockquote></li>
   {% endfor %}
   </ul>

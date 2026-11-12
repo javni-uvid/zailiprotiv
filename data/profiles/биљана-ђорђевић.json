@@ -1,0 +1,73 @@
+{
+ "mp": "биљана ђорђевић",
+ "model": "claude-fable-5-2",
+ "read": 33,
+ "speeches": 82,
+ "sittings": 12,
+ "points": [
+  {
+   "tekst": "Наводи да се јавно земљиште и културна добра у Београду, попут комплекса Генералштаба, препуштају приватном профиту уместо да служе јавном интересу.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нама су потребни јавни простори, сећања, преиспитивања, солидарне објаве, станови за људе а не само за елиту, не да нам ви вређате интелигенцију и достојанство. Србија ће припадати свом народу, а не тајкунима и капиталу.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што буџет даје предност пројектима као што су ЕКСПО и национални стадион, а не платама просветних радника, обнови школа, здравству и заштити животне средине.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, само за један стадион имамо 31 милијарду динара, а за реновирање школа само две милијарде и 800 милиона динара.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се важећи закони не примењују и да институције не реагују на њихово кршење, на пример у заштити животне средине и правима страних радника.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Власти не поступају у складу са важећим законима и прописима и нешто је само у свему томе чудно - ко је на власти 14 године?",
+    "date": "2026-07-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 06.07.2026..docx"
+   }
+  },
+  {
+   "tekst": "Замера што закони о подршци породици и социјалној заштити остављају без права поједине групе жена и деце, као што су предузетнице, жене на несигурним пословима и породице са више од четворо деце.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ваша брига о мамама се види у томе што и даље имате низ дискриминисаних жена које неће уживати заштиту као труднице или породиље или, просто, као мајке које брину о деци.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се уведу посебни порези, на ванредну добит нафтне компаније и на добит приређивача игара на срећу, а да се тај новац усмери на борбу против сиромаштва и лечење зависности.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми предлажемо да овај екстра профит треба уложити у борбу против сиромаштва или инвестирање у обновљиве изворе енергије.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}
