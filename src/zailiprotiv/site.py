@@ -165,10 +165,28 @@ def most_against(items: list[dict], n: int) -> list[dict]:
             for it in ranked[:n]]
 
 
-def build(data: Path, out: Path, domain: str | None = None) -> dict:
-    laws_store, votes, bills = load(data)
-    laws = laws_store["laws"]
-    people = registry(votes)
+ORDINAL_NAME = {"12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
+
+
+def convocations(root: Path) -> list[tuple[str, Path]]:
+    """The convocations with data, newest first: data/<N>/laws.json (or a single folder with laws.json in it)."""
+    from zailiprotiv.config import CURRENT
+    if (root / "laws.json").exists():
+        return [(CURRENT, root)]
+    found = [(p.name, p) for p in root.iterdir() if p.is_dir() and (p / "laws.json").exists()]
+    return sorted(found, key=lambda c: int(c[0]) if c[0].isdigit() else 0, reverse=True)
+
+
+def laws_page(conv: str, current: str) -> str:
+    return "zakoni.html" if conv == current else f"zakoni-{conv}.html"
+
+
+def build(root: Path, out: Path, domain: str | None = None) -> dict:
+    convs = convocations(root)
+    current = convs[0][0]
+    loaded = {c: load(path) for c, path in convs}
+    all_votes = {k: v for _, votes, _ in loaded.values() for k, v in votes.items()}
+    people = registry(all_votes)
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters.update(latin=latin, day=day, vote_label=lambda v: VOTE_LABEL.get(v, v))
@@ -178,68 +196,78 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
     (out / "poslanik").mkdir()
     shutil.copy(HERE / "static" / "style.css", out / "style.css")
     built = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    common = {"built": built, "fetched": laws_store.get("fetched", "")[:10], "vote_label": VOTE_LABEL,
-              "VOTES": VOTES}
+    conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
+                  "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
+    common = {"built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
+              "VOTES": VOTES, "convs": conv_list, "current": current}
 
-    # Laws, newest first; slugs unique.
-    items, taken = [], Counter()
-    for key, law in sorted(laws.items(), key=lambda kv: (kv[1].get("passed") or "", kv[1]["title"]), reverse=True):
-        s = slug(law["title"])
-        taken[s] += 1
-        s = s if taken[s] == 1 else f"{s}-{taken[s]}"
-        final = votes.get(law.get("final_vote") or "")
-        summary = bills.get(law.get("bill_file", ""), {}).get("summary")
-        notes = bills.get(law.get("bill_file", ""), {}).get("notes")
-        items.append({"key": key, "slug": s, "law": law, "final": final, "summary": summary, "notes": notes,
-                      "kind": kinds.KINDS.get(law.get("kind", "other"), ""),
-                      "areas": [kinds.AREAS[a] for a in law.get("areas", [])]})
-    ranked = most_against(items, len(items))
-    by_key = {it["key"]: it for it in items}
-    for i, r in enumerate(ranked, 1):
-        r["rank"] = i
-        by_key[r["key"]].update(rank=i, share=r["share"])
-    for it in items:
-        law, final = it["law"], it["final"]
-        bill = bills.get(law.get("bill_file", ""), {})
-        it["urgent"] = "urgency" in bill.get("sections", {})
-        it["days"] = days_between(law.get("submitted"), law.get("passed"))
-        sections = bill.get("sections", {})
-        others = [votes[k] for k in law.get("votes", []) if k != law.get("final_vote") and k in votes]
-        roll = []
-        if final:
-            listed = {mps.key(r[1]): r for r in final["rows"]}
-            roll = sorted(({"mp": people[k], "vote": r[2], "group": latin(r[3])} for k, r in listed.items()),
-                          key=lambda x: collate(x["mp"].name))
-        page = env.get_template("law.html").render(
-            **common, it=it, law=law, final=final, groups=by_group(final) if final else [], roll=roll,
-            others=others, reasons=excerpt(sections.get("reasons", ""), 1200),
-            funds=excerpt(sections.get("funds", ""), 500), effects=excerpt(sections.get("effects", ""), 600),
-            report=bool(final and final["counts"]["nije_prisutan"]), root="../")
-        (out / "zakon" / f"{it['slug']}.html").write_text(page, encoding="utf-8")
-    by_kind = defaultdict(list)
-    for it in items:
-        by_kind[it["law"].get("kind", "other")].append(it)
-    kind_order = [k for k in kinds.KINDS if k in by_kind]
-    (out / "zakoni.html").write_text(env.get_template("laws.html").render(
-        **common, by_kind=by_kind, kind_order=kind_order, KINDS=kinds.KINDS, total=len(items), root=""),
-        encoding="utf-8")
+    # Laws, newest first within each convocation, the current one first so its addresses never change.
+    items_by_conv, taken = {}, Counter()
+    for conv, _ in convs:
+        laws_store, votes, bills = loaded[conv]
+        items = []
+        for key, law in sorted(laws_store["laws"].items(), key=lambda kv: (kv[1].get("passed") or "", kv[1]["title"]),
+                               reverse=True):
+            s = slug(law["title"])
+            taken[s] += 1
+            s = s if taken[s] == 1 else f"{s}-{taken[s]}"
+            bill = bills.get(law.get("bill_file", ""), {})
+            items.append({"key": key, "slug": s, "law": law, "final": votes.get(law.get("final_vote") or ""),
+                          "summary": bill.get("summary"), "notes": bill.get("notes"), "conv": conv,
+                          "conv_name": ORDINAL_NAME.get(conv, conv), "conv_page": laws_page(conv, current),
+                          "kind": kinds.KINDS.get(law.get("kind", "other"), ""),
+                          "areas": [kinds.AREAS[a] for a in law.get("areas", [])],
+                          "urgent": "urgency" in bill.get("sections", {}),
+                          "days": days_between(law.get("submitted"), law.get("passed"))})
+        by_key = {it["key"]: it for it in items}
+        for i, r in enumerate(most_against(items, len(items)), 1):
+            by_key[r["key"]].update(rank=i, share=r["share"])
+        items_by_conv[conv] = items
+        for it in items:
+            law, final = it["law"], it["final"]
+            sections = bills.get(law.get("bill_file", ""), {}).get("sections", {})
+            others = [votes[k] for k in law.get("votes", []) if k != law.get("final_vote") and k in votes]
+            roll = []
+            if final:
+                listed = {mps.key(r[1]): r for r in final["rows"]}
+                roll = sorted(({"mp": people[k], "vote": r[2], "group": latin(r[3])} for k, r in listed.items()),
+                              key=lambda x: collate(x["mp"].name))
+            page = env.get_template("law.html").render(
+                **common, it=it, law=law, final=final, groups=by_group(final) if final else [], roll=roll,
+                others=others, reasons=excerpt(sections.get("reasons", ""), 1200),
+                funds=excerpt(sections.get("funds", ""), 500), effects=excerpt(sections.get("effects", ""), 600),
+                report=bool(final and final["counts"]["nije_prisutan"]), root="../")
+            (out / "zakon" / f"{it['slug']}.html").write_text(page, encoding="utf-8")
+        by_kind = defaultdict(list)
+        for it in items:
+            by_kind[it["law"].get("kind", "other")].append(it)
+        kind_order = [k for k in kinds.KINDS if k in by_kind]
+        (out / laws_page(conv, current)).write_text(env.get_template("laws.html").render(
+            **common, by_kind=by_kind, kind_order=kind_order, KINDS=kinds.KINDS, total=len(items), conv=conv,
+            conv_name=ORDINAL_NAME.get(conv, conv), root=""), encoding="utf-8")
 
-    # MPs: their final votes on laws.
-    finals = {it["law"]["final_vote"]: it for it in items if it["law"].get("final_vote")}
+    # MPs: their final votes on laws, in every convocation.
+    finals = {it["law"]["final_vote"]: it for items in items_by_conv.values() for it in items
+              if it["law"].get("final_vote")}
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = [{"it": finals[k], "vote": how} for k, how in mp.votes.items() if k in finals]
         record.sort(key=lambda r: r["it"]["final"]["when"], reverse=True)
         tally = Counter(r["vote"] for r in record)
-        rows_mp.append({"mp": mp, "tally": tally, "n": len(record)})
+        rows_mp.append({"mp": mp, "tally": tally, "n": len(record),
+                        "convs": sorted({r["it"]["conv"] for r in record}, key=int, reverse=True)})
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
             **common, mp=mp, record=record, tally=tally, root="../"), encoding="utf-8")
     (out / "poslanici.html").write_text(env.get_template("mps.html").render(
         **common, rows=rows_mp, root=""), encoding="utf-8")
 
+    items = items_by_conv[current]
+    votes = loaded[current][1]
     stats = {"laws": len(items), "linked": sum(1 for it in items if it["final"]), "votes": len(votes),
-             "mps": len(people), "treaties": sum(1 for it in items if it["law"].get("kind") == "treaty"),
-             "sittings": len({v["sitting"] for v in votes.values()})}
+             "mps": len({mps.key(r[1]) for v in votes.values() for r in v["rows"]}),
+             "treaties": sum(1 for it in items if it["law"].get("kind") == "treaty"),
+             "sittings": len({v["sitting"] for v in votes.values()}),
+             "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people)}
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, stats=stats, latest=items[:12], contested=most_against(items, 12), root=""), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),

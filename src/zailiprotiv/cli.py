@@ -14,14 +14,15 @@ import urllib.parse
 from pathlib import Path
 
 from zailiprotiv import bills, jsonfile, kinds, laws, link, rollcall, skupstina
-from zailiprotiv.config import DELAY
+from zailiprotiv.config import CONVOCATIONS, CURRENT, DELAY
 
-DATA = Path("data")
+ROOT = Path("data")
+DATA = ROOT / CURRENT  # the convocation's own folder; `--convocation N` before the command picks another
 
 
 def index(args) -> int:
     """The current convocation's sittings and the roll-call PDF of each agenda item, into data/index.json."""
-    found = skupstina.index()
+    found = skupstina.index(convocation=CONVOCATION)
     store = {
         "fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "sittings": {
@@ -44,8 +45,10 @@ def index(args) -> int:
 
 def adopted(args) -> int:
     """The laws the current convocation passed, from the Assembly's page of adopted laws, into data/laws.json."""
-    found = laws.parse(skupstina.fetch(laws.ADOPTED).decode("utf-8", "replace"))
-    store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": laws.ADOPTED,
+    source = CONVOCATIONS[CONVOCATION]["laws"]
+    found = laws.parse(skupstina.fetch(source).decode("utf-8", "replace"), source)
+    store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": source,
+             "convocation": CONVOCATION,
              "laws": {law.pdf: law.as_dict() for law in found}}
     Path(args.out).write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
     print(f"laws: {len(found)}, international treaties: {sum(l.treaty for l in found)}, "
@@ -138,7 +141,7 @@ def memoranda(args) -> int:
 
 def website(args) -> int:
     from zailiprotiv import site
-    stats = site.build(DATA, Path(args.out), args.domain or None)
+    stats = site.build(ROOT, Path(args.out), args.domain or None)
     print(", ".join(f"{k}: {v}" for k, v in stats.items()))
     return 0
 
@@ -343,8 +346,21 @@ def download(args) -> int:
     return 0
 
 
+CONVOCATION = CURRENT
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="zailiprotiv")
+    global DATA, CONVOCATION
+    pre = argparse.ArgumentParser(add_help=False)
+    pre.add_argument("--convocation", default=CURRENT, choices=sorted(CONVOCATIONS))
+    known, rest = pre.parse_known_args(argv)
+    CONVOCATION, DATA = known.convocation, ROOT / known.convocation
+    if CONVOCATION == CURRENT and (ROOT / "laws.json").exists() and not DATA.exists():
+        DATA = ROOT  # the layout before data/<N>/: one convocation in data/ itself
+    argv = rest
+    parser = argparse.ArgumentParser(prog="zailiprotiv",
+                                     epilog="--convocation N before the command works on convocation N (default: "
+                                            f"{CURRENT})")
     commands = parser.add_subparsers(dest="command", required=True)
     p = commands.add_parser("index", help="list the current convocation's sittings and their roll-call PDFs")
     p.add_argument("--out", default=str(DATA / "index.json"))

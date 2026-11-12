@@ -74,3 +74,24 @@ def test_file_names_are_plain():
     assert file_name(BASE + "/upload/rezultati_glasanja/2025/16.%20MUEDIH%20FIJULJANIN.PDF") == "2025_16._muedih_fijuljanin.pdf"
     assert file_name(BASE + "/upload/rezultati_glasanja/2026/osma_sednica/1.pdf") == "2026_osma_sednica_1.pdf"
     assert file_name(BASE + "/upload/archive/files/cir/doc/Listinzi/2024/2024.09.30%201.pdf") == "2024_2024.09.30_1.pdf"
+
+
+def test_archive_sittings_follow_pages_and_cyrillic_twin():
+    from zailiprotiv import skupstina
+    listing = "https://www.parlament.gov.rs/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-1-avgusta-2022/zasedanja.4921.html"
+    pages = {
+        listing: '<a href="/aktivnosti/x/prva-sednica.53525.941.html">Prva sednica Prvog redovnog zasedanja</a>'
+                 '<a href="?offset=20">2</a>',
+        listing + "?offset=20": '<a href="/aktivnosti/x/druga-sednica.53601.941.html">Druga sednica Drugog '
+                                'vanrednog zasedanja</a><a href="?offset=0">1</a><a href="/o-nama.12.941.html">O nama</a>',
+    }
+    found = skupstina.archive_sittings(listing, lambda u: pages.get(u, pages[listing]).encode(), delay=0)
+    assert [s.url for s in found] == ["https://www.parlament.gov.rs/sednica.53524.43.html",
+                                      "https://www.parlament.gov.rs/sednica.53600.43.html"]
+
+
+def test_other_convocation():
+    from zailiprotiv import skupstina
+    assert skupstina.other_convocation("Прва седница Првог редовног заседања у Четрнаестом сазиву", "trinaest")
+    assert not skupstina.other_convocation("Прва седница Првог редовног заседања у Тринаестом сазиву", "trinaest")
+    assert not skupstina.other_convocation("Друга седница Другог ванредног заседања", "trinaest")

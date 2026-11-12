@@ -11,10 +11,10 @@
 <p class="note small">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. odsutni nisu bili na spisku, pa se ta glasanja ovde ne vide.</p>
 <div class="scroll">
 <table class="record">
-  <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
+  <thead><tr><th>Datum</th><th>Zakon</th>{% if convs|length > 1 %}<th>Saziv</th>{% endif %}<th>Glas</th></tr></thead>
   <tbody>
   {% for r in record %}
-    <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.title }}</a></td><td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
+    <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.title }}</a></td>{% if convs|length > 1 %}<td class="nowrap">{{ r.it.conv }}.</td>{% endif %}<td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
   {% endfor %}
   </tbody>
 </table>

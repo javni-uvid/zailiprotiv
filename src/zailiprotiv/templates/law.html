@@ -3,7 +3,7 @@
 {% block title %}{{ law.title }} — Za ili protiv{% endblock %}
 {% block description %}{{ law.title }}: kako su glasali poslanici i šta predlagač navodi u obrazloženju.{% endblock %}
 {% block main %}
-<p class="crumbs"><a href="../zakoni.html">Zakoni</a> › <a href="../zakoni.html#{{ law.kind }}">{{ it.kind|latin }}</a></p>
+<p class="crumbs"><a href="../{{ it.conv_page }}">Zakoni — {{ it.conv_name }} saziv</a> › <a href="../{{ it.conv_page }}#{{ law.kind }}">{{ it.kind|latin }}</a></p>
 <h1>{{ law.title }}</h1>
 <dl class="facts">
   <div><dt>Usvojen</dt><dd>{{ law.passed|day }}</dd></div>

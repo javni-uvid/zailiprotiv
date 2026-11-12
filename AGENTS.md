@@ -55,6 +55,12 @@ These are the project's promises to its readers. Never change them without the m
   roll call. The Latin pages (`….941.html`) have the agenda without links. The current convocation's sittings are
   listed on two Cyrillic pages, regular (`заседања/редовна.34.html`) and extraordinary (`заседања/ванредна.35.html`),
   whose margins also carry other news: a sitting is a `.43.html` link whose text names a sitting or session.
+- **Earlier convocations** are on archive pages in Latin (`arhiva-aktivnosti/saziv-od-1-avgusta-2022/zasedanja.4921.html`
+  for the Thirteenth, `…saziv-od-3-avgusta-2020-godine/zasedanja.4620.html` for the Twelfth, more pages with
+  `?offset=N`). They link each sitting's Latin page; its Cyrillic twin, which links the roll calls, has the next
+  lower number (`….53525.941.html` → `sednica.53524.43.html`; the words before the number are ignored). Each
+  convocation has its own page of adopted laws. All of this is in `config.CONVOCATIONS`; a sitting whose title names
+  another convocation is left out.
 - **PDF names are irregular** (`2026/20.pdf`, `2026/29.11.pdf` for a sub-vote, `2026/osma_sednica/1.pdf`,
   `2026/19. Izveshtaj_sa_rezultatima_glasanja_24_04_2026_09_27.pdf`): a vote is known by its link, never by a
   name built from a pattern.
@@ -166,12 +172,17 @@ These are the project's promises to its readers. Never change them without the m
 ### Scope
 
 - The current convocation first, then the older ones (the maintainer's decision, 12 Nov 2026).
+- **Each convocation has its own folder**, `data/<N>/` (index, laws, votes, bills, summaries, notes), and every
+  command takes `--convocation N` before the command (default: the current one). The site is built from all of
+  them: `zakoni.html` is the current convocation, `zakoni-<N>.html` an earlier one; a law's address is its title,
+  the current convocation's laws first, so they never change when an older one is added (an older law of the same
+  title gets `-2`). An MP's page lists their final votes in every convocation.
 
 ## Known issues and open decisions
 
 - The Fifteenth convocation was convened in November 2026, after the October elections. The listings show the
-  Fourteenth's sittings (2024–2026). Earlier convocations' sittings are in the archive pages, likely with their
-  own `Listinzi` links: still to check.
+  Fourteenth's sittings (2024–2026). When the Fifteenth's appear there, the Fourteenth moves to the archive:
+  add its archive page to `config.CONVOCATIONS`, the Fifteenth's listings and laws page, and set `CURRENT`.
 - How a vote is tied to its act (title, bill, memorandum) on the Assembly's site.
 - Summaries of the laws (Claude's, from the memorandum) and a Cyrillic edition of the site.
 - MPs whose name is spelled differently across layouts (Ana/Anna Oreg, middle initials) appear twice: a manual

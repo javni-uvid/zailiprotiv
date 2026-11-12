@@ -1,5 +1,5 @@
 # Run by hand (and after each data run): Claude's summary of every bill's memorandum not summarised yet, or whose
-# memorandum changed, committed to data/summaries/. Needs the repository secret ANTHROPIC_API_KEY.
+# memorandum changed, in every convocation, committed to data/<convocation>/summaries/. Needs the repository secret ANTHROPIC_API_KEY.
 name: summaries
 
 on:
@@ -35,14 +35,16 @@ jobs:
             exit 0
           fi
           pip install uv && uv sync --frozen
-          uv run zailiprotiv summaries --limit "${{ inputs.limit || 0 }}"
+          for c in $(ls data); do
+            [ -f "data/$c/laws.json" ] && uv run zailiprotiv --convocation "$c" summaries --limit "${{ inputs.limit || 0 }}"
+          done
       - name: Commit
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/summaries
+          git add data
           git diff --cached --quiet && exit 0
           git commit -m "Summaries of the bills' memoranda"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

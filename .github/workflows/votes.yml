@@ -1,10 +1,15 @@
-# Run by hand: index the current convocation's sittings and laws, read every roll call and bill not read yet,
-# link laws to their votes, and commit data/ when it changed.
+# Run by hand: index a convocation's sittings and laws (the current one unless another is chosen), read every roll
+# call and bill not read yet, link laws to their votes, and commit data/<convocation>/ when it changed.
 name: votes
 
 on:
   workflow_dispatch:
     inputs:
+      convocation:
+        description: "Convocation (14 is the current one; 13 and 12 are in the archive)"
+        type: choice
+        options: ["14", "13", "12"]
+        default: "14"
       again:
         description: "Read every roll call again, not only new ones"
         type: boolean
@@ -34,11 +39,12 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
           pip install uv && uv sync --frozen
-          uv run zailiprotiv index
-          uv run zailiprotiv laws
-          uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
-          uv run zailiprotiv link
-          uv run zailiprotiv bills
+          c="--convocation ${{ inputs.convocation || '14' }}"
+          uv run zailiprotiv $c index
+          uv run zailiprotiv $c laws
+          uv run zailiprotiv $c votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
+          uv run zailiprotiv $c link
+          uv run zailiprotiv $c bills
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
@@ -46,7 +52,7 @@ jobs:
           git add data
           git diff --cached --quiet && { gh workflow run pages.yml --ref main; exit 0; }
           # New bills get their summaries in a run of their own, which then publishes the site.
-          git commit -m "Roll calls read from the Assembly's site"
+          git commit -m "Roll calls read from the Assembly's site (convocation ${{ inputs.convocation || '14' }})"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
           git status -sb | grep -q ahead && exit 1
           gh workflow run pages.yml --ref main

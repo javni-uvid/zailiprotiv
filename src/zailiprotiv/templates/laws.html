@@ -2,8 +2,9 @@
 {% from "macros.html" import bar, tally %}
 {% block title %}Zakoni — Za ili protiv{% endblock %}
 {% block main %}
-<h1>Usvojeni zakoni</h1>
-<p class="lead">{{ total }} zakona Četrnaestog saziva, po vrsti, najnoviji prvo. Vrsta se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon.</p>
+<h1>Usvojeni zakoni — {{ conv_name }} saziv</h1>
+{% if convs|length > 1 %}<p class="convs">{% for c in convs %}{% if c.n == conv %}<b>{{ c.name }} saziv</b>{% else %}<a href="{{ c.page }}">{{ c.name }} saziv</a>{% endif %} ({{ c.laws }}){% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+<p class="lead">{{ total }} zakona, po vrsti, najnoviji prvo. Vrsta se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon.</p>
 <nav class="toc">
 {% for k in kind_order %}<a href="#{{ k }}">{{ KINDS[k]|latin }} <span>{{ by_kind[k]|length }}</span></a>{% endfor %}
 </nav>

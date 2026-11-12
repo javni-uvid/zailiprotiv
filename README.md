@@ -29,15 +29,16 @@ every agenda item to its roll call; the sittings are listed on the regular and e
 
 ```sh
 uv sync
-uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
-uv run zailiprotiv laws                # laws the current convocation passed → data/laws.json
-uv run zailiprotiv summaries           # Claude's summaries of the memoranda → data/summaries/ (ANTHROPIC_API_KEY)
+# Every command works on the current convocation, data/14/; `--convocation 13` before the command, on another.
+uv run zailiprotiv index               # sittings of the convocation and their roll calls → data/14/index.json
+uv run zailiprotiv laws                # laws the current convocation passed → data/14/laws.json
+uv run zailiprotiv summaries           # Claude's summaries of the memoranda → data/14/summaries/ (ANTHROPIC_API_KEY)
 uv run zailiprotiv export --to DIR      # material of laws without a summary, for summaries written in a session
 uv run zailiprotiv import FILE --model M  # save such summaries (JSON Lines: bill_file, summary)
 uv run zailiprotiv site --out _site   # build the static site
-uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/laws.json
-uv run zailiprotiv bills               # each law's bill: memorandum and constitutional basis → data/bills/
-uv run zailiprotiv votes               # read every roll call not read yet → data/votes/<sitting>.json (needs pdftotext)
+uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/14/laws.json
+uv run zailiprotiv bills               # each law's bill: memorandum and constitutional basis → data/14/bills/
+uv run zailiprotiv votes               # read every roll call not read yet → data/14/votes/<sitting>.json (needs pdftotext)
 uv run pytest
 ```
 
@@ -45,7 +46,7 @@ uv run pytest
 
 | Workflow | When | What |
 |---|---|---|
-| votes | by hand | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/` |
+| votes | by hand (choose the convocation) | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/<N>/` |
 | summaries | by hand, and after each data run | Claude's summaries of new bills' memoranda (secret `ANTHROPIC_API_KEY`) |
 | pages | on push, and after each data run | build the site and publish it on GitHub Pages |
 | fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
@@ -68,7 +69,7 @@ src/zailiprotiv/
   cli.py         commands
   translit.py    Cyrillic → Latin
   jsonfile.py    JSON stores one entry per line, for small git diffs
-data/
+data/<N>/        one folder per convocation (14, 13, 12)
   index.json     sittings and their roll calls (one sitting per line)
   laws.json      the convocation's adopted laws (one law per line)
   bills/         one file per bill: its memorandum's sections and the Constitution's articles it cites

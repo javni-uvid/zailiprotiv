@@ -71,3 +71,28 @@ def test_most_against_first():
     ranked = [x["law"]["title"] for x in site.most_against(items, 3)]
     assert ranked == ["126:60", "150:60", "130:40"]
     assert site.most_against(items, 3)[2]["law"]["passed"] == "2026-02-01"  # a tie goes to the newer law
+
+
+def test_site_builds_every_convocation(tmp_path):
+    import shutil
+    one = data(tmp_path)
+    root = tmp_path / "root"
+    shutil.copytree(one, root / "14")
+    shutil.copytree(one, root / "13")
+    older = root / "13" / "votes" / "1.json"
+    store = json.loads(older.read_text())
+    store["votes"] = {BASE.replace("2026", "2023") + "1.pdf#0": {**v, "when": "2023-07-10T15:55:01"}
+                      for v in store["votes"].values()}
+    older.write_text(json.dumps(store))
+    laws = json.loads((root / "13" / "laws.json").read_text())
+    laws["laws"]["L"].update(passed="2023-07-10", votes=list(store["votes"]), final_vote=next(iter(store["votes"])))
+    (root / "13" / "laws.json").write_text(json.dumps(laws))
+    out = tmp_path / "_site"
+    stats = site.build(root, out, None)
+    assert stats["laws"] == 1 and stats["all_laws"] == 2
+    assert (out / "zakon" / "zakon-o-oruzju.html").exists()  # the current convocation keeps the plain address
+    assert "Trinaesti saziv" in (out / "zakon" / "zakon-o-oruzju-2.html").read_text()
+    assert (out / "zakoni-13.html").exists() and "zakoni-13.html" in (out / "zakoni.html").read_text()
+    mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
+    assert "zakon-o-oruzju.html" in mp and "zakon-o-oruzju-2.html" in mp
+    assert "13, 14" not in (out / "poslanici.html").read_text() and "14, 13" in (out / "poslanici.html").read_text()

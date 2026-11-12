@@ -10,6 +10,7 @@
     <li><b>{{ stats.mps }}</b> poslanika</li>
     <li><b>{{ stats.sittings }}</b> sednica i zasedanja</li>
   </ul>
+  {% if convs|length > 1 %}<p class="meta">Arhiva: {% for c in convs[1:] %}<a href="{{ c.page }}">{{ c.name }} saziv</a> ({{ c.laws }} zakona){% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
   <p><a class="button" href="zakoni.html">Svi zakoni</a> <a class="button ghost" href="poslanici.html">Svi poslanici</a></p>
 </section>
 

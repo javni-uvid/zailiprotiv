@@ -9,6 +9,7 @@ one for extraordinary sittings."""
 from __future__ import annotations
 
 import http.client
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -18,13 +19,11 @@ from dataclasses import dataclass, field
 from html import unescape
 from html.parser import HTMLParser
 
-from zailiprotiv.config import BASE, DELAY, USER_AGENT, VOTES_PATHS
+from zailiprotiv.config import BASE, CONVOCATIONS, DELAY, ORDINALS, USER_AGENT, VOTES_PATHS
+from zailiprotiv.translit import latin
 
 # The current convocation's sittings: regular, then extraordinary.
-LISTINGS = (
-    BASE + "/активности/народна-скупштина/заседања/редовна.34.html",
-    BASE + "/активности/народна-скупштина/заседања/ванредна.35.html",
-)
+LISTINGS = CONVOCATIONS["14"]["listings"]
 
 
 class FetchError(RuntimeError):
@@ -134,6 +133,38 @@ def sittings(get: Callable[[str], bytes] = fetch, listings=LISTINGS) -> list[Sit
     return out
 
 
+def other_convocation(title: str, ordinal: str) -> bool:
+    """A sitting whose title names another convocation ("… у Четрнаестом сазиву" listed in the Thirteenth's
+    archive, or a notice of the Fifteenth's first sitting among the Fourteenth's)."""
+    t = latin(title).lower()
+    return any(f"{o}om sazivu" in t or f"{o}og saziva" in t for o in ORDINALS if o != ordinal)
+
+
+def archive_sittings(listing: str, get: Callable[[str], bytes] = fetch, delay: float = DELAY) -> list[Sitting]:
+    """An earlier convocation's sittings, from its archive page in Latin and the pages after it (?offset=N). A
+    sitting's Latin page ("….53525.941.html") has a Cyrillic twin with the next lower number ("….53524.43.html"),
+    which is the one linking the roll calls; the site ignores the words before the number."""
+    out, seen, pages, todo = [], set(), set(), [listing]
+    while todo:
+        page = todo.pop(0)
+        if page in pages:
+            continue
+        pages.add(page)
+        if len(pages) > 1:
+            time.sleep(delay)
+        for url, text in links(get(page).decode("utf-8", "replace"), page):
+            if "offset=" in url and url.split("?")[0] == listing.split("?")[0] and url not in pages:
+                todo.append(url)
+            m = re.search(r"\.(\d+)\.941\.html$", urllib.parse.unquote(url))
+            low = latin(text).lower()
+            if m and ("sednic" in low or "zasedanj" in low):
+                cyr = f"{BASE}/sednica.{int(m.group(1)) - 1}.43.html"
+                if cyr not in seen:
+                    seen.add(cyr)
+                    out.append(Sitting(cyr, text))
+    return out
+
+
 def votes(html: str, base: str) -> list[Vote]:
     """The agenda items of a sitting's page that link to a roll call, in page order, each PDF once."""
     out, seen = [], set()
@@ -144,9 +175,11 @@ def votes(html: str, base: str) -> list[Vote]:
     return out
 
 
-def index(get: Callable[[str], bytes] = fetch, delay: float = DELAY) -> list[Sitting]:
-    """The current convocation's sittings with their roll calls."""
-    found = sittings(get)
+def index(get: Callable[[str], bytes] = fetch, delay: float = DELAY, convocation: str = "14") -> list[Sitting]:
+    """A convocation's sittings with their roll calls."""
+    conf = CONVOCATIONS[convocation]
+    found = archive_sittings(conf["archive"], get, delay) if "archive" in conf else sittings(get, conf["listings"])
+    found = [s for s in found if not other_convocation(s.title, conf["ordinal"])]
     for sitting in found:
         time.sleep(delay)
         sitting.votes = votes(get(sitting.url).decode("utf-8", "replace"), sitting.url)
