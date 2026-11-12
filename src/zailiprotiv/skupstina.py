@@ -1,13 +1,13 @@
-"""The National Assembly's website: fetching pages and finding the roll-call PDFs they link to.
+"""The National Assembly's website: its sittings and the roll-call PDF of every vote taken at them.
 
 The Assembly publishes each roll-call vote as a PDF under /upload/rezultati_glasanja/ (for example
-/upload/rezultati_glasanja/2026/20.pdf or /upload/rezultati_glasanja/2026/osma_sednica/1.pdf). Which pages list
-them is not known yet: `crawl` walks the site from a start page, following the links most likely to lead to
-sittings and votes first, and records every such PDF with the pages that link to it."""
+/upload/rezultati_glasanja/2026/20.pdf or /upload/rezultati_glasanja/2026/osma_sednica/1.pdf). Only the Cyrillic
+pages of the sittings link to them (`….43.html`; the Latin pages, `….941.html`, don't): each agenda item's text is
+a link to its vote. The sittings of the current convocation are listed on two Cyrillic pages, one for regular and
+one for extraordinary sittings."""
 
 from __future__ import annotations
 
-import heapq
 import http.client
 import time
 import urllib.error
@@ -19,6 +19,12 @@ from html import unescape
 from html.parser import HTMLParser
 
 from zailiprotiv.config import BASE, DELAY, USER_AGENT, VOTES_PATH
+
+# The current convocation's sittings: regular, then extraordinary.
+LISTINGS = (
+    BASE + "/активности/народна-скупштина/заседања/редовна.34.html",
+    BASE + "/активности/народна-скупштина/заседања/ванредна.35.html",
+)
 
 
 class FetchError(RuntimeError):
@@ -97,56 +103,51 @@ def is_vote_pdf(url: str) -> bool:
     return VOTES_PATH in path and path.lower().endswith(".pdf")
 
 
-def same_site(url: str) -> bool:
-    host = urllib.parse.urlsplit(url).hostname or ""
-    return host.removeprefix("www.") == urllib.parse.urlsplit(BASE).hostname.removeprefix("www.")
-
-
-# Words in a link's address or text that make it likelier to lead to sittings and votes (both scripts).
-_LEADS = ("седниц", "sednic", "заседањ", "zasedanj", "гласањ", "glasanj", "активност", "aktivnost",
-          "пленарн", "plenarn", "дневни-ред", "dnevni-red")
-# Earlier convocations come last: the current one is read first (and the archive is large).
-_LATER = ("архив", "arhiv", "сазив-од", "saziv-od")
-# Files and sections that never lead there.
-_SKIP = (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png", ".gif", ".zip", ".mp4", "/upload/")
-
-
-def _score(url: str, text: str) -> int:
-    s = (urllib.parse.unquote(url) + " " + text).lower()
-    return sum(word in s for word in _LEADS) - 10 * any(word in s for word in _LATER)
+def is_sitting(url: str, text: str) -> bool:
+    """A link to a sitting's Cyrillic page. The listings also carry other news in their margins."""
+    path = urllib.parse.unquote(urllib.parse.urlsplit(url).path)
+    t = text.lower()
+    return path.endswith(".43.html") and ("седниц" in t or "заседањ" in t)
 
 
 @dataclass
-class Crawl:
-    pdfs: dict[str, set[str]] = field(default_factory=dict)  # vote PDF -> pages linking to it
-    visited: list[str] = field(default_factory=list)
-    failed: list[tuple[str, str]] = field(default_factory=list)
+class Vote:
+    item: str  # the agenda item's text as the sitting's page gives it
+    pdf: str
 
 
-def crawl(start: str, max_pages: int = 80, delay: float = DELAY,
-          get: Callable[[str], bytes] = fetch) -> Crawl:
-    """Walk the site from start, best leads first, reading at most max_pages pages."""
-    result = Crawl()
-    queue: list[tuple[int, int, str]] = [(0, 0, start)]
-    seen = {start}
-    order = 1
-    while queue and len(result.visited) < max_pages:
-        _, _, url = heapq.heappop(queue)
-        if result.visited:
-            time.sleep(delay)
-        try:
-            body = get(url)
-        except FetchError as e:
-            result.failed.append((url, str(e)))
-            continue
-        result.visited.append(url)
-        for link, text in links(body.decode("utf-8", "replace"), url):
-            if is_vote_pdf(link):
-                result.pdfs.setdefault(link, set()).add(url)
-                continue
-            if link in seen or not same_site(link) or any(x in link.lower() for x in _SKIP):
-                continue
-            seen.add(link)
-            heapq.heappush(queue, (-_score(link, text), order, link))
-            order += 1
-    return result
+@dataclass
+class Sitting:
+    url: str
+    title: str
+    votes: list[Vote] = field(default_factory=list)
+
+
+def sittings(get: Callable[[str], bytes] = fetch, listings=LISTINGS) -> list[Sitting]:
+    """Every sitting the listings link to, once, in the listings' order."""
+    out, seen = [], set()
+    for listing in listings:
+        for url, text in links(get(listing).decode("utf-8", "replace"), listing):
+            if is_sitting(url, text) and url not in seen:
+                seen.add(url)
+                out.append(Sitting(url, text))
+    return out
+
+
+def votes(html: str, base: str) -> list[Vote]:
+    """The agenda items of a sitting's page that link to a roll call, in page order, each PDF once."""
+    out, seen = [], set()
+    for url, text in links(html, base):
+        if is_vote_pdf(url) and url not in seen:
+            seen.add(url)
+            out.append(Vote(text.rstrip(" ;."), url))
+    return out
+
+
+def index(get: Callable[[str], bytes] = fetch, delay: float = DELAY) -> list[Sitting]:
+    """The current convocation's sittings with their roll calls."""
+    found = sittings(get)
+    for sitting in found:
+        time.sleep(delay)
+        sitting.votes = votes(get(sitting.url).decode("utf-8", "replace"), sitting.url)
+    return found

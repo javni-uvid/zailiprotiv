@@ -14,7 +14,7 @@ in the same commit. README.md describes the project for its users; this file is 
 - **Ask the Assembly little.** Requests identify the project in the User-Agent and wait a second between pages.
   Recurring reads are incremental.
 - **The development sandbox may not reach parlament.gov.rs; GitHub's runners may.** Run anything that needs the
-  site through `workflow_dispatch` (start with **probe**).
+  site through `workflow_dispatch`.
 - **Only one pending run per workflow.** Each workflow has a concurrency group.
 - **Talk to the maintainer in Serbian** (Latin script), briefly and to the point. Code, comments and docs are in
   English.
@@ -44,8 +44,17 @@ These are the project's promises to its readers. Never change them without the m
 - **Roll calls:** the Assembly publishes each vote as a PDF under `/upload/rezultati_glasanja/` (by year, sometimes
   by sitting: `2026/20.pdf`, `2026/osma_sednica/1.pdf`). Each gives the kind of vote (e.g. on the act as a whole),
   the date and time, and every MP with their vote (for, against, abstained, did not vote, not present) and club.
-- **Where they are listed is not known yet.** `zailiprotiv probe` walks the site from its home page, follows the
-  links most likely to lead to sittings first, and reports every roll-call PDF found with the pages linking to it.
+- **Only the Cyrillic pages of the sittings link to them** (`….43.html`): each agenda item's text is a link to its
+  roll call. The Latin pages (`….941.html`) have the agenda without links. The current convocation's sittings are
+  listed on two Cyrillic pages, regular (`заседања/редовна.34.html`) and extraordinary (`заседања/ванредна.35.html`),
+  whose margins also carry other news: a sitting is a `.43.html` link whose text names a sitting or session.
+- **PDF names are irregular** (`2026/20.pdf`, `2026/29.11.pdf` for a sub-vote, `2026/osma_sednica/1.pdf`,
+  `2026/19. Izveshtaj_sa_rezultatima_glasanja_24_04_2026_09_27.pdf`): a vote is known by its link, never by a
+  name built from a pattern.
+- **The PDFs have a text layer** (no OCR): a title, the session and convocation, the agenda item's number and act,
+  the kind of vote with date and time ("Гласање о предлогу акта у целини - 25.06.2026 / 11:17:12"), then numbered
+  rows under ГЛАСАЛИ ЗА, ГЛАСАЛИ ПРОТИВ, УЗДРЖАНИ, НИСУ ГЛАСАЛИ, НИСУ ПРИСУТНИ: name, vote, club ("ПГ АВ-СНСДС").
+- `zailiprotiv index` (the **index** workflow) writes the sittings and their roll calls to `data/index.json`.
 
 ### Scope
 
@@ -53,7 +62,8 @@ These are the project's promises to its readers. Never change them without the m
 
 ## Known issues and open decisions
 
-- The listing pages for roll calls, and whether GitHub's runners reach parlament.gov.rs: the **probe** answers both.
+- The Fifteenth convocation was convened in November 2026, after the October elections. The listings show the
+  Fourteenth's sittings (2024–2026); where earlier convocations' roll calls are, if anywhere, is still to find.
 - How a vote is tied to its act (title, bill, memorandum) on the Assembly's site.
 - Site layout, languages and hosting: to decide once the data is in.
 
@@ -65,3 +75,5 @@ These are the project's promises to its readers. Never change them without the m
   The repo lives in the new organisation `javni-uvid` ("public inspection" of what institutions do), meant to hold
   the election repos too once their sites have a domain of their own (GitHub Pages addresses don't follow a
   renamed organisation).
+  A probe confirmed that GitHub's runners reach parlament.gov.rs (the sandbox doesn't, nor can it download
+  workflow artifacts, so workflows print what needs reviewing to their log).

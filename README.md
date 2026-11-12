@@ -3,7 +3,7 @@
 A public site about the laws Serbia's National Assembly passes: what each law does, what its proposer says it will
 change, and how every MP voted on it.
 
-**Status:** skeleton. The probe that finds the Assembly's roll-call results comes first.
+**Status:** skeleton. The index of sittings and their roll calls works; reading the roll calls comes next.
 
 ## Principles
 
@@ -17,13 +17,14 @@ change, and how every MP voted on it.
 ## Source
 
 The Assembly publishes each roll-call vote as a PDF under `https://www.parlament.gov.rs/upload/rezultati_glasanja/`:
-the kind of vote, its date and time, and every MP with their vote and club.
+the kind of vote, its date and time, and every MP with their vote and club. The Cyrillic page of each sitting links
+every agenda item to its roll call; the sittings are listed on the regular and extraordinary sessions' pages.
 
 ## Commands
 
 ```sh
 uv sync
-uv run zailiprotiv probe --out probe   # reach the Assembly's site, find where it lists roll-call PDFs
+uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
 uv run pytest
 ```
 
@@ -31,7 +32,7 @@ uv run pytest
 
 | Workflow | When | What |
 |---|---|---|
-| probe | by hand | can GitHub's runners reach parlament.gov.rs; which pages list roll-call PDFs; saves samples as an artifact |
+| index | by hand | the current convocation's sittings and their roll-call PDFs, committed as `data/index.json` |
 | test | on push | the whole test suite |
 
 ## Layout
@@ -39,10 +40,12 @@ uv run pytest
 ```
 src/zailiprotiv/
   config.py      the Assembly's address, User-Agent, delay between requests
-  skupstina.py   fetching pages, finding roll-call PDFs on the site
+  skupstina.py   the Assembly's site: sittings and the roll-call PDF of each agenda item
   cli.py         commands
   translit.py    Cyrillic → Latin
   jsonfile.py    JSON stores one entry per line, for small git diffs
+data/
+  index.json     sittings and their roll calls (one sitting per line)
 tests/
 ```
 

@@ -1,75 +1,66 @@
 from zailiprotiv import skupstina
 from zailiprotiv.translit import latin
 
-PAGE = """<html><body>
-<a href="/lat/aktivnosti/sednice.html">Седнице</a>
-<a href="https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/20.pdf">Резултати гласања</a>
-<a href="/upload/rezultati_glasanja/2026/osma_sednica/1.pdf#page=1">1</a>
-<a href="/upload/archive/files/lat/doc/beleske.docx">белешке</a>
-<a href="https://example.com/other">elsewhere</a>
-<a href="mailto:info@example.com">mail</a>
-<a href="/o-skupstini.html">О Скупштини</a>
+BASE = "https://www.parlament.gov.rs"
+
+# The shapes of the Assembly's pages, cut down: a listing of sittings with news in its margin, and a sitting whose
+# agenda items link to their roll calls (one item with a sub-vote, one link to the same PDF twice).
+LISTING = """<html><body>
+<a href="/Седмо_ванредно_заседање_Народне.53524.43.html">Седмо ванредно заседање Народне скупштине</a>
+<a href="/Трећа_седница_Првог_редовног.53241.43.html">Трећа седница Првог редовног заседања</a>
+<a href="/Брнабић_на_самиту.54089.43.html">Брнабић на самиту Европске политичке заједнице</a>
+<a href="/Sedmo_vanredno.53525.941.html">Sedmo vanredno zasedanje</a>
 </body></html>"""
 
+SITTING = """<html><body><ul>
+<li><a href="https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/1.pdf">Предлог закона о јавном
+  тужилаштву, који је поднела Влада;</a></li>
+<li><a href="/upload/rezultati_glasanja/2026/29.11.pdf">Предлог да се за члана Већа изабере</a></li>
+<li><a href="/upload/rezultati_glasanja/2026/1.pdf">Предлог закона о јавном тужилаштву</a></li>
+<li><a href="/upload/archive/files/lat/doc/stenografske_beleske/beleske.docx">Стенографске белешке</a></li>
+</ul></body></html>"""
 
-def test_links_are_absolute_without_fragments():
-    found = skupstina.links(PAGE, "https://www.parlament.gov.rs/lat/")
-    urls = [u for u, _ in found]
-    assert "https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/osma_sednica/1.pdf" in urls
-    assert not any(u.startswith("mailto:") for u in urls)
-    assert ("https://www.parlament.gov.rs/lat/aktivnosti/sednice.html", "Седнице") in found
+
+def test_sittings_from_listings_without_news():
+    pages = {BASE + "/list": LISTING}
+    found = skupstina.sittings(get=lambda u: pages[u].encode(), listings=[BASE + "/list", BASE + "/list"])
+    assert [s.url for s in found] == [
+        BASE + "/Седмо_ванредно_заседање_Народне.53524.43.html",
+        BASE + "/Трећа_седница_Првог_редовног.53241.43.html",
+    ]
+    assert found[0].title == "Седмо ванредно заседање Народне скупштине"
+
+
+def test_votes_on_a_sitting():
+    found = skupstina.votes(SITTING, BASE + "/Седмо.53524.43.html")
+    assert [(v.item, v.pdf) for v in found] == [
+        ("Предлог закона о јавном тужилаштву, који је поднела Влада",
+         BASE + "/upload/rezultati_glasanja/2026/1.pdf"),
+        ("Предлог да се за члана Већа изабере", BASE + "/upload/rezultati_glasanja/2026/29.11.pdf"),
+    ]
+
+
+def test_index_reads_each_sitting():
+    pages = {skupstina.LISTINGS[0]: LISTING, skupstina.LISTINGS[1]: "<p></p>",
+             BASE + "/Седмо_ванредно_заседање_Народне.53524.43.html": SITTING,
+             BASE + "/Трећа_седница_Првог_редовног.53241.43.html": "<p>no votes yet</p>"}
+    found = skupstina.index(get=lambda u: pages[u].encode(), delay=0)
+    assert [len(s.votes) for s in found] == [2, 0]
 
 
 def test_vote_pdfs():
-    assert skupstina.is_vote_pdf("https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/20.pdf")
-    assert skupstina.is_vote_pdf("https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/osma_sednica/3.PDF")
-    assert not skupstina.is_vote_pdf("https://www.parlament.gov.rs/upload/archive/files/lat/doc/x.docx")
-    assert not skupstina.is_vote_pdf("https://www.parlament.gov.rs/upload/rezultati_glasanja/")
-
-
-def test_crawl_follows_leads_and_stays_on_site():
-    site = {
-        "https://www.parlament.gov.rs/": PAGE,
-        "https://www.parlament.gov.rs/lat/aktivnosti/sednice.html":
-            '<a href="/upload/rezultati_glasanja/2025/7.pdf">7</a>',
-        "https://www.parlament.gov.rs/o-skupstini.html": "<p>nothing</p>",
-    }
-    asked = []
-
-    def get(url):
-        asked.append(url)
-        if url not in site:
-            raise skupstina.FetchError(url)
-        return site[url].encode()
-
-    result = skupstina.crawl("https://www.parlament.gov.rs/", max_pages=10, delay=0, get=get)
-    assert set(result.pdfs) == {
-        "https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/20.pdf",
-        "https://www.parlament.gov.rs/upload/rezultati_glasanja/2026/osma_sednica/1.pdf",
-        "https://www.parlament.gov.rs/upload/rezultati_glasanja/2025/7.pdf",
-    }
-    # the page about sittings is read before the one about the Assembly; nothing off the site, no documents
-    assert asked.index("https://www.parlament.gov.rs/lat/aktivnosti/sednice.html") < \
-        asked.index("https://www.parlament.gov.rs/o-skupstini.html")
-    assert not any("example.com" in u or u.endswith(".docx") for u in asked)
-
-
-def test_archive_comes_last():
-    current = skupstina._score("https://www.parlament.gov.rs/активности/народна-скупштина/заседања/ванредна.35.html", "")
-    archive = skupstina._score(
-        "https://www.parlament.gov.rs/активности/народна-скупштина/архива-активности/сазив-од-3-августа-2020/заседања.html",
-        "Седнице")
-    assert current > archive
+    assert skupstina.is_vote_pdf(BASE + "/upload/rezultati_glasanja/2026/20.pdf")
+    assert skupstina.is_vote_pdf(BASE + "/upload/rezultati_glasanja/2026/osma_sednica/3.PDF")
+    assert not skupstina.is_vote_pdf(BASE + "/upload/archive/files/lat/doc/x.docx")
 
 
 def test_cyrillic_paths_are_encoded_once():
-    url = "https://www.parlament.gov.rs/народна-скупштина/седнице.html?x=1"
+    url = BASE + "/народна-скупштина/седнице.html?x=1"
     assert skupstina.ascii_url(url) == \
-        "https://www.parlament.gov.rs/%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B0-" \
+        BASE + "/%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B0-" \
         "%D1%81%D0%BA%D1%83%D0%BF%D1%88%D1%82%D0%B8%D0%BD%D0%B0/%D1%81%D0%B5%D0%B4%D0%BD%D0%B8%D1%86%D0%B5.html?x=1"
     assert skupstina.ascii_url(skupstina.ascii_url(url)) == skupstina.ascii_url(url)
-    assert skupstina.ascii_url("https://www.parlament.gov.rs/upload/a%20b.pdf") == \
-        "https://www.parlament.gov.rs/upload/a%20b.pdf"
+    assert skupstina.ascii_url(BASE + "/upload/a%20b.pdf") == BASE + "/upload/a%20b.pdf"
 
 
 def test_translit():

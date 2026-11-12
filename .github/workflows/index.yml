@@ -1,0 +1,33 @@
+# Run by hand: list the current convocation's sittings and the roll-call PDF of each agenda item,
+# and commit data/index.json when it changed.
+name: index
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: index
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Read the sittings
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv index
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/index.json
+          git diff --cached --quiet || { git commit -m "Index of sittings and roll calls" && git push; }
