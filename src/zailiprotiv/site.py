@@ -99,6 +99,52 @@ def load(data: Path) -> tuple[dict, dict, dict]:
     return laws, votes, bills
 
 
+def load_transcripts(data: Path) -> dict[str, dict]:
+    """The stenographic notes read, by the address of their sitting's page."""
+    folder = data / "transcripts"
+    out = {}
+    for path in sorted(folder.glob("*.json")) if folder.exists() else []:
+        store = json.loads(path.read_text(encoding="utf-8"))
+        out[store["sitting"]] = store
+    return out
+
+
+OUTSIDE = "Bez poslaničke grupe na spisku (predstavnici Vlade i drugi)"
+
+
+def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
+    """What the notes of the law's sitting say about its debate: the days, the agenda items debated with it in
+    principle, how many speeches and words in each part, the amendments, and the words by group (each speaker's group
+    as in the final roll call; someone not on it, such as a minister, apart)."""
+    from zailiprotiv import link
+    if not final or not notes:
+        return None
+    name = link.act_name(final.get("item") or law["title"])
+    scored = [(link.closeness(link.act_name(t), name), int(n)) for n, t in notes["agenda"].items()]
+    score, item = max(scored, default=(0.0, None))
+    if item is None or score < 0.6:
+        return None
+    groups = {mps.key(r[1]): latin(r[3]) or "Bez poslaničke grupe" for r in final["rows"]}
+    general = [s for s in notes["speeches"].values() if not s["chair"] and s["part"] == "general" and item in s["items"]]
+    detail = [s for s in notes["speeches"].values() if not s["chair"] and s["part"] == "detail" and s["items"] == [item]]
+    by_group: Counter = Counter()
+    for sp in general + detail:
+        by_group[groups.get(mps.key(sp["speaker"]), OUTSIDE)] += len(re.findall(r"\w+", sp["text"]))
+    total = sum(by_group.values())
+    joint = sorted({i for sp in general for i in sp["items"]} - {item})
+    amendments = [a for a in notes["amendments"] if a["item"] == item]
+    filers = Counter(re.sub(r"^народн\w+\s+посланиц?\w*\s+", "", a["by"]) for a in amendments)
+    used = {sp["day"] for sp in general + detail}
+    return {"item": item, "agenda": notes["agenda"], "joint": joint,
+            "days": [d for i, d in enumerate(notes["days"], 1) if i in used] or notes["days"],
+            "all_days": notes["days"], "general": len(general), "detail": len(detail),
+            "speakers": len({sp["speaker"] for sp in general + detail}), "words": total,
+            "by_group": [(g, n, n / total) for g, n in sorted(by_group.items(), key=lambda x: (-x[1], collate(x[0])))]
+            if total else [],
+            "amendments": len(amendments), "filers": filers.most_common(),
+            "provisional": any(d.get("provisional") for d in notes["days"])}
+
+
 def registry(votes: dict) -> dict[str, MP]:
     """Every MP met in a roll call, under one key whatever the layout wrote. The name shown is the report
     layout's ("SURNAME Given", one order for everyone) where the MP is in one, else the listinzi's."""
@@ -185,6 +231,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     convs = convocations(root)
     current = convs[0][0]
     loaded = {c: load(path) for c, path in convs}
+    debates = {c: load_transcripts(path) for c, path in convs}
     all_votes = {k: v for _, votes, _ in loaded.values() for k, v in votes.items()}
     people = registry(all_votes)
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
@@ -218,7 +265,10 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                           "kind": kinds.KINDS.get(law.get("kind", "other"), ""),
                           "areas": [kinds.AREAS[a] for a in law.get("areas", [])],
                           "urgent": "urgency" in bill.get("sections", {}),
-                          "days": days_between(law.get("submitted"), law.get("passed"))})
+                          "days": days_between(law.get("submitted"), law.get("passed")),
+                          "debate": debate_of(law, votes.get(law.get("final_vote") or ""),
+                                              debates[conv].get((votes.get(law.get("final_vote") or "") or {})
+                                                                .get("sitting", "")))})
         by_key = {it["key"]: it for it in items}
         for i, r in enumerate(most_against(items, len(items)), 1):
             by_key[r["key"]].update(rank=i, share=r["share"])

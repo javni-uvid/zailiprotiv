@@ -45,6 +45,37 @@
 </section>
 {% endif %}
 
+{% set db = it.debate %}
+{% if db %}
+<section class="debate">
+  <h2>Rasprava u Skupštini</h2>
+  <p>Ovo je {{ db.item }}. tačka dnevnog reda. {% if db.joint %}U načelu se o njoj raspravljalo zajedno sa još {{ db.joint|length }} {{ "tačkom" if db.joint|length == 1 else "tačaka" }} ({{ db.joint|join(", ") }}), pa se govori u načelnom pretresu ne odnose svi na ovaj zakon.{% else %}U načelu se o njoj raspravljalo posebno.{% endif %}</p>
+  <dl class="facts">
+    <div><dt>Govora u načelnom pretresu</dt><dd>{{ db.general }}</dd></div>
+    <div><dt>Govora o amandmanima</dt><dd>{{ db.detail }}</dd></div>
+    <div><dt>Amandmana na koje je otvorena rasprava</dt><dd>{{ db.amendments }}</dd></div>
+    <div><dt>Govornika</dt><dd>{{ db.speakers }}</dd></div>
+  </dl>
+  {% if db.by_group %}
+  <h3>Koliko je ko govorio</h3>
+  <p class="label">Udeo izgovorenih reči po poslaničkoj grupi, u načelnom pretresu{% if db.joint %} (o svim tačkama zajedno){% endif %} i u raspravi o amandmanima ovog zakona, bez predsedavajućeg. Grupa je ona sa poimeničnog glasanja o zakonu.</p>
+  <table class="groups">
+    <tbody>
+    {% for g, n, share in db.by_group %}
+      <tr><td>{{ g }}</td><td class="num">{{ "{:,}".format(n).replace(",", ".") }} reči</td><td class="num">{{ "%.1f"|format(share * 100) }}%</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  {% if db.filers %}
+  <h3>Ko je podneo amandmane o kojima se raspravljalo</h3>
+  <ul class="small">{% for who, n in db.filers %}<li>{{ who|latin }}: {{ n }}</li>{% endfor %}</ul>
+  {% endif %}
+  <p class="docs">{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške, {{ d.day }}. dan{% if d.date %} ({{ d.date|latin }}){% endif %}</a>{% endfor %}</p>
+  {% if db.provisional %}<p class="note small">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane. Brojevi su izvedeni iz njih: koji deo rasprave je u toku, sajt čita iz reči predsedavajućeg.</p>{% endif %}
+</section>
+{% endif %}
+
 {% if it.notes and (it.notes.independent or it.notes.media) %}
 <section class="voices">
   <h2>Šta kažu drugi</h2>
