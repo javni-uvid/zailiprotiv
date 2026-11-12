@@ -41,3 +41,17 @@ def test_domestic_memorandum_from_text():
 
 def test_no_memorandum():
     assert bills.memorandum("Члан 1. Текст закона.").sections == {}
+
+
+def test_bills_command(tmp_path, monkeypatch):
+    import json
+    from zailiprotiv import cli, skupstina
+    url = "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/14_saziv/2560-26%20LAT.pdf"
+    monkeypatch.setattr(skupstina, "fetch", lambda u: TREATY.read_bytes())
+    monkeypatch.setattr(cli, "DELAY", 0)
+    laws = tmp_path / "laws.json"
+    laws.write_text(json.dumps({"laws": {"L": {"title": "Zakon o potvrđivanju Ugovora", "bill_pdf": url}}}))
+    assert cli.main(["bills", "--laws", str(laws), "--out", str(tmp_path / "bills")]) == 0
+    law = json.loads(laws.read_text())["laws"]["L"]
+    assert law["bill_file"] == "14_saziv_2560-26_lat.json"
+    assert law["constitution"] == [{"article": 99, "paragraph": 1, "points": [4]}] and law["areas"] == []

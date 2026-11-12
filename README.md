@@ -28,6 +28,7 @@ uv sync
 uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
 uv run zailiprotiv laws                # laws the current convocation passed → data/laws.json
 uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/laws.json
+uv run zailiprotiv bills               # each law's bill: memorandum and constitutional basis → data/bills/
 uv run zailiprotiv votes               # read every roll call not read yet → data/votes/<sitting>.json (needs pdftotext)
 uv run pytest
 ```
@@ -36,7 +37,7 @@ uv run pytest
 
 | Workflow | When | What |
 |---|---|---|
-| votes | by hand | index the sittings, list the adopted laws, read the roll calls not read yet, commit `data/` |
+| votes | by hand | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/` |
 | fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
 | test | on push | the whole test suite |
 
@@ -58,6 +59,7 @@ src/zailiprotiv/
 data/
   index.json     sittings and their roll calls (one sitting per line)
   laws.json      the convocation's adopted laws (one law per line)
+  bills/         one file per bill: its memorandum's sections and the Constitution's articles it cites
   votes/         one file per sitting: each vote's date, item, kind, counts and rows (number, name, vote, group)
 tests/
 ```

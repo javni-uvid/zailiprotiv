@@ -1,5 +1,5 @@
-# Run by hand: index the current convocation's sittings, read every roll call not read yet, and commit
-# data/index.json and data/votes/ when they changed.
+# Run by hand: index the current convocation's sittings and laws, read every roll call and bill not read yet,
+# link laws to their votes, and commit data/ when it changed.
 name: votes
 
 on:
@@ -23,7 +23,7 @@ concurrency:
 jobs:
   votes:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -37,6 +37,7 @@ jobs:
           uv run zailiprotiv laws
           uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
           uv run zailiprotiv link
+          uv run zailiprotiv bills
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"

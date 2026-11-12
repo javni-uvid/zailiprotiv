@@ -13,7 +13,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import jsonfile, kinds, laws, link, rollcall, skupstina
+from zailiprotiv import bills, jsonfile, kinds, laws, link, rollcall, skupstina
 from zailiprotiv.config import DELAY
 
 DATA = Path("data")
@@ -82,6 +82,51 @@ def linked(args) -> int:
     return 0
 
 
+def memoranda(args) -> int:
+    """Each adopted law's bill, read once: its memorandum's sections and constitutional basis, into
+    data/bills/<file>.json, and the law's area(s) into data/laws.json."""
+    path = Path(args.laws)
+    store = json.loads(path.read_text(encoding="utf-8"))
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    read = failed = 0
+    for law in store["laws"].values():
+        url = law.get("bill_pdf")
+        if not url:
+            continue
+        target = out_dir / (file_name(url).removesuffix(".pdf") + ".json")
+        if not target.exists() or args.again:
+            if args.limit and read >= args.limit:
+                continue
+            time.sleep(DELAY)
+            try:
+                body = skupstina.fetch(url)
+            except skupstina.FetchError as e:
+                failed += 1
+                print(f"  failed {urllib.parse.unquote(url)}: {e}")
+                continue
+            with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
+                f.write(body)
+                f.flush()
+                memo = bills.read(f.name)
+            target.write_text(json.dumps({"bill": url, "sha256": hashlib.sha256(body).hexdigest(), **memo.as_dict()},
+                                         ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            read += 1
+        memo = json.loads(target.read_text(encoding="utf-8"))
+        law["bill_file"] = target.name
+        law["constitution"] = memo["articles"]
+        law["areas"] = kinds.areas(memo["articles"])
+    path.write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    all_laws = store["laws"].values()
+    no_memo = [l for l in all_laws if l.get("bill_file") and not l.get("constitution")]
+    print(f"bills read now: {read}, failed: {failed}; laws with an area: {sum(1 for l in all_laws if l.get('areas'))}, "
+          f"treaties (Art. 99): {sum(1 for l in all_laws if any(a['article'] == 99 for a in l.get('constitution', [])))}, "
+          f"no constitutional basis found: {len(no_memo)}")
+    for l in no_memo[:30]:
+        print(f"  no basis: {l['title'][:110]}")
+    return 0
+
+
 def sitting_id(url: str) -> str:
     """The number the Assembly's site gives a sitting's page ("…_Народне.53524.43.html" → "53524")."""
     m = re.search(r"\.(\d+)\.43\.html$", urllib.parse.unquote(url))
@@ -145,9 +190,9 @@ def votes(args) -> int:
 
 
 def file_name(url: str) -> str:
-    """A plain file name for a roll call, from its address below the votes' folder: ASCII, no spaces."""
+    """A plain file name for a roll call or a bill, from its address below its folder: ASCII, no spaces."""
     path = urllib.parse.unquote(urllib.parse.urlsplit(url).path)
-    path = re.split(r"rezultati_glasanja/|Listinzi/", path, flags=re.I)[-1]
+    path = re.split(r"rezultati_glasanja/|Listinzi/|predlozi_zakona/", path, flags=re.I)[-1]
     return re.sub(r"[^A-Za-z0-9.-]+", "_", path).strip("_").lower()
 
 
@@ -175,6 +220,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--laws", default=str(DATA / "laws.json"))
     p.add_argument("--votes", default=str(DATA / "votes"))
     p.set_defaults(run=linked)
+    p = commands.add_parser("bills", help="each law's bill: memorandum and constitutional basis → data/bills/")
+    p.add_argument("--laws", default=str(DATA / "laws.json"))
+    p.add_argument("--out", default=str(DATA / "bills"))
+    p.add_argument("--again", action="store_true")
+    p.add_argument("--limit", type=int, default=0)
+    p.set_defaults(run=memoranda)
     p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
     p.add_argument("--index", default=str(DATA / "index.json"))
     p.add_argument("--out", default=str(DATA / "votes"))
