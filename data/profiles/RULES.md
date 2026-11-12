@@ -20,7 +20,7 @@ Pravila:
 - Svaki deo rečenice mora da stoji u najmanje 2 navedena govora, ne samo njen prvi deo.
 - Uvredljive ili nabijene izraze ne preuzimaj svojim rečima; ako su suština tačke, stavi ih pod navodnike kao
   govornikove.
-- Uz svaku tačku jedan DOSLOVAN citat (15 do 45 reči), prepisan slovo po slovo iz jednog od navedenih govora,
+- Uz svaku tačku jedan DOSLOVAN citat (15 do 60 reči; radije duža rečenica nego izostavljena tačka), prepisan slovo po slovo iz jednog od navedenih govora,
   ćirilicom kao u izvoru, cele rečenice, bez „…“; citat ne sme da sadrži ime običnog građanina; oštre reči poslanika o javnim ličnostima ne izbegavaj ako najbolje pokazuju tačku.
 - Tekst tačaka piši ćirilicom, jednostavnim rečima.
 - Ako nema bar 3 tačke koje se ponavljaju, vrati manje; ne izmišljaj.

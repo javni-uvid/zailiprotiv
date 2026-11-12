@@ -87,7 +87,7 @@ def check(reply: dict, material: dict) -> list[str]:
             bad.append(f"govori: {ids}")
         if q.get("govor") not in ids or norm(q.get("tekst", "")) not in norm(by_id.get(q.get("govor"), {}).get("text", "")):
             bad.append(f"citat nije doslovan: {q.get('tekst', '')[:60]}")
-        elif not 12 <= len(q["tekst"].split()) <= 50:
+        elif not 12 <= len(q["tekst"].split()) <= 60:
             bad.append(f"dužina citata: {len(q['tekst'].split())}")
     return bad
 
