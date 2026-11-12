@@ -94,7 +94,7 @@ def speeches(paras: list[str]) -> list[dict]:
 
 # An agenda item, numbered by hand ("1. Предлог закона …;") or by Word's list numbering, which leaves no number in
 # the text ("Предлог закона …,").
-AGENDA_ITEM = re.compile(r"^(?:(\d+)[.,]\s+(.+?)|((?:Предлог|Предлози|Избор|Избори|Извештај|Разматрање|Утврђивање|"
+AGENDA_ITEM = re.compile(r"^(?:(\d+)[.,]\s*(.+?)|((?:Предлог|Предлози|Избор|Избори|Извештај|Разматрање|Утврђивање|"
                          r"Давање|Именовање|Аутентичн|Одлука|Престанак|Потврђивање|Листа|Редовн|Годишњ)\w*\s.*?))[;,.]?$")
 # The stenographers' page marks ("1/2МТ/ ВЗ") between paragraphs.
 MARK = re.compile(r"^\d+/\d+\s*[А-ЯЂЈЉЊЋЏШЖЧA-Z]{1,3}/\s*[А-ЯЂЈЉЊЋЏШЖЧA-Z/ ]{0,8}$")
@@ -102,7 +102,7 @@ AGENDA_HEAD = re.compile(r"Д\s*н\s*е\s*в\s*н\s*и\s+р\s*е\s*д\s*:?\s*$")
 RANGE = r"тач\w*\s+(?:од\s+)?(\d+)\.?\s*(?:до|-|–)\s*(\d+)"
 JOINT = re.compile(r"(?:отварам|настављамо)\s+(?:сада\s+)?заједнички\W+(?:\w+\W+){0,4}?претрес", re.I)
 DETAIL = re.compile(r"(?:отварам\s+|настављамо\s+|прелазимо\s+на\s+|^)(?:сада\s+)?претрес\w*\W+(?:\w+\W+){0,3}?[уо]\s+појединостима", re.I)
-GENERAL = re.compile(r"(?:отварам|настављамо)\s+(?:сада\s+)?(?:начелни\s+)?претрес\w*(?!\W+(?:\w+\W+){0,3}?[уо]\s+појединостима)", re.I)
+GENERAL = re.compile(r"(?:отварам|настављамо)\s+(?:сада\s+)?(?:начелни\s+(?:и\s+јединствени\s+)?)?претрес\w*(?!\W+(?:\w+\W+){0,3}?[уо]\s+појединостима)", re.I)
 CLOSE_JOINT = re.compile(r"закључујем\s+заједнички\W+(?:\w+\W+){0,4}?претрес", re.I)
 QUESTIONS = re.compile(r"члан\w*\s+287|сат\w*\s+(?:времена\s+)?(?:постављања\s+питања|тражења)", re.I)
 RESUME = re.compile(r"настављамо|листи\b|листу\b|листом\b", re.I)
@@ -180,8 +180,17 @@ def _move(line: str, agenda: dict[int, str], state: dict, debated: set[int], det
         return {"part": "detail", "items": items or (rest[:1] if state["part"] != "detail" else state["items"][-1:])}
     if MOVE.search(line) and items:
         return {"part": "detail" if set(items) <= debated else "general", "items": items}
-    if GENERAL.search(line) and (items or state["items"]):
-        return {"part": "general", "items": items or state["items"]}
+    if GENERAL.search(line):
+        if not items and (t := re.search(r"претрес\w*\s+о\s+(Предлог\w*\s+.+)", line)):
+            # A sitting with a single bill names it instead of a number; an agenda read without its list gets it.
+            items = [n] if (n := item_of(t.group(1), agenda)) else []
+            if not items and not agenda:
+                agenda[1] = re.sub(r"^Предлог\w*", "Предлог", t.group(1)).rstrip(".")
+                items = [1]
+        if not items and not state["items"] and len(agenda) == 1:
+            items = list(agenda)
+        if items or state["items"]:
+            return {"part": "general", "items": items or state["items"]}
     return None
 
 

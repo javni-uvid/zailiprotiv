@@ -130,7 +130,7 @@ def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
     from zailiprotiv import link
     if not final or not notes:
         return None
-    name = re.sub(r" u (celini|nacelu|pojedinostima)$", "", link.act_name(final.get("item") or law["title"]))
+    name = re.sub(r" (u )?(celini|nacelu|pojedinostima)$", "", link.act_name(final.get("item") or law["title"]))
     # An agenda item may bundle other acts after the bill ("… за 2023. годину, са Предлогом одлуке о …").
     scored = [(1.0 if link.act_name(t) == name or link.act_name(t).startswith(name + " ") else
                link.closeness(link.act_name(t), name), int(n)) for n, t in notes["agenda"].items()]
