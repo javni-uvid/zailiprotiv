@@ -33,6 +33,7 @@ jobs:
           uv run zailiprotiv index
           uv run zailiprotiv laws
           uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }}
+          uv run zailiprotiv link
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"

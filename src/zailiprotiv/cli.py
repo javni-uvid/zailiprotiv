@@ -13,7 +13,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import jsonfile, laws, rollcall, skupstina
+from zailiprotiv import jsonfile, kinds, laws, link, rollcall, skupstina
 from zailiprotiv.config import DELAY
 
 DATA = Path("data")
@@ -51,6 +51,35 @@ def adopted(args) -> int:
     print(f"laws: {len(found)}, international treaties: {sum(l.treaty for l in found)}, "
           f"without a bill: {sum(not l.bill_pdf for l in found)}")
     return 0 if found else 1
+
+
+def all_votes(folder: Path) -> dict[str, dict]:
+    out = {}
+    for path in sorted(folder.glob("*.json")):
+        store = json.loads(path.read_text(encoding="utf-8"))
+        for key, v in store["votes"].items():
+            out[key] = {**v, "sitting": store["sitting"]}
+    return out
+
+
+def linked(args) -> int:
+    """Each law's kind, roll calls and final vote, into data/laws.json."""
+    path = Path(args.laws)
+    store = json.loads(path.read_text(encoding="utf-8"))
+    votes = all_votes(Path(args.votes))
+    found = link.link(store["laws"], votes)
+    for key, law in store["laws"].items():
+        law["kind"] = kinds.kind(law["title"], law.get("treaty", False))
+        law.update(found[key])
+    path.write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    n = len(store["laws"])
+    final = sum(1 for law in store["laws"].values() if law["final_vote"])
+    print(f"laws: {n}, with their final vote: {final}, with some vote: "
+          f"{sum(1 for law in store['laws'].values() if law['votes'])}; roll calls read: {len(votes)}")
+    for law in store["laws"].values():
+        if not law["final_vote"]:
+            print(f"  no final vote: {law['passed']}  {law['title'][:110]}")
+    return 0
 
 
 def sitting_id(url: str) -> str:
@@ -141,6 +170,10 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("laws", help="the laws the current convocation passed → data/laws.json")
     p.add_argument("--out", default=str(DATA / "laws.json"))
     p.set_defaults(run=adopted)
+    p = commands.add_parser("link", help="each law's kind, roll calls and final vote, into data/laws.json")
+    p.add_argument("--laws", default=str(DATA / "laws.json"))
+    p.add_argument("--votes", default=str(DATA / "votes"))
+    p.set_defaults(run=linked)
     p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
     p.add_argument("--index", default=str(DATA / "index.json"))
     p.add_argument("--out", default=str(DATA / "votes"))

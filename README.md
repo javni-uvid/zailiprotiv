@@ -27,6 +27,7 @@ every agenda item to its roll call; the sittings are listed on the regular and e
 uv sync
 uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
 uv run zailiprotiv laws                # laws the current convocation passed → data/laws.json
+uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/laws.json
 uv run zailiprotiv votes               # read every roll call not read yet → data/votes/<sitting>.json (needs pdftotext)
 uv run pytest
 ```
@@ -49,6 +50,7 @@ src/zailiprotiv/
   laws.py        the adopted laws: title, bill, day passed, Official Gazette, international treaty or not
   bills.py       a bill's memorandum: constitutional basis (article, points), reasons, funds, effects
   kinds.py       an act's kind (from its title) and area (from Article 97 of the Constitution), with their labels
+  link.py        which roll calls were on which law, and its final vote
   mps.py         who an MP is across roll calls: a name key without word order or titles
   cli.py         commands
   translit.py    Cyrillic → Latin
