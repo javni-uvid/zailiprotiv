@@ -1,75 +1,31 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, tally, quote, plural %}
+{% from "macros.html" import bar %}
 {% block main %}
 <section class="hero">
-  <p class="kicker">Narodna skupština Srbije · {{ convs[0].name }} saziv, 2024–2026</p>
-  <h1>Ko je glasao za,<br>a ko protiv</h1>
-  <p class="lead">Svaki usvojeni zakon: šta menja prema predlagaču, šta je rečeno u raspravi i kako je glasao svaki poslanik. Sve iz dokumenata same Skupštine, sa linkom na izvor.</p>
-  <ul class="numbers">
-    <li><b>{{ stats.laws }}</b> zakona</li>
-    <li><b>{{ stats.votes }}</b> poimeničnih glasanja</li>
-    <li><b>{{ stats.mps }}</b> poslanika</li>
-  </ul>
-  <p><a class="button" href="#najvise-protiv">Zakoni sa najviše glasova protiv</a> <a class="button ghost" href="poslanici.html">Kako je glasao moj poslanik?</a></p>
+  <h1>Ko je glasao za, a ko protiv</h1>
+  <p class="lead">{{ stats.laws }} zakona {{ (convs[0].name[:-1] ~ "og")|lower }} saziva Narodne skupštine: šta menjaju prema predlagaču, šta je rečeno u raspravi i kako je glasao svaki od {{ stats.mps }} poslanika. Iz dokumenata same Skupštine.</p>
 </section>
 
+{% macro row(it) -%}
+<li>
+  <a class="title" href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>
+  {% if it.gist %}<p class="gist small">{{ it.gist|latin|truncate(160, killwords=false, end=" …") }}</p>{% endif %}
+  {% if it.final %}<div class="row-bar">{{ bar(it.final.counts) }}<span class="meta nowrap"><span class="t-za">{{ it.final.counts.za }}</span> za · <span class="t-protiv">{{ it.final.counts.protiv }}</span> protiv</span></div>{% endif %}
+</li>
+{%- endmacro %}
+
 {% if contested %}
-<section id="najvise-protiv">
+<section>
   <h2>Najviše glasova protiv</h2>
-  <p class="meta">Zakoni kod kojih je u konačnom glasanju udeo glasova protiv bio najveći. Isto pravilo za svaki zakon.</p>
-  <div class="featured">
-  {% for it in contested[:3] %}
-    <article class="feature">
-      <p class="meta">{{ it.law.passed|day }} · {{ it.kind|latin }}{% if it.urgent %} · <span class="warn-text">hitan postupak</span>{% endif %}</p>
-      <h3><a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a></h3>
-      {% if it.gist %}<p class="gist small">{{ it.gist|latin }}</p>{% endif %}
-      <div class="big-numbers compact"><div class="n-za"><b>{{ it.final.counts.za }}</b> za</div><div class="n-protiv"><b>{{ it.final.counts.protiv }}</b> protiv</div></div>
-      {{ bar(it.final.counts) }}
-      {% if it.pair|length == 2 %}{% for q in it.pair %}<blockquote class="quote mini q-{{ q.side }}"><p>„{{ q.tekst|latin|truncate(120, killwords=false, end=" …") }}“</p><footer>{{ q.govornik|latin|title }}{% if q.grupa %} ({{ q.grupa|latin }}){% endif %}</footer></blockquote>{% endfor %}{% endif %}
-      <p><a href="zakon/{{ it.slug }}.html">Šta zakon menja, rasprava i glasovi →</a></p>
-    </article>
-  {% endfor %}
-  </div>
-  <ol class="ranked" start="4">
-  {% for it in contested[3:] %}
-    <li>
-      <a class="rank-head" href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>
-      <div class="row-bar">{{ bar(it.final.counts) }}<span class="meta nowrap">{{ it.final.counts.za }} za · {{ it.final.counts.protiv }} protiv · {{ it.law.passed|day }}</span></div>
-    </li>
-  {% endfor %}
-  </ol>
+  <ol class="list">{% for it in contested[:8] %}{{ row(it) }}{% endfor %}</ol>
 </section>
 {% endif %}
 
 <section>
   <h2>Nedavno usvojeni</h2>
-  <ul class="cards">
-  {% for it in latest %}
-    <li>
-      <p class="meta">{{ it.law.passed|day }} · {{ it.kind|latin }}</p>
-      <a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>
-      {% if it.gist %}<p class="gist small">{{ it.gist|latin|truncate(150, killwords=false, end=" …") }}</p>{% endif %}
-      {% if it.final %}{{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>{% endif %}
-    </li>
-  {% endfor %}
-  </ul>
-  <p><a href="zakoni.html">Svi zakoni ({{ stats.laws }}) →</a></p>
+  <ul class="list">{% for it in latest %}{{ row(it) }}{% endfor %}</ul>
+  <p><a href="zakoni.html">Svi zakoni →</a> <span class="sep">·</span> <a href="poslanici.html">Svi poslanici →</a>{% for c in convs[1:] %} <span class="sep">·</span> <a href="{{ c.page }}">{{ c.name }} saziv →</a>{% endfor %}</p>
 </section>
 
-<section class="browse">
-  <h2>Pregledaj zakone po vrsti</h2>
-  <ul class="toc">
-  {% for k, label, n in kinds_count %}<li><a href="zakoni.html#{{ k }}">{{ label|latin }} <span>{{ n }}</span></a></li>{% endfor %}
-  </ul>
-  {% if convs|length > 1 %}<p class="meta">Raniji sazivi: {% for c in convs[1:] %}<a href="{{ c.page }}">{{ c.name }} saziv</a> ({{ c.laws }} zakona){% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
-</section>
-
-<section class="note">
-  <h2>Kako čitati</h2>
-  <ul>
-    <li>Glasovi su prepisani iz poimeničnih rezultata glasanja koje Skupština objavljuje kao PDF; uz svaki zakon je link na izvor.</li>
-    <li>Šta zakon menja navodi <em>predlagač</em> u obrazloženju predloga. To je njegova ocena, ne naša. Sažetke i preglede rasprave piše AI model iz tih dokumenata i tako su označeni.</li>
-    <li>Za glasanja iz 2024. i prve polovine 2025. Skupština nije objavljivala ko je bio odsutan, pa se vidi samo ko je glasao i kako.</li>
-  </ul>
-</section>
+<p class="meta foot-note">Glasovi su iz poimeničnih rezultata koje Skupština objavljuje; uz svaki zakon je link na izvor. Šta zakon menja navodi predlagač, ne mi; sažetke i preglede rasprave piše AI model i tako su označeni. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala ko je bio odsutan.</p>
 {% endblock %}

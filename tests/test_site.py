@@ -62,13 +62,13 @@ def test_site_builds_every_page(tmp_path):
     assert "Allow: /" in (out / "robots.txt").read_text()
     assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()
     assert not (out / "najvise-protiv.html").exists()
-    assert "1. mesto među 1 zakona sa glasovima protiv" in law and "50% glasova protiv" in law
+    assert "50% glasova protiv" in law
     assert law.index("50% glasova protiv") < law.index("Šta zakon menja") < law.index("Rasprava u Skupštini") \
         < law.index("Detaljnije")  # the outcome first, the long text last
     assert "Hitan postupak" in law
     assert "Rasprava u Skupštini" in law and "o 1 amandmanu na ovaj zakon" in law and "Protiv zakona</h3>" in law
-    assert "„Ovaj zakon ne valja jer ukida dozvole za lovce.“" in law and "Nenad Abramović (PG A)" in law
-    assert "Glas: za" in law  # the quote's speaker voted for the law
+    assert "„Ovaj zakon ne valja jer ukida dozvole za lovce.“" in law and "Nenad Abramović, PG A" in law
+    assert "glasao za" in law  # the quote's speaker voted for the law
     assert "Fiskalni savet" in law and "Nezavisna i međunarodna tela" in law and "Mediji i civilno" not in law
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I

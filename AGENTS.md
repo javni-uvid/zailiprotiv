@@ -183,15 +183,13 @@ These are the project's promises to its readers. Never change them without the m
   vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
   for what it measures; "controversial" would be a judgement. Then the newest laws.
 - **Page structure** (the maintainer, 12 Nov 2026: draw people in from the home page, the interesting things on a
-  law first, long text lower for those who want it):
-  - home: a short promise, three numbers, then "Najviše glasova protiv" (the top three as cards with the proposer's
-    one-line gist, the count and a quote from each side when both exist, never one side alone; the rest as a
-    ranked list), the newest laws, laws by kind, how to read;
-  - a law: title and the proposer's one-line gist; the outcome (counts, bar, share against and rank, the groups
-    that voted against, chips: urgent procedure, days to passing, joint debate, amendments); two quotes, one from
-    each side (the Government or an MP who voted for, and one who voted against, by the final roll call); what the
-    law changes; groups' votes; the debate; outside views; then "Detaljnije": facts, documents, every MP's vote,
-    the memorandum excerpt, other votes, folded.
+  law first, long text lower; then "simplify: a busy design makes the accents lose their point"): plain text and
+  lists, no cards, chips or coloured boxes; colour only for "za" and "protiv".
+  - home: one line on what the site is, the laws with most votes against (title, the proposer's gist, a bar with
+    the count), the newest laws the same way, links to all laws and MPs, a short note on sources;
+  - a law: title and gist; the count and bar with one line of facts (passed, urgent procedure, days, share
+    against); one quote from each side (by how the speaker voted on the final roll call, or the Government), never
+    one side alone; what the law changes; groups' votes; the debate; outside views; then "Detaljnije", folded.
 - **Each law's page** gives its share of votes against and its place in the convocation by that share, and the
   course of its passing: submitted, days to passing, urgent procedure (proposed when the memorandum gives reasons
   for it), the sitting. The roll calls published are the final votes only; votes on amendments aren't among them.

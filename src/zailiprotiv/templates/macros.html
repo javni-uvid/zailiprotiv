@@ -13,12 +13,11 @@
 {{ one if n % 10 == 1 and n % 100 != 11 else (few if n % 10 in [2, 3, 4] and n % 100 not in [12, 13, 14] else many) }}
 {%- endmacro %}
 
-{% macro quote(q, db, big=false) -%}
+{% macro quote(q, db) -%}
 {% set d = db.all_days[q.dan - 1] if db and q.dan <= db.all_days|length else none %}
-{% set side = {"za": "Glas: za", "protiv": "Glas: protiv", "vlada": "Vlada", "uzdrzan": "Glas: uzdržan", "nije_glasao": "Nije glasao"}.get(q.side) %}
-<blockquote class="quote{% if big %} big{% endif %}{% if q.side %} q-{{ q.side }}{% endif %}">
-  {% if side %}<span class="q-side">{{ side }}</span>{% endif %}
+{% set side = {"za": "glasao za", "protiv": "glasao protiv", "vlada": "Vlada"}.get(q.side) %}
+<blockquote class="quote{% if q.side %} q-{{ q.side }}{% endif %}">
   <p>„{{ q.tekst|latin }}“</p>
-  <footer>{{ q.govornik|latin|title }}{% if q.grupa %} ({{ q.grupa|latin }}){% endif %}{% if d %}, <a href="{{ d.url }}">stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% endif %}</a>{% endif %}</footer>
+  <footer>{{ q.govornik|latin|title }}{% if q.grupa and q.grupa != "Влада" %}, {{ q.grupa|latin }}{% endif %}{% if side %} · {{ side }}{% endif %}{% if d %} · <a href="{{ d.url }}">{{ d.listed_date|day if d.listed_date else "stenogram" }}</a>{% endif %}</footer>
 </blockquote>
 {%- endmacro %}

@@ -10,44 +10,27 @@
 <h1>{{ law.title }}</h1>
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
 
-{# 1. The outcome, at a glance. #}
+{# 1. The outcome. #}
 {% if final %}
-<section class="verdict" aria-label="Konačno glasanje">
-  <div class="verdict-head">
-    <span class="stamp">Usvojen {{ law.passed|day }}</span>
-    {% if it.rank %}<span class="rank-note">{{ (100 * it.share)|round|int }}% glasova protiv · {{ it.rank }}. mesto među {{ it.conv_total }} zakona sa glasovima protiv u sazivu</span>{% endif %}
-  </div>
-  <div class="big-numbers">
-    <div class="n-za"><b>{{ final.counts.za }}</b> za</div>
-    <div class="n-protiv"><b>{{ final.counts.protiv }}</b> protiv</div>
-    <div class="n-other"><b>{{ final.counts.uzdrzan + final.counts.nije_glasao }}</b> uzdržano ili nije glasalo</div>
-    {% if report %}<div class="n-other"><b>{{ final.counts.nije_prisutan }}</b> nije prisutno</div>{% endif %}
-  </div>
+<section class="outcome" aria-label="Konačno glasanje">
+  <p class="score"><span class="t-za">{{ final.counts.za }} za</span> <span class="sep">·</span> <span class="t-protiv">{{ final.counts.protiv }} protiv</span></p>
   {{ bar(final.counts) }}
-  {% if it.against %}<p class="against"><span class="meta">Protiv su glasali:</span> {% for g, n in it.against[:6] %}<span class="chip-g">{{ g }} <b>{{ n }}</b></span> {% endfor %}{% if it.against|length > 6 %}<span class="meta">i još {{ it.against|length - 6 }}</span>{% endif %}</p>
-  {% else %}<p class="against meta">Niko nije glasao protiv.</p>{% endif %}
-  <ul class="chips">
-    {% if it.urgent %}<li class="chip warn">Predložen hitan postupak</li>{% endif %}
-    {% if it.days is not none %}<li class="chip">{{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga do usvajanja</li>{% endif %}
-    {% if db and db.joint %}<li class="chip">Rasprava zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}</li>{% endif %}
-    {% if db and db.amendments %}<li class="chip">{{ db.amendments }} {{ plural(db.amendments, "amandman", "amandmana", "amandmana") }} u raspravi</li>{% endif %}
-    {% if law.treaty %}<li class="chip">Međunarodni ugovor</li>{% endif %}
-  </ul>
+  <p class="meta">Usvojen {{ law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.days is not none %} · {{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga{% endif %}{% if it.rank %} · {{ (100 * it.share)|round|int }}% glasova protiv{% endif %}</p>
 </section>
 {% else %}
-<section class="note"><p>Usvojen {{ law.passed|day }}. Za ovaj zakon nije pronađeno poimenično glasanje među dokumentima koje Skupština objavljuje uz sednicu.</p></section>
+<p class="meta">Usvojen {{ law.passed|day }}. Poimenično glasanje nije pronađeno među dokumentima Skupštine.</p>
 {% endif %}
 
-{# 2. Two voices from the debate, one from each side. #}
+{# 2. One voice from each side. #}
 {% if it.pair %}
 <section class="pair" aria-label="Iz rasprave">
-  {% for q in it.pair %}{{ quote(q, db, true) }}{% endfor %}
+  {% for q in it.pair %}{{ quote(q, db) }}{% endfor %}
 </section>
 {% endif %}
 
 {# 3. What the law does, in short. #}
 {% if sm and (sm.promene or sm.razlozi) %}
-<section class="memo">
+<section>
   <h2>Šta zakon menja</h2>
   {% if sm.promene %}<ul>{% for x in sm.promene %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.razlozi %}<h3>Zašto, prema predlagaču</h3><ul>{% for x in sm.razlozi %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
@@ -62,7 +45,7 @@
   <h2>Kako su glasale poslaničke grupe</h2>
   <div class="scroll">
   <table class="groups">
-    <thead><tr><th>Grupa (kako je piše Skupština)</th><th class="vote-cell"></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
+    <thead><tr><th>Grupa</th><th class="vote-cell"></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
     <tbody>
     {% for g in groups %}
       <tr><td>{{ g.group }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
@@ -81,16 +64,14 @@
   {% set n = db.joint|length %}
   <p>{% if db.n_days %}O zakonu se raspravljalo {{ db.n_days }} {{ plural(db.n_days, "dan", "dana", "dana") }}{% if db.first %}, {% if db.first == db.last %}{{ db.first|day_of }}{% else %}od {{ db.first|day_of }} do {{ db.last|day_of }}{% endif %}{% endif %}. {% endif %}{% if db.joint %}U načelu zajedno sa još {{ n }} {{ plural(n, "tačkom", "tačke", "tačaka") }} dnevnog reda{% else %}U načelu posebno{% endif %}{% if db.amendments %}, a zatim o {{ db.amendments }} {{ plural(db.amendments, "amandmanu", "amandmana", "amandmana") }} na ovaj zakon{% elif db.detail %}, a zatim o pojedinostima{% else %}; rasprave o amandmanima nije bilo{% endif %}.</p>
   {% if sd %}
-  <div class="sides">
   {% for key, heading in [("predlagac", "Predlagač i Vlada"), ("podrska", "Za zakon"), ("zamerke", "Protiv zakona")] %}
-  {% if sd[key] %}<div class="side side-{{ key }}"><h3>{{ heading }}</h3><ul>{% for x in sd[key] %}<li>{{ x|latin }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if sd[key] %}<h3>{{ heading }}</h3><ul>{% for x in sd[key] %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% endfor %}
-  </div>
   {% set rest = it.quotes|reject("in", it.pair)|list %}
   {% if rest %}
   <details>
     <summary>Još citata iz rasprave ({{ rest|length }})</summary>
-    {% for q in rest %}{{ quote(q, db, false) }}{% endfor %}
+    {% for q in rest %}{{ quote(q, db) }}{% endfor %}
   </details>
   {% endif %}
   <p class="label">Pregled rasprave napisao je AI model ({{ it.said.model }}) samo iz stenografskih beleški; svaki navod pripisan je onome ko ga je izneo, a sajt ne preuzima nijedan stav. Citati su provereni reč po reč u beleškama. Pregled može da sadrži grešku; merodavne su beleške.</p>
