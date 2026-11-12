@@ -37,6 +37,7 @@ jobs:
           python-version: "3.12"
       - name: Read the notes
         run: |
+          sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libreoffice-writer-nogui  # the older notes are .doc
           pip install uv && uv sync --frozen
           uv run zailiprotiv --convocation "${{ inputs.convocation }}" transcripts --top "${{ inputs.top }}" ${{ inputs.again && '--again' || '' }}
       - name: Commit

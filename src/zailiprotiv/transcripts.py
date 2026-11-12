@@ -11,6 +11,9 @@ from __future__ import annotations
 
 import io
 import re
+import subprocess
+import tempfile
+from pathlib import Path
 import zipfile
 from collections import Counter
 from html import unescape
@@ -61,7 +64,14 @@ def iso_date(text: str) -> str:
 
 
 def paragraphs(docx: bytes) -> list[str]:
-    """The Word file's paragraphs as plain text, empty ones left out."""
+    """The Word file's paragraphs as plain text, empty ones left out. The older notes are in Word's old format
+    (.doc), turned into the new one with LibreOffice first."""
+    if not docx.startswith(b"PK"):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "notes.doc").write_bytes(docx)
+            subprocess.run(["soffice", "--headless", f"-env:UserInstallation=file://{tmp}/profile", "--convert-to", "docx",
+                            "--outdir", tmp, f"{tmp}/notes.doc"], check=True, capture_output=True, timeout=300)
+            docx = (Path(tmp) / "notes.docx").read_bytes()
     xml = zipfile.ZipFile(io.BytesIO(docx)).read("word/document.xml").decode("utf-8")
     out = []
     for p in re.findall(r"<w:p[ >].*?</w:p>|<w:p/>", xml, flags=re.S):
