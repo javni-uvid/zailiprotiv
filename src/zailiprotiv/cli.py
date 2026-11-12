@@ -446,7 +446,7 @@ def debates_import(args) -> int:
             continue
         law, bill, n, final, item = by_bill[name]
         try:
-            debate, dropped = debates.parse(entry["debate"], n)
+            debate, dropped = debates.parse(entry["debate"], n, debates.speaker_groups(n, final, seated))
         except (ValueError, AttributeError) as e:
             print(f"  refused {name}: {e}")
             refused += 1

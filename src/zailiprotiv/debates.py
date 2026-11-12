@@ -67,12 +67,64 @@ def group_at(seated: list[tuple[str, str]], when: str, days: int = 60) -> str | 
     return best[1] if best and best[0].days <= days else None
 
 
+GOVERNMENT = "Влада"
+# The chair gives the floor: "Реч има народни посланик Радомир Лазовић.", "Реч има министар Ненад Вујић."
+FLOOR = re.compile(r"[Рр]еч\s+има\s+(?:реч\s+)?(народн\w*\s+посланиц?\w*|министар\w*|министарк\w*|председни\w+\s+Владе|"
+                   r"потпредседни\w+\s+Владе|државн\w+\s+секретар\w*)\s+(?:господин\s+|госпођа\s+)?"
+                   r"(?:(?:др|проф|мр|доц)\.?\s+)*([А-ЯЂЈЉЊЋЏШЖЧ][а-яђјљњћџ]+(?:[\s-]+[А-ЯЂЈЉЊЋЏШЖЧ][а-яђјљњћџ]+){1,2})")
+
+
+def roles(notes: dict) -> dict[str, str]:
+    """Who the chair says a speaker is when giving the floor: "mp" or "government", by name key."""
+    out: dict[str, str] = {}
+    for sp in notes["speeches"].values():
+        if sp["chair"]:
+            for m in FLOOR.finditer(sp["text"]):
+                role = "mp" if "посланик" in m.group(1) or "посланиц" in m.group(1) else "government"
+                k = mps.key(m.group(2))
+                if out.get(k) != "government":
+                    out[k] = role
+    return out
+
+
+def loose(key: str) -> str:
+    """A name key that ignores hyphens: "марковић-топаловић татјана" and "марковић татјана топаловић" are one."""
+    return " ".join(sorted(key.replace("-", " ").split()))
+
+
+def resolve(name: str, known: dict[str, str]) -> str | None:
+    """The roll calls' key for a name the notes write, typos included ("РАДОМИР ЛАЗОВЋ", "МИЛЕКО ЈОВАНОВ"): the same
+    words, or the closest name letter by letter if it is very close and has as many words."""
+    import difflib
+    k = loose(mps.key(name))
+    if k in known:
+        return known[k]
+    close = difflib.get_close_matches(k, [x for x in known if len(x.split()) == len(k.split())], n=1, cutoff=0.9)
+    return known[close[0]] if close else None
+
+
 def speaker_groups(notes: dict, final: dict, seated: dict) -> dict[str, str]:
-    groups = {mps.key(r[1]): r[3] or "без посланичке групе" for r in final["rows"]}
+    """Each speaker's group: as in the law's final roll call; for someone not on it, the Government if the chair
+    gave them the floor as a minister, otherwise their group in the convocation's roll call nearest in time (the
+    2024–25 roll calls list only the MPs present, so an MP can be missing from many); someone on no roll call of the
+    convocation is apart."""
+    in_final = {mps.key(r[1]): r[3] or "без посланичке групе" for r in final["rows"]}
+    known = {loose(k): k for k in seated} | {loose(k): k for k in in_final}
+    said = {loose(k): v for k, v in roles(notes).items()}
+    groups = {}
     for sp in notes["speeches"].values():
         k = mps.key(sp["speaker"])
-        if k not in groups:
-            groups[k] = group_at(seated.get(k, []), final["when"]) or OUTSIDE
+        if k in groups:
+            continue
+        role = said.get(loose(k))
+        real = resolve(sp["speaker"], known)
+        if real in in_final:
+            groups[k] = in_final[real]
+        elif role == "government":
+            groups[k] = GOVERNMENT
+        else:
+            groups[k] = (group_at(seated.get(real, []), final["when"], days=100000) if real else None) or \
+                ("посланик" if role == "mp" else OUTSIDE)
     return groups
 
 
@@ -143,9 +195,9 @@ def norm(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[„“”\"'’]", "", text)).strip().lower()
 
 
-def parse(reply: str | dict, notes: dict) -> tuple[dict, list[str]]:
+def parse(reply: str | dict, notes: dict, groups: dict[str, str] | None = None) -> tuple[dict, list[str]]:
     """The model's answer with the expected fields, and the quotes it gave that are not in the notes word for word
-    (those are dropped)."""
+    (those are dropped). A quote's group is taken from `groups` (speaker_groups), not from the model."""
     data = reply if isinstance(reply, dict) else json.loads(re.search(r"\{.*\}", reply, flags=re.S).group(0))
     said = {s["day"]: [] for s in notes["speeches"].values()}
     for s in notes["speeches"].values():
@@ -161,8 +213,9 @@ def parse(reply: str | dict, notes: dict) -> tuple[dict, list[str]]:
         if found is None or not 6 <= len(text.split()) <= 60:
             dropped.append(text)
             continue
-        quotes.append({"govornik": who, "grupa": str(q.get("grupa", "")).strip(), "dan": found, "tekst": text})
-    out["citati"] = quotes[:6]
+        group = (groups or {}).get(mps.key(who)) or str(q.get("grupa", "")).strip()
+        quotes.append({"govornik": who, "grupa": group, "dan": found, "tekst": text})
+    out["citati"] = quotes[:10]  # one per group at most, from both sides: a cut here could leave one side out
     if not (out["predlagac"] or out["podrska"] or out["zamerke"]):
         raise ValueError("empty")
     return out, dropped

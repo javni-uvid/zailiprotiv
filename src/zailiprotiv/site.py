@@ -46,6 +46,18 @@ def day(iso: str | None) -> str:
     return f"{int(d)}. {MONTHS[int(m) - 1]} {y}."
 
 
+MONTHS_OF = ("januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra",
+             "novembra", "decembra")
+
+
+def day_of(iso: str | None) -> str:
+    """"2025-11-04" → "4. novembra 2025": the date after "od", "do", without the final dot."""
+    if not iso:
+        return ""
+    y, m, d = iso[:10].split("-")
+    return f"{int(d)}. {MONTHS_OF[int(m) - 1]} {y}"
+
+
 def title_case(name: str) -> str:
     """"АТЛАГИЋ проф. др МАРКО" → "Atlagić prof. dr Marko": capitals only where the PDF writes them."""
     def cap(w: str) -> str:
@@ -225,7 +237,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     people = registry(all_votes)
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
                       trim_blocks=True, lstrip_blocks=True)
-    env.filters.update(latin=latin, day=day, vote_label=lambda v: VOTE_LABEL.get(v, v))
+    env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v))
     if out.exists():
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
