@@ -1,0 +1,71 @@
+{
+ "mp": "кркобабић стефан",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 16,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Наводи да су кроз државни програм доделе сеоских кућа са окућницом хиљаде младих људи добиле кров над главом на селу.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Посебно наглашавам да је просечна старост људи који су конкурисали и добили кућу испод 30 година старости. Истичем да се ради о готово шест хиљада мушкараца и жена и близу три хиљаде деце, што посебно радује и охрабрује.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Брани државну помоћ задругама и наводи да је основано више од 1.100 нових задруга, док се раније гасило сто задруга годишње.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Не мање битан уважени народни посланици и уважени грађани Србије је програм оживљавања задругарства. Од 2017. године основано је 1.100 задруга, а до тада се гасило сто годишње.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Брани измене Закона о пензијском и инвалидском осигурању и наводи да се њима побољшава положај пензионера, који су и сами поднели терет реформи.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Шта ће се постићи? Па, постићи ће се оснаживање и унапређење положаја корисника пензија које су и сами поднели терет током фискалне консолидације.",
+    "date": "2022-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 5. dan rada, 9. decembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Подржава ребаланс буџета и похваљује издвајања за пољопривреду.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што је посебно значајно за нас из посланичког клуба ПУПС – Солидарност и правда, а то је да је више од трећине субвенција намењено пољопривреди, и то посебно подржавамо и то посебно похваљујемо.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да онима који у расправи о Влади помињу ПУПС и министра Милана Кркобабића они због нечега сметају.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Молим вас, хајде да уозбиљимо расправу, ми је нисмо сводили на личну расправу, али добро, опет кажем једну ствар. Оне које спомињу очито им због нечега сметају, видећемо зашто сметају.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "mp": "данијела несторовић",
+ "model": "claude-fable-5-2",
+ "read": 14,
+ "speeches": 18,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Замера што се закони доносе по хитном поступку и у кратком року, без разлога који би то оправдали.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Замолила бих вас везано за измене и допуне Закона о министарствима, рок је заиста био кратак, овај закон се усваја по хитном поступку без икаквог образложења.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да правосудни закони не доносе независно и самостално судство и тужилаштво, већ да политичка власт задржава утицај на њих.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "И у овом и у новом сету правосудних закона крије се очигледна намера да политичка власт предвлада над судском.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су полицијски службеници тукли и злостављали активисте у Мајданпеку.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Оно што се десило у Шодрошу данас јесте рација. Оно што се десило пре пар дана у Мајданпеку је буквално тортура и злостављање од стране полицијских службеника.",
+    "date": "2022-10-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Фонд пензијског и инвалидског осигурања једва исплаћује пензије, а да његови запослени раде за плату од 44.000 динара.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Врло добро знате да то повећање пензија о коме ви причате, да ће следеће године бити чак и 12%, иде из некаквог Фонда пензијског и инвалидског осигурања који једва крпи крај са крајем сваког месеца да исплати пензије пензионерима.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се амандмани и примедбе на предлоге закона одбијају без озбиљног разматрања.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Поштовани грађани Србије, наиме, мени је жао што овај амандман није узет озбиљно у разматрање, као и скоро сви амандмани који долазе са ове стране, како се каже, са оне друге стране, јел?",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  }
+ ]
+}

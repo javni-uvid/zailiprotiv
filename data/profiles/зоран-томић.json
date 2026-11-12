@@ -1,0 +1,71 @@
+{
+ "mp": "зоран томић",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 14,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Наводи да је власт после 2000. године уништила привреду Крушевца, међу осталим предузећа „14. октобар“, Хемијску индустрију „Жупа“ и „Трајал“.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Па, у њихово време ниједна нова инвестиција није дошла у Крушевац, а оно што је функционисало, разорили су и уништили до темеља.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Замера ранијој власти што је економску кризу 2008. године називала „развојном шансом за Србију“.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ви сте нашли нама да причате шта ми треба да радимо, ви сте нашли да се бринете за грађане Србије, а 2008. године када се десила економска криза смејали сте се и рекли сте – па то је развојна шанса за Србију.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што грађанима не нуди ништа конкретно ни програм, већ се бави само Александром Вучићем, председником Републике.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Кад их питате шта је то што би они понудили да правосудни систем буде бољи, ништа конкретно не чујете са њихове стране.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Драган Ђилас, један од лидера опозиције, док је био на власти уређивао медије и одлучивао о њиховом садржају.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Знате како, прошло је време када су Драган Ђилас и његови сарадници били главни одговорни уредници тих јавних сервиса, када су они одлучивали ко ће моћи да гостује у њима, које су емисије адекватне да се емитују, а које не.",
+    "date": "2020-12-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sedma sednica Drugog redovnog zasedanja NSRS 17.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да ће Моравски коридор бити најсавременији ауто-пут у Србији.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Преко 2,8 милијарде евра је заиста импозантна цифра која ће се уложити у развој наше земље, а као особа из Крушевца посебно ми је драго да се у буџету издваја Моравски коридор који ће бити најсавременији аутопут, не само у Србији, него и у региону.",
+    "date": "2020-12-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sesta sednica Drugog redovnog zasedanja NSRS, 10.12.2020..docx"
+   }
+  }
+ ]
+}

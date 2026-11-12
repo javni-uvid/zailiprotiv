@@ -1,0 +1,57 @@
+{
+ "mp": "динић растислав",
+ "model": "claude-fable-5-2",
+ "read": 14,
+ "speeches": 16,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Тражи да се повећају ненаменски трансфери локалним самоуправама, за које наводи да су мањи од 1,7% БДП-а предвиђених законом.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Актуелна давања за ненаменске трансфере локалним самоуправама износе далеко испод законског минимума од 1,7% БДП-а. Пошто ови трансфери оснажују локалне самоуправе и омогућавају им да самостално и слободно праве пројекте у односу на реалне локалне потребе, важно је да се њихов износ увећа.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се из буџета избришу средства за поновно увођење обавезног војног рока и наводи да Војска Србије не може да гарантује безбедност војника.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Претходних година смо видели да војници Војске Србије гину у рутинским мирнодопским задацима у свакодневним нормалним условима, мирнодопским условима. То је систем који не може да гарантује безбедност и сигурност и преживљавање чак ни професионалним, обученим војницима.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је 1999. године служио војни рок на Косову, а да се Александар Вучић, тадашњи министар, у то време бавио својим новим станом.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја сам 1999. године редовно служио војни рок на Косову. Док сам ја носио униформу, тадашњи министар Вучић бирао је завесе за нови стан од 117 квадрата, који је добио од државе.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера Влади и Министарству просвете што Филозофском факултету у Нишу одузимају три департмана и буџетска средства ради Факултета српских студија, упркос одлуци Управног суда.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Иако је Управни суд одложио извршење решења Министарства и Факултет српских студија нема дозволу за рад, Министарство наставља да се понаша самовољно и да крши закон и судске одлуке.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  }
+ ]
+}

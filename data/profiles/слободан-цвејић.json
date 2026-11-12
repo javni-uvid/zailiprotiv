@@ -1,0 +1,69 @@
+{
+ "mp": "слободан цвејић",
+ "model": "claude-fable-5-2",
+ "read": 12,
+ "speeches": 17,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Замера Влади што буџете назива развојним, наводећи да она не разликује раст од развоја.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прошле године сам скренуо пажњу на употребу тог појма „развојни“. Нисте баш показали да разумете шта је разлика између раста и развоја.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт води неодрживу фискалну политику, уз сталан раст задужености државе.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Почећу указивањем на нешто на шта је пажњу скренуо Фискални савет, а то је да се дефицит у буџетским плановима константно увећава и да он постаје неодржив.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера политику чврстог курса динара, наводећи да она штети извозу и домаћој привреди.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тако да ово што говорите о курсу динара, одржали сте чврст курс динара, то је много обрадовало увознике. Они највише профитирају од тога, а ми домаћу привреду изузетно споро развијамо.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је животни стандард великог дела грађана низак и да слика коју Влада приказује то прикрива.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ово је предизборна демагогија, која у ствари скрива чињеницу да већи део грађана има низак стандард и таква редовна примања којима не може да покрије ценовну вредност просечне потрошачке корпе.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што предлог закона предвиђа да држава буде оснивач универзитета Српске православне цркве заједно са црквом, наводећи да се тиме крши Устав.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно на шта ми имамо примедбу је да се овим законом предвиђа да држава и црква буду заједно оснивач тог универзитета.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  }
+ ]
+}

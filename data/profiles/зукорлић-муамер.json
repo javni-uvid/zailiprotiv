@@ -1,0 +1,69 @@
+{
+ "mp": "зукорлић муамер",
+ "model": "claude-fable-5-2",
+ "read": 16,
+ "speeches": 16,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да у Санџак нису доведене значајније стране и производне инвестиције и пита зашто.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Оно што нам упада у очи јесте чињеница да за 10 година, да за 30 година у Санџаку, на простору Санџака се није десила ни једна значајнија производна инвестиција. Конкретно, није отворена нити једна фабрика на подручју Санџака.",
+    "date": "2020-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Sesta sednica Drugog redovnog zasedanja NSRS 09.12. 2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да у локалним властима у Новом Пазару и Сјеници има криминала и корупције и тражи да државни органи то истраже.",
+   "govora": 4,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Зато рачунајте на наше партнерство у обрачуну са корупцијом, криминалом, да коначно тај поштени грађанин тамо може да заради свој залогај за себе и породицу.",
+    "date": "2020-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Sesta sednica Drugog redovnog zasedanja NSRS 09.12. 2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи путеве и гасовод као важне пројекте за Санџак и поздравља што се граде.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "То су дакле, лепе вести, свакако очекујемо да ће се и други започети, најављени пројекти наставити и то је оно што можемо са радошћу пренети народу као народни посланици.",
+    "date": "2020-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sesta sednica Drugog redovnog zasedanja NSRS 08.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да подржава борбу против дискриминације и насиља, али замера што се законима о родној равноправности и забрани дискриминације намеће образац „родно-сензитивног језика“.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Поштоваћемо сваког и право на избор је оно за шта се залажем, али овде ми намећемо образац са одређеним санкцијама за оне који то не поштују, односно то не желе.",
+    "date": "2021-05-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvanaesta sednica Prvog redovnog zasedanja NSRS, 18. maj 2021..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су правда и правичност основна мера квалитета државног система и правосуђа.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Питање правде, питање правичности, питање наше жеље и намере да стварно задовољимо правичност су веома важни и да никада не затворимо ту тему.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanestom sazivu, 21. jul 2021. godine.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "миладиновић сања",
+ "model": "claude-fable-5-2",
+ "read": 17,
+ "speeches": 17,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Замера што се запошљава и што се деца уписују у вртиће по партијској припадности, а не по стручности и потреби.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Моје друго питање је када ће се запошљавање по партијском кључу, када ће престати? И оно што је можда најосетљивије, а најбитније на терену је видљиво, а то је упис деце у вртић по партијском принципу.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је школовање породицама и студентима постало прескупо и да образовање не сме да буде „луксуз“.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "То заиста у Србији бива луксуз, односно школовати децу бива луксуз, што је недопустиво јер образовање мора бити једнако и доступно за све.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се број становника смањује и да људи одлазе из Србије.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Баш зато годишње из Србије, односно Србију напусти, оде у иностранство више о 50.000 људи. То је само пут за њихов бржи одлазак из земље.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Замера што судови, међу њима Управни суд, не доносе одлуке у роковима, и као пример наводи спорове око власти у општини Мерошина.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Тај исти суд је такву одлуку доносио пет или шест месеци. Причам о Управном суду из Ниша. Што је најгоре, нико одговоран, нико санкционисан.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се у градовима гради без плана, што назива „урбанистичким хаосом“, и да инфраструктура због тога не функционише.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "То је требало да буде једно од најлепших насеља у том крају, међутим данас смо сведоци да се тамо дивље гради и да ћемо кроз пар година имати потпуно нефункционалну инфраструктуру, саобраћајнице ће бити такође нефункционалне и имаћемо поново један урбанистички хаос.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "mp": "акош ујхељи",
+ "model": "claude-fable-5-2",
+ "read": 15,
+ "speeches": 16,
+ "sittings": 12,
+ "points": [
+  {
+   "tekst": "Наводи да су одговорно вођење економске политике и добро стање у буџету омогућили Влади да помогне привреди у пандемији, и подржава кредите са државном гаранцијом.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Одговорно вођење економске политике и добро стање у буџету створило је довољно простора да Влада Републике Србије помогне привреди у ублажавању негативних ефеката пандемије вируса корона.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се из републичког буџета издваја за капиталне пројекте у АП Војводини и да се тиме остварују приоритети из коалиционог споразума СВМ и СНС.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Време је показало, а бројке потврђују да се из године у годину кроз буџетске ставке континуирано издваја за регионални развој, унапређење инфраструктуре и капитална улагања АП Војводине.",
+    "date": "2024-09-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 23. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се СВМ залаже за развој железнице, посебно пруга Београд–Будимпешта, Суботица–Сегедин и Суботица–Баја.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Препознајући овај потенцијал наша посланичка група је од самог почетка снажно поздравила и иницирала развој железнице, јер железница није само инфраструктура, она је генератор економског развоја, еколошки најприхватљивији вид транспорта и кључни предуслов за привлачење нових инвестиција.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је помоћ младима у куповини прве стамбене непокретности економска, социјална, демографска и популациона мера и да је Министарство финансија прихватило предлог СВМ да јемци могу бити и шири чланови породице.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Даме и господо, помоћ младима при куповини прве стамбене непокретности за Савез војвођанских Мађара никада није била само економска мера. То је дубоко социјална, демографска и популациона политика.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да развијено тржиште капитала није конкуренција банкарском финансирању него његов додатак и да смањује зависност малих и средњих предузећа од банака и државних субвенција.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Диверзификација извора финансирања треба да допринесе смањењу трошкова прикупљања капитала, а посебно у случају малих и средњих предузећа.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

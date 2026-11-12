@@ -1,0 +1,69 @@
+{
+ "mp": "марсенић предраг",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 17,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Наводи да власт предаје српске институције на Косову и Метохији и да је прихватила споразум, објављен на сајту Владе, којим се признају косовска документа.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми од 2008. године указујемо на то да се спроводи политика пузајућег признавања Косова. Указујемо на то да се предају српске институције једна по једна.",
+    "date": "2024-09-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 24. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се одрже седнице Скупштине о литијуму и о Косову и Метохији.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато хајде да се уозбиљимо, да завршавамо ову седницу и да идемо на ове две следеће седнице о литијуму и о Косову и да причамо као људи нормално.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се новац намењен за ауто-пут преусмери на ревитализацију блокова А1 и А2 у Термоелектрани „Никола Тесла“.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Једноставно, у овом тренутку мислим да немамо тај луксуз и да је много битније да одустанемо у овом тренутку од аутопута до Албаније и да те паре преусмеримо на ревитализацију ових блокова.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да Влада каже које је обавезе преузела стендбај аранжманом са ММФ-ом и да ли међу њима има приватизације јавних предузећа.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Шта је тачно договорила Србија са ММФ? Шта су преузете обавезе? Да ли ће бити додатног отпуштања запослених и да ли ће бити приватизација јавних предузећа?",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што представници Владе на седницама говоре много дуже од посланика и наводи да се то време злоупотребљава.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Али, имам право, јер ми, госпођо Брнабић, имамо 20 минута, 20 минута као овлашћени да нешто кажемо. Сви представници Владе имају заиста много више. Допустите и нама некад да искористимо то време.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

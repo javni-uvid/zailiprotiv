@@ -1,0 +1,69 @@
+{
+ "mp": "александар ивановић",
+ "model": "claude-fable-5-2",
+ "read": 18,
+ "speeches": 18,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да се новац из буџета издваја за „корупционашке пројекте“ као што су ЕКСПО, национални стадион и делфинаријум, и тражи да се преусмери на стварне потребе грађана.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, новца има, само је важно направити прерасподелу са корупционашких пројеката на реалне и стварне потребе грађана Републике Србије.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се посебним законом („лекс специјалис“) чланови Владе штите од кривичне одговорности у предмету у којем је директор завода признао кривично дело.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Да бисте спречили њихово хапшење и одговорност њихову, ви доносите лекс специјалис, суспендујете правни поредак у овој држави да бисте спасили колеге одговорности.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се седнице са више десетина тачака дневног реда заказују по хитном поступку и наводи да се тиме од грађана крије истина.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Поштовани грађани Србије, и ова седнице је, као и све претходне у овом сазиву, заказана по хитном поступку а да апсолутно ништа није било хитно.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је предложени начин избора судија и тужилаца неуставан и позива се на став Високог савета судства.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Мислимо да је цео предлог овог закона неуставан, зато што на један неуставан начин регулише питање избора јавних тужилаца, као и у претходним члановима кад смо говорили о избору судија.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да опозиција већ дуже време предлаже закон о родитељу неговатељу и замера што га владајућа већина није прихватила.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Знате, велика је срамота што две године покушавамо да тај закон ставимо на дневни ред и ви нисте хтели да гласате о томе.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}

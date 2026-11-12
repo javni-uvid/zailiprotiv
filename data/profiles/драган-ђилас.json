@@ -1,0 +1,69 @@
+{
+ "mp": "драган ђилас",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 15,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи шта је урађено у Београду док је био градоначелник: домови здравља, школе, обданишта, мостови, бесплатни уџбеници и помоћ трудницама.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У моје време, инвестициони буџет у Београду је био преко трећине, помоћ породиљама и трудницама, бесплатни уџбеници, четири дома здравља, три моста, 40 обданишта, девет основних школа, 15 фискултурних сала.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера властима што не усвајају законе које је предложила Странка слободе и правде, међу њима о специјалном тужиоцу за корупцију функционера, о пореклу имовине и о образовању.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Закон о специјалном тужиоцу за корупцију високих функционера са тужилачком полицијом смо предложили, одбили сте. Закон о пореклу имовине, да се провери имовина свакога, одбили сте.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт износи нетачне податке о бруто домаћем производу и да је прави БДП Србије око 60 милијарди евра.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Лажете народ да је српски БДП у 2025. години дошао до скоро 90 милијарди евра, иако је то номинални, инфлаторни БДП. Онај реални, прави је око 60 милијарди.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да председник Србије Александар Вучић носи гардеробу коју не може да плати од своје плате и да функционери Српске напредне странке на власти живе много боље него раније.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нисте ми одговорили, господине Мали, од којих пара је председник купио фармерке које коштају 1.800 долара, односно коштају 200.000 динара?",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Србија подељена, да се људи мрзе и да то води у сукобе међу њима.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Рекао сам да је Србија подељена најстрашније у својој историји, да се људи мрзе, да ће кренути да се директно сукобљавају, да ће то довести до жртава.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  }
+ ]
+}

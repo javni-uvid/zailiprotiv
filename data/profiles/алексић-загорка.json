@@ -1,0 +1,72 @@
+{
+ "mp": "алексић загорка",
+ "model": "claude-fable-5-2",
+ "read": 15,
+ "speeches": 18,
+ "sittings": 14,
+ "points": [
+  {
+   "tekst": "Брани буџете и ребалансе које предлаже Влада, наводећи да доносе повећање плата и пензија и улагања у капиталне инвестиције.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ове измене и допуне буџетског закона означавају велика улагања у капиталне инвестиције, у енергетику, пољопривреду, здравство, војску. Такође подржавамо и повећање пензије које следи од 1. децембра и повећање плата које следи од 1. јануара.",
+    "date": "2024-09-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 24. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Фискални савет саветује опрез, али да предлоге буџета и ребаланса у начелу оцењује повољно.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Фискални савет уз једну дозу опреза, па и критике у својој анализи ипак даје у начелу једну солидну оцену предлога буџета.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да држава настави да помаже домаћа мала и средња предузећа и пољопривредне произвођаче.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ускоро ћемо доносити и буџет за наредну годину и очекујемо да се определе подстицаји за домаћу привреду, да ће се помагати и даље пољопривредним произвођачима, јер само јак пољопривредни произвођач је стожер одрживог развоја ове привредне гране.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани финансијску помоћ државе породицама са децом, наводећи да је то приоритет Јединствене Србије.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што је за ЈС посебно значајно је што се није одустало од социјалних подстицаја и ми ћемо увек као и наш председник, господин Драган Марковић подржавати финансијске мере помоћи породицама са децом.",
+    "date": "2024-09-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 24. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Драган Марковић, председник Јединствене Србије, више пута водио делегације из Србије у Египат, међу којима су били здравствени радници.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја ћу подсетити да је председник ЈС шест пута водио делегацију у пријатељски Египат, од тога четири пута већински део делегације су чинили управо лекари који су имали прилику да се упознају са здравственим системом ове земље.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "горан петровић",
+ "model": "claude-fable-5-2",
+ "read": 12,
+ "speeches": 17,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да се Законом о Правосудној академији Високом савету судства и Високом савету тужилаштва одузима надлежност да оцењују и бирају кандидате за судије и тужиоце.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви им суштински одузимате право да бирају и процењују кандидате за судије и тужиоце. По овом закону Високи савет судства и Високи савет тужилаштва само ударају печате на списак кандидата за судије и тужиоце који је спакован у просторијама Академије.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је циљ закона о правосуђу које власт предлаже утицај извршне власти на тужилаштво и на избор судија и тужилаца, а не унапређење правосуђа.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви не пишете закон за добробит грађана Србије и правосуђа, ви пишете закон да бисте зацементирали политичку контролу над правосуђем.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се Законом о оружју и муницији приватним агенцијама омогућава набавка аутоматског оружја, што по њему угрожава безбедност грађана, и тражи брисање те одредбе.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Грађани треба да знају да се омогућавањем правним лицима, односно агенцијама да набављају аутоматско оружје директно угрожава њихова безбедност и зато смо и тражили брисање става 1. у члану 11. закона о оружју и муницији.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера предлагачима што су закони предложени без јавне расправе и са образложењима која не објашњавају предложена решења.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато вероватно нисте ни дали образложење овог члана. Нема га, као ни јавне расправе што није било, зато што желите да на мала врата извршите удар на правни поредак.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера министру правде Ненаду Вујићу што није решио положај запослених у правосудној администрацији, који, како наводи, имају плате на нивоу минималне зараде.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Спорно је то што запослени у Правосудној администрацији, записничари, референти и остали имају плату на нивоу минималца или нешто мало већу. То је спорно. Спорно је то што њихов проблем није решен.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  }
+ ]
+}

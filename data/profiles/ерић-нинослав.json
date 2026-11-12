@@ -1,0 +1,69 @@
+{
+ "mp": "ерић нинослав",
+ "model": "claude-fable-5-2",
+ "read": 11,
+ "speeches": 17,
+ "sittings": 1,
+ "points": [
+  {
+   "tekst": "Наводи да се јавни дуг не мери номиналним износом већ односом према БДП-у и да је по том мерилу задуженост Србије око 50 одсто.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Јавни дуг се не рачуна у номиналном износу, већ у односу на БДП. Ја сам био у скупштинској библиотеци, има пуно књига из макроекономије, јавних финансија и прочитајте.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се дугорочни инфраструктурни пројекти финансирају из дугорочних кредита, а не из редовних буџетских прихода.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Овде смо чули пуно нетачних информација или незнања, јер сви дугорочни инфраструктурни радови никако се не финансирају са средствима из буџета, из кеш лове, већ се финансирају из дугорочних кредита.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера посланицима опозиције што не говоре о тачкама дневног реда и амандманима, већ се, како каже, баве „политичком демагогијом“.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Неки нису причали о ниједној тачки. Причали су о 31. тачки која уопште није на дневном реду, и сваког пута причају исту тему и исте лажи, како би хтели да политичком демагогијом утичу на јавно мњење.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је дом здравља у Ћуприји 2013. године, када је постао председник те општине, био у дуговима.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Сваки кров у Ћуприји на свакој јавној установи је прокишњавао. То сте ви оставили. Године 2013. када сам постао председник општине оставили сте и тај дом здравља са тим дугом.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је као председник Економског кокуса предложио амандмане на измене Закона о планирању и изградњи, које је министар Горан Весић подржао.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "На крају, захвалио бих министру Весићу зато што је подржао амандмане испред Економског кокуса који сам ја као председник Економског кокуса предложио.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "mp": "бранковић сања јефић",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 14,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Наводи да Социјалдемократска партија Србије подржава предлоге буџета и ребаланса буџета.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Поштовани председниче, уважени министри, колегинице и колеге народни посланици, Социјалдемократска партија Србије ће подржати предлог буџета, као и све инфраструктурне пројекте које се у њему налазе, између осталог, и оне спортског карактера.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се изменама Устава и правосудних закона смањује утицај политике на правосуђе.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо променили Устав, променили смо законски оквир, ојачали смо гаранције самосталности правосуђа и у том смислу направљен је и те како важан искорак ка томе да се политички утицај на избор носилаца правосудних функција додатно и ограничи.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Венецијанска комисија повољно оценила поједине кораке Србије у променама правосуђа.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Чак напротив, она је управо истакла овај сегмент читавог процеса уставних промена које спроводимо као добар пример онога што Србија заиста јесте урадила по том питању, а то је транспарентност читавог процеса који је спроведен.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Високи савет судства треба да пружи подршку интегритету и независности судија.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Високи савет судства мора својим актима и својим деловањем у потпуности преузети, али и испунити своју законску улогу независног и самосталног органа који обезбеђује и гарантује независност и самосталност судија.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanestom sazivu, 21. jul 2021. godine.docx"
+   }
+  },
+  {
+   "tekst": "Похваљује мере које се односе на зараде и накнаде зарада запослених у јавним комуналним предузећима.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "И заиста желим да похвалим што по први пут ово повећање од 12,5% се односи и на оне који раде у комуналном сектору.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

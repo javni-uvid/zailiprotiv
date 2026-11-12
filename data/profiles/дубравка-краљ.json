@@ -1,0 +1,71 @@
+{
+ "mp": "дубравка краљ",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 16,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да је за независност судства најважнија лична независност судија и да о независности судија и угледу суда прво треба да се старају председници судова.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Но, уз Етички одбор, а можда и пре Етичког одбора, о примени Етичког кодекса треба да се старају председници судова који су и према Закону о уређењу судова дужни да се старају о независности судија и очувању угледа суда.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanestom sazivu, 21. jul 2021. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се повећају плате судија и тужилаца.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Морам да напоменем да је, поред законских јемстава и гаранција, неопходно са европским нивоом и стандардом ускладити и плате судија и јавних тужилаца.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanestom sazivu, 21. jul 2021. godine.docx"
+   }
+  },
+  {
+   "tekst": "Брани сет правосудних закона као други корак после уставних промена у правосуђу и наводи да ће се до бољег правосуђа још корачати.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја бих на самом почетку свог излагања овај сет закона окарактерисала као мост који морамо прећи, не би ли смо од усвајања уставних амандмана дошли до остваривања њихових циљева у пракси и то јесте други корак.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Брани измене Закона о јединственом бирачком списку и наводи да се око бирачког списка дуго спорило.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Будући да је у неколико претходних изборних циклуса тачка раздора међу учесницима на изборима био баш бирачки списак, поздрављам ове законске измене које предвиђају потпуну транспарентност бирачког списка, максималну ажурност, као и формирање комисије која ће контролисати тачност и ажурност бирачког списка.",
+    "date": "2025-11-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 5. novembra 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да у друштву постоје изражене тензије и острашћеност и да их треба смирити.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Мислим да је на РЕМ-у да мало те тензије ублажи и да заиста утиче, ако не на постојање друштвене хармоније, онда макар на смиривање тензија.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

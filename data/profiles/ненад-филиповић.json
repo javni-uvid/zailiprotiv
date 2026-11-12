@@ -1,0 +1,73 @@
+{
+ "mp": "ненад филиповић",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 13,
+ "sittings": 12,
+ "points": [
+  {
+   "tekst": "Наводи да посланичка група Јединствене Србије има поверења у Владу, за коју каже да наставља рад претходних влада, и да зато подржава њене предлоге буџета.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато ће посланичка група ЈС Драган Марковић Палма у дану за гласање подржати ове законе. Сматрамо да имамо поверења у ову Владу која иде стазама претходне Владе и оне претходне Владе које имају изузетне резултате и то стално треба потенцирати.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Влада много уложила у Лесковац и југ Србије, у пречишћавање отпадних вода и путеве ка Власотинцу, и тражи обнову пута Лесковац–Вучје.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тачно је и то да је град Лесковац добио велики број путне инфраструктуре, односно савремених саобраћајница које повезују и општину Власотинце са градом Лесковцем и општину Лебане са градом Лесковцем.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су пад броја становника и подршка породици питање опстанка Србије и да мере у тој области не дају резултате одмах, већ после годину или више.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Бела куга је оно што нас је у последњих десетак година смањила за готово пола милиона. Само ове године имамо до шестог месеца око 20.000 нас мање.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да запосленост и плате расту из године у годину и да очекује просечну плату од око 1.400 евра до 2027. године.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, ово треба стално потенцирати и рећи да ови резултати нису дошли као неки блесак и нестали, него је то процес који траје стално и у успону је. Очекујем да до 2027. године дођемо у ситуацију да просечна зарада буде 1.400 евра.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Брани измене закона о јединственом бирачком списку као већи увид грађана у податке и наводи да транспарентности у раду државе никада није довољно.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Управо зато поздрављам почетак рада интерактивног буџетског портала који представља конкретан доказ тежње ка што већој транспарентности. Данас сваки грађанин има директан приступ информацијама о томе где су средства распоређена и у ком износу.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

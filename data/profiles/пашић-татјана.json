@@ -1,0 +1,70 @@
+{
+ "mp": "пашић татјана",
+ "model": "claude-fable-5-2",
+ "read": 11,
+ "speeches": 12,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Замера владајућој већини што одбија да на дневни ред стави предлог закона о родитељу-неговатељу, којим би родитељи деце са сметњама добили статус, накнаду и право на пензију.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Трећи пут за два месеца тражимо да Закон о родитељу-неговатељу ставите на дневни ред. Ви игноришете и одбијате да гласате.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што ће по Владином закону о родитељима неговатељима статус добити само 3.270 родитеља, јер је увећана туђа нега и помоћ услов за стицање статуса.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Право на статус родитељ неговатељ ће добити само 3.270 родитеља, јер је увећана туђа нега и помоћ један од елиминационих услова за стицање статуса.",
+    "date": "2026-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 09.07.2026. 4. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се новац издваја за Национални стадион и ЕКСПО, а не за накнаде родитељима-неговатељима.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Знамо да Национални стадион који никоме не треба кошта милијарду евра, а за тај новац би сви родитељи-неговатељи имали накнаду пуне четири године.",
+    "date": "2026-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 09.07.2026. 4. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера министарки за рад, запошљавање, борачка и социјална питања Милици Ђурђевић Стаменковски што се не поштују рокови које је обећала за закон о родитељу-неговатељу.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Међутим, министарка је изјавила да ће примена Закона родитељ-неговатељ почети у јануару идуће године иако је обећала и у Закону пише да се примењује почев од 1. октобра 2026. године.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Противи се рушењу Старог савског моста у Београду и замера што се за то издваја новац.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "И ја вам сада одмах кажем да ми нисмо против изградње моста и да смо сами градили мостове, али ми јесмо против рушења, јер мостови се не руше.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

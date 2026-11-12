@@ -1,0 +1,70 @@
+{
+ "mp": "милица николић",
+ "model": "claude-fable-5-2",
+ "read": 14,
+ "speeches": 14,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Наводи да су одговорна политика и стабилне јавне финансије омогућиле повећања плата и пензија и новчану подршку грађанима, уз наставак улагања у инфраструктуру.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Захваљујући стабилним јавним финансијама, ми данас можемо и поред два пута по 100 евра за младе у овој години да пружимо додатну подршку од 5.000 динара пред новогодишње и божићне празнике.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера власти до 2012. године што је оставила јавни дуг од 78 одсто БДП-а у 2014. години, а да, како наводи, није изграђен ниједан значајан капитални инфраструктурни пројекат.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Па зато што смо 2014. године имали јавни дуг од 78% у односу на бруто домаћи производ, а да са друге стране нисмо имали ниједан већи капитални инфраструктурни пројекат.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да опозицију не занима бољи живот грађана, већ да теме попут трагедија користи да би стекла политичке поене и дошла на власт.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Данас их занимају политички поени који мисле да победе председника Вучића. Занима их свака трагедија коју могу злоупотребити како би стекли неки јефтин политички поен.",
+    "date": "2024-09-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 23. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је изменама прописа о бирачком списку и изборним условима испуњено оно што се тражило и да опозиција изборним условима и тврдњама о изборној крађи правда пораз на изборима.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наравно, поново су то блокадери у питању који су све ово време обмањивали грађане Србије наводећи изборне услове као разлог њиховог изборног пораза.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се у Србији спроводи „обојена револуција“, односно насилна промена власти, са циљем да на власт дођу они који би служили страним центрима моћи.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "И тада је било јасно, а може се рећи и раније, да је у нашој земљи у току спровођење обојене револуције, односно насилне промене власти, насилно рушење легитимно и легално изабраног председника Републике са скоро два и по милиона гласова.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  }
+ ]
+}
