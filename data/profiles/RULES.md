@@ -12,15 +12,14 @@ Pravila:
   i ocena („oštar“, „populista“, „proevropski“, „konstruktivan“, „napada“ i slično). Bez zaključaka o namerama.
 - Svaka tačka je jedna rečenica u trećem licu, pripisana poslaniku glagolom navođenja: „Navodi da …“, „Zamera što …“,
   „Brani …“, „Traži da …“. Ne tvrdi da je ono što kaže tačno ili netačno.
-- Bez imena osoba (drugih poslanika, ministara, predsednika, građana). Stranke i institucije mogu („vladajuća
-  većina“, „opozicija“, „Vlada“, naziv stranke ako ga sam govornik koristi).
-- Ne piši tačku koja je u suštini o jednoj osobi (njenoj imovini, postupcima, porodici), ni kad je ne imenuješ
-  („jedan opozicioni političar“). Funkcija u Vladi ili Skupštini može („ministar“, „predsedavajući“).
+- Tačke o osobama se navode kao i sve druge, ako se ponavljaju: šta poslanik tvrdi ili zamera nekome. Nosioce javnih
+  funkcija (poslanike, ministre, predsednika, funkcionere, lidere stranaka) navedi imenom i funkcijom. Privatna lica
+  (građane, zaposlene, članove porodice) navedi samo ulogom, bez imena.
 - Svaki deo rečenice mora da stoji u najmanje 2 navedena govora, ne samo njen prvi deo.
 - Uvredljive ili nabijene izraze ne preuzimaj svojim rečima; ako su suština tačke, stavi ih pod navodnike kao
   govornikove.
 - Uz svaku tačku jedan DOSLOVAN citat (15 do 45 reči), prepisan slovo po slovo iz jednog od navedenih govora,
-  ćirilicom kao u izvoru, cele rečenice, bez „…“; citat ne sme da sadrži ime osobe ni uvredu na račun osobe.
+  ćirilicom kao u izvoru, cele rečenice, bez „…“; citat ne sme da sadrži uvredu na račun osobe ni ime privatnog lica.
 - Tekst tačaka piši ćirilicom, jednostavnim rečima.
 - Ako nema bar 3 tačke koje se ponavljaju, vrati manje; ne izmišljaj.
 

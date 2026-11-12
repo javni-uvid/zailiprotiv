@@ -166,7 +166,9 @@ These are the project's promises to its readers. Never change them without the m
   notes read, as a trial): `data/profiles/<name>.json`, three to five points a model wrote from a selection of the MP's
   speeches (the longest from each sitting in turn, up to about 18,000 words, each cut at 700), under
   `data/profiles/RULES.md`: only what recurs in two or more speeches, as the MP's claim ("Navodi da …"), content not
-  tone, no labels or assessments, no persons, charged terms quoted, one verbatim quote per point checked word for word.
+  tone, no labels or assessments, charged terms quoted; what the MP says about persons is given like anything else
+  (the maintainer, 12 Nov 2026: such points are not left out), holders of public office by name, private persons by
+  role only; one verbatim quote per point checked word for word.
   The page says how many speeches were read and that the site doesn't judge the claims. Labels for MPs ("populist",
   "pro-European") were considered and rejected as judgements. Speakers who spoke mostly as members of the Government
   are left out (by hand so far: a rule is needed before this is widened). The MP page also shows the quotes chosen
