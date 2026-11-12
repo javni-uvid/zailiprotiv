@@ -104,14 +104,16 @@ def same_site(url: str) -> bool:
 
 # Words in a link's address or text that make it likelier to lead to sittings and votes (both scripts).
 _LEADS = ("седниц", "sednic", "заседањ", "zasedanj", "гласањ", "glasanj", "активност", "aktivnost",
-          "пленарн", "plenarn", "дневни-ред", "dnevni-red", "архив", "arhiv")
+          "пленарн", "plenarn", "дневни-ред", "dnevni-red")
+# Earlier convocations come last: the current one is read first (and the archive is large).
+_LATER = ("архив", "arhiv", "сазив-од", "saziv-od")
 # Files and sections that never lead there.
 _SKIP = (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png", ".gif", ".zip", ".mp4", "/upload/")
 
 
 def _score(url: str, text: str) -> int:
     s = (urllib.parse.unquote(url) + " " + text).lower()
-    return sum(word in s for word in _LEADS)
+    return sum(word in s for word in _LEADS) - 10 * any(word in s for word in _LATER)
 
 
 @dataclass

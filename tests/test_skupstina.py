@@ -54,6 +54,14 @@ def test_crawl_follows_leads_and_stays_on_site():
     assert not any("example.com" in u or u.endswith(".docx") for u in asked)
 
 
+def test_archive_comes_last():
+    current = skupstina._score("https://www.parlament.gov.rs/активности/народна-скупштина/заседања/ванредна.35.html", "")
+    archive = skupstina._score(
+        "https://www.parlament.gov.rs/активности/народна-скупштина/архива-активности/сазив-од-3-августа-2020/заседања.html",
+        "Седнице")
+    assert current > archive
+
+
 def test_cyrillic_paths_are_encoded_once():
     url = "https://www.parlament.gov.rs/народна-скупштина/седнице.html?x=1"
     assert skupstina.ascii_url(url) == \

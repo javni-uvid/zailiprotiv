@@ -7,7 +7,7 @@ on:
     inputs:
       start:
         description: "Page to start the walk from"
-        default: "https://www.parlament.gov.rs/"
+        default: "https://www.parlament.gov.rs/активности/народна-скупштина/заседања/ванредна.35.html"
       max_pages:
         description: "Pages to read at most"
         default: "200"
