@@ -1,0 +1,69 @@
+{
+ "mp": "мирослав петрашиновић",
+ "model": "claude-fable-5-2",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да је изменама Закона о финансирању политичких активности испуњено девет препорука ОДИХР-а, датих после избора 2020, 2022. и 2023. године.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Понашали смо се одговорно и кроз овај закон имплементирали девет препорука ОДИХР-а и нашли најбоља могућа законска решења да се те препоруке нађу овде у овом предложеном закону.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што је тражила да се испуне препоруке ОДИХР-а, а сада критикује законе којима се те препоруке испуњавају.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Махали са извештајем и тражили да испунимо све препоруке ОДИХР, јер без испуњења тих препорука, нема избора и демократије у Србији.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су о изборним законима одржана јавна слушања у четири највећа града и да су сви имали прилику да се укључе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Јавност апсолутно укључена. Четири јавна слушања сте имали у четири највећа града у Републици Србији.",
+    "date": "2026-07-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 06.07.2026..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да ће северна обилазница око Крагујевца, осим што растерећује саобраћај, омогућити нову индустријску зону и нове инвестиције.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "То није само северна обилазница која ће растеретити саобраћај у централном градском језгру. То је северна обилазница која омогућава да се гради нова индустријска зона.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanredno zasedanja NSRS, odrzane 31.jul 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су политиком председника Републике Александра Вучића у Крагујевац доведене стране компаније у којима су се људи запослили.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Све су то стране инвестиције и стране компаније које су у многоме допринели и промениле привредну слику града Крагујевца и Шумадије.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanredno zasedanja NSRS, odrzane 31.jul 2024. godine, sesti dan rada.docx"
+   }
+  }
+ ]
+}

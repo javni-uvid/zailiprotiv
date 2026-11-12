@@ -1,0 +1,70 @@
+{
+ "mp": "биљана пантић пиља",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 10,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Замера опозиционим посланицима то како су њихове странке водиле државу док су биле на власти.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Имали сте времена да се бавите дијаспором када сте били на власти. То је нешто што ми највише смета у читавој овој расправи у ова три дана.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да политика председника Александра Вучића и Српске напредне странке доноси нове путеве и виши животни стандард грађана.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Данас имамо политику Александра Вучића где се отвара, рецимо, фабрика робота, где имамо Фрушкогорски коридор, о чему смо могли само да маштамо, или Смајли, нове путеве, нове болнице, нове школе.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да опозиција води политику „насиља“ и да су опозициони посланици у Народној скупштини користили сузавац.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато што сте ви вашу политику свели на мржњу, на насиље и на нападање на све оно што уради или каже Александар Вучић.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозиционим посланицима што, како наводи, „клече“ пред послаником Европског парламента Пицулом.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ти резултати су веће плате и пензије, нови километри пута, брза пруга, а са друге стране сте ви који идете и клечите пред Пицулом и пред Братулицом.",
+    "date": "2025-11-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 5. novembra 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је странка народног посланика Борка Стефановића 2009. године одлучивала ко ће бити судија и да су тада судије остајале без посла, као и да се он подсмевао њеном презимену.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Видите, мени је рекао да се спрда са мном и да од мене не очекује ништа паметно зато што се ја презивам Биља Пиља. Ја се не презивам Биља Пиља.",
+    "date": "2026-01-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Sestog vanrednog zasedanja NSRS, 22. januar 2026. godine, 4. dan rada.docx"
+   }
+  }
+ ]
+}

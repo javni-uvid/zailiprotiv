@@ -1,0 +1,75 @@
+{
+ "mp": "војислав вујић",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 11,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Наводи да посланичка група Јединствене Србије гласа за буџет и законе на дневном реду зато што су у корист грађана.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Посланичка група којој припадам ЈС ће гласати за све законе и споразуме који су на дневном реду из простог разлога зато што они сви иду у прилог грађанима.",
+    "date": "2023-02-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 5. februar 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани задуживање државе и наводи да се кредити узимају за изградњу путева и друге инвестиције.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Са друге стране, не постоји држава која не повлачи кредитне аранжмане за различите ситуације. Оно што је добро, зато што се у Србији сваки пут кредитна средства повлаче за инвестиције.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је ауто-пут Моравски коридор значајан за Врњачку Бању, из које долази, и да Србија треба да се развија и ван Београда.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми конкретно се бавимо туризмом и од кад је отворен ауто-пут Моравски коридор број страних гостију се повећава. То је реална статистика.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се боље управља пословним простором и некретнинама у јавној својини и да се простор који се не користи стави у употребу.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ево, ја као члан Одбора за финансије, приметио сам, задњих десет година причам о томе и молим ову Владу да то озбиљно размотри, разне агенције, разне комисије и разне институције чије ми финансијске планове усвајамо плаћају пословни простор.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Драган Марковић Палма, председник посланичке групе Јединствене Србије, говорио да не треба критиковати ако се уз критику не даје и предлог.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Када причамо о уштедама, Драган Марковић Палма је рекао – немојте никада да критикујете, ово шаљем поруку опозицији, ако немате предлог да дате бар једну добру идеју шта може да се уради.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

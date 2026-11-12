@@ -1,0 +1,69 @@
+{
+ "mp": "бајић борис",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 12,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да се Савез војвођанских Мађара залаже за то да се политичке разлике решавају дијалогом и да се одлуке доносе у институцијама државе.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наш принцип је једноставан и годинама се није мењао – политичке разлике решавају се дијалогом и институције се јачају радом у њима, а поверење грађана заслужује се одговорним понашањем и конкретним резултатима.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да ОДИХР даје препоруке о изборима у Србији од 1997. године, а да се оне тек у последњих десетак година озбиљно разматрају и уграђују у законе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тек током последње деценије развијена је јасна политичка воља да препоруке ОДИХР-а буду озбиљно анализиране и системски уграђене у наш правни систем.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је велика већина од 24 национална савета националних мањина заједнички предложила кандидате за Савет РЕМ-а и да ту заједничку вољу треба уважити.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, говоримо о вољи апсолутне већине националних савета, о вољи 15 активних и девет прећутно сагласних савета, о вољи која је демократски изражена у оквиру заједничког тела које сви они признају и у којем сви учествују.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се, како наводи, у спору око избора Савета РЕМ-а национални савети националних мањина користе за туђе политичке интересе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Реч је о политичким интересним групама које имају, да кажемо, српски национални предзнак и који ама баш никакве везе немају са националним саветима националних мањина, осим намере да њима манипулишу.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су односи и сарадња Србије и Мађарске добри и да Савез војвођанских Мађара жели да се тим путем настави.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сматрамо да је та сарадња донела конкретне и добре резултате и планирамо да је наставимо и у будућности, у најбољем интересу наше заједнице, али и Републике Србије, наше заједничке домовине.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  }
+ ]
+}

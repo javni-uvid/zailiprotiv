@@ -1,0 +1,69 @@
+{
+ "mp": "владимир обрадовић",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 11,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Наводи да у планирању и изградњи постоји корупција и тражи од министра Весића одговор на питања о томе.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Оно што свакако већина говорника овде подвлачи јесте да је у претходном периоду, деценијама уназад свеприсутна корупција у овом сегменту, па је моје питање за министра, и молио бих за тај одговор, како ће то овај закон да промени.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се у Београду гради без дозволе и пита министра Весића шта ће се поводом тога урадити.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, преко 120 питања смо поставили, нисмо добили одговор, подносимо пријаве грађевинској инспекцији, не добијамо одговор, тако да морам ово вас као другостепени орган да питам.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се држава додатно задужује.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, одлучује се не да штеди и враћа део дуга, него да се још додатно задужи.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи боље управљање пројектима који се плаћају јавним новцем.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Република Србија и студенти су три пута били прваци света у управљању пројектима, а у државној управи и у систему ми нигде немамо систематизовано радно место са квалификацијама које се зове руководилац пројекта.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Тражи од министра Весића да се прописима заштити имовина задужбина.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Треће питање или молба, чули сте вероватно ових дана да имамо непријатну ситуацију око прекњижавања имовине задужбине Николе Спасића. Два спрата се прекњижавају на предузеће које је у стечају.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  }
+ ]
+}

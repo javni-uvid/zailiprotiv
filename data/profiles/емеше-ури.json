@@ -1,0 +1,69 @@
+{
+ "mp": "емеше ури",
+ "model": "claude-fable-5-2",
+ "read": 12,
+ "speeches": 12,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да је норматив од 1.600 становника на једног изабраног лекара застарео, јер је становништво све старије и болесније и све је више старачких и самачких домаћинстава.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Наши становници су све старији и болеснији, јако пуно имамо старачких и самачких домаћинстава, нарочито по селима, по мањим градовима, а нормативи су остали стари, 1.600 старих становника на једног изабраног доктора.",
+    "date": "2020-11-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja 12.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да у малим и сеоским срединама недостаје лекара и да је здравствена заштита тамо слабије доступна, и пита Министарство здравља који су му планови за то.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наиме, познато је да рад у малим сеоским амбулантама није популаран међу младим лекарима, тако да сви домови здравља имају проблем да нађу лекара за рад у тим малим срединама.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани повећање плата здравствених радника и запошљавање 3.300 њих за стално, и наводи да је у здравству најважније улагање у људе како млади лекари не би одлазили из земље.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Значи, много је важније да имамо мотивисане раднике и због тога је врло битно да је дошло до повећања плата здравствених радника за 10%.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да треба више уважити рад немедицинских радника у здравственим установама, као што су возачи и особље које брине о хигијени и исхрани пацијената.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Друго моје питање бих поставила министру Лончару у вези великог броја запослених у здравственим установама као помоћних радника који имају најниже коефицијенте, а с тим заједно и најниже зараде.",
+    "date": "2021-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osma sednica Drugog redovnog zasedanja NSRS, 25. novembar 2021. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да факултетски образоване медицинске сестре треба да добију већу улогу у здравственом систему, на пример у скрининзима и у раду са хроничним болесницима.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Иако су годинама присутни у нашем здравственом систему, њихов допринос није ни законски ни организационо препознат.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

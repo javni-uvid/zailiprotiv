@@ -1,0 +1,58 @@
+{
+ "mp": "душан марић",
+ "model": "claude-fable-5-2",
+ "read": 12,
+ "speeches": 12,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Наводи да странке које победе на изборима имају право да формирају Владу и одреде њен састав.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Сматрам да је основно право странака и политика које су учествовале на изборима, које су победиле, да одреде технички изглед Владе, да одреде кадровски састав Владе и да одреде програм Владе.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Влада Србије обезбедила новац за обнову државних путева у општини Велика Плана и тражи да се обнове и преостали путни правци.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја користим ову прилику да замолим Владу Србије да пронађе средства да завршимо обнову и тог пута.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да зграда Генералштаба нема архитектонску вредност и да је идеолошки споменик комунистичкој власти Јосипа Броза, а не културно добро.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Али су се зато сетили да једну срушену зграду, једну развалину која објективно нема некакву архитектонску вредност, која је идеолошки споменик комунистичком покрету Јосипа Броза прогласе за културно добро.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да опозиција годину дана тражи избор новог Савета РЕМ-а, а да истовремено спречава да тај избор буде завршен.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Истовремено, годину дана опозиција чини све што може, и ногама и рукама, да Савет РЕМ-а не буде изабран.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

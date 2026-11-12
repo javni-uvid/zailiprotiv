@@ -1,0 +1,69 @@
+{
+ "mp": "драган станојевић",
+ "model": "claude-fable-5-2",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да Европска унија Србији поставља услове и да се тиме угрожава суверенитет Србије.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Та цена је очигледно и губитак суверенитета и губитак Косова и Метохије и разне идеологије које уништавају наш национални идентитет, нашу културу, веру итд.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да власт посланицима саопшти податке о односима Србије са Украјином.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Било би добро да ми као посланици знамо о чему се тамо разговарало, шта се договорило и какве су обавезе преузете за Србију испред Украјине, пошто знамо сви који посећују Украјину су у обавези да нешто њима дају?",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је посланичка група „Ми – Глас из народа“ предложила акт о геноциду над Србима у НДХ и замера што га Скупштина није изгласала.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прво, „Ми – Глас из народа“ смо поднели резолуцију за геноцид који је начињен у Јасеновцу. Видим ових дана да јако браните ту причу, али сте могли лако да је одбраните тиме што би подржали ту резолуцију и изгласали је овде у Скупштини.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да држава више помаже породицама са више деце.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ако већ имамо новац за помоћ, онда већа помоћ треба да иде тамо где је већи број чланова домаћинстава и где је мањи приход по члану.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да НИС држави плаћа преко две милијарде евра пореза.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У реду, то могу да разумем, али ме интересује да нам неко каже колико смо ми то зарадили новца за то оружје које смо ми испоручили, имајући у виду да смо само од НИС-а добили преко две милијарде евра пореза.",
+    "date": "2025-11-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 04.11.2025..docx"
+   }
+  }
+ ]
+}

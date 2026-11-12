@@ -1,0 +1,73 @@
+{
+ "mp": "никола радосављевић",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 11,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Наводи да држава много улаже у здравство: у изградњу и обнову болница, медицинску опрему и плате здравствених радника.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Зато имамо огромно улагање у инфраструктуру, изградњу болница, морам опет да поновим, изградњу болница у Београду, у Крушевцу, али такође морам да напоменем и реконструкцију домова здравља и реконструкцију општих болница у целој Србији.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Србија, по пројекцијама ММФ-а и Европске комисије, има најмањи пад БДП-а у Европи.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Данас имамо најмањи пад БДП у Европи, по пројекцији ММФ и Европске комисије и када очекујемо раст.",
+    "date": "2020-12-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sedma sednica Drugog redovnog zasedanja NSRS 15.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Брани економске мере Владе Србије током пандемије и наводи да су оне помогле привреди.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Морам да напоменем то да је у 2020. години забележена најнижа стопа незапослености у Србији и да није било масовног отпуштања радника, али све због мера Владе Републике Србије, јер је држава помогла привредним субјектима.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Србија данас у бољем стању него у време власти до 2012. године.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тај проблем датира много дуго, дуги низ година, али нико на томе није радио до 2012. године, док нисмо кренули ми да радимо на томе.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  },
+  {
+   "tekst": "Замера посланицима опозиције што, како наводи, не говоре истину.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Морате да говорите истину да би вам грађани Србије веровали. То је основно што требате прво да радите.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

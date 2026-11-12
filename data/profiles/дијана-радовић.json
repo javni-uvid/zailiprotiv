@@ -1,0 +1,70 @@
+{
+ "mp": "дијана радовић",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 10,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Брани већа буџетска издвајања за подстицаје пољопривредним произвођачима и за рурални развој.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "С тим у вези, важно је и да кажемо колико су битне субвенције и колико су битни подстицаји за наше пољопривредне произвођаче.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је у новим геополитичким околностима сопствена производња и прерада хране, уз енергенте, питање сигурности државе.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Чињеница је данас да државе које имају сопствену производњу, које имају и добру прерађивачку, односно прехрамбену индустрију данас се могу сматрати много безбеднијим и сигурнијим од оних држава које то немају.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани Закон о Алиментационом фонду и наводи да он исправља неправду према деци и родитељима који о њима брину када други родитељ избегава плаћање алиментације.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сматрамо да је овај закон изузетно важан из више разлога, јер исправља једну велику неправду која траје према једнохранитељским породицама, односно оној деци и родитељима према којима су други родитељи неодговорни и избегавају плаћање алиментације.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Социјалистичка партија Србије „државотворна“ партија чији рад у Влади и Народној скупштини грађани треба да вреднују.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Социјалистичка партија Србије као државотворна партија за ову дискусију је издвојила три теме као најважније и кључне када је у питању овако обиман дневни ред.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да држава треба да чува културу и историјско наслеђе српског народа као основу националног идентитета.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Културна добра су темељ нашег идентитета, темељ наше државности и континуитета српског народа, због тога ћемо свакако у нашим овлашћењима и надлежностима дати и потребну помоћ уколико буде било потребе.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

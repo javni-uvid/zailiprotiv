@@ -1,0 +1,69 @@
+{
+ "mp": "ракић снежана",
+ "model": "claude-fable-5-2",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да годишње 500 до 600 лекара тражи испис из Лекарске коморе и да државном здравству недостају лекари.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "По подацима из Лекарске коморе, на годишњем нивоу око 500 до 600 лекара тражи испис из Лекарске коморе и одлази да ради у стране земље.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се лекарима у државним здравственим установама повећају плате и да се рад у државним установама одвоји од рада у приватним.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Значи, мора докторима у државним болницама да се подигну плате, да се спречи одлив доктора, не може се радити на два места истовремено.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се здравствени прегледи организују у страначким просторијама и наводи да је то противно Закону о здравственој заштити.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато вас питам – ко је дао дозволу да се здравствени прегледи организују у просторијама владајуће партије? Ко је извршио инспекцијски надзор?",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што измене правосудних закона нису праћене анализом о томе како ће унапредити рад правосуђа.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сва струковна удружења су се огласила против ових измена, није консултована јавност, нити је било коме предочена анализа зашто се одређене одредбе мењају и на који начин оне представљају унапређење система.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Србија, ако жели да уђе у Европску унију, треба да уважи замерке европских институција на законе о којима се расправља.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми не морамо ни да се слажемо, ни да се не слажемо, али је питање да ли ми заиста желимо да идемо у ЕУ или не желимо.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

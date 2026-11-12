@@ -1,0 +1,70 @@
+{
+ "mp": "балинт пастор",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 11,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да ће споменик невиним жртвама из 1944. и 1945. године у Новом Саду бити подигнут на основу важеће одлуке Скупштине града и да на њему неће бити ниједног имена.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "У вези споменика „Невин жртвама“ из 1944. године постоји Одлука Скупштине града Новог Сада. Све док та одлука не буде била преиначена или укинута, та одлука је важећа.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је између српског и мађарског народа постигнуто историјско помирење и да од тога корист имају грађани обе државе.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Захваљујући том историјском помирењу никада овакви односи нису били између две државе и два народа. Оставили смо иза себе та болна поглавља прошлости.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера народном посланику Јанку Веселиновићу што, како наводи, као професор права позива на непоштовање одлука надлежних органа о том споменику.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Он као професор права не би требао да позива на непоштовање донетих одлука од стране легално изабраних органа Републике Србије, без обзира да ли се ради о локалним, покрајинским или републичким органима, са једне стране.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи пројекте у Суботици и северној Војводини за које су у буџету предвиђена средства: пруге ка Мађарској, гранични прелаз Хоргош, Ипсилон крак и Аква парк на Палићу.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Врло је добро што је предвиђено 720 милиона ове године и 900 милиона динара следеће године за реконструкцију и доградњу граничног прелаза Хоргош.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да закони морају да буду усклађени са Уставом и указује на рокове за то усклађивање.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Уставним законом за спровођење Устава је предвиђено да ће се закони из области правосуђа ускладити са измењеним Уставом у року од годину дана од ступања на снагу измењеног Устава.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  }
+ ]
+}

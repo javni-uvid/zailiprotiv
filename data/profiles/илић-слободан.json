@@ -1,0 +1,69 @@
+{
+ "mp": "илић слободан",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 12,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да буџет за пољопривреду није довољан и да српска пољопривреда, а највише сточарство, пропада.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, пољопривредни буџет јесте повећан и то је чињеница, али ни изблиза то није довољно за оно што је све потребно за српску пољопривреду.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се у Србији продаје фалсификована храна и замера што Предлог закона о службеним контролама то не решава.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Неколико пута сам на Одбору за пољопривреду говорио о томе да ми као грађани у великим трговинским ланцима већином купујемо лажну, фалсификовану храну са лажним декларацијама.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је ЕКСПО „корупционашки“ пројекат на који се троши новац грађана.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, мало, мало имамо овде ове две теме кроз које се провлаче милијарде евра новца грађана и капитала грађана.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се криминалци у Србији слободно крећу и да их нико не хапси.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Криминалци у Србији поседују на десетине хиљада комада ватреног оружја, аутоматске пушке, бомбе, зоље, пиштоље и они се слободно крећу улицама Србије и њих нико не сме да контролише, да ухапси.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера власти што, како наводи, крши Пословник Народне скупштине када ставља предлоге на дневни ред.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "То сте наравно урадили кршећи Пословник, али ви већином прегласавате и Пословник и законе и Устав, ви се тога не држите, тако да су то већ ваши манири.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "mp": "каранац јасмина",
+ "model": "claude-fable-5-2",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Наводи да су буџет и ребаланси буџета реално и одговорно планирани и да је привреда Србије отпорна на кризу.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овај Предлог ребаланса врло одговорно је пројектован и показује нам да без обзира на велика непланирана улагања која су се десила од избијања кризе па надаље држава Србија све време се придржава финансијске дисциплине.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се и у кризи наставља улагање у ауто-путеве, железницу и болнице и да јавне инвестиције подржава и Фискални савет.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Улагање у јавне инвестиције подржао је и Фискални савет који је рекао да је изградња инфраструктуре главна полуга за покретање привредног раста.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Србија у пандемији имала мањи пад БДП-а од других европских земаља због удела пољопривреде и производње хране и подржава већа издвајања за пољопривреду.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "То се дешава управо због структуре економије, односно већег учешћа пољопривреде и прехрамбене индустрије и зато је Србија у време највеће корона кризе, имала мањи пад БДП-а, од других европских земаља.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanaestom sazivu, 21. jul 2021. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Социјалдемократска партија Србије подржава повећање плата и пензија и издвајања за социјалну заштиту.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нама социјалдемократама Расима Љајића важна је сигурност сваког појединца, сваког радника, заштита интереса запослених и њихових породица и зато подржавамо свако повећање плата и пензија, када год је оно засновано на здравим и реалним основама.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да држава законима и новчаним давањима помаже мајкама, породицама са децом и родитељима који се сами старају о деци.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Споменућу Закон о Алиментационом фонду којим штитимо самохране родитеље, Закон о повољним кредитима за младе за куповину прве некретнине, закон који омогућава мајкама до 20.000 евра бесповратне помоћи за куповину крова над главом и да не набрајам даље.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}
