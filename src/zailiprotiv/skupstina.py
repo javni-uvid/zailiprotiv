@@ -8,6 +8,7 @@ sittings and votes first, and records every such PDF with the pages that link to
 from __future__ import annotations
 
 import heapq
+import http.client
 import time
 import urllib.error
 import urllib.parse
@@ -24,11 +25,21 @@ class FetchError(RuntimeError):
     pass
 
 
+def ascii_url(url: str) -> str:
+    """url with non-ASCII characters percent-encoded (the site has Cyrillic paths), and nothing encoded twice."""
+    parts = urllib.parse.urlsplit(url)
+    host = parts.hostname.encode("idna").decode() if parts.hostname else ""
+    netloc = host + (f":{parts.port}" if parts.port else "")
+    path = urllib.parse.quote(parts.path, safe="/%:@!$&'()*+,;=~")
+    query = urllib.parse.quote(parts.query, safe="=&%:@!$'()*+,;/?~")
+    return urllib.parse.urlunsplit((parts.scheme, netloc, path, query, ""))
+
+
 def fetch(url: str, timeout: float = 60, tries: int = 3) -> bytes:
     """The body at url, retried on network errors and server errors; a 4xx is not retried."""
     last = None
     for attempt in range(tries):
-        request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+        request = urllib.request.Request(ascii_url(url), headers={"User-Agent": USER_AGENT})
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
                 return response.read()
@@ -36,8 +47,10 @@ def fetch(url: str, timeout: float = 60, tries: int = 3) -> bytes:
             last = e
             if e.code < 500:
                 break
-        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+        except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.IncompleteRead) as e:
             last = e
+        except (ValueError, http.client.HTTPException) as e:  # a malformed address or reply: not worth retrying
+            raise FetchError(f"{url}: {e}") from e
         time.sleep(2 * (attempt + 1))
     raise FetchError(f"{url}: {last}")
 

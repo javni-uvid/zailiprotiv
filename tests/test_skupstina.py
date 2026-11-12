@@ -54,5 +54,15 @@ def test_crawl_follows_leads_and_stays_on_site():
     assert not any("example.com" in u or u.endswith(".docx") for u in asked)
 
 
+def test_cyrillic_paths_are_encoded_once():
+    url = "https://www.parlament.gov.rs/народна-скупштина/седнице.html?x=1"
+    assert skupstina.ascii_url(url) == \
+        "https://www.parlament.gov.rs/%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B0-" \
+        "%D1%81%D0%BA%D1%83%D0%BF%D1%88%D1%82%D0%B8%D0%BD%D0%B0/%D1%81%D0%B5%D0%B4%D0%BD%D0%B8%D1%86%D0%B5.html?x=1"
+    assert skupstina.ascii_url(skupstina.ascii_url(url)) == skupstina.ascii_url(url)
+    assert skupstina.ascii_url("https://www.parlament.gov.rs/upload/a%20b.pdf") == \
+        "https://www.parlament.gov.rs/upload/a%20b.pdf"
+
+
 def test_translit():
     assert latin("Гласали за") == "Glasali za"
