@@ -94,6 +94,8 @@ def load(data: Path) -> tuple[dict, dict, dict]:
         bills[path.name] = json.loads(path.read_text(encoding="utf-8"))
     for path in sorted((data / "summaries").glob("*.json")) if (data / "summaries").exists() else []:
         bills.setdefault(path.name, {})["summary"] = json.loads(path.read_text(encoding="utf-8"))
+    for path in sorted((data / "notes").glob("*.json")) if (data / "notes").exists() else []:
+        bills.setdefault(path.name, {})["notes"] = json.loads(path.read_text(encoding="utf-8"))
     return laws, votes, bills
 
 
@@ -187,7 +189,8 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
         s = s if taken[s] == 1 else f"{s}-{taken[s]}"
         final = votes.get(law.get("final_vote") or "")
         summary = bills.get(law.get("bill_file", ""), {}).get("summary")
-        items.append({"key": key, "slug": s, "law": law, "final": final, "summary": summary,
+        notes = bills.get(law.get("bill_file", ""), {}).get("notes")
+        items.append({"key": key, "slug": s, "law": law, "final": final, "summary": summary, "notes": notes,
                       "kind": kinds.KINDS.get(law.get("kind", "other"), ""),
                       "areas": [kinds.AREAS[a] for a in law.get("areas", [])]})
     ranked = most_against(items, len(items))

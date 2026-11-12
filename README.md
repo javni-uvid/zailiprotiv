@@ -72,6 +72,7 @@ data/
   index.json     sittings and their roll calls (one sitting per line)
   laws.json      the convocation's adopted laws (one law per line)
   bills/         one file per bill: its memorandum's sections and the Constitution's articles it cites
+  notes/         outside views on a law (independent bodies; media and civil society): source, date, link, note
   summaries/     one file per bill: the summary, the model, a fingerprint of what it read
   votes/         one file per sitting: each vote's date, item, kind, counts and rows (number, name, vote, group)
 tests/

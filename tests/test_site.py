@@ -24,6 +24,10 @@ def data(tmp_path):
     (d / "summaries" / "b.json").write_text(json.dumps({"model": "claude-sonnet-5-5", "summary": {
         "ukratko": "Закон уређује набавку оружја, према предлагачу.", "razlozi": ["усклађивање са ЕУ"],
         "promene": ["нова дозвола"], "sredstva": "Нису потребна средства."}}))
+    (d / "notes").mkdir()
+    (d / "notes" / "b.json").write_text(json.dumps({"checked": "2026-11-12", "independent": [
+        {"source": "Фискални савет", "date": "2026-07-01", "title": "Оцена", "url": "https://www.fiskalnisavet.rs/x",
+         "note": "Фискални савет оцењује да закон нема фискалне ефекте."}], "media": []}))
     laws = json.loads((d / "laws.json").read_text())
     laws["laws"]["L"]["bill_file"] = "b.json"
     (d / "laws.json").write_text(json.dumps(laws))
@@ -44,6 +48,7 @@ def test_site_builds_every_page(tmp_path):
     assert not (out / "najvise-protiv.html").exists()
     assert "1. mesto u sazivu" in law and "50.0%" in law
     assert "Hitan postupak" in law
+    assert "Fiskalni savet" in law and "Nezavisna i međunarodna tela" in law and "Mediji i civilno" not in law
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I
     for page in out.rglob("*.html"):

@@ -73,3 +73,6 @@ summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 .ranked li { border-bottom: 1px solid var(--line); padding: .9rem 0; }
 .rank-head { font-weight: 600; }
 .rank { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: .2rem; }
+.voices .label { font-size: .88rem; color: var(--muted); }
+.notes { padding-left: 1.1rem; }
+.notes li { margin: .45rem 0; }

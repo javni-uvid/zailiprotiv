@@ -45,6 +45,23 @@
 </section>
 {% endif %}
 
+{% if it.notes and (it.notes.independent or it.notes.media) %}
+<section class="voices">
+  <h2>Šta kažu drugi</h2>
+  <p class="label">Mišljenja i analize van Skupštine, sa izvorom i linkom. Ovo su stavovi tih izvora, ne naši; sajt ne preuzima nijedan stav. Beleške je prikupio AI model pretragom weba{% if it.notes.checked %} ({{ it.notes.checked|day }}){% endif %}.</p>
+  {% for key, heading in [("independent", "Nezavisna i međunarodna tela"), ("media", "Mediji i civilno društvo")] %}
+  {% if it.notes[key] %}
+  <h3>{{ heading }}</h3>
+  <ul class="notes">
+  {% for n in it.notes[key] %}
+    <li><b>{{ n.source|latin }}</b>{% if n.date %}, {{ n.date|day if n.date|length == 10 else n.date }}{% endif %}: {{ n.note|latin }} <a href="{{ n.url }}" rel="nofollow">{{ (n.title or "izvor")|latin }}</a></li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  {% endfor %}
+</section>
+{% endif %}
+
 {% if final %}
 <section>
   <h2>Konačno glasanje</h2>
