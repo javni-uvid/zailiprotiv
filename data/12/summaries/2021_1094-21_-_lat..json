@@ -1,0 +1,23 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "ae91468c8ea361696854b2462d4f9ca7c4c6e2b516ba3ef015d72ffa6ed433c7",
+ "summary": {
+  "ukratko": "Закон потврђује Уговор о кредитном аранжману са JPMorgan Chase Bank, N.A., London Branch, уз гаранцију британске агенције за извозно кредитирање UKEF, о зајму до 431.685.732,79 евра за изградњу ауто-пута Е-761, деоница Појате–Прељина (Моравски коридор).",
+  "razlozi": [
+   "Према образложењу, о задуживању Републике одлучује Народна скупштина, у складу са Законом о јавном дугу.",
+   "Предлагач наводи да Моравски коридор повезује централну Србију са Коридорима 10 и 11 и већа места у региону, од Ћићевца и Крушевца до Краљева и Чачка.",
+   "Очекују се, према образложењу, уштеде времена, нижи трошкови превоза, већа безбедност саобраћаја и већи приходи буџета.",
+   "Законом о буџету за 2021. предвиђено је задуживање до 800.000.000 евра за овај пројекат, а комерцијални уговор са Bechtel Enka UK Limited закључен је 5. децембра 2019. године."
+  ],
+  "promene": [
+   "Потврђује се уговор потписан у Лондону и Београду 11. јуна 2021. године.",
+   "Према образложењу, рок отплате је 13 година са почеком од три године, а камата је шестомесечни EURIBOR увећан за фиксну маржу од 0,50% годишње.",
+   "Премија агенције за извозно кредитирање износи 31.685.733 евра и плаћа се из зајма; предлагач наводи да је снижена са 10,28% на 7,27% због бољег ранга земље према OECD.",
+   "Накнада за аранжман износи 0,55% и плаћа се из буџета, провизија на неповучена средства до 0,20%, а годишња накнада агенту 25.000 евра."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o kreditnom aranžmanu br. 0020008959 koji se odnosi na neobezbeđeni zajam do iznosa od 431.685.732,79 evra uz garanciju UKEF u cilju finansiranja određenih građevinskih usluga od strane Bechtel Enka UK Limited, koji posluje u Srbiji preko Bechtel Enka UK Limited Ogranak Beograd za potrebe privrednog društva „Koridori Srbije“ d.o.o. Beograd u vezi sa izgradnjom infrastrukturnog koridora autoputa E-761 deonice Pojate-Preljina (Moravski koridor) između Republike Srbije koju zastupa Vlada Republike Srbije, postupajući preko Ministarstva finansija kao Zajmoprimca i J.P. MORGAN AG kao Agenta i JPMORGAN CHASE BANK, N.A., LONDON BRANCH kao Aranžera i JPMORGAN CHASE BANK, N.A., LONDON BRANCH kao Prvobitnog zajmodavca",
+ "depth": "standard"
+}

@@ -1,0 +1,15 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "3b7d4258f9d2915ec74e7b164b0f0c63cf1f4efa67a634115c064470cf393f88",
+ "summary": {
+  "ukratko": "Закон потврђује Уговор о кредиту бр. CRS 1020 01 Y између Француске агенције за развој и Србије за спровођење Програма урбане средине отпорне на климатске промене, потписан у Београду 10. маја 2021. године.",
+  "razlozi": [
+   "Хитан поступак предлагач образлаже потребом да средства зајма благовремено буду на располагању Републици Србији."
+  ],
+  "promene": [],
+  "sredstva": "Према образложењу, средства за спровођење закона обезбеђиваће се у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o kreditu br. CRS 1020 01 Y između Francuske agencije za razvoj i Republike Srbije za realizaciju Programa urbane sredine otporne na klimatske promene",
+ "depth": "standard"
+}

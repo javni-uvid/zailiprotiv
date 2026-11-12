@@ -1,0 +1,23 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "520a67b718b8b051a3e908caafbc8af515d4eaebcd66b76fa8db30224ac8e6d8",
+ "summary": {
+  "ukratko": "Закон потврђује уговор о кредиту до 400.000.000 евра са групом страних банака, уз осигурање Мултилатералне агенције за гарантовање инвестиција (MIGA), за грађевинске радове на аутопуту Е-761 Појате–Прељина (Моравски коридор).",
+  "razlozi": [
+   "Предлагач наводи да према Закону о јавном дугу Народна скупштина одлучује о задуживању Републике Србије.",
+   "Према образложењу, Моравски коридор, дуг око 110 км, повезује централну Србију са коридорима 10 и 11 и већа места у региону, а од њега се очекују уштеде времена, нижи трошкови превоза и већа безбедност саобраћаја.",
+   "Предлагач наводи да је зајам потребан за преостали део финансирања, после ранијег кредита уз подршку Извозне кредитне агенције Велике Британије, из ког је до сада искоришћено 158.044.456,70 евра.",
+   "Према образложењу, законима о буџету за 2021. и 2022. годину предвиђено је задуживање за овај пројекат до 800.000.000, односно до 600.000.000 евра."
+  ],
+  "promene": [
+   "Износ кредита је до 400.000.000 евра, а MIGA гарантује 95% кредита и камате.",
+   "Рок отплате је 13 година, укључујући три године почека, а средства су расположива до 36 месеци.",
+   "Камата је променљива: шестомесечни EURIBOR увећан за фиксну маржу од 0,55% годишње; накнада за аранжман износи 0,60% укупног зајма.",
+   "Провизија на неповучена средства износи 40% марже, агенту се плаћа 25.000 евра годишње, а премију MIGA у целини сноси зајмопримац."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o kreditu koji se odnosi na neobezbeđeni zajam u iznosu do 400.000.000 evra uz osiguranje od strane Multilateralne agencije za garantovanje investicija u cilju finansiranja određenih građevinskih usluga od strane Bechtel Enka UK Limited, koji posluje u Srbiji preko Bechtel Enka UK Limited Ogranak Beograd za potrebe privrednog društva \"Koridori Srbije\" d.o.o. Beograd u vezi sa izgradnjom infrastrukturnog koridora autoputa E-761 deonice Pojate - Preljina (Moravski koridor) između Republike Srbije koju zastupa Vlada Republike Srbije, postupajući preko Ministarstva finansija kao Zajmoprimca i J.R. MORGAN AG kao Agentom i JPMORGAN CHASE BANK, N.A., LONDON BRANCH kao Prvobitnim mandatnim vodećim aranžerom i Credit Agricole Corporate and Investment Bank, Raiffeisen Bank International AG i Santander Bank N.A. kao Mandatnim vodećim aranžerima i CaixaBank, S.A. i UBS Switzerland AG kao Vodećim aranžerima i Banco Santander, S.A., CaixaBank, S.A., Credit Agricole Corporate and Investment Bank, JPMorgan Chase Bank, N.A., London Branch, Raiffeisen Bank International AG i UBS Switzerland AG kao Prvobitnim zajmodavcima",
+ "depth": "standard"
+}

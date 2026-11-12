@@ -1,0 +1,22 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "4cec5be8846166a8a7d7a9aa5ee321ad6232755a2e635ef843bffcdf93148521",
+ "summary": {
+  "ukratko": "Закон потврђује уговор о кредитном аранжману до 203.775.000 евра, осигураном код China Export & Credit Insurance Corporation, за прву фазу пројекта сакупљања и пречишћавања отпадних вода централног канализационог система Београда, према образложењу.",
+  "razlozi": [
+   "Предлагач наводи да према Закону о јавном дугу Народна скупштина одлучује о задуживању, а да је Законом о буџету Републике Србије за 2022. годину предвиђено задуживање за овај пројекат до 220.000.000 евра.",
+   "Према образложењу, од пројекта се очекују ефекти на заштиту животне средине, нарочито на очување Саве и Дунава као крајњих реципијената испуштених вода.",
+   "Предлагач наводи да су после вишемесечних разговора са више банака UNICREDIT BANK AG и BNP PARIBAS понудиле најповољније услове кредита, уз осигурање Sinosure."
+  ],
+  "promene": [
+   "Прва фаза обухвата изградњу недостајуће инфраструктуре (интерцептор, тунел Хитна помоћ–Венизелосова), нове канализационе црпне станице „Ушће – Нова” и реконструкцију црпне станице „Мостар”.",
+   "Према образложењу, пројекат се реализује у две фазе на основу споразума Владе са кинеском компанијом CMEC из 2020. године, а постројење ће се простирати на око 97 хектара.",
+   "Кредит се повлачи 60 месеци и отплаћује у 20 једнаких полугодишњих рата, са крајњим доспећем десет година од почетне тачке кредита.",
+   "Камата је 6M EURIBOR + фиксна маржа од 1,75% годишње; уписна провизија износи 1%, провизија на неповучена средства 0,5% годишње, накнада агента 45.000,00 евра и ECA агента 25.000,00 евра годишње, уз плаћање премије Sinosure."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o kreditnom angažmanu u iznosu do 203.775.000 evra osiguranog kod China Export & Credit Insurance Corporation za finansiranje prve faze Projekta sakupljanja i prečišćavanja otpadnih voda centralnog kanalizacionog sistema grada Beograda između Republike Srbije, koju zastupa Vlada Republike Srbije, postupajući preko Ministarstva finansija, kao Zajmoprimca, BNP PARIBAS SA i UNICREDIT BANK AG, kao Aranžera, UNICREDIT BANK AG, BNP PARIBAS FORTIS SA/NV i BNP PARIBAS SA, kao Prvobitnih zajmodavaca, UNICREDIT BANK AG, kao Agenta i BNP PARIBAS SA, kao ESA Agenta",
+ "depth": "standard"
+}
