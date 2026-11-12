@@ -54,6 +54,26 @@
 {{ block("Glasovi za", for_, "Nijedan glas za među konačnim glasanjima o zakonima.") }}
 {% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true) }}{% endif %}
 
+{% if by_conv|selectattr("agree")|list %}
+<section>
+  <h2>Sa kim glasa isto</h2>
+  {% for c in by_conv if c.agree %}
+  {% if by_conv|length > 1 %}<h3>{{ c.name }} saziv</h3>{% endif %}
+  <div class="scroll">
+  <table class="groups agree">
+    <thead><tr><th>Poslanička grupa</th><th class="vote-cell"></th><th class="num">Isto</th><th class="num">Od</th><th class="num">%</th></tr></thead>
+    <tbody>
+    {% for a in c.agree %}
+      <tr{% if a.own %} class="own"{% endif %}><td>{{ a.group }}{% if a.own %} <span class="meta">(svoja grupa)</span>{% endif %}</td><td class="vote-cell"><span class="meter"><span style="width: {{ (100 * a.share)|round(1) }}%"></span></span></td><td class="num">{{ a.same }}</td><td class="num">{{ a.both }}</td><td class="num">{{ (100 * a.share)|round|int }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endfor %}
+  <p class="label">U koliko konačnih glasanja o zakonima je poslanik glasao isto (za, protiv ili uzdržan) kao većina poslaničke grupe, od onih u kojima su glasali i poslanik i ta grupa (najmanje 10 takvih glasanja). Grupe su navedene kako ih Skupština piše u listingu glasanja. Izračunato iz poimeničnih glasanja, istim pravilom za sve; ovo nije ocena rada poslanika.</p>
+</section>
+{% endif %}
+
 {% if kinds_table %}
 <section>
   <h2>Po vrsti zakona</h2>

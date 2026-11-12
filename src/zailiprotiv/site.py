@@ -393,6 +393,9 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             (top, n), total = c.most_common(1)[0], sum(c.values())
             if total >= 3 and n > total / 2 and g != "Bez poslaničke grupe" and g.lower() != "samostalni":
                 line[(key, g)] = top
+    groups_in: dict[str, list] = defaultdict(list)
+    for (key, g) in line:
+        groups_in[key].append(g)
     # What each MP is quoted saying in the debates summarised (the laws with most votes against).
     from zailiprotiv import debates as debates_
     loose_keys = {debates_.loose(k): k for k in people}
@@ -419,7 +422,16 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         for c in sorted({r["it"]["conv"] for r in record}, key=int, reverse=True):
             rs = [r for r in record if r["it"]["conv"] == c]
             groups = list(dict.fromkeys(r["group"] for r in rs if r["group"]))
-            by_conv.append({"conv": c, "name": ORDINAL_NAME.get(c, c), "groups": groups, "n": len(rs),
+            # How often the MP voted as most of each group did, in the votes where both voted.
+            same, both = Counter(), Counter()
+            for r in rs:
+                if r["vote"] in ("za", "protiv", "uzdrzan"):
+                    for g in groups_in[r["it"]["law"]["final_vote"]]:
+                        both[g] += 1
+                        same[g] += line[(r["it"]["law"]["final_vote"], g)] == r["vote"]
+            agree = sorted(({"group": g, "same": same[g], "both": n, "share": same[g] / n, "own": g in groups}
+                            for g, n in both.items() if n >= 10), key=lambda a: (-a["share"], -a["both"], a["group"]))
+            by_conv.append({"conv": c, "name": ORDINAL_NAME.get(c, c), "groups": groups, "n": len(rs), "agree": agree,
                             "tally": Counter(r["vote"] for r in rs), "record": rs})
         kinds_table = []
         for k, label in kinds.KINDS.items():

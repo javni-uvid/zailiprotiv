@@ -225,3 +225,6 @@ button.link { border: 0; background: none; padding: .6rem 0; margin-right: 1rem;
 .q-mp { margin: 1.2rem 0; max-width: 46rem; }
 .q-mp blockquote { font-size: 1.12rem; }
 .q-mp figcaption a { color: inherit; }
+.meter { display: block; height: .5rem; background: var(--line); }
+.meter span { display: block; height: 100%; background: var(--muted); }
+table.agree tr.own td:first-child { font-weight: 600; }
