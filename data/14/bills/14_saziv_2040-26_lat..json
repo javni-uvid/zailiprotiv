@@ -10,8 +10,10 @@
  "articles": [
   {
    "article": 97,
-   "paragraph": 10,
-   "points": []
+   "paragraph": null,
+   "points": [
+    10
+   ]
   }
  ]
 }

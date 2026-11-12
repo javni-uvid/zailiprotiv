@@ -11,8 +11,10 @@
  "articles": [
   {
    "article": 99,
-   "paragraph": null,
-   "points": []
+   "paragraph": 1,
+   "points": [
+    4
+   ]
   }
  ]
 }

@@ -1,6 +1,19 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/14_saziv/1261-26 - Lat..pdf",
  "sha256": "ff5defc263eeb7545deb0c2d9bd88ff19f81562c29ba0cf3ce06d23353bb9d59",
- "sections": {},
- "articles": []
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV ZA DONOŠENJE ZAKONA\n\nUstavni osnov za donošenje Zakona o potvrđivanju Sporazuma između\nVlade Republike Srbije i Vlade Republike Kipar o statusu njihovih snaga, koji je\npotpisan u Nikoziji, 10. decembra 2025. godine, sadržan je u članu 99. stav 1. tačka\n4. Ustava Republike Srbije, kojim je propisano da Narodna skupština potvrđuje\nmeđunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+  "reasons": "RAZLOZI ZBOG KOJIH SE PREDLAŽE POTVRĐIVANJE SPORAZUMA\n\nZaključkom Vlade 05 Broj: 018-12464/2025-2 od 4. decembra 2025.\ngodine, prihvaćen je Izveštaj o realizovanim pregovorima o usaglašavanju\nSporazuma između Vlade Republike Srbije i Vlade Republike Kipar o statusu njihovih\nsnaga, usvojen je tekst usaglašenog predmetnog sporazuma i ovlašćen ministar\nodbrane za njegovo potpisivanje.\n\nSporazum između Vlade Republike Srbije i Vlade Republike Kipar o\nstatusu njihovih snaga, potpisan je Nikoziji, 10. decembra 2025. godine.\n\nRepublika Srbija i Republika Kipar imaju zaključen ugovor o saradnji u oblasti\nodbrane. Upravo iz razloga razvoja bilateralne saradnje u domenu odbrane, te s tim\nu vezi i boravcima pripadnika osoblja (vojna i/ili civilna lica na službi u institucijama\ni/ili organima ugovornih strana) jedne od strana na teritoriji države druge ugovorne\nstrane, u cilju realizacije tog sporazuma, javila se potreba za ugovornim regulisanjem\nnjihovog statusa.",
+  "funds": "PROCENA POTREBNIH FINANSIJSKIH SREDSTAVA ZA\nSPROVOĐENJE ZAKONA\n\nZa realizaciju ovog zakona u 2026. godini, nisu potrebna finansijska\nsredstva.\n\nPotrebna finansijska sredstva za realizaciju ovog zakona u narednim\ngodinama, zavise od stepena i načina njegove realizacije i ista će biti planirana u\nokviru limita koje Ministarstvo finansija utvrdi za razdeo Ministarstva odbrane."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
 }
