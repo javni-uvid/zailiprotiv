@@ -1,0 +1,72 @@
+{
+ "mp": "жарић ковачевић јелена",
+ "model": "claude-fable-5-2",
+ "read": 34,
+ "speeches": 37,
+ "sittings": 12,
+ "points": [
+  {
+   "tekst": "Наводи да је Одбор за уставна питања и законодавство оценио да су предлози на дневном реду у складу са Уставом и правним системом Републике Србије.",
+   "govora": 5,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Уважена председнице Владе, уважени министри, представници министарстава, даме и господо народни посланици, на седници Одбора за уставна питања и законодавство оценили смо да су предлози о којима ћемо расправљати у пленуму у складу са Уставом и правним системом Републике Србије.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су јавне финансије Србије стабилне и да то омогућава повећање плата и пензија и бољи животни стандард грађана.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "И поред свих криза о којима сам говорила, наше јавне финансије су стабилне, то је најважније и то је управо оно што нам даје могућност да надаље поправљамо животни стандард грађана Србије.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је стање у Србији боље него до 2012. године, када, како каже, није било извесно да ли ће бити новца за плате и пензије.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Тада нисмо били сигурни ни да ли ће плате и пензије бити исплаћене данас. Ево, из месеца у месец можемо да говоримо о повећању плата и пензија.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера претходној власти реформу правосуђа из 2009. године, за коју наводи да је судије и тужиоце и њихове породице оставила „на улици“.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Нажалост, за нашу државу, као последица, јавили су се откази, породице носилаца правосудних функција који су остали на улици, а штета по буџет је била око 4,5 милиона евра.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да посланици опозиције у Скупштини износе неистине и обмањују грађане Србије.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Није тачно и није лепо да се са овог места из Народне скупштине обмањују грађани Србије.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  }
+ ]
+}

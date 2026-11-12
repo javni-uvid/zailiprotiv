@@ -1,0 +1,69 @@
+{
+ "mp": "здравко понош",
+ "model": "claude-fable-5-2",
+ "read": 18,
+ "speeches": 27,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да власт краде изборе и да се на изборну крађу ослања да би остала на власти.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овај закон служи томе да спречи вашу изборну крађу, то томе служи. Сада је врло парадоксално како смо дошли у ситуацију да управо ви предлажете закон који треба да ограничи вашу могућност да крадете.",
+    "date": "2025-11-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 04.11.2025..docx"
+   }
+  },
+  {
+   "tekst": "Замера што је министар финансија Синиша Мали буџет од 20 милијарди евра образложио за 30 минута.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тридесет минута за 20 милијарди евра. На то скрећем пажњу. Следећа ствар, ви сте расправу о буџету ставили међу 57 неких других тачака.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је власт 15. марта употребила звучни топ против грађана.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нормално би било да одговарају они који јесу узнемирили јавност, који су напали мирне демонстранте на улици, који су наредили и употребили звучни топ.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се један министар хвали везама са Русијом, док други одлази у Сједињене Америчке Државе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви, људи, сте врло чудни у томе. Каква сте ви Влада један се хвали да сарађује са ФСБ-ом, други тајно одлази у ЦИА-у.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера председници Народне скупштине Ани Брнабић што, како наводи, док води седницу реагује импулсивно, односно из афекта.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Госпођо Брнабић, хтео сам само да вам скренем пажњу да сте ви спикер овог парламента, ви нисте спикер већине, нисте спикер СНС.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "верица милановић",
+ "model": "claude-fable-5-2",
+ "read": 31,
+ "speeches": 35,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Тражи да се умање буџетска средства за Национални стадион и ЕКСПО, а увећају за друге намене, међу њима за домове за старе и друге објекте социјалне заштите.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Амандманом се предлаже умањење позиције изградње националног стадиона за једну милијарду и увећање за једну милијарду динара позиције обнове, изградње објеката јавне намене у области социјалне заштите.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се увећају средства за социјалну заштиту и наводи да велики број пензионера прима пензију до око 30.000 динара.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Разлог за овакав предлог је очигледна потреба за додатна социјална давања и помоћ најугроженијем становништву Србије.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт изменама закона о судовима и тужилаштву настоји да успостави контролу над правосуђем.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Има доста тога да се уреди у Закону о јавном тужилаштву, али не на овакав начин, на начин да се гуши јавно тужилаштво, да се ограничавају надлежности јавног тужилаштва и да се успоставља апсолутна контрола на тужилаштву.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Противи се томе да уверење Правосудне академије буде услов за први избор судија и тужилаца и да Академија буде једина тачка уласка у правосуђе.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, оспособљеност и стручност кандидата више не утврђују ВСС и ВСТ, него у претходном поступку утврђује Правосудна академија када врши одабир кандидата за похађање претходне обуке и издавањем уверења по завршеној тој обуци.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да у Србији често горе депоније и да загађен ваздух угрожава здравље грађана.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У Србији у прошлој години, током ове године, мислим да није било дана да нека депоније није горела.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  }
+ ]
+}

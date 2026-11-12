@@ -1,0 +1,69 @@
+{
+ "mp": "зечевић зоран",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 39,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да се држава задужује дугорочним кредитима које ће враћати и деца која се данас рађају.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Као што видите, сви пројекти који се раде у Србији, из овог буџета сазнајемо, раде се на дугорочне кредите, тако да имамо ситуацију да ће и она деца која се данас роде морати наредних 35 година да враћају поменуте кредите.",
+    "date": "2022-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 5. dan rada, 9. decembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је повећање најнижих пензија од 900 динара недовољно и да пензионери са малим пензијама преживљавају од новца који им шаљу деца из иностранства.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Подсетићу вас само да, што је рекао мој колега, да је огроман број пензионера који имају пензију испод 10 хиљада динара и мислим да је срамота за државу да им дају повећање од 900 динара.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Предлаже да се приходи буџета повећају тако што би се вратио новац из приватизација које назива „пљачкашким“ и преиспитале јавне набавке, у којима се, како наводи, вредност радова увећава.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Поново ћу да их поновим, а један о предлога јесте да се новац прикупљен од тзв. пљачкашких приватизација врати грађанима од којих је и узет.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да му је председник Александар Вучић рекао да половина материјала набављеног за здравствене установе заврши у приватним апотекама.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Све то не би био проблем да ја у личном разговору са председником нисам сазнао да материјал који добијају здравствене установе пола заврши у приватним апотекама.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је питање Косова и Метохије међу најважнијим темама и тражи да посланици у томе помогну председнику Александру Вучићу.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Док ви о томе разговарате на једном нивоу који не заслужује овај парламент, ултиматуми стижу са Запада, каже – Косово да се реши до децембра.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

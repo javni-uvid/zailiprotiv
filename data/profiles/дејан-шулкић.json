@@ -1,0 +1,70 @@
+{
+ "mp": "дејан шулкић",
+ "model": "claude-fable-5-2",
+ "read": 20,
+ "speeches": 27,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Замера што рад државних органа није довољно јаван и што су уговори које држава закључује тајни.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Јавност у раду у нашем друштву, у нашим институцијама није јача страна и није нешто што нас краси.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се подносе извештаји о степену реализације и ефектима пројеката које држава финансира или подстиче.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, предложио сам да за гаранције, зајмове и суфинансирања ових пројеката да се подносе извештаји Народној скупштини о степену реализације тих пројеката, о утрошеним средствима, такође, праћење ефеката реализованих пројеката, квалитета изведених радова.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да има привредних друштава која су добила подстицаје или помоћ државе, а не плаћају доприносе за запослене, и тражи да се и њихове обавезе контролишу.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја сам о томе говорио да постоје послодавци, привредна друштва која годинама не уплаћују доприносе које терете послодавца.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што Скупштина законе разматра по скраћеном поступку и у обједињеној расправи о великом броју тачака, па се о свим тачкама не стигне расправљати.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Нема довољно времена ни за ових пет закона, а камоли за неке друге. Ево, видите да нећемо можда више од два закона у појединостима, када је у питању разматрање амандмана.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да предлози измена правосудних закона који нису део Владиног текста иду у прилог независности судства и самосталности тужилаштва.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Са друге стране, ти предлози су чак, да иронија буде већа, и ветар у леђа независности судства и самосталности тужилаштва, али на неки начин нису прихваћени.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  }
+ ]
+}

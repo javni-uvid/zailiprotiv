@@ -1,0 +1,69 @@
+{
+ "mp": "гајић горица",
+ "model": "claude-fable-5-2",
+ "read": 30,
+ "speeches": 36,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Замера што се новчана помоћ од 5.000 динара даје свим младима без разлике и тражи да се помоћ усмери на сиромашне ученике и студенте.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Молим вас да овако више не радите, јер много је боље да дамо сиромашним ученицима и студентима, него да неселективно трошимо овако паре на све младе људе, па чак и оне који имају можда и 2.000 евра плату.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се капиталне инвестиције из буџета финансирају из зајмова и кредита које ће враћати грађани.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Све ово треба да се гради и објекти за здравство и објекти за просвету и инфраструктура и путеви и мостови и железнице и софтверска опрема, али све ћемо то платити из зајмова и кредита.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се из буџета повећају ненаменски трансфери локалним самоуправама.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Тако да, мислим да је требало знатно да се повећа ова ставка за ненаменске трансфере локалним самоуправама.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се из буџета више уложи у установе социјалне заштите и наводи да проблеме центара за социјални рад зна из свог рада на месту директорке центра.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Као дугогодишњи директор једног центра за социјални рад, знам какве проблеме центри за социјални рад имају када треба да сместе лица са менталним сметњама.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера, позивајући се на Пословник, што се у расправи користе увредљиви изрази и износе подаци из приватног живота посланика.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дајте једном, не односи се сада само на колегу који је претходно говорио, на све нас, немојмо више да говоримо о личним стварима и да износимо чињенице из личног живота.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  }
+ ]
+}

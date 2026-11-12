@@ -1,0 +1,72 @@
+{
+ "mp": "александар марковић",
+ "model": "claude-fable-5-2",
+ "read": 32,
+ "speeches": 35,
+ "sittings": 18,
+ "points": [
+  {
+   "tekst": "Наводи да медији које назива „тајкунским“, међу њима Н1 и Нова, воде сталну кампању против председника Александра Вучића и његове породице.",
+   "govora": 6,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Отуда кампања против Вучића, отуда специјалне емисије, отуда некакви филмови итд. у којима је мета искључиво једино и само Александар Вучић.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани буџете и ребалансе, наводећи да се плате и пензије повећавају без угрожавања макроекономске стабилности.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Притом, оно што је јако битно и што треба нагласити, да све ово остварујемо без додатног задуживања, да све ово остварујемо без неповољних задуживања, да овим не нарушавамо и не угрожавамо макро-економску стабилност.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани већа издвајања за Војску Србије и повећање плата њеним припадницима.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Признаћете, то у овом тренутку није мало и показује одлучан став државе да брине о својим војницима.",
+    "date": "2020-12-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sesta sednica Drugog redovnog zasedanja NSRS, 10.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су у време претходне власти просечна плата и минимална зарада биле вишеструко ниже него данас и замера опозицији што то оспорава.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Трећи је дан како слушамо да је 330 евра просечне плате, колика је била у њихово време, заправо боље и више од 820 евра, колика је данас.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су прихваћене препоруке ОДИХР-а о изборима и да опозиција за своје изборне поразе криви изборне услове, а нема програм ни политику.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нема тих изборних услова који ће вам омогућити победу на изборима уколико немате политику, уколико немате план, уколико немате програм, уколико не кандидујете идеје које за циљ имају бољи квалитет живота грађана Србије.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

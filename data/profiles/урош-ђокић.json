@@ -1,0 +1,69 @@
+{
+ "mp": "урош ђокић",
+ "model": "claude-fable-5-2",
+ "read": 24,
+ "speeches": 26,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Замера што се новац из буџета и зајмова троши на ЕКСПО и национални стадион и наводи да би исти износи били довољни за бесплатне уџбенике за децу.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ова милијарда евра, Влада планира да баци на овај бесмислени пројекат, је довољно да 22 године сви основци у Србији добијају бесплатне уџбеника.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да министар финансија Синиша Мали одлучује у чије ће џепове отићи новац грађана из буџета и јавних пројеката.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато грађани министар брани своје чедо и зато министар брани ЕКСПО, јер је ЕКСПО гарант да ће новац свих нас завршити у оним џеповима у које их министар пошаље.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се зграда Генералштаба поклања страним инвеститорима уз кршење закона и да се закон мења како министар Никола Селаковић не би одговарао у поступку који тужилаштво води због скидања статуса културног добра.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прекршили сте Закон о културном наслеђу, а што се тиче скидања статуса културног добра, ту ТОК већ води поступак и полако, али сигурно иде према Николи Селаковићу, Горану Весићу и Дејану Ђурђевићу.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што је правосудне законе предложио посланик Угљеша Мрдић, а не Влада, без јавне расправе и мишљења струке, и наводи да они служе томе да власт стави правосуђе под своју контролу.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овим сетом закона власт не јача правосуђе, она га преузима. Предлозима господина Угљеше Мрдића имамо на сцени преузимање правосуђа са задатком да се сва овлашћења преузму из руку Доловац и преместе у руке Ненада Стефановића.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је регионална депонија „Дубоко“ у Ужицу радила без употребне дозволе и после решења инспекције о затварању из фебруара 2024. године и да је пожар на њој 20 дана тровао Ужице и околину.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У фебруару 2024. године инспекција доноси решење да депонија мора бити затворена, јер пазите – не поседује употребну дозволу, не може да врши прихват отпада.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

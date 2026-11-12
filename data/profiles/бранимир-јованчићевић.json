@@ -1,0 +1,69 @@
+{
+ "mp": "бранимир јованчићевић",
+ "model": "claude-fable-5-2",
+ "read": 13,
+ "speeches": 33,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Наводи да се закони из области животне средине у Србији не поштују.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Имајући у виду те законе, па могу слободно да кажем, чак и квалитет тих закона, очекивали бисмо да је данас држава Србија налик једној развијеној Швајцарској или некој таквој држави.\nМеђутим, ситуација је потпуно другачије. Због чега? Зато што су заказале извршна и судска власт.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да грађани Србије нису на време обавештени о стању и загађењу животне средине.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Данас су грађани, према Архунској конвенцији коју је ратификовала Скупштина Републике Србије, ти који имају право да буду правовремено информисани када је у питању стање квалитета животне средине. Данас то у Србији није случај.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Говори о науци и високом образовању и наводи да је наука најважнија за развој друштва.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Данас, нажалост, видим мало прилике, мало тема, мало реченица о нечему што је по мом мишљењу данас и не само за Србију, него и за свако друштво најважније.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се судији који се премешта у други суд гарантује зарада коју је имао.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, ДС се стварно залаже за социјалну правду и сматра да никакво премештање из суда у суд не би требало да допринесе смањењу зарада судија.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да предложена решења о распореду послова судија угрожавају независност судија.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Овакво решење је, међутим, у пракси коришћено као механизам утицаја председника судова на независност судија по нашем мишљењу.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  }
+ ]
+}

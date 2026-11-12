@@ -1,0 +1,69 @@
+{
+ "mp": "стефан јањић",
+ "model": "claude-fable-5-2",
+ "read": 22,
+ "speeches": 29,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да су рачуни великог броја прекршајних и виших судова у блокади и замера што се буџетом то не решава.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "За вашу информацију, у блокади је 31 прекршајни суд и 18 виших судова. Да ли је то одлика једног гиганта, каква је Србија, да је већина прекршајних и виших судова у блокади, рачуни су им у блокади?",
+    "date": "2024-09-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 24. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се изменама закона које је предложио посланик Угљеша Мрдић деградирају тужилаштво и правосуђе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дошла је свакако нова година и експресно је заказана ова седница са дневним редом на којем доминирају ови Мрдићеви закони, закони којима се систематски деградира и уништава тужилаштво и правосуђе Републике Србије.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да посланик Угљеша Мрдић каже где је завршио прве две године факултета.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Кажите где сте завршили прве две године факултета и ништа више није спорно, као и где су адресе судова које сам вас питао?",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да председница Народне скупштине Ана Брнабић није говорила истину када је рекла да није обавештена о доласку делегације европарламентараца.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Госпођо Брнабић, ви сте гостовали у јутарњем програму једне телевизије и рекли сте, изричито, да вас нико није обавестио о доласку европарламентараца у Србију.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Пита да ли Ивица Дачић и даље врши дужност министра унутрашњих послова, у вези са поступањем полиције.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Врло је важно да знамо да ли имамо функционалног министра полиције, имајући у виду шта се све дешава, пре свега испред Народне скупштине?",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

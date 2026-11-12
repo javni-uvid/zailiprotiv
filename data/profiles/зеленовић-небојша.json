@@ -1,0 +1,69 @@
+{
+ "mp": "зеленовић небојша",
+ "model": "claude-fable-5-2",
+ "read": 16,
+ "speeches": 27,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да се укидањем накнаде за конверзију земљишта, које предлаже министар Горан Весић, спроводи „пљачка века“ вредна десетине милијарди евра.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Још једном ћу рећи, сви људи који су приватизовали фабрике су знали тада шта купују. Знали су да купују фирме и фабрике без грађевинског земљишта и сада им министар Весић даје практично то у руке, бесплатно.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Замера председавајућима што посланицима опозиције не дају реч и право на реплику и тражи да се поштује Пословник.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, тражимо од почетка да дозволите опозицији да говори. Тражимо од почетка само да се поштује оно што је свето писмо за овај дом.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је цена горива у Србији превисока и тражи да се снизи.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Замислите сваки пут кад одете да сипате гориво на пумпу ви га плаћате скупље него било ко у региону, зато што је ваша Влада одлучила да вам узме толико.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се пред Скупштином нађе закон о забрани рударења литијума и бора, предложен народном иницијативом.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Та борба ће се завршити овде у парламенту онда када буде био изгласан закон о забрани рударења литијума и Бора у складу са народном иницијативом.",
+    "date": "2022-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 5. dan rada, 9. decembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Брани резултате градске власти у Шапцу у време када ју је водио и наводи да је град трошио мање него други градови.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Уштедели тако што нисмо запошљавали рођаке и фамилију и страначке функционере, него смо имали 1.000 људи мање запослених у јавном систему него што је имао било који други град сличне величине.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  }
+ ]
+}

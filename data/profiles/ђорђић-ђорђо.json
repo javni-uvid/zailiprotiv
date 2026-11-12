@@ -1,0 +1,73 @@
+{
+ "mp": "ђорђић ђорђо",
+ "model": "claude-fable-5-2",
+ "read": 18,
+ "speeches": 27,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да општа болница у Сремској Митровици, која лечи више од 300.000 људи, нема магнетну резонанцу и тражи да је добије.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Моја мисија је да хоћу по цену свега да се магнетна резонанца појави у Сремској Митровици, јер ми у Сремској Митровици у општој болници која лечи 330 хиљада људи немамо магнетну резонанцу.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да фабрика за прераду метала у Сремској Митровици загађује ваздух и тражи да се загађење измери.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Фабрика, истину, запошљава велик број људи, али зашто у Сремској Митровици нема ниједна мерна страница која мери загађеност ваздуха?",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се буџетски новац издваја за вађење потонулих немачких бродова и пут који већ постоји, а тражи да се уложи у потребе Сремске Митровице.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "За мене је много битнији вртић у Мачванској Митровици, спортска дворана у Мартиновцима и Сремска Митровица, Војводина и неке ствари које су за нас приоритет него пут који већ постоји.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су цене порасле више него плате и пита чланове Владе како се од тих плата може живети.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја сам вас питао просто да ли ви знате да је од 2023-2026. године поскупело све за 70%, а плата је скочила за 35%?",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се у спорт улаже, али да је систем улагања погрешан и да се деца све мање баве спортом.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми улажемо нон-стоп у неке стадионе, у неке дворане, али у оно у шта се не улаже дефинитивно то су људи и то су стручњаци спортски.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "mp": "бакарец небојша",
+ "model": "claude-fable-5-2",
+ "read": 28,
+ "speeches": 31,
+ "sittings": 17,
+ "points": [
+  {
+   "tekst": "Наводи да су од 2012. године, под влашћу Александра Вучића и СНС-а, порасле плате и запосленост и изграђени ауто-путеви, а да је власт до 2012. године, коју назива „жута хунта“, нанела штету држави.",
+   "govora": 6,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Председник Вучић је незапосленост смањио са 25% на 8% и запослио је 550.000 људи за ових 14 година.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Драган Ђилас, бивши градоначелник Београда, новац стицао корупцијом и на штету града Београда.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Била је вредна једино Драгану Ђиласу који је од те крипто валуте зарадио 619 милиона евра.",
+    "date": "2020-12-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sedma sednica Drugog redovnog zasedanja NSRS 17.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да телевизије Н1 и Нова и други медији наклоњени опозицији шире лажне вести и воде кампању против државе и председника Александра Вучића.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ови медији највише и таргетирају и дехуманизују председника Републике и чланове његове породице, чланове Владе, Ану Брнабић и чланове њене породице и све остале функционере власти.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да део опозиције и учесници блокада, које назива „блокадери“, прибегавају насиљу над члановима СНС-а и желе да дођу на власт без избора.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Блокадери су за 16 месеци уништили више од 1000 просторија СНС, од којих су 40 спалили.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су закони које предлаже већина усклађени са прописима ЕУ и да их подржавају Европска комисија и друга европска тела.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што је битно Европа подржава овај сет правосудних закона и онај референдум и измене Устава, а Венецијанска и Европска комисија су подржале овај сет закона.",
+    "date": "2023-02-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 5. februar 2023. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

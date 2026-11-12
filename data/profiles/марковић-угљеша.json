@@ -1,0 +1,71 @@
+{
+ "mp": "марковић угљеша",
+ "model": "claude-fable-5-2",
+ "read": 30,
+ "speeches": 33,
+ "sittings": 13,
+ "points": [
+  {
+   "tekst": "Наводи да Социјалистичка партија Србије постоји више од три деценије зато што јој грађани на изборима дају подршку.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дефинитивно и дан данас за СПС гласају грађанке и грађани Србије, а то могу да потврде и ваши контролори на бирачким местима који сваке изборе потпишу исте те записнике.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Брани рад Министарства унутрашњих послова и полиције и наводи да унутрашња контрола ради свој посао.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Мислим да ови подаци на најбољи могући начин говоре о томе да ли полиција ради свој посао. Она га ради.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Подржава предлоге буџета и наводи да они доносе раст плата и пензија и наставак улагања у инфраструктуру.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Тај буџет нам омогућује за следећу годину да на пројектовану инфлацију коју имамо ми наставимо са растом плата и пензија.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се у расправи говори о тачкама дневног реда.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Замолио бих вас, уважена председнице Народне скупштине, да на неки начин покушамо да ток ове седнице вратимо на онај начин како је дефинисано управо овим Пословником.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Закон о оружју и муницији уређује легално оружје, а да се казне за нелегално држање и ношење оружја повећавају изменама Кривичног законика.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Када је и питању оно што је јуче доминирало као тема, а то јесте неовлашћено ношење или држање оружја, то не регулише закон о оружју и муницији.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}

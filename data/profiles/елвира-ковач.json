@@ -1,0 +1,72 @@
+{
+ "mp": "елвира ковач",
+ "model": "claude-fable-5-2",
+ "read": 29,
+ "speeches": 31,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Наводи да су предлози закона о којима извештава у име Одбора за европске интеграције усклађени са правним тековинама ЕУ и да се њима испуњавају обавезе Србије из преговора о приступању.",
+   "govora": 6,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Све ове реформе радимо, наравно, због наших грађана, али није мање битно да нам помажу да напредујемо на путу ка ЕУ, а надамо се да ће све то бити валоризовано и у виду отварања кластера.",
+    "date": "2026-07-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 06.07.2026..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Европска комисија више пута оценила да је Србија спремна за отварање Кластера 3, а да до отварања није дошло.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Јер, подсетила бих све нас, Европска комисија је у последња два извештаја рекла да Србија јесте спремна за отварање Кластера 3, за велики нови корак, а ипак до тога није дошло у протеклих годину и по дана.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да кандидати за члана Савета РЕМ-а које предлажу национални савети националних мањина нису кандидати већине тих савета и тражи да се за њих не гласа.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У једној од категорија они су предлагачи, 20 националних свата националних мањина не жели ове кандидате који су сада пред нама, већ је њихов предлог другачији.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да припадници националних мањина могу да користе матерњи језик у јавној управи и на електронским платформама државе.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наиме, између осталог Повереница још увек актуелна је раније у својим препорукама нагласила и чињеницу да је нажалост још увек недовољна заступљеност припадника националних мањина у органима јавне управе.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су породица и деца стуб политике СВМ-а и да уз новчана давања треба обезбедити вртиће и целодневну наставу.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Није једини пресуђујући фактор зашто се људи одређују за више деце. Потребно је размишљати и на даље шта после, обезбеђивати целодневну наставу у школама итд.",
+    "date": "2024-09-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 24. septembra 2024. godine.docx"
+   }
+  }
+ ]
+}

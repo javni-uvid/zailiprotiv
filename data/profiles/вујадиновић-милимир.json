@@ -1,0 +1,71 @@
+{
+ "mp": "вујадиновић милимир",
+ "model": "claude-fable-5-2",
+ "read": 29,
+ "speeches": 36,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Брани то што се новцем из буџета Србије помаже Србима у региону и граде путеви ка Републици Српској.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "У овоме предлогу ребаланса буџета се налази новац за изградњу путева према Републици Српској и онога према Прељини и даље према Вишеграду и Сарајеву, ако хоћете.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је председник Александар Вучић заслужан за развој Србије и за пројекте урађене у време његове политике.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Много историјских ствари урађено је у периоду политике данашњег српског председника Александра Вучића, данашње СНС и њеног председника Милоша Вучевића.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да Тужилаштво за ратне злочине испита Тонина Пицулу, известиоца Европског парламента за Србију, о евентуалном учешћу у ратном злочину у Двору на Уни 1995. године.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што желим да питам наше Тужилаштво за ратне злочине је да ли ће испитати Тонина Пицулу као припадника екстремне војне формације о његовом евентуалном учешћу у ратном злочину који је почињен у Двору на Уни?",
+    "date": "2026-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 09.07.2026. 4. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што, како наводи, брани и заступа људе са криминалном прошлошћу, међу њима приведене у Мајданпеку.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Од шест приведених у Мајданпеку, за које се тако здушно залажу, свих шест су кривично гоњени и осуђивани људи у протеклих 10 година, свих шест.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што су на њене скупове у Србији, како наводи, долазили активисти из Тузле и човек који је по сопственим речима у рату убијао Србе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Шта је моје питање, а доћи ће данас министар полиције овде и биће згодно да нам одговори, да ли ће и када таквим лицима која угрожавају безбедност Републике Србије бити забрањен улазак у Републику Србију?",
+    "date": "2024-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene  stenografske beleske Prvog vanrednog zasedanja NSRS, odrazane 25. jula 2024. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

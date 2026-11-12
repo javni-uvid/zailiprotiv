@@ -1,0 +1,70 @@
+{
+ "mp": "станковић ђорђе",
+ "model": "claude-fable-5-2",
+ "read": 25,
+ "speeches": 29,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Замера што се кредити и капиталне инвестиције усмеравају у Београд и тражи да се више улаже у Ниш и југ Србије.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "То су у суштини неке цифре које добија Београд у овом случају или можемо да кажемо одређени део Србије, али не и југ, исток или запад.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да ђаци у целој Србији, а не само у појединим градовима, добију бесплатне уџбенике и бесплатну ужину.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, бесплатни уџбеници на нивоу целе Србије би коштали 50 милиона евра. Бесплатна ужина на нивоу целе Србије за основце би коштала око 100 милиона евра.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се у Нишу оснива нови факултет издвајањем из Филозофског факултета без мишљења Универзитета у Нишу и наводи да се тиме руши аутономија универзитета.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, ко је донео одлуку да се оснује факултет српски студија у Нишу без мишљења Универзитета у Нишу, без мишљења Националног савета за високо образовање?",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се новац улаже у ЕКСПО и тражи да се улаже и у друге области.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја ћу вам дати само финансијску анализу колико би шта коштало и чисто да направимо анализу колико се тренутно новца троши на ЕКСПО, а колико би у овом случају могло да се уложи у образовање.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да повећање минималне зараде, уз скупље закупе, комуналије и енергију, пада на терет малих предузетника.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Како министар очекује да преживе мале породичне фирме када се повећава константно минимална зарада, и то на њихов рачун?",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  }
+ ]
+}

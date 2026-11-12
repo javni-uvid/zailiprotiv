@@ -1,0 +1,69 @@
+{
+ "mp": "богдан радовановић",
+ "model": "claude-fable-5-2",
+ "read": 27,
+ "speeches": 33,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да је регионална депонија „Дубоко“ упропашћена нестручним управљањем власти и да локалне самоуправе које су је основале због тога плаћају буџетску помоћ и камату на њу.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што је чињеница јесте да сте ви то јавно добро, ту регионалну депонију упропастили својим нестручним управљањем и својом корупцијом, а након тога плаћају, дакле, девет локалних самоуправа плаћају буџетску помоћ за санацију ваших коруптивних радњи.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се на изборима врше организована миграција бирача и куповина гласова, позивајући се на препоруке ОДИХР-а.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, опет се враћам на препоруке ОДИХР, које су јасне и недвосмислене и које чак на седам места кажу - организована је нелегална миграција бирача, а чак на осам места, и то су ове препоруке након избора децембра 2023. године, помиње се куповина гласова.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да предложене измене закона о тужилаштву одузимају тужилаштву самосталност и стављају га под контролу власти.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, решење о Предлогу смањује објективност у функционисању јавних тужилаштава и повећава централизацију и контролу. Због тога је овај Предлог шаторског закона апсолутно не прихватљив.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да тужилаштва не процесуирају пријаве због претњи и напада на њега, а да гоне оне који на друштвеним мрежама пишу против власти.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "То се дешавало и позивима на телефон и порукама и писањима на друштвеним мрежама, али до дан данас је све то, ево скоро ће годину дана, остало нерешено, без конкретизације, без оптужног предлога, без било каквог формалног процесуирања.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера власти што комплекс Генералштаба, који сматра културним наслеђем, препушта за пројекат који везује за „Трамповог зета“.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Међутим, с друге стране, ви нисте свесни да овим законом осим те зграде Генералштаба дајете и Касарну Седмог пука за рецепцију хотела Трамповог зета.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

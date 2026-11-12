@@ -1,0 +1,72 @@
+{
+ "mp": "томислав јанковић",
+ "model": "claude-fable-5-2",
+ "read": 25,
+ "speeches": 26,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да ће Сремска Митровица, град из кога долази, бити окружена са три ауто-пута у облику потковице и да то доприноси развоју града.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Данас Сремска Митровица, односно за месец дана ће бити једини град на простору Републике Србије који ће имати три ауто-пута који ће опасати мој град у облику потковице и данас се улаже и наставља се даљи развој Сремске Митровице.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је за време претходне власти привреда била уништена, а незапосленост 25 одсто, и да је по доласку СНС на власт незапосленост знатно мања.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Они који данас позивају на некакве мотке и камење су упропастили привреду. Ми смо до 2012. године имали стопу незапослености од 25%. Данас је она једноцифрена.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да амандмани које подноси скраћују процедуре и олакшавају инвеститорима улагање у Србију.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Значи, кроз овај предлог се смањују одређене процедуре. Укидају се непотребне процедуре и то ће позитивно утицати на саму реализацију инвестиција и смањење рокова, тако да вас у дану за гласање позивам да подржите овај предлог.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Хвали рад министра Горана Весића и начин на који је Закон о планирању и изградњи представљен јавности и у јавној расправи.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Желим на почетку пре свега да похвалим министра Весића и његов Кабинет и све људе који су у тиму представили закон и начин на који је он донет, али и начин презентације јавности.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се у Србији много гради и да држава улаже у путеве, пруге, школе и болнице.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Када говоримо о инвестицијама, заиста са пуно поноса можемо да кажемо да је данас Србија једно велико градилиште, да се на све стране буквално ради, гради се.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  }
+ ]
+}

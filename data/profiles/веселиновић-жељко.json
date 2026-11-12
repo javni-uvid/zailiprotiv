@@ -1,0 +1,71 @@
+{
+ "mp": "веселиновић жељко",
+ "model": "claude-fable-5-2",
+ "read": 24,
+ "speeches": 27,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Тражи да се промени Закон о раду и наводи да су он и његови сарадници већ предложили нови закон.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми морамо да радимо на квалитету радних места и морамо да мењамо Закон о раду. Ми смо то предложили и предлагаћемо и даље.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да раднице у фабрици „Јура“ носе пелене јер им се не дозвољава одлазак у тоалет и тражи да држава реагује на такве послодавце.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ако хоћете да знате где се носе пелене, ево, рећи ћу вам, носе се у „Јури“ и то цела Србија зна.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се повећава само минимална зарада, па ће за њу радити све више запослених, што назива „уравниловком“.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Када дођемо до минималца од 40 хиљада динара, доћи ћемо до уравниловку да ће преко пола милиона грађана Србије примати минималац. То се зове сиромаштво.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да радни спорови трају и по десет година, а да одштете за незаконите отказе на крају плаћају грађани.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја бих се осврнуо на радне спорове који у Србији трају по пет, шест, некада и 10 година. Сведок сам да синдикат који водим води неке радне спорове који трају и по 10 година.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је запослених више него 2012. године, али да су нова радна места неквалитетна и слабо плаћена.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Да се разумемо, 2012. године је било 1.800.000 запослених, данас је 2.400.000. Нисам демагог, апсолутно. Међутим, проблем се поставља у томе што то нису квалитетни послови.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

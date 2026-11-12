@@ -1,0 +1,73 @@
+{
+ "mp": "радовановић славица",
+ "model": "claude-fable-5-2",
+ "read": 26,
+ "speeches": 34,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да у Наставном центру „Макиш“ није могућа градња због постојеће инфраструктуре и тражи да се новац предвиђен за њега усмери на друге полицијске објекте.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сматрам да у наведеном Наставном центру „Макиш“ није могућа реконструкција и санација објекта услед постојеће инфраструктуре, а без реконструкције и санације објекта полицијске станице Рача и полицијске станице Аранђеловац хитније и нужније усмерити новац из буџета Републике Србије.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се изгради центар за ургентно збрињавање жртава насиља у породици и да деца чије су мајке убијене у породичном насиљу добију дечји додатак.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сматрам да је далеко хитније и потребније да се наведени износ искористи за пројектовање далеко нужнијег објекта као што је Центар за ургентно збрињавање жртва насиља.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се у МУП-у до чинова и руководећих места долази без конкурса и без прописаних услова и квалификација.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Такође, говори да нема поштовања Уредбе и да на овакав начин радницима је потребно, који раде у министарству, 10 до 15 година стажа да дођу на таква радна места, а некима је потребно две недеље или два месеца.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Александар Вулин као министар унутрашњих послова неоправдано и ненаменски трошио новац МУП-а.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "То би могао и да нам каже господин Вулин, јер он када је био министар, он је тако ишао по полицијским станицама, по објектима, градио теретане, ненаменски куповао.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Пита министра унутрашњих послова ко је одговоран за прекомерну употребу силе полиције према грађанима и да ли су против тих полицајаца покренути поступци.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зашто, ако су ово радили полицајци, зашто нису покренути дисциплински поступци за теже повреде радне дужности, јер ово је срамота, ове слике су отишле у свет, како полиција бије децу?",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "александар павић",
+ "model": "claude-fable-5-2",
+ "read": 20,
+ "speeches": 27,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да је његова посланичка група избрисана из медија које контролише власт.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Е па, када би имали приступ медијима, који немамо, ми бисмо рекли, ви би знали да постоји опозиција у Србији која није за увођење санкција Русији. Значи, ви сте направили један медијски логор, који ви контролишете и ту сте главни.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да понуда председника Србије Александра Вучића да се муниција прода Европској унији крши војну неутралност и увлачи Србију у сукоб са Русијом.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Да ли ми кршимо војну неутралност нашу декларисану тиме што продајемо једној од зараћених страна, то јест нудимо да продајемо нашу муницију?",
+    "date": "2025-11-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 04.11.2025..docx"
+   }
+  },
+  {
+   "tekst": "Замера што није добио одговоре о томе на основу чега је одлучено да се купе авиони „Рафал“ и које су биле алтернативе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не знамо уопште процес одлуке да се купе \"Рафали\" и зашто су они били најбољи? И тај део је нетранспарентан.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да јавни сервис РТС једнострано заступа Зелену агенду и тезу да је глобално загревање проузроковао човек.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо због агенди ЕУ изложени нон-стоп једностраној пропаганди преко јавног сервиса. За Н1, Нову С то делимично могу и да разумем, али за јавни сервис.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се комплекс Генералштаба препушта странцима из земље која је бомбардовала Србију.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми сами треба да се питамо шта ће да буде на том месту, не мора да буде исто архитектонско решење, ми треба да одлучимо макар референдумом шта ће ту да буде, а не страни инвеститор.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}
