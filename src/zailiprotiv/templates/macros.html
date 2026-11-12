@@ -15,7 +15,7 @@
 
 {% macro quote(q, db) -%}
 {% set d = db.all_days[q.dan - 1] if db and q.dan <= db.all_days|length else none %}
-{% set side = {"za": "glasao za", "protiv": "glasao protiv", "vlada": "Vlada"}.get(q.side) %}
+{% set side = {"za": "glas: za", "protiv": "glas: protiv", "vlada": "Vlada"}.get(q.side) %}
 <blockquote class="quote{% if q.side %} q-{{ q.side }}{% endif %}">
   <p>„{{ q.tekst|latin }}“</p>
   <footer>{{ q.govornik|latin|title }}{% if q.grupa and q.grupa != "Влада" %}, {{ q.grupa|latin }}{% endif %}{% if side %} · {{ side }}{% endif %}{% if d %} · <a href="{{ d.url }}">{{ d.listed_date|day if d.listed_date else "stenogram" }}</a>{% endif %}</footer>
