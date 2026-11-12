@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, tally, quote, plural %}
-{% block title %}{{ law.title }} — Za ili protiv{% endblock %}
+{% block title %}{{ law.title }} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.title }}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block main %}
 {% set sm = it.summary.summary if it.summary else none %}
 {% set sd = it.said.debate if it.said else none %}
 {% set db = it.debate %}
 <p class="crumbs"><a href="../{{ it.conv_page }}">Zakoni — {{ it.conv_name }} saziv</a> › <a href="../{{ it.conv_page }}#{{ law.kind }}">{{ it.kind|latin }}</a></p>
-<h1>{{ law.title }}</h1>
+<h1>{{ law.short }}</h1>
+{% if law.short != law.title %}<p class="official">{{ law.title }}</p>{% endif %}
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
 
 {# 1. The outcome. #}

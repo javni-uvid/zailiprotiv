@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, tally %}
-{% block title %}Zakoni — Za ili protiv{% endblock %}
+{% block title %}Zakoni — Za ili Protiv{% endblock %}
 {% block main %}
 <h1>Usvojeni zakoni — {{ conv_name }} saziv</h1>
 {% if convs|length > 1 %}<p class="convs">{% for c in convs %}{% if c.n == conv %}<b>{{ c.name }} saziv</b>{% else %}<a href="{{ c.page }}">{{ c.name }} saziv</a>{% endif %} ({{ c.laws }}){% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
@@ -17,7 +17,7 @@
     {% for it in by_kind[k] %}
       <tr>
         <td class="nowrap">{{ it.law.passed|day }}</td>
-        <td><a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>{% if it.summary %}<div class="gist">{{ it.summary.summary.ukratko|latin }}</div>{% endif %}{% if it.areas %}<div class="meta">{{ it.areas|map("latin")|join(" · ") }}</div>{% endif %}</td>
+        <td><a class="law-name" href="zakon/{{ it.slug }}.html">{{ it.law.short }}</a>{% if it.law.short != it.law.title %}<div class="meta">{{ it.law.title }}</div>{% endif %}</td>
         <td class="vote-cell">{% if it.final %}{{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>{% else %}<span class="meta">glasanje nije pronađeno</span>{% endif %}</td>
       </tr>
     {% endfor %}

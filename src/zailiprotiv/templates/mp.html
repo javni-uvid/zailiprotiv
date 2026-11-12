@@ -1,22 +1,80 @@
 {% extends "base.html" %}
-{% block title %}{{ mp.name }} — Za ili protiv{% endblock %}
-{% block description %}Kako je {{ mp.name }} glasao o zakonima Četrnaestog saziva Narodne skupštine.{% endblock %}
+{% from "macros.html" import bar, plural %}
+{% block title %}{{ mp.name }} — Za ili Protiv{% endblock %}
+{% block description %}Kako je glasao poslanik {{ mp.name }}: zakoni za i protiv, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
 {% block main %}
+{% macro rows(rs, show_line=false) -%}
+<ul class="rows compact">
+{% for r in rs %}
+  <li class="row">
+    <div class="row-main">
+      <a class="row-title" href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a>
+      <p class="row-meta">{{ r.it.final.when[:10]|day }}{% if show_line %} · glas: <span class="v-text-{{ r.vote }}">{{ vote_label[r.vote]|lower }}</span>, većina grupe {{ r.group }}: {{ vote_label[r.line]|lower }}{% endif %}</p>
+    </div>
+    <div class="row-vote">{{ bar(r.it.final.counts) }}<span class="row-score"><span class="t-za">{{ r.it.final.counts.za }}</span> : <span class="t-protiv">{{ r.it.final.counts.protiv }}</span></span></div>
+  </li>
+{% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro block(title, rs, empty, show_line=false) -%}
+<section>
+  <h2>{{ title }} <span class="count">{{ rs|length }}</span></h2>
+  {% if rs %}
+  {{ rows(rs[:6], show_line) }}
+  {% if rs|length > 6 %}<details><summary>Još {{ rs|length - 6 }}</summary>{{ rows(rs[6:], show_line) }}</details>{% endif %}
+  {% else %}<p class="meta">{{ empty }}</p>{% endif %}
+</section>
+{%- endmacro %}
+
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 <h1>{{ mp.name }}</h1>
-<p class="meta">Poslednja poslanička grupa: {{ mp.group or "—" }} · poslednje glasanje {{ mp.last_seen[:10]|day }}</p>
-<ul class="numbers small">
-{% for k in VOTES %}<li><b class="v-text-{{ k }}">{{ tally[k] or 0 }}</b> {{ vote_label[k]|lower }}</li>{% endfor %}
-</ul>
-<p class="note small">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. odsutni nisu bili na spisku, pa se ta glasanja ovde ne vide.</p>
-<div class="scroll">
-<table class="record">
-  <thead><tr><th>Datum</th><th>Zakon</th>{% if convs|length > 1 %}<th>Saziv</th>{% endif %}<th>Glas</th></tr></thead>
-  <tbody>
-  {% for r in record %}
-    <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.title }}</a></td>{% if convs|length > 1 %}<td class="nowrap">{{ r.it.conv }}.</td>{% endif %}<td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
+<p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {{ c.groups|join(", ") or "—" }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+
+<section class="outcome mp-outcome">
+  <div class="big"><div class="t-za"><b>{{ tally.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ tally.protiv or 0 }}</b><span>protiv</span></div></div>
+  {{ bar({"za": tally.za or 0, "protiv": tally.protiv or 0, "uzdrzan": tally.uzdrzan or 0, "nije_glasao": tally.nije_glasao or 0, "nije_prisutan": tally.nije_prisutan or 0}) }}
+  <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
+</section>
+
+{{ block("Glasovi protiv", against, "Nijedan glas protiv među konačnim glasanjima o zakonima.") }}
+{{ block("Glasovi za", for_, "Nijedan glas za među konačnim glasanjima o zakonima.") }}
+{% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true) }}{% endif %}
+
+{% if kinds_table %}
+<section>
+  <h2>Po vrsti zakona</h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Vrsta</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for g in kinds_table %}
+      <tr><td>{{ g.label|latin }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Brojevi su izračunati iz poimeničnih glasanja; ovo nije ocena rada poslanika.</p>
+</section>
+{% endif %}
+
+<section class="more">
+  <h2>Svi glasovi po sazivima</h2>
+  {% for c in by_conv %}
+  <details{% if loop.first and by_conv|length == 1 %} open{% endif %}>
+    <summary>{{ c.name }} saziv · {{ c.n }} {{ plural(c.n, "glasanje", "glasanja", "glasanja") }} · {{ c.tally.za or 0 }} za, {{ c.tally.protiv or 0 }} protiv</summary>
+    <div class="scroll">
+    <table class="record">
+      <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
+      <tbody>
+      {% for r in c.record %}
+        <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </details>
   {% endfor %}
-  </tbody>
-</table>
-</div>
+  <p class="meta">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala odsutne, pa se ta glasanja ovde ne vide.</p>
+</section>
 {% endblock %}

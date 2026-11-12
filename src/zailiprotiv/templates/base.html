@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}Za ili protiv{% endblock %}</title>
+<title>{% block title %}Za ili Protiv{% endblock %}</title>
 <meta name="description" content="{% block description %}Zakoni Narodne skupštine Srbije, šta predlagač kaže da menjaju, i kako je glasao svaki poslanik.{% endblock %}">
 <link rel="stylesheet" href="{{ root }}style.css?v={{ css }}">
+<script src="{{ root }}site.js?v={{ css }}" defer></script>
 </head>
-<body>
+<body data-root="{{ root }}" data-v="{{ css }}">
 <header class="top">
-  <a class="brand" href="{{ root }}index.html">Za ili protiv</a>
+  <a class="brand" href="{{ root }}index.html"><span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span></a>
   <nav>
     <a href="{{ root }}zakoni.html">Zakoni</a>
     <a href="{{ root }}poslanici.html">Poslanici</a>
@@ -21,7 +22,7 @@
 </main>
 <footer>
   <p>Podaci: <a href="https://www.parlament.gov.rs">Narodna skupština Republike Srbije</a>, poimenični rezultati glasanja i predlozi zakona; preuzeto {{ fetched }}. Sajt izgrađen {{ built }}.</p>
-  <p>Ista pravila za svakog poslanika i svaku poslaničku grupu. Bez kolačića, analitike i skripti sa drugih servera. <a href="https://github.com/javni-uvid/zailiprotiv">Kod i podaci</a>.</p>
+  <p>Ista pravila za svakog poslanika i svaku poslaničku grupu. Bez kolačića, analitike i ičega sa drugih servera. <a href="https://github.com/javni-uvid/zailiprotiv">Kod i podaci</a>.</p>
 </footer>
 </body>
 </html>

@@ -1,50 +1,81 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, plural %}
 {% block main %}
-<section class="hero">
-  <h1>Ko je glasao za, a ko protiv</h1>
-  <p class="lead">{{ stats.laws }} zakona {{ (convs[0].name[:-1] ~ "og")|lower }} saziva Narodne skupštine: šta menjaju prema predlagaču, šta je rečeno u raspravi i kako je glasao svaki od {{ stats.mps }} poslanika. Iz dokumenata same Skupštine.</p>
-</section>
+<p class="masthead">Narodna skupština Srbije · {{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} · {{ stats.all_mps }} poslanika · iz dokumenata same Skupštine</p>
 
-{% macro row(it) -%}
-<li>
-  <a class="title" href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>
-  {% if it.gist %}<p class="gist small">{{ it.gist|latin|truncate(160, killwords=false, end=" …") }}</p>{% endif %}
-  {% if it.final %}<div class="row-bar">{{ bar(it.final.counts) }}<span class="meta nowrap"><span class="t-za">{{ it.final.counts.za }}</span> za · <span class="t-protiv">{{ it.final.counts.protiv }}</span> protiv</span></div>{% endif %}
+{% macro row(it, n) -%}
+<li class="row">
+  {% if n %}<span class="row-n">{{ n }}</span>{% endif %}
+  <div class="row-main">
+    <a class="row-title" href="zakon/{{ it.slug }}.html">{{ it.law.short }}</a>
+    <p class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.debate and it.debate.amendments %} · {{ it.debate.amendments }} {{ plural(it.debate.amendments, "amandman", "amandmana", "amandmana") }}{% endif %}</p>
+  </div>
+  {% if it.final %}<div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div>{% endif %}
 </li>
 {%- endmacro %}
 
 {% if contested %}
-<section>
-  <h2>Najviše glasova protiv</h2>
-  <div class="cardgrid">
-  {% for it in contested[:6] %}
-    {% set db = it.debate %}
-    <article class="card">
-      <p class="meta">{{ it.law.passed|day }}{% if it.urgent %} · <span class="t-warn">hitan postupak</span>{% endif %}</p>
-      <h3><a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a></h3>
-      {% if it.gist %}<p class="gist small">{{ it.gist|latin|truncate(170, killwords=false, end=" …") }}</p>{% endif %}
-      <p class="score small"><span class="t-za">{{ it.final.counts.za }} za</span> <span class="sep">·</span> <span class="t-protiv">{{ it.final.counts.protiv }} protiv</span></p>
-      {{ bar(it.final.counts) }}
-      {% if it.against %}<p class="against small"><span class="meta">Protiv:</span> {% for g, n in it.against[:4] %}{{ g }} <b>{{ n }}</b>{% if not loop.last %}, {% endif %}{% endfor %}{% if it.against|length > 4 %} <span class="meta">i još {{ it.against|length - 4 }}</span>{% endif %}</p>{% endif %}
-      <ul class="facts-line">
-        {% if it.days is not none %}<li>{{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga do usvajanja</li>{% endif %}
-        {% if db and db.joint %}<li>rasprava zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}</li>{% endif %}
-        {% if db and db.amendments %}<li>{{ db.amendments }} {{ plural(db.amendments, "amandman", "amandmana", "amandmana") }} u raspravi</li>{% endif %}
-      </ul>
-      {% if it.pair|length == 2 %}{% for q in it.pair %}<blockquote class="quote mini q-{{ q.side }}"><p>„{{ q.tekst|latin|truncate(110, killwords=false, end=" …") }}“</p><footer>{{ q.govornik|latin|title }}{% if q.grupa and q.grupa != "Влада" %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "vlada" %} · Vlada{% endif %}</footer></blockquote>{% endfor %}{% endif %}
-    </article>
+{% set top = contested[0] %}
+<section class="lead-law">
+  <div class="lead-text">
+    <p class="kicker">Najviše glasova protiv · {{ top.law.passed|day }}</p>
+    <h1><a href="zakon/{{ top.slug }}.html">{{ top.law.short }}</a></h1>
+    {% if top.gist %}<p class="standfirst">{{ top.gist|latin }}</p>{% endif %}
+    <p class="row-meta">{% if top.urgent %}Hitan postupak · {% endif %}{% if top.days is not none %}{{ top.days }} {{ plural(top.days, "dan", "dana", "dana") }} od predloga do usvajanja{% endif %}</p>
+    <p><a class="button" href="zakon/{{ top.slug }}.html">Ko je glasao kako</a></p>
+  </div>
+  <div class="lead-vote">
+    <div class="big"><div class="t-za"><b>{{ top.final.counts.za }}</b><span>za</span></div><div class="t-protiv"><b>{{ top.final.counts.protiv }}</b><span>protiv</span></div></div>
+    {{ bar(top.final.counts) }}
+    {% if top.against %}<p class="row-meta">Protiv: {% for g, n in top.against[:4] %}{{ g }} {{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+  </div>
+</section>
+
+{% if featured %}
+<section class="voices-home">
+  <p class="kicker muted">Iz rasprave · <a href="zakon/{{ featured.slug }}.html">{{ featured.law.short }}</a></p>
+  <div class="pair">
+  {% for q in featured.pair %}
+    <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
   {% endfor %}
   </div>
-  {% if contested|length > 6 %}<ol class="list" start="7">{% for it in contested[6:] %}{{ row(it) }}{% endfor %}</ol>{% endif %}
 </section>
 {% endif %}
+{% endif %}
 
-<section>
-  <h2>Nedavno usvojeni</h2>
-  <ul class="list">{% for it in latest %}{{ row(it) }}{% endfor %}</ul>
-  <p><a href="zakoni.html">Svi zakoni →</a> <span class="sep">·</span> <a href="poslanici.html">Svi poslanici →</a>{% for c in convs[1:] %} <span class="sep">·</span> <a href="{{ c.page }}">{{ c.name }} saziv →</a>{% endfor %}</p>
+<section id="zakoni">
+  <h2 id="lista-naslov">Zakoni koji su podelili Skupštinu</h2>
+  <div class="finder js-only" hidden>
+    <label class="sr" for="q">Zakon ili poslanik</label>
+    <input id="q" type="search" placeholder="Zakon ili poslanik, npr. budžet ili Jovanov" autocomplete="off">
+    <ul id="hits" class="hits" hidden></ul>
+    <div class="chips" role="group" aria-label="Prikaži">
+      <button type="button" class="chip on" data-f="protiv">Najviše glasova protiv</button>
+      <button type="button" class="chip" data-f="novi">Najnoviji</button>
+      <button type="button" class="chip" data-f="hitan">Hitan postupak</button>
+      <button type="button" class="chip" data-f="finance">Budžet i finansije</button>
+      <button type="button" class="chip" data-f="treaty">Međunarodni ugovori</button>
+      <label class="sr" for="saziv">Saziv</label>
+      <select id="saziv">{% for c in convs %}<option value="{{ c.n }}">{{ c.name }} saziv</option>{% endfor %}<option value="">Svi sazivi</option></select>
+    </div>
+  </div>
+  <ol id="lista" class="rows">
+  {% for it in contested[1:] %}{{ row(it, loop.index + 1) }}{% endfor %}
+  </ol>
+  <p><button type="button" id="jos" class="link js-only" hidden>Prikaži još</button> <a href="zakoni.html">Svih {{ stats.laws }} zakona ovog saziva</a>{% for c in convs[1:] %} · <a href="{{ c.page }}">{{ c.name }} saziv</a>{% endfor %}</p>
 </section>
 
-<p class="meta foot-note">Glasovi su iz poimeničnih rezultata koje Skupština objavljuje; uz svaki zakon je link na izvor. Šta zakon menja navodi predlagač, ne mi; sažetke i preglede rasprave piše AI model i tako su označeni. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala ko je bio odsutan.</p>
+<section class="mp-finder">
+  <h2>Kako je glasao tvoj poslanik?</h2>
+  <div class="mp-form">
+    <div class="js-only" hidden>
+      <label class="sr" for="qmp">Ime poslanika</label>
+      <input id="qmp" type="search" placeholder="Ime i prezime" autocomplete="off">
+      <ul id="hits-mp" class="hits" hidden></ul>
+    </div>
+    <a class="button" href="poslanici.html">Svi poslanici</a>
+  </div>
+</section>
+
+<p class="meta foot-note">Glasovi su iz poimeničnih rezultata koje Skupština objavljuje; uz svaki zakon je link na izvor. Kratki nazivi zakona su naši, pun naziv je na stranici zakona. Šta zakon menja navodi predlagač, ne mi; sažetke i preglede rasprave piše AI model i tako su označeni.</p>
 {% endblock %}

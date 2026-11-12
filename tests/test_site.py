@@ -38,6 +38,7 @@ def data(tmp_path):
                            "text": "један два три"},
                      "2": {"day": 1, "speaker": "МИНИСТАР НЕКИ", "chair": False, "part": "detail", "items": [1],
                            "text": "један"}}}))
+    (d / "short_titles.json").write_text(json.dumps({"L": "Oružje i municija"}))
     (d / "debates").mkdir()
     (d / "debates" / "b.json").write_text(json.dumps({"model": "claude-opus-5-5", "debate": {
         "predlagac": ["Предлагач наводи да закон усклађује прописе са ЕУ."], "podrska": [],
@@ -57,7 +58,15 @@ def test_site_builds_every_page(tmp_path):
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
     assert "Odbrana i bezbednost" in law and "Ilić-Stošić Biljana" in law
     assert "Zakon uređuje nabavku oružja, prema predlagaču." in law and "AI model (claude-sonnet-5-5)" in law
-    assert "Zakon uređuje nabavku oružja" in (out / "zakoni.html").read_text()
+    assert "Oružje i municija" in (out / "zakoni.html").read_text()  # the short name in lists
+    assert "<h1>Oružje i municija</h1>" in law and '<p class="official">Zakon o oružju</p>' in law
+    index = json.loads((out / "podaci.json").read_text())
+    assert index["laws"][0]["t"] == "Oružje i municija" and index["laws"][0]["s"] == "zakon-o-oruzju"
+    assert len(index["mps"]) == 3 and (out / "site.js").exists() and (out / "fonts").is_dir()
+    home = (out / "index.html").read_text()
+    assert '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>' in home
+    mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
+    assert "Glasovi protiv" in mp and "Glasovi za" in mp and "Po vrsti zakona" in mp
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
     assert "Allow: /" in (out / "robots.txt").read_text()
     assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()
@@ -74,7 +83,11 @@ def test_site_builds_every_page(tmp_path):
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I
     for page in out.rglob("*.html"):
         text = page.read_text()
-        assert "<script" not in text and "http://" not in text  # nothing from other servers, no plain http
+        # The site's own script only, nothing from other servers, no plain http.
+        assert re.findall(r"<script[^>]*>", text) == [f'<script src="{"../" if page.parent != out else ""}site.js?v='
+                                                      + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
+        assert "http://" not in text and not re.search(r'(?:src|href)="https?://(?!www\.parlament\.gov\.rs|github\.com)'
+                                                       r'[^"]*\.(?:js|css|woff2?)', text)
         assert not re.search(r"[Ѐ-ӿ]", text), page  # Latin pages: no Cyrillic left
 
 

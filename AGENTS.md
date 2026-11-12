@@ -186,20 +186,31 @@ These are the project's promises to its readers. Never change them without the m
   documents, an excerpt of the proposer's memorandum labelled as such, the final vote by group and by MP, the other
   votes on the act), MPs, a page per MP (their final votes on laws). Cyrillic from the Assembly's documents is
   transliterated; a test checks no Cyrillic is left. A Cyrillic edition can follow, as in the election site.
-- **No scripts at all**, nothing from other servers. Colours mean kinds of vote (for, against, …), never a group.
+- **Nothing from other servers.** Colours mean kinds of vote (for, against, …), never a group.
 - **Home page:** "Najviše glasova protiv" first (the maintainer's request, 12 Nov 2026): the laws whose final
   vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
   for what it measures; "controversial" would be a judgement. Then the newest laws.
-- **Page structure** (the maintainer, 12 Nov 2026: draw people in from the home page, the interesting things on a
-  law first, long text lower; then "simplify: a busy design makes the accents lose their point"): plain text and
-  lists, no cards, chips or coloured boxes; colour only for "za" and "protiv".
-  - home: one line on what the site is; the six laws with most votes against as cards (the maintainer brought them
-    back the same day: date and urgent procedure, title, gist, count and bar, the groups that voted against, days
-    to passing, joint debate, amendments, a quote from each side when both exist), the rest as a list; the newest
-    laws (title, gist, bar); links to all laws and MPs; a short note on sources;
-  - a law: title and gist; the count and bar, the groups that voted against with their numbers, one line of
-    facts (passed, urgent procedure, days, joint debate, amendments, share against and rank); one quote from each side (by how the speaker voted on the final roll call, or the Government), never
-    one side alone; what the law changes; groups' votes; the debate; outside views; then "Detaljnije", folded.
+- **Design** (the maintainer chose it from three mock-ups, 12 Nov 2026): a newspaper look — white page, serif
+  headlines (Source Serif 4, served from the site, OFL), a black rule under the header, colour only for "za" (blue)
+  and "protiv" (orange). The wordmark is "Za ili Protiv", "Za" and "Protiv" in their colours. Little text: one line
+  of facts per law.
+  - home: the law with most votes against as the lead (short name, the proposer's gist, the count, groups against);
+    a quote from each side of the first such law that has both; the list of the next ones; search for a law or an
+    MP, filters (most against, newest, urgent procedure, budget, treaties) and a choice of convocation; an MP finder;
+  - a law: its short name as the headline with the official title under it; then as before (count, groups against,
+    a quote from each side, what it changes, groups' votes, the debate, outside views, "Detaljnije" folded);
+  - an MP: the counts for and against; "Glasovi protiv" and "Glasovi za" (six each, the rest folded); "Drugačije od
+    većine svoje grupe" (their vote for, against or abstained differs from what most of their group did in that
+    vote: three or more voting, a clear majority); a table by kind of law; every vote by convocation, folded.
+    All computed from the roll calls by one rule for everyone; no assessment of an MP in words.
+- **One script of our own** (`static/site.js`, the maintainer, 12 Nov 2026; before that none): search and filters
+  over `podaci.json` (every law and MP), fetched on first use. Pages work without it: the search box and filters
+  appear only when it runs. Still nothing from other servers; a test checks each page has that one script only.
+- **Short names of laws** for lists and headlines (`data/<N>/short_titles.json`, by the law's key): written by an AI
+  model from the official title and the summary of the proposer's memorandum, reviewed. Rules: the subject first,
+  then the main change after a colon; neutral and factual, no nicknames or labels from either side, no persons, no
+  claimed benefits; unique within a convocation (same names get the year). The official title is always shown on
+  the law's page, and the home page says the short names are ours.
 - **Each law's page** gives its share of votes against and its place in the convocation by that share, and the
   course of its passing: submitted, days to passing, urgent procedure (proposed when the memorandum gives reasons
   for it), the sitting. The roll calls published are the final votes only; votes on amendments aren't among them.
