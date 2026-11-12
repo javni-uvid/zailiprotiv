@@ -63,15 +63,31 @@ def iso_date(text: str) -> str:
     return f"{y:04d}-{mo:02d}-{d:02d}" if 1 <= mo <= 12 and 1 <= d <= 31 else ""
 
 
+class Unreadable(ValueError):
+    """A day's notes that are neither a Word file nor one LibreOffice can turn into one."""
+
+
+def to_docx(body: bytes) -> bytes:
+    """The older notes are in Word's old format (.doc), or RTF: turned into .docx with LibreOffice."""
+    kind = "doc" if body.startswith(b"\xd0\xcf\x11\xe0") else "rtf" if body.lstrip().startswith(b"{\\rtf") else ""
+    if not kind:
+        raise Unreadable(f"not a Word file: {body[:80]!r}")
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / f"notes.{kind}").write_bytes(body)
+        run = subprocess.run(["soffice", "--headless", "--norestore", f"-env:UserInstallation=file://{tmp}/profile",
+                              "--convert-to", "docx:MS Word 2007 XML", "--outdir", tmp, f"{tmp}/notes.{kind}"],
+                             capture_output=True, text=True, timeout=300)
+        out = Path(tmp) / "notes.docx"
+        if run.returncode or not out.exists():
+            raise Unreadable(f"LibreOffice could not convert the {kind} ({run.returncode}): {(run.stderr or run.stdout)[-400:]}")
+        return out.read_bytes()
+
+
 def paragraphs(docx: bytes) -> list[str]:
     """The Word file's paragraphs as plain text, empty ones left out. The older notes are in Word's old format
     (.doc), turned into the new one with LibreOffice first."""
     if not docx.startswith(b"PK"):
-        with tempfile.TemporaryDirectory() as tmp:
-            (Path(tmp) / "notes.doc").write_bytes(docx)
-            subprocess.run(["soffice", "--headless", f"-env:UserInstallation=file://{tmp}/profile", "--convert-to", "docx",
-                            "--outdir", tmp, f"{tmp}/notes.doc"], check=True, capture_output=True, timeout=300)
-            docx = (Path(tmp) / "notes.docx").read_bytes()
+        docx = to_docx(docx)
     xml = zipfile.ZipFile(io.BytesIO(docx)).read("word/document.xml").decode("utf-8")
     out = []
     for p in re.findall(r"<w:p[ >].*?</w:p>|<w:p/>", xml, flags=re.S):

@@ -41,6 +41,7 @@ jobs:
           pip install uv && uv sync --frozen
           uv run zailiprotiv --convocation "${{ inputs.convocation }}" transcripts --top "${{ inputs.top }}" ${{ inputs.again && '--again' || '' }}
       - name: Commit
+        if: always()  # keep the sittings read even when a later one failed
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

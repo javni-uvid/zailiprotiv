@@ -395,7 +395,11 @@ def notes_of_debate(args) -> int:
         for d in sorted(listed, key=lambda d: d["day"]):
             time.sleep(DELAY)
             body = skupstina.fetch(d["url"])
-            paras = transcripts.paragraphs(body)
+            try:
+                paras = transcripts.paragraphs(body)
+            except transcripts.Unreadable as e:  # the day is left out, and the log says why
+                print(f"  {d['url']}: {e}")
+                paras = []
             days.append(paras)
             meta.append({**d, **transcripts.heading(paras), "sha256": hashlib.sha256(body).hexdigest()})
         found = transcripts.debate(days)
