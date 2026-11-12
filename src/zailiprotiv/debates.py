@@ -70,7 +70,7 @@ def group_at(seated: list[tuple[str, str]], when: str, days: int = 60) -> str | 
 GOVERNMENT = "Влада"
 # The chair gives the floor: "Реч има народни посланик Радомир Лазовић.", "Реч има министар Ненад Вујић."
 FLOOR = re.compile(r"[Рр]еч\s+има\s+(?:реч\s+)?(народн\w*\s+посланиц?\w*|министар\w*|министарк\w*|председни\w+\s+Владе|"
-                   r"потпредседни\w+\s+Владе|државн\w+\s+секретар\w*)\s+(?:господин\s+|госпођа\s+)?"
+                   r"премијер\w*|потпредседни\w+\s+Владе|државн\w+\s+секретар\w*)[\s,]+(?:господин\s+|госпођа\s+)?"
                    r"(?:(?:др|проф|мр|доц)\.?\s+)*([А-ЯЂЈЉЊЋЏШЖЧ][а-яђјљњћџ]+(?:[\s-]+[А-ЯЂЈЉЊЋЏШЖЧ][а-яђјљњћџ]+){1,2})")
 
 
@@ -99,7 +99,10 @@ def resolve(name: str, known: dict[str, str]) -> str | None:
     k = loose(mps.key(name))
     if k in known:
         return known[k]
-    close = difflib.get_close_matches(k, [x for x in known if len(x.split()) == len(k.split())], n=1, cutoff=0.9)
+    def near(a: str, b: str) -> bool:  # every word nearly the same: a typo, not another person
+        wa, wb = a.split(), b.split()
+        return len(wa) == len(wb) and all(difflib.SequenceMatcher(None, x, y).ratio() >= 0.85 for x, y in zip(wa, wb))
+    close = [x for x in difflib.get_close_matches(k, list(known), n=3, cutoff=0.85) if near(k, x)]
     return known[close[0]] if close else None
 
 
@@ -117,7 +120,14 @@ def speaker_groups(notes: dict, final: dict, seated: dict) -> dict[str, str]:
         if k in groups:
             continue
         role = said.get(loose(k))
-        real = resolve(sp["speaker"], known)
+        exact = known.get(loose(k))
+        if exact in in_final:
+            groups[k] = in_final[exact]
+            continue
+        if role == "government" and not exact:
+            groups[k] = GOVERNMENT  # before any likeness of names: a minister is not the MP with a similar name
+            continue
+        real = exact or resolve(sp["speaker"], known)
         if real in in_final:
             groups[k] = in_final[real]
         elif role == "government":

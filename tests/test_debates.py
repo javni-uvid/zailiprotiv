@@ -35,3 +35,19 @@ def test_quotes_checked_word_for_word():
     assert len(dropped) == 2  # words not said, and words said by someone else
     with pytest.raises(ValueError):
         debates.parse({"predlagac": [], "podrska": [], "zamerke": [], "citati": []}, NOTES)
+
+
+def test_roles_from_the_chair():
+    notes = {"speeches": {"0": {"chair": True, "text": "Реч има председник Владе, господин Милош Вучевић. "
+                                                        "Реч има премијер, господин Милош Вучевић. "
+                                                        "Реч има народни посланик Радомир Лазовић."}}}
+    roles = debates.roles(notes)
+    from zailiprotiv import mps
+    assert roles[mps.key("МИЛОШ ВУЧЕВИЋ")] == "government" and roles[mps.key("РАДОМИР ЛАЗОВИЋ")] == "mp"
+
+
+def test_resolve_typos_not_other_people():
+    known = {debates.loose(k): k for k in ("александар марковић", "лазовић радомир", "јованов миленко")}
+    assert debates.resolve("РАДОМИР ЛАЗОВЋ", known) == "лазовић радомир"
+    assert debates.resolve("МИЛЕКО ЈОВАНОВ", known) == "јованов миленко"
+    assert debates.resolve("АЛЕКСАНДАР МАРТИНОВИЋ", known) is None
