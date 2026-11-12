@@ -1,0 +1,27 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2019/2950-19 - Lat.pdf",
+ "sha256": "18e046b819e942398bf09ea115721505fdd41a98b0f87d085e37fe005e6c40f2",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV\n\nUstavni osnov za donošenje ovog zakona sadržan je u članu 97. tačka 8.\nUstava Republike Srbije, kojim je propisano da Republika Srbija uređuje i\nobezbeđuje, pored ostalog, sistem u oblasti socijalnog osiguranja, kao i u članu 123.\ntačka 4. kojim je propisano da Vlada predlaže Narodnoj skupštini zakone i druge\nopšte akte i daje o njima mišljenje kad ih donosi drugi predlagač.",
+  "reasons": "RAZLOZI ZA DONOŠENjE ZAKONA\n\nOsnovni razlog za donošenje ovog zakona jeste obezbeđivanje zakonskog\nosnova za razmenu podataka o porezu na dohodak građana između Centralnog\nregistra obaveznog socijalnog osiguranja (u daljem tekstu: Centralni registar) i\nPoreske uprave, a koje Poreska uprava prikuplja u okviru objedinjene naplate poreza\ni doprinosa po odbitku.\nNaime, kako je Centralni registar pre svega elektronski vođena baza\npodataka i elektronski servis koji se zasniva na informacionim tehnologijama,\nneophodno je obezbediti i zakonski osnov za razmenu podataka i povezivanje sa\ndrugim registrima i evidencijama u Republici Srbiji, kako bi se efikasnije ispoštovali\nzahtevi u pogledu elektronske razmene podataka državnih organa, odnosno razvoja\nE - uprave, a sve u cilju povećanja efikasnosti kako Centralnog registra, tako i drugih\norgana i organizacija korisnika podataka iz Centralnog registra.\nS obzirom na to da se u okviru organa korisnika podataka Centralnog registra\njavila potreba razmene podatka koji se odnosi i na porez na dohodak građana,\nneophodno je propisati zakonski osnov za evidenciju ovog podatka u Jedinstvenoj\nbazi Centralnog registra.\nPored navedenog, ovim zakonom predviđa se produženje roka za ažuriranje\npodataka u Jedinstvenoj bazi Centralnog registra obaveznog socijalnog osiguranja\nna dve godine od početka primene Odluke o Jedinstvenom kodeksu šifara za\nunošenje i šifriranje podataka u evidencijama u oblasti rada („Službeni glasnik RS”,\nbroj 56/18), kao i produženje roka za uspostavljanje Registra zaposlenih, izabranih,\nimenovanih, postavljenih i angažovanih lica kod korisnika javnih sredstava u okviru\ninformacionog sistema Centralnog registra.",
+  "explained": "OBJAŠNjENjE POJEDINAČNIH REŠENjA U ZAKONU\n\nČl. 1-4. ovog zakona dopunjuje se sadržina Jedinstvene baze podataka\nCentralnog registra obaveznog socijalnog osiguranja, čime će se omogućiti razmena\npodataka između Centralnog registra obaveznog socijalnog osiguranja i Poreske\nuprave u delu koji se odnosi na razmenu podataka o porezu na dohodak građana,\nkoji predstavlja sastavni deo poreske prijave poreza po odbitku, kao i objedinjene\nnaplate.\n\nČlanom 5. ovog zakona odlaže se preuzimanje poslova vođenja Registra\nzaposlenih, izabranih, imenovanih, postavljenih i angažovanih lica kod korisnika\njavnih sredstava do 1. januara 2021. godine\nČlanom 6. ovog zakona produžava se rok za ažuriranje podataka koji se odnose na\nzanimanje, prema klasifikaciji zanimanja, koje se zahteva za radno angažovanje na\nodređenim poslovima, odnosno radnom mestu i vrstu i nivo kvalifikacije koji su uslovi\nza radno angažovanje na određenim poslovima, odnosno radnom mestu i vrstu i nivo\nkvalifikacije koje lice ima.\nČlanom 7. ovog zakona propisano je njegovo stupanje na snagu.\n\n3",
+  "funds": "PROCENA FINANSIJSKIH SREDSTAVA POTREBNIH ZA\nSPROVOĐENjE ZAKONA\n\nZa sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska\nsredstva u budžetu Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 97,
+   "paragraph": null,
+   "points": [
+    8
+   ]
+  },
+  {
+   "article": 123,
+   "paragraph": null,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

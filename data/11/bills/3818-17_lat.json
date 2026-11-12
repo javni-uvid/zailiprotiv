@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/3818-17 lat.pdf",
+ "sha256": "eac07ffee2f309dddcdf7231fa909976d7886c47d80d32c4a8b1a24cb26e4231",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje zakona\n\nUstavni osnov za donošenje Zakona o potvrđivanju Sporazuma između\nRepublike Srbije i Republike Grčke o međusobnom priznavanju vozačkih dozvola (u\ndaljem tekstu: Sporazum) sadržan je u članu 99. stav 1. tačka 4. Ustava Republike\nSrbije, prema kome je u nadležnosti Narodne skupštine da potvrđuje međunarodne\nugovore kada je zakonom predviđena obaveza njihovog potvrđivanja.",
+  "reasons": "Razlozi za potvrđivanje ovog sporazuma\n\nČlanom 12. Sporazuma predviđeno je da Sporazum stupa na snagu na dan\nprijema, diplomatskim putem, poslednjeg obaveštenja kojim Ugovorne strane\nobaveštavaju jedna drugu pisanim putem o ispunjenju svojih relevantnih internih\nprocedura neophodnih za njegovo stupanje na snagu.\nRelevantne interne procedure, u smislu važećih propisa Republike Srbije,\npodazumevaju, pokretanje postupka kojim se potvrđuje Sporazum u Narodnoj\nskupštini.\nU cilju ispunjenja internih procedura Ministarstvo unutrašnjih poslova predlaže\npokretanje postupka potvrđivanja.",
+  "funds": "Ocena potrebnih finansijskih sredstava za izvršenje ovog sporazuma\n\nZa izvršenje ovog sporazuma nije potrebno obezbediti budžetska sredstva\nRepublike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

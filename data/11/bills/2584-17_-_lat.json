@@ -1,0 +1,22 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2584-17 - LAT.pdf",
+ "sha256": "4d4e2b977e261dcae5e9ca120d98b008275fdbdee6f97684651a925212665eef",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV ZA DONOŠENjE ZAKONA\nUstavni osnov za donošenje ovog zakona sadržan je u članu 97. tač. 4, 16. i\n17. Ustava Republike Srbije, kojima je, između ostalog, propisano da Republika\nSrbija uređuje i obezbeđuje bezbednost Republike Srbije, organizaciju, nadležnost i\nrad republičkih organa, i da obezbeđuje druge odnose od interesa za Republiku\nSrbiju.",
+  "reasons": "RAZLOZI ZA DONOŠENjE ZAKONA\nZakonom o informacionoj bezbednosti („Službeni glasnik RS”, broj 6/16, u\ndaljem tekstu: Zakon) uređene su mere zaštite od bezbednosnih rizika u\ninformaciono-komunikacionim sistemima, odgovornosti pravnih lica prilikom\nupravljanja i korišćenja informaciono-komunikacionih sistema i određeni su nadležni\norgani za sprovođenje mera zaštite, koordinaciju između činilaca zaštite i praćenje\npravilne primene propisanih mera zaštite.\nČlanom 18. Zakona propisano je da poslove CERT-a republičkih organa\nobavlja Uprava za zajedničke poslove republičkih organa (UZZPRO), koja je u vreme\ndonošenja zakona bila nadležna za poslove projektovanja, izgradnje i obezbeđivanja\nfunkcionisanja računarske mreže republičkih organa i njeno povezivanje na Internet,\nkao i podršku u primeni informaciono-komunikacionih tehnologija u republičkim\norganima.\nPredloženim izmenama Zakona omogućava se da poslove CERT-a\nrepubličkih organa vrši organ nadležan za projektovanje, razvoj, izgradnju,\nodržavanje i unapređenje računarske mreže republičkih organa, za čije obavljanje je\nsada nadležna Kancelarija za informacione tehnologije i elektronsku upravu.\nPored toga, s obzirom na navedene promene, predloženo je da se izmenama\nZakona predvidi da predstavnici CERT-a republičkih organa učestvuju u radu Tela za\nkoordinaciju poslova informacione bezbednosti.",
+  "explained": "OBJAŠNjENjE OSNOVNIH PRAVNIH INSTITUTA I POJEDINAČNIH\nREŠENjA\nČlanom 1. predloženog zakona vrši se preciziranje odredbe o članovima Tela\nza koordinaciju poslova informacione bezbednosti i predviđa se da u radu tog tela\nučestvuju predstavnici CERT-a republičkih organa.\nČlanom 2. predloženog zakona predviđa se izmena teksta važećeg člana 18.\nstav 2. Zakona o informacionoj bezbednosti, tako što se predlaže da poslove CERT-\na republičkih organa obavlja organ nadležan za projektovanje, razvoj, izgradnju,\nodržavanje i unapređenje računarske mreže republičkih organa, što su poslovi koje je\nKancelarija za informacione tehnologije i elektronsku upravu preuzela od UZZPRO.\nČlanom 3. predloženog zakona predviđa se da ovaj zakon stupa na snagu\nosmog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”.",
+  "urgency": "RAZLOZI ZA DONOŠENjE ZAKONA PO HITNOM POSTUPKU\nPredlaže se donošenje ovog zakona po hitnom postupku, saglasno članu\n167. Poslovnika Narodne skupštine („Službeni glasnik RS”, broj 20/12 - prečišćen\ntekst), radi omogućavanja nesmetanog funkcionisanja organa nadležnog za\nprojektovanje, razvoj, izgradnju, održavanje i unapređenje računarske mreže\nrepubličkih organa, kao i radi obavljanja poslova CERT-a republičkih organa koji su\nod izuzetnog značaja za očuvanje bezbednosti računarske mreže republičkih organa,\nodnosno prevenciju i zaštitu od eventualnih napada na mrežu koji mogu izazvati\nštetu po funkcionisanje državnih organa povezanih na republičku računarsku mrežu."
+ },
+ "articles": [
+  {
+   "article": 97,
+   "paragraph": null,
+   "points": [
+    4,
+    16,
+    17
+   ]
+  }
+ ]
+}
