@@ -98,6 +98,11 @@ These are the project's promises to its readers. Never change them without the m
   - The page labels it as an AI model's summary of the proposer's memorandum, names the model, and keeps an
     excerpt of the memorandum itself one click away.
   - The **summaries** workflow (by hand, and started by the votes workflow) needs the secret `ANTHROPIC_API_KEY`.
+  - Summaries may also be written in a Claude session, from the same material under the same rules (the
+    maintainer's choice for the Fourteenth convocation, 12 Nov 2026): `zailiprotiv export` writes each pending
+    law's material and the rules, `zailiprotiv import FILE --model …` checks and saves the summaries under the
+    name of the model that wrote them. The fingerprint covers the rules and the material, not the model, so the
+    API run leaves them alone until either changes.
 
 ### Links between laws and votes
 

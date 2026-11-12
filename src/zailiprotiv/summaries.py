@@ -52,7 +52,15 @@ def material(law: dict, memo: dict) -> str:
 
 
 def fingerprint(text: str) -> str:
-    return hashlib.sha256((MODEL + "\n" + SYSTEM + "\n" + text).encode("utf-8")).hexdigest()
+    """What a summary was written from: the rules and the material. Not the model: a summary written in a Claude
+    session is kept as long as the rules and the memorandum stay the same; its file still names who wrote it."""
+    return hashlib.sha256((SYSTEM + "\n" + text).encode("utf-8")).hexdigest()
+
+
+def record(law: dict, memo: dict, summary: dict, model: str, usage: dict | None = None) -> dict:
+    """A summary file's content."""
+    return {"model": model, "fingerprint": fingerprint(material(law, memo)), "summary": summary,
+            "usage": usage or {}, "law": law["title"]}
 
 
 def parse(reply: str) -> dict:
@@ -81,5 +89,5 @@ def summarize(law: dict, memo: dict, client=None) -> dict:
     reply = client.messages.create(model=MODEL, max_tokens=1500, system=SYSTEM,
                                    messages=[{"role": "user", "content": text}])
     answer = "".join(b.text for b in reply.content if getattr(b, "type", "") == "text")
-    return {"model": MODEL, "fingerprint": fingerprint(text), "summary": parse(answer),
-            "usage": {"input": reply.usage.input_tokens, "output": reply.usage.output_tokens}}
+    return record(law, memo, parse(answer), MODEL,
+                  {"input": reply.usage.input_tokens, "output": reply.usage.output_tokens})

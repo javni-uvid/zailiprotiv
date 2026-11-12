@@ -168,7 +168,6 @@ def summaries_cmd(args) -> int:
             failed += 1
             print(f"  failed {law['title'][:90]}: {type(e).__name__}: {str(e)[:200]}")
             continue
-        result["law"] = law["title"]
         target.write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         tokens["input"] += result["usage"]["input"]
         tokens["output"] += result["usage"]["output"]
@@ -176,6 +175,73 @@ def summaries_cmd(args) -> int:
     print(f"summaries written: {done}, failed: {failed}, bills without a memorandum: {skipped}; "
           f"tokens in {tokens['input']:,}, out {tokens['output']:,}")
     return 1 if failed and not done else 0
+
+
+def _pending(args):
+    """Laws whose bill has a memorandum and no current summary, newest first: (law, memo, bill file name)."""
+    from zailiprotiv import summaries
+    store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
+    out = []
+    for law in sorted(store["laws"].values(), key=lambda l: (l.get("passed") or "", l["title"]), reverse=True):
+        name = law.get("bill_file")
+        if not name or not (Path(args.bills) / name).exists():
+            continue
+        memo = json.loads((Path(args.bills) / name).read_text(encoding="utf-8"))
+        if not memo.get("sections"):
+            continue
+        target = Path(args.out) / name
+        if target.exists() and json.loads(target.read_text(encoding="utf-8")).get("fingerprint") == \
+                summaries.fingerprint(summaries.material(law, memo)):
+            continue
+        out.append((law, memo, name))
+    return out
+
+
+def export(args) -> int:
+    """The material of laws still without a summary, one text file each, for summaries written in a session."""
+    from zailiprotiv import summaries
+    to = Path(args.to)
+    to.mkdir(parents=True, exist_ok=True)
+    pending = _pending(args)
+    if args.kind:
+        pending = [p for p in pending if p[0].get("kind") in args.kind.split(",")]
+    chosen = pending[args.skip: args.skip + args.limit] if args.limit else pending[args.skip:]
+    for law, memo, name in chosen:
+        (to / (name.removesuffix(".json") + ".txt")).write_text(summaries.material(law, memo), encoding="utf-8")
+    (to / "RULES.txt").write_text(summaries.SYSTEM, encoding="utf-8")
+    print(f"pending: {len(pending)}, exported: {len(chosen)} to {to}")
+    return 0
+
+
+def import_summaries(args) -> int:
+    """Summaries written in a session (a JSON Lines file: {"bill_file", "summary"}), checked and saved like the
+    API's, under the name of the model that wrote them."""
+    from zailiprotiv import summaries
+    store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
+    by_bill = {l.get("bill_file"): l for l in store["laws"].values() if l.get("bill_file")}
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    saved = refused = 0
+    for line in Path(args.file).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        item = json.loads(line)
+        name = item["bill_file"] if item["bill_file"].endswith(".json") else item["bill_file"] + ".json"
+        law = by_bill.get(name)
+        try:
+            if law is None:
+                raise ValueError("no such bill")
+            summary = summaries.parse(json.dumps(item["summary"], ensure_ascii=False))
+        except ValueError as e:
+            refused += 1
+            print(f"  refused {name}: {e}")
+            continue
+        memo = json.loads((Path(args.bills) / name).read_text(encoding="utf-8"))
+        (out_dir / name).write_text(json.dumps(summaries.record(law, memo, summary, args.model), ensure_ascii=False,
+                                               indent=1) + "\n", encoding="utf-8")
+        saved += 1
+    print(f"summaries saved: {saved}, refused: {refused}")
+    return 1 if refused and not saved else 0
 
 
 def sitting_id(url: str) -> str:
@@ -283,6 +349,21 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", default=str(DATA / "summaries"))
     p.add_argument("--limit", type=int, default=0, help="write at most this many (0: all)")
     p.set_defaults(run=summaries_cmd)
+    for name, run, help_ in (("export", export, "write the material of laws still without a summary"),
+                             ("import", import_summaries, "save summaries written in a session (JSON Lines)")):
+        p = commands.add_parser(name, help=help_)
+        p.add_argument("--laws", default=str(DATA / "laws.json"))
+        p.add_argument("--bills", default=str(DATA / "bills"))
+        p.add_argument("--out", default=str(DATA / "summaries"))
+        p.set_defaults(run=run)
+        if name == "export":
+            p.add_argument("--to", required=True)
+            p.add_argument("--limit", type=int, default=0)
+            p.add_argument("--skip", type=int, default=0)
+            p.add_argument("--kind", default="", help="only these kinds, comma-separated (law,change,finance,treaty)")
+        else:
+            p.add_argument("file")
+            p.add_argument("--model", required=True, help="who wrote them, e.g. claude-opus-5-5")
     p = commands.add_parser("site", help="build the static site")
     p.add_argument("--out", default="_site")
     p.add_argument("--domain", default="zailiprotiv.rs")

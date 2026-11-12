@@ -59,3 +59,24 @@ def test_summaries_command_skips_the_unchanged(tmp_path, monkeypatch):
     assert cli.main(args) == 0 and cli.main(args) == 0
     assert len(client.asked) == 1
     assert json.loads((tmp_path / "s" / "b.json").read_text())["summary"]["ukratko"] == "Кратко."
+
+
+def test_session_summaries_are_checked_and_kept(tmp_path):
+    from zailiprotiv import cli
+    (tmp_path / "bills").mkdir()
+    (tmp_path / "bills" / "b.json").write_text(json.dumps(MEMO))
+    (tmp_path / "laws.json").write_text(json.dumps({"laws": {"L": {**LAW, "bill_file": "b.json", "passed": "2026-01-01",
+                                                                   "kind": "law"}}}))
+    common = ["--laws", str(tmp_path / "laws.json"), "--bills", str(tmp_path / "bills"), "--out", str(tmp_path / "s")]
+    assert cli.main(["export", *common, "--to", str(tmp_path / "x")]) == 0
+    assert (tmp_path / "x" / "b.txt").read_text().startswith("Наслов закона:")
+    (tmp_path / "in.jsonl").write_text(
+        json.dumps({"bill_file": "b", "summary": {"ukratko": "Кратко.", "razlozi": ["а"], "promene": [],
+                                                  "sredstva": ""}}, ensure_ascii=False) + "\n" +
+        json.dumps({"bill_file": "nema", "summary": {"ukratko": "x"}}) + "\n")
+    assert cli.main(["import", *common, str(tmp_path / "in.jsonl"), "--model", "claude-opus-5-5"]) == 0
+    saved = json.loads((tmp_path / "s" / "b.json").read_text())
+    assert saved["model"] == "claude-opus-5-5" and saved["summary"]["razlozi"] == ["а"]
+    # the API run then leaves it alone
+    assert cli._pending(type("A", (), {"laws": str(tmp_path / "laws.json"), "bills": str(tmp_path / "bills"),
+                                       "out": str(tmp_path / "s")})) == []

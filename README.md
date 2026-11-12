@@ -30,6 +30,8 @@ uv sync
 uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
 uv run zailiprotiv laws                # laws the current convocation passed → data/laws.json
 uv run zailiprotiv summaries           # Claude's summaries of the memoranda → data/summaries/ (ANTHROPIC_API_KEY)
+uv run zailiprotiv export --to DIR      # material of laws without a summary, for summaries written in a session
+uv run zailiprotiv import FILE --model M  # save such summaries (JSON Lines: bill_file, summary)
 uv run zailiprotiv site --out _site   # build the static site
 uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/laws.json
 uv run zailiprotiv bills               # each law's bill: memorandum and constitutional basis → data/bills/
