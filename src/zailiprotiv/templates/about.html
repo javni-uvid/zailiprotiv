@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}O projektu — Za ili protiv{% endblock %}
+{% block main %}
+<h1>O projektu</h1>
+<p class="lead">„Za ili protiv“ pokazuje zakone koje Narodna skupština Srbije usvaja, šta predlagač navodi da oni menjaju, i kako je glasao svaki poslanik.</p>
+
+<h2>Načela</h2>
+<ol>
+  <li><b>Ista pravila za svakog poslanika, grupu i stranku.</b> Nijedna stranka nije posebno obrađena; poretci su neutralni (broj poslanika, azbuka/abeceda).</li>
+  <li><b>Samo primarni izvori:</b> poimenični rezultati glasanja, predlozi zakona sa obrazloženjem i spisak usvojenih zakona sa sajta Narodne skupštine.</li>
+  <li><b>Šta zakon menja kaže predlagač.</b> Izvodi su iz obrazloženja predloga zakona, uz link; sajt ne ocenjuje da li je zakon dobar ili loš.</li>
+  <li><b>Poslanici su javni funkcioneri:</b> njihova imena i glasovi su javni. Ništa o njihovom privatnom životu.</li>
+  <li><b>Ništa od trećih strana:</b> bez kolačića, analitike, fontova i skripti sa drugih servera.</li>
+</ol>
+
+<h2>Kako nastaju podaci</h2>
+<ul>
+  <li>Spisak sednica i zasedanja Četrnaestog saziva i poimenični rezultati svakog glasanja čitaju se sa sajta Skupštine. Svaki PDF se čuva po svom otisku (SHA-256), pa se vidi ako se promeni.</li>
+  <li>Zakon se povezuje sa glasanjem po nazivu akta i danu usvajanja. Konačno je glasanje „u celini“ na dan usvajanja. Od {{ stats.laws }} zakona, {{ stats.linked }} ima pronađeno konačno glasanje.</li>
+  <li>Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika; oblast po tački člana 97. Ustava koju predlog navodi u ustavnom osnovu.</li>
+  <li>Isti poslanik se prepoznaje po rečima imena, bez obzira na red reči i titule.</li>
+</ul>
+
+<h2>Ograničenja</h2>
+<ul>
+  <li>Za glasanja iz 2024. i prve polovine 2025. Skupština je objavljivala samo prisutne poslanike; odsutni nisu na spisku.</li>
+  <li>Grupe su prepisane onako kako ih piše Skupština: skraćenice poslaničkih grupa u novijim, nazivi lista u starijim dokumentima.</li>
+  <li>Ako primetite grešku, prijavite je na <a href="https://github.com/javni-uvid/zailiprotiv/issues">GitHub-u</a>.</li>
+</ul>
+{% endblock %}

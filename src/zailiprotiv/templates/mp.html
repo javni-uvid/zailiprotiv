@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ mp.name }} — Za ili protiv{% endblock %}
+{% block description %}Kako je {{ mp.name }} glasao o zakonima Četrnaestog saziva Narodne skupštine.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
+<h1>{{ mp.name }}</h1>
+<p class="meta">Poslednja poslanička grupa: {{ mp.group or "—" }} · poslednje glasanje {{ mp.last_seen[:10]|day }}</p>
+<ul class="numbers small">
+{% for k in VOTES %}<li><b class="v-text-{{ k }}">{{ tally[k] or 0 }}</b> {{ vote_label[k]|lower }}</li>{% endfor %}
+</ul>
+<p class="note small">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. odsutni nisu bili na spisku, pa se ta glasanja ovde ne vide.</p>
+<div class="scroll">
+<table class="record">
+  <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
+  <tbody>
+  {% for r in record %}
+    <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.title }}</a></td><td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

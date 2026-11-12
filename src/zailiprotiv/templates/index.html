@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, tally %}
+{% block main %}
+<section class="hero">
+  <h1>Kako se glasa u Skupštini</h1>
+  <p class="lead">Svaki zakon koji je Narodna skupština usvojila u Četrnaestom sazivu (2024–2026), šta predlagač kaže da menja, i kako je glasao svaki poslanik. Sve iz dokumenata same Skupštine.</p>
+  <ul class="numbers">
+    <li><b>{{ stats.laws }}</b> usvojenih zakona</li>
+    <li><b>{{ stats.votes }}</b> poimeničnih glasanja</li>
+    <li><b>{{ stats.mps }}</b> poslanika</li>
+    <li><b>{{ stats.sittings }}</b> sednica i zasedanja</li>
+  </ul>
+  <p><a class="button" href="zakoni.html">Svi zakoni</a> <a class="button ghost" href="poslanici.html">Svi poslanici</a></p>
+</section>
+
+<section>
+  <h2>Poslednji usvojeni zakoni</h2>
+  <ul class="cards">
+  {% for it in latest %}
+    <li>
+      <a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>
+      <div class="meta">{{ it.law.passed|day }} · {{ it.kind|latin }}</div>
+      {% if it.final %}{{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="note">
+  <h2>Kako čitati</h2>
+  <ul>
+    <li>Glasovi su prepisani iz poimeničnih rezultata glasanja koje Skupština objavljuje kao PDF; uz svaki zakon je link na izvor.</li>
+    <li>Šta zakon menja i koliko košta navodi <em>predlagač</em> u obrazloženju predloga zakona. To je njegova ocena, ne naša.</li>
+    <li>Za glasanja iz 2024. i prve polovine 2025. Skupština nije objavljivala ko je bio odsutan, pa se vidi samo ko je glasao i kako.</li>
+  </ul>
+</section>
+{% endblock %}

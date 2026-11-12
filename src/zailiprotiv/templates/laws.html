@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, tally %}
+{% block title %}Zakoni — Za ili protiv{% endblock %}
+{% block main %}
+<h1>Usvojeni zakoni</h1>
+<p class="lead">{{ total }} zakona Četrnaestog saziva, po vrsti, najnoviji prvo. Vrsta se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon.</p>
+<nav class="toc">
+{% for k in kind_order %}<a href="#{{ k }}">{{ KINDS[k]|latin }} <span>{{ by_kind[k]|length }}</span></a>{% endfor %}
+</nav>
+{% for k in kind_order %}
+<section id="{{ k }}">
+  <h2>{{ KINDS[k]|latin }}</h2>
+  <table class="laws">
+    <thead><tr><th>Usvojen</th><th>Zakon</th><th>Konačno glasanje</th></tr></thead>
+    <tbody>
+    {% for it in by_kind[k] %}
+      <tr>
+        <td class="nowrap">{{ it.law.passed|day }}</td>
+        <td><a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>{% if it.areas %}<div class="meta">{{ it.areas|map("latin")|join(" · ") }}</div>{% endif %}</td>
+        <td class="vote-cell">{% if it.final %}{{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>{% else %}<span class="meta">glasanje nije pronađeno</span>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endfor %}
+{% endblock %}

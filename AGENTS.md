@@ -102,6 +102,21 @@ These are the project's promises to its readers. Never change them without the m
 - Fourteenth convocation (12 Nov 2026): 394 of 395 laws have their final vote (388 exact, 6 close). The Venezuela
   visa agreement (passed 13 March 2025) has no roll call among the PDFs the Assembly links for that day.
 
+### Site
+
+- **Static pages in Latin script** (`site.py`, Jinja2 templates): home, laws by kind, a page per law (facts,
+  documents, an excerpt of the proposer's memorandum labelled as such, the final vote by group and by MP, the other
+  votes on the act), MPs, a page per MP (their final votes on laws). Cyrillic from the Assembly's documents is
+  transliterated; a test checks no Cyrillic is left. A Cyrillic edition can follow, as in the election site.
+- **No scripts at all**, nothing from other servers. Colours mean kinds of vote (for, against, …), never a group.
+- **Neutral order:** groups by the number of their MPs on the roll, then alphabetically; names in Serbian
+  alphabetical order (`collate`: č, ć after c; dž, lj, nj as one letter).
+- **Groups as the Assembly writes them:** abbreviations ("ПГ АВ-СНСДС") in the report layout, list names in the
+  listinzi. An MP's name is the report layout's ("Surname Given") where they have one.
+- **Hosting:** GitHub Pages through Actions at zailiprotiv.rs (domain bought 12 Nov 2026). The custom domain is
+  set in the repository's Pages settings and DNS by the maintainer; the build also writes `CNAME`. The votes
+  workflow starts **pages** after committing data, as pushes by the workflows' token start no other workflow.
+
 ### Scope
 
 - The current convocation first, then the older ones (the maintainer's decision, 12 Nov 2026).
@@ -112,7 +127,9 @@ These are the project's promises to its readers. Never change them without the m
   Fourteenth's sittings (2024–2026). Earlier convocations' sittings are in the archive pages, likely with their
   own `Listinzi` links: still to check.
 - How a vote is tied to its act (title, bill, memorandum) on the Assembly's site.
-- Site layout, languages and hosting: to decide once the data is in.
+- Summaries of the laws (Claude's, from the memorandum) and a Cyrillic edition of the site.
+- MPs whose name is spelled differently across layouts (Ana/Anna Oreg, middle initials) appear twice: a manual
+  joining file is still to add.
 
 ## Decisions log
 

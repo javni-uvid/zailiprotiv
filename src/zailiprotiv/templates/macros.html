@@ -1,0 +1,10 @@
+{% macro bar(counts, total=None) -%}
+{% set t = total or ((counts.za or 0) + (counts.protiv or 0) + (counts.uzdrzan or 0) + (counts.nije_glasao or 0) + (counts.nije_prisutan or 0)) %}
+<div class="bar" role="img" aria-label="Za {{ counts.za }}, protiv {{ counts.protiv }}, uzdržanih {{ counts.uzdrzan }}, nije glasalo {{ counts.nije_glasao }}, nije prisutno {{ counts.nije_prisutan }}">
+{% for k in ["za", "protiv", "uzdrzan", "nije_glasao", "nije_prisutan"] %}{% if counts[k] %}<span class="v-{{ k }}" style="width:{{ (100 * counts[k] / t)|round(2) }}%"></span>{% endif %}{% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro tally(counts, short=false) -%}
+<span class="tally"><b class="t-za">{{ counts.za }}</b> za · <b class="t-protiv">{{ counts.protiv }}</b> protiv{% if not short %} · {{ counts.uzdrzan }} uzdržano · {{ counts.nije_glasao }} nije glasalo{% if counts.nije_prisutan %} · {{ counts.nije_prisutan }} nije prisutno{% endif %}{% endif %}</span>
+{%- endmacro %}

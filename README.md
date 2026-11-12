@@ -3,8 +3,10 @@
 A public site about the laws Serbia's National Assembly passes: what each law does, what its proposer says it will
 change, and how every MP voted on it.
 
-**Status:** first version. The Fourteenth convocation's roll calls are indexed and read; joining MPs across
-votes and the laws' summaries come next.
+**Site:** https://zailiprotiv.rs
+
+**Status:** first version. The Fourteenth convocation's laws, each with its final roll call by group and by MP, and
+every MP's votes. The laws' summaries (from the proposer's memorandum) come next.
 
 ## Principles
 
@@ -27,6 +29,7 @@ every agenda item to its roll call; the sittings are listed on the regular and e
 uv sync
 uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
 uv run zailiprotiv laws                # laws the current convocation passed → data/laws.json
+uv run zailiprotiv site --out _site   # build the static site
 uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/laws.json
 uv run zailiprotiv bills               # each law's bill: memorandum and constitutional basis → data/bills/
 uv run zailiprotiv votes               # read every roll call not read yet → data/votes/<sitting>.json (needs pdftotext)
@@ -38,6 +41,7 @@ uv run pytest
 | Workflow | When | What |
 |---|---|---|
 | votes | by hand | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/` |
+| pages | on push, and after each data run | build the site and publish it on GitHub Pages |
 | fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
 | test | on push | the whole test suite |
 
@@ -52,6 +56,7 @@ src/zailiprotiv/
   bills.py       a bill's memorandum: constitutional basis (article, points), reasons, funds, effects
   kinds.py       an act's kind (from its title) and area (from Article 97 of the Constitution), with their labels
   link.py        which roll calls were on which law, and its final vote
+  site.py        the static site, with templates/ and static/
   mps.py         who an MP is across roll calls: a name key without word order or titles
   cli.py         commands
   translit.py    Cyrillic → Latin

@@ -127,6 +127,13 @@ def memoranda(args) -> int:
     return 0
 
 
+def website(args) -> int:
+    from zailiprotiv import site
+    stats = site.build(DATA, Path(args.out), args.domain or None)
+    print(", ".join(f"{k}: {v}" for k, v in stats.items()))
+    return 0
+
+
 def sitting_id(url: str) -> str:
     """The number the Assembly's site gives a sitting's page ("…_Народне.53524.43.html" → "53524")."""
     m = re.search(r"\.(\d+)\.43\.html$", urllib.parse.unquote(url))
@@ -226,6 +233,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--again", action="store_true")
     p.add_argument("--limit", type=int, default=0)
     p.set_defaults(run=memoranda)
+    p = commands.add_parser("site", help="build the static site")
+    p.add_argument("--out", default="_site")
+    p.add_argument("--domain", default="zailiprotiv.rs")
+    p.set_defaults(run=website)
     p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
     p.add_argument("--index", default=str(DATA / "index.json"))
     p.add_argument("--out", default=str(DATA / "votes"))

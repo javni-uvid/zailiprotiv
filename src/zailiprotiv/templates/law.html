@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, tally %}
+{% block title %}{{ law.title }} — Za ili protiv{% endblock %}
+{% block description %}{{ law.title }}: kako su glasali poslanici i šta predlagač navodi u obrazloženju.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="../zakoni.html">Zakoni</a> › <a href="../zakoni.html#{{ law.kind }}">{{ it.kind|latin }}</a></p>
+<h1>{{ law.title }}</h1>
+<dl class="facts">
+  <div><dt>Usvojen</dt><dd>{{ law.passed|day }}</dd></div>
+  <div><dt>Službeni glasnik</dt><dd>{{ law.gazette }}{% if law.treaty %} (međunarodni ugovori){% endif %}</dd></div>
+  <div><dt>Vrsta</dt><dd>{{ it.kind|latin }}</dd></div>
+  <div><dt>Oblast</dt><dd>{% if it.areas %}{{ it.areas|map("latin")|join("; ") }}{% else %}—{% endif %}</dd></div>
+</dl>
+<p class="docs">
+  <a href="{{ law.pdf }}">Tekst zakona (PDF)</a>
+  {% if law.bill_pdf %}<a href="{{ law.bill_pdf }}">Predlog zakona sa obrazloženjem (PDF)</a>{% endif %}
+  {% if final %}<a href="{{ final.key.split('#')[0] }}">Poimenično glasanje (PDF)</a>{% endif %}
+</p>
+
+{% if reasons or funds or effects %}
+<section class="memo">
+  <h2>Šta predlagač navodi</h2>
+  <p class="label">Izvod iz obrazloženja predloga zakona. Ovo je ocena predlagača, ne naša; ceo tekst je u <a href="{{ law.bill_pdf }}">predlogu</a>.</p>
+  {% if reasons %}<h3>Razlozi za donošenje</h3><p>{{ reasons|latin }}</p>{% endif %}
+  {% if funds %}<h3>Potrebna sredstva</h3><p>{{ funds|latin }}</p>{% endif %}
+  {% if effects %}<h3>Analiza efekata</h3><p>{{ effects|latin }}</p>{% endif %}
+</section>
+{% endif %}
+
+{% if final %}
+<section>
+  <h2>Konačno glasanje</h2>
+  <p class="meta">{{ final.when[:10]|day }} u {{ final.when[11:16] }}{% if final.kind %} · {{ final.kind|latin }}{% endif %} · {{ final.sitting_title|latin }}</p>
+  {{ bar(final.counts) }}
+  <p>{{ tally(final.counts) }}</p>
+  {% if not report %}<p class="note small">Za glasanja iz 2024. i prve polovine 2025. Skupština je objavljivala samo poslanike koji su bili prisutni; odsutni nisu na spisku.</p>{% endif %}
+
+  <h3>Po poslaničkim grupama</h3>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Grupa (kako je piše Skupština)</th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
+    <tbody>
+    {% for g in groups %}
+      <tr><td>{{ g.group }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  <details>
+    <summary>Kako je glasao svaki poslanik ({{ roll|length }})</summary>
+    <div class="scroll">
+    <table class="roll">
+      <thead><tr><th>Poslanik</th><th>Grupa</th><th>Glas</th></tr></thead>
+      <tbody>
+      {% for r in roll %}
+        <tr><td><a href="../poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td><td>{{ r.group }}</td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </details>
+</section>
+{% else %}
+<section class="note"><p>Za ovaj zakon nije pronađeno poimenično glasanje među dokumentima koje Skupština objavljuje uz sednicu.</p></section>
+{% endif %}
+
+{% if others %}
+<section>
+  <h2>Ostala glasanja o ovom aktu</h2>
+  <ul class="plain">
+  {% for v in others %}
+    <li><span class="meta">{{ v.when[:10]|day }} {{ v.when[11:16] }}{% if v.kind %} · {{ v.kind|latin }}{% endif %}</span> — {{ tally(v.counts, true) }} · <a href="{{ v.key.split('#')[0] }}">PDF</a></li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

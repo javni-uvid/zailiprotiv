@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: votes
@@ -43,6 +44,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
-          git diff --cached --quiet && exit 0
+          git diff --cached --quiet && { gh workflow run pages.yml --ref main; exit 0; }
           git commit -m "Roll calls read from the Assembly's site"
-          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done; exit 1
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          git status -sb | grep -q ahead && exit 1
+          gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}

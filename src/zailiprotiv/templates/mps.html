@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Poslanici — Za ili protiv{% endblock %}
+{% block main %}
+<h1>Poslanici</h1>
+<p class="lead">Svako ko je glasao bar jednom u Četrnaestom sazivu, po prezimenu. Brojevi su konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku.</p>
+<div class="scroll">
+<table class="mps">
+  <thead><tr><th>Poslanik</th><th>Poslednja grupa</th><th class="num">Za</th><th class="num">Protiv</th><th class="num">Uzdržan</th><th class="num">Nije glasao</th><th class="num">Nije prisutan</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td><a href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td>
+      <td>{{ r.mp.group or "—" }}</td>
+      {% for k in VOTES %}<td class="num">{{ r.tally[k] or "" }}</td>{% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
