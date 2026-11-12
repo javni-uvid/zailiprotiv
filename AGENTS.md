@@ -124,6 +124,9 @@ These are the project's promises to its readers. Never change them without the m
   votes on the act), MPs, a page per MP (their final votes on laws). Cyrillic from the Assembly's documents is
   transliterated; a test checks no Cyrillic is left. A Cyrillic edition can follow, as in the election site.
 - **No scripts at all**, nothing from other servers. Colours mean kinds of vote (for, against, …), never a group.
+- **Home page:** "Najviše glasova protiv" first (the maintainer's request, 12 Nov 2026): the laws whose final
+  vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
+  for what it measures; "controversial" would be a judgement. Then the newest laws.
 - **Neutral order:** groups by the number of their MPs on the roll, then alphabetically; names in Serbian
   alphabetical order (`collate`: č, ć after c; dž, lj, nj as one letter).
 - **Groups as the Assembly writes them:** abbreviations ("ПГ АВ-СНСДС") in the report layout, list names in the

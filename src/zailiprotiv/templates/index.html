@@ -13,6 +13,22 @@
   <p><a class="button" href="zakoni.html">Svi zakoni</a> <a class="button ghost" href="poslanici.html">Svi poslanici</a></p>
 </section>
 
+{% if contested %}
+<section>
+  <h2>Najviše glasova protiv</h2>
+  <p class="meta">Zakoni kod kojih je u konačnom glasanju udeo glasova protiv, među glasovima za i protiv, bio najveći. Isto pravilo za svaki zakon.</p>
+  <ul class="cards">
+  {% for it in contested %}
+    <li>
+      <a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>
+      <div class="meta">{{ it.law.passed|day }} · {{ it.kind|latin }} · {{ (100 * it.share)|round|int }}% protiv</div>
+      {{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
 <section>
   <h2>Poslednji usvojeni zakoni</h2>
   <ul class="cards">

@@ -135,6 +135,21 @@ def excerpt(text: str, limit: int) -> str:
     return cut + " …"
 
 
+def against_share(counts: dict) -> float:
+    """The share of votes against among the votes for and against: 0 when nobody voted against."""
+    cast = counts["za"] + counts["protiv"]
+    return counts["protiv"] / cast if cast else 0.0
+
+
+def most_against(items: list[dict], n: int) -> list[dict]:
+    """The laws whose final vote had the largest share against, the same rule for every law; ties go to more
+    votes against, then the newer law."""
+    voted = [it for it in items if it["final"] and it["final"]["counts"]["protiv"]]
+    ranked = sorted(voted, key=lambda it: (against_share(it["final"]["counts"]), it["final"]["counts"]["protiv"],
+                                           it["law"].get("passed") or ""), reverse=True)
+    return [{**it, "share": against_share(it["final"]["counts"])} for it in ranked[:n]]
+
+
 def build(data: Path, out: Path, domain: str | None = None) -> dict:
     laws_store, votes, bills = load(data)
     laws = laws_store["laws"]
@@ -203,7 +218,7 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
              "mps": len(people), "treaties": sum(1 for it in items if it["law"].get("kind") == "treaty"),
              "sittings": len({v["sitting"] for v in votes.values()})}
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, stats=stats, latest=items[:12], root=""), encoding="utf-8")
+        **common, stats=stats, latest=items[:12], contested=most_against(items, 12), root=""), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
     if domain:

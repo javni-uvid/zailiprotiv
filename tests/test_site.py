@@ -51,3 +51,13 @@ def test_serbian_order():
     words = ["Čolaković", "Cvetković", "Ćirić", "Džajić", "Đurić", "Dinić", "Ljubić", "Lazić", "Šarac", "Žarić"]
     assert sorted(words, key=site.collate) == ["Cvetković", "Čolaković", "Ćirić", "Dinić", "Džajić", "Đurić",
                                                "Lazić", "Ljubić", "Šarac", "Žarić"]
+
+
+def test_most_against_first():
+    def it(za, protiv, passed="2026-01-01"):
+        c = {"za": za, "protiv": protiv, "uzdrzan": 0, "nije_glasao": 0, "nije_prisutan": 0}
+        return {"final": {"counts": c}, "law": {"passed": passed, "title": f"{za}:{protiv}"}}
+    items = [it(140, 0), it(130, 40), it(126, 60), it(150, 60), it(130, 40, "2026-02-01"), {"final": None, "law": {}}]
+    ranked = [x["law"]["title"] for x in site.most_against(items, 3)]
+    assert ranked == ["126:60", "150:60", "130:40"]
+    assert site.most_against(items, 3)[2]["law"]["passed"] == "2026-02-01"  # a tie goes to the newer law
