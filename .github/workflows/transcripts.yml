@@ -1,0 +1,52 @@
+# Run by hand: the stenographic notes of the debates on the laws with the most votes against, read into
+# data/<convocation>/transcripts/<sitting>.json and committed.
+name: transcripts
+
+on:
+  workflow_dispatch:
+    inputs:
+      convocation:
+        description: "Convocation"
+        type: choice
+        options: ["14", "13", "12"]
+        default: "14"
+      top:
+        description: "How many of the laws with the largest share of votes against"
+        default: "20"
+      again:
+        description: "Read sittings already read again"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: transcripts
+  cancel-in-progress: false
+
+jobs:
+  transcripts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Read the notes
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv --convocation "${{ inputs.convocation }}" transcripts --top "${{ inputs.top }}" ${{ inputs.again && '--again' || '' }}
+      - name: Commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "Stenographic notes of the debates (convocation ${{ inputs.convocation }})"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          git status -sb | grep -q ahead && exit 1

@@ -13,7 +13,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import bills, jsonfile, kinds, laws, link, rollcall, skupstina
+from zailiprotiv import bills, jsonfile, kinds, laws, link, rollcall, skupstina, transcripts
 from zailiprotiv.config import CONVOCATIONS, CURRENT, DELAY
 
 ROOT = Path("data")
@@ -346,6 +346,51 @@ def download(args) -> int:
     return 0
 
 
+def notes_of_debate(args) -> int:
+    """The stenographic notes of the sittings where the laws with the most votes against (or the ones named) had
+    their final vote, into data/<N>/transcripts/<sitting>.json: the agenda, every speech with the part of the debate
+    it was given in, and the amendments announced. A sitting already read is skipped unless --again."""
+    import hashlib
+    from zailiprotiv.site import against_share
+    store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
+    votes_ = all_votes(Path(args.votes))
+    finals = [(law, votes_[law["final_vote"]]) for law in store["laws"].values()
+              if law.get("final_vote") in votes_]
+    if args.law:
+        chosen = [(l, v) for l, v in finals if l.get("bill_file") in args.law or l["title"] in args.law]
+    else:
+        chosen = sorted((x for x in finals if x[1]["counts"]["protiv"]),
+                        key=lambda x: (against_share(x[1]["counts"]), x[1]["counts"]["protiv"]), reverse=True)
+        chosen = chosen[:args.top]
+    sittings = sorted({v["sitting"] for _, v in chosen})
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    for url in sittings:
+        path = out / f"{sitting_id(url)}.json"
+        if path.exists() and not args.again:
+            continue
+        page = skupstina.fetch(url).decode("utf-8", "replace")
+        listed = transcripts.days(page, url)
+        if not listed:
+            print(f"{url}: no stenographic notes linked")
+            continue
+        days, meta = [], []
+        for d in sorted(listed, key=lambda d: d["day"]):
+            time.sleep(DELAY)
+            body = skupstina.fetch(d["url"])
+            paras = transcripts.paragraphs(body)
+            days.append(paras)
+            meta.append({**d, **transcripts.heading(paras), "sha256": hashlib.sha256(body).hexdigest()})
+        found = transcripts.debate(days)
+        record = {"sitting": url, "days": meta, "agenda": {str(k): v for k, v in found["agenda"].items()},
+                  "amendments": found["amendments"],
+                  "speeches": {f"{i:05d}": s for i, s in enumerate(found["speeches"])}}
+        path.write_text(jsonfile.dumps(record, "speeches"), encoding="utf-8")
+        print(f"{path}: {len(meta)} days, {len(found['speeches'])} speeches, {len(found['amendments'])} amendments")
+        time.sleep(DELAY)
+    return 0
+
+
 CONVOCATION = CURRENT
 
 
@@ -401,6 +446,14 @@ def main(argv: list[str] | None = None) -> int:
         else:
             p.add_argument("file")
             p.add_argument("--model", required=True, help="who wrote them, e.g. claude-opus-5-5")
+    p = commands.add_parser("transcripts", help="stenographic notes of the debates on the most contested laws")
+    p.add_argument("--laws", default=str(DATA / "laws.json"))
+    p.add_argument("--votes", default=str(DATA / "votes"))
+    p.add_argument("--out", default=str(DATA / "transcripts"))
+    p.add_argument("--top", type=int, default=20, help="the laws with the largest share of votes against")
+    p.add_argument("--law", action="append", default=[], help="a law by bill file or title (instead of --top)")
+    p.add_argument("--again", action="store_true")
+    p.set_defaults(run=notes_of_debate)
     p = commands.add_parser("site", help="build the static site")
     p.add_argument("--out", default="_site")
     p.add_argument("--domain", default="zailiprotiv.rs")
