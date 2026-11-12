@@ -13,7 +13,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import jsonfile, rollcall, skupstina
+from zailiprotiv import jsonfile, laws, rollcall, skupstina
 from zailiprotiv.config import DELAY
 
 DATA = Path("data")
@@ -40,6 +40,17 @@ def index(args) -> int:
         print("no roll calls found: has the sittings' page layout changed?")
         return 1
     return 0
+
+
+def adopted(args) -> int:
+    """The laws the current convocation passed, from the Assembly's page of adopted laws, into data/laws.json."""
+    found = laws.parse(skupstina.fetch(laws.ADOPTED).decode("utf-8", "replace"))
+    store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": laws.ADOPTED,
+             "laws": {law.pdf: law.as_dict() for law in found}}
+    Path(args.out).write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    print(f"laws: {len(found)}, international treaties: {sum(l.treaty for l in found)}, "
+          f"without a bill: {sum(not l.bill_pdf for l in found)}")
+    return 0 if found else 1
 
 
 def sitting_id(url: str) -> str:
@@ -127,6 +138,9 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("index", help="list the current convocation's sittings and their roll-call PDFs")
     p.add_argument("--out", default=str(DATA / "index.json"))
     p.set_defaults(run=index)
+    p = commands.add_parser("laws", help="the laws the current convocation passed → data/laws.json")
+    p.add_argument("--out", default=str(DATA / "laws.json"))
+    p.set_defaults(run=adopted)
     p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
     p.add_argument("--index", default=str(DATA / "index.json"))
     p.add_argument("--out", default=str(DATA / "votes"))

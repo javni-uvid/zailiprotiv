@@ -31,6 +31,7 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
           pip install uv && uv sync --frozen
           uv run zailiprotiv index
+          uv run zailiprotiv laws
           uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }}
       - name: Commit
         run: |

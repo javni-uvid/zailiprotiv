@@ -26,6 +26,7 @@ every agenda item to its roll call; the sittings are listed on the regular and e
 ```sh
 uv sync
 uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
+uv run zailiprotiv laws                # laws the current convocation passed → data/laws.json
 uv run zailiprotiv votes               # read every roll call not read yet → data/votes/<sitting>.json (needs pdftotext)
 uv run pytest
 ```
@@ -34,7 +35,7 @@ uv run pytest
 
 | Workflow | When | What |
 |---|---|---|
-| votes | by hand | index the sittings, read the roll calls not read yet, commit `data/` |
+| votes | by hand | index the sittings, list the adopted laws, read the roll calls not read yet, commit `data/` |
 | fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
 | test | on push | the whole test suite |
 
@@ -45,12 +46,14 @@ src/zailiprotiv/
   config.py      the Assembly's address, User-Agent, delay between requests
   skupstina.py   the Assembly's site: sittings and the roll-call PDF of each agenda item
   rollcall.py    reading a roll-call PDF: the vote, and each MP's vote and group
+  laws.py        the adopted laws: title, bill, day passed, Official Gazette, international treaty or not
   mps.py         who an MP is across roll calls: a name key without word order or titles
   cli.py         commands
   translit.py    Cyrillic → Latin
   jsonfile.py    JSON stores one entry per line, for small git diffs
 data/
   index.json     sittings and their roll calls (one sitting per line)
+  laws.json      the convocation's adopted laws (one law per line)
   votes/         one file per sitting: each vote's date, item, kind, counts and rows (number, name, vote, group)
 tests/
 ```

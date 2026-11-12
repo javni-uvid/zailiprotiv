@@ -71,6 +71,24 @@ These are the project's promises to its readers. Never change them without the m
   roll call not read yet into `data/votes/<sitting>.json` (the sitting page's number), keeping each PDF's SHA-256.
   The **votes** workflow runs both and commits.
 
+### Laws
+
+- **The adopted laws** come from the Assembly's page "Донети закони" (`laws.py`): per law its title and PDF, the
+  bill it came from (title, PDF, day submitted), the day passed and the Official Gazette's issue, marked "(MU)" when
+  published among international treaties. 395 laws in the Fourteenth convocation, 171 of them treaties (Nov 2026).
+  `zailiprotiv laws` writes them to `data/laws.json`.
+- **Two ways of sorting laws, both read from the documents themselves** (the maintainer's decision, 12 Nov 2026),
+  the same rules for every law:
+  1. the kind of act, from its title and the Gazette's mark: international treaty; budget and public finance
+     (budget, final account, financial plans, borrowing, guarantees); a new law or changes to one; election or
+     dismissal of officials; the Assembly's own work (rules of procedure, committees, agenda); declarations and
+     resolutions;
+  2. the area, from the bill's "Уставни основ": the point of Article 97 of the Constitution the proposer relies
+     on, each point being one area of the Republic's competence. No area of our own choosing; "political" is not
+     a category.
+- **A law's summary is Claude's summary of the proposer's memorandum** (reasons, analysis of effects, funds
+  needed), labelled as such and linked to the bill (the maintainer's decision, 12 Nov 2026).
+
 ### Scope
 
 - The current convocation first, then the older ones (the maintainer's decision, 12 Nov 2026).
