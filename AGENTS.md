@@ -109,14 +109,16 @@ These are the project's promises to its readers. Never change them without the m
     law's material and the rules, `zailiprotiv import FILE --model …` checks and saves the summaries under the
     name of the model that wrote them. The fingerprint covers the rules and the material, not the model, so the
     API run leaves them alone until either changes.
-  - Practice in the session summaries (12 Nov 2026), to be confirmed by the maintainer:
+  - Practice in the session summaries (12 Nov 2026, confirmed by the maintainer the same day, with one change:
+    the proposer's political reasons are given, attributed, not left out):
     - no sums or figures the memorandum doesn't state (two added-up totals were taken out);
     - the proposer's charged terms are quoted and attributed ("„НАТО агресија“, како наводи образложење"),
       never replaced by a softer word of ours; evaluative phrases of the proposer's ("од изузетног значаја") are
       left out; legal statuses ("пројекат од посебног значаја") stay, attributed;
     - no persons: signatories, MPs who proposed a bill, appointees, people named in court cases;
-    - in the visa and other bilateral agreements, the memoranda's passages on how the other country stands on
-      Kosovo or voted on the Srebrenica resolution are left out under the no-politics rule;
+    - the proposer's stated reasons are given as the proposer's, political ones too (in bilateral agreements, the
+      other country's stance on Kosovo or its vote on the Srebrenica resolution), the proposer's terms quoted;
+      factual conditions and budget items stay (a loan's condition of dialogue with Pristina);
     - a malformed figure in a memorandum is quoted as written, never corrected.
   - In large laws the explanation of individual articles is cut at the material's limit (8,000 characters), so
     their summaries cover the reasons and the first articles. To revisit with a higher limit for those laws.
