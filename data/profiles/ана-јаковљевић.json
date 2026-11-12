@@ -1,0 +1,69 @@
+{
+ "mp": "ана јаковљевић",
+ "model": "claude-fable-5-2",
+ "read": 21,
+ "speeches": 22,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да власт улаже у зграде уместо у људе, науку и образовање, а да су људи најважнији ресурс једне земље.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Власти у развијеним земљама знају да су људи најважнији ресурс и да је најисплативија инвестиција увек улагање у њих.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су ОДИХР и ЦРТА утврдили да су избори 2023. године покрадени и да је власт око две године одуговлачила ревизију бирачког списка.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "До прихватљивог концепта Комисије за ревизију бирачког списка по ОДХИР препорукама смо дошли после скоро две године мрцварења које смо трпели од стране владајуће већине.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Позива грађане да верују свом новчанику, а не бројкама које износи власт.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Развој је оно што видите када погледате у свој новчаник. То вам говори где се налазимо, шта можете да купите и како живите, па ви одлучите да ли ћете веровати власти или свом новчанику.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да дуално образовање „сакати“ образовање деце и замера што се из буџета финансирају тренинг центри Канцеларије за дуално образовање.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Уместо да модел струковних школа, које код нас постоје деценијама и које смо развијали по немачком моделу, унапређујемо и развијамо, ми смо решили да додатно осакатимо наше образовање тако што смо увели дуални модел образовања.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт од препорука ОДИХР-а примењује само оно што је најмање угрожава, а грађане уверава да их испуњава.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "А опет, све исто раде у свом маниру – изигравају процедуре предлагања закона, не организују јавне расправе него их симулирају, од препорука узимају само оно што их најмање угрожава и врте све исте приче у круг које и врапци на грани знају.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}

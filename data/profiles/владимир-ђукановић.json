@@ -1,0 +1,72 @@
+{
+ "mp": "владимир ђукановић",
+ "model": "claude-fable-5-2",
+ "read": 24,
+ "speeches": 24,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да изградња нових стадиона доноси нова насеља и подстиче привреду, а да постојећи стадиони не задовољавају стандарде УЕФА.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато што сваки од тих стадиона доноси потпуно ново насеље, потпуно се нешто ново зида, читави квартови нови се зидају, то је за вашу грађевинску оперативу озбиљан посао и суштински тако БДП подижете.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanredno zasedanja NSRS, odrzane 31.jul 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се Србији препоручују децентрализација и подела на више делова, а Босни и Херцеговини централизација и укидање Републике Српске, што назива „дуплим аршинима“.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Јел тако, а да Републику Српску угасимо? Како су то дупли аршини - просто невероватно. Зато Србија мора да се бори за Републику Српску.",
+    "date": "2024-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene  stenografske beleske Prvog vanrednog zasedanja NSRS, odrazane 25. jula 2024. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се мерама против ковида не затвара и не ограничава рад привредника и угоститеља, јер привреда мора да ради.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Немојмо више да ограничавамо привреднике са радним временом. То је бесмислено. Уведимо строжију контролу поштовања епидемиолошких мера у привредним субјектима, посебно у угоститељским објектима, али немојмо спречавати угоститеље и малог привредника да ради.",
+    "date": "2020-12-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sesta sednica Drugog redovnog zasedanja NSRS, 10.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је народни посланик Милош Парандиловић тражио функцију од људи из СНС-а у Прибоју и да је прешао у опозицију када је није добио.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прича о функцијама, знате, човек је молио наше функционере у Прибоју да буде на некој функцији, па када није добио, онда је прешао у опозицију.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да опозиција тражи тужилачку полицију по узору на Румунију да би, под контролом „неке амбасаде“, из политике уклонила политичку елиту која јој смета.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У Румунији је такво правило да чак и када си ослобођен више после не можеш да се бавиш јавним послом и цела поента прича је била – склонити политичку елиту која смета.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  }
+ ]
+}

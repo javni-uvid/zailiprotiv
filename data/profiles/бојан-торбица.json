@@ -1,0 +1,70 @@
+{
+ "mp": "бојан торбица",
+ "model": "claude-fable-5-2",
+ "read": 18,
+ "speeches": 19,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да Европска унија Србији поставља услове и уцене, међу њима одрицање од Косова, санкције Русији и удаљавање од Кине.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сваки пут када Србија испуни све што се тражи, из Брисела стигне нови захтев, нова уцена и ново понижење.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се грађани на референдуму изјасне о европском путу Србије.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Деценијама се у Србији говори да је европски пут једини пут. Ако је тако онда је ред да се грађани о томе изјасне.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су припадници српског народа у региону изложени претњама и нападима.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сведоци смо чињенице да се у региону у последње две године значајно повећао број напада на припаднике српског народа, њихов прогон, хапшење, незаконито задржавање у притвору по основу наводних ратних злочина и других фингираних дела за које не постоје никакви докази.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Брани то што Србија није увела санкције Русији.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, свима мора бити јасно да су ово санкције искључиво против Србије и то је казна Србији и њеним грађанима зато што нисмо увели санкције Русији и зато што одбијамо да будемо део западног антируског фронта и хистерије.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су после 2000. године, за време власти Демократске странке и њених партнера, фабрике распродате, а радници остали без посла и у сиромаштву.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Пре свега неопходна, јер мора подсетити да је после 2000. године 400.000 људи у Србији истерано на улицу, да су хиљаде фабрика продате у бесцење, да су шећеране продаване за једну марку, да је цела српска пољопривреда укинута, да не кажем угашена преко ноћи.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  }
+ ]
+}

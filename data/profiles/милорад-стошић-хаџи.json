@@ -1,0 +1,74 @@
+{
+ "mp": "милорад стошић хаџи",
+ "model": "claude-fable-5-2",
+ "read": 21,
+ "speeches": 22,
+ "sittings": 14,
+ "points": [
+  {
+   "tekst": "Наводи да ће посланичка група ПУПС-а у дану за гласање подржати предлоге који су на дневном реду.",
+   "govora": 12,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "На самом почетку бих нагласио да ће наша посланичка група ПУПС – Три П у дану за гласање подржати овај Предлог закона о попису пољопривреде у 2023. години, као и остале тачке дневног реда овог заседања, односно ове седнице.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanaestom sazivu, 21. jul 2021. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Министарство за бригу о селу програмом куповине сеоских кућа са окућницом обезбедило дом младим људима са децом и да се млади због тога враћају на село или остају на њему.",
+   "govora": 5,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ради подсећања, овим пројектом Министарства за бригу о селу купљено је преко 3620 сеоских кућа са окућницом у које се уселило преко 16.000 лица, међу којима је много деце.",
+    "date": "2025-06-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се ПУПС годинама залаже за то да се пензије усклађују са растом плата, по формули „пензије прате плате“.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Посебно је битно нагласити најаву да ће се коначно пензије у наредној години и наредним годинама усклађивати у односу на раст плата по формули три П – пензије прате плате, по формули коју ПУПС – Солидарност и правда предлаже већ низ година уназад.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се програм изградње станова за припаднике снага безбедности прошири и на младе брачне парове.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "У том смислу ја ћу у име наше посланичке групе ПУПС- Солидарности и правда поновити своје раније залагање да се овај програм станоградње прошири и на остале стручњаке и младе брачне парове у градовима, али зашто да не и у селима.",
+    "date": "2024-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanrednog zasedanja NSRS, odrzane 29. jula 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је кроз програм подршке задругама основано више од 1.100 нових задруга, а да се пре тога гасило и по 100 задруга годишње.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Програмом 500 задруга у 500 села, који је покренуо министар Милан Кркобабић, у сарадњи са академским одбором за село САНУ, враћено је поверење у удруживање, и за ово претходно време основано је више од 1.118 задруга.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

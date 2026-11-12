@@ -1,0 +1,69 @@
+{
+ "mp": "ковач митар",
+ "model": "claude-fable-5-2",
+ "read": 18,
+ "speeches": 20,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Замера што се законом о локацији Генералштаба у Београду омогућава да страни инвеститор гради објекат међу зградама владиних институција.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наиме, у вези са покретањем Нацрта овог закона требало се обезбедити мишљење надлежних безбедносних служби Министарства, па и БИА, јер се ради о изградњи комплекса у центру владиних институција.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Србија нема уређен стратегијски систем и тражи да свака функција државе добије своју стратегију.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Мислим да је сазрело време после двадесет пет, шест година од демократских промена да се уреди тај стратегијски систем и да јасно знамо, па и тражимо од Владе да све држане функције доставе урађене стратегије.",
+    "date": "2026-01-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Sestog vanrednog zasedanja NSRS, 22. januar 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се и претходна и садашња власт држе става да Европска унија нема алтернативу.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Све власти и прошла и ова посредно преко резултата избора закључивале су да европски пут, односно ЕУ нема алтернативу. По истраживањима јавног мњења, то данас није тако ни близу.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да професионални војник старији од 40 година не може да одговори војничким дужностима.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Војник преко 40 година знамо да не може да носи 20 килограма опреме, не може да изводи маршеве. Дакле, то је нецелисходно за систем.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да председник Републике командује војском, али да врховна команда која се формира у рату није прецизно уређена законом.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Следећи појам када се говори о врховном команданту у рату се формира врховна команда. Овде не видим да је један закон, па, и овај, то тачно одредио, прецизирао, шта је та врховна команда, где је место Генералштаба у тој врховној команди.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  }
+ ]
+}

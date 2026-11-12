@@ -1,0 +1,69 @@
+{
+ "mp": "владимир пајић",
+ "model": "claude-fable-5-2",
+ "read": 14,
+ "speeches": 21,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Наводи да је власт Српске напредне странке угасила Централни институт за конзервацију и уништила преко 100 објеката културног наслеђа.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Та таква политика је угасила, када је култура у питању, Централни институт за конзервацију, као једну изузетно важну установу, то је потписала госпођа Ана Брнабић. Та политика уништила је преко 100 објеката културног наслеђа у Републици Србији.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да предложене измене правосудних закона служе као освета зато што је министар културе Никола Селаковић оптужен.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "То видимо по томе што сте јако нестрпљиви и јако усмерени на то да се загаси све оно што је остало од трагова правне државе и владавине права код нас само због тога што се неко дрзнуо да министра Николу Селаковића оптужи за нешто.",
+    "date": "2026-01-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 21. januara 2026. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Пита министра културе Николу Селаковића зашто није поднео кривичне пријаве против директора завода за заштиту споменика које оптужује, а које је именовала његова власт.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја имам питање за вас – зашто ви до сада нисте поднели кривичне пријаве за све то што нам говорите?",
+    "date": "2026-01-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 21. januara 2026. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера министру културе Николи Селаковићу што је у Скупштини износио неистине и што је болест користио као увреду.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Он нема право да се директно обраћа народним посланицима, нема право да крши достојанство Скупштине и што је најгоре, нема право да вређа људе, децу, која имају оваква или слична обољења, тако што то користи као увреду.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Амандманима на буџет тражи више улагања у образовање и наводи да власти образовање није важно.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо овим амандманом хтели да одвојимо додатно три милијарде динара за образовање. Желимо да повећамо стандард наших просветних радника, да се више улаже у просвету.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "нешић никола",
+ "model": "claude-fable-5-2",
+ "read": 23,
+ "speeches": 25,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Замера министру Горану Весићу што за измене закона о озакоњењу објеката и о планирању и изградњи није урадио анализе и није доставио податке које му је тражио.",
+   "govora": 6,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Због тога захтевам да се овај закон, док не урадите адекватну анализу и не дођете спремни пред народне посланике, да га повучете из процедуре.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да допуне Закона о озакоњењу објеката деле грађане на оне који су градили по прописаној процедури и оне који су градили нелегално.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Шта са људима који су поштовали све процедуре до сада? Шта ћемо са њима? Зашто правимо грађане првог и другог реда, господине Весићу?",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се положај жена предузетница код накнада за трудничко и породиљско одсуство изједначи са положајем жена које имају стандардне уговоре о раду.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Значи, морају да се изједначе статуси свим женама и мора да се укине овај коефицијент који је сулуд, јер те жене уплаћују буџет не само за себе, већ и за своје запослене, а зашто су онда овом одлуком кажњене.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је до измена Закона о финансијској подршци породици са децом дошло зато што је Уставни суд оценио да закон из 2018. године није у складу са Уставом.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Поштовани грађани Србије, драге колеге, желим да сумирам ову измену закона и да кажем, да поновим да је дошло до ове измене зато што је Уставни суд рекао да закон који сте донели 2018. године је неуставан.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се провери уставност Закона о планирању и изградњи.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ту лежи суштина. Поново ћу поновити да је Савет за борбу против корупције упозорио да је ово противуставно.",
+    "date": "2023-07-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

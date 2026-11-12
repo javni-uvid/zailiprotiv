@@ -1,0 +1,69 @@
+{
+ "mp": "марковић татјана топаловић",
+ "model": "claude-fable-5-2",
+ "read": 19,
+ "speeches": 19,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да закон о родитељима неговатељима, тиме што им забрањује да раде, крши Устав, Закон о раду и Закон о социјалној инклузији.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Напомињем да спречавањем родитеља-неговатеља и неговатеља да раде ви кршите Устав, члан 60. који прописује право на рад, затим кршите Закон о раду који дозвољава рад са непуним радним временом и кршите Закон о социјалној инклузији који промовише социјално укључење.",
+    "date": "2026-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 09.07.2026. 4. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера министарки за рад Милици Ђурђевић Стаменковски што у закону о родитељима неговатељима нису уважене сугестије повереника за заштиту равноправности Милана Антонијевића.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Упорно избегавате да ми одговорите на питање – зашто сте тражили а нисте уважили мишљење Повереника за заштиту равноправности? Тај господин, Милан Антонијевић, кога је поставила ова народна скупштина, је излистао толико мана овог закона.",
+    "date": "2026-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 09.07.2026. 4. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да, када законе предлажу народни посланици, нема анализе ефеката закона и избегава се контролни механизам.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У овом случају, када су предлагачи посланици, нема анализе ефекта закона и то је оно што је спорно, значи, када је предлагач Влада онда ова анализа јесте обавезна за закон.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се изменама Закона о уџбеницима монополизује тржиште уџбеника.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви монополизујете тржиште уџбеника. Нема креативности, уколико имате један уџбеник, нема ни конкуренције и крши се велики број међународних уговора чији је потписник Србија.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се у буџету повећа новац за образовање, а да се смањи новац за национални стадион.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Определили сте 139 милиона. Ми смо предложили милијарду више и предложили смо одакле можете да уштинете. Можете да уштинете од дисфункционалног националног стадиона.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

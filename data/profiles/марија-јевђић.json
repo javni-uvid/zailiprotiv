@@ -1,0 +1,74 @@
+{
+ "mp": "марија јевђић",
+ "model": "claude-fable-5-2",
+ "read": 19,
+ "speeches": 19,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Наводи да је Моравски коридор важан за развој Краљева и Рашког округа и да се улагањем ван Београда Србија децентрализује.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "То је дугорочна инвестиција која ће овом делу Србије омогућити да се убрзано развија и тиме полако децентрализујемо Србију и центар развоја померамо из Београда ка другим деловима Србије.",
+    "date": "2020-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Sesta sednica Drugog redovnog zasedanja NSRS 09.12. 2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је улагање државе у спорт и спортисте оправдано и подржава га.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Улагање државе у спорт се показало као оправдано. Разни спортисти су донели велики број медаља са међународних такмичења.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су независно судство и ефикасан правосудни систем основ владавине права.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Јединствена Србија сматра да свака држава претендује да буде демократска да је важно да има добар и ефикасан правосудни систем из кога произилазе добри показатељи за остале стубове владавине права, а наша земља управо тежи ка томе.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се изградњом постројења за пречишћавање отпадних вода у Краљеву заштити река Ибар.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не смемо дозволити да отпадне воде угрозе наше реке, а самим тим и пијаћу воду и на крају здравље наших грађана.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да жене треба да буду равноправне са мушкарцима у друштву и у политици.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Јединства Србија верује да постајемо друштво једнаких могућности за све. Та једнакост не може бити истинска ако немамо жене које су равноправни партнери.",
+    "date": "2021-05-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvanaesta sednica Prvog redovnog zasedanja NSRS, 18. maj 2021..docx"
+   }
+  }
+ ]
+}

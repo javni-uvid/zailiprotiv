@@ -1,0 +1,69 @@
+{
+ "mp": "спирић јелена",
+ "model": "claude-fable-5-2",
+ "read": 17,
+ "speeches": 24,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да је Електродистрибуција Србије два пута узела кредит од по 50 милиона евра за замену дрвених бандера и да је тај новац, како каже, отишао „криминалцима“.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, пре две године ЕДС је узео кредит од 50 милиона евра за замену дрвених бандера бетонским у Нишу, Краљеву и Крагујевцу. Тада су тврдили да је то укупна цена, тј. вредност целе инвестиције.",
+    "date": "2025-06-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се укине такса за јавни медијски сервис и наводи да РТС и РТВ служе власти, а не грађанима.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Странка слободе и правде је предложила да се такса и за РТС и за РТВ потпуно укине.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се у буџету повећава новац за национални стадион и за Канцеларију за медије, а не за школе и лечење.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зашто за Канцеларију за медије има и зашто за ЕКСПО и за стадион има, а за децу оболелу од ретких болести нема?",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се јавни ресурси и државне институције у изборним кампањама користе у корист владајуће странке.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Службени капацитети не смеју бити скривена донација владајућој странци. У супротном, говоримо о неравноправним изборима и злоупотреби државе у корист једне партије.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су људски животи изгубљени због корупције власти.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "И најстрашније од свега овог што сам навела је да вас није опоменуло ни то што је због ваше корупције и заробљених институција изгубљено 16 живота у Новом Саду.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  }
+ ]
+}

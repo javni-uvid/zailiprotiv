@@ -1,0 +1,69 @@
+{
+ "mp": "антонијевић борислав",
+ "model": "claude-fable-5-2",
+ "read": 16,
+ "speeches": 23,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да су предлози буџета и ребаланса буџета нетранспарентни и незаконити.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Анекси уговора нису јавно доступни, а Министарство финансија и Влада у Предлогу закона о буџету за 2026. годину не пружају информације.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што Министарство финансија за информациони систем „Искра“ уговара послове са ИТ фирмама за око 20 милиона евра уместо да запосли домаће ИТ стручњаке.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Уместо да запосли домаће ИТ стручњаке за изградњу софтвера и информационог система Централни информациони систем за обрачун примања запослених у јавном сектору „Искра“, министар финансија је уговорио послове са ИТ фирмама само у 2026. години за износ 2.380.000.000, илити скоро 20 милиона евра.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Државна ревизорска институција на завршни рачун буџета за 2024. годину дала мишљење са резервом због неправилности у Министарству финансија, међу којима је непостојање помоћне књиге нефинансијске имовине.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Министарство финансија нема помоћне књиге нефинансијске имовине Републике Србије, што је проузроковало да нефинансијска имовина Републике Србије у вредности од више стотина милијарди динара није евидентирана као имовина у употреби.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је у НДХ почињен геноцид над Србима и залаже се за то да Народна скупштина усвоји акт о томе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Осамдесет година од Другог светског рата жртве геноцида у НДХ, Срби, Јевреји и Роби нису добили одговарајућу сатисфакцију.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је држава од пројекта „Београд на води“ до сада добила тридесетак милиона од 130 милиона колико је требало да јој буде исплаћено и да је на том пројекту у губитку.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овде је град Београд и Република Србија само у финансирање инфраструктуре уложила између 1,3 и 2,1 милијарду евра, а досада су добили 30-ак милиона од укупног колико је требало да буде исплаћено – 130 милиона.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  }
+ ]
+}

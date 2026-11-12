@@ -1,0 +1,69 @@
+{
+ "mp": "бранко миљуш",
+ "model": "claude-fable-5-2",
+ "read": 14,
+ "speeches": 23,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да Србија нема Савет РЕМ-а и да власт настоји да изабере „крњи“ РЕМ.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Србији је потребан функционалан РЕМ, изабран у складу са законом. Без тога добићемо нејаки или крњи РЕМ, и то је од почетка била идеја оних који би да РЕМ постоји на папиру, али да не ради.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су напади на новинаре учестали и тражи од посланика већине и надлежног министра да се о њима огласе.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Подсећам вас да је у овој години рекордан број физичких напада на новинаре по нашим улицама и трговима.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Србија по медијским слободама на дну европских ранг-листа.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Колико је тужна медијска слика Србије најбоље се види у индексу медијских слобода који мере Репортери без граница. Никада у историји Србија није била лошије оцењена.",
+    "date": "2025-06-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи амандманима да јавност буде више укључена у поступке по закону о спречавању и контроли загађивања животне средине.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Све у свему, јако је важно да продужим рокове у коме јавност може да буде укључена у тај процес, што је начин, ако не да корупцију елиминишемо, онда барем да је смањимо.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се усвоје амандмани на закон о родитељима неговатељима.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја ћу сада, без обзира на све, на крају свог излагања, вас све замолити да усвојите амандмане и проширите обухват. Молим вас, људи, хајде да урадимо то, да урадимо једну добру ствар за грађане.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}

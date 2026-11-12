@@ -1,0 +1,69 @@
+{
+ "mp": "самир тандир",
+ "model": "claude-fable-5-2",
+ "read": 21,
+ "speeches": 21,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Тражи да општине Пријепоље, Прибој, Нова Варош и Сјеница као девастиране добију посебан третман у буџету.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Иста је ситуација и када говорим о општинама Пријепоље, Прибој и Нова Варош. То су девастиране општине и Министарство финансија према њима мора да има посебан третман.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Замера Радио-телевизији Србије што је одбила да оснује редакцију на босанском језику и наводи да програм мора да одговара и мањинским заједницама, које чине трећину грађана.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Такође, њихово одбијање да се формира редакција РТС-а на босанском језику од стране програмског савета је грубо кршење Устава и закона Републике Србије који то гарантују.",
+    "date": "2020-12-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Sedma sednica Drugog redovnog zasedanja NSRS 16.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да без ауто-пута и друге инфраструктуре нема привредног развоја Санџака ни заустављања исељавања младих.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Без добре инфраструктуре нема развоја привреде и не можемо се изборити да наши млади остану у овој земљи.",
+    "date": "2021-12-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 22. decembar 2021. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи контролу трошења новца националних савета и наводи да опозиционим већницима у њима нису исплаћивана средства која им по закону припадају.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Могу рећи на мом примеру да оног тренутка када сам ја био опозициони већник у Бошњачком националном већу мени средства која ми по закону припадају нису исплаћивана и сада смо на суду.",
+    "date": "2020-11-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Druga sednica Drugog redovnog zasedanja 12.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се помогне болницама у Пријепољу, Прибоју и Новој Вароши и наводи да се Здравствени центар Ужице према њима односи „маћехински“.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Желим да одам признање медицинском особљу у тим општинама и да још једном упутим апел надлежним институцијама да се помогне Општа болница у Пријепољу, Ковид болница у Прибоју и Здравствени центар у Ужицу.",
+    "date": "2020-12-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Sedma sednica Drugog redovnog zasedanja NSRS 16.12.2020..docx"
+   }
+  }
+ ]
+}

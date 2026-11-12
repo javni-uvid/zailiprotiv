@@ -1,0 +1,69 @@
+{
+ "mp": "ана ераковић",
+ "model": "claude-fable-5-2",
+ "read": 20,
+ "speeches": 24,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Тражи да се формира регионални буџет југа Србије и наводи да се о потребама градова и општина ван Београда одлучује у Београду.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не може се развој југа Србије планирати искључиво из Београда, јер неко ко је стотинама километара удаљен од Ниша, Лесковца или Врања не може боље да зна шта су приоритети у тим градовима од самих грађана.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се пруга измести из центра Ниша и да се изгради железничка обилазница око Ниша.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Поштовани грађани, Народни покрет Србије овим амандманом тражи измештање пруге из центра Ниша и изградње железничке обилазнице око Ниша.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се изменама Закона о уџбеницима успоставља монопол Завода за уџбенике и наводи да уџбеници Завода нису били најквалитетнији.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Опет постављамо питање, зашто се успоставља монопол Завода за уџбенике, који од свих издавача до сада није показао завидни квалитет?",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што су измене закона о тужилаштву предложене без редовне процедуре, без изјашњавања стручних тела и без укључивања јавности.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Понављамо, процедура није испоштована, анализа утицаја прописа коју спроводи Секретаријат за јавне политике није урађена, нити су се о овоме изјаснила стручна удружења и јавност.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је „хајка“ власти на тужилаштва почела када су тужилаштва почела да раде свој посао.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Хајка на тужилаштво је од стране власти кренула тек када су се тужилаштва пробудила и почела да се мешају у свој посао.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "зоран сандић",
+ "model": "claude-fable-5-2",
+ "read": 10,
+ "speeches": 19,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Тражи већу помоћ пољопривреди, између осталог укидање акциза на гориво за пољопривреднике.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Треба размишљати даље о регресираној нафти, односно да се укине регресирана нафта, да се укину акцизе за нафту за пољопривреднике.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се на путу ка Европској унији од Србије тражи признање Косова и тражи да се новац и надлежности намењени европским интеграцијама преусмере на Косово и Метохију.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Од нас се тражи да пристанемо да тзв. Косово уђе и добио столицу у УН. Од нас се тражи правно обавезујући споразум који подразумева признање лажне државе.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што касни изградња ауто-пута Београд–Зрењанин–Нови Сад и што Зрењанин 20 година чека обилазницу.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Господо народни посланици, 20 година Зрењанин чека на обилазницу. Остало је још четири километра да се повеже Темишвар са Београдом.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да инфлација и поскупљење основних животних намирница отежавају живот грађана.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Када кажем због лошег вођења политике, јесте да званична статистика каже да је инфлација нешто мало преко 13%, али инфлација основних животних намирница је близу 50%.",
+    "date": "2023-07-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 19. jul 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се у расправи говори о тачки дневног реда и наводи да међусобне оптужбе посланика грађане не занимају.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Поштоване колеге народни посланици, ја вас молим да се вратимо на тему. Ја тек сада видим, ово ми је први пут да сам народни посланик, зашто грађани имају тако лоше мишљење о политичарима и зашто грађани најмање верују баш у ову институцију.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

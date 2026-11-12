@@ -1,0 +1,69 @@
+{
+ "mp": "мила поповић",
+ "model": "claude-fable-5-2",
+ "read": 21,
+ "speeches": 23,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Замера што посебан закон о „Београду на води“ важи за једног инвеститора и тражи да се зауставе ширење тог пројекта и нове експропријације; пројекат назива „пљачком“ и „перионицом пара“.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато је порука овог нашег амандмана једноставна – доста је било закона за једног инвеститора. Вратите Београд под иста правила која важе за све.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се уклони камп испред Народне скупштине, који назива „ћациленд“, и наводи да су у њему криминалци који прете грађанима, новинарима и посланицима.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ко је, са којим образложењем и на који период захтевао и добио дозволу да заузме коловоз и јавну површину испред Дома Народне скупштине? Ко је то одобрење потписао, уколико оно уопште постоји?",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да закон штити здравље грађана, а не профит загађивача, и да онај ко загађује за то плати.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не може загађивач сам да процењује колико му је скупо да не загађује. Не може држава да му чува профит, а да грађанима остави последице.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Драган Ђилас као градоначелник Београда уводио и градио оно што је власт СНС потом укинула или обуставила.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Подсетићу вас да је Београд пре доласка СНС имао два комплета бесплатних уџбеника, да је Драган Ђилас док је био градоначелник то увео. Прва ствар коју је СНС урадио када је дошао на власт у Београду – укинуо је бесплатне уџбенике.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да радници државног предузећа „Србија Карго“ остају без посла и да су запослени који нису по вољи руководству изложени политичком притиску.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Запослени тврде да су политички неподобни склоњени, а да су добијали минусе ако не иду на митинге СНС или у „ћациленд“, док су преостали радници врбовани да иду у кампању од врата до врата и по кол-центрима.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  }
+ ]
+}

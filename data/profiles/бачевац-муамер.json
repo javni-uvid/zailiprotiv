@@ -1,0 +1,72 @@
+{
+ "mp": "бачевац муамер",
+ "model": "claude-fable-5-2",
+ "read": 23,
+ "speeches": 23,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Наводи да је Нови Пазар годинама оштећен при расподели ненаменских трансфера и тражи да му се амандманом на буџет та средства повећају за 200 милиона.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Премијерка је и тада признала да је овде велика нелогичност, да је ово велика неправда према мом граду и да ће се то исправити.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је изградња клиничко-болничког центра у Новом Пазару од великог значаја за грађане тог краја и поздравља улагања у здравствене установе.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Пре свега, за мене је, који долазим из Новог Пазара, од изузетног значаја наставак рада на изградњи Клиничко-болничког центра у Новом Пазару.",
+    "date": "2026-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 24. avgusta 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да јавни сервис даје више програма и садржаја о националним мањинама и на њиховим језицима.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Јавни сервис, а чини ми се и све друге телевизије са националном фреквенцијом морају бити много отвореније за мањинске програме и мањинске језике. Они нажалост то ових година до сада нису били.",
+    "date": "2025-11-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 12. novembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је привреда Србије везана за Европску унију, чије су земље њени најважнији трговински партнери и тржиште.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Наши најзначајнији трговински партнери су земље ЕУ и земље региона наравно. Само за нешто више од једне деценије од 2009. године па до данас учетворостручили смо размену са њима.",
+    "date": "2022-10-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера посланицима једне посланичке групе из Санџака што не говоре о тачки дневног реда и што, како наводи, износе неистине о његовој странци.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Молим вас да поведете рачуна о садржају говора, јер садржај говора посланика који долазе из те опције никада се не поклапају са тачкама дневног реда. Деведесет посто њиховог говора није везано за тачку дневног реда.",
+    "date": "2021-05-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvanaesta sednica Prvog redovnog zasedanja NSRS 19.05.2021..docx"
+   }
+  }
+ ]
+}

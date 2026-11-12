@@ -188,6 +188,8 @@ These are the project's promises to its readers. Never change them without the m
 - **Links by hand** where the Assembly's PDF names the act otherwise (a wrong year, a typo, another word):
   `data/<N>/links.json`, `{law title: {"vote", "why", "item"}}`, applied only to a law left without a final vote
   and only to a vote of the day it passed; marked `"matched": "manual"`. Six in the Twelfth convocation.
+- Eleventh convocation (2016–2020, read 13 Nov 2026): 611 of 617 (594 exact, 17 close), 983 roll calls, none with a
+  problem; the absent are not listed. No summaries, short names or debates yet.
 - Thirteenth convocation: 197 of 197. Twelfth: 255 of 257; the Hilandar law and the anti-corruption amendments
   (both passed 23 Sept 2021) have no roll call among the PDFs indexed for that day.
 - Fourteenth convocation (12 Nov 2026): 394 of 395 laws have their final vote (388 exact, 6 close). The Venezuela
