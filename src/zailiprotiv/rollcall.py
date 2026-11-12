@@ -108,8 +108,26 @@ def _row(line: str, section: str) -> Row | None:
                      or word in ("uzdrzan", "nije_glasao", "nije_prisutan")):
             vote, others = word, others[1:]
         club = " ".join(others).strip()
+    # A vote word and the group with one space between them: "За ПГ АВ-СНСДС".
+    m = re.match(r"^(За|Против|Уздржан\w*|Ни[јj]е\s+гласа\w*)\s+(.+)$", cyrillic(club)) if club else None
+    if m and vote_word(m.group(1)):
+        vote, club = vote_word(m.group(1)), club[m.start(2):]
     club = "" if club in ("-", "–") else club
     return Row(number, name.strip(), vote, club)
+
+
+def _split_known_groups(vote: "Vote") -> None:
+    """A long name and its group with one space between them read as one field ("… Марија Здравковић А. ВУЧИЋ -
+    Србија не сме да стане"): where a row has no group and its name ends with a group other rows of the same vote
+    carry, that end is the group."""
+    groups = sorted({r.club for r in vote.rows if r.club}, key=len, reverse=True)
+    for r in vote.rows:
+        if r.club:
+            continue
+        for g in groups:
+            if r.name.endswith(" " + g):
+                r.name, r.club = r.name[: -len(g)].strip(), g
+                break
 
 
 def parse(text: str) -> list[Vote]:
@@ -190,6 +208,7 @@ def parse(text: str) -> list[Vote]:
             current.rows.append(row)
     out = [votes[k] for k in order]
     for v in out:
+        _split_known_groups(v)
         _check(v)
     return out
 

@@ -14,7 +14,7 @@ from collections import defaultdict
 from zailiprotiv.rollcall import cyrillic
 
 # Titles, lowercased, without their dot.
-TITLES = {"проф", "др", "мр", "доц", "прим", "сц", "мед", "дипл", "инж", "академик", "ванр", "вет", "спец"}
+TITLES = {"проф", "др", "мр", "доц", "прим", "сц", "сци", "мед", "дипл", "инж", "академик", "ванр", "вет", "спец"}
 
 
 def key(name: str) -> str:

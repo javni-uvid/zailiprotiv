@@ -131,3 +131,18 @@ def test_listinzi_item_without_a_number():
     [v] = rollcall.parse(text)
     assert v.item == "Предлог закона о изменама и допунама Закона о доприносима за обавезно социјално осигурање"
     assert v.session == ""
+
+
+def test_vote_word_and_group_one_space_apart():
+    row = rollcall._row("  12 ЈОВАНОВИЋ НАТАША                  За ПГ АВ-СНСДС", "za")
+    assert (row.name, row.vote, row.club) == ("ЈОВАНОВИЋ НАТАША", "za", "ПГ АВ-СНСДС")
+
+
+def test_a_name_run_into_its_group():
+    v = rollcall.Vote("2025-03-06T15:10:40", "1. Предлог")
+    v.rows = [rollcall.Row(1, "Иван Антић", "za", "А. ВУЧИЋ - Србија не сме да стане"),
+              rollcall.Row(2, "проф. др сц. мед. Марија Здравковић А. ВУЧИЋ - Србија не сме да стане", "za", ""),
+              rollcall.Row(3, "Един Ђерлек", "za", "")]
+    rollcall._split_known_groups(v)
+    assert (v.rows[1].name, v.rows[1].club) == ("проф. др сц. мед. Марија Здравковић", "А. ВУЧИЋ - Србија не сме да стане")
+    assert v.rows[2].club == ""
