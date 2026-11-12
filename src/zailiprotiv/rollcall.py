@@ -108,9 +108,10 @@ def _row(line: str, section: str) -> Row | None:
                      or word in ("uzdrzan", "nije_glasao", "nije_prisutan")):
             vote, others = word, others[1:]
         club = " ".join(others).strip()
-    # A vote word and the group with one space between them: "За ПГ АВ-СНСДС".
+    # A vote word and the group with one space between them: "За ПГ АВ-СНСДС". Not a group whose name starts
+    # with the word: "За помирење СПП-УСС-ДСХВ" (2023).
     m = re.match(r"^(За|Против|Уздржан\w*|Ни[јj]е\s+гласа\w*)\s+(.+)$", cyrillic(club)) if club else None
-    if m and vote_word(m.group(1)):
+    if m and vote_word(m.group(1)) and not m.group(2)[:1].islower():
         vote, club = vote_word(m.group(1)), club[m.start(2):]
     club = "" if club in ("-", "–") else club
     return Row(number, name.strip(), vote, club)

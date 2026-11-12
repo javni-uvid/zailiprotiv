@@ -146,3 +146,11 @@ def test_a_name_run_into_its_group():
     rollcall._split_known_groups(v)
     assert (v.rows[1].name, v.rows[1].club) == ("проф. др сц. мед. Марија Здравковић", "А. ВУЧИЋ - Србија не сме да стане")
     assert v.rows[2].club == ""
+
+
+def test_group_whose_name_starts_with_za():
+    from zailiprotiv import rollcall
+    row = rollcall._row("86.   Мирко Острогонац           За помирење СПП-УСС-ДСХВ", "nije_glasao")
+    assert row.vote == "nije_glasao" and row.club == "За помирење СПП-УСС-ДСХВ"
+    row = rollcall._row("12. ЈОВАНОВ МИЛЕНКО  За ПГ АВ-СНСДС", "za")
+    assert row.vote == "za" and row.club == "ПГ АВ-СНСДС"
