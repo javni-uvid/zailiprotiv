@@ -7,6 +7,7 @@ Nothing on the pages comes from another server: no scripts, fonts or analytics (
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import json
 import re
 import shutil
@@ -271,10 +272,12 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
     shutil.copy(HERE / "static" / "style.css", out / "style.css")
+    # The stylesheet's address changes with its content, so a browser or cache never pairs new pages with old styles.
+    css_version = hashlib.sha256((HERE / "static" / "style.css").read_bytes()).hexdigest()[:10]
     built = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
-    common = {"built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
+    common = {"css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current}
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
