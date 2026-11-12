@@ -61,7 +61,7 @@
   var list = document.getElementById("lista"), more = document.getElementById("jos"), saziv = document.getElementById("saziv");
   var heading = document.getElementById("lista-naslov"), chips = document.querySelectorAll(".chip[data-f]");
   if (!list || !chips.length) return;
-  var filter = "protiv", shown = 10;
+  var filter = "protiv", shown = 8;
   var TITLES = { protiv: "Zakoni koji su podelili Skupštinu", novi: "Najnoviji zakoni", hitan: "Usvojeni po hitnom postupku",
                  finance: "Budžet i javne finansije", treaty: "Međunarodni ugovori" };
   function rows() {
@@ -115,10 +115,55 @@
     chip.addEventListener("click", function () {
       chips.forEach(function (c) { c.classList.remove("on"); c.setAttribute("aria-pressed", "false"); });
       chip.classList.add("on"); chip.setAttribute("aria-pressed", "true");
-      filter = chip.dataset.f; shown = 10;
+      filter = chip.dataset.f; shown = 8;
       load().then(render);
     });
   });
-  if (saziv) saziv.addEventListener("change", function () { shown = 10; load().then(render); });
+  if (saziv) saziv.addEventListener("change", function () { shown = 8; load().then(render); });
   more.addEventListener("click", function () { shown += 20; load().then(render); });
+})();
+
+// Lists that are already on the page (all laws, all MPs of a convocation): search, filter and sort the rows in place.
+(function () {
+  "use strict";
+  var box = document.querySelector("[data-filter]");
+  if (!box) return;
+  var list = document.getElementById(box.dataset.filter), rows = Array.prototype.slice.call(list.children);
+  var q = document.getElementById("f-q"), sort = document.getElementById("f-sort"), group = document.getElementById("f-g");
+  var count = document.getElementById("f-n"), chips = box.querySelectorAll(".chip[data-k]"), kind = "";
+  function norm(s) {
+    return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
+  }
+  rows.forEach(function (r) { r._t = norm(r.querySelector(".row-main").textContent); });
+  function apply() {
+    var words = norm(q.value.trim()).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = words.every(function (w) { return r._t.indexOf(w) >= 0; })
+        && (!kind || (" " + r.dataset.k + " ").indexOf(" " + kind + " ") >= 0)
+        && (!group || !group.value || r.dataset.g === group.value);
+      r.hidden = !ok;
+      if (ok) shown++;
+    });
+    count.textContent = shown === rows.length ? "" : "Prikazano " + shown + " od " + rows.length;
+  }
+  function order() {
+    var key = sort ? sort.value : "";
+    var sorted = rows.slice().sort(function (a, b) {
+      if (key === "d") return a.dataset.d < b.dataset.d ? 1 : a.dataset.d > b.dataset.d ? -1 : 0;
+      if (key) return parseFloat(b.dataset[key]) - parseFloat(a.dataset[key]);
+      return parseInt(a.dataset.i, 10) - parseInt(b.dataset.i, 10);
+    });
+    sorted.forEach(function (r) { list.appendChild(r); });
+  }
+  q.addEventListener("input", apply);
+  if (group) group.addEventListener("change", apply);
+  if (sort) sort.addEventListener("change", order);
+  chips.forEach(function (chip) {
+    chip.setAttribute("aria-pressed", chip.classList.contains("on") ? "true" : "false");
+    chip.addEventListener("click", function () {
+      chips.forEach(function (c) { c.classList.remove("on"); c.setAttribute("aria-pressed", "false"); });
+      chip.classList.add("on"); chip.setAttribute("aria-pressed", "true");
+      kind = chip.dataset.k; apply();
+    });
+  });
 })();

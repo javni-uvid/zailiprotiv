@@ -203,6 +203,10 @@ These are the project's promises to its readers. Never change them without the m
     većine svoje grupe" (their vote for, against or abstained differs from what most of their group did in that
     vote: three or more voting, a clear majority); a table by kind of law; every vote by convocation, folded.
     All computed from the roll calls by one rule for everyone; no assessment of an MP in words.
+- **Lists:** "Zakoni" and "Poslanici" are one page per convocation with tabs by years (2024–2026 …); rows can be
+  searched, filtered (kind of law, urgent procedure, parliamentary group) and sorted in place by the script. The
+  home list ranks the laws of every convocation by default. MPs are shown "Surname Given" without titles in every
+  convocation (the older lists write "Given Surname"); "(NADA …)" and "NADA …" are one group.
 - **One script of our own** (`static/site.js`, the maintainer, 12 Nov 2026; before that none): search and filters
   over `podaci.json` (every law and MP), fetched on first use. Pages work without it: the search box and filters
   appear only when it runs. Still nothing from other servers; a test checks each page has that one script only.

@@ -192,6 +192,7 @@ def registry(votes: dict) -> dict[str, MP]:
     """Every MP met in a roll call, under one key whatever the layout wrote. The name shown is the report
     layout's ("SURNAME Given", one order for everyone) where the MP is in one, else the listinzi's."""
     out: dict[str, MP] = {}
+    surname_first = set()
     for v in sorted(votes.values(), key=lambda v: v["when"]):
         report = v["counts"]["nije_prisutan"] > 0
         for _, name, vote, group in v["rows"]:
@@ -199,8 +200,16 @@ def registry(votes: dict) -> dict[str, MP]:
             mp = out.setdefault(k, MP(k, title_case(name)))
             if report and not name.split()[0].istitle():
                 mp.name = title_case(name)
+                surname_first.add(k)
             mp.votes[v["key"]] = vote
             mp.group, mp.last_seen = latin(group), v["when"]
+    # The older lists write "Given Surname": shown surname first too, so every list sorts one way.
+    for k, mp in out.items():
+        titles = mps.TITLES | {latin(t) for t in mps.TITLES}
+        words = [w for w in mp.name.split() if w.lower().strip(".") not in titles] or mp.name.split()
+        if k not in surname_first and len(words) > 1:
+            words = words[1:] + words[:1]
+        mp.name = " ".join(words)  # without titles (dr, prof.): they are not part of the name
     taken = Counter()
     for mp in sorted(out.values(), key=lambda m: collate(m.name)):
         base = slug(mp.name, 60)
@@ -270,6 +279,10 @@ def laws_page(conv: str, current: str) -> str:
     return "zakoni.html" if conv == current else f"zakoni-{conv}.html"
 
 
+def mps_page(conv: str, current: str) -> str:
+    return "poslanici.html" if conv == current else f"poslanici-{conv}.html"
+
+
 def build(root: Path, out: Path, domain: str | None = None) -> dict:
     convs = convocations(root)
     current = convs[0][0]
@@ -292,7 +305,17 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     css_version = hashlib.sha256((HERE / "static" / "style.css").read_bytes()
                                  + (HERE / "static" / "site.js").read_bytes()).hexdigest()[:10]
     built = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    from zailiprotiv.config import CONVOCATIONS
+
+    def years(c: str) -> str:
+        passed = sorted(l.get("passed") or "" for l in loaded[c][0]["laws"].values())
+        conf = CONVOCATIONS.get(c, {})
+        first = (conf.get("from") or (passed[0] if passed else ""))[:4]
+        last = (conf.get("to") or (passed[-1] if passed else ""))[:4]
+        return f"{first}–{last}" if first and last and first != last else first or last
+
     conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
+                  "mps_page": mps_page(c, current), "years": years(c),
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     common = {"css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current}
@@ -350,7 +373,8 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             by_kind[it["law"].get("kind", "other")].append(it)
         kind_order = [k for k in kinds.KINDS if k in by_kind]
         (out / laws_page(conv, current)).write_text(env.get_template("laws.html").render(
-            **common, by_kind=by_kind, kind_order=kind_order, KINDS=kinds.KINDS, total=len(items), conv=conv,
+            **common, items=items, kind_counts=[(k, kinds.KINDS[k], len(by_kind[k])) for k in kind_order],
+            urgent=sum(1 for it in items if it["urgent"]), total=len(items), conv=conv,
             conv_name=ORDINAL_NAME.get(conv, conv), root=""), encoding="utf-8")
 
     # MPs: their final votes on laws, in every convocation.
@@ -361,7 +385,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     for key, it in finals.items():
         cast: dict[str, Counter] = defaultdict(Counter)
         for _, name, how, group in it["final"]["rows"]:
-            g = latin(group) or "Bez poslaničke grupe"
+            g = (latin(group) or "Bez poslaničke grupe").strip("() ")  # "(NADA …)" and "NADA …" are one group
             seat[(key, mps.key(name))] = g
             if how in ("za", "protiv", "uzdrzan"):
                 cast[g][how] += 1
@@ -391,14 +415,18 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             c = Counter(r["vote"] for r in record if r["it"]["law"].get("kind", "other") == k)
             if c:
                 kinds_table.append({"label": label, "total": sum(c.values()), **{v: c.get(v, 0) for v in VOTES}})
-        rows_mp.append({"mp": mp, "tally": tally, "n": len(record),
+        rows_mp.append({"mp": mp, "tally": tally, "n": len(record), "by_conv": {c["conv"]: c for c in by_conv},
                         "convs": sorted({r["it"]["conv"] for r in record}, key=int, reverse=True)})
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]], root="../"), encoding="utf-8")
-    (out / "poslanici.html").write_text(env.get_template("mps.html").render(
-        **common, rows=rows_mp, root=""), encoding="utf-8")
+    for conv, _ in convs:
+        rows = [{"mp": r["mp"], "in": r["by_conv"][conv]} for r in rows_mp if conv in r["by_conv"]]
+        groups = Counter(g for r in rows for g in r["in"]["groups"][:1])
+        (out / mps_page(conv, current)).write_text(env.get_template("mps.html").render(
+            **common, rows=rows, conv=conv, conv_name=ORDINAL_NAME.get(conv, conv), root="",
+            groups=sorted(groups.items(), key=lambda kv: (-kv[1], collate(kv[0])))), encoding="utf-8")
 
     # What the page's own script searches and filters: every law and MP, in one file fetched on first use.
     index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"], "s": it["slug"], "d": it["law"].get("passed") or "",
@@ -420,6 +448,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, stats=stats, latest=items[:6], contested=most_against(items, 9), root="",
         featured=next((it for it in most_against(items, 9) if len(it["pair"]) == 2), None),
+        ranked=most_against([it for its in items_by_conv.values() for it in its], 8),
         kinds_count=[(k, kinds.KINDS[k], n) for k, n in sorted(Counter(it["law"].get("kind", "other") for it in items)
                                                                 .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")

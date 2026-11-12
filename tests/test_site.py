@@ -129,4 +129,6 @@ def test_site_builds_every_convocation(tmp_path):
     assert (out / "zakoni-13.html").exists() and "zakoni-13.html" in (out / "zakoni.html").read_text()
     mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
     assert "zakon-o-oruzju.html" in mp and "zakon-o-oruzju-2.html" in mp
-    assert "13, 14" not in (out / "poslanici.html").read_text() and "14, 13" in (out / "poslanici.html").read_text()
+    assert "abramovic-nenad.html" in (out / "poslanici.html").read_text()  # one page of MPs per convocation
+    assert "abramovic-nenad.html" in (out / "poslanici-13.html").read_text()
+    assert 'href="poslanici-13.html"' in (out / "poslanici.html").read_text()

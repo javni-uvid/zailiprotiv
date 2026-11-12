@@ -1,28 +1,31 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, tally %}
-{% block title %}Zakoni — Za ili Protiv{% endblock %}
+{% from "macros.html" import bar, plural, tabs %}
+{% block title %}Zakoni, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block main %}
-<h1>Usvojeni zakoni — {{ conv_name }} saziv</h1>
-{% if convs|length > 1 %}<p class="convs">{% for c in convs %}{% if c.n == conv %}<b>{{ c.name }} saziv</b>{% else %}<a href="{{ c.page }}">{{ c.name }} saziv</a>{% endif %} ({{ c.laws }}){% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
-<p class="lead">{{ total }} zakona, po vrsti, najnoviji prvo. Vrsta se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon.</p>
-<nav class="toc">
-{% for k in kind_order %}<a href="#{{ k }}">{{ KINDS[k]|latin }} <span>{{ by_kind[k]|length }}</span></a>{% endfor %}
-</nav>
-{% for k in kind_order %}
-<section id="{{ k }}">
-  <h2>{{ KINDS[k]|latin }}</h2>
-  <table class="laws">
-    <thead><tr><th>Usvojen</th><th>Zakon</th><th>Konačno glasanje</th></tr></thead>
-    <tbody>
-    {% for it in by_kind[k] %}
-      <tr>
-        <td class="nowrap">{{ it.law.passed|day }}</td>
-        <td><a class="law-name" href="zakon/{{ it.slug }}.html">{{ it.law.short }}</a>{% if it.law.short != it.law.title %}<div class="meta">{{ it.law.title }}</div>{% endif %}</td>
-        <td class="vote-cell">{% if it.final %}{{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>{% else %}<span class="meta">glasanje nije pronađeno</span>{% endif %}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</section>
+<h1>Zakoni</h1>
+{{ tabs(convs, conv, "page") }}
+<div class="finder js-only" hidden data-filter="f-rows">
+  <label class="sr" for="f-q">Pretraži zakone</label>
+  <input id="f-q" type="search" placeholder="Pretraži {{ total }} {{ plural(total, "zakon", "zakona", "zakona") }} ovog saziva" autocomplete="off">
+  <div class="chips" role="group" aria-label="Prikaži">
+    <button type="button" class="chip on" data-k="">Svi</button>
+    {% if urgent %}<button type="button" class="chip" data-k="u">Hitan postupak <span>{{ urgent }}</span></button>{% endif %}
+    {% for k, label, n in kind_counts %}<button type="button" class="chip" data-k="{{ k }}">{{ label|latin }} <span>{{ n }}</span></button>{% endfor %}
+    <label class="sr" for="f-sort">Redosled</label>
+    <select id="f-sort"><option value="d">Najnoviji prvo</option><option value="sh">Najviše glasova protiv</option></select>
+  </div>
+</div>
+<p id="f-n" class="row-meta" aria-live="polite"></p>
+<ol class="rows" id="f-rows">
+{% for it in items %}
+  <li class="row" data-k="{{ it.law.kind or "other" }}{% if it.urgent %} u{% endif %}" data-d="{{ it.law.passed }}" data-sh="{{ it.share or 0 }}">
+    <div class="row-main">
+      <a class="row-title" href="zakon/{{ it.slug }}.html">{{ it.law.short }}</a>
+      <p class="row-meta">{{ it.law.passed|day }} · {{ it.kind|latin }}{% if it.urgent %} · hitan postupak{% endif %}</p>
+    </div>
+    {% if it.final %}<div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div>{% else %}<div class="row-vote row-meta">glasanje nije pronađeno</div>{% endif %}
+  </li>
 {% endfor %}
+</ol>
+<p class="meta foot-note">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Kratki nazivi su naši; pun naziv je na stranici zakona.</p>
 {% endblock %}

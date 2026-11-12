@@ -21,3 +21,7 @@
   <footer>{{ q.govornik|latin|title }}{% if q.grupa and q.grupa != "Влада" %}, {{ q.grupa|latin }}{% endif %}{% if side %} · {{ side }}{% endif %}{% if d %} · <a href="{{ d.url }}">{{ d.listed_date|day if d.listed_date else "stenogram" }}</a>{% endif %}</footer>
 </blockquote>
 {%- endmacro %}
+
+{% macro tabs(convs, conv, key) -%}
+{% if convs|length > 1 %}<nav class="tabs" aria-label="Saziv">{% for c in convs %}<a href="{{ c[key] }}"{% if c.n == conv %} aria-current="page"{% endif %}>{{ c.years }}<span>{{ c.name }} saziv</span></a>{% endfor %}</nav>{% endif %}
+{%- endmacro %}

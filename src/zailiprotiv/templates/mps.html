@@ -1,20 +1,31 @@
 {% extends "base.html" %}
-{% block title %}Poslanici — Za ili Protiv{% endblock %}
+{% from "macros.html" import bar, plural, tabs %}
+{% block title %}Poslanici, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block main %}
 <h1>Poslanici</h1>
-<p class="lead">Svako ko je glasao bar jednom{% if convs|length == 1 %} u Četrnaestom sazivu{% else %} u sazivima na sajtu{% endif %}, po prezimenu. Brojevi su konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku.</p>
-<div class="scroll">
-<table class="mps">
-  <thead><tr><th>Poslanik</th><th>Poslednja grupa</th>{% if convs|length > 1 %}<th>Sazivi</th>{% endif %}<th class="num">Za</th><th class="num">Protiv</th><th class="num">Uzdržan</th><th class="num">Nije glasao</th><th class="num">Nije prisutan</th></tr></thead>
-  <tbody>
-  {% for r in rows %}
-    <tr>
-      <td><a href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td>
-      <td>{{ r.mp.group or "—" }}</td>{% if convs|length > 1 %}<td class="nowrap">{{ r.convs|join(", ") }}</td>{% endif %}
-      {% for k in VOTES %}<td class="num">{{ r.tally[k] or "" }}</td>{% endfor %}
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+{{ tabs(convs, conv, "mps_page") }}
+<div class="finder js-only" hidden data-filter="f-rows">
+  <label class="sr" for="f-q">Pretraži poslanike</label>
+  <input id="f-q" type="search" placeholder="Ime ili prezime, {{ rows|length }} poslanika ovog saziva" autocomplete="off">
+  <div class="chips">
+    <label class="sr" for="f-g">Poslanička grupa</label>
+    <select id="f-g" class="wide"><option value="">Sve poslaničke grupe</option>{% for g, n in groups %}<option value="{{ g }}">{{ g }} ({{ n }})</option>{% endfor %}</select>
+    <label class="sr" for="f-sort">Redosled</label>
+    <select id="f-sort"><option value="">Po prezimenu</option><option value="pr">Najviše glasova protiv</option><option value="za">Najviše glasova za</option><option value="ab">Najviše izostanaka</option></select>
+  </div>
 </div>
+<p id="f-n" class="row-meta" aria-live="polite"></p>
+<ol class="rows compact" id="f-rows">
+{% for r in rows %}
+  {% set t = r.in.tally %}
+  <li class="row" data-g="{{ r.in.groups[0] if r.in.groups else "" }}" data-pr="{{ t.protiv or 0 }}" data-za="{{ t.za or 0 }}" data-ab="{{ (t.nije_prisutan or 0) + (t.nije_glasao or 0) }}" data-i="{{ loop.index }}">
+    <div class="row-main">
+      <a class="row-title" href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a>
+      <p class="row-meta">{{ r.in.groups|join(", ") or "—" }}</p>
+    </div>
+    <div class="row-vote">{{ bar({"za": t.za or 0, "protiv": t.protiv or 0, "uzdrzan": t.uzdrzan or 0, "nije_glasao": t.nije_glasao or 0, "nije_prisutan": t.nije_prisutan or 0}) }}<span class="row-score"><span class="t-za">{{ t.za or 0 }}</span> : <span class="t-protiv">{{ t.protiv or 0 }}</span></span></div>
+  </li>
+{% endfor %}
+</ol>
+<p class="meta foot-note">Svako ko je bar jednom na spisku konačnog glasanja o zakonu u ovom sazivu. Traka: za, protiv, uzdržan, nije glasao, nije prisutan. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala odsutne.</p>
 {% endblock %}

@@ -18,7 +18,7 @@
 {% set top = contested[0] %}
 <section class="lead-law">
   <div class="lead-text">
-    <p class="kicker">Najviše glasova protiv · {{ top.law.passed|day }}</p>
+    <p class="kicker">Najviše glasova protiv u poslednjem sazivu · {{ top.law.passed|day }}</p>
     <h1><a href="zakon/{{ top.slug }}.html">{{ top.law.short }}</a></h1>
     {% if top.gist %}<p class="standfirst">{{ top.gist|latin }}</p>{% endif %}
     <p class="row-meta">{% if top.urgent %}Hitan postupak · {% endif %}{% if top.days is not none %}{{ top.days }} {{ plural(top.days, "dan", "dana", "dana") }} od predloga do usvajanja{% endif %}</p>
@@ -56,13 +56,13 @@
       <button type="button" class="chip" data-f="finance">Budžet i finansije</button>
       <button type="button" class="chip" data-f="treaty">Međunarodni ugovori</button>
       <label class="sr" for="saziv">Saziv</label>
-      <select id="saziv">{% for c in convs %}<option value="{{ c.n }}">{{ c.name }} saziv</option>{% endfor %}<option value="">Svi sazivi</option></select>
+      <select id="saziv"><option value="">Svi sazivi ({{ convs[-1].years[:4] }}–{{ convs[0].years[-4:] }})</option>{% for c in convs %}<option value="{{ c.n }}">{{ c.name }} saziv ({{ c.years }})</option>{% endfor %}</select>
     </div>
   </div>
   <ol id="lista" class="rows">
-  {% for it in contested[1:] %}{{ row(it, loop.index + 1) }}{% endfor %}
+  {% for it in ranked %}{{ row(it, loop.index) }}{% endfor %}
   </ol>
-  <p><button type="button" id="jos" class="link js-only" hidden>Prikaži još</button> <a href="zakoni.html">Svih {{ stats.laws }} zakona ovog saziva</a>{% for c in convs[1:] %} · <a href="{{ c.page }}">{{ c.name }} saziv</a>{% endfor %}</p>
+  <p><button type="button" id="jos" class="link js-only" hidden>Prikaži još</button> <a href="zakoni.html">Svi zakoni</a></p>
 </section>
 
 <section class="mp-finder">
