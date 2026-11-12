@@ -141,13 +141,20 @@ def against_share(counts: dict) -> float:
     return counts["protiv"] / cast if cast else 0.0
 
 
+def against_by_group(vote: dict) -> list[tuple[str, int]]:
+    """Groups with MPs voting against, most first, then by name."""
+    c = Counter(latin(g) or "Bez poslaničke grupe" for _, _, how, g in vote["rows"] if how == "protiv")
+    return sorted(c.items(), key=lambda kv: (-kv[1], collate(kv[0])))
+
+
 def most_against(items: list[dict], n: int) -> list[dict]:
     """The laws whose final vote had the largest share against, the same rule for every law; ties go to more
     votes against, then the newer law."""
     voted = [it for it in items if it["final"] and it["final"]["counts"]["protiv"]]
     ranked = sorted(voted, key=lambda it: (against_share(it["final"]["counts"]), it["final"]["counts"]["protiv"],
                                            it["law"].get("passed") or ""), reverse=True)
-    return [{**it, "share": against_share(it["final"]["counts"])} for it in ranked[:n]]
+    return [{**it, "share": against_share(it["final"]["counts"]), "against": against_by_group(it["final"])}
+            for it in ranked[:n]]
 
 
 def build(data: Path, out: Path, domain: str | None = None) -> dict:
@@ -177,6 +184,11 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
         items.append({"key": key, "slug": s, "law": law, "final": final, "summary": summary,
                       "kind": kinds.KINDS.get(law.get("kind", "other"), ""),
                       "areas": [kinds.AREAS[a] for a in law.get("areas", [])]})
+    ranked = most_against(items, len(items))
+    by_key = {it["key"]: it for it in items}
+    for i, r in enumerate(ranked, 1):
+        r["rank"] = i
+        by_key[r["key"]].update(rank=i, share=r["share"])
     for it in items:
         law, final = it["law"], it["final"]
         bill = bills.get(law.get("bill_file", ""), {})
@@ -219,9 +231,17 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
              "sittings": len({v["sitting"] for v in votes.values()})}
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, stats=stats, latest=items[:12], contested=most_against(items, 12), root=""), encoding="utf-8")
+    (out / "najvise-protiv.html").write_text(env.get_template("contested.html").render(
+        **common, ranked=ranked, total=len(items), root=""), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")
+        base = f"https://{domain}/"
+        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html"))
+        (out / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + "".join(f"<url><loc>{base}{p}</loc></url>\n" for p in pages) + "</urlset>\n", encoding="utf-8")
+        (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {base}sitemap.xml\n", encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     return stats

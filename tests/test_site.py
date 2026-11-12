@@ -39,6 +39,11 @@ def test_site_builds_every_page(tmp_path):
     assert "Zakon uređuje nabavku oružja, prema predlagaču." in law and "AI model (claude-sonnet-5-5)" in law
     assert "Zakon uređuje nabavku oružja" in (out / "zakoni.html").read_text()
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
+    assert "Allow: /" in (out / "robots.txt").read_text()
+    assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()
+    contested = (out / "najvise-protiv.html").read_text()
+    assert "zakon/zakon-o-oruzju.html" in contested and "PG B 1" in contested and "50.0%" in contested
+    assert "1. mesto u sazivu" in law
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I
     for page in out.rglob("*.html"):
@@ -56,7 +61,7 @@ def test_serbian_order():
 def test_most_against_first():
     def it(za, protiv, passed="2026-01-01"):
         c = {"za": za, "protiv": protiv, "uzdrzan": 0, "nije_glasao": 0, "nije_prisutan": 0}
-        return {"final": {"counts": c}, "law": {"passed": passed, "title": f"{za}:{protiv}"}}
+        return {"final": {"counts": c, "rows": []}, "law": {"passed": passed, "title": f"{za}:{protiv}"}}
     items = [it(140, 0), it(130, 40), it(126, 60), it(150, 60), it(130, 40, "2026-02-01"), {"final": None, "law": {}}]
     ranked = [x["law"]["title"] for x in site.most_against(items, 3)]
     assert ranked == ["126:60", "150:60", "130:40"]

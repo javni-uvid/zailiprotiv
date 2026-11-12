@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, tally %}
+{% block title %}Najviše glasova protiv — Za ili protiv{% endblock %}
+{% block description %}Zakoni Četrnaestog saziva po udelu glasova protiv u konačnom glasanju.{% endblock %}
+{% block main %}
+<h1>Najviše glasova protiv</h1>
+<p class="lead">Zakoni Četrnaestog saziva po udelu glasova protiv među glasovima za i protiv u konačnom glasanju, od najvećeg. Isto pravilo za svaki zakon; zakoni bez ijednog glasa protiv nisu na spisku ({{ ranked|length }} od {{ total }} jeste).</p>
+<ol class="ranked">
+{% for it in ranked %}
+  <li>
+    <div class="rank-head"><span class="rank">{{ it.rank }}.</span> <a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a></div>
+    <div class="meta">{{ it.law.passed|day }} · {{ it.kind|latin }} · <b class="t-protiv">{{ (100 * it.share)|round(1) }}%</b> protiv</div>
+    {% if it.summary %}<div class="gist">{{ it.summary.summary.ukratko|latin }}</div>{% endif %}
+    {{ bar(it.final.counts) }}
+    <div class="meta">{{ tally(it.final.counts) }}</div>
+    <div class="meta">Protiv po grupama: {% for g, n in it.against %}{{ g }} {{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</div>
+  </li>
+{% endfor %}
+</ol>
+{% endblock %}

@@ -45,6 +45,7 @@
   <p class="meta">{{ final.when[:10]|day }} u {{ final.when[11:16] }}{% if final.kind %} · {{ final.kind|latin }}{% endif %} · {{ final.sitting_title|latin }}</p>
   {{ bar(final.counts) }}
   <p>{{ tally(final.counts) }}</p>
+  {% if it.rank %}<p class="meta">Udeo glasova protiv: {{ (100 * it.share)|round(1) }}% · <a href="../najvise-protiv.html">{{ it.rank }}. mesto u sazivu</a></p>{% endif %}
   {% if not report %}<p class="note small">Za glasanja iz 2024. i prve polovine 2025. Skupština je objavljivala samo poslanike koji su bili prisutni; odsutni nisu na spisku.</p>{% endif %}
 
   <h3>Po poslaničkim grupama</h3>

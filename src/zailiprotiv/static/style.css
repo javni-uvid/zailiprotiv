@@ -69,3 +69,7 @@ summary { cursor: pointer; font-weight: 600; color: var(--accent); }
   table.laws tr { display: block; padding: .6rem 0; border-bottom: 1px solid var(--line); }
   table.laws td { display: block; border: 0; padding: .1rem 0; }
 }
+.ranked { padding: 0; list-style: none; }
+.ranked li { border-bottom: 1px solid var(--line); padding: .9rem 0; }
+.rank-head { font-weight: 600; }
+.rank { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: .2rem; }

@@ -138,6 +138,12 @@ These are the project's promises to its readers. Never change them without the m
 - **Home page:** "Najviše glasova protiv" first (the maintainer's request, 12 Nov 2026): the laws whose final
   vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
   for what it measures; "controversial" would be a judgement. Then the newest laws.
+- **"Najviše protiv"** (`najvise-protiv.html`): every law with at least one vote against, ranked by that share,
+  with the groups whose MPs voted against; each law's page gives its share and place. The maintainer asked for a
+  special focus on these laws (12 Nov 2026).
+- **`robots.txt` allows everything** and points to `sitemap.xml`: the site wants to be read, by search engines and
+  AI crawlers alike (the maintainer, 12 Nov 2026). A block seen from outside comes from the host's settings, not
+  the site.
 - **Neutral order:** groups by the number of their MPs on the roll, then alphabetically; names in Serbian
   alphabetical order (`collate`: č, ć after c; dž, lj, nj as one letter).
 - **Groups as the Assembly writes them:** abbreviations ("ПГ АВ-СНСДС") in the report layout, list names in the
