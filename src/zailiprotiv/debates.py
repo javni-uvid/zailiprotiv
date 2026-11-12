@@ -215,7 +215,7 @@ def parse(reply: str | dict, notes: dict, groups: dict[str, str] | None = None) 
             continue
         group = (groups or {}).get(mps.key(who)) or str(q.get("grupa", "")).strip()
         quotes.append({"govornik": who, "grupa": group, "dan": found, "tekst": text})
-    out["citati"] = quotes[:10]  # one per group at most, from both sides: a cut here could leave one side out
+    out["citati"] = quotes  # one per group at most already; a cut here could leave one side out
     if not (out["predlagac"] or out["podrska"] or out["zamerke"]):
         raise ValueError("empty")
     return out, dropped
