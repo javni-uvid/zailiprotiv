@@ -71,9 +71,20 @@ def linked(args) -> int:
     store = json.loads(path.read_text(encoding="utf-8"))
     votes = all_votes(Path(args.votes))
     found = link.link(store["laws"], votes)
+    # Links made by hand where the Assembly's PDF names the act otherwise (a wrong year, a typo, another word):
+    # data/<N>/links.json, {law title: {"vote": vote key, "why": "…"}}, each checked to be a vote of that day.
+    manual_path = path.parent / "links.json"
+    manual = json.loads(manual_path.read_text(encoding="utf-8")) if manual_path.exists() else {}
     for key, law in store["laws"].items():
         law["kind"] = kinds.kind(law["title"], law.get("treaty", False))
         law.update(found[key])
+        m = manual.get(law["title"])
+        if m and not law["final_vote"]:
+            vote = votes.get(m["vote"])
+            if not vote or vote["when"][:10] != law.get("passed"):
+                print(f"  manual link refused (no such vote that day): {law['title'][:90]}")
+                continue
+            law.update(final_vote=m["vote"], matched="manual", votes=sorted(set(law.get("votes", [])) | {m["vote"]}))
     path.write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
     n = len(store["laws"])
     final = sum(1 for law in store["laws"].values() if law["final_vote"])

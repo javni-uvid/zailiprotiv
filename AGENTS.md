@@ -169,6 +169,11 @@ These are the project's promises to its readers. Never change them without the m
   passing; the final vote is that on the day passed, on the act as a whole where the PDF says so. A law left
   without one takes that day's vote sharing 90% of its words, or 95% of its letters (typos), when unambiguous and
   not taken by another law: marked `"matched": "close"`.
+- **Links by hand** where the Assembly's PDF names the act otherwise (a wrong year, a typo, another word):
+  `data/<N>/links.json`, `{law title: {"vote", "why", "item"}}`, applied only to a law left without a final vote
+  and only to a vote of the day it passed; marked `"matched": "manual"`. Six in the Twelfth convocation.
+- Thirteenth convocation: 197 of 197. Twelfth: 255 of 257; the Hilandar law and the anti-corruption amendments
+  (both passed 23 Sept 2021) have no roll call among the PDFs indexed for that day.
 - Fourteenth convocation (12 Nov 2026): 394 of 395 laws have their final vote (388 exact, 6 close). The Venezuela
   visa agreement (passed 13 March 2025) has no roll call among the PDFs the Assembly links for that day.
 
