@@ -41,8 +41,9 @@ These are the project's promises to its readers. Never change them without the m
 
 ### Source
 
-- **Roll calls:** the Assembly publishes each vote as a PDF under `/upload/rezultati_glasanja/` (by year, sometimes
-  by sitting: `2026/20.pdf`, `2026/osma_sednica/1.pdf`). Each gives the kind of vote (e.g. on the act as a whole),
+- **Roll calls:** the Assembly publishes each vote as a PDF under `/upload/rezultati_glasanja/` since autumn 2025
+  (by year, sometimes by sitting: `2026/20.pdf`, `2026/osma_sednica/1.pdf`), and before that under
+  `/upload/archive/files/cir/doc/Listinzi/<year>/` ("листинзи": `2024/2024.09.30 1.pdf`). Each gives the kind of vote (e.g. on the act as a whole),
   the date and time, and every MP with their vote (for, against, abstained, did not vote, not present) and club.
 - **Only the Cyrillic pages of the sittings link to them** (`….43.html`): each agenda item's text is a link to its
   roll call. The Latin pages (`….941.html`) have the agenda without links. The current convocation's sittings are
@@ -63,7 +64,8 @@ These are the project's promises to its readers. Never change them without the m
 ## Known issues and open decisions
 
 - The Fifteenth convocation was convened in November 2026, after the October elections. The listings show the
-  Fourteenth's sittings (2024–2026); where earlier convocations' roll calls are, if anywhere, is still to find.
+  Fourteenth's sittings (2024–2026). Earlier convocations' sittings are in the archive pages, likely with their
+  own `Listinzi` links: still to check.
 - How a vote is tied to its act (title, bill, memorandum) on the Assembly's site.
 - Site layout, languages and hosting: to decide once the data is in.
 

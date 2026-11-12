@@ -52,6 +52,8 @@ def test_vote_pdfs():
     assert skupstina.is_vote_pdf(BASE + "/upload/rezultati_glasanja/2026/20.pdf")
     assert skupstina.is_vote_pdf(BASE + "/upload/rezultati_glasanja/2026/osma_sednica/3.PDF")
     assert not skupstina.is_vote_pdf(BASE + "/upload/archive/files/lat/doc/x.docx")
+    assert skupstina.is_vote_pdf(BASE + "/upload/archive/files/cir/doc/Listinzi/2024/2024.09.30%201.pdf")
+    assert not skupstina.is_vote_pdf(BASE + "/upload/archive/files/cir/doc/stenografske_beleske/x.pdf")
 
 
 def test_cyrillic_paths_are_encoded_once():
@@ -69,5 +71,6 @@ def test_translit():
 
 def test_file_names_are_plain():
     from zailiprotiv.cli import file_name
-    assert file_name(BASE + "/upload/rezultati_glasanja/2025/16.%20MUEDIH%20FIJULJANIN.PDF") == "2025_16.muedih_fijuljanin.pdf"
+    assert file_name(BASE + "/upload/rezultati_glasanja/2025/16.%20MUEDIH%20FIJULJANIN.PDF") == "2025_16._muedih_fijuljanin.pdf"
     assert file_name(BASE + "/upload/rezultati_glasanja/2026/osma_sednica/1.pdf") == "2026_osma_sednica_1.pdf"
+    assert file_name(BASE + "/upload/archive/files/cir/doc/Listinzi/2024/2024.09.30%201.pdf") == "2024_2024.09.30_1.pdf"

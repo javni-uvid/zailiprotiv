@@ -1,7 +1,7 @@
 """The National Assembly's website: its sittings and the roll-call PDF of every vote taken at them.
 
-The Assembly publishes each roll-call vote as a PDF under /upload/rezultati_glasanja/ (for example
-/upload/rezultati_glasanja/2026/20.pdf or /upload/rezultati_glasanja/2026/osma_sednica/1.pdf). Only the Cyrillic
+The Assembly publishes each roll-call vote as a PDF under /upload/rezultati_glasanja/ (since autumn 2025, for
+example /upload/rezultati_glasanja/2026/20.pdf) or, before, /upload/archive/files/cir/doc/Listinzi/<year>/. Only the Cyrillic
 pages of the sittings link to them (`….43.html`; the Latin pages, `….941.html`, don't): each agenda item's text is
 a link to its vote. The sittings of the current convocation are listed on two Cyrillic pages, one for regular and
 one for extraordinary sittings."""
@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from html import unescape
 from html.parser import HTMLParser
 
-from zailiprotiv.config import BASE, DELAY, USER_AGENT, VOTES_PATH
+from zailiprotiv.config import BASE, DELAY, USER_AGENT, VOTES_PATHS
 
 # The current convocation's sittings: regular, then extraordinary.
 LISTINGS = (
@@ -100,7 +100,7 @@ def links(html: str, base: str) -> list[tuple[str, str]]:
 
 def is_vote_pdf(url: str) -> bool:
     path = urllib.parse.unquote(urllib.parse.urlsplit(url).path)
-    return VOTES_PATH in path and path.lower().endswith(".pdf")
+    return any(p.lower() in path.lower() for p in VOTES_PATHS) and path.lower().endswith(".pdf")
 
 
 def is_sitting(url: str, text: str) -> bool:

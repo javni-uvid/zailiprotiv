@@ -38,8 +38,9 @@ def index(args) -> int:
 
 
 def file_name(url: str) -> str:
-    """A plain file name for a roll call, from its address under rezultati_glasanja: ASCII, no spaces."""
-    path = urllib.parse.unquote(urllib.parse.urlsplit(url).path).split("rezultati_glasanja/")[-1]
+    """A plain file name for a roll call, from its address below the votes' folder: ASCII, no spaces."""
+    path = urllib.parse.unquote(urllib.parse.urlsplit(url).path)
+    path = re.split(r"rezultati_glasanja/|Listinzi/", path, flags=re.I)[-1]
     return re.sub(r"[^A-Za-z0-9.-]+", "_", path).strip("_").lower()
 
 
