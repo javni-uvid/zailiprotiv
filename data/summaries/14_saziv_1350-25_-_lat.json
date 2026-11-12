@@ -1,0 +1,15 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "46285df6cfad75403c679add3fec3e52d53123b9c093521fcb418af7405ff815",
+ "summary": {
+  "ukratko": "Закон потврђује споразум о економској и трговинској сарадњи између влада Србије и Републике Екваторијалне Гвинеје.",
+  "razlozi": [
+   "Предлагач наводи да Србија жели да унапреди трговинску и економску сарадњу са свим земљама Африке.",
+   "Према образложењу, очекује се да споразум унапреди трговинску размену и укупну економску сарадњу две земље."
+  ],
+  "promene": [],
+  "sredstva": "Предлагач наводи да за спровођење закона нису потребна средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Ekvatorijalne Gvineje o ekonomskoj i trgovinskoj saradnji"
+}

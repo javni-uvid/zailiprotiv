@@ -1,0 +1,15 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "5b54afcba22704a5462b337fbff7cd5b9dcca299469b5d4a9c103e6f40d4e3b6",
+ "summary": {
+  "ukratko": "Закон потврђује споразум о трговинској, инвестиционој и економској сарадњи између влада Србије и Републике Малдива.",
+  "razlozi": [
+   "Предлагач наводи да Србија жели да унапреди трговинску и економску сарадњу са свим земљама јужне Азије.",
+   "Према образложењу, очекује се да споразум унапреди трговинску размену и економску и инвестициону сарадњу две земље."
+  ],
+  "promene": [],
+  "sredstva": "Предлагач наводи да за примену закона нису потребна средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Maldiva o trgovinskoj, investicionoj i ekonomskoj saradnji"
+}
