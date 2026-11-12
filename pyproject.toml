@@ -5,9 +5,8 @@ description = "Laws passed by Serbia's National Assembly, their effects as their
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
-dependencies = [
-    "pypdf>=5",
-]
+# Roll calls are read with poppler's pdftotext (poppler-utils), which keeps a PDF's columns apart.
+dependencies = []
 
 [project.scripts]
 zailiprotiv = "zailiprotiv.cli:main"

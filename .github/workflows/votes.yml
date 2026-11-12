@@ -1,0 +1,42 @@
+# Run by hand: index the current convocation's sittings, read every roll call not read yet, and commit
+# data/index.json and data/votes/ when they changed.
+name: votes
+
+on:
+  workflow_dispatch:
+    inputs:
+      again:
+        description: "Read every roll call again, not only new ones"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: votes
+  cancel-in-progress: false
+
+jobs:
+  votes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Index the sittings and read the roll calls
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv index
+          uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }}
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "Roll calls read from the Assembly's site"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done; exit 1

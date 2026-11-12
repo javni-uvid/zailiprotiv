@@ -3,7 +3,8 @@
 A public site about the laws Serbia's National Assembly passes: what each law does, what its proposer says it will
 change, and how every MP voted on it.
 
-**Status:** skeleton. The index of sittings and their roll calls works; reading the roll calls comes next.
+**Status:** first version. The Fourteenth convocation's roll calls are indexed and read; joining MPs across
+votes and the laws' summaries come next.
 
 ## Principles
 
@@ -25,6 +26,7 @@ every agenda item to its roll call; the sittings are listed on the regular and e
 ```sh
 uv sync
 uv run zailiprotiv index               # sittings of the current convocation and their roll calls → data/index.json
+uv run zailiprotiv votes               # read every roll call not read yet → data/votes/<sitting>.json (needs pdftotext)
 uv run pytest
 ```
 
@@ -32,7 +34,8 @@ uv run pytest
 
 | Workflow | When | What |
 |---|---|---|
-| index | by hand | the current convocation's sittings and their roll-call PDFs, committed as `data/index.json` |
+| votes | by hand | index the sittings, read the roll calls not read yet, commit `data/` |
+| fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
 | test | on push | the whole test suite |
 
 ## Layout
@@ -41,11 +44,13 @@ uv run pytest
 src/zailiprotiv/
   config.py      the Assembly's address, User-Agent, delay between requests
   skupstina.py   the Assembly's site: sittings and the roll-call PDF of each agenda item
+  rollcall.py    reading a roll-call PDF: the vote, and each MP's vote and group
   cli.py         commands
   translit.py    Cyrillic → Latin
   jsonfile.py    JSON stores one entry per line, for small git diffs
 data/
   index.json     sittings and their roll calls (one sitting per line)
+  votes/         one file per sitting: each vote's date, item, kind, counts and rows (number, name, vote, group)
 tests/
 ```
 

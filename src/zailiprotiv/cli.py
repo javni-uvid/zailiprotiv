@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
+import json
 import re
 import sys
+import tempfile
+import time
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import jsonfile, skupstina
+from zailiprotiv import jsonfile, rollcall, skupstina
+from zailiprotiv.config import DELAY
 
 DATA = Path("data")
 
@@ -37,6 +42,67 @@ def index(args) -> int:
     return 0
 
 
+def sitting_id(url: str) -> str:
+    """The number the Assembly's site gives a sitting's page ("…_Народне.53524.43.html" → "53524")."""
+    m = re.search(r"\.(\d+)\.43\.html$", urllib.parse.unquote(url))
+    return m.group(1) if m else re.sub(r"\W+", "_", url)[-40:]
+
+
+def votes(args) -> int:
+    """Read every roll call in data/index.json not read yet, into data/votes/<sitting>.json."""
+    index = json.loads(Path(args.index).read_text(encoding="utf-8"))
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    read = failed = 0
+    problems: list[str] = []
+    for url, sitting in sorted(index["sittings"].items(), key=lambda kv: kv[1]["listed"]):
+        if not sitting["votes"]:
+            continue
+        path = out_dir / f"{sitting_id(url)}.json"
+        store = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        store.update({"sitting": url, "title": sitting["title"]})
+        store.setdefault("pdfs", {})
+        store.setdefault("votes", {})
+        changed = False
+        for item, pdf in sitting["votes"]:
+            if pdf in store["pdfs"] and not args.again:
+                continue
+            if args.limit and read >= args.limit:
+                break
+            time.sleep(DELAY)
+            try:
+                body = skupstina.fetch(pdf)
+            except skupstina.FetchError as e:
+                failed += 1
+                print(f"  failed {urllib.parse.unquote(pdf)}: {e}")
+                continue
+            with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
+                f.write(body)
+                f.flush()
+                found = rollcall.read(f.name)
+            for key in [k for k in store["votes"] if k.split("#")[0] == pdf]:
+                del store["votes"][key]
+            for i, v in enumerate(found):
+                store["votes"][f"{pdf}#{i}"] = {
+                    "when": v.when, "item": v.item, "kind": v.kind, "session": v.session,
+                    "listed_as": item, "counts": v.count(), "problems": v.problems,
+                    "rows": [[r.number, r.name, r.vote, r.club] for r in v.rows],
+                }
+                problems += [f"{urllib.parse.unquote(pdf)} #{i}: {p}" for p in v.problems]
+            if not found:
+                problems.append(f"{urllib.parse.unquote(pdf)}: no vote read")
+            store["pdfs"][pdf] = hashlib.sha256(body).hexdigest()
+            read += 1
+            changed = True
+        if changed:
+            path.write_text(jsonfile.dumps(store, "votes"), encoding="utf-8")
+    total = sum(len(json.loads(p.read_text(encoding="utf-8"))["votes"]) for p in out_dir.glob("*.json"))
+    print(f"PDFs read now: {read}, failed: {failed}; votes in the archive: {total}")
+    for p in problems[:50]:
+        print(f"  problem: {p}")
+    return 1 if failed and not read else 0
+
+
 def file_name(url: str) -> str:
     """A plain file name for a roll call, from its address below the votes' folder: ASCII, no spaces."""
     path = urllib.parse.unquote(urllib.parse.urlsplit(url).path)
@@ -61,6 +127,12 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("index", help="list the current convocation's sittings and their roll-call PDFs")
     p.add_argument("--out", default=str(DATA / "index.json"))
     p.set_defaults(run=index)
+    p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
+    p.add_argument("--index", default=str(DATA / "index.json"))
+    p.add_argument("--out", default=str(DATA / "votes"))
+    p.add_argument("--again", action="store_true", help="read every PDF again, not only new ones")
+    p.add_argument("--limit", type=int, default=0, help="read at most this many PDFs (0: all)")
+    p.set_defaults(run=votes)
     p = commands.add_parser("download", help="save roll-call PDFs into a folder (test fixtures)")
     p.add_argument("--to", default="tests/fixtures")
     p.add_argument("urls", nargs="+")

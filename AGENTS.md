@@ -52,10 +52,24 @@ These are the project's promises to its readers. Never change them without the m
 - **PDF names are irregular** (`2026/20.pdf`, `2026/29.11.pdf` for a sub-vote, `2026/osma_sednica/1.pdf`,
   `2026/19. Izveshtaj_sa_rezultatima_glasanja_24_04_2026_09_27.pdf`): a vote is known by its link, never by a
   name built from a pattern.
-- **The PDFs have a text layer** (no OCR): a title, the session and convocation, the agenda item's number and act,
-  the kind of vote with date and time ("Гласање о предлогу акта у целини - 25.06.2026 / 11:17:12"), then numbered
-  rows under ГЛАСАЛИ ЗА, ГЛАСАЛИ ПРОТИВ, УЗДРЖАНИ, НИСУ ГЛАСАЛИ, НИСУ ПРИСУТНИ: name, vote, club ("ПГ АВ-СНСДС").
-- `zailiprotiv index` (the **index** workflow) writes the sittings and their roll calls to `data/index.json`.
+- **The PDFs have a text layer** (no OCR), read with poppler's `pdftotext -layout` (`rollcall.py`), which keeps
+  the columns apart. Three layouts:
+  - since autumn 2025 ("Извештај са резултатима гласања"): one vote per file; session, agenda item, the kind of
+    vote with date and time ("Гласање о предлогу акта у целини - 25.06.2026 / 11:17:12"), then sections ГЛАСАЛИ
+    ЗА, ГЛАСАЛИ ПРОТИВ, УЗДРЖАНИ, НИСУ ГЛАСАЛИ, НИСУ ПРИСУТНИ numbered from 1; a row is "SURNAME Given, vote,
+    group" ("ПГ АВ-СНСДС"); the absent are listed (250 rows, fewer with a vacancy);
+  - listinzi 2024: one file may hold several votes (items 1.1, 1.2, …); a row is "Given Surname (list)"; the
+    absent are **not** listed;
+  - listinzi 2025: as 2024, the list in a column ("-" for none).
+  Every page repeats its header, so a vote is known by its date and time and its agenda item. A row's own vote
+  word must agree with its section, and numbers run from 1 in each section; anything else is a recorded problem.
+  The PDFs write some Cyrillic words with Latin look-alike letters ("Ниje гласао"): matched after mapping them.
+- **Not yet joined:** names are "SURNAME Given" in one layout and "Given Surname" in the others, with titles
+  (проф., др, мр); groups are abbreviations in one and list names in the others. Who an MP is across votes, and
+  who was absent from a 2024–2025 vote, need the convocation's roster.
+- `zailiprotiv index` writes the sittings and their roll calls to `data/index.json`; `zailiprotiv votes` reads every
+  roll call not read yet into `data/votes/<sitting>.json` (the sitting page's number), keeping each PDF's SHA-256.
+  The **votes** workflow runs both and commits.
 
 ### Scope
 
