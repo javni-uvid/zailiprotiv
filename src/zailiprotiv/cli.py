@@ -391,6 +391,76 @@ def notes_of_debate(args) -> int:
     return 0
 
 
+def _debated(args):
+    """The laws whose sitting's notes have been read, with what debates.material needs: (law, bill, notes, final,
+    item), the most votes against first."""
+    from zailiprotiv import site
+    laws_, votes_, bills_ = site.load(DATA)
+    notes = site.load_transcripts(DATA)
+    items = [{"law": l, "final": votes_.get(l.get("final_vote") or "")} for l in laws_["laws"].values()]
+    out = []
+    for it in site.most_against(items, len(items)):
+        law, final = it["law"], it["final"]
+        n = notes.get(final["sitting"])
+        d = site.debate_of(law, final, n) if n else None
+        if d and law.get("bill_file"):
+            out.append((law, bills_.get(law["bill_file"], {}), n, final, d["item"]))
+    return out, votes_, bills_
+
+
+def debates_export(args) -> int:
+    """The debate material of the laws with most votes against whose notes were read, one text file each, for
+    summaries of the debate written in a session."""
+    from zailiprotiv import debates
+    found, votes_, bills_ = _debated(args)
+    seated, df = debates.seats(votes_), debates.document_frequency(bills_)
+    to = Path(args.to)
+    to.mkdir(parents=True, exist_ok=True)
+    chosen = found[:args.top]
+    for law, bill, n, final, item in chosen:
+        text = debates.material(law, bill, n, final, seated, item, df)
+        (to / (law["bill_file"].removesuffix(".json") + ".txt")).write_text(text, encoding="utf-8")
+    (to / "RULES.txt").write_text(debates.SYSTEM, encoding="utf-8")
+    print(f"exported: {len(chosen)} to {to}")
+    return 0
+
+
+def debates_import(args) -> int:
+    """Debate summaries written in a session (JSON Lines: {"bill_file", "debate"}): quotes checked against the notes
+    word for word, saved to data/<N>/debates/<bill file>.json."""
+    from zailiprotiv import debates
+    found, votes_, bills_ = _debated(args)
+    seated, df = debates.seats(votes_), debates.document_frequency(bills_)
+    by_bill = {law["bill_file"]: (law, bill, n, final, item) for law, bill, n, final, item in found}
+    out = DATA / "debates"
+    out.mkdir(parents=True, exist_ok=True)
+    saved = refused = 0
+    for line in Path(args.file).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        entry = json.loads(line)
+        name = entry["bill_file"] if entry["bill_file"].endswith(".json") else entry["bill_file"] + ".json"
+        if name not in by_bill:
+            print(f"  refused {name}: no notes read for its sitting")
+            refused += 1
+            continue
+        law, bill, n, final, item = by_bill[name]
+        try:
+            debate, dropped = debates.parse(entry["debate"], n)
+        except (ValueError, AttributeError) as e:
+            print(f"  refused {name}: {e}")
+            refused += 1
+            continue
+        text = debates.material(law, bill, n, final, seated, item, df)
+        (out / name).write_text(json.dumps(debates.record(law, text, debate, args.model, dropped), ensure_ascii=False,
+                                           indent=1) + "\n", encoding="utf-8")
+        print(f"  {name}: {len(debate['citati'])} quotes kept, {len(dropped)} dropped" +
+              "".join(f"\n    dropped: {d[:90]}" for d in dropped))
+        saved += 1
+    print(f"debates saved: {saved}, refused: {refused}")
+    return 1 if refused and not saved else 0
+
+
 CONVOCATION = CURRENT
 
 
@@ -454,6 +524,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--law", action="append", default=[], help="a law by bill file or title (instead of --top)")
     p.add_argument("--again", action="store_true")
     p.set_defaults(run=notes_of_debate)
+    p = commands.add_parser("debates-export", help="debate material of the most contested laws, for a session")
+    p.add_argument("--to", required=True)
+    p.add_argument("--top", type=int, default=20)
+    p.set_defaults(run=debates_export)
+    p = commands.add_parser("debates-import", help="save debate summaries written in a session")
+    p.add_argument("file")
+    p.add_argument("--model", required=True)
+    p.set_defaults(run=debates_import)
     p = commands.add_parser("site", help="build the static site")
     p.add_argument("--out", default="_site")
     p.add_argument("--domain", default="zailiprotiv.rs")

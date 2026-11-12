@@ -47,28 +47,26 @@
 
 {% set db = it.debate %}
 {% if db %}
+{% set sd = it.said.debate if it.said else none %}
 <section class="debate">
   <h2>Rasprava u Skupštini</h2>
-  <p>Ovo je {{ db.item }}. tačka dnevnog reda. {% set n = db.joint|length %}{% if db.joint %}U načelu se o njoj raspravljalo zajedno sa još {{ n }} {{ "tačkom" if n % 10 == 1 and n % 100 != 11 else ("tačke" if n % 10 in [2, 3, 4] and n % 100 not in [12, 13, 14] else "tačaka") }}{% if n <= 10 %} ({{ db.joint|join(", ") }}){% endif %}, pa se govori u načelnom pretresu ne odnose svi na ovaj zakon.{% else %}U načelu se o njoj raspravljalo posebno.{% endif %}</p>
-  <dl class="facts">
-    <div><dt>Govora u načelnom pretresu</dt><dd>{{ db.general }}</dd></div>
-    <div><dt>Govora o amandmanima</dt><dd>{{ db.detail }}</dd></div>
-    <div><dt>Amandmana na koje je otvorena rasprava</dt><dd>{{ db.amendments }}</dd></div>
-    <div><dt>Govornika</dt><dd>{{ db.speakers }}</dd></div>
-  </dl>
-  {% if db.by_group %}
-  <h3>Koliko je ko govorio</h3>
-  <p class="label">Udeo izgovorenih reči po poslaničkoj grupi, u načelnom pretresu{% if db.joint %} (o svim tačkama zajedno){% endif %} i u raspravi o amandmanima ovog zakona, bez predsedavajućeg. Grupa govornika je ona sa poimeničnog glasanja najbližeg raspravi (najviše dva meseca ranije ili kasnije).</p>
-  <table class="groups">
-    <tbody>
-    {% for g, n, share in db.by_group %}
-      <tr><td>{{ g }}</td><td class="num">{{ "{:,}".format(n).replace(",", ".") }} reči</td><td class="num">{{ "%.1f"|format(share * 100) }}%</td></tr>
-    {% endfor %}
-    </tbody>
-  </table>
+  {% set n = db.joint|length %}
+  <p>{% if db.n_days %}O zakonu se raspravljalo {{ db.n_days }} {{ "dan" if db.n_days % 10 == 1 and db.n_days % 100 != 11 else "dana" }}{% if db.first %}, {% if db.first == db.last %}{{ db.first|day }}{% else %}od {{ db.first|day }} do {{ db.last|day }}{% endif %}{% endif %}. {% endif %}{% if db.joint %}U načelu zajedno sa još {{ n }} {{ "tačkom" if n % 10 == 1 and n % 100 != 11 else ("tačke" if n % 10 in [2, 3, 4] and n % 100 not in [12, 13, 14] else "tačaka") }} dnevnog reda{% else %}U načelu posebno{% endif %}{% if db.amendments %}, a zatim o {{ db.amendments }} {{ "amandmanu" if db.amendments % 10 == 1 and db.amendments % 100 != 11 else "amandmana" }} na ovaj zakon{% elif db.detail %}, a zatim o pojedinostima{% else %}; rasprave o amandmanima nije bilo{% endif %}.</p>
+  {% if sd %}
+  {% for key, heading in [("predlagac", "Šta su rekli predlagač i Vlada"), ("podrska", "Argumenti onih koji su podržali zakon"), ("zamerke", "Zamerke onih koji su bili protiv")] %}
+  {% if sd[key] %}<h3>{{ heading }}</h3><ul>{% for x in sd[key] %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
+  {% endfor %}
+  {% if sd.citati %}
+  <h3>Iz rasprave</h3>
+  {% for q in sd.citati %}
+  {% set d = db.all_days[q.dan - 1] if q.dan <= db.all_days|length else none %}
+  <blockquote class="quote"><p>„{{ q.tekst|latin }}“</p><footer>{{ q.govornik|latin|title }}{% if q.grupa %} ({{ q.grupa|latin }}){% endif %}{% if d %}, <a href="{{ d.url }}">stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% endif %}</a>{% endif %}</footer></blockquote>
+  {% endfor %}
   {% endif %}
-  <p class="docs">{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške, {{ d.day }}. dan{% if d.listed_date %} ({{ d.listed_date|day }}){% endif %}</a>{% endfor %}</p>
-  {% if db.provisional %}<p class="note small">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane. Brojevi su izvedeni iz njih: koji deo rasprave je u toku, sajt čita iz reči predsedavajućeg.</p>{% endif %}
+  <p class="label">Pregled rasprave napisao je AI model ({{ it.said.model }}) samo iz stenografskih beleški; svaki navod pripisan je onome ko ga je izneo, a sajt ne preuzima nijedan stav. Citati su provereni reč po reč u beleškama. Pregled može da sadrži grešku; merodavne su beleške.</p>
+  {% endif %}
+  <p class="docs">{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% else %}, {{ d.day }}. dan{% endif %}</a>{% endfor %}</p>
+  {% if db.provisional %}<p class="note small">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane.</p>{% endif %}
 </section>
 {% endif %}
 

@@ -38,6 +38,12 @@ def data(tmp_path):
                            "text": "један два три"},
                      "2": {"day": 1, "speaker": "МИНИСТАР НЕКИ", "chair": False, "part": "detail", "items": [1],
                            "text": "један"}}}))
+    (d / "debates").mkdir()
+    (d / "debates" / "b.json").write_text(json.dumps({"model": "claude-opus-5-5", "debate": {
+        "predlagac": ["Предлагач наводи да закон усклађује прописе са ЕУ."], "podrska": [],
+        "zamerke": ["Посланици групе ПГ Б оцењују да закон отежава лов."],
+        "citati": [{"govornik": "НЕНАД АБРАМОВИЋ", "grupa": "ПГ А", "dan": 1,
+                    "tekst": "Овај закон не ваља јер укида дозволе за ловце."}]}}))
     laws = json.loads((d / "laws.json").read_text())
     laws["laws"]["L"]["bill_file"] = "b.json"
     (d / "laws.json").write_text(json.dumps(laws))
@@ -58,7 +64,8 @@ def test_site_builds_every_page(tmp_path):
     assert not (out / "najvise-protiv.html").exists()
     assert "1. mesto u sazivu" in law and "50.0%" in law
     assert "Hitan postupak" in law
-    assert "Rasprava u Skupštini" in law and "75.0%" in law and "Nisu na spiskovima glasanja" in law
+    assert "Rasprava u Skupštini" in law and "o 1 amandmanu na ovaj zakon" in law and "Zamerke onih" in law
+    assert "„Ovaj zakon ne valja jer ukida dozvole za lovce.“" in law and "Nenad Abramović (PG A)" in law
     assert "Fiskalni savet" in law and "Nezavisna i međunarodna tela" in law and "Mediji i civilno" not in law
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I

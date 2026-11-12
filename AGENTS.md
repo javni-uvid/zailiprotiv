@@ -148,8 +148,16 @@ These are the project's promises to its readers. Never change them without the m
   тачку …", "Претрес у појединостима о 4. тачки …"); the hour of MPs' questions (Article 287) pauses the debate,
   which resumes where it was. Speeches in a joint debate in principle can't be told apart by bill, and the law
   page says so.
-- **On the law page:** speeches in each part, speakers, amendments debated, and words by group. A speaker's group is
-  the one in the roll call nearest in time, within two months; ministers and others on no roll call are apart.
+- **On the law page** (the maintainer's choice, 12 Nov 2026; word counts by group were dropped as meaningless): the
+  course of the debate (days, items debated with it, amendments), then a summary of what was said, in three parts:
+  the proposer and the Government, those who supported the law, those against it; each point attributed with the
+  speaker's group; and verbatim quotes, at most one per group, from both sides, each linked to its day's notes.
+- **The summary** (`debates.py`) is written by a model from the notes only: the speeches on the law's amendments,
+  and from the debate in principle all of it, or, when it was joint, the paragraphs naming the law's subject
+  (words of its title and rare words of its memorandum). A speaker's group is the one in the roll call nearest in
+  time, within two months; ministers and others on no roll call are marked. Every quote is checked word for word
+  against the notes, and against its speaker, and dropped if not found. `zailiprotiv debates-export` / `debates-import`
+  for summaries written in a session; kept in `data/<N>/debates/<bill file>.json`.
 
 ### Links between laws and votes
 
