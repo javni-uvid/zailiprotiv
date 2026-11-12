@@ -95,7 +95,11 @@ def memoranda(args) -> int:
         if not url:
             continue
         target = out_dir / (file_name(url).removesuffix(".pdf") + ".json")
-        if not target.exists() or args.again:
+        stale = False
+        if target.exists() and not args.again:
+            old = json.loads(target.read_text(encoding="utf-8"))
+            stale = not old.get("sections") and old.get("reader", 1) < bills.READER
+        if not target.exists() or args.again or stale:
             if args.limit and read >= args.limit:
                 continue
             time.sleep(DELAY)
@@ -109,7 +113,8 @@ def memoranda(args) -> int:
                 f.write(body)
                 f.flush()
                 memo = bills.read(f.name)
-            target.write_text(json.dumps({"bill": url, "sha256": hashlib.sha256(body).hexdigest(), **memo.as_dict()},
+            target.write_text(json.dumps({"bill": url, "sha256": hashlib.sha256(body).hexdigest(),
+                                          "reader": bills.READER, **memo.as_dict()},
                                          ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
             read += 1
         memo = json.loads(target.read_text(encoding="utf-8"))

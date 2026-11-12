@@ -16,11 +16,27 @@ from pathlib import Path
 
 from zailiprotiv.translit import latin
 
+# The reader's version: a bill whose memorandum an older reader didn't find is read again by a newer one.
+READER = 2
+
 # Section headings by their key word (in Latin, lowercased, after transliteration).
 SECTIONS = (("ustavni osnov", "basis"), ("hitn", "urgency"), ("razlo", "reasons"), ("objasnjenj", "explained"), ("objašnjenj", "explained"),
             ("finansijsk", "funds"), ("sredstav", "funds"), ("analiz", "effects"))
 _ROMAN = r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)"
-_HEADING = re.compile(rf"^\s*({_ROMAN})\.?\s+(\S.*)$")
+_HEADING = re.compile(rf"^\s*({_ROMAN}|\d{{1,2}})\.?\s+(\S.*)$")
+
+
+def _heading(line: str):
+    """A section heading: "II Разлози …" (Roman numeral), or "2. RAZLOZI ZA DONOŠENJE ZAKONA" (Arabic numeral,
+    written in capitals: an Arabic-numbered line in small letters is a list item, not a heading)."""
+    m = _HEADING.match(line)
+    if not m:
+        return None
+    if m.group(1).isdigit():
+        letters = [c for c in m.group(2) if c.isalpha()]
+        if len(letters) < 8 or sum(c.isupper() for c in letters) / len(letters) < 0.8:
+            return None
+    return m
 
 
 @dataclass
@@ -48,8 +64,7 @@ def _kind(heading: str) -> str | None:
 def memorandum(text: str) -> Memorandum:
     """The memorandum's sections, found from the first heading on the constitutional basis."""
     lines = text.splitlines()
-    start = next((i for i, l in enumerate(lines)
-                  if _HEADING.match(l) and _kind(_HEADING.match(l).group(2)) == "basis"), None)
+    start = next((i for i, l in enumerate(lines) if _heading(l) and _kind(_heading(l).group(2)) == "basis"), None)
     out = Memorandum()
     if start is None:
         return out
@@ -61,7 +76,7 @@ def memorandum(text: str) -> Memorandum:
             out.sections[current] = (out.sections.get(current, "") + "\n" + body).strip()
 
     for line in lines[start:]:
-        m = _HEADING.match(line)
+        m = _heading(line)
         kind = _kind(m.group(2)) if m else None
         if kind:
             flush()

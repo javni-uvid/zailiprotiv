@@ -74,3 +74,15 @@ def test_bills_command(tmp_path, monkeypatch):
 ])
 def test_constitutional_basis_in_its_many_spellings(basis, expected):
     assert bills.articles(basis) == expected
+
+
+def test_arabic_numbered_headings():
+    m = bills.read(FIXTURES / "bills" / "14_saziv_2249-25_-_lat..pdf")
+    assert m.articles == [{"article": 97, "paragraph": None, "points": [10]}]
+    assert {"basis", "reasons", "funds"} <= set(m.sections)
+    assert m.sections["reasons"].startswith("RAZLOZI ZA DONOŠENjE ZAKONA")
+    assert "Prioritetni razlog za izradu predmetnog propisa" in m.sections["reasons"]
+
+
+def test_a_bill_without_a_memorandum():
+    assert bills.read(FIXTURES / "bills" / "14_saziv_1242-24_-_lat..pdf").sections == {}
