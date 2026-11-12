@@ -1,0 +1,20 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "18bc44ff2b9aeef4d0ed3cd1068ca831e402dad1c0e40f7fe1de41732f0bc5bc",
+ "summary": {
+  "ukratko": "Закон потврђује уговор о кредиту од 530 милиона евра са групом француских банака, уз гаранцију француске агенције Bpifrance Assurance Export, за финансирање прве фазе пројекта београдског метроа.",
+  "razlozi": [
+   "Предлагач наводи да према Закону о јавном дугу Народна скупштина одлучује о задуживању Републике Србије.",
+   "Према образложењу, задуживање за прву фазу београдског метроа предвиђено је Законом о буџету за 2026. годину и споразумом Владе Србије и Владе Француске о приоритетним пројектима.",
+   "Предлагач наводи да кредит служи за финансирање саобраћајног система и надзора изградње, према уговору закљученом са компанијом Alstom Transport."
+  ],
+  "promene": [
+   "Износ кредита је 530 милиона евра, са отплатом у 30 полугодишњих рата током 15 година, према образложењу.",
+   "Камата је променљива: шестомесечни EURIBOR увећан за 0,75% годишње.",
+   "Рок за повлачење средстава је 31. децембар 2031. године, уз могућност продужења договором две владе."
+  ],
+  "sredstva": "Према образложењу, средства за спровођење закона обезбеђиваће се у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o kreditnom aranžmanu kupca između Republike Srbije koju zastupa Vlada Republike Srbije postupajući preko Ministarstva finansija u svojstvu Zajmoprimca aranžiran od strane BNP Paribas, Credit Agricole Corporate and Investment Bank i Societe Generale u svojstvu Ovlašćenih vodećih aranžera sa Credit Agricole Corporate and Investment Bank u svojstvu Banke za globalnu koordinaciju i dokumentaciju i Credit Agricole Corporate and Investment Bank u svojstvu Agenta ESA i Kreditnog aranžmana i Societe Generale u svojstvu Agenta životne i društvene sredine i Koordinatora zelenog zajma i Finansijskih institucija navedenih u Delu 1 Priloga 1 u svojstvu Prvobitnih zajmodavaca"
+}

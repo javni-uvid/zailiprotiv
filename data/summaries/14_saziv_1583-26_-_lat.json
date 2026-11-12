@@ -1,0 +1,21 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "3b32c1410d7b0a01b829ecf582610042d5a3d10ae4a0e5f659fb941e6647204c",
+ "summary": {
+  "ukratko": "Закон потврђује уговор о зајму од 150 милиона евра са француском агенцијом Bpifrance Assurance Export, која поступа у име Владе Француске, за финансирање прве фазе пројекта београдског метроа.",
+  "razlozi": [
+   "Предлагач наводи да према Закону о јавном дугу Народна скупштина одлучује о задуживању и потврђује уговоре који стварају финансијске обавезе.",
+   "Према образложењу, задуживање је предвиђено Законом о буџету за 2026. годину и споразумом Владе Србије и Владе Француске о приоритетним пројектима.",
+   "Предлагач наводи да зајам служи за финансирање саобраћајног система и надзора изградње прве фазе метроа, према уговору закљученом са компанијом Alstom Transport."
+  ],
+  "promene": [
+   "Износ зајма је 150 милиона евра, са периодом отплате од 15 година, према образложењу.",
+   "Камата је 3,84% годишње, према правилима OECD-а о извозним кредитима.",
+   "Пре првог повлачења средстава плаћа се премија ризика од 16.005.000 евра.",
+   "Рок за повлачење средстава је 31. децембар 2031. године, уз могућност продужења договором две владе."
+  ],
+  "sredstva": "Према образложењу, средства за спровођење закона обезбеђиваће се у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o zajmu uz finansijski protokol potpisan dana 19. decembra 2025. godine, između Vlade Republike Srbije i Vlade Republike Francuske, između Republike Srbije koju predstavlja Vlada Republike Srbije postupajući preko Ministarstva finansija kao Zajmoprimca i Bpifrance Assurance Export koji postupa u ime, za račun i pod kontrolom Vlade Republike Francuske kao Zajmodavca"
+}
