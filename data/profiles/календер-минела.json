@@ -1,0 +1,69 @@
+{
+ "mp": "календер минела",
+ "model": "claude-fable-5-2",
+ "read": 15,
+ "speeches": 21,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да медији, нарочито они које назива „режимским“, негирају национални, верски, културни и језички идентитет Бошњака и других мањинских народа.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Устаљена пракса медија у Србији, а нарочито оних режимских, је негирање националног верског, културно и језичког идентитета Бошњака, али и других несрпских народа и томе се треба стати на пут.",
+    "date": "2025-06-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да јавни медијски сервиси имају програм на босанском језику и језицима других националних мањина.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Питам овај дом – зашто РТС више од деценију и по неће да формира редакцију на босанском језику како би проводила програмски садржај на босанском језику као матерњем језику бошњачког народа у Републици Србији?",
+    "date": "2025-06-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што буџет не нуди решења за проблеме грађана Санџака и тражи улагања у путеве, водоснабдевање и здравствене установе у санџачким општинама.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Када погледамо овај буџет тешко можемо препознати шта се у Санџаку у наредном периоду намерава суштински унапредити. Да ли ће грађани Сјенице и становници Пештери имати сигурније водоснабдевање?",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Бошњаци нису одговарајуће заступљени у правосуђу на подручју Санџака и тражи да се то промени.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Више међународних организација које се баве владавином права, положајем и статусом националних мањина у Републици Србији изразили су своју забринутост због чињенице да Албанци у Прешевској долини и Бошњаци у Санџаку нису адекватно или готово никако заступљени у правосудном систему Републике Србије.",
+    "date": "2026-01-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Sestog vanrednog zasedanja NSRS, 22. januar 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да активности са могућим великим утицајем на животну средину, попут геолошких истраживања и вађења руда, не остану ван система интегрисане дозволе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ако активност по стварним карактеристикама испуњава услове за примену закона онда ознака „истраживање“ не може бити излаз из система.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  }
+ ]
+}

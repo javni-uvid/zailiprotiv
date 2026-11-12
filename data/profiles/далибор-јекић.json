@@ -1,0 +1,72 @@
+{
+ "mp": "далибор јекић",
+ "model": "claude-fable-5-2",
+ "read": 15,
+ "speeches": 21,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Наводи да су регионалне разлике у Србији огромне и замера Влади што за регионални развој издваја премало новца из буџета.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Госпођо Месаревић, две трећине грађана Србије живи у неразвијеним регионима и замислите шта сте ви урадили? Определили сте 0,1% за регионални развој.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера Влади што нема национални план регионалног развоја.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Такође, подсетићу вас колико сте озбиљни. Немате ни национални план за регионални развој који треба да се односи на десетогодишњи период, немате ни формиран национални савет за регионални развој.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се новац улаже у пројекат ЕКСПО уместо у смањивање регионалних разлика и решавање проблема грађана у остатку Србије.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Шта мислите, да ли је било паметније да се милијарде бачене на ЕХРО уложили у смањивање регионалних разлика.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да пројекти у Крагујевцу касне и да град нема одговарајућу дворану за концерте и културне догађаје.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ситуација јесте таква да сви пројекти у граду Крагујевцу касне, да ниједан пројекат није био завршен у дефинисаним роковима, да град Крагујевац не изгледа како треба да изгледа, да се концерти одржавају у холу друге Крагујевачке гимназије.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да у грађевинским и инфраструктурним пројектима има корупције.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Највећа корупција је у грађевинарству. Преко 30% кажете да су пројекти преплаћени, од једне до 2,5 милијарди су процене да је прање новца у грађевинарству.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  }
+ ]
+}
