@@ -211,12 +211,21 @@ def export(args) -> int:
     from zailiprotiv import summaries
     to = Path(args.to)
     to.mkdir(parents=True, exist_ok=True)
-    pending = _pending(args)
+    if args.only:
+        wanted = [n.strip() for n in Path(args.only).read_text(encoding="utf-8").split() if n.strip()]
+        store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
+        by_bill = {l.get("bill_file"): l for l in store["laws"].values() if l.get("bill_file")}
+        pending = [(by_bill[n], json.loads((Path(args.bills) / n).read_text(encoding="utf-8")), n)
+                   for n in wanted if n in by_bill and (Path(args.bills) / n).exists()]
+    else:
+        pending = _pending(args)
     if args.kind:
         pending = [p for p in pending if p[0].get("kind") in args.kind.split(",")]
     chosen = pending[args.skip: args.skip + args.limit] if args.limit else pending[args.skip:]
     for law, memo, name in chosen:
-        (to / (name.removesuffix(".json") + ".txt")).write_text(summaries.material(law, memo), encoding="utf-8")
+        limits = summaries.DEEP_LIMITS if args.deep else None
+        (to / (name.removesuffix(".json") + ".txt")).write_text(summaries.material(law, memo, limits),
+                                                                 encoding="utf-8")
     (to / "RULES.txt").write_text(summaries.SYSTEM, encoding="utf-8")
     print(f"pending: {len(pending)}, exported: {len(chosen)} to {to}")
     return 0
@@ -246,7 +255,8 @@ def import_summaries(args) -> int:
             print(f"  refused {name}: {e}")
             continue
         memo = json.loads((Path(args.bills) / name).read_text(encoding="utf-8"))
-        (out_dir / name).write_text(json.dumps(summaries.record(law, memo, summary, args.model), ensure_ascii=False,
+        (out_dir / name).write_text(json.dumps(summaries.record(law, memo, summary, args.model, deep=args.deep),
+                                               ensure_ascii=False,
                                                indent=1) + "\n", encoding="utf-8")
         saved += 1
     print(f"summaries saved: {saved}, refused: {refused}")
@@ -365,11 +375,13 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--bills", default=str(DATA / "bills"))
         p.add_argument("--out", default=str(DATA / "summaries"))
         p.set_defaults(run=run)
+        p.add_argument("--deep", action="store_true", help="the memorandum nearly whole (laws with most votes against)")
         if name == "export":
             p.add_argument("--to", required=True)
             p.add_argument("--limit", type=int, default=0)
             p.add_argument("--skip", type=int, default=0)
             p.add_argument("--kind", default="", help="only these kinds, comma-separated (law,change,finance,treaty)")
+            p.add_argument("--only", default="", help="a file listing the bill files to export, done or not")
         else:
             p.add_argument("file")
             p.add_argument("--model", required=True, help="who wrote them, e.g. claude-opus-5-5")

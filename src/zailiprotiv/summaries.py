@@ -18,6 +18,8 @@ MODEL = os.environ.get("ZAILIPROTIV_MODEL", "claude-sonnet-5-5")
 # can be very long.
 LIMITS = {"reasons": 12000, "explained": 8000, "funds": 3000, "effects": 12000, "urgency": 2000}
 FIELDS = ("ukratko", "razlozi", "promene", "sredstva")
+# For the laws that get a closer look (the most votes against): the memorandum nearly whole.
+DEEP_LIMITS = {key: 60000 for key in LIMITS}
 
 SYSTEM = """Ти си уредник јавног сајта који приказује законе Народне скупштине Србије. Пишеш сажетак образложења \
 предлога закона: шта ПРЕДЛАГАЧ наводи као разлоге, шта закон мења и колико средстава је потребно.
@@ -39,12 +41,13 @@ SYSTEM = """Ти си уредник јавног сајта који прика
  "sredstva": "једна реченица: шта предлагач наводи о потребним средствима из буџета"}"""
 
 
-def material(law: dict, memo: dict) -> str:
+def material(law: dict, memo: dict, limits: dict | None = None) -> str:
     """What the model reads: the law's title and the memorandum's sections, each cut to its limit."""
+    limits = limits or LIMITS
     parts = [f"Наслов закона: {law['title']}"]
     names = {"reasons": "Разлози за доношење", "explained": "Објашњење решења", "funds": "Финансијска средства",
              "effects": "Анализа ефеката", "urgency": "Разлози за хитан поступак"}
-    for key, limit in LIMITS.items():
+    for key, limit in limits.items():
         text = re.sub(r"[ \t]+", " ", memo.get("sections", {}).get(key, "")).strip()
         if text:
             parts.append(f"## {names[key]}\n{text[:limit]}")
@@ -57,10 +60,11 @@ def fingerprint(text: str) -> str:
     return hashlib.sha256((SYSTEM + "\n" + text).encode("utf-8")).hexdigest()
 
 
-def record(law: dict, memo: dict, summary: dict, model: str, usage: dict | None = None) -> dict:
-    """A summary file's content."""
+def record(law: dict, memo: dict, summary: dict, model: str, usage: dict | None = None, deep: bool = False) -> dict:
+    """A summary file's content. The fingerprint is always the standard material's, so a deeper summary is kept
+    as long as the memorandum and the rules stay the same; "depth" says which material it was written from."""
     return {"model": model, "fingerprint": fingerprint(material(law, memo)), "summary": summary,
-            "usage": usage or {}, "law": law["title"]}
+            "usage": usage or {}, "law": law["title"], "depth": "deep" if deep else "standard"}
 
 
 def parse(reply: str) -> dict:

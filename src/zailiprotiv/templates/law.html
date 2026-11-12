@@ -26,7 +26,7 @@
   {% if sm.razlozi %}<h3>Razlozi, prema predlagaču</h3><ul>{% for x in sm.razlozi %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.promene %}<h3>Šta zakon menja</h3><ul>{% for x in sm.promene %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.sredstva %}<h3>Potrebna sredstva</h3><p>{{ sm.sredstva|latin }}</p>{% endif %}
-  <p class="label">Sažetak obrazloženja predloga zakona. Napisao ga je AI model ({{ it.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ law.bill_pdf }}">predlog zakona</a>.</p>
+  <p class="label">{% if it.summary.depth == "deep" %}Detaljniji sažetak, iz celog obrazloženja. {% endif %}Sažetak obrazloženja predloga zakona. Napisao ga je AI model ({{ it.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ law.bill_pdf }}">predlog zakona</a>.</p>
   {% endif %}
   {% if reasons or funds or effects %}
   <details{% if not sm %} open{% endif %}>
