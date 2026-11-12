@@ -65,3 +65,9 @@ def test_cyrillic_paths_are_encoded_once():
 
 def test_translit():
     assert latin("Гласали за") == "Glasali za"
+
+
+def test_file_names_are_plain():
+    from zailiprotiv.cli import file_name
+    assert file_name(BASE + "/upload/rezultati_glasanja/2025/16.%20MUEDIH%20FIJULJANIN.PDF") == "2025_16.muedih_fijuljanin.pdf"
+    assert file_name(BASE + "/upload/rezultati_glasanja/2026/osma_sednica/1.pdf") == "2026_osma_sednica_1.pdf"
