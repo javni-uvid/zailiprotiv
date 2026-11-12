@@ -12,6 +12,8 @@ every MP's votes, and Claude's summary of each law's memorandum, labelled as suc
 
 1. **The same rules for every MP, club and party.** Nothing is computed differently for anyone.
 2. **Primary sources only:** the Assembly's own roll-call results, bills and transcripts, and laws as published.
+   For the laws with most votes against, opinions of independent bodies and analyses by media and civil society
+   appear as labelled notes with their source, never as a figure, a vote or a ranking.
 3. **A law's effects are its proposer's,** summarised from the bill's explanatory memorandum and analysis of
    effects, with a link. The site doesn't judge laws.
 4. **MPs are public officials:** their names and votes are shown. Nothing about their private lives.

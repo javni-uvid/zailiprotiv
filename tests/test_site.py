@@ -41,9 +41,9 @@ def test_site_builds_every_page(tmp_path):
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
     assert "Allow: /" in (out / "robots.txt").read_text()
     assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()
-    contested = (out / "najvise-protiv.html").read_text()
-    assert "zakon/zakon-o-oruzju.html" in contested and "PG B 1" in contested and "50.0%" in contested
-    assert "1. mesto u sazivu" in law
+    assert not (out / "najvise-protiv.html").exists()
+    assert "1. mesto u sazivu" in law and "50.0%" in law
+    assert "Hitan postupak" in law
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I
     for page in out.rglob("*.html"):

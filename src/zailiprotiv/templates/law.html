@@ -11,6 +11,12 @@
   <div><dt>Vrsta</dt><dd>{{ it.kind|latin }}</dd></div>
   <div><dt>Oblast</dt><dd>{% if it.areas %}{{ it.areas|map("latin")|join("; ") }}{% else %}—{% endif %}</dd></div>
 </dl>
+<dl class="facts process">
+  <div><dt>Predlog podnet</dt><dd>{{ law.submitted|day or "—" }}</dd></div>
+  <div><dt>Od predloga do usvajanja</dt><dd>{% if it.days is not none %}{{ it.days }} {{ "dan" if it.days % 10 == 1 and it.days % 100 != 11 else "dana" }}{% else %}—{% endif %}</dd></div>
+  <div><dt>Hitan postupak</dt><dd>{% if it.urgent %}predložen, uz obrazloženje{% elif law.bill_file %}nije predložen{% else %}—{% endif %}</dd></div>
+  {% if final %}<div><dt>Sednica</dt><dd>{{ final.sitting_title|latin }}</dd></div>{% endif %}
+</dl>
 <p class="docs">
   <a href="{{ law.pdf }}">Tekst zakona (PDF)</a>
   {% if law.bill_pdf %}<a href="{{ law.bill_pdf }}">Predlog zakona sa obrazloženjem (PDF)</a>{% endif %}
@@ -45,7 +51,7 @@
   <p class="meta">{{ final.when[:10]|day }} u {{ final.when[11:16] }}{% if final.kind %} · {{ final.kind|latin }}{% endif %} · {{ final.sitting_title|latin }}</p>
   {{ bar(final.counts) }}
   <p>{{ tally(final.counts) }}</p>
-  {% if it.rank %}<p class="meta">Udeo glasova protiv: {{ (100 * it.share)|round(1) }}% · <a href="../najvise-protiv.html">{{ it.rank }}. mesto u sazivu</a></p>{% endif %}
+  {% if it.rank %}<p class="meta">Udeo glasova protiv: {{ (100 * it.share)|round(1) }}% · {{ it.rank }}. mesto u sazivu po udelu glasova protiv</p>{% endif %}
   {% if not report %}<p class="note small">Za glasanja iz 2024. i prve polovine 2025. Skupština je objavljivala samo poslanike koji su bili prisutni; odsutni nisu na spisku.</p>{% endif %}
 
   <h3>Po poslaničkim grupama</h3>

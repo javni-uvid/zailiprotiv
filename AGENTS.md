@@ -28,6 +28,12 @@ These are the project's promises to its readers. Never change them without the m
 2. **Facts from primary sources only:** the National Assembly's own publications (roll-call results, bills with
    their explanatory memoranda, transcripts), laws as published in the Official Gazette. Otvoreni parlament
    (CRTA) and news reports may help find or check something, but never supply a figure or a vote.
+   - **Other voices, labelled** (the maintainer, 12 Nov 2026): for the laws with most votes against, opinions of
+     independent bodies (Fiscal Council, Protector of Citizens, Commissioner, Venice Commission, ODIHR, European
+     Commission) and analyses by media and civil society may be shown as notes, each with its source named, its
+     date and a link, summarised in a sentence or two and attributed ("Fiskalni savet ocenjuje …"). A note never
+     supplies a figure, a vote or a ranking, and the site doesn't take its side. Independent bodies and media or
+     civil society are shown apart, so readers can weigh them.
 3. **A law's effects are its proposer's, quoted with the source.** What a law is expected to do comes from the
    bill's explanatory memorandum (obrazloženje) and its analysis of effects (analiza efekata), summarised and
    linked, and labelled as the proposer's assessment. The site adds no judgement of its own about whether a law
@@ -138,9 +144,12 @@ These are the project's promises to its readers. Never change them without the m
 - **Home page:** "Najviše glasova protiv" first (the maintainer's request, 12 Nov 2026): the laws whose final
   vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
   for what it measures; "controversial" would be a judgement. Then the newest laws.
-- **"Najviše protiv"** (`najvise-protiv.html`): every law with at least one vote against, ranked by that share,
-  with the groups whose MPs voted against; each law's page gives its share and place. The maintainer asked for a
-  special focus on these laws (12 Nov 2026).
+- **Each law's page** gives its share of votes against and its place in the convocation by that share, and the
+  course of its passing: submitted, days to passing, urgent procedure (proposed when the memorandum gives reasons
+  for it), the sitting. The roll calls published are the final votes only; votes on amendments aren't among them.
+- **A closer look at the laws with most votes against** (the maintainer, 12 Nov 2026): the debate from the
+  Assembly's transcripts, the course of passing, independent bodies' opinions, and media and civil society's
+  analyses. A separate page for them was tried and dropped at the maintainer's wish; the home page section stays.
 - **`robots.txt` allows everything** and points to `sitemap.xml`: the site wants to be read, by search engines and
   AI crawlers alike (the maintainer, 12 Nov 2026). A block seen from outside comes from the host's settings, not
   the site.

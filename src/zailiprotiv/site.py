@@ -135,6 +135,12 @@ def excerpt(text: str, limit: int) -> str:
     return cut + " …"
 
 
+def days_between(a: str | None, b: str | None) -> int | None:
+    if not a or not b:
+        return None
+    return (dt.date.fromisoformat(b[:10]) - dt.date.fromisoformat(a[:10])).days
+
+
 def against_share(counts: dict) -> float:
     """The share of votes against among the votes for and against: 0 when nobody voted against."""
     cast = counts["za"] + counts["protiv"]
@@ -192,6 +198,8 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
     for it in items:
         law, final = it["law"], it["final"]
         bill = bills.get(law.get("bill_file", ""), {})
+        it["urgent"] = "urgency" in bill.get("sections", {})
+        it["days"] = days_between(law.get("submitted"), law.get("passed"))
         sections = bill.get("sections", {})
         others = [votes[k] for k in law.get("votes", []) if k != law.get("final_vote") and k in votes]
         roll = []
@@ -231,8 +239,6 @@ def build(data: Path, out: Path, domain: str | None = None) -> dict:
              "sittings": len({v["sitting"] for v in votes.values()})}
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, stats=stats, latest=items[:12], contested=most_against(items, 12), root=""), encoding="utf-8")
-    (out / "najvise-protiv.html").write_text(env.get_template("contested.html").render(
-        **common, ranked=ranked, total=len(items), root=""), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
     if domain:
