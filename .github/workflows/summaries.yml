@@ -30,7 +30,10 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          test -n "$ANTHROPIC_API_KEY" || { echo "The repository secret ANTHROPIC_API_KEY is not set."; exit 1; }
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::notice::The repository secret ANTHROPIC_API_KEY is not set: no summaries written."
+            exit 0
+          fi
           pip install uv && uv sync --frozen
           uv run zailiprotiv summaries --limit "${{ inputs.limit || 0 }}"
       - name: Commit
