@@ -45,6 +45,7 @@ src/zailiprotiv/
   config.py      the Assembly's address, User-Agent, delay between requests
   skupstina.py   the Assembly's site: sittings and the roll-call PDF of each agenda item
   rollcall.py    reading a roll-call PDF: the vote, and each MP's vote and group
+  mps.py         who an MP is across roll calls: a name key without word order or titles
   cli.py         commands
   translit.py    Cyrillic → Latin
   jsonfile.py    JSON stores one entry per line, for small git diffs
