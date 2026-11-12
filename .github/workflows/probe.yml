@@ -1,0 +1,46 @@
+# Run by hand: can GitHub's runners reach parlament.gov.rs, and which pages list the roll-call PDFs?
+# Changes nothing in the repository; the PDFs found, the pages listing them and a few samples are saved as an artifact.
+name: probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "Page to start the walk from"
+        default: "https://www.parlament.gov.rs/"
+      max_pages:
+        description: "Pages to read at most"
+        default: "80"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Probe the Assembly's site
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv probe --start "${{ inputs.start }}" --max-pages "${{ inputs.max_pages }}" --out probe
+      - name: Text of the sample PDFs
+        if: always()
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
+          for f in probe/*.pdf; do [ -f "$f" ] && pdftotext -layout "$f" "${f%.pdf}.txt" || true; done
+          ls -la probe || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe
+          path: probe/
+          retention-days: 7
