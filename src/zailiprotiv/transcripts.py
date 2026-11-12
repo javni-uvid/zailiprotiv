@@ -32,8 +32,32 @@ def days(html: str, base: str) -> list[dict]:
         if PATH in url and url not in seen:
             seen.add(url)
             m = DAY.search(text)
-            out.append({"day": int(m.group(1)) if m else 1, "title": text, "url": url})
+            out.append({"day": int(m.group(1)) if m else 1, "title": text, "url": url,
+                        "listed_date": iso_date(text) or iso_date(url.rsplit("/", 1)[-1])})
     return out
+
+
+MONTHS = {m: i for i, m in enumerate(("jan", "feb", "mar", "apr", "maj", "jun", "jul", "avg", "sep", "okt", "nov",
+                                     "dec"), 1)}
+MONTHS_CYR = {m: i for i, m in enumerate(("јан", "феб", "мар", "апр", "мај", "јун", "јул", "авг", "сеп", "окт", "нов",
+                                         "дец"), 1)}
+
+
+def iso_date(text: str) -> str:
+    """A day named in a file name, a link or the notes' heading: "04.11.2025", "5. novembra 2025", "18. јун 2026",
+    "04 новембар 2025" → "2025-11-04"; "" if none."""
+    import urllib.parse
+    t = urllib.parse.unquote(text).lower()
+    if m := re.search(r"(\d{1,2})\.\s*(\d{1,2})\.\s*(20\d\d)", t):
+        d, mo, y = map(int, m.groups())
+    elif m := re.search(r"(\d{1,2})\.?\s+([a-zа-яђјљњћџ]{3})[a-zа-яђјљњћџčćšžđ]*\s+(20\d\d)", t):
+        mo = MONTHS.get(m.group(2)) or MONTHS_CYR.get(m.group(2))
+        if not mo:
+            return ""
+        d, y = int(m.group(1)), int(m.group(3))
+    else:
+        return ""
+    return f"{y:04d}-{mo:02d}-{d:02d}" if 1 <= mo <= 12 and 1 <= d <= 31 else ""
 
 
 def paragraphs(docx: bytes) -> list[str]:
@@ -68,14 +92,35 @@ def speeches(paras: list[str]) -> list[dict]:
     return out
 
 
-AGENDA_ITEM = re.compile(r"^(\d+)\.\s+(Предлог\s.*?)[;.]?$")
-JOINT = re.compile(r"(?:отварам|настављамо)\s+заједнички\s+начелни[^.]*?претрес[^.]*?тачака\s+(?:од\s+)?(\d+)\.?\s*до\s+(\d+)", re.I)
-ITEM = re.compile(r"(?:Прелазимо|Настављамо)\s+(?:рад\s+)?(?:на|по|са)\s+(\d+)\.\s*тачк", re.I)
-DETAIL = re.compile(r"претрес\w*\s+(?:Предлог\w*\s+закона\s+)?у\s+појединостима", re.I)
-DETAIL_TITLE = re.compile(r"претрес\w*\s+у\s+појединостима\s*[–-]\s*(.+)", re.I)
-GENERAL = re.compile(r"отварам\s+(?:начелни\s+)?претрес\w*\s+(?:о\s+)?(?:Предлог\w*\s+закона\s+)?у\s+начелу|отварам\s+начелни\s+претрес", re.I)
-CLOSE = re.compile(r"закључујем\s+(?:заједнички\s+)?(?:начелни\s+)?(?:и\s+)?(?:јединствени\s+)?претрес", re.I)
-AMENDMENT = re.compile(r"На\s+члан\s+(\d+)\.?\s+амандман\s+(?:је\s+поднео|је\s+поднела|су\s+заједно\s+поднели)\s+(.+?)\.?\s*$")
+# An agenda item, numbered by hand ("1. Предлог закона …;") or by Word's list numbering, which leaves no number in
+# the text ("Предлог закона …,").
+AGENDA_ITEM = re.compile(r"^(?:(\d+)[.,]\s+(.+?)|((?:Предлог|Предлози|Избор|Избори|Извештај|Разматрање|Утврђивање|"
+                         r"Давање|Именовање|Аутентичн|Одлука|Престанак|Потврђивање|Листа|Редовн|Годишњ)\w*\s.*?))[;,.]?$")
+# The stenographers' page marks ("1/2МТ/ ВЗ") between paragraphs.
+MARK = re.compile(r"^\d+/\d+\s*[А-ЯЂЈЉЊЋЏШЖЧA-Z]{1,3}/\s*[А-ЯЂЈЉЊЋЏШЖЧA-Z/ ]{0,8}$")
+AGENDA_HEAD = re.compile(r"Д\s*н\s*е\s*в\s*н\s*и\s+р\s*е\s*д\s*:?\s*$")
+RANGE = r"тач\w*\s+(?:од\s+)?(\d+)\.?\s*(?:до|-|–)\s*(\d+)"
+JOINT = re.compile(r"(?:отварам|настављамо)\s+(?:сада\s+)?заједнички\W+(?:\w+\W+){0,4}?претрес", re.I)
+DETAIL = re.compile(r"(?:отварам\s+|настављамо\s+|прелазимо\s+на\s+|^)(?:сада\s+)?претрес\w*\W+(?:\w+\W+){0,3}?[уо]\s+појединостима", re.I)
+GENERAL = re.compile(r"(?:отварам|настављамо)\s+(?:сада\s+)?(?:начелни\s+)?претрес\w*(?!\W+(?:\w+\W+){0,3}?[уо]\s+појединостима)", re.I)
+CLOSE_JOINT = re.compile(r"закључујем\s+заједнички\W+(?:\w+\W+){0,4}?претрес", re.I)
+QUESTIONS = re.compile(r"члан\w*\s+287|сат\w*\s+(?:времена\s+)?(?:постављања\s+питања|тражења)", re.I)
+RESUME = re.compile(r"настављамо|листи\b|листу\b|листом\b", re.I)
+MOVE = re.compile(r"Прелазимо\s+(?:сада\s+)?на\s+(?:(\d+)\.?\s*тачк\w*|следећу\s+тачк\w*|(\w+)\s+тачк\w*|(Предлог\w*\s.+))", re.I)
+NTH = re.compile(r"(?:о|по)\s+(?:тачки\s+(\d+)\.|(\d+)\.\s*тачк|(\w+ој)\s+тачк)", re.I)
+VOTING = re.compile(r"Прелазимо\s+(?:сада\s+)?на\s+(?:одлучивање|гласање)|дан\s+за\s+гласање\s+(?:је|почиње)", re.I)
+ORDINAL = {w: i for i, w in enumerate("прв друг трећ четврт пет шест седм осм девет десет".split(), 1)}
+# "На члан 3. амандман је поднео …", "… амандман су заједно поднели …", "… амандмане, у истоветном тексту, поднели су …"
+AMENDMENT = re.compile(r"На\s+члан\s+(\d+)\.?\s+амандман\w*[^.]{0,40}?подне[ол]\w*\s+(?:су\s+|је\s+)?(?:заједно\s+)?(.+?)\.?\s*$")
+
+
+def ordinal(word: str) -> int | None:
+    """"трећу", "Првој", "Пету" → 3, 1, 5 (up to ten)."""
+    w = word.lower()
+    for stem in sorted(ORDINAL, key=len, reverse=True):
+        if w.startswith(stem) and len(w) - len(stem) <= 3 and not w.startswith(("петна", "шестна", "седамн")):
+            return ORDINAL[stem]
+    return None
 
 
 def _words(title: str) -> set[str]:
@@ -95,13 +140,63 @@ def item_of(title: str, agenda: dict[int, str]) -> int | None:
     return best if score >= 0.6 else None
 
 
+def _item(line: str, agenda: dict[int, str], state: dict) -> list[int]:
+    """The agenda items a chair's line names: "тачака 1. до 8.", "8. тачку", "Првој тачки", "следећу тачку", or a
+    bill's title."""
+    if r := re.search(RANGE, line, re.I):
+        return list(range(int(r.group(1)), int(r.group(2)) + 1))
+    m = MOVE.search(line)
+    if m and m.group(1):
+        return [int(m.group(1))]
+    if m and m.group(2) and (n := ordinal(m.group(2))):
+        return [n]
+    if m and re.search(r"следећу\s+тачк", m.group(0), re.I):
+        title = re.split(r"\s+[–-]\s+", line, maxsplit=1)
+        if len(title) == 2 and (n := item_of(title[1], agenda)):
+            return [n]
+        return [state["items"][-1] + 1] if state["items"] else []
+    if n := NTH.search(line):
+        if n.group(1) or n.group(2):
+            return [int(n.group(1) or n.group(2))]
+        return [k] if (k := ordinal(n.group(3))) else []
+    if m and m.group(3) and (n := item_of(m.group(3), agenda)):
+        return [n]
+    t = re.split(r"појединостима\s*(?:о\s+|[–-]\s*)", line, maxsplit=1)
+    if len(t) == 2 and (n := item_of(t[1], agenda)):
+        return [n]
+    return []
+
+
+def _move(line: str, agenda: dict[int, str], state: dict, debated: set[int], detailed: set[int]) -> dict | None:
+    """Where the chair's line takes the debate, or None if it doesn't move it. An item whose principle was debated
+    together with others goes straight to its amendments when the chair moves to it."""
+    if VOTING.search(line):
+        return {"part": "other", "items": []}
+    items = _item(line, agenda, state)
+    if JOINT.search(line):
+        return {"part": "general", "items": items if len(items) > 1 else state.get("joint") or sorted(agenda)}
+    if DETAIL.search(line):
+        rest = sorted(debated - detailed)
+        return {"part": "detail", "items": items or (rest[:1] if state["part"] != "detail" else state["items"][-1:])}
+    if MOVE.search(line) and items:
+        return {"part": "detail" if set(items) <= debated else "general", "items": items}
+    if GENERAL.search(line) and (items or state["items"]):
+        return {"part": "general", "items": items or state["items"]}
+    return None
+
+
 def debate(days_: list[list[str]]) -> dict:
     """A sitting's notes, day by day (each a list of paragraphs), read in order: the agenda, and each speech with the
     part of the debate it was given in, "general" (in principle, possibly on several items together) or "detail"
-    (on the articles and amendments of one bill), with the agenda items it concerns. Amendments the chair announces
-    are kept with their article and who filed them."""
+    (on the articles and amendments of one bill), with the agenda items it concerns; "other" is everything else
+    (MPs' questions, the agenda, voting). The chair's words move the debate on; the hour of MPs' questions (Article
+    287 of the Rules) pauses it, and it resumes where it was. Amendments the chair announces are kept with their
+    article and who filed them."""
     agenda: dict[int, str] = {}
-    state: dict = {"part": "other", "items": []}
+    state: dict = {"part": "other", "items": [], "joint": []}
+    paused: dict | None = None
+    debated: set[int] = set()
+    detailed: set[int] = set()
     out, amendments, in_agenda = [], [], False
     for day, paras in enumerate(days_, 1):
         current = None
@@ -118,36 +213,45 @@ def debate(days_: list[list[str]]) -> dict:
                 line = p
             else:
                 continue
-            if not current["chair"]:
+            if not current["chair"] or MARK.match(line):
                 continue
-            # The chair's words move the debate on.
-            if re.search(r"Д\s*н\s*е\s*в\s*н\s*и\s+р\s*е\s*д\s*$", line) or "утврдила дневни ред" in line:
+            if AGENDA_HEAD.search(line) or "утврдила дневни ред" in line:
                 in_agenda = True
                 continue
-            a = AGENDA_ITEM.match(line)
-            if in_agenda and a:
-                agenda[int(a.group(1))] = a.group(2).strip()
+            if in_agenda and (a := AGENDA_ITEM.match(line)):
+                n = int(a.group(1)) if a.group(1) else max(agenda, default=0) + 1
+                agenda[n] = (a.group(2) or a.group(3)).strip()
                 continue
-            in_agenda = False if agenda else in_agenda
-            new = None
-            if j := JOINT.search(line):
-                new = {"part": "general", "items": list(range(int(j.group(1)), int(j.group(2)) + 1))}
-            elif t := DETAIL_TITLE.search(line):
-                n = item_of(t.group(1), agenda)
-                new = {"part": "detail", "items": [n] if n else []}
-            elif i := ITEM.search(line):
-                new = {"part": "general", "items": [int(i.group(1))]}
-            elif DETAIL.search(line) and state["items"]:
-                new = {"part": "detail", "items": state["items"][-1:]}
-            elif GENERAL.search(line) and state["items"]:
-                new = {"part": "general", "items": state["items"]}
-            elif CLOSE.search(line):
-                new = {"part": "other", "items": state["items"] if state["part"] == "detail" else []}
+            if agenda:
+                in_agenda = False
             if (am := AMENDMENT.search(line)) and state["part"] == "detail":
                 amendments.append({"day": day, "item": state["items"][0] if state["items"] else None,
                                    "article": int(am.group(1)), "by": am.group(2).strip()})
+            if c := CLOSE_JOINT.search(line):
+                items = _item(line, agenda, state) or state.get("joint") or sorted(agenda)
+                # The notes may miss the opening ("настављамо заједнички претрес" with no items named): the general
+                # speeches with no item belong to the debate it closes.
+                for sp in out:
+                    if sp["part"] == "general" and not sp["items"]:
+                        sp["items"] = list(items)
+                debated |= set(items)
+                state = {"part": "other", "items": [], "joint": items}
+                continue
+            if QUESTIONS.search(line) and state["part"] != "other":
+                paused, state = state, {"part": "other", "items": [], "joint": state.get("joint", [])}
+                current["part"], current["items"] = "other", []
+                continue
+            if paused and RESUME.search(line) and not MOVE.search(line):
+                state, paused = paused, None
+                current["part"], current["items"] = state["part"], list(state["items"])
+            new = _move(line, agenda, state, debated, detailed)
             if new:
-                state = new
+                paused = None
+                if new["part"] == "general":
+                    debated |= set(new["items"])
+                if new["part"] == "detail":
+                    detailed |= set(new["items"])
+                state = {**new, "joint": new["items"] if len(new["items"]) > 1 else state.get("joint", [])}
                 # A chair's speech that opens a part belongs to it, so the speeches after it do too.
                 current["part"], current["items"] = state["part"], list(state["items"])
     return {"agenda": agenda, "speeches": out, "amendments": amendments}
@@ -155,8 +259,8 @@ def debate(days_: list[list[str]]) -> dict:
 
 def heading(paras: list[str]) -> dict:
     """The notes' date ("04. новембар 2025. године") and whether they say they are provisional."""
-    head = " ".join(paras[:12])
-    m = re.search(r"(\d{1,2})\.\s*([а-я]+)\s+(\d{4})\.\s*године", head)
+    head = " ".join(paras[:20])
+    m = re.search(r"(\d{1,2})\.\s*([а-я]+|\d{1,2}\.)\s*(\d{4})\.\s*године", head)
     return {"date": " ".join(m.groups()) if m else "", "provisional": "ПРИВРЕМЕНЕ" in head.upper()}
 
 

@@ -49,7 +49,7 @@
 {% if db %}
 <section class="debate">
   <h2>Rasprava u Skupštini</h2>
-  <p>Ovo je {{ db.item }}. tačka dnevnog reda. {% if db.joint %}U načelu se o njoj raspravljalo zajedno sa još {{ db.joint|length }} {{ "tačkom" if db.joint|length == 1 else "tačaka" }} ({{ db.joint|join(", ") }}), pa se govori u načelnom pretresu ne odnose svi na ovaj zakon.{% else %}U načelu se o njoj raspravljalo posebno.{% endif %}</p>
+  <p>Ovo je {{ db.item }}. tačka dnevnog reda. {% set n = db.joint|length %}{% if db.joint %}U načelu se o njoj raspravljalo zajedno sa još {{ n }} {{ "tačkom" if n % 10 == 1 and n % 100 != 11 else ("tačke" if n % 10 in [2, 3, 4] and n % 100 not in [12, 13, 14] else "tačaka") }}{% if n <= 10 %} ({{ db.joint|join(", ") }}){% endif %}, pa se govori u načelnom pretresu ne odnose svi na ovaj zakon.{% else %}U načelu se o njoj raspravljalo posebno.{% endif %}</p>
   <dl class="facts">
     <div><dt>Govora u načelnom pretresu</dt><dd>{{ db.general }}</dd></div>
     <div><dt>Govora o amandmanima</dt><dd>{{ db.detail }}</dd></div>
@@ -58,7 +58,7 @@
   </dl>
   {% if db.by_group %}
   <h3>Koliko je ko govorio</h3>
-  <p class="label">Udeo izgovorenih reči po poslaničkoj grupi, u načelnom pretresu{% if db.joint %} (o svim tačkama zajedno){% endif %} i u raspravi o amandmanima ovog zakona, bez predsedavajućeg. Grupa je ona sa poimeničnog glasanja o zakonu.</p>
+  <p class="label">Udeo izgovorenih reči po poslaničkoj grupi, u načelnom pretresu{% if db.joint %} (o svim tačkama zajedno){% endif %} i u raspravi o amandmanima ovog zakona, bez predsedavajućeg. Grupa govornika je ona sa poimeničnog glasanja najbližeg raspravi (najviše dva meseca ranije ili kasnije).</p>
   <table class="groups">
     <tbody>
     {% for g, n, share in db.by_group %}
@@ -67,11 +67,7 @@
     </tbody>
   </table>
   {% endif %}
-  {% if db.filers %}
-  <h3>Ko je podneo amandmane o kojima se raspravljalo</h3>
-  <ul class="small">{% for who, n in db.filers %}<li>{{ who|latin }}: {{ n }}</li>{% endfor %}</ul>
-  {% endif %}
-  <p class="docs">{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške, {{ d.day }}. dan{% if d.date %} ({{ d.date|latin }}){% endif %}</a>{% endfor %}</p>
+  <p class="docs">{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške, {{ d.day }}. dan{% if d.listed_date %} ({{ d.listed_date|day }}){% endif %}</a>{% endfor %}</p>
   {% if db.provisional %}<p class="note small">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane. Brojevi su izvedeni iz njih: koji deo rasprave je u toku, sajt čita iz reči predsedavajućeg.</p>{% endif %}
 </section>
 {% endif %}

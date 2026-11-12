@@ -54,7 +54,7 @@ jobs:
           # New bills get their summaries in a run of their own, which then publishes the site.
           git commit -m "Roll calls read from the Assembly's site (convocation ${{ inputs.convocation || '14' }})"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-          git status -sb | grep -q ahead && exit 1
+          if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main
           gh workflow run summaries.yml --ref main || true
         env:

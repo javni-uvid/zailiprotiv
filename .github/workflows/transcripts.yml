@@ -49,4 +49,4 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "Stenographic notes of the debates (convocation ${{ inputs.convocation }})"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-          git status -sb | grep -q ahead && exit 1
+          if git status -sb | grep -q ahead; then exit 1; fi

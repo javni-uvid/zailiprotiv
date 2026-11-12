@@ -109,13 +109,31 @@ def load_transcripts(data: Path) -> dict[str, dict]:
     return out
 
 
-OUTSIDE = "Bez poslaničke grupe na spisku (predstavnici Vlade i drugi)"
+OUTSIDE = "Nisu na spiskovima glasanja tih meseci (članovi Vlade i drugi)"
 
 
-def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
+def seats(votes: dict) -> dict[str, list[tuple[str, str]]]:
+    """Each MP's group at each roll call: key → [(when, group)], in time order."""
+    out: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for v in sorted(votes.values(), key=lambda v: v["when"]):
+        for _, name, _, group in v["rows"]:
+            out[mps.key(name)].append((v["when"], latin(group) or "Bez poslaničke grupe"))
+    return out
+
+
+def group_at(seated: list[tuple[str, str]], when: str, days: int = 60) -> str | None:
+    """The group of the roll call nearest in time, if it is within `days`: a minister who was an MP before (or
+    after) is not one now."""
+    at = dt.datetime.fromisoformat(when[:19])
+    near = [(abs(dt.datetime.fromisoformat(w[:19]) - at), g) for w, g in seated]
+    best = min(near, default=None)
+    return best[1] if best and best[0].days <= days else None
+
+
+def debate_of(law: dict, final: dict | None, notes: dict | None, seated: dict | None = None) -> dict | None:
     """What the notes of the law's sitting say about its debate: the days, the agenda items debated with it in
     principle, how many speeches and words in each part, the amendments, and the words by group (each speaker's group
-    as in the final roll call; someone not on it, such as a minister, apart)."""
+    in the roll call nearest in time, within two months; someone on none of them, such as a minister, apart)."""
     from zailiprotiv import link
     if not final or not notes:
         return None
@@ -124,7 +142,12 @@ def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
     score, item = max(scored, default=(0.0, None))
     if item is None or score < 0.6:
         return None
+    seated = seated or {}
     groups = {mps.key(r[1]): latin(r[3]) or "Bez poslaničke grupe" for r in final["rows"]}
+    for sp in notes["speeches"].values():
+        k = mps.key(sp["speaker"])
+        if k not in groups and (g := group_at(seated.get(k, []), final["when"])):
+            groups[k] = g
     general = [s for s in notes["speeches"].values() if not s["chair"] and s["part"] == "general" and item in s["items"]]
     detail = [s for s in notes["speeches"].values() if not s["chair"] and s["part"] == "detail" and s["items"] == [item]]
     by_group: Counter = Counter()
@@ -133,7 +156,6 @@ def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
     total = sum(by_group.values())
     joint = sorted({i for sp in general for i in sp["items"]} - {item})
     amendments = [a for a in notes["amendments"] if a["item"] == item]
-    filers = Counter(re.sub(r"^народн\w+\s+посланиц?\w*\s+", "", a["by"]) for a in amendments)
     used = {sp["day"] for sp in general + detail}
     return {"item": item, "agenda": notes["agenda"], "joint": joint,
             "days": [d for i, d in enumerate(notes["days"], 1) if i in used] or notes["days"],
@@ -141,7 +163,7 @@ def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
             "speakers": len({sp["speaker"] for sp in general + detail}), "words": total,
             "by_group": [(g, n, n / total) for g, n in sorted(by_group.items(), key=lambda x: (-x[1], collate(x[0])))]
             if total else [],
-            "amendments": len(amendments), "filers": filers.most_common(),
+            "amendments": len(amendments),
             "provisional": any(d.get("provisional") for d in notes["days"])}
 
 
@@ -232,6 +254,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     current = convs[0][0]
     loaded = {c: load(path) for c, path in convs}
     debates = {c: load_transcripts(path) for c, path in convs}
+    seated = {c: seats(loaded[c][1]) for c in loaded}
     all_votes = {k: v for _, votes, _ in loaded.values() for k, v in votes.items()}
     people = registry(all_votes)
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
@@ -268,7 +291,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                           "days": days_between(law.get("submitted"), law.get("passed")),
                           "debate": debate_of(law, votes.get(law.get("final_vote") or ""),
                                               debates[conv].get((votes.get(law.get("final_vote") or "") or {})
-                                                                .get("sitting", "")))})
+                                                                .get("sitting", "")), seated[conv])})
         by_key = {it["key"]: it for it in items}
         for i, r in enumerate(most_against(items, len(items)), 1):
             by_key[r["key"]].update(rank=i, share=r["share"])

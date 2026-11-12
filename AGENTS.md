@@ -135,6 +135,22 @@ These are the project's promises to its readers. Never change them without the m
   - In large laws the explanation of individual articles is cut at the material's limit (8,000 characters), so
     their summaries cover the reasons and the first articles. To revisit with a higher limit for those laws.
 
+### Debates
+
+- **Stenographic notes:** a sitting's Cyrillic page links one Word file per day of work under
+  `/stenografske_beleske/`, provisional, unedited and unauthorised. `zailiprotiv transcripts` reads them for the
+  sittings of the laws with most votes against (`--top`, default 20) into `data/<N>/transcripts/<sitting>.json`.
+- **Each speech starts a paragraph** with the speaker in capitals and a colon ("МИЛЕНКО ЈОВАНОВ: …"); the chair is
+  ПРЕДСЕДНИК or ПРЕДСЕДАВАЈУЋИ/-А (typos included). Page marks ("1/2МТ/ ВЗ") are skipped. The agenda follows
+  "Д н е в н и р е д", numbered by hand or by Word's list numbering, which leaves no number in the text.
+- **The part of the debate comes from the chair's words:** a joint debate in principle on several items ("отварам
+  заједнички начелни и јединствени претрес … тачака 1. до 58."), then each bill's amendments ("Прелазимо на трећу
+  тачку …", "Претрес у појединостима о 4. тачки …"); the hour of MPs' questions (Article 287) pauses the debate,
+  which resumes where it was. Speeches in a joint debate in principle can't be told apart by bill, and the law
+  page says so.
+- **On the law page:** speeches in each part, speakers, amendments debated, and words by group. A speaker's group is
+  the one in the roll call nearest in time, within two months; ministers and others on no roll call are apart.
+
 ### Links between laws and votes
 
 - `link.py`: a roll call's act is named by its **PDF**, never by the sitting page's link text, which is sometimes

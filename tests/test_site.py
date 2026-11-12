@@ -28,6 +28,16 @@ def data(tmp_path):
     (d / "notes" / "b.json").write_text(json.dumps({"checked": "2026-11-12", "independent": [
         {"source": "Фискални савет", "date": "2026-07-01", "title": "Оцена", "url": "https://www.fiskalnisavet.rs/x",
          "note": "Фискални савет оцењује да закон нема фискалне ефекте."}], "media": []}))
+    (d / "transcripts").mkdir()
+    (d / "transcripts" / "1.json").write_text(json.dumps({"sitting": "s1", "agenda": {"1": "Предлог закона о оружју"},
+        "days": [{"day": 1, "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/x.docx",
+                  "title": "", "date": "10 јул 2026", "provisional": True}],
+        "amendments": [{"day": 1, "item": 1, "article": 3, "by": "народни посланик Ненад Абрамовић"}],
+        "speeches": {"0": {"day": 1, "speaker": "ПРЕДСЕДНИК", "chair": True, "part": "general", "items": [1], "text": "x"},
+                     "1": {"day": 1, "speaker": "НЕНАД АБРАМОВИЋ", "chair": False, "part": "general", "items": [1],
+                           "text": "један два три"},
+                     "2": {"day": 1, "speaker": "МИНИСТАР НЕКИ", "chair": False, "part": "detail", "items": [1],
+                           "text": "један"}}}))
     laws = json.loads((d / "laws.json").read_text())
     laws["laws"]["L"]["bill_file"] = "b.json"
     (d / "laws.json").write_text(json.dumps(laws))
@@ -48,6 +58,7 @@ def test_site_builds_every_page(tmp_path):
     assert not (out / "najvise-protiv.html").exists()
     assert "1. mesto u sazivu" in law and "50.0%" in law
     assert "Hitan postupak" in law
+    assert "Rasprava u Skupštini" in law and "75.0%" in law and "Nisu na spiskovima glasanja" in law
     assert "Fiskalni savet" in law and "Nezavisna i međunarodna tela" in law and "Mediji i civilno" not in law
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I
