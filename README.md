@@ -47,6 +47,7 @@ src/zailiprotiv/
   skupstina.py   the Assembly's site: sittings and the roll-call PDF of each agenda item
   rollcall.py    reading a roll-call PDF: the vote, and each MP's vote and group
   laws.py        the adopted laws: title, bill, day passed, Official Gazette, international treaty or not
+  bills.py       a bill's memorandum: constitutional basis (article, points), reasons, funds, effects
   mps.py         who an MP is across roll calls: a name key without word order or titles
   cli.py         commands
   translit.py    Cyrillic → Latin
