@@ -15,7 +15,16 @@
 <section class="outcome" aria-label="Konačno glasanje">
   <p class="score"><span class="t-za">{{ final.counts.za }} za</span> <span class="sep">·</span> <span class="t-protiv">{{ final.counts.protiv }} protiv</span></p>
   {{ bar(final.counts) }}
-  <p class="meta">Usvojen {{ law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.days is not none %} · {{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga{% endif %}{% if it.rank %} · {{ (100 * it.share)|round|int }}% glasova protiv{% endif %}</p>
+  {% if it.against %}<p class="against"><span class="meta">Protiv su glasali:</span> {% for g, n in it.against %}<span class="g">{{ g }} <b>{{ n }}</b></span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+  {% else %}<p class="against meta">Niko nije glasao protiv.</p>{% endif %}
+  <ul class="facts-line">
+    <li>Usvojen {{ law.passed|day }}</li>
+    {% if it.urgent %}<li class="t-warn">hitan postupak</li>{% endif %}
+    {% if it.days is not none %}<li>{{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga do usvajanja</li>{% endif %}
+    {% if db and db.joint %}<li>rasprava zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}</li>{% endif %}
+    {% if db and db.amendments %}<li>{{ db.amendments }} {{ plural(db.amendments, "amandman", "amandmana", "amandmana") }} u raspravi</li>{% endif %}
+    {% if it.rank %}<li>{{ (100 * it.share)|round|int }}% glasova protiv, {{ it.rank }}. u sazivu</li>{% endif %}
+  </ul>
 </section>
 {% else %}
 <p class="meta">Usvojen {{ law.passed|day }}. Poimenično glasanje nije pronađeno među dokumentima Skupštine.</p>

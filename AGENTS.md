@@ -185,10 +185,12 @@ These are the project's promises to its readers. Never change them without the m
 - **Page structure** (the maintainer, 12 Nov 2026: draw people in from the home page, the interesting things on a
   law first, long text lower; then "simplify: a busy design makes the accents lose their point"): plain text and
   lists, no cards, chips or coloured boxes; colour only for "za" and "protiv".
-  - home: one line on what the site is, the laws with most votes against (title, the proposer's gist, a bar with
-    the count), the newest laws the same way, links to all laws and MPs, a short note on sources;
-  - a law: title and gist; the count and bar with one line of facts (passed, urgent procedure, days, share
-    against); one quote from each side (by how the speaker voted on the final roll call, or the Government), never
+  - home: one line on what the site is; the six laws with most votes against as cards (the maintainer brought them
+    back the same day: date and urgent procedure, title, gist, count and bar, the groups that voted against, days
+    to passing, joint debate, amendments, a quote from each side when both exist), the rest as a list; the newest
+    laws (title, gist, bar); links to all laws and MPs; a short note on sources;
+  - a law: title and gist; the count and bar, the groups that voted against with their numbers, one line of
+    facts (passed, urgent procedure, days, joint debate, amendments, share against and rank); one quote from each side (by how the speaker voted on the final roll call, or the Government), never
     one side alone; what the law changes; groups' votes; the debate; outside views; then "Detaljnije", folded.
 - **Each law's page** gives its share of votes against and its place in the convocation by that share, and the
   course of its passing: submitted, days to passing, urgent procedure (proposed when the memorandum gives reasons

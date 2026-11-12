@@ -109,3 +109,19 @@ summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 .more { margin-top: 3rem; }
 .more h2 { color: var(--muted); font-size: 1rem; text-transform: uppercase; letter-spacing: .04em; }
 main section > ul, main section > p, .debate ul, main details > p { max-width: 46rem; }
+
+/* Cards for the laws with most votes against; facts as a quiet dotted line */
+.cardgrid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin: 1rem 0 1.2rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1.1rem .9rem; }
+.card h3 { font-size: 1.05rem; line-height: 1.3; margin: .2rem 0 .4rem; }
+.card h3 a { color: var(--fg); text-decoration: none; }
+.card h3 a:hover { text-decoration: underline; }
+.score.small { font-size: 1.15rem; margin: .5rem 0 .25rem; }
+.against { margin: .5rem 0 .2rem; }
+.against.small { font-size: .88rem; }
+.against b, .against .g b { color: var(--protiv); }
+.facts-line { list-style: none; padding: 0; margin: .3rem 0; display: flex; flex-wrap: wrap; font-size: .88rem; color: var(--muted); }
+.facts-line li:not(:last-child)::after { content: "·"; margin: 0 .45rem; }
+.t-warn { color: var(--warn); font-weight: 600; }
+.quote.mini { margin: .5rem 0; padding-left: .7rem; }
+.quote.mini p { font-size: .9rem; }
