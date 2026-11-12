@@ -20,6 +20,13 @@ def data(tmp_path):
         "title": "Zakon o oružju", "passed": "2026-07-10", "gazette": "63/26", "treaty": False, "pdf": "z.pdf",
         "bill_pdf": "p.pdf", "kind": "law", "areas": [4], "votes": [BASE + "1.pdf#0"],
         "final_vote": BASE + "1.pdf#0"}}}))
+    (d / "summaries").mkdir()
+    (d / "summaries" / "b.json").write_text(json.dumps({"model": "claude-sonnet-5-5", "summary": {
+        "ukratko": "Закон уређује набавку оружја, према предлагачу.", "razlozi": ["усклађивање са ЕУ"],
+        "promene": ["нова дозвола"], "sredstva": "Нису потребна средства."}}))
+    laws = json.loads((d / "laws.json").read_text())
+    laws["laws"]["L"]["bill_file"] = "b.json"
+    (d / "laws.json").write_text(json.dumps(laws))
     return d
 
 
@@ -29,6 +36,8 @@ def test_site_builds_every_page(tmp_path):
     assert stats["laws"] == 1 and stats["mps"] == 3 and stats["linked"] == 1
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
     assert "Odbrana i bezbednost" in law and "Ilić-Stošić Biljana" in law
+    assert "Zakon uređuje nabavku oružja, prema predlagaču." in law and "AI model (claude-sonnet-5-5)" in law
+    assert "Zakon uređuje nabavku oružja" in (out / "zakoni.html").read_text()
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
     names = re.findall(r'poslanik/[^"]+">([^<]+)<', (out / "poslanici.html").read_text())
     assert names == ["Abramović Nenad", "Čolaković Jovan", "Ilić-Stošić Biljana"]  # Č after C, before I

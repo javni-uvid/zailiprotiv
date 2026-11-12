@@ -134,6 +134,50 @@ def website(args) -> int:
     return 0
 
 
+def summaries_cmd(args) -> int:
+    """Claude's summary of each bill's memorandum not summarised yet (or whose memorandum changed), into
+    data/summaries/<bill file>.json. Needs ANTHROPIC_API_KEY."""
+    from zailiprotiv import summaries
+    store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    client = None
+    done = failed = skipped = 0
+    tokens = {"input": 0, "output": 0}
+    for law in sorted(store["laws"].values(), key=lambda l: l.get("passed") or "", reverse=True):
+        name = law.get("bill_file")
+        if not name or not (Path(args.bills) / name).exists():
+            continue
+        memo = json.loads((Path(args.bills) / name).read_text(encoding="utf-8"))
+        if not memo.get("sections"):
+            skipped += 1
+            continue
+        target = out_dir / name
+        text = summaries.material(law, memo)
+        if target.exists() and json.loads(target.read_text(encoding="utf-8")).get("fingerprint") == \
+                summaries.fingerprint(text):
+            continue
+        if args.limit and done >= args.limit:
+            break
+        if client is None:
+            import anthropic
+            client = anthropic.Anthropic()
+        try:
+            result = summaries.summarize(law, memo, client)
+        except Exception as e:  # one bad reply mustn't stop the rest
+            failed += 1
+            print(f"  failed {law['title'][:90]}: {type(e).__name__}: {str(e)[:200]}")
+            continue
+        result["law"] = law["title"]
+        target.write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        tokens["input"] += result["usage"]["input"]
+        tokens["output"] += result["usage"]["output"]
+        done += 1
+    print(f"summaries written: {done}, failed: {failed}, bills without a memorandum: {skipped}; "
+          f"tokens in {tokens['input']:,}, out {tokens['output']:,}")
+    return 1 if failed and not done else 0
+
+
 def sitting_id(url: str) -> str:
     """The number the Assembly's site gives a sitting's page ("…_Народне.53524.43.html" → "53524")."""
     m = re.search(r"\.(\d+)\.43\.html$", urllib.parse.unquote(url))
@@ -233,6 +277,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--again", action="store_true")
     p.add_argument("--limit", type=int, default=0)
     p.set_defaults(run=memoranda)
+    p = commands.add_parser("summaries", help="Claude's summaries of the bills' memoranda → data/summaries/")
+    p.add_argument("--laws", default=str(DATA / "laws.json"))
+    p.add_argument("--bills", default=str(DATA / "bills"))
+    p.add_argument("--out", default=str(DATA / "summaries"))
+    p.add_argument("--limit", type=int, default=0, help="write at most this many (0: all)")
+    p.set_defaults(run=summaries_cmd)
     p = commands.add_parser("site", help="build the static site")
     p.add_argument("--out", default="_site")
     p.add_argument("--domain", default="zailiprotiv.rs")

@@ -1,0 +1,47 @@
+# Run by hand (and after each data run): Claude's summary of every bill's memorandum not summarised yet, or whose
+# memorandum changed, committed to data/summaries/. Needs the repository secret ANTHROPIC_API_KEY.
+name: summaries
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Write at most this many summaries (0: all)"
+        default: "0"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: summaries
+  cancel-in-progress: false
+
+jobs:
+  summaries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Summarise
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          test -n "$ANTHROPIC_API_KEY" || { echo "The repository secret ANTHROPIC_API_KEY is not set."; exit 1; }
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv summaries --limit "${{ inputs.limit || 0 }}"
+      - name: Commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/summaries
+          git diff --cached --quiet && exit 0
+          git commit -m "Summaries of the bills' memoranda"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          git status -sb | grep -q ahead && exit 1
+          gh workflow run pages.yml --ref main

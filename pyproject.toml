@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 # Roll calls are read with poppler's pdftotext (poppler-utils), which keeps a PDF's columns apart.
-dependencies = ["jinja2>=3.1"]
+dependencies = ["jinja2>=3.1", "anthropic>=0.50"]
 
 [project.scripts]
 zailiprotiv = "zailiprotiv.cli:main"

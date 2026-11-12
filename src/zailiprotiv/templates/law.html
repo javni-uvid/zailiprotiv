@@ -17,13 +17,25 @@
   {% if final %}<a href="{{ final.key.split('#')[0] }}">Poimenično glasanje (PDF)</a>{% endif %}
 </p>
 
-{% if reasons or funds or effects %}
+{% set sm = it.summary.summary if it.summary else none %}
+{% if sm or reasons or funds or effects %}
 <section class="memo">
   <h2>Šta predlagač navodi</h2>
-  <p class="label">Izvod iz obrazloženja predloga zakona. Ovo je ocena predlagača, ne naša; ceo tekst je u <a href="{{ law.bill_pdf }}">predlogu</a>.</p>
-  {% if reasons %}<h3>Razlozi za donošenje</h3><p>{{ reasons|latin }}</p>{% endif %}
-  {% if funds %}<h3>Potrebna sredstva</h3><p>{{ funds|latin }}</p>{% endif %}
-  {% if effects %}<h3>Analiza efekata</h3><p>{{ effects|latin }}</p>{% endif %}
+  {% if sm %}
+  <p class="lead-small">{{ sm.ukratko|latin }}</p>
+  {% if sm.razlozi %}<h3>Razlozi, prema predlagaču</h3><ul>{% for x in sm.razlozi %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
+  {% if sm.promene %}<h3>Šta zakon menja</h3><ul>{% for x in sm.promene %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
+  {% if sm.sredstva %}<h3>Potrebna sredstva</h3><p>{{ sm.sredstva|latin }}</p>{% endif %}
+  <p class="label">Sažetak obrazloženja predloga zakona. Napisao ga je AI model ({{ it.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ law.bill_pdf }}">predlog zakona</a>.</p>
+  {% endif %}
+  {% if reasons or funds or effects %}
+  <details{% if not sm %} open{% endif %}>
+    <summary>Izvod iz samog obrazloženja</summary>
+    {% if reasons %}<h3>Razlozi za donošenje</h3><p>{{ reasons|latin }}</p>{% endif %}
+    {% if funds %}<h3>Potrebna sredstva</h3><p>{{ funds|latin }}</p>{% endif %}
+    {% if effects %}<h3>Analiza efekata</h3><p>{{ effects|latin }}</p>{% endif %}
+  </details>
+  {% endif %}
 </section>
 {% endif %}
 

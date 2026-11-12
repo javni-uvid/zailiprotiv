@@ -16,7 +16,7 @@
     {% for it in by_kind[k] %}
       <tr>
         <td class="nowrap">{{ it.law.passed|day }}</td>
-        <td><a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>{% if it.areas %}<div class="meta">{{ it.areas|map("latin")|join(" · ") }}</div>{% endif %}</td>
+        <td><a href="zakon/{{ it.slug }}.html">{{ it.law.title }}</a>{% if it.summary %}<div class="gist">{{ it.summary.summary.ukratko|latin }}</div>{% endif %}{% if it.areas %}<div class="meta">{{ it.areas|map("latin")|join(" · ") }}</div>{% endif %}</td>
         <td class="vote-cell">{% if it.final %}{{ bar(it.final.counts) }}<div class="meta">{{ tally(it.final.counts, true) }}</div>{% else %}<span class="meta">glasanje nije pronađeno</span>{% endif %}</td>
       </tr>
     {% endfor %}

@@ -88,6 +88,16 @@ These are the project's promises to its readers. Never change them without the m
      a category.
 - **A law's summary is Claude's summary of the proposer's memorandum** (reasons, analysis of effects, funds
   needed), labelled as such and linked to the bill (the maintainer's decision, 12 Nov 2026).
+  - Written through the Anthropic API (the maintainer's decision, 12 Nov 2026) by `summaries.py` with
+    `claude-sonnet-5-5` (override: `ZAILIPROTIV_MODEL`), from the memorandum's sections, each cut to a limit.
+  - The system prompt holds the rules: only what the memorandum says, attributed to the proposer, no judgement,
+    no parties or persons, Cyrillic, plain words; empty where the memorandum says nothing. The reply is a JSON
+    object (ukratko, razlozi, promene, sredstva); anything else in it is dropped.
+  - Kept in `data/summaries/<bill file>.json` with the model, token usage and a fingerprint of model, prompt and
+    material: a summary is written again only when one of those changes.
+  - The page labels it as an AI model's summary of the proposer's memorandum, names the model, and keeps an
+    excerpt of the memorandum itself one click away.
+  - The **summaries** workflow (by hand, and started by the votes workflow) needs the secret `ANTHROPIC_API_KEY`.
 
 ### Links between laws and votes
 
