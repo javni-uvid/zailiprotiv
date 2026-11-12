@@ -393,6 +393,17 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             (top, n), total = c.most_common(1)[0], sum(c.values())
             if total >= 3 and n > total / 2 and g != "Bez poslaničke grupe" and g.lower() != "samostalni":
                 line[(key, g)] = top
+    # What each MP is quoted saying in the debates summarised (the laws with most votes against).
+    from zailiprotiv import debates as debates_
+    loose_keys = {debates_.loose(k): k for k in people}
+    said_by: dict[str, list] = defaultdict(list)
+    for its in items_by_conv.values():
+        for it in its:
+            for q in it["quotes"]:
+                k = loose_keys.get(debates_.loose(mps.key(q["govornik"])))
+                if k and q.get("grupa") != debates_.GOVERNMENT:
+                    days_ = (it["debate"] or {}).get("all_days") or []
+                    said_by[k].append({"it": it, "q": q, "day": days_[q["dan"] - 1] if 0 < q["dan"] <= len(days_) else None})
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -420,7 +431,9 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
-            apart=[r for r in record if r["differs"]], root="../"), encoding="utf-8")
+            apart=[r for r in record if r["differs"]],
+            said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
+            root="../"), encoding="utf-8")
     for conv, _ in convs:
         rows = [{"mp": r["mp"], "in": r["by_conv"][conv]} for r in rows_mp if conv in r["by_conv"]]
         groups = Counter(g for r in rows for g in r["in"]["groups"][:1])

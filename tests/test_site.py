@@ -67,6 +67,7 @@ def test_site_builds_every_page(tmp_path):
     assert '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>' in home
     mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
     assert "Glasovi protiv" in mp and "Glasovi za" in mp and "Po vrsti zakona" in mp
+    assert "Iz rasprava" in mp and "„Ovaj zakon ne valja jer ukida dozvole za lovce.“" in mp
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
     assert "Allow: /" in (out / "robots.txt").read_text()
     assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()

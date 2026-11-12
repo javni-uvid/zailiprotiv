@@ -37,6 +37,19 @@
   <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
 </section>
 
+{% if said %}
+<section>
+  <h2>Iz rasprava <span class="count">{{ said|length }}</span></h2>
+  {% for x in said %}
+  <figure class="q q-{{ x.q.side }} q-mp">
+    <blockquote>„{{ x.q.tekst|latin }}“</blockquote>
+    <figcaption><a href="../zakon/{{ x.it.slug }}.html">{{ x.it.law.short }}</a>{% if x.q.side in ["za", "protiv"] %} · glas: {{ x.q.side }}{% endif %}{% if x.day %} · <a href="{{ x.day.url }}">stenogram{% if x.day.listed_date %}, {{ x.day.listed_date|day }}{% endif %}</a>{% endif %}</figcaption>
+  </figure>
+  {% endfor %}
+  <p class="label">Doslovni citati iz stenografskih beleški, iz pregleda rasprava o zakonima sa najviše glasova protiv. Citate je izabrao AI model, najviše jedan po poslaničkoj grupi za svaki zakon, pa ovo nije sve što je poslanik rekao.</p>
+</section>
+{% endif %}
+
 {{ block("Glasovi protiv", against, "Nijedan glas protiv među konačnim glasanjima o zakonima.") }}
 {{ block("Glasovi za", for_, "Nijedan glas za među konačnim glasanjima o zakonima.") }}
 {% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true) }}{% endif %}

@@ -222,3 +222,6 @@ button.link { border: 0; background: none; padding: .6rem 0; margin-right: 1rem;
   .tabs { gap: 0 1.2rem; }
   .tabs a { font-size: 1.05rem; }
 }
+.q-mp { margin: 1.2rem 0; max-width: 46rem; }
+.q-mp blockquote { font-size: 1.12rem; }
+.q-mp figcaption a { color: inherit; }
