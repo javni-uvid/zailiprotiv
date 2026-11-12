@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 import sys
+import subprocess
 import tempfile
 import time
 import urllib.parse
@@ -126,7 +127,12 @@ def memoranda(args) -> int:
             with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
                 f.write(body)
                 f.flush()
-                memo = bills.read(f.name)
+                try:
+                    memo = bills.read(f.name)
+                except subprocess.CalledProcessError:  # a file pdftotext can't open: the law goes without its bill
+                    failed += 1
+                    print(f"  unreadable {urllib.parse.unquote(url)}")
+                    continue
             target.write_text(json.dumps({"bill": url, "sha256": hashlib.sha256(body).hexdigest(),
                                           "reader": bills.READER, **memo.as_dict()},
                                          ensure_ascii=False, indent=1) + "\n", encoding="utf-8")

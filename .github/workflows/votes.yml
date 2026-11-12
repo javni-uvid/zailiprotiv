@@ -46,6 +46,7 @@ jobs:
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
       - name: Commit
+        if: always()  # keep what was read even when a later step failed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
