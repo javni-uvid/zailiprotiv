@@ -34,6 +34,12 @@ These are the project's promises to its readers. Never change them without the m
      date and a link, summarised in a sentence or two and attributed ("Fiskalni savet ocenjuje …"). A note never
      supplies a figure, a vote or a ranking, and the site doesn't take its side. Independent bodies and media or
      civil society are shown apart, so readers can weigh them.
+   - **How notes are kept:** `data/<N>/notes/<bill file>.json` (`checked`, `by`, `independent`, `media`; each note
+     `source`, `date`, `url`, `title`, `note`), gathered by an AI model from pages it fetched, then reviewed. In the
+     review: professional associations (bar, judges' and prosecutors' associations) go with civil society, not
+     independent bodies; a source reported second-hand says so ("(преноси N1)"); a note about another act (a later
+     amendment, an unrelated procurement) is dropped; supportive views are kept when found, never invented to
+     balance; private persons are named by role only. Pilot: 10 of the laws with most votes against (12 Nov 2026).
 3. **A law's effects are its proposer's, quoted with the source.** What a law is expected to do comes from the
    bill's explanatory memorandum (obrazloženje) and its analysis of effects (analiza efekata), summarised and
    linked, and labelled as the proposer's assessment. The site adds no judgement of its own about whether a law

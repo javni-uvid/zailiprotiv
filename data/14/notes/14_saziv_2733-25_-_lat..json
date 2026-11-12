@@ -1,0 +1,51 @@
+{
+ "law": "Zakon o izmenama Zakona o Visokom savetu tužilaštva",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Венецијанска комисија",
+   "date": "2026-04-24",
+   "title": "Serbia: Venice Commission assesses legislative amendments to laws governing the judiciary and the prosecution",
+   "url": "https://www.coe.int/en/web/portal/-/venice-commission-assesses-legislative-amendments-to-laws-governing-the-judiciary-and-the-prosecution",
+   "note": "Венецијанска комисија препоручује да о приговорима тужилаца на хијерархијске одлуке и годишње распореде послова одлучује комисија Високог савета тужилаштва, а не непосредно више тужилаштво. Комисија оцењује да измене појединачно и збирно слабе гаранције самосталности тужилаштва."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-07-17",
+   "title": "2026 Rule of Law Report – Country Chapter on the rule of law situation in Serbia (SWD(2026) 931)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-11674-2026-ADD-32/en/pdf",
+   "note": "Европска комисија наводи да су јануарске измене, усвојене по хитном поступку без транспарентних и инклузивних консултација, вратиле овлашћење за проверу законитости обавезних упутстава са Високог савета тужилаштва на тужилачку хијерархију. Према извештају, Венецијанска комисија је препоручила да се то промени."
+  },
+  {
+   "source": "Високи савет тужилаштва (преноси 021)",
+   "date": "2026-01-22",
+   "title": "Visoki savet tužilaštva zatražio od skupštine da se povuku izmene zakona o tužilaštvu",
+   "url": "https://www.021.rs/story/Info/Srbija/433011/Visoki-savet-tuzilastva-zatrazio-od-skupstine-da-se-povuku-izmene-zakona-o-tuzilastvu.html",
+   "note": "Већина чланова Високог савета тужилаштва затражила је да се предлози измена матичних закона о тужилаштву повуку из процедуре, наводећи да Савет није консултован иако то предвиђа Закон о Високом савету тужилаштва. Савет оцењује да су предлози супротни стандардима које су похвалиле Венецијанска и Европска комисија."
+  }
+ ],
+ "media": [
+  {
+   "source": "Удружење судија и тужилаца (преноси Курир)",
+   "date": "2026-01-29",
+   "title": "Udruženje sudija i tužilaca pozdravilo set pravosudnih zakona koje je usvojila Skupština",
+   "url": "https://www.kurir.rs/vesti/politika/9899543/ust-pozdravlja-set-pravosudnih-zakona-koje-je-usvojila-skupstina",
+   "note": "Удружење судија и тужилаца поздравља усвојени сет правосудних закона, оцењујући да отклања мањкава решења, усклађује прописе са уставним променама из 2022. и враћа хијерархијско уређење тужилаштва уз очување самосталности тужилаца."
+  },
+  {
+   "source": "Радна група Националног конвента о ЕУ за Поглавље 23",
+   "date": "2026-01-13",
+   "title": "Hitne izmene pravosudnih zakona – zaobilaženje struke i evropskih standarda i politička odmazda za „neposlušnost“",
+   "url": "https://yucom.org.rs/wp-content/uploads/2026/01/Saopstenje-RG-NKEU-za-PG-23_13.01.2026.pdf",
+   "note": "Радна група Националног конвента о ЕУ за Поглавље 23 међу најспорније измене убраја „укидање комисије ВСТ која одлучује о приговорима на обавезна упутства” и оцењује да пакет заобилази струку и европске стандарде."
+  },
+  {
+   "source": "BBC News на српском (Данас)",
+   "date": "2026-01-21",
+   "title": "Šta su Mrdićevi pravosudni zakoni u Srbiji i šta ako budu usvojeni",
+   "url": "https://www.danas.rs/bbc-news-serbian/sta-su-mrdicevi-pravosudni-zakoni-u-srbiji-i-sta-ako-budu-usvojeni/",
+   "note": "BBC на српском објашњава да би измене Високом савету тужилаштва одузеле надлежност да одлучује о приговорима на одлуке руководилаца тужилаштава и пренеле је на руководиоце виших јавних тужилаштава."
+  }
+ ]
+}

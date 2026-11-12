@@ -1,0 +1,44 @@
+{
+ "law": "Zakon o izmeni Zakona o sudijama",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Венецијанска комисија (Савет Европе)",
+   "date": "2026-04-24",
+   "title": "Serbia: Venice Commission assesses legislative amendments to laws governing the judiciary and the prosecution",
+   "url": "https://www.coe.int/web/portal/-/venice-commission-assesses-legislative-amendments-to-laws-governing-the-judiciary-and-the-prosecution",
+   "note": "Венецијанска комисија у хитном мишљењу о изменама од 28. јануара 2026. препоручује да мандати председника судова по правилу не буду обновљиви, уз ограничене изузетке за мале судове, и оцењује да измене, појединачно и заједно, подривају поједине гаранције судијске независности."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-11-04",
+   "title": "Serbia 2026 Report (SWD(2026) 695 final)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-15404-2026-ADD-7/en/pdf",
+   "note": "Европска комисија у годишњем извештају наводи да су јануарске измене правосудних закона усвојене по хитном поступку без транспарентних и инклузивних консултација и да су, између осталог, увеле обновљиве мандате председника судова и главних јавних тужилаца."
+  },
+  {
+   "source": "Европски парламент",
+   "date": "2026-07-08",
+   "title": "2025 Commission report on Serbia – European Parliament resolution of 8 July 2026 (P10_TA(2026)0261)",
+   "url": "https://data.europarl.europa.eu/distribution/doc/TA-10-2026-0261_en.pdf",
+   "note": "Европски парламент у резолуцији о Србији оцењује измене кључних правосудних закона усвојене 28. јануара 2026. као још један озбиљан корак уназад, јер додатно слабе независност правосуђа и аутономију тужилаштва, и позива на њихову хитну ревизију у складу с препорукама Венецијанске комисије."
+  }
+ ],
+ "media": [
+  {
+   "source": "Национални конвент о ЕУ – Радна група за Поглавље 23",
+   "date": "2026-01-13",
+   "title": "Hitne izmene pravosudnih zakona – zaobilaženje struke i evropskih standarda i politička odmazda za „neposlušnost“",
+   "url": "https://yucom.org.rs/wp-content/uploads/2026/01/Saopstenje-RG-NKEU-za-PG-23_13.01.2026.pdf",
+   "note": "Радна група Националног конвента о ЕУ за Поглавље 23 наводи да предлог измене Закона о судијама наставља ранији покушај Министарства правде на који је Високи савет судства дао негативно мишљење, и оцењује да хитни поступак није примерен за системске правосудне законе."
+  },
+  {
+   "source": "European Western Balkans",
+   "date": "2026-01-28",
+   "title": "Controversial amendments to the key laws on judiciary approved by the MPs",
+   "url": "https://europeanwesternbalkans.com/2026/01/28/controversial-amendments-to-the-key-laws-on-judiciary-approved-by-the-mps/",
+   "note": "European Western Balkans наводи да предлагач измену Закона о судијама образлаже тиме што омогућава да председник суда по истеку мандата буде поново изабран на исту функцију, док критичари указују да су измене усвојене брзо и без јавних консултација."
+  }
+ ]
+}

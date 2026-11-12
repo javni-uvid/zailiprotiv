@@ -1,0 +1,51 @@
+{
+ "law": "Zakon o posebnim postupcima radi realizacije projekta revitalizacije i razvoja lokacije u Beogradu između ulica Kneza Miloša, Masarikove, Birčaninove i Resavske",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Europa Nostra, ICOMOS, DOCOMOMO International и Савет архитеката Европе (ACE)",
+   "date": "2025-11-04",
+   "title": "Joint Statement calling for the withdrawal of the proposed Lex Specialis law related to the Generalštab Modernist Complex in Belgrade, Serbia",
+   "url": "https://www.europanostra.org/joint-statement-calling-for-the-withdrawal-of-the-proposed-lex-specialis-law-related-to-the-generalstab-modernist-complex-in-belgrade-serbia",
+   "note": "Четири међународне организације за наслеђе и архитектуру у заједничкој изјави траже повлачење предлога закона, наводећи да би он суспендовао прописе о заштити наслеђа и животне средине на локацији и омогућио рушење заштићеног културног добра. Оне оцењују да би то представљало тешко кршење Устава и владавине права."
+  },
+  {
+   "source": "ICOMOS Србија",
+   "date": "2025-11-03",
+   "title": "ICOMOS Srbija: Leks specijalisom zgrada Generalštaba se tretira kao opasna ruševina",
+   "url": "https://n1info.rs/vesti/icomos-srbija-leks-specijalisom-zgrada-generalstaba-se-tretira-kao-opasna-rusevina/",
+   "note": "ICOMOS Србија наводи да се у предлогу закона утврђено културно добро третира као „рушевина без споменичких својстава“ опасна по живот грађана, и оцењује да предлог занемарује прописе о културном наслеђу и Устав."
+  },
+  {
+   "source": "Европски парламент",
+   "date": "2026-07-08",
+   "title": "2025 Commission report on Serbia – European Parliament resolution of 8 July 2026 (P10_TA(2026)0261)",
+   "url": "https://data.europarl.europa.eu/distribution/doc/TA-10-2026-0261_en.pdf",
+   "note": "Европски парламент у резолуцији о Србији оцењује да доношење lex specialis-а и потоњег аутентичног тумачења о комплексу Генералштаба фактички ставља ван снаге правни оквир за заштиту културног наслеђа и подрива правну сигурност, и позива власти да те мере укину."
+  }
+ ],
+ "media": [
+  {
+   "source": "Транспарентност Србија",
+   "date": "2025-12",
+   "title": "Коруптивни ризици у „Закону“ о Генералштабу",
+   "url": "https://www.transparentnost.org.rs/images/Koruptivni_rizici_u_Zakonu_o_Generalštabu.pdf",
+   "note": "Транспарентност Србија наводи да су, пошто су закон предложили посланици, изостали јавна расправа и мишљење Агенције за спречавање корупције о ризицима корупције. Организација упозорава на могућност избора партнера без конкурентског поступка и на одредбу којом се унапред проглашавају пуноважним неименовани акти и уговори у вези с пројектом."
+  },
+  {
+   "source": "ЦИНС (Центар за истраживачко новинарство Србије)",
+   "date": "2025-11-28",
+   "title": "General Staff Case: Key Points of Contention",
+   "url": "https://www.cins.rs/en/general-staff-case-key-points-of-contention/",
+   "note": "ЦИНС преноси оцене својих саговорника да је закон у сукобу са Законом о културном наслеђу и да је неуставан, и наводи да рок од 15 дана за брисање комплекса из регистра културних добара није испоштован, а да закон за то не предвиђа последице."
+  },
+  {
+   "source": "Antidisinfo (Western Balkans Anti-Disinformation Hub)",
+   "date": "2025-12-11",
+   "title": "Analysis of the Narrative: General Staff Building between public interest and investment projects",
+   "url": "https://antidisinfo.net/analysis-of-the-narrative-general-staff-building-between-public-interest-and-investment-projects/",
+   "note": "Анализа наратива наводи да званично образложење закон представља као начин за убрзање инвестиција од државног значаја, уз став да су зграде небезбедне и да обнова није изводљива, док критичари указују на уклањање институционалних препрека и на спорно уклањање статуса културног добра."
+  }
+ ]
+}

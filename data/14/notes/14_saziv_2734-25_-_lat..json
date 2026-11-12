@@ -1,0 +1,58 @@
+{
+ "law": "Zakon o izmenama i dopunama Zakona o sedištima i područjima sudova i javnih tužilaštava",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Европска комисија",
+   "date": "2026-07-17",
+   "title": "2026 Rule of Law Report – Country Chapter on the rule of law situation in Serbia (SWD(2026) 931)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-11674-2026-ADD-32/en/pdf",
+   "note": "Европска комисија наводи да измене предвиђају замену појединих постојећих судова и тужилаштава оснивањем нових, као и да је Венецијанска комисија нагласила да пре примене треба спровести додатне студије и процене утицаја засноване на свеобухватној анализи."
+  },
+  {
+   "source": "Венецијанска комисија (преноси Време)",
+   "date": "2026-06-17",
+   "title": "Venecijanska komisija: Srbija sprovela sedam od devet preporuka, dve ključne i dalje nerešene",
+   "url": "https://vreme.com/vesti/venecijanska-komisija-srbija-sprovela-sedam-od-devet-preporuka-dve-kljucne-i-dalje-neresene/",
+   "note": "Према извештају Времена, Венецијанска комисија у накнадном мишљењу поздравља оснивање радне групе за додатну анализу мреже судова и тужилаштава, али за пуно испуњење препоруке тражи свеобухватне и инклузивне анализе у најављеном року и евентуалне измене закона."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-11-04",
+   "title": "Serbia 2026 Report (SWD(2026) 695)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-15404-2026-ADD-7/en/pdf",
+   "note": "Европска комисија у годишњем извештају наводи да је препорука Венецијанске комисије о реорганизацији мреже судова и тужилаштава делимично спроведена и да захтева даљи рад у наредним месецима."
+  }
+ ],
+ "media": [
+  {
+   "source": "Адвокатска комора Србије (преноси N1)",
+   "date": "2026-01-28",
+   "title": "Serbian Bar Association calls on president not to sign off on new judicial laws",
+   "url": "https://n1info.rs/english/news/serbian-bar-association-calls-on-president-not-to-sign-off-on-new-judicial-laws/",
+   "note": "Адвокатска комора Србије оцењује да планирана реорганизација седишта и надлежности судова и тужилаштава може знатно отежати, па и онемогућити приступ грађана правди, и позива председника да не потпише указ о проглашењу закона. Комора наводи и да закони нису припремљени уз јавну расправу и учешће струке."
+  },
+  {
+   "source": "BBC News на српском (Данас)",
+   "date": "2026-01-21",
+   "title": "Šta su Mrdićevi pravosudni zakoni u Srbiji i šta ako budu usvojeni",
+   "url": "https://www.danas.rs/bbc-news-serbian/sta-su-mrdicevi-pravosudni-zakoni-u-srbiji-i-sta-ako-budu-usvojeni/",
+   "note": "BBC на српском објашњава да предлог дели Трећи основни суд у Београду и да предлагач то повезује са очекиваним приливом предмета због пројекта ЕКСПО 2027. Текст преноси оцену ЈУКОМ-а да подела не доноси нове судије ни особље, из чега та организација закључује да је циљ прерасподела предмета повезаних са ЕКСПО-м."
+  },
+  {
+   "source": "Транспарентност Србија",
+   "date": "2026-01-30",
+   "title": "Štetne posledice izmena pravosudnih propisa za borbu protiv korupcije (Bilten, 31. januar 2026)",
+   "url": "https://www.transparentnost.org.rs/images/Bilten_2026_01_31.pdf",
+   "note": "Транспарентност Србија наводи да образложење предлога садржи нетачну тврдњу да оснивање суда неће проузроковати трошкове за буџет."
+  },
+  {
+   "source": "Курир",
+   "date": "2026-01-28",
+   "title": "SKUPŠTINA USVOJILA SET PRAVOSUDNIH ZAKONA",
+   "url": "https://www.kurir.rs/vesti/politika/9898190/skupstina-usvojila-set-pravosudnih-zakona",
+   "note": "Курир извештава да закон оснива Четврти основни суд и Четврто основно јавно тужилаштво у Београду, који преузимају Нови Београд од Трећег основног суда, као и судску јединицу у Косјерићу."
+  }
+ ]
+}

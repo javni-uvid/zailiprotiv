@@ -1,0 +1,65 @@
+{
+ "law": "Zakon o izmenama i dopunama Zakona o organizaciji i nadležnosti državnih organa za borbu protiv visokotehnološkog kriminala",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Венецијанска комисија",
+   "date": "2026-04-24",
+   "title": "Serbia: Venice Commission assesses legislative amendments to laws governing the judiciary and the prosecution",
+   "url": "https://www.coe.int/en/web/portal/-/venice-commission-assesses-legislative-amendments-to-laws-governing-the-judiciary-and-the-prosecution",
+   "note": "Венецијанска комисија у хитном мишљењу о изменама од 28. јануара 2026. препоручује да се Посебном одељењу за високотехнолошки криминал да „већа аутономија”, уз поштовање његове специјализоване улоге и надлежности на целој територији земље. Комисија је оценила и да процес усвајања није у потпуности поштовао начела транспарентности и инклузивности."
+  },
+  {
+   "source": "Венецијанска комисија (преноси Време)",
+   "date": "2026-06-17",
+   "title": "Venecijanska komisija: Srbija sprovela sedam od devet preporuka, dve ključne i dalje nerešene",
+   "url": "https://vreme.com/vesti/venecijanska-komisija-srbija-sprovela-sedam-od-devet-preporuka-dve-kljucne-i-dalje-neresene/",
+   "note": "Према извештају Времена, Венецијанска комисија у накнадном мишљењу оцењује да је препорука о аутономији Посебног одељења за високотехнолошки криминал само делимично спроведена. Комисија поздравља измену начина избора руководиоца одељења и оснивање радне групе, али препоруку сматра испуњеном тек после анализе и измене закона која обезбеди већу структурну и оперативну аутономију."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-07-17",
+   "title": "2026 Rule of Law Report – Country Chapter on the rule of law situation in Serbia (SWD(2026) 931)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-11674-2026-ADD-32/en/pdf",
+   "note": "Европска комисија у Извештају о владавини права наводи да су измене успоставиле хијерархијску потчињеност Посебног одељења за високотехнолошки криминал Вишем јавном тужилаштву у Београду, као и да је Венецијанска комисија препоручила већу структурну и оперативну независност овог одељења."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-11-04",
+   "title": "Serbia 2026 Report (SWD(2026) 695)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-15404-2026-ADD-7/en/pdf",
+   "note": "Европска комисија у годишњем извештају о Србији наводи да је после претварања посебног тужилаштва у одељење број тужилаца смањен на пет, уз руководиоца, и да одељењу недостају људски, материјални и технички ресурси. Препорука Венецијанске комисије о овом одељењу оцењује се као делимично спроведена."
+  }
+ ],
+ "media": [
+  {
+   "source": "BBC News на српском (Данас)",
+   "date": "2026-01-21",
+   "title": "Šta su Mrdićevi pravosudni zakoni u Srbiji i šta ako budu usvojeni",
+   "url": "https://www.danas.rs/bbc-news-serbian/sta-su-mrdicevi-pravosudni-zakoni-u-srbiji-i-sta-ako-budu-usvojeni/",
+   "note": "BBC на српском објашњава да предлог посебно тужилаштво за високотехнолошки криминал претвара у одељење Вишег јавног тужилаштва у Београду и мења ко поставља његовог руководиоца. Текст преноси оцену Комитета правника за људска права (ЈУКОМ) да се тиме повећава контрола власти над гоњењем криминала на интернету."
+  },
+  {
+   "source": "Радна група Националног конвента о ЕУ за Поглавље 23",
+   "date": "2026-01-13",
+   "title": "Hitne izmene pravosudnih zakona – zaobilaženje struke i evropskih standarda i politička odmazda za „neposlušnost“",
+   "url": "https://yucom.org.rs/wp-content/uploads/2026/01/Saopstenje-RG-NKEU-za-PG-23_13.01.2026.pdf",
+   "note": "Радна група Националног конвента о ЕУ за Поглавље 23 критикује измене које се односе на Посебно јавно тужилаштво за високотехнолошки криминал и оцењује да оне слабе уставом гарантовану самосталност тужилаштва."
+  },
+  {
+   "source": "Транспарентност Србија",
+   "date": "2026-01-30",
+   "title": "Štetne posledice izmena pravosudnih propisa za borbu protiv korupcije (Bilten, 31. januar 2026)",
+   "url": "https://www.transparentnost.org.rs/images/Bilten_2026_01_31.pdf",
+   "note": "Транспарентност Србија оцењује да изгласана решења о начину избора тужиоца за високотехнолошки криминал „нису ни најбоља, а поготово не једина могућа”."
+  },
+  {
+   "source": "Курир",
+   "date": "2026-03-18",
+   "title": "Delegacija VJT u Beogradu sa predstavnicima Venecijanske komisije: Razgovarano o izmenama i dopunama seta pravosudnih zakona koji se odnose na javno tužilaštvo",
+   "url": "https://www.kurir.rs/vesti/politika/9943610/delegacija-vjt-u-beogradu-izmene-zakona-o-javnom-tuzilastvu",
+   "note": "Курир преноси да је Више јавно тужилаштво у Београду у разговору са Венецијанском комисијом оценило измењене одредбе овог закона као боље од ранијих „хибридних” решења, јер прате организацију тог тужилаштва и Вишег суда у Београду. Тужилаштво је, према тексту, изнело и идеју о оснивању јединица одељења у сва четири апелациона подручја."
+  }
+ ]
+}

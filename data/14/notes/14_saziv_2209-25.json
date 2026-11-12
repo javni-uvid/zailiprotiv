@@ -1,0 +1,51 @@
+{
+ "law": "Zakon o budžetu Republike Srbije za 2026. godinu",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Фискални савет",
+   "date": "2025-11-21",
+   "title": "Оцена Предлога закона о буџету за 2026. годину (резиме)",
+   "url": "https://www.fiskalnisavet.rs/doc/ocene-i-misljenja/2025/fiskalni-savet_rezime_ocena-predloga-zakona-o-budzetu-za-2026.-godinu.pdf",
+   "note": "Фискални савет оцењује да је предлог буџета фискално одржив и начелно кредибилан, уз дефицит од 3% БДП-а и благ пад учешћа јавног дуга у БДП-у. Као хроничну слабост наводи недовољну транспарентност, укључујући необјашњена повећања трошкова великих пројеката, и препоручује реформу текуће буџетске резерве."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-11-04",
+   "title": "Serbia 2026 Report (SWD(2026) 695 final)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-15404-2026-ADD-7/en/pdf",
+   "note": "Европска комисија у годишњем извештају наводи да су буџети за 2025. и 2026. усвојени у складу с буџетским календаром, али и да је државни буџет у децембру 2025. разматран заједно са још 57 тачака дневног реда."
+  }
+ ],
+ "media": [
+  {
+   "source": "Транспарентност Србија",
+   "date": "2025-11-16",
+   "title": "Javno slušanje o predlogu budžeta Srbije za 2026. i izveštaja o završnom računu budžeta za 2024. godinu – izlaganje TS",
+   "url": "https://www.transparentnost.org.rs/images/Izlaganje_TS_-_javno_slušanje_o_predlogu_budžetu_i_završnom_računu.pdf",
+   "note": "Транспарентност Србија на јавном слушању наводи да предлог не испуњава законске захтеве програмског буџетирања и показатеља учинка и да уговори о великим инфраструктурним пројектима углавном нису објављени, и препоручује да јавна слушања буду обавезна и одржавају се пре израде закона о буџету."
+  },
+  {
+   "source": "Национални конвент о Европској унији",
+   "date": "2025-11",
+   "title": "Detaljna analiza predloga budžeta i fiskalne strategije Republike Srbije za period 2025-2027. godine",
+   "url": "https://eukonvent.org/wp-content/uploads/2025/11/Detaljna-analiza-predloga-budzeta-i-fiskalne-strategije-Republike-Srbije-za-period-2025-2027.-godine-2.pdf",
+   "note": "Национални конвент о ЕУ у анализи наводи да је буџет за 2026. припремљен без стварног укључивања јавности, да капитални издаци опадају са 7,1% на 6,7% БДП-а, а издаци за одбрану расту на око 2,7% БДП-а, и указује на необразложену ставку од око 217 милиона евра за улагања од посебног значаја."
+  },
+  {
+   "source": "Biznis.rs (анализа CEVES-а)",
+   "date": "2025-12-03",
+   "title": "CEVES: Da li budžet za 2026. donosi razvoj ili samo produžava stare probleme?",
+   "url": "https://biznis.rs/novac/investicije/ceves-da-li-budzet-za-2026-donosi-razvoj-ili-samo-produzava-stare-probleme/",
+   "note": "CEVES, према извештају Biznis.rs, оцењује да је израда фискалне стратегије и буџета била затворена за јавност, да је програмско буџетирање слабо и да капитални пројекти касне око 40% у односу на план, највише они у вези са ЕКСПО 2027."
+  },
+  {
+   "source": "Радио Слободна Европа",
+   "date": "2025-11-29",
+   "title": "Budžet Srbije za 2026: Kratkoročno podizanje standarda i nedovoljna transparentnost",
+   "url": "https://www.slobodnaevropa.org/a/budzet-srbije-intervju-fiskalni-savet/33607977.html",
+   "note": "У интервјуу за РСЕ саветник Фискалног савета оцењује да буџет краткорочно подиже стандард грађана кроз раст плата и пензија изнад инфлације, али да не прати довољно развојне потребе, уз ниска улагања у животну средину, енергетику и образовање."
+  }
+ ]
+}

@@ -1,0 +1,58 @@
+{
+ "law": "Zakon o izmenama i dopunama Zakona o javnom tužilaštvu",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Венецијанска комисија (Савет Европе)",
+   "date": "2026-04-24",
+   "title": "Serbia: Venice Commission assesses legislative amendments to laws governing the judiciary and the prosecution",
+   "url": "https://www.coe.int/web/portal/-/venice-commission-assesses-legislative-amendments-to-laws-governing-the-judiciary-and-the-prosecution",
+   "note": "Венецијанска комисија у хитном мишљењу прихвата циљ ефикасности и сматра прихватљивим да о упућивању тужилаца одлучује Високи савет тужилаштва, али оцењује да измене подривају поједине гаранције аутономије тужилаштва. Препоручује да о приговорима на упутства одлучује комисија ВСТ уместо вишег тужилаштва и да се вршење функције главног тужиоца ограничи на годину дана без поновног постављења."
+  },
+  {
+   "source": "Венецијанска комисија (преноси Радио Слободна Европа)",
+   "date": "2026-06-16",
+   "title": "Venecijanska komisija: Srbija nije primenila sve preporuke za izmene 'Mrdićevih zakona'",
+   "url": "https://www.slobodnaevropa.org/a/33782454.html",
+   "note": "Према извештају РСЕ, Венецијанска комисија у накнадном мишљењу поздравља то што предлог нових измена у потпуности спроводи седам од девет кључних препорука, док су две спроведене делимично, између осталог зато што двоје од 11 тужилаца чије је упућивање прекинуто није враћено."
+  },
+  {
+   "source": "Високи савет тужилаштва",
+   "date": "2026-01-22",
+   "title": "Visoki savet tužilaštva zatražio od skupštine da se povuku izmene zakona o tužilaštvu",
+   "url": "https://www.021.rs/story/Info/Srbija/433011/Visoki-savet-tuzilastva-zatrazio-od-skupstine-da-se-povuku-izmene-zakona-o-tuzilastvu.html",
+   "note": "Високи савет тужилаштва већинским мишљењем тражи да се предлози измена закона о јавном тужилаштву повуку из процедуре, наводећи да Савет није консултован иако то закон предвиђа и да су предложена решења супротна важећим европским стандардима."
+  },
+  {
+   "source": "Европска комисија",
+   "date": "2026-11-04",
+   "title": "Serbia 2026 Report (SWD(2026) 695 final)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-15404-2026-ADD-7/en/pdf",
+   "note": "Европска комисија у годишњем извештају наводи да је пет закона о правосуђу и тужилаштву у јануару 2026. измењено по хитном поступку, без транспарентних и инклузивних консултација, и да су измене у кратком року окончале привремена упућивања тужилаца, па је упућивање 11 тужилаца Тужилаштва за организовани криминал престало 11. марта."
+  }
+ ],
+ "media": [
+  {
+   "source": "Транспарентност Србија",
+   "date": "2026-01",
+   "title": "Harmful consequences of changes in judicial regulations on the fight against corruption",
+   "url": "https://transparentnost.org.rs/en/110-english/naslovna/13006-harmful-consequences-of-changes-in-judicial-regulations-on-the-fight-against-corruption",
+   "note": "Транспарентност Србија оцењује да ће измене вероватно смањити могућности Тужилаштва за организовани криминал да истражује високу корупцију, јер 11 упућених тужилаца мора да се врати у матична тужилаштва. Критикује и обавезу сагласности министра правде за међународну сарадњу Врховног јавног тужилаштва, без рокова и критеријума."
+  },
+  {
+   "source": "Национални конвент о ЕУ – Радна група за Поглавље 23",
+   "date": "2026-01-13",
+   "title": "Hitne izmene pravosudnih zakona – zaobilaženje struke i evropskih standarda i politička odmazda za „neposlušnost“",
+   "url": "https://yucom.org.rs/wp-content/uploads/2026/01/Saopstenje-RG-NKEU-za-PG-23_13.01.2026.pdf",
+   "note": "Радна група Националног конвента о ЕУ за Поглавље 23 као најспорније издваја продужење в. д. стања у тужилаштву и укидање комисије ВСТ која одлучује о приговорима на обавезна упутства, оцењујући да се тиме смањују гаранције самосталности тужилаштва, и тражи да се предлози повуку из хитне процедуре."
+  },
+  {
+   "source": "BBC News на српском (пренео Данас)",
+   "date": "2026-01-21",
+   "title": "Šta su „Mrdićevi pravosudni zakoni“ u Srbiji i šta ako budu usvojeni",
+   "url": "https://www.danas.rs/bbc-news-serbian/sta-su-mrdicevi-pravosudni-zakoni-u-srbiji-i-sta-ako-budu-usvojeni/",
+   "note": "BBC на српском преноси супротстављене ставове: Тужилаштво за организовани криминал и правници из цивилног друштва упозоравају да би прекид упућивања тужилаца успорио или блокирао сложене предмете, док предлагач тврди да ће измене ојачати независност и ефикасност тужилаштва."
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "law": "Zakon o izmeni Zakona o državnim službenicima",
+ "checked": "2026-11-12",
+ "by": "claude-opus-5-5",
+ "independent": [
+  {
+   "source": "Европска комисија",
+   "date": "2026-11-04",
+   "title": "Serbia 2026 Report (SWD(2026) 695 final)",
+   "url": "https://data.consilium.europa.eu/doc/document/ST-15404-2026-ADD-7/en/pdf",
+   "note": "Европска комисија у годишњем извештају о Србији наводи да је примена законске одредбе о обавезном конкурсу за пријем државних службеника на одређено време поново одложена, до јануара 2027, због чега се око 10% државних службеника и даље прима на одређено без конкурса."
+  }
+ ],
+ "media": [
+  {
+   "source": "Biznis.rs (изјава Центра за достојанствен рад)",
+   "date": "2025-12-17",
+   "title": "Reljanović: Zloupotrebe rada na određeno vreme u Srbiji duboko ukorenjene",
+   "url": "https://biznis.rs/biznis/bolji-posao/reljanovic-zloupotrebe-rada-na-odredjeno-vreme-u-srbiji-duboko-ukorenjene/",
+   "note": "Председник Центра за достојанствен рад у изјави за Biznis.rs оцењује да одлагање обавезе конкурса до 2027. омогућава наставак запошљавања на одређено време без конкурса и да води ка политизованом запошљавању."
+  },
+  {
+   "source": "N1",
+   "date": "2025-12-13",
+   "title": "Državni službenici i dalje će se \"na određeno\" zapošljavati bez konkursa: Rok se pomera na 1. januar 2027.",
+   "url": "https://n1info.rs/biznis/drzavni-sluzbenici-na-odredjeno-bez-konkursa/",
+   "note": "N1 преноси образложење Владе да је одлагање потребно јер је јавни конкурс у државној управи 2024. у просеку трајао 189 дана, што би угрозило благовремено попуњавање привремених кадровских потреба, као и да се током 2026. планира електронско спровођење конкурса."
+  }
+ ]
+}
