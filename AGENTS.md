@@ -132,6 +132,9 @@ These are the project's promises to its readers. Never change them without the m
       other country's stance on Kosovo or its vote on the Srebrenica resolution), the proposer's terms quoted;
       factual conditions and budget items stay (a loan's condition of dialogue with Pristina);
     - a malformed figure in a memorandum is quoted as written, never corrected.
+  - **A bill PDF holding another act's memorandum** (the Assembly's upload; two in the Twelfth convocation) is
+    listed in `data/<N>/wrong_bills.json` with what it holds: no summary or excerpt for that law, and the page says
+    why and links the PDF.
   - In large laws the explanation of individual articles is cut at the material's limit (8,000 characters), so
     their summaries cover the reasons and the first articles. To revisit with a higher limit for those laws.
 

@@ -111,6 +111,13 @@ def load(data: Path) -> tuple[dict, dict, dict]:
         bills.setdefault(path.name, {})["notes"] = json.loads(path.read_text(encoding="utf-8"))
     for path in sorted((data / "debates").glob("*.json")) if (data / "debates").exists() else []:
         bills.setdefault(path.name, {})["debate"] = json.loads(path.read_text(encoding="utf-8"))
+    # Bills whose PDF on the Assembly's site holds another act's memorandum: none of it is shown for this law.
+    wrong = data / "wrong_bills.json"
+    for name, why in (json.loads(wrong.read_text(encoding="utf-8")) if wrong.exists() else {}).items():
+        b = bills.setdefault(name, {})
+        b.pop("summary", None)
+        b["sections"] = {k: v for k, v in b.get("sections", {}).items() if k == "basis"}
+        b["wrong"] = why
     return laws, votes, bills
 
 
@@ -293,7 +300,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             bill = bills.get(law.get("bill_file", ""), {})
             items.append({"key": key, "slug": s, "law": law, "final": votes.get(law.get("final_vote") or ""),
                           "summary": bill.get("summary"), "notes": bill.get("notes"),
-                          "said": bill.get("debate"), "conv": conv,
+                          "said": bill.get("debate"), "wrong_bill": bill.get("wrong"), "conv": conv,
                           "conv_name": ORDINAL_NAME.get(conv, conv), "conv_page": laws_page(conv, current),
                           "kind": kinds.KINDS.get(law.get("kind", "other"), ""),
                           "areas": [kinds.AREAS[a] for a in law.get("areas", [])],

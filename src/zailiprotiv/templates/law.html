@@ -37,6 +37,8 @@
 </section>
 {% endif %}
 
+{% if it.wrong_bill %}<p class="note small">Obrazloženje u PDF-u predloga zakona na sajtu Skupštine odnosi se na drugi akt ({{ it.wrong_bill }}), pa ga ovde ne prikazujemo. <a href="{{ law.bill_pdf }}">Predlog zakona (PDF)</a></p>{% endif %}
+
 {# 3. What the law does, in short. #}
 {% if sm and (sm.promene or sm.razlozi) %}
 <section>
