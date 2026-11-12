@@ -8,7 +8,7 @@ on:
       convocation:
         description: "Convocation (14 is the current one; 13 and 12 are in the archive)"
         type: choice
-        options: ["14", "13", "12"]
+        options: ["14", "13", "12", "11"]
         default: "14"
       again:
         description: "Read every roll call again, not only new ones"

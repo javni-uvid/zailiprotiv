@@ -22,6 +22,9 @@ CONVOCATIONS = {
     "12": {"from": "2020-08-03", "to": "2022-08-01", "ordinal": "dvanaest",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-3-avgusta-2020-godine/zasedanja.4620.html",
            "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-avgusta-2020.4686.html"},
+    "11": {"from": "2016-06-03", "to": "2020-08-03", "ordinal": "jedanaest",
+           "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-3-juna-2016/zasedanja.4184.html",
+           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-juna-2016.4242.html"},
 }
 CURRENT = "14"
-ORDINALS = ("dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
+ORDINALS = ("deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")

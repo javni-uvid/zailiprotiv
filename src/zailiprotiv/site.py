@@ -248,7 +248,7 @@ def most_against(items: list[dict], n: int) -> list[dict]:
             for it in ranked[:n]]
 
 
-ORDINAL_NAME = {"12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
+ORDINAL_NAME = {"11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
 
 
 def convocations(root: Path) -> list[tuple[str, Path]]:
