@@ -1,0 +1,70 @@
+{
+ "mp": "грбовић павле",
+ "model": "claude-fable-5-2",
+ "read": 37,
+ "speeches": 52,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Наводи да је чланство у Европској унији државни интерес и стратешко опредељење Србије.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Чланство у ЕУ је стратешко опредељење Републике Србије и сваки корак који томе доприноси је корак у позитивном правцу.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што буџет даје више новца војсци и наоружању него образовању и науци.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ако имате ситуацију да један ребаланс буџета предвиђа мање средстава за науку и образовање а предвиђа више средстава за полицију, војску и за репресивни апарат, то показује намеру државе да уместо грађана ствара поданике.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да јавне инвестиције попут Националног стадиона много коштају и остављају простор за корупцију.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Проблем је што су те инвестиције базиране на енормно високим трошковима којим се граниче, а некада чак и прелазе линију, односно границу корупције.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се закони о правосуђу припремају без довољног учешћа струке и наводи да се њима задржава политички утицај на тужилаштво.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Што нисмо имали неке јавне расправе, округле столове, дебатне емисије да укључимо и неко цивилно друштво, адвокатске коморе, да укључимо струковна удружења да видимо имају ли шта да кажу?",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да закони којима власт уређује изборне услове суштински неће променити те услове.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Даље, на дневном реду је Закон о финансирању политичких активности, исто као и све претходне препоруке ОДИХР-а које сте усвајали. Дакле, пук формализам који суштински неће решити апсолутно ништа.",
+    "date": "2026-07-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 06.07.2026..docx"
+   }
+  }
+ ]
+}

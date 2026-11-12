@@ -1,0 +1,69 @@
+{
+ "mp": "бранко павловић",
+ "model": "claude-fable-5-2",
+ "read": 35,
+ "speeches": 43,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Замера куповину авиона „Рафал“: наводи да она неће повећати безбедност Србије јер се купују од државе која је признала независност „тзв. Косова“ и да су се јефтинији авиони могли набавити од Русије или Кине.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Већ смо платили преко 800 милиона евра из буџета, 30% купопродајне цене купујући нешто што неће повећати безбедност Србије због тога што купујемо од земље која нам није пријатељска.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се не враћа војни рок, иако је владајућа већина о томе говорила пре избора, и наводи да стварање војске „тзв. Косова“ представља егзистенцијалну претњу за Србију.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Нажалост у Предлогу закона о изменама и допунама Закона о Војсци где су рађене обимне измене нема враћања војног рока.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што су правосудни закони предложени без јавне расправе и без мишљења Високог савета судства и Високог савета тужилаштва, и наводи да се то мишљење мора тражити без обзира на то да ли је предлагач Влада или народни посланик.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "На сваки предлог од кога год да потиче, Предлог закона, а везан је за област правосуђа у надлежности је и Високог савета судства и Високог савета тужилаштва да дају мишљење.",
+    "date": "2026-01-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 21. januara 2026. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је београдско правосуђе преоптерећено, али замера што се оснивање новог основног суда у Београду предлаже на основу оскудне анализе, која узима само један податак за две године.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, ако гледате само две године, као што ви радите, 2024. и 2025. година, и узимате један параметар, пријем предмета, ви не можете да анализирате на прави начин, чак и када вам је интенција у правом смеру растерећења преоптерећеног београдског правосуђа.",
+    "date": "2026-01-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 21. januara 2026. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су предлози по којима Правосудна академија постаје једини улаз у правосуђе противуставни, јер се право да бирају судије и јавне тужиоце суштински преноси са високих савета на Академију.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овај члан и читав закон је суштински одузимање права да бира судије Високом савету судства и преношење тог права на Правосудну академију. Отуда је закон противуставан и никада није ни смео да буде уврштен у тачку дневног реда Народне скупштине Републике Србије.",
+    "date": "2026-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 28. avgusta 2026. godine, 5. dan rada.docx"
+   }
+  }
+ ]
+}

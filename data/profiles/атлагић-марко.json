@@ -1,0 +1,75 @@
+{
+ "mp": "атлагић марко",
+ "model": "claude-fable-5-2",
+ "read": 28,
+ "speeches": 48,
+ "sittings": 19,
+ "points": [
+  {
+   "tekst": "Наводи да се власт пре 2012. године при избору судија није држала стручности, обучености и достојности, него страначке припадности, и да је судство тада било најгоре у Европи.",
+   "govora": 5,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Да резимирам. Дакле, нису се држали нити стручности, нити обучености, а најмање достојности. Чега су се држали? Само страначке опредељености, да ли је члан ДС или не.",
+    "date": "2021-07-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanestom sazivu, 21. jul 2021. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су се поједини опозициони политичари и јавне личности јавно одрекли Косова и Метохије и чита њихове изјаве о томе.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Истина је поштоване даме и господо сасвим другачија, управо они који га прозивају, одрекли су се поодавно КиМ, и пођимо редом.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је критика власти у медијима пожељна, али да између критике и медијских напада постоји разлика, јер се критика заснива на истинитости изнетих чињеница.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Поштовани грађани Републике Србије, Србија је демократска земља у којој је медијска критика власти дозвољена, чак и пожељна јер делује лековито, али подвлачим, између критике и медијских напада постоји огромна непремостива разлика.",
+    "date": "2021-05-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Dvanaesta sednica Prvog redovnog zasedanja NSRS 20.05.2021..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је садашња власт 2012. године наследила земљу која је била економски, индустријски и инфраструктурно „тотално девастирана“, са стопом незапослености од 25,9 одсто.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Да ли је тачно да сте нам државу предали 2012. године са великом стопом незапослености, 25,9%? Дабоме да је тачно.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Залаже се да се кроз васпитање и образовање код ученика развија патриотизам.",
+   "govora": 4,
+   "sazivi": [
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато се изузетно залажем да патриотизам у најширем и племенитом смислу буде темељ српске државе.",
+    "date": "2020-12-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sedma sednica Drugog redovnog zasedanja NSRS 17.12.2020..docx"
+   }
+  }
+ ]
+}

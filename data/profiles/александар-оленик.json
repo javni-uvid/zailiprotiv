@@ -1,0 +1,69 @@
+{
+ "mp": "александар оленик",
+ "model": "claude-fable-5-2",
+ "read": 24,
+ "speeches": 47,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да предложени правосудни закони не уклањају политички утицај на избор судија и тужилаца, јер ће „истакнуте правнике“ преко Одбора за правосуђе бирати странка на власти.",
+   "govora": 6,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Даме и господо, члан 49. Закона о Високом савету тужилаштва одређује да Одбор за правосуђе овој Скупштини предлаже осам кандидата за истакнуте правнике. Ти истакнути правници су главни начин, метод, политичког утицаја партија на избор будућих тужилаца.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што услов да истакнути правник „снажно не утиче на доношење политичких одлука“ не спречава политичаре да буду бирани на то место.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ова одлука је написана по захтеву Венецијанске комисије, али је написана тако да нема сврху. Ова одлука директно може да произведе ситуацију да ће политичари преподне бити политичари, а поподне ће бити истакнути правници.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Скупштина годинама крши Устав јер није донела закон о финансирању Војводине и пита када ће он бити донет.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Наиме, 14 година ова Скупштина крши Устав и понижава све грађане Војводине тиме што неће да донесе закон о финансирању Војводине.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да Србија уведе санкције Русији и наводи да од тога зависи наставак пута ка Европској унији.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Само у случају да Влада на првој седници у првој тачки, значи будућа Влада, уведе санкције Русији, тада постоји смисао и тада ово министарство треба да постоји.",
+    "date": "2022-10-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера владајућој већини што је одбацила амандмане опозиције без образложења и то назива „политичким насиљем“ којим се посланици опозиције спречавају да говоре.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Када одбаците 80 амандмана опозиционих без образложења, онда је то чист, класичан пример правног и политичког насиља према посланицима опозиције.",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

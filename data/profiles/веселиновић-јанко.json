@@ -1,0 +1,69 @@
+{
+ "mp": "веселиновић јанко",
+ "model": "claude-fable-5-2",
+ "read": 32,
+ "speeches": 52,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Тражи да се број министарстава смањи и наводи да се већим бројем расипа новац грађана.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, наш предлог је да смањите број министарстава ради ефикасности, ради уштеде и ради тога да грађани схвате да о њима Влада брине не тако што ће трошити њихов новац, него тако што ће бити ефикасна и економична.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Противи се рушењу Старог савског моста, који назива симболом борбе против фашизма, и подизању споменика у Новом Саду за који каже да је споменик „фашистима“.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, против смо рушења Старог савског моста, као што смо и против изградње споменика фашистима у Новом Саду и баш је лепо што су данас ту и представници Српске напредне странке, Савеза војвођанских Мађара, али и Социјалистичке партије Србије.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што држава наплаћује високу акцизу на гориво и акцизу на бројило за струју, као и паркинг испред клиничких центара.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Друга ствар, други пример, једина смо земља у Европи, можда и у свету, где струју плаћате и ако је не користите. Дакле, и ако се не врти бројило, плаћате струју.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се пензионерима врате пензије за које каже да су им „отете“ и замера што предлог закона о томе није стављен у процедуру.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ми смо, конкретно Покрет за преокрет, Слога, ССП, Покрет слободних грађана, предложили закон о враћању пензија, закон о раду. Да ли вам је проблем да пензионери чују да се ми залажемо да се врате отете пензије? По свему судећи, јесте.",
+    "date": "2022-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 5. dan rada, 9. decembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се новац из буџета даје за национални стадион, а наводи да недостаје за основне потребе грађана.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "И то је оно о чему смо данас сведочили, да се паре узимају од грађана, преко цена горива, акциза, преко акциза на бројила и дају се за националне стадионе, дају се за инвестиције браће, другова, итд, који ће изводити те инвестиције.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

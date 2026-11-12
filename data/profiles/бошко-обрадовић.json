@@ -1,0 +1,69 @@
+{
+ "mp": "бошко обрадовић",
+ "model": "claude-fable-5-2",
+ "read": 30,
+ "speeches": 40,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Замера што предложена Влада има 25 министарстава, а међу њима нема министарства за Косово и Метохију ни министарства за Србе у региону и расејању.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, будућа Влада Србије биће Влада са највећим бројем министарстава у Европи, а ја нисам сигуран да друге европске земље не би узеле тај пример да је он добар.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да држава субвенцијама и олакшицама помаже стране компаније и тражи да се та подршка преусмери на домаће привреднике и пољопривреднике.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Нека држава сва средства, пореске олакшице, субвенције, извозне гаранције, преусмери ка домаћем привреднику и пољопривреднику, он је то заслужио.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се новац из буџета издваја за национални стадион и друге фудбалске стадионе у време кризе и поскупљења.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "У времену кризе, у времену инфлације, у времену цунамија поскупљења свих основних животних намирница, млека, меса, уља, брашна, шећера, огрева, закупнина станова, кредитних рата, цена лекова, цена комуналија, новог поскупљења струје и гаса од Нове године, не можете имати као приоритет национални стадион.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да помоћ државе не треба да буде иста за све, већ да више треба да добију они са најмањим примањима.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Просто не мислимо да у једном друштву у коме постоје толике социјалне неједнакости, толико раслојавање између великог броја сиромашних и малог броја богатих свима треба давати исто.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се одржи седница Народне скупштине о Косову и Метохији, да се саопшти садржај француско-немачког предлога и да се Скупштина изјасни о санкцијама Русији.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Питања за председника Народне скупштине - када ће бити заказана седница о Косову и Метохији на којој ће Скупштина Србије заузети заједнички став по питању стратегије очувања Косова и Метохије у саставу Србије, а као одговор на ове најновије притиске из ЕУ?",
+    "date": "2022-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

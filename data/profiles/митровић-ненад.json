@@ -1,0 +1,71 @@
+{
+ "mp": "митровић ненад",
+ "model": "claude-fable-5-2",
+ "read": 32,
+ "speeches": 42,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да држава узима нове кредите да би вратила камате на старе, а да главницу дуга готово не смањује.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Република Србија има буџет од 18,4 милијарде евра, а дужна је 38,5 милијарди евра. Само ове године ћемо на име камата платити милијарду и 650 милиона евра. Главницу не смањујемо, а за камате и за враћање кредита узимамо нове кредите.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што банке држави, поред камате, наплаћују накнаду за обраду кредита и накнаду за неповучена средства.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја знам да се обрађује рана, да се обрађује дрво, да се обрађује земља, али како се то обрађује кредит да узмете само на старту 310.000 евра?",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanredno zasedanja NSRS, odrzane 31.jul 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Противи се задуживању за изградњу националног стадиона и тражи да се новац уместо тога улаже у знање.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Деца у Србији морају да знају да су приоритети знање и просвета, а никако мегаломански пројекти, улагање у знање и просвету, довешће до развоја Србије, а национални стадион како га ви зовете, никада.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanredno zasedanja NSRS, odrzane 31.jul 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се буџетски новац преусмери Министарству пољопривреде.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сматрам да су буџетска средства намењена за функционисање Владе превелика и лоше прорачуната и да је неопходно тај вишак расподелити Министарству пољопривреде за, пре свега, наводњавање.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се улаже у туризам на југу Србије, на планини Кукавици и на Власини.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Позивам све посланике да обиђемо планину Кукавицу да видите колико је то лепа планина. Ту је туристички туризам, са квадовима, са екстерним спортовима, итд.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "наталија стојменовић",
+ "model": "claude-fable-5-2",
+ "read": 38,
+ "speeches": 47,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Тражи да се цена кирије ограничи и веже за просечну плату и да закуп станова буде уређен писаним уговорима.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не може кирија да вам поједе плату за живот, тако да предлажемо да постоји максимална цена кирије која је усклађена са нивоом просечне плате у Србији.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да кредит за младе није решење стамбеног питања јер је кредит дуг, и замера што држава новац и погодности даје инвеститорима, а не гради станове доступне младима.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Младима су потребне гаранције за будућност. Кредит није и не може да буде гаранција за будућност.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су фабрике страних инвеститора на југу Србије, које су добиле државне субвенције, затваране и да су радници отпуштани када истекне клаузула о запошљавању.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Као што сам малопре рекла многе фабрике на југу које су отворене у претходној деценији, у њих је држава уложила око 80 милиона евра, од тога данас немамо скоро ни једну фабрику.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да закон о родитељима неговатељима не сме да их претвори у „јефтину замену за цео систем“, пита каквим се уговором штите њихова права и шта бива са њима после 65. године.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Измене које смо ми овде предложили заправо иду у смеру тога да овај закон не сме да претвори родитеље и неговатеље у јефтину замену за цео систем.",
+    "date": "2026-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 09.07.2026. 4. dan.docx"
+   }
+  },
+  {
+   "tekst": "Замера власти што не издваја новац за школе и вртиће и наводи примере палих плафона, прозора закуцаних ексерима и вртића који годинама чекају изградњу или реконструкцију.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Буџет који се данас налази пред нама на дневном реду говори само једну ствар, а то је да СНС образовање није важно. Када погледамо у буџету Министарство за јавна улагања, улагање у просветну инфраструктуру је овим буџетом у односу на претходни смањено.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "mp": "павићевић ђорђе",
+ "model": "claude-fable-5-2",
+ "read": 40,
+ "speeches": 60,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Наводи да Србија мало улаже у образовање и да оно Влади није приоритет.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми овде често упозоравамо колико су мала улагања у образовање у Србији и колико наша држава у односу на упоредне државе, чак и региону, издваја мање средстава у односу на БДП.",
+    "date": "2024-09-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 27. septembra 2024. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што о образовању, посебно дуалном, више одлучују компаније, Привредна комора и Канцеларија за дуално образовање него Министарство просвете.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Видимо и по томе што нама већ систем образовања више уређују црква и Привредна комора него Министарство образовања.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се изменама Закона о уџбеницима издвајају уџбеници и предмети „од националног значаја“ и наводи да власт тиме хоће да контролише садржај наставе.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја бих рекао да то јесте класичан пример „ћацизације“ образовања у том смислу да се, у ствари, уџбеници покушавају да поделе на уџбенике од националног значаја и на уџбенике који нису од националног значаја.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се о тридесетак различитих тачака дневног реда води обједињена расправа, па о многима од њих нема прилике да се расправља.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Обједињена је расправа о 32 веома различите тачке дневног реда, тако да наука и образовање вероватно опет неће стићи на дневни ред.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да укидање конверзије земљишта у Закону о планирању и изградњи значи да се земљиште поклања, односно да га неко добија бесплатно.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Значи, сво оно које је дато на коришћење, није фактички државно власништво. Да ли ћете онда поклањати и све друго?",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "ивана роквић",
+ "model": "claude-fable-5-2",
+ "read": 52,
+ "speeches": 61,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Тражи да се на Новом Београду изгради дом здравља и замера што се новац уместо тога троши на ЕКСПО и друге пројекте.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, ЕХПО ће трајати три месеца, а дом здравља ће служити људима деценијама, јер грађани Новог Београда не могу да се лече у једном од павиљона ЕХПО.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да на јавном сервису и телевизијама са националном фреквенцијом нема политичког плурализма и позива се на извештаје европских институција.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Пише да све оно што по закону Јавни сервис треба да испоштује, РТВ као и РТС не испуњава, а на првом месту политички плурализам који каже да 94% је било централне информативе усмерене као владајућој странци, а 6% према опозицији.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што претплата за јавни медијски сервис није укинута иако је, како наводи, власт то обећала.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, ова странка је дошла на власт тако што је рекла да ће укинути претплату. Ја сам сигурна да је постојала стратегија коју сте у старту знали како ћете да је имплементирате, како би Јавни медијски сервис наставио да функционише без претплате.",
+    "date": "2025-12-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се отпад и отпадне воде у Србији не збрињавају како треба: депоније горе, а отпадне воде и муљ завршавају у рекама.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Београд је једина европска престоница у којој се фекалне отпадне воде директно испуштају у две међународне реке, Саву и Дунав.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да запослени у државној управи и јавним предузећима морају да иду на скупове СНС јер им се прети отказом или непродужавањем уговора на одређено.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Људе годинама намерно држите на уговорима на одређено како би сваког месеца могли да их подсетите да њихова плата, егзистенција и будућност њихове деце зависе од тога да ли ће се појавити на митингу СНС и да ли ће вас подржати на изборима.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "душан никезић",
+ "model": "claude-fable-5-2",
+ "read": 52,
+ "speeches": 59,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Наводи да се велики инфраструктурни пројекти уговарају без тендера и студија оправданости, по ценама вишеструко већим од најављених, и да је то извор корупције.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Е толико сте се задуживали, притом све велике инфраструктурне пројекте реализујете мимо тендера и то је директан извор корупције.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера власти што се, како наводи, прекомерно задужује, и то код пословних банака уз камате од седам и више одсто.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Економска политика ове власти је већ годинама политика прекомерног задуживања за преплаћене инфраструктурне пројекте и зато ћете се и данас задужити за додатних 2,4 милијарде евра.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се у буџету обезбеди новац за веће плате у просвети и здравству, за враћање, како каже, „отетих пензија“ и за бесплатне уџбенике и оброке за ученике.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не прича о садашњости зато што у ребалансу буџета нема пара за повећање плата просветним радницима, нема плата за повећање плата здравственим радницима, нема пара за враћање отетих пензија.",
+    "date": "2024-09-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт обмањује грађане економским подацима: пореди податке о незапослености добијене по различитим методологијама и раст БДП-а приказује у еврима, са урачунатом инфлацијом.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Методологија је промењена. Статистика је на свом сајту навела да ти подаци нису упоредиви, али се они непрекидно пореде.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се субвенције, уместо страним инвеститорима који плаћају минималне зараде, дају домаћим предузећима.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Замислите, да уместо 200 милиона евра за шачицу страних инвеститора дамо за 2.000 домаћих предузећа по 100.000 евра, ефекат на српску привреду би био неупоредиво већи и бољи.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  }
+ ]
+}

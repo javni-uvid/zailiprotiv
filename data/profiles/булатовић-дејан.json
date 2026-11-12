@@ -1,0 +1,71 @@
+{
+ "mp": "булатовић дејан",
+ "model": "claude-fable-5-2",
+ "read": 32,
+ "speeches": 53,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Замера председавајућем што не опомиње посланике већине који добацују и вређају, а посланицима опозиције изриче опомене.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја вас молим, господине председниче, да не уводите двоструке аршине када кажњавате и опомињете посланике и не изричете опомене само посланицима из опозиције.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се села у Србији гасе и да су штале и свињци празни.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја вам кажем српски сељак гладује. Верујте ми, гладује. Српско село је на измаку, гасе се српска села.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се из буџета више издвоји за пољопривреду, јер сматра да повећање није довољно.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Моја забринутост је само у том правцу да ли је то што сте повећали довољно. Ја мислим да није.",
+    "date": "2022-11-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "У каснијим говорима наводи да се у пољопривреду улаже више него икада раније.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, ви морате да знате да је у пољопривреду уложено више него икада, више него икада. Да у пољопривреди данас воде рачуна заиста људи из струке.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је опозиција заправо бивша власт и замера јој што критикује предлоге закона иако је и сама била на власти.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Морам грађанима Србије да кажем да та опозиција је заправо бивша власт, а бивша власт су зато што нису добро радили, нису били добра власт и они су сада бивша власт, дакле опозиција.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "марина мијатовић",
+ "model": "claude-fable-5-2",
+ "read": 43,
+ "speeches": 54,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да се предложеним изменама закона о јавном тужилаштву тужиоцима смањује самосталност и да се тужилаштва стављају под контролу.",
+   "govora": 6,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Као и овом претходном члану, и овде видимо исто тако да је једина намера да смањите управљачке могућности, да смањите овлашћења, да смањите самосталност и да држите апсолутну контролу.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да судовима недостаје 700 судија и да држава грађанима плаћа накнаде штете због рада судова.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато што у току 2024. године ми имамо 700 судија мање од онога што је предвиђено и што је потребно с обзиром на прилив, с обзиром на број становника, односно грађана и грађанки Републике Србије.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што буџетом није повећан износ за лечење оболелих од ретких болести и тражи да се он увећа.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо у овом буџету видели да је исти износ као прошле године у буџету опредељен за лечење од ретких болести. Дакле, у један једини динар је исти износ, што значи да нисте повећали могућност да људи добију лечење.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се, док се улаже у болнице, урушавају амбуланте ван седишта домова здравља, чиме се људима ускраћује приступ здравственој заштити.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не мислим на амбуланте као на ординацију у оквиру домова здравља, већ на амбуланте које се налазе ван седишта дома здравља и које су много ближе грађанима и грађанкама да би добили услугу здравствене заштите.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што предлог закона о Алиментационом фонду продужава рокове у којима дете долази до новца и тражи да дете право стекне раније.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми свакако сматрамо да овај додатни рок од два месеца је на штету детета и да га треба апсолутно избацити из овог члана.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

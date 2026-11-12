@@ -1,0 +1,71 @@
+{
+ "mp": "јелена јеринић",
+ "model": "claude-fable-5-2",
+ "read": 32,
+ "speeches": 41,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да правосудни закони остављају владајућој странци и извршној власти утицај на судове и тужилаштва.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Прво, ови закони легализују утицај СНС на правосуђе, друго, у њих су уграђени механизми за утицај извршне власти на аутономију правосуђа и треће, ово није никаква реформа, већ је препакивање постојећег система онако како вама одговара.",
+    "date": "2023-02-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 4. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да Српска напредна странка купује гласове и краде изборе и позива се на кривичне пријаве које је њена странка због тога поднела.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Што се тиче ваше изјаве да ми сада тврдимо да ви сада одједном крадете изборе, не, ви крадете стално и о томе говоре десетине кривичних пријава које смо, између осталог, и ми као Зелено-леви фронт подносили.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се државни службеници на положају држе у статусу вршилаца дужности и наводи да се то чини да би били под контролом или зато што не испуњавају услове.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "То се дешава најчешће из два разлога - или ваш кандидат не испуњава услове за избор на функцију, на пример нема одговарајућу школу, или зато што постоји потреба да контролишете своје кадрове.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се закони предлажу на брзину и без јавне расправе, па опозиција мора да их поправља амандманима.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ми смо наравно покушали да вам поправимо овај предлог закона јер сте то све збрзали, нисте спровели јавну расправу, нисте питали ни извршитеље који ће можда трпети дисциплинске санкције.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се предлаже да закони ступе на снагу пре рока из Устава, а да предлагач за то не образложи нарочито оправдане разлоге.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "За раније ступање на снагу закона Устав захтева нарочито оправдане разлоге и ви те разлоге морате да наведете, врло конкретно и поткрепљено подацима.",
+    "date": "2022-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 10. novembar 2022. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}
