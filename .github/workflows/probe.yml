@@ -10,7 +10,7 @@ on:
         default: "https://www.parlament.gov.rs/"
       max_pages:
         description: "Pages to read at most"
-        default: "80"
+        default: "200"
 
 permissions:
   contents: read
@@ -38,6 +38,14 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
           for f in probe/*.pdf; do [ -f "$f" ] && pdftotext -layout "$f" "${f%.pdf}.txt" || true; done
           ls -la probe || true
+      - name: Show what the probe found
+        if: always()
+        # The artifact can't always be downloaded where the work is reviewed, so the log carries the essentials.
+        # Roll-call PDFs are public records of MPs' votes; their names may appear here.
+        run: |
+          echo "== pages read"; python3 -c "import sys,urllib.parse; [print(urllib.parse.unquote(l.strip())) for l in open('probe/visited.txt')]" || true
+          echo "== known PDF as text (first 120 lines)"; head -n 120 probe/known.txt || true
+          echo "== sample PDFs (first 60 lines each)"; for f in probe/sample-*.txt; do [ -f "$f" ] && { echo "-- $f"; head -n 60 "$f"; }; done || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
