@@ -137,7 +137,8 @@ def parse(text: str) -> list[Vote]:
             if i <= title_at or l is when_line or cyrillic(l).upper().startswith("ВРЕМЕ ГЛАСАЊА"):
                 continue
             l = l.lstrip("•· ").strip()
-            session_done = bool(session_lines) and re.search(r"(години|сазиву)\s*$", session_lines[-1])
+            listinzi = title_at >= 0 and "НАРОДНА" in cyrillic(joined[title_at]).upper()  # no session line there
+            session_done = listinzi or (bool(session_lines) and re.search(r"(години|сазиву)\s*$", session_lines[-1]))
             numbered = re.match(r"^\d+(\.\s?\d+)*\.?\s", l) and not re.match(r"^\d{4}\.\s+годин", l)
             if item_lines or numbered or session_done:
                 item_lines.append(l)

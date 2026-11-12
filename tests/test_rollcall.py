@@ -118,3 +118,16 @@ def test_votes_command_reads_new_pdfs_once(tmp_path, monkeypatch):
     v = store["votes"][base + "20.pdf#0"]
     assert v["counts"]["za"] == 137 and len(v["rows"]) == 250 and v["listed_as"] == "20. Предлог"
     assert cli.main(args) == 0 and len(asked) == 2  # nothing read twice
+
+
+def test_listinzi_item_without_a_number():
+    text = """НАРОДНА СКУПШТИНА РЕПУБЛИКЕ СРБИЈЕ
+ВРЕМЕ ГЛАСАЊА 27.11.2024. / 12:00:00
+   •   Предлог закона о изменама и допунама Закона о доприносима
+       за обавезно социјално осигурање
+ ГЛАСАЛИ ЗА
+1. Иван Антић (А. ВУЧИЋ - Србија не сме да стане)
+"""
+    [v] = rollcall.parse(text)
+    assert v.item == "Предлог закона о изменама и допунама Закона о доприносима за обавезно социјално осигурање"
+    assert v.session == ""
