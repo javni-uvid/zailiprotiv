@@ -48,6 +48,7 @@ src/zailiprotiv/
   rollcall.py    reading a roll-call PDF: the vote, and each MP's vote and group
   laws.py        the adopted laws: title, bill, day passed, Official Gazette, international treaty or not
   bills.py       a bill's memorandum: constitutional basis (article, points), reasons, funds, effects
+  kinds.py       an act's kind (from its title) and area (from Article 97 of the Constitution), with their labels
   mps.py         who an MP is across roll calls: a name key without word order or titles
   cli.py         commands
   translit.py    Cyrillic → Latin
