@@ -1,0 +1,22 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "11b81d53e8fcd5ce44c54021a54e54738a0abf4ca8c901f2bc91bfcc7325ceef",
+ "summary": {
+  "ukratko": "Закон потврђује уговор о кредиту до 200.000.000 евра између Србије и банака Deutsche Bank и Société Générale, уз гаранцију италијанске извозно-кредитне агенције SACE, за финансирање општих потреба буџета.",
+  "razlozi": [
+   "Предлагач наводи да по Закону о јавном дугу Народна скупштина одлучује о задуживању државе, а да је ово задуживање предвиђено буџетом за 2024. годину.",
+   "Према образложењу, кредит произлази из Меморандума о разумевању између Владе Србије и агенције SACE, потписаног у Риму 21. марта 2023, о јачању привредне и трговинске сарадње Италије и Србије.",
+   "Предлагач наводи да су две банке одабране у спроведеном поступку избора банака."
+  ],
+  "promene": [
+   "Кредит износи до 200.000.000 евра, по 100.000.000 евра од сваке банке, и користи се једнократно у року од 12 месеци.",
+   "Камата је променљива: шестомесечни EURIBOR увећан за 1,65% годишње.",
+   "Отплата траје девет година у 18 једнаких полугодишњих рата, а коначни рок доспећа је десет година од потписивања.",
+   "Гаранцијска накнада агенцији SACE износи 6.400.000 евра.",
+   "Према образложењу, Србија подстиче пословно повезивање италијанских и српских партнера и учешће италијанских компанија на тендерима државних предузећа."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju SACE Ugovora o kreditnom aranžmanu u iznosu do 200.000.000 evra, između Republike Srbije koju zastupa Vlada Republike Srbije, postupajući preko Ministarstva finansija kao Zajmoprimca i Deutsche Bank S.P.A. i Societe Generale kao Ovlašćenih vodećih aranžera, Societe Generale kao Dokumentacione banke, finansijskih institucija navedenih u Delu D Priloga 1 kao Prvobitnih zajmodavaca, Deutsche Bank AG, London Branch kao Agenta i Deutsche Bank S.P.A. kao SACE Agenta"
+}

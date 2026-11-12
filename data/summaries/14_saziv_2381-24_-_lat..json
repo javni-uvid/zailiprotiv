@@ -1,0 +1,22 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "8c137e40465a3667adbbfb163ee743fdca4441ff5d093258f29479c4e2360e29",
+ "summary": {
+  "ukratko": "Закон потврђује уговор о кредиту до 178.382.740,33 евра између Србије и банке Deutsche Bank AG, филијала Хонгконг, уз осигурање кинеске агенције Sinosure, за изградњу Депоа Макиш у оквиру прве фазе београдског метроа.",
+  "razlozi": [
+   "Предлагач наводи да по Закону о јавном дугу Народна скупштина одлучује о задуживању, а да је буџетом за 2024. одобрено задуживање до 1.500.000.000 евра за прву фазу београдског метроа.",
+   "Према образложењу, Београд је један од ретких главних градова у Европи без метроа, а метро треба да постане основа јавног превоза и да подстакне развој појединих делова града.",
+   "Предлагач наводи да је комерцијални уговор за пројектовање и изградњу Депоа Макиш потписан 22. септембра 2023. са кинеском компанијом Power Construction Corporation of China, у вредности до 209.862.047,45 евра."
+  ],
+  "promene": [
+   "Из Депоа Макиш, према образложењу, управљаће се целим системом метроа и ту ће се одржавати све композиције.",
+   "Корисник кредита је ЈКП Београдски метро и воз.",
+   "Отплата траје 13 година, укључујући почек од 5,5 година, а кредит је на располагању пет година.",
+   "Камата је шестомесечни EURIBOR увећан за 1,65% годишње, уз провизију од 0,65% на неповучена средства.",
+   "Премију осигурања агенцији Sinosure плаћа држава као зајмопримац, а њен износ накнадно одређује Sinosure."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o kreditnom aranžmanu u iznosu do 178.382.740,33 evra između Republike Srbije koju predstavlja Vlada Republike Srbije postupajući preko Ministarstva finansija kao Zajmoprimca aranžiran od strane Deutsche Bank Aktiengesellschaft Filiale Hong Kong (osnovane u Saveznoj Republici Nemačkoj sa ograničenom odgovornošću akcionara) kao Banke za strukturiranje i Ovlašćenog glavnog aranžera i Agenta Kreditnog aranžmana i Sinosure agenta"
+}
