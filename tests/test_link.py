@@ -74,3 +74,9 @@ def test_a_typo_in_a_long_name_is_close_but_another_country_isnt():
     g = link.act_name("Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Gvatemale o "
                       "ukidanju viza za nosioce običnih pasoša")
     assert link.closeness(v, g) < link.CLOSE
+
+
+def test_bullet_before_the_number():
+    from zailiprotiv import link
+    assert link.act_name(" 26. Предлог закона о изменама и допунама Закона о уџбеницима, у целини").startswith(
+        link.act_name("Zakon o izmenama i dopunama Zakona o udžbenicima"))

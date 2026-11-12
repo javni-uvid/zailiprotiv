@@ -21,8 +21,8 @@ CLOSE = 0.9
 
 def act_name(text: str) -> str:
     t = _plain(text)
-    t = re.sub(r"^[\s\d.]+", "", t)  # "20. ", "28. 11. ", "1.1. "
-    t = re.sub(r"^predlog\s+zakona\b", "zakon", t)  # the bill's name → the law's
+    t = re.sub(r"^[\W\d_]+", "", t)  # "20. ", "28. 11. ", "1.1. ", a bullet ("\uf0b7 28. …", 2023)
+    t = re.sub(r"^pred\w{0,3}\s+zakona\b", "zakon", t)  # the bill's name → the law's ("Предог", a typo, 2023)
     t = re.sub(r"^predlog\s+", "", t)
     t = re.sub(r"^zakona\s+o\b", "zakon o", t)  # a typo on the page of adopted laws
     t = re.split(r",?\s+koj[ie]\s+(?:je|su)\s+podne", t)[0]
