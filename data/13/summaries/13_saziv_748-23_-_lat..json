@@ -1,0 +1,23 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "aee85e5827dd89b9534193fbfcdbd3b7fe6f5f3d6c8d16c99c7ca37094064312",
+ "summary": {
+  "ukratko": "Закон потврђује измене Уговора о кредиту из 2021. године, уз гаранцију Мултилатералне агенције за гарантовање инвестиција (MIGA), за изградњу ауто-пута E-761 Појате – Прељина (Моравски коридор), којима се кредит од 400.000.000 евра повећава за до 100.000.000 евра.",
+  "razlozi": [
+   "Предлагач наводи да према Закону о јавном дугу Народна скупштина одлучује о задуживању Републике Србије, а да је Законом о буџету за 2023. годину предвиђено задуживање до 800.000.000 евра за изградњу Моравског коридора.",
+   "Према образложењу, за пројекат су потребна додатна средства до 100.000.000 евра, а њихово обезбеђење у оквиру већ одобрене MIGA гаранције омогућава да се задрже, како се наводи, „повољни финансијски услови“ постојећег уговора.",
+   "Предлагач наводи да Моравски коридор повезује централну Србију са Коридорима 10 и 11 и да ће повећати доступност општинских центара, привредних зона и туристичких одредишта; ауто-пут се гради на траси државног пута М-5 и повезује Ћићевац, Сталаћ, Крушевац, Трстеник, Врњачку Бању, Краљево и Чачак.",
+   "Према образложењу, из постојећег зајма до сада је искоришћено 311.116.387,35 евра."
+  ],
+  "promene": [
+   "Кредит се повећава за до 100.000.000 евра, на укупно до 500.000.000 евра, а MIGA гарантује 95% кредита и камате.",
+   "Рок отплате је 13 година, са почеком од три године, а кредит је расположив до 36 месеци.",
+   "Камата је варијабилна, заснована на шестомесечном EURIBOR-у или другој референтној стопи, уз фиксну маржу од 0,55% годишње; провизија на неповучена средства износи 40% марже.",
+   "Према образложењу, Моравски коридор је дугачак око 110 км и има три деонице: Појате – Крушевац (Кошеви), Крушевац (Кошеви) – Адрани и Адрани – Мрчајевци – Прељина."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o izmenama i dopunama koji se odnosi na MIGA Ugovor o kreditu u iznosu do 400.000.000 evra, od 10. decembra 2021. godine između Republike Srbije koju zastupa Vlada Republike Srbije, postupajući preko Ministarstva finansija kao Zajmoprimca i J.P. MORGAN AG kao Agentom i JPMORGAN CHASE BANK, N.A., LONDON BRANCH kao Prvobitnim mandatnim vodećim aranžerom i Credit Agricole Corporate and Investment Bank, Raiffeisen Bank International AG i Santander Bank N.A. kao Mandatnim vodećim aranžerima i CaixaBank, S.A. i UBS Switzerland AG kao Vodećim aranžerima i Banco Santander, S.A., CaixaBank, S.A., Credit Agricole Corporate and Investment Bank, JPMorgan Chase Bank, N.A., London Branch, Raiffeisen Bank International AG i UBS Switzerland AG kao Prvobitnim zajmodavcima, koji se odnosi na neobezbeđeni zajam u cilju finansiranja određenih građevinskih usluga od strane Bechtel Enka UK Limited, koji posluje u Srbiji preko Bechtel Enka UK Limited Ogranak Beograd za potrebe privrednog društva „Koridori Srbije\" d.o.o. Beograd u vezi sa izgradnjom infrastrukturnog koridora autoputa E-761 deonice Pojate - Preljina (Moravski koridor)",
+ "depth": "standard"
+}
