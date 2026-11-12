@@ -2,11 +2,13 @@
 :root {
   --bg: #fbfaf7; --fg: #1d2330; --muted: #5d6475; --line: #e3e0d8; --card: #ffffff; --accent: #1f3a68;
   --za: #2a6f97; --protiv: #c06a1b; --uzdrzan: #8a8f99; --nije_glasao: #c9ccd3; --nije_prisutan: #e9e9ec;
+  --za-soft: #e6f0f6; --protiv-soft: #f8ece1; --warn: #9a5b00; --warn-soft: #fbf0dc;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #14171d; --fg: #e8e6e1; --muted: #a0a6b3; --line: #2b313b; --card: #1b2028; --accent: #9db8e8;
     --za: #5aa3cf; --protiv: #e0904a; --uzdrzan: #7d8390; --nije_glasao: #4a505c; --nije_prisutan: #333842;
+    --za-soft: #18293a; --protiv-soft: #33241a; --warn: #e3b25e; --warn-soft: #2f2716;
   }
 }
 * { box-sizing: border-box; }
@@ -80,3 +82,57 @@ summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 .quote { margin: .8rem 0; padding: .1rem 0 .1rem 1rem; border-left: 3px solid var(--muted); max-width: 46rem; }
 .quote p { margin: 0 0 .25rem; }
 .quote footer { max-width: none; margin: 0; padding: 0; border: 0; font-size: .88rem; color: var(--muted); }
+
+/* Home */
+.kicker { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--muted); margin: 1.5rem 0 0; font-weight: 600; }
+.hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); margin: .3rem 0 .8rem; letter-spacing: -.025em; }
+.featured { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); margin: 1rem 0 1.4rem; }
+.feature { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--protiv); border-radius: 12px; padding: .4rem 1.1rem 1rem; }
+.feature h3 { font-size: 1.08rem; line-height: 1.3; margin: .3rem 0 .5rem; }
+.feature h3 a { color: var(--fg); text-decoration: none; }
+.feature h3 a:hover { text-decoration: underline; }
+.row-bar { display: grid; grid-template-columns: minmax(120px, 1fr) auto; gap: .8rem; align-items: center; }
+.ranked .rank-head { color: var(--fg); text-decoration: none; }
+.ranked .rank-head:hover { text-decoration: underline; }
+.warn-text { color: var(--warn); font-weight: 600; }
+.browse .toc { list-style: none; padding: 0; }
+.cards .gist { color: var(--muted); }
+
+/* Law page */
+.gist { font-size: 1.12rem; max-width: 46rem; margin: 0 0 1rem; }
+.gist.small { font-size: .94rem; margin: .3rem 0 .4rem; }
+.gist .by { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+.verdict { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.2rem .6rem; margin: 1rem 0 1.4rem; }
+.verdict-head { display: flex; flex-wrap: wrap; gap: .3rem 1rem; justify-content: space-between; align-items: baseline; }
+.stamp { font-weight: 700; }
+.rank-note { color: var(--protiv); font-weight: 600; font-size: .92rem; }
+.big-numbers { display: flex; flex-wrap: wrap; gap: .4rem 1.8rem; margin: .7rem 0 .3rem; align-items: baseline; }
+.big-numbers div { color: var(--muted); font-size: .95rem; }
+.big-numbers b { font-size: 2.4rem; line-height: 1; margin-right: .25rem; font-variant-numeric: tabular-nums; color: var(--fg); }
+.big-numbers .n-za b { color: var(--za); } .big-numbers .n-protiv b { color: var(--protiv); }
+.big-numbers .n-other b { font-size: 1.5rem; }
+.big-numbers.compact b { font-size: 1.6rem; }
+.verdict .bar { height: 14px; border-radius: 7px; }
+.against { margin: .7rem 0 .3rem; line-height: 2; }
+.chip-g { display: inline-block; background: var(--protiv-soft); border-radius: 6px; padding: 0 .5rem; font-size: .88rem; margin-right: .15rem; line-height: 1.7; }
+.chips { list-style: none; padding: 0; margin: .5rem 0 .3rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+.chip { border: 1px solid var(--line); border-radius: 999px; padding: .15rem .7rem; font-size: .86rem; }
+.chip.warn { background: var(--warn-soft); border-color: transparent; color: var(--warn); font-weight: 600; }
+.pair { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 0 0 1rem; }
+.quote.big { margin: 0; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--muted); border-radius: 10px; padding: .8rem 1rem; max-width: none; }
+.quote.big p { font-size: 1.05rem; }
+.quote.q-za, .quote.q-vlada { border-left-color: var(--za); }
+.quote.q-protiv { border-left-color: var(--protiv); }
+.q-side { display: inline-block; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; color: var(--muted); margin-bottom: .2rem; }
+.q-za .q-side, .q-vlada .q-side { color: var(--za); } .q-protiv .q-side { color: var(--protiv); }
+.quote.mini { margin: .5rem 0; padding-left: .7rem; border-left-width: 3px; }
+.quote.mini p { font-size: .9rem; }
+.sides { display: grid; gap: .8rem 1.4rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.side h3 { margin-top: .6rem; }
+.side ul { padding-left: 1.1rem; margin: .3rem 0; }
+.side li { margin: .35rem 0; }
+.side-podrska h3 { color: var(--za); } .side-zamerke h3 { color: var(--protiv); }
+.groups .vote-cell { width: 30%; min-width: 120px; }
+.groups .vote-cell .bar { margin: .35rem 0; }
+.more { border-top: 1px solid var(--line); margin-top: 2.5rem; }
+.more h2 { color: var(--muted); font-size: 1.1rem; }

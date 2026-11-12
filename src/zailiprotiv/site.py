@@ -146,6 +146,32 @@ def debate_of(law: dict, final: dict | None, notes: dict | None) -> dict | None:
             "provisional": any(d.get("provisional") for d in notes["days"])}
 
 
+def quotes_with_votes(said: dict | None, final: dict | None) -> list[dict]:
+    """The debate's quotes, each with how its speaker voted on the law ("za", "protiv", …; "vlada" for the
+    Government; None if not on the roll call), for the reader to see which side a quote comes from."""
+    if not said:
+        return []
+    from zailiprotiv import debates
+    rows = {debates.loose(mps.key(r[1])): r[2] for r in (final or {}).get("rows", [])}
+    known = {k: k for k in rows}
+    out = []
+    for q in said.get("debate", {}).get("citati", []):
+        if q.get("grupa") == debates.GOVERNMENT:
+            side = "vlada"
+        else:
+            k = debates.resolve(q["govornik"], known)
+            side = rows.get(k) if k else None
+        out.append({**q, "side": side})
+    return out
+
+
+def pair(quotes: list[dict]) -> list[dict]:
+    """Two quotes to show first: one from those for the law (the Government first), one from those against."""
+    for_ = [q for q in quotes if q["side"] == "vlada"] + [q for q in quotes if q["side"] == "za"]
+    against = [q for q in quotes if q["side"] == "protiv"]
+    return ([for_[0]] if for_ else []) + ([against[0]] if against else [])
+
+
 def registry(votes: dict) -> dict[str, MP]:
     """Every MP met in a roll call, under one key whatever the layout wrote. The name shown is the report
     layout's ("SURNAME Given", one order for everyone) where the MP is in one, else the listinzi's."""
@@ -271,9 +297,16 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                           "debate": debate_of(law, votes.get(law.get("final_vote") or ""),
                                               debates[conv].get((votes.get(law.get("final_vote") or "") or {})
                                                                 .get("sitting", "")))})
+        for it in items:
+            it["quotes"] = quotes_with_votes(it["said"], it["final"])
+            it["pair"] = pair(it["quotes"])
+            it["against"] = against_by_group(it["final"]) if it["final"] else []
+            sm = (it["summary"] or {}).get("summary") or {}
+            it["gist"] = sm.get("ukratko", "")
         by_key = {it["key"]: it for it in items}
-        for i, r in enumerate(most_against(items, len(items)), 1):
-            by_key[r["key"]].update(rank=i, share=r["share"])
+        ranked = most_against(items, len(items))
+        for i, r in enumerate(ranked, 1):
+            by_key[r["key"]].update(rank=i, share=r["share"], conv_total=len(ranked))
         items_by_conv[conv] = items
         for it in items:
             law, final = it["law"], it["final"]
@@ -321,7 +354,10 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
              "sittings": len({v["sitting"] for v in votes.values()}),
              "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people)}
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, stats=stats, latest=items[:12], contested=most_against(items, 12), root=""), encoding="utf-8")
+        **common, stats=stats, latest=items[:6], contested=most_against(items, 12), root="",
+        kinds_count=[(k, kinds.KINDS[k], n) for k, n in sorted(Counter(it["law"].get("kind", "other") for it in items)
+                                                                .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],
+        debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
     if domain:

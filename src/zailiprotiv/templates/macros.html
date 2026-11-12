@@ -8,3 +8,17 @@
 {% macro tally(counts, short=false) -%}
 <span class="tally"><b class="t-za">{{ counts.za }}</b> za · <b class="t-protiv">{{ counts.protiv }}</b> protiv{% if not short %} · {{ counts.uzdrzan }} uzdržano · {{ counts.nije_glasao }} nije glasalo{% if counts.nije_prisutan %} · {{ counts.nije_prisutan }} nije prisutno{% endif %}{% endif %}</span>
 {%- endmacro %}
+
+{% macro plural(n, one, few, many) -%}
+{{ one if n % 10 == 1 and n % 100 != 11 else (few if n % 10 in [2, 3, 4] and n % 100 not in [12, 13, 14] else many) }}
+{%- endmacro %}
+
+{% macro quote(q, db, big=false) -%}
+{% set d = db.all_days[q.dan - 1] if db and q.dan <= db.all_days|length else none %}
+{% set side = {"za": "Glas: za", "protiv": "Glas: protiv", "vlada": "Vlada", "uzdrzan": "Glas: uzdržan", "nije_glasao": "Nije glasao"}.get(q.side) %}
+<blockquote class="quote{% if big %} big{% endif %}{% if q.side %} q-{{ q.side }}{% endif %}">
+  {% if side %}<span class="q-side">{{ side }}</span>{% endif %}
+  <p>„{{ q.tekst|latin }}“</p>
+  <footer>{{ q.govornik|latin|title }}{% if q.grupa %} ({{ q.grupa|latin }}){% endif %}{% if d %}, <a href="{{ d.url }}">stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% endif %}</a>{% endif %}</footer>
+</blockquote>
+{%- endmacro %}
