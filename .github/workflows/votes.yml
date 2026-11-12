@@ -9,6 +9,9 @@ on:
         description: "Read every roll call again, not only new ones"
         type: boolean
         default: false
+      reread:
+        description: "Read again the roll calls whose address contains this text"
+        default: ""
 
 permissions:
   contents: write
@@ -32,7 +35,7 @@ jobs:
           pip install uv && uv sync --frozen
           uv run zailiprotiv index
           uv run zailiprotiv laws
-          uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }}
+          uv run zailiprotiv votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
           uv run zailiprotiv link
       - name: Commit
         run: |

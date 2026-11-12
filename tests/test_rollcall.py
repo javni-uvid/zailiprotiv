@@ -80,6 +80,13 @@ def test_every_fixture_reads_cleanly(name):
         assert len({r.name for r in v.rows}) == len(v.rows)
 
 
+def test_second_vote_with_only_its_time():
+    first, second = read("2025_11._izvestaj_sa_rezultatima_glasanja_22_12_2025_11_15.pdf")
+    assert (first.when, second.when) == ("2025-12-18T11:12:35", "2025-12-18T11:13:01")
+    assert first.item == second.item and first.item.startswith("Предлог да Народна скупштина утврђивање Листе")
+    assert sum(first.count().values()) == sum(second.count().values()) == 250
+
+
 def test_lookalike_letters():
     assert rollcall.vote_word("Ниje гласао") == "nije_glasao"
     assert rollcall.section_of("  НИСУ ПРИСУТНИ:") == "nije_prisutan"

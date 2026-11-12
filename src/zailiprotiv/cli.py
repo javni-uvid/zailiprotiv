@@ -105,7 +105,8 @@ def votes(args) -> int:
         store.setdefault("votes", {})
         changed = False
         for item, pdf in sitting["votes"]:
-            if pdf in store["pdfs"] and not args.again:
+            again = args.again or (args.reread and args.reread in urllib.parse.unquote(pdf))
+            if pdf in store["pdfs"] and not again:
                 continue
             if args.limit and read >= args.limit:
                 break
@@ -179,6 +180,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", default=str(DATA / "votes"))
     p.add_argument("--again", action="store_true", help="read every PDF again, not only new ones")
     p.add_argument("--limit", type=int, default=0, help="read at most this many PDFs (0: all)")
+    p.add_argument("--reread", default="", help="read again the PDFs whose address contains this text")
     p.set_defaults(run=votes)
     p = commands.add_parser("download", help="save roll-call PDFs into a folder (test fixtures)")
     p.add_argument("--to", default="tests/fixtures")

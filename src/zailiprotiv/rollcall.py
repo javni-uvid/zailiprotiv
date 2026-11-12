@@ -13,7 +13,8 @@ Three layouts are known:
 - 2025 listinzi: as 2024, with the list in a column of its own ("-" for none).
 
 Every page repeats its header, so the rows of one vote may be spread over several pages; a vote is known by its
-date and time and its agenda item.
+date and time and its agenda item. A file may also hold a second vote on the same item with only its date and time
+before its sections (December 2025).
 """
 
 from __future__ import annotations
@@ -136,7 +137,9 @@ def parse(text: str) -> list[Vote]:
             if i <= title_at or l is when_line or cyrillic(l).upper().startswith("ВРЕМЕ ГЛАСАЊА"):
                 continue
             l = l.lstrip("•· ").strip()
-            if item_lines or (re.match(r"^\d+(\.\s?\d+)*\.?\s", l) and not re.match(r"^\d{4}\.\s+годин", l)):
+            session_done = bool(session_lines) and re.search(r"(години|сазиву)\s*$", session_lines[-1])
+            numbered = re.match(r"^\d+(\.\s?\d+)*\.?\s", l) and not re.match(r"^\d{4}\.\s+годин", l)
+            if item_lines or numbered or session_done:
                 item_lines.append(l)
             else:
                 session_lines.append(l)
@@ -163,6 +166,18 @@ def parse(text: str) -> list[Vote]:
             continue
         if in_header:
             header.append(line)
+            continue
+        when = _WHEN.search(line)
+        if when and current is not None and not _ROW.match(line):
+            # A second vote on the same item in the same file, with only its time as a header (December 2025).
+            d, mo, y, h, mi, s_ = when.groups()
+            stamp = f"{y}-{int(mo):02d}-{int(d):02d}T{int(h):02d}:{mi}:{s_}"
+            key = (stamp, current.item[:60])
+            if key not in votes:
+                kind = cyrillic(line[: when.start()]).strip(" -–").strip()
+                votes[key] = Vote(stamp, current.item, kind, current.session)
+                order.append(key)
+            current, section = votes[key], None
             continue
         if current is None or section is None:
             continue

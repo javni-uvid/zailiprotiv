@@ -6,6 +6,9 @@ Labels are written once in Cyrillic, as the site's Serbian text is; the Latin pa
 
 from __future__ import annotations
 
+import re
+
+from zailiprotiv.rollcall import cyrillic
 from zailiprotiv.translit import latin
 
 KINDS = {
@@ -51,8 +54,14 @@ _ASSEMBLY = ("poslovnik", "dnevnom redu", "dnevni red", "sastavu", "clanova i za
 
 
 def _plain(text: str) -> str:
-    """Latin, lowercased, without diacritics: "Буџет" and "Budžet" both become "budzet"."""
-    t = latin(text).lower()
+    """Latin, lowercased, without diacritics: "Буџет" and "Budžet" both become "budzet". A word that mixes the
+    scripts ("Ниje", "xpане" for "хране") had Latin look-alikes typed among Cyrillic letters: those are read as
+    Cyrillic first. Words wholly in Latin ("Banca", "OTP") stay as they are."""
+    def word(w: str) -> str:
+        cyr = any("\u0400" <= c <= "\u04ff" for c in w)
+        lat = any("a" <= c.lower() <= "z" for c in w)
+        return cyrillic(w) if cyr and lat else w
+    t = latin(re.sub(r"\w+", lambda m: word(m.group(0)), text)).lower()
     return t.translate(str.maketrans({"č": "c", "ć": "c", "š": "s", "ž": "z", "đ": "dj"}))
 
 
