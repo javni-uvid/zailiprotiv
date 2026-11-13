@@ -14,6 +14,9 @@ from pathlib import Path
 
 TRIES = 2
 POLL = 60  # seconds between looks at a batch
+# Room for a reply, in tokens. Only what is written is paid for, so this is generous: Cyrillic takes many tokens,
+# and a reply cut off at the limit is paid for and thrown away.
+ROOM = 16000
 
 
 class State:
@@ -94,7 +97,9 @@ def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes
     out = {}
     for entry in client.messages.batches.results(pending["id"]):
         name = pending["names"][int(entry.custom_id[1:])]
-        if entry.result.type == "succeeded":
+        if entry.result.type == "succeeded" and getattr(entry.result.message, "stop_reason", "") == "max_tokens":
+            print(f"  {name}: cut off at the limit, sent again next run")  # our limit's fault: not a refused reply
+        elif entry.result.type == "succeeded":
             out[name] = "".join(b.text for b in entry.result.message.content if getattr(b, "type", "") == "text")
         else:
             print(f"  {name}: {entry.result.type}")

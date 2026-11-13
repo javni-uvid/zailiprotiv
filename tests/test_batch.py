@@ -109,3 +109,17 @@ def test_federated_sign_in_is_used_only_when_set_up(monkeypatch):
     for v in federated.SETTINGS.values():
         monkeypatch.setenv(v, "x")
     assert federated.available()
+
+
+def test_a_reply_cut_off_at_the_limit_is_not_a_reply(tmp_path, monkeypatch):
+    monkeypatch.setattr(batch, "POLL", 0)
+    client, state = Batches(lambda p: '{"pola'), batch.State(tmp_path / "batches.json")
+    whole = client.results
+
+    def cut(id):
+        for e in whole(id):
+            e.result.message.stop_reason = "max_tokens"
+            yield e
+    client.results = cut
+    assert batch.run(client, state, "k", {"n": {"messages": []}}, wait_minutes=1) == {}
+    assert not state.pending("k") and not state.refused("k", "n")
