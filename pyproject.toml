@@ -10,6 +10,7 @@ dependencies = [
     "jinja2>=3.1",
     "anthropic>=0.50",
     "pillow>=13.0.0",
+    "boto3>=1.44.3",
 ]
 
 [project.scripts]

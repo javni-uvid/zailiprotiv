@@ -116,7 +116,7 @@
   <h2>Teške reči</h2>
   {% for x in words_ %}
   <details{% if loop.first %} open{% endif %}><summary>{{ x.name }} saziv: {{ x.harsh }} {{ plural(x.harsh, "reč", "reči", "reči") }} u {{ x.said|length }} {{ plural(x.said|length, "rečenici", "rečenice", "rečenica") }}</summary>
-  <ul class="plain harsh">{% for h in x.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.notes %}<a href="{{ h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
+  <ul class="plain harsh">{% for h in x.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.ours or h.notes %}<a href="{{ h.ours or h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
   </details>
   {% endfor %}
   <p class="label">Reči sa utvrđenog spiska pogrdnih reči i psovki, u pročitanim beleškama. Brojimo da je reč izgovorena: ne kome je upućena, ni da li je govornik nekoga citirao ili je reč odbijao; zato je tu svaka rečenica, doslovno. {{ how("replike") }}</p>

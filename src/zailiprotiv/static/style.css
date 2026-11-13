@@ -665,3 +665,12 @@ td.lean { white-space: nowrap; }
 .hero-text .floor-firsts { grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 1.1rem 1.6rem; }
 .hero-text .home-floor h2 { font-size: 1.5rem; }
 .hero-text { flex: 1.3 1 26rem; }
+
+/* The pages of stenographic notes (kept apart from the site, on beleske.zailiprotiv.rs). */
+.notes .turn { padding: 1rem 0; border-bottom: 1px solid var(--line); max-width: 46rem; scroll-margin-top: 1rem; }
+.notes .turn h2 { font-family: system-ui, sans-serif; font-size: 1rem; margin: 0 0 .4rem; letter-spacing: 0; }
+.notes .turn h2 .anchor { text-decoration: none; color: inherit; } .notes .turn h2 a[href^="https"] { text-decoration: underline; }
+.notes .turn p { margin: 0 0 .6rem; line-height: 1.55; }
+.notes .turn-chair { color: var(--muted); }
+.notes .turn:target { background: var(--za-soft); box-shadow: -1rem 0 0 var(--za-soft), 1rem 0 0 var(--za-soft); }
+.notes .turn { border-width: 0 0 1px; background: none; }

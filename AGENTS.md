@@ -99,6 +99,11 @@ These are the project's promises to its readers. Never change them without the m
      full-text search (Pagefind, built in the `pages` workflow from the Latin pages into `pagefind/`; `pretraga.html`),
      and MPs' portraits from the Assembly's list of MPs (`photos.py`, `data/photos/`, shown on the MP's page, in
      the list and in the quiz's result). Nothing is loaded from another server for either.
+   - **The stenographic notes as pages of their own** (the maintainer, 14 Nov 2026): every speech of the sittings
+     read, word for word, each with an address, in a Cloudflare R2 bucket behind `beleske.zailiprotiv.rs`: too much
+     for the site's host (GitHub Pages allows 1 GB; the site is about 740 MB). `notes_site.py` builds them
+     (`notes-site`), `notes-upload` sends only what changed (`data/notes_manifest.json`), the `notes` workflow runs
+     both after each transcripts run. The site links to them when `data/settings.json` has `notes_url`.
    - **A second exception, the maintainer's (13 Nov 2026): counting visits.** Every page loads Cloudflare Web
      Analytics' script (no cookies, no following of a person; totals per page) when `data/settings.json` has
      `analytics_token`; without it nothing is loaded. The footer and "O projektu" say so. `publish.check` lets this

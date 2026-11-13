@@ -55,6 +55,7 @@ jobs:
             if git status -sb | grep -q ahead; then exit 1; fi
           fi
           gh workflow run summaries.yml --ref main -f convocation=${{ inputs.convocation }}
+          gh workflow run notes.yml --ref main || true  # the notes as pages of their own (R2)
       - name: Tell the maintainer when this failed
         if: failure()
         env:

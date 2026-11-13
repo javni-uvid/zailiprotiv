@@ -62,7 +62,7 @@
           <p class="meta">{{ where(e) }}{% if w and w.slug %} · <a href="poslanik/{{ w.slug }}.html#mere">sve mere: {{ w.name }}</a>{% endif %}</p>
           {% if e.before %}<p class="turn-who">Govor pre toga: {{ person(e.before_who) }}</p><blockquote class="said"><p>{{ e.before.text|latin }}</p></blockquote>{% endif %}
           <p class="turn-who">Sve reči predsedavajućeg</p>
-          <blockquote class="said"><p>{{ e.chair.text|latin }}</p>{% if e.notes %}<footer><a href="{{ e.notes }}">Stenografske beleške tog dana</a></footer>{% endif %}</blockquote>
+          <blockquote class="said"><p>{{ e.chair.text|latin }}</p>{% if e.ours or e.notes %}<footer>{% if e.ours %}<a href="{{ e.ours }}">Na ovom mestu u beleškama</a>{% endif %}{% if e.ours and e.notes %} · {% endif %}{% if e.notes %}<a href="{{ e.notes }}">izvorni fajl Skupštine</a>{% endif %}</footer>{% endif %}</blockquote>
         </div>
       </details>
     </li>
@@ -97,7 +97,7 @@
       <div class="talk">
       {% for s in e.speeches %}<div class="turn turn-{{ s.side }}"><p class="turn-who">{% if s.who %}{{ person(s.who) }}{% else %}Predsedavajući{% endif %}</p><p class="turn-text">{{ s.text|latin }}</p></div>{% endfor %}
       </div>
-      {% if e.notes %}<p class="meta"><a href="{{ e.notes }}">Stenografske beleške tog dana</a> (privremene, neautorizovane)</p>{% endif %}
+      {% if e.ours %}<p class="meta"><a href="{{ e.ours }}">Ova razmena u beleškama, sa svim što je rečeno oko nje</a></p>{% endif %}{% if e.notes %}<p class="meta"><a href="{{ e.notes }}">Stenografske beleške tog dana</a> (privremene, neautorizovane)</p>{% endif %}
       </details>
     </li>
   {% endfor %}
@@ -134,7 +134,7 @@
   {% for r in c.top.harsh %}
     <li{% if r.who.slug %} id="reci-{{ r.who.slug }}"{% endif %}><details><summary><span class="board-who">{{ r.who.name }}</span> <b class="board-n">{{ r.harsh|length }}</b> <span class="meta">· {{ r.harsh_words|join(", ") }}</span></summary>
       {% if r.who.slug %}<p class="meta"><a href="poslanik/{{ r.who.slug }}.html">Strana poslanika</a></p>{% endif %}
-      <ul class="plain harsh">{% for h in r.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.notes %}<a href="{{ h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
+      <ul class="plain harsh">{% for h in r.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.ours or h.notes %}<a href="{{ h.ours or h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
     </details></li>
   {% endfor %}
   </ol>

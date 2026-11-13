@@ -286,3 +286,25 @@ def test_a_measure_without_a_name_is_placed_by_context_only_when_the_notes_show_
     later = {"chair": True, "speaker": "ПРЕДСЕДНИК", "day": 1,
              "text": "Хвала. Реч има министар. Не, чекајте. Молим за мир у сали. Изричем вам опомену."}
     assert f.by_context(f.measures([said, later])[0]) is None  # too far from the speech to say
+
+
+def test_every_speech_of_the_notes_has_a_place_and_long_days_are_split(monkeypatch):
+    from zailiprotiv import notes_site
+    monkeypatch.setattr(notes_site, "PART", 30)
+    notes = {"sitting": "https://www.parlament.gov.rs/Седница.53893.43.html",
+             "speeches": {"00000": {"day": 1, "text": "а" * 10}, "00001": {"day": 1, "text": "б" * 10},
+                          "00002": {"day": 1, "text": "в" * 10}, "00003": {"day": 2, "text": "г"}}}
+    where = notes_site.layout("14", notes)
+    assert where["00000"] == ("14/53893/dan-1.html", "g00000") and where["00001"][0] == "14/53893/dan-1-2.html"
+    assert where["00003"][0] == "14/53893/dan-2.html"
+
+
+def test_only_changed_notes_pages_are_sent(tmp_path):
+    from zailiprotiv import notes_site
+    (tmp_path / "a.html").write_text("a")
+    (tmp_path / "b.html").write_text("b")
+    now, send, gone = notes_site.changed(tmp_path, {})
+    assert send == ["a.html", "b.html"] and not gone
+    (tmp_path / "b.html").write_text("b2")
+    (tmp_path / "a.html").unlink()
+    assert notes_site.changed(tmp_path, now)[1:] == (["b.html"], ["a.html"])

@@ -1,0 +1,61 @@
+# The stenographic notes as pages of their own, kept in a Cloudflare R2 bucket behind beleske.zailiprotiv.rs: too
+# much for the site's host. Builds the pages from data/<N>/transcripts/ and sends only those that changed
+# (data/notes_manifest.json remembers what is in the bucket). Runs after each transcripts run, and by hand.
+# Needs the repository secrets R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY (an R2 API token for the bucket, object
+# read and write) and CLOUDFLARE_ACCOUNT_ID.
+name: notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: "Only say what would be sent"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: notes
+  cancel-in-progress: false
+
+jobs:
+  notes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build and send
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv notes-site --out _beleske
+          du -sh --apparent-size _beleske; find _beleske -type f | wc -l
+          uv run zailiprotiv notes-upload --dir _beleske ${{ inputs.dry && '--dry' || '' }}
+      - name: Commit what is in the bucket
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/notes_manifest.json 2>/dev/null || exit 0
+          git diff --cached --quiet && exit 0
+          git commit -m "Notes' pages sent to the bucket"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+      - name: Tell the maintainer when this failed
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Workflow ${{ github.workflow }} ne prolazi"
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          n=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${{ github.repository }}" --body "Ponovo: $url"
+          else gh issue create -R "${{ github.repository }}" --title "$title" --body "Pokretanje nije prošlo: $url"; fi

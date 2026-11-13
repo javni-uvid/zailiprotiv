@@ -10,7 +10,7 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from zailiprotiv import debates as debates_, mps
+from zailiprotiv import debates as debates_, mps, notes_site
 from zailiprotiv.site import ORDINAL_NAME, slug
 from zailiprotiv.translit import latin
 
@@ -162,7 +162,7 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
 
 
 def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
-           years_of: dict | None = None) -> tuple[dict, dict]:
+           years_of: dict | None = None, notes_url: str = "") -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
     years_of = years_of or {}
 
@@ -182,7 +182,9 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                      "measures_likely": 0, "harsh": []})
         pair_of = {}
         for url, notes in debates.get(c, {}).items():
-            speeches = [{**notes["speeches"][k], "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
+            speeches = [{**notes["speeches"][k], "key": k, "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
+            # The speech's own address among the notes' pages (notes_site), when those are published.
+            where = notes_site.layout(c, notes) if notes_url else {}
             days = {d["day"]: d for d in notes["days"]}
             title = latin(re.sub(r"^СТЕНОГРАФСКЕ БЕЛЕШКЕ\s*-\s*", "", notes["days"][0]["title"]).split(" - ")[0]) if notes["days"] else ""
             agenda = notes["agenda"] if isinstance(notes["agenda"], dict) else dict(notes["agenda"])
@@ -197,7 +199,9 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 if 1 <= len(items) <= 3:  # a debate on one act (or a few): say which; a joint debate on dozens is not "on" any
                     law = law_at.get((url, items[0]))
                     on = {"text": latin(agenda.get(items[0], "")), "law": law, "more": len(items) - 1}
+                ours = where.get(s.get("key"))
                 return {"date": date, "notes": d.get("url", ""), "sitting": title, "sitting_url": url, "on": on,
+                        "ours": f"{notes_url}{ours[0]}#{ours[1]}" if ours else "",
                         "joint": len(items) if len(items) > 3 else 0}
             found = []
             for m in measures(speeches):

@@ -77,6 +77,52 @@ def in_procedure(args) -> int:
     return 0
 
 
+def notes_site_cmd(args) -> int:
+    """The stenographic notes read, as pages of their own (see notes_site), into --out."""
+    from zailiprotiv import notes_site
+    n = notes_site.build(ROOT, Path(args.out))
+    print(f"notes: {n['pages']} pages (each in two scripts), {n['speeches']} speeches")
+    return 0
+
+
+def notes_upload_cmd(args) -> int:
+    """Send the notes' pages that changed to the R2 bucket (S3 API), and remember what is there in
+    data/notes_manifest.json so the next run sends only what is new. Needs R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY and
+    CLOUDFLARE_ACCOUNT_ID in the environment."""
+    import mimetypes
+    import os
+    from zailiprotiv import notes_site
+    folder, store = Path(args.dir), ROOT / "notes_manifest.json"
+    manifest = json.loads(store.read_text(encoding="utf-8")) if store.exists() else {}
+    now, send, gone = notes_site.changed(folder, manifest)
+    print(f"notes: {len(now)} files, {len(send)} to send, {len(gone)} to remove")
+    if args.dry or not (send or gone):
+        return 0
+    missing = [v for v in ("R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "CLOUDFLARE_ACCOUNT_ID") if not os.environ.get(v)]
+    if missing:
+        print("not sent, missing: " + ", ".join(missing))
+        return 1
+    import boto3
+    s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+                      aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+                      aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"], region_name="auto")
+    for i, name in enumerate(send):
+        kind = mimetypes.guess_type(name)[0] or "application/octet-stream"
+        if kind.startswith("text/") or kind in ("image/svg+xml", "application/json"):
+            kind += "; charset=utf-8"
+        s3.upload_file(str(folder / name), args.bucket, name,
+                       ExtraArgs={"ContentType": kind, "CacheControl": "public, max-age=3600"})
+        manifest[name] = now[name]
+        if i % 200 == 199:  # keep what was sent, should the run stop
+            store.write_text(json.dumps(manifest, ensure_ascii=False, indent=0, sort_keys=True) + "\n", encoding="utf-8")
+    for name in gone:
+        s3.delete_object(Bucket=args.bucket, Key=name)
+        manifest.pop(name, None)
+    store.write_text(json.dumps(manifest, ensure_ascii=False, indent=0, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"notes: sent {len(send)}, removed {len(gone)}")
+    return 0
+
+
 def photos_cmd(args) -> int:
     """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
     import time
@@ -905,6 +951,14 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("procedure", help="the bills in procedure now → data/<N>/procedure.json")
     p.add_argument("--out", default=str(DATA / "procedure.json"))
     p.set_defaults(run=in_procedure)
+    p = commands.add_parser("notes-site", help="the stenographic notes as pages of their own → --out")
+    p.add_argument("--out", default="_beleske")
+    p.set_defaults(run=notes_site_cmd)
+    p = commands.add_parser("notes-upload", help="send the notes' pages that changed to the R2 bucket")
+    p.add_argument("--dir", default="_beleske")
+    p.add_argument("--bucket", default="zailiprotiv-beleske")
+    p.add_argument("--dry", action="store_true", help="say what would be sent, send nothing")
+    p.set_defaults(run=notes_upload_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")
