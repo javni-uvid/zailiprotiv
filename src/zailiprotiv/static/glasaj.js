@@ -46,7 +46,7 @@
       m.className = (m.dataset.go === "kraj" ? "q-strip-end" : "") + (a ? " a-" + a : "") + (String(i) === m.dataset.go ? " now" : "");
       if (m.dataset.go === "kraj") m.disabled = done() < 3;
     });
-    if (end) summary();
+    if (end) { summary(); others(); }
   }
 
   function names(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " i " + xs[xs.length - 1]; }
@@ -204,19 +204,53 @@
   // Visitors' votes: shown under a law once the visitor has answered it; sent only when the visitor asks.
   var apiEl = document.getElementById("q-api"), api = apiEl ? apiEl.dataset.api : "";
   var crowd = null, SENT = KEY + ":poslato";
-  function showCrowd() {
-    items.forEach(function (item, i) {
-      var p = item.querySelector(".q-crowd"), c = crowd && crowd[data.laws[i].s];
-      var n = c ? c.z + c.p + c.u : 0;
-      p.hidden = !(answers[i] && n >= 10);  // a handful of votes says nothing
-      if (!p.hidden) p.textContent = "Posetioci sajta: " + Math.round(100 * c.z / n) + "% za, " + Math.round(100 * c.p / n) +
-        "% protiv (" + n + " " + plural(n, "glas", "glasa", "glasova") + ")";
-    });
-  }
-  // Each law's vote is sent once, when the visitor moves on from it (the page says so before the first vote).
   var sentLaws = {};
   try { sentLaws = JSON.parse(localStorage.getItem(SENT) || "{}"); } catch (e) {}
   if (!sentLaws || typeof sentLaws !== "object") sentLaws = {};
+  // What visitors chose for a law: the counter's totals, plus this visitor's own vote while it is not sent yet.
+  function crowdOf(i) {
+    var law = data.laws[i].s, c = (crowd && crowd[law]) || { z: 0, p: 0, u: 0 };
+    c = { z: c.z, p: c.p, u: c.u };
+    if (answers[i] && !sentLaws[law]) c[answers[i]]++;
+    c.n = c.z + c.p + c.u;
+    return c;
+  }
+  function showCrowd() {
+    if (!api) return;
+    items.forEach(function (item, i) {
+      var box = item.querySelector(".q-crowd"), c = crowdOf(i);
+      box.hidden = !(answers[i] && c.n);
+      if (box.hidden) return;
+      var bars = box.querySelectorAll(".q-hall span");
+      [c.z, c.p, c.u].forEach(function (n, k) { bars[k].style.width = (100 * n / c.n) + "%"; });
+      box.querySelector(".q-crowd-key").textContent = c.z + " za, " + c.p + " protiv" + (c.u ? ", " + c.u + " uzdržano" : "") +
+        (c.n < 10 ? " (za sada samo " + c.n + " " + plural(c.n, "glas", "glasa", "glasova") + ")" : "");
+    });
+    if (at === "kraj") others();
+  }
+  // At the end: every law, the chamber beside the visitors.
+  function others() {
+    var body = document.getElementById("q-others"), any = false;
+    if (!body) return;
+    body.textContent = "";
+    items.forEach(function (item, i) {
+      var c = crowdOf(i), tr = el("tr"), td = el("td"), a = el("a", null, item.querySelector("h2").textContent);
+      if (c.n) any = true;
+      a.href = item.querySelector("h2 a").getAttribute("href"); td.appendChild(a); tr.appendChild(td);
+      tr.appendChild(el("td", "num" + (answers[i] ? " v-text-" + { z: "za", p: "protiv", u: "uzdrzan" }[answers[i]] : ""), answers[i] ? WORD[answers[i]] : "—"));
+      tr.appendChild(el("td", "num", item.dataset.za + " : " + item.dataset.protiv));
+      var cell = el("td", "vote-cell"), bar = el("div", "bar");
+      [["v-za", c.z], ["v-protiv", c.p], ["v-uzdrzan", c.u]].forEach(function (p) {
+        if (c.n && p[1]) { var sp = el("span", p[0]); sp.style.width = (100 * p[1] / c.n) + "%"; bar.appendChild(sp); }
+      });
+      cell.appendChild(bar); tr.appendChild(cell);
+      tr.appendChild(el("td", "num", c.n ? c.z + " : " + c.p : "—"));
+      body.appendChild(tr);
+    });
+    document.getElementById("q-others-box").hidden = !any;
+  }
+
+  // Each law's vote is sent once, when the visitor moves on from it (the page says so before the first vote).
   function send() {
     if (!api) return;
     var v = {}, any = false;

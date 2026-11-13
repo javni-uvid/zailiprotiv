@@ -175,7 +175,7 @@ def memoranda(args) -> int:
 
 def website(args) -> int:
     from zailiprotiv import site
-    stats = site.build(ROOT, Path(args.out), args.domain or None)
+    stats = site.build(ROOT, Path(args.out), args.domain or None, clean=not args.html_links)
     print(", ".join(f"{k}: {v}" for k, v in stats.items()))
     bad = site.check(Path(args.out))  # the site is not published while any page breaks the rules
     for b in bad:
@@ -819,6 +819,7 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("site", help="build the static site")
     p.add_argument("--out", default="_site")
     p.add_argument("--domain", default="zailiprotiv.rs")
+    p.add_argument("--html-links", action="store_true", help="keep .html in links, to open the pages from disk")
     p.set_defaults(run=website)
     p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
     p.add_argument("--index", default=str(DATA / "index.json"))

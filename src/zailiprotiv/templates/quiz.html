@@ -33,7 +33,11 @@
       <p class="q-verdict"></p>
       <div class="q-hall" role="img" aria-label="Skupština: {{ c.za }} za, {{ c.protiv }} protiv"><span class="v-za"></span><span class="v-protiv"></span><span class="v-ostali"></span></div>
       <p class="q-hall-key"><b class="t-za">{{ c.za }} za</b><b class="t-protiv">{{ c.protiv }} protiv</b></p>
-      <p class="q-crowd" hidden></p>
+      <div class="q-crowd" hidden>
+        <p class="q-crowd-title">Posetioci sajta</p>
+        <div class="q-hall q-hall-small" role="img" aria-label="Glasovi posetilaca sajta"><span class="v-za"></span><span class="v-protiv"></span><span class="v-uzdrzan"></span></div>
+        <p class="q-crowd-key"></p>
+      </div>
       <p class="q-next"><button type="button" class="button q-go">{% if loop.last %}Vidi rezultat{% else %}Sledeći zakon{% endif %}</button> <a href="zakon/{{ it.slug }}.html">Više o ovom zakonu</a></p>
     </div>
   </li>
@@ -57,11 +61,16 @@
   <h3>Poslanici koji su glasali kao ti</h3>
   <ul class="rows compact" id="q-mps"></ul>
   <p class="meta" id="q-mps-note"></p>
+  <div id="q-others-box" hidden>
+  <h3>Kako su glasali drugi posetioci</h3>
+  <div class="scroll"><table class="groups q-others"><thead><tr><th>Zakon</th><th class="num">Ti</th><th class="num">Skupština (za : protiv)</th><th class="vote-cell"></th><th class="num">Posetioci (za : protiv)</th></tr></thead><tbody id="q-others"></tbody></table></div>
+  <p class="label">Zbir glasova posetilaca ove strane, sa tvojim. To nije istraživanje javnog mnjenja: glasaju samo oni koji dođu na sajt.</p>
+  </div>
   <h3>Poslaničke grupe</h3>
   <div class="scroll"><table class="groups"><thead><tr><th>Grupa</th><th class="vote-cell"></th><th class="num">Isti glas kao većina grupe</th></tr></thead><tbody id="q-groups"></tbody></table></div>
   <p class="label">Poredimo samo zakone o kojima ste oboje glasali. Ovo je poređenje glasova o nekoliko zakona, ne preporuka za koga da glasaš.</p>
 </section>
-<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. {% if votes_api %}Kad glasaš o zakonu i pređeš na sledeći, tvoj glas o tom zakonu se šalje našem brojaču, jednom po zakonu. „Posetioci sajta“ je zbir tih glasova: to nije istraživanje javnog mnjenja, glasaju samo oni koji dođu na sajt, a isti čovek može da glasa sa više uređaja.{% else %}Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju.{% endif %} {{ how("glasaj") }}</p>
+<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. {% if votes_api %}Kad glasaš o zakonu i pređeš na sledeći, tvoj glas o tom zakonu se šalje našem brojaču, jednom po zakonu. „Posetioci sajta“ je zbir tih glasova, prikazan odmah, i kad ih je malo: to nije istraživanje javnog mnjenja, glasaju samo oni koji dođu na sajt, a isti čovek može da glasa sa više uređaja.{% else %}Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju.{% endif %} {{ how("glasaj") }}</p>
 <div id="q-api" data-api="{{ votes_api }}" hidden></div>
 <script type="application/json" id="quiz-data">{{ quiz|safe }}</script>
 <script src="glasaj.js?v={{ css }}" defer></script>

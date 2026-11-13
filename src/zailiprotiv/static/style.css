@@ -325,7 +325,12 @@ td.lean { white-space: nowrap; }
 .q-hall span { display: block; height: 100%; width: 0; transition: width .9s cubic-bezier(.2, .7, .2, 1); }
 .q-hall .v-ostali { background: transparent; }
 .q-hall-key { display: flex; gap: 1.2rem; margin: .45rem 0 0; font-size: 1.1rem; }
-.q-crowd { margin: .8rem 0 0; font-size: 1.05rem; font-weight: 600; }
+.q-crowd { margin: 1.3rem 0 0; }
+.q-crowd-title { margin: 0 0 .35rem; font-weight: 700; font-size: 1.05rem; }
+.q-hall-small { height: 1.5rem; }
+.q-hall-small .v-uzdrzan { background: var(--uzdrzan); }
+.q-crowd-key { margin: .35rem 0 0; font-size: 1.05rem; }
+.q-others td:first-child { min-width: 12rem; }
 .q-next { margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; align-items: center; }
 .q-next .button, .q-share .button { font-size: 1.1rem; padding: .85rem 1.5rem; border: 2px solid var(--fg); cursor: pointer; font-family: inherit; margin: 0; }
 .q-share .button.ghost { background: transparent; color: var(--fg); }

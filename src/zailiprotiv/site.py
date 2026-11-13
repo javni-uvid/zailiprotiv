@@ -334,7 +334,7 @@ def write_feed(path: Path, title: str, self_url: str, page_url: str, entries: li
                     f"<id>{x(page_url or self_url)}</id><updated>{updated}</updated>\n{body}</feed>\n", encoding="utf-8")
 
 
-def build(root: Path, out: Path, domain: str | None = None) -> dict:
+def build(root: Path, out: Path, domain: str | None = None, clean: bool = False) -> dict:
     convs = convocations(root)
     current = convs[0][0]
     loaded = {c: load(path) for c, path in convs}
@@ -912,7 +912,41 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                    [entry(r["it"], f"{word.get(r['vote'], r['vote'])}: {r['it']['law']['short']}",
                           "Drugačije od većine svoje grupe. " if r["differs"] else "") for r in record])
     (out / ".nojekyll").write_text("", encoding="utf-8")
+    if clean:
+        clean_urls(out)
     return stats
+
+
+_HREF = re.compile(r'((?:href|content)=")([^":?#]*?)\.html((?:[#?][^"]*)?")')
+
+
+def clean_urls(out: Path) -> None:
+    """Addresses without ".html" (the maintainer, 13 Nov 2026): GitHub Pages serves page.html at /page, so the files
+    keep their names and only the links change, in pages, feeds, the sitemap and the site's own scripts. "index"
+    becomes the folder itself. A page that shares its name with a folder ("podaci.html" beside "podaci/") keeps its
+    ending, as the short address would open the folder. Links to other sites are left as they are."""
+    def absolute(m):
+        rel = m.group(2)
+        if rel == "index" or rel.endswith("/index"):
+            return m.group(1) + rel[:-5]
+        return m.group(0) if (out / rel).is_dir() else m.group(1) + rel
+    own = re.compile(r"(https://[^\s\"<>/]*zailiprotiv[^\s\"<>/]*/)([^\s\"<>?#]*?)\.html")
+    for f in out.rglob("*"):
+        if f.suffix == ".html":
+            def link(m, here=f.parent):
+                path = m.group(2)
+                if path == "index" or path.endswith("/index"):
+                    path = path[:-5] or "./"
+                elif (here / path).is_dir():
+                    return m.group(0)
+                return m.group(1) + path + m.group(3)
+            text = _HREF.sub(link, f.read_text(encoding="utf-8"))  # relative links: no scheme, so no colon
+            f.write_text(own.sub(absolute, text), encoding="utf-8")
+        elif f.suffix == ".xml":
+            f.write_text(own.sub(absolute, f.read_text(encoding="utf-8")), encoding="utf-8")
+        elif f.suffix == ".js":
+            text = f.read_text(encoding="utf-8")
+            f.write_text(text.replace(' + ".html"', "").replace('glasaj.html"', 'glasaj"'), encoding="utf-8")
 
 
 # What every built page must keep to (project principles): nothing loaded from another site, and pages light enough

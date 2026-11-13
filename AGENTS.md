@@ -25,6 +25,10 @@ in the same commit. README.md describes the project for its users; this file is 
   left for a person (`zailiprotiv status` lists it). The session commands (`export`/`import`, `*-export`/`*-import`)
   stay for work by hand.
 - **`zailiprotiv status`** says what the data still lacks per convocation; look before and after a data run.
+- **Links have no ".html"** (the maintainer, 13 Nov 2026): the files keep their names, GitHub Pages serves
+  `page.html` at `/page`, and `site.clean_urls` rewrites the links after the build (pages, feeds, sitemap, scripts).
+  A page named like a folder (`podaci.html`, `podaci/`) keeps its ending. `zailiprotiv site --html-links` keeps the
+  endings, to open the built pages from disk.
 - **`zailiprotiv site` fails** when a page is over 1 MB or loads anything from another site (`site.check`); the
   **pages** workflow then doesn't publish.
 - **Talk to the maintainer in Serbian** (Latin script), briefly and to the point. Code, comments and docs are in
@@ -63,8 +67,9 @@ These are the project's promises to its readers. Never change them without the m
      choice (law → for, against, abstained) to the project's own counter (`worker/`, a Cloudflare Worker with a D1
      table of three numbers per law; no cookies, addresses or times kept), once per law and browser, when the visitor
      moves on from that law. First built with a "send" button; the maintainer chose automatic sending the same day,
-     so the page says it before the first vote. The totals are shown as "Posetioci sajta", apart from MPs' votes,
-     with ten votes or more, and the page says it is not a poll. The address is in `data/settings.json`
+     so the page says it before the first vote. The totals are shown as "Posetioci sajta", apart from MPs' votes:
+     under a law as soon as the visitor has voted on it (the maintainer, 13 Nov 2026; fewer than ten votes are marked
+     as few), and in a table at the end beside the chamber's result. The page says it is not a poll. The address is in `data/settings.json`
      (`votes_api`); empty, the page sends nothing.
 
 ## Architecture decisions

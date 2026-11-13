@@ -181,3 +181,18 @@ def test_visitors_votes_are_sent_only_when_an_address_is_set(tmp_path):
     site.build(root, out, "zailiprotiv.rs")
     page = (out / "glasaj.html").read_text()
     assert "ulaze u zbir" in page and 'data-api="https://glasovi.example/"' in page and "nije istraživanje" in page
+
+
+def test_links_without_html_when_published(tmp_path):
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs", clean=True)
+    law = (out / "zakon" / "zakon-o-oruzju.html").read_text()  # the file keeps its name; GitHub Pages serves it without
+    assert 'href="../poslanik/abramovic-nenad"' in law and 'href="../kako-racunamo#' in law and 'href="../"' in law
+    assert 'content="https://zailiprotiv.rs/zakon/zakon-o-oruzju"' in law and "zakon-o-oruzju.png" in law
+    assert "www.parlament.gov.rs" in law and not re.search(r'href="(?!https?:)(?!\.\./podaci\.html)[^"]*\.html', law)
+    home = (out / "index.html").read_text()
+    assert 'href="zakoni"' in home and 'href="./"' in home and 'href="zakon/zakon-o-oruzju"' in home
+    assert "zakon/zakon-o-oruzju</loc>" in (out / "sitemap.xml").read_text() and (out / "sitemap.xml").read_text().count(".html") == 1
+    assert "/zakon/zakon-o-oruzju\"" in (out / "zakoni.xml").read_text()
+    assert 'href="podaci.html"' in home  # beside the folder podaci/, so it keeps its ending
+    assert '+ ".html"' not in (out / "site.js").read_text() and '+ ".html"' not in (out / "glasaj.js").read_text()
