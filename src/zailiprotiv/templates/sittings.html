@@ -1,9 +1,19 @@
 {% extends "base.html" %}
+{% from "macros.html" import plural %}
 {% block title %}Sednice — Za ili Protiv{% endblock %}
 {% block description %}Sednice Narodne skupštine na kojima su usvajani zakoni, po sazivima i datumu.{% endblock %}
 {% block main %}
 <h1>Sednice</h1>
-<p class="meta">Sednice na kojima su usvajani zakoni, po sazivima, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv. Sazvane sednice čiji rezultati još nisu objavljeni su na strani <a href="u-proceduri.html#sednice">U proceduri</a>.</p>
+{% set now = by_conv[0][1] if by_conv else [] %}
+{% if now %}
+{% set most = (now|sort(attribute="against", reverse=true))[0] %}
+{% set big = (now|sort(attribute="n", reverse=true))[0] %}
+<div class="lead-nums">
+  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "sednica", "sednice", "sednica") }} sa usvojenim zakonima u {{ by_conv[0][0].name|lower }}m sazivu</span></p>
+  <p><b>{{ big.n }}</b><span>{{ plural(big.n, "zakon", "zakona", "zakona") }} na jednoj sednici, najviše: <a href="sednica/{{ big.slug }}.html">{{ big.day|day }}</a></span></p>
+  <p><b class="t-protiv">{{ most.against }}</b><span>glasova protiv na jednoj sednici, najviše: <a href="sednica/{{ most.slug }}.html">{{ most.day|day }}</a></span></p>
+</div>
+{% endif %}
 <nav class="page-menu" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav>
 {% for cv, ss in by_conv if ss %}
 <section id="saziv-{{ cv.n }}">
@@ -13,4 +23,7 @@
   </ul>
 </section>
 {% endfor %}
+<details class="method"><summary>Kako je ovo nastalo</summary>
+<p>Sednice na kojima su usvajani zakoni, po sazivima, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv. Sazvane sednice čiji rezultati još nisu objavljeni su na strani <a href="u-proceduri.html#sednice">U proceduri</a>.</p>
+</details>
 {% endblock %}

@@ -4,7 +4,13 @@
 {% block description %}Kako Narodna skupština Srbije donosi zakone, po sazivima: hitan postupak, dani od predloga do usvajanja, zakoni bez glasa protiv, jedinstvo poslaničkih grupa.{% endblock %}
 {% block main %}
 <h1>Skupština u brojkama</h1>
-<p class="meta">Iz istih dokumenata kao i ostatak sajta, istim pravilom za svaki saziv i svaku grupu. Ovde nema rang-liste poslanika: broj glasanja ili govora ne govori koliko poslanik radi. {{ how("brojke") }}</p>
+{% set n0 = numbers[0] %}
+<div class="lead-nums">
+  <p><b>{{ n0.laws }}</b><span>{{ plural(n0.laws, "zakon", "zakona", "zakona") }} u {{ n0.conv.name|lower }}m sazivu</span></p>
+  {% if n0.with_bill %}<p><b>{{ (100 * n0.urgent / n0.with_bill)|round|int }}%</b><span>po hitnom postupku</span></p>{% endif %}
+  {% if n0.voted %}<p><b>{{ (100 * n0.unopposed / n0.voted)|round|int }}%</b><span>bez ijednog glasa protiv</span></p>{% endif %}
+  {% if n0.days is not none %}<p><b>{{ n0.days }}</b><span>{{ plural(n0.days, "dan", "dana", "dana") }} od predloga do usvajanja, za polovinu zakona</span></p>{% endif %}
+</div>
 <section>
   <h2>Kako se donose zakoni</h2>
   <div class="scroll">
@@ -31,4 +37,7 @@
 </section>
 {% endfor %}
 <p class="meta foot-note">Grupe su poređane po broju članova. Za i protiv: konačna glasanja o zakonima na kojima je većina grupe tako glasala. Prisustvo samo gde Skupština navodi i odsutne (od jeseni 2025).</p>
+<details class="method"><summary>Kako je ovo nastalo</summary>
+<p>Iz istih dokumenata kao i ostatak sajta, istim pravilom za svaki saziv i svaku grupu. Ovde nema rang-liste poslanika: broj glasanja ili govora ne govori koliko poslanik radi. {{ how("brojke") }}</p>
+</details>
 {% endblock %}

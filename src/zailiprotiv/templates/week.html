@@ -1,13 +1,24 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, how with context %}
+{% from "macros.html" import bar, chamber, plural, how with context %}
 {% block title %}U Skupštini, {{ w.span }} — Za ili Protiv{% endblock %}
 {% block description %}Nedelja u Narodnoj skupštini, {{ w.span }}: {{ w.n }} {{ plural(w.n, "usvojen zakon", "usvojena zakona", "usvojenih zakona") }}{% if w.bills %}, {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }}{% endif %}.{% endblock %}
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Nedelja u Skupštini" href="../nedelje.xml">{% endblock %}
 {% block main %}
 <p class="crumbs"><a href="../nedelje.html">Nedelja u Skupštini</a></p>
+{% set top = (w.laws|selectattr("final")|list)[:1] %}
+<div class="law-hero">
+<div class="law-head">
 <h1>{{ w.span }}</h1>
-<p class="standfirst">{% if w.n %}Skupština je usvojila {{ w.n }} {{ plural(w.n, "zakon", "zakona", "zakona") }}{% if w.opposed %}, od toga {{ w.opposed }} sa glasovima protiv{% else %}, nijedan sa glasom protiv{% endif %}{% if w.urgent %}; {{ w.urgent }} po hitnom postupku{% endif %}.{% else %}Skupština ove nedelje nije usvojila nijedan zakon.{% endif %}{% if w.bills %} Podneto je {{ w.bills|length }} {{ plural(w.bills|length, "predlog zakona koji", "predloga zakona koja", "predloga zakona koji") }} još {{ plural(w.bills|length, "čeka", "čekaju", "čeka") }}.{% endif %}</p>
+<div class="lead-nums">
+  <p><b>{{ w.n }}</b><span>{{ plural(w.n, "usvojen zakon", "usvojena zakona", "usvojenih zakona") }}</span></p>
+  {% if w.n %}<p><b class="t-protiv">{{ w.opposed }}</b><span>sa glasovima protiv</span></p>{% endif %}
+  {% if w.urgent %}<p><b>{{ w.urgent }}</b><span>po hitnom postupku</span></p>{% endif %}
+  {% if w.bills %}<p><b>{{ w.bills|length }}</b><span>{{ plural(w.bills|length, "novi predlog koji čeka", "nova predloga koja čekaju", "novih predloga koji čekaju") }}</span></p>{% endif %}
+</div>
+</div>
+{% if top and top[0].final.counts.protiv %}<a class="law-chamber sitting-lead" href="../zakon/{{ top[0].slug }}.html">{{ chamber(top[0].final.counts) }}<span class="hero-meta">Najviše podeljen ove nedelje:</span> <span class="sitting-lead-law">{{ top[0].law.short }}</span></a>{% endif %}
+</div>
 {% if w.laws %}
 <section>
   <h2>Usvojeno <span class="count">{{ w.n }}</span></h2>
