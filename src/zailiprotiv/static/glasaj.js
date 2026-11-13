@@ -9,6 +9,20 @@
   var KEY = "glasaj:" + data.laws.map(function (l) { return l.s; }).join("|"), at = 0;
   var WORD = { z: "za", p: "protiv", u: "uzdržan" };
   try { var saved = JSON.parse(sessionStorage.getItem(KEY) || "null"); if (saved && saved.length === answers.length) answers = saved; } catch (e) {}
+  // A vote cast on the home page's band comes in the address (?z=<law>&g=z|p|u): it is taken as cast here, and the
+  // page opens on that law with its result. The address is then cleaned, so a reload does not cast it again.
+  var cameWith = -1;
+  try {
+    var qp = new URLSearchParams(location.search), qz = qp.get("z"), qg = qp.get("g");
+    if (qz && WORD[qg]) {
+      cameWith = data.laws.map(function (l) { return l.s; }).indexOf(qz);
+      if (cameWith >= 0) {
+        answers[cameWith] = qg;
+        try { sessionStorage.setItem(KEY, JSON.stringify(answers)); } catch (e) {}
+      }
+      history.replaceState(null, "", location.pathname);
+    }
+  } catch (e) {}
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function plural(n, one, few, many) { return n % 10 === 1 && n % 100 !== 11 ? one : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many); }
   function match(v) {
@@ -323,5 +337,6 @@
   if (api) fetch(api).then(function (r) { return r.json(); }).then(function (d) { crowd = d; showCrowd(); }).catch(function () {});
 
   var first = answers.indexOf("");
-  go(first < 0 ? "kraj" : first);
+  go(cameWith >= 0 ? cameWith : (first < 0 ? "kraj" : first));
+  if (cameWith >= 0) showCrowd();
 })();

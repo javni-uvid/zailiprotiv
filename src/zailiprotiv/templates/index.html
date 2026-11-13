@@ -44,7 +44,7 @@
   </div>
   <div class="hq-try">
     <p class="hq-law">{% if q.opis %}{{ q.opis }}{% else %}{{ q.gist|latin|truncate(180, killwords=False, end="…") }}{% endif %}</p>
-    <p class="hq-buttons"><a class="hq-btn hq-za" href="glasaj.html">Za</a><a class="hq-btn hq-protiv" href="glasaj.html">Protiv</a><a class="hq-btn hq-uzd" href="glasaj.html">Uzdržan</a></p>
+    <p class="hq-buttons"><a class="hq-btn hq-za" href="glasaj.html?z={{ q.slug }}&amp;g=z" rel="nofollow">Za</a><a class="hq-btn hq-protiv" href="glasaj.html?z={{ q.slug }}&amp;g=p" rel="nofollow">Protiv</a><a class="hq-btn hq-uzd" href="glasaj.html?z={{ q.slug }}&amp;g=u" rel="nofollow">Uzdržan</a></p>
   </div>
 </section>
 {% endif %}
