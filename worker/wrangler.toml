@@ -1,6 +1,9 @@
 name = "zailiprotiv-glasovi"
 main = "worker.js"
 compatibility_date = "2026-06-01"
+# The counter's own address on the site's domain (its DNS is at Cloudflare since 13 Nov 2026); the deploy makes the
+# DNS record and the certificate. The workers.dev address keeps working.
+routes = [{ pattern = "glasovi.zailiprotiv.rs", custom_domain = true }]
 
 [[d1_databases]]
 binding = "DB"
