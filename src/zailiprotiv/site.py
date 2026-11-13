@@ -816,7 +816,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
              "sittings": len({v["sitting"] for v in votes.values()}),
              "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people), "waiting": len(waiting)}
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, stats=stats, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
+        **common, stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
         spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
                             (most_against(items, 1) or [{}])[0].get("key")),
         featured=next((it for it in most_against(items, 9) if len(it["pair"]) == 2), None),

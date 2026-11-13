@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, plural, how with context %}
 {% block main %}
-<p class="masthead">Narodna skupština Srbije · {{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} · {{ stats.all_mps }} poslanika · <a href="u-proceduri.html">{{ stats.waiting }} {{ plural(stats.waiting, "predlog", "predloga", "predloga") }} u proceduri</a> · iz dokumenata same Skupštine</p>
-{% if of_conv %}<p class="note">Novi saziv još nije usvojio zakone. Dok ih ne usvoji, ovde su zakoni prethodnog, {{ of_conv|lower }}g saziva; <a href="u-proceduri.html">šta čeka na red</a>.</p>{% endif %}
+<section class="home-hero">
+  <h1>Kako glasaju poslanici?</h1>
+  <p class="standfirst">Svaki zakon Narodne skupštine Srbije: šta menja, ko je glasao za, a ko protiv.</p>
+  <div class="finder hero-finder js-only" hidden>
+    <label class="sr" for="q">Zakon ili poslanik</label>
+    <input id="q" type="search" placeholder="Potraži zakon ili poslanika, npr. budžet ili Jovanov" autocomplete="off">
+    <ul id="hits" class="hits" hidden></ul>
+  </div>
+  <p class="masthead">{{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} od {{ convs[-1].years[:4] }}. godine · {{ stats.all_mps }} poslanika · iz dokumenata same Skupštine · <a href="zakoni.html">svi zakoni</a> · <a href="poslanici.html">svi poslanici</a></p>
+</section>
+{% if of_conv %}<p class="note">Novi saziv još nije usvojio zakone. Dok ih ne usvoji, ovde su zakoni prethodnog, {{ of_conv|lower }}g saziva.</p>{% endif %}
 
 {% macro row(it, n) -%}
 <li class="row">
@@ -15,34 +24,26 @@
 </li>
 {%- endmacro %}
 
-{% if contested %}
-{% set top = contested[0] %}
-<section class="lead-law">
-  <div class="lead-text">
-    <p class="kicker">Najviše glasova protiv u poslednjem sazivu · {{ top.law.passed|day }}</p>
-    <h1><a href="zakon/{{ top.slug }}.html">{{ top.law.short }}</a></h1>
-    {% if top.gist %}<p class="standfirst">{{ top.gist|latin }}</p>{% endif %}
-    <p class="row-meta">{% if top.urgent %}Hitan postupak · {% endif %}{% if top.days is not none %}{{ top.days }} {{ plural(top.days, "dan", "dana", "dana") }} od predloga do usvajanja{% endif %}</p>
-    <p><a class="button" href="zakon/{{ top.slug }}.html">Ko je glasao kako</a></p>
-  </div>
-  <div class="lead-vote">
-    <div class="big"><div class="t-za"><b>{{ top.final.counts.za }}</b><span>za</span></div><div class="t-protiv"><b>{{ top.final.counts.protiv }}</b><span>protiv</span></div></div>
-    {{ bar(top.final.counts) }}
-    {% if top.against %}<p class="row-meta">Protiv: {% for g, n in top.against[:4] %}{{ g }} {{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
-  </div>
+<div class="home-now">
+<section>
+  <h2>Poslednje usvojeno</h2>
+  <ol class="rows compact">
+  {% for it in latest %}{{ row(it, none) }}{% endfor %}
+  </ol>
+  <p><a href="zakoni.html">Svi zakoni</a> · <a href="zakoni.xml">RSS</a></p>
 </section>
-
-{% if featured %}
-<section class="voices-home">
-  <p class="kicker muted">Iz rasprave · <a href="zakon/{{ featured.slug }}.html">{{ featured.law.short }}</a></p>
-  <div class="pair">
-  {% for q in featured.pair %}
-    <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
-  {% endfor %}
-  </div>
-</section>
-{% endif %}
-{% endif %}
+<aside class="home-side">
+  <a class="side-box" href="u-proceduri.html">
+    <b>{{ stats.waiting }}</b>
+    <span>{{ plural(stats.waiting, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u proceduri</span>
+    {% if coming %}<span class="side-note">Sazvano: {{ coming[0].title|latin }}{% if coming[0].starts %}, {{ coming[0].starts[:10]|day }}{% endif %}</span>{% endif %}
+  </a>
+  <a class="side-box side-vote" href="glasaj.html">
+    <b>Glasaj i ti</b>
+    <span>Kako bi ti glasao o zakonima koji su podelili Skupštinu? Vidi ko je u sali glasao kao ti.</span>
+  </a>
+</aside>
+</div>
 
 {% if spotlight %}
 <section class="spotlight" aria-labelledby="izdvojeno">
@@ -64,16 +65,24 @@
     </article>
   {% endfor %}
   </div>
-  <p class="spot-more"><a class="button" href="glasaj.html">Glasaj i ti o ovim zakonima</a> <a href="grupe.html">Poslaničke grupe</a> · <a href="brojke.html">Skupština u brojkama</a></p>
+  <p class="spot-more"><a class="button" href="glasaj.html">Glasaj i ti o ovim zakonima</a> <a href="grupe.html">Kako glasaju poslaničke grupe</a> · <a href="brojke.html">Skupština u brojkama</a></p>
+</section>
+{% endif %}
+
+{% if featured %}
+<section class="voices-home">
+  <p class="kicker muted">Iz rasprave · <a href="zakon/{{ featured.slug }}.html">{{ featured.law.short }}</a></p>
+  <div class="pair">
+  {% for q in featured.pair %}
+    <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
+  {% endfor %}
+  </div>
 </section>
 {% endif %}
 
 <section id="zakoni">
   <h2 id="lista-naslov">Zakoni koji su podelili Skupštinu</h2>
   <div class="finder js-only" hidden>
-    <label class="sr" for="q">Zakon ili poslanik</label>
-    <input id="q" type="search" placeholder="Zakon ili poslanik, npr. budžet ili Jovanov" autocomplete="off">
-    <ul id="hits" class="hits" hidden></ul>
     <div class="chips" role="group" aria-label="Prikaži">
       <button type="button" class="chip on" data-f="protiv">Najviše glasova protiv</button>
       <button type="button" class="chip" data-f="novi">Najnoviji</button>
@@ -88,18 +97,6 @@
   {% for it in ranked %}{{ row(it, loop.index) }}{% endfor %}
   </ol>
   <p><button type="button" id="jos" class="link js-only" hidden>Prikaži još</button> <a href="zakoni.html">Svi zakoni</a></p>
-</section>
-
-<section class="mp-finder">
-  <h2>Kako je glasao tvoj poslanik?</h2>
-  <div class="mp-form">
-    <div class="js-only" hidden>
-      <label class="sr" for="qmp">Ime poslanika</label>
-      <input id="qmp" type="search" placeholder="Ime i prezime" autocomplete="off">
-      <ul id="hits-mp" class="hits" hidden></ul>
-    </div>
-    <a class="button" href="poslanici.html">Svi poslanici</a>
-  </div>
 </section>
 
 <p class="meta foot-note">Glasovi su iz poimeničnih rezultata koje Skupština objavljuje; uz svaki zakon je link na izvor. Kratki nazivi zakona su naši, pun naziv je na stranici zakona. Šta zakon menja navodi predlagač, ne mi; sažetke i preglede rasprave piše AI model i tako su označeni.</p>
