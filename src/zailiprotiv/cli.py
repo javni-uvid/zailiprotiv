@@ -103,24 +103,84 @@ def notes_upload_cmd(args) -> int:
         print("not sent, missing: " + ", ".join(missing))
         return 1
     import boto3
+    from botocore.config import Config
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    workers = 16
     s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com",
                       aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
-                      aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"], region_name="auto")
-    for i, name in enumerate(send):
+                      aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"], region_name="auto",
+                      config=Config(connect_timeout=10, read_timeout=60, max_pool_connections=workers,
+                                    retries={"max_attempts": 4, "mode": "standard"}))
+    try:  # a wrong key, account or bucket is said at once, not after an hour of retries
+        s3.list_objects_v2(Bucket=args.bucket, MaxKeys=1)
+    except Exception as e:
+        print(f"not sent, the bucket {args.bucket} does not answer: {e}")
+        return 1
+
+    def save():
+        store.write_text(json.dumps(manifest, ensure_ascii=False, indent=0, sort_keys=True) + "\n", encoding="utf-8")
+
+    def put(name):
         kind = mimetypes.guess_type(name)[0] or "application/octet-stream"
         if kind.startswith("text/") or kind in ("image/svg+xml", "application/json"):
             kind += "; charset=utf-8"
         s3.upload_file(str(folder / name), args.bucket, name,
                        ExtraArgs={"ContentType": kind, "CacheControl": "public, max-age=3600"})
-        manifest[name] = now[name]
-        if i % 200 == 199:  # keep what was sent, should the run stop
-            store.write_text(json.dumps(manifest, ensure_ascii=False, indent=0, sort_keys=True) + "\n", encoding="utf-8")
-    for name in gone:
-        s3.delete_object(Bucket=args.bucket, Key=name)
-        manifest.pop(name, None)
-    store.write_text(json.dumps(manifest, ensure_ascii=False, indent=0, sort_keys=True) + "\n", encoding="utf-8")
-    print(f"notes: sent {len(send)}, removed {len(gone)}")
-    return 0
+
+    failed = []
+    # The pages first and the lists that link to them last, so a list never points at a page not yet there.
+    order = sorted(send, key=lambda n: (n.rsplit("/", 1)[-1] == "index.html", n))
+    with ThreadPoolExecutor(workers) as pool:
+        jobs = {pool.submit(put, name): name for name in order}
+        for i, job in enumerate(as_completed(jobs), 1):
+            name = jobs[job]
+            if job.exception():
+                failed.append(name)
+                print(f"  not sent {name}: {job.exception()}")
+            else:
+                manifest[name] = now[name]
+            if i % 200 == 0:  # keep what was sent, should the run stop
+                save()
+                print(f"  {i}/{len(order)}", flush=True)
+    for name in gone if not failed else []:  # nothing is removed in a run that did not send everything
+        try:
+            s3.delete_object(Bucket=args.bucket, Key=name)
+            manifest.pop(name, None)
+        except Exception as e:
+            failed.append(name)
+            print(f"  not removed {name}: {e}")
+    save()
+    print(f"notes: sent {len(send) - len([f for f in failed if f in now])}, removed {len(gone) if not failed else 0}, failed {len(failed)}")
+    return 1 if failed else 0
+
+
+def notes_check_cmd(args) -> int:
+    """Do the notes' pages answer at their public address? The front page, the style and a few pages picked across
+    data/notes_manifest.json, each asked for and read: 200, the right kind, and for a page the speeches in it."""
+    import urllib.request
+    store = ROOT / "notes_manifest.json"
+    names = sorted(json.loads(store.read_text(encoding="utf-8"))) if store.exists() else []
+    pages = [n for n in names if "/dan-" in n]
+    if not pages:
+        print("notes: nothing in the bucket yet")
+        return 1
+    ask = ["index.html", "style.css"] + [pages[i * (len(pages) - 1) // 4] for i in range(5)]
+    bad = 0
+    for name in dict.fromkeys(ask):
+        url = args.url.rstrip("/") + "/" + urllib.parse.quote(name)
+        want = "text/css" if name.endswith(".css") else "text/html"
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "zailiprotiv-check"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                kind, body = r.headers.get("Content-Type", ""), r.read().decode("utf-8", "replace")
+            ok = want in kind and "utf-8" in kind.lower() and ("/dan-" not in name or 'id="g' in body)
+            why = "" if ok else f" (kind {kind!r}, {len(body)} bytes)"
+        except Exception as e:
+            ok, why = False, f" ({e})"
+        bad += not ok
+        print(f"  {'ok ' if ok else 'BAD'} {url}{why}")
+    print(f"notes: {len(names)} files in the bucket, {len(dict.fromkeys(ask)) - bad} of {len(dict.fromkeys(ask))} asked for answer")
+    return 1 if bad else 0
 
 
 def photos_cmd(args) -> int:
@@ -959,6 +1019,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--bucket", default="zailiprotiv-beleske")
     p.add_argument("--dry", action="store_true", help="say what would be sent, send nothing")
     p.set_defaults(run=notes_upload_cmd)
+    p = commands.add_parser("notes-check", help="do the notes' pages answer at their public address?")
+    p.add_argument("--url", default="https://beleske.zailiprotiv.rs/")
+    p.set_defaults(run=notes_check_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")

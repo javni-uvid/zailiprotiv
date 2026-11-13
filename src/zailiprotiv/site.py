@@ -577,7 +577,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                 if len(close) == 1:
                     photo_of[key_] = photo_of[close[0]]
     from zailiprotiv import pages_floor
-    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
+    sent = root / "notes_manifest.json"  # what notes-upload has put in the bucket
+    notes_pages = set(json.loads(sent.read_text(encoding="utf-8"))) if sent.exists() else set()
+    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
                                                 convs=convs, items_by_conv=items_by_conv)
     from zailiprotiv import card
     import os

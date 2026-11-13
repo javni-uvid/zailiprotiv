@@ -162,7 +162,7 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
 
 
 def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
-           years_of: dict | None = None, notes_url: str = "") -> tuple[dict, dict]:
+           years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None) -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
     years_of = years_of or {}
 
@@ -184,7 +184,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for url, notes in debates.get(c, {}).items():
             speeches = [{**notes["speeches"][k], "key": k, "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
             # The speech's own address among the notes' pages (notes_site), when those are published.
+            # Only pages known to be in the bucket (data/notes_manifest.json) are linked: no link ahead of its page.
             where = notes_site.layout(c, notes) if notes_url else {}
+            if notes_pages is not None:
+                where = {k: v for k, v in where.items() if v[0] in notes_pages}
             days = {d["day"]: d for d in notes["days"]}
             title = latin(re.sub(r"^СТЕНОГРАФСКЕ БЕЛЕШКЕ\s*-\s*", "", notes["days"][0]["title"]).split(" - ")[0]) if notes["days"] else ""
             agenda = notes["agenda"] if isinstance(notes["agenda"], dict) else dict(notes["agenda"])

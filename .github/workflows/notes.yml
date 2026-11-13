@@ -16,6 +16,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write
 
 concurrency:
   group: notes
@@ -41,6 +42,7 @@ jobs:
           du -sh --apparent-size _beleske; find _beleske -type f | wc -l
           uv run zailiprotiv notes-upload --dir _beleske ${{ inputs.dry && '--dry' || '' }}
       - name: Commit what is in the bucket
+        id: commit
         if: always()
         run: |
           git config user.name "github-actions[bot]"
@@ -49,6 +51,18 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "Notes' pages sent to the bucket"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          if git status -sb | grep -q ahead; then exit 1; fi
+          echo changed=1 >> "$GITHUB_OUTPUT"
+      - name: Do the pages answer?
+        if: ${{ !inputs.dry }}
+        run: |
+          # A page just sent can take a moment to show at the public address: three tries, a minute apart.
+          for i in 1 2 3; do uv run zailiprotiv notes-check && exit 0; sleep 60; done; exit 1
+      - name: Build the site again, so that it links to the new pages
+        if: steps.commit.outputs.changed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
       - name: Tell the maintainer when this failed
         if: failure()
         env:

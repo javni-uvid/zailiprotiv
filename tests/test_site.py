@@ -308,3 +308,10 @@ def test_only_changed_notes_pages_are_sent(tmp_path):
     (tmp_path / "b.html").write_text("b2")
     (tmp_path / "a.html").unlink()
     assert notes_site.changed(tmp_path, now)[1:] == (["b.html"], ["a.html"])
+
+
+def test_a_speech_is_linked_among_the_notes_only_when_its_page_is_in_the_bucket():
+    import inspect
+    from zailiprotiv import pages_floor
+    src = inspect.getsource(pages_floor.render)
+    assert "notes_pages" in inspect.signature(pages_floor.render).parameters and "v[0] in notes_pages" in src
