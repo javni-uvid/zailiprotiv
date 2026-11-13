@@ -141,8 +141,10 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
     return None
 
 
-def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None) -> tuple[dict, dict]:
+def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
+           years_of: dict | None = None) -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
+    years_of = years_of or {}
 
     def who(name: str) -> dict:
         key = loose.get(debates_.loose(mps.key(name)))
@@ -248,7 +250,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                                  "measure_events": [e for e in events if e["type"] == "mera" and e.get("to")
                                                                     and e["to"]["slug"] == r["who"]["slug"]]})
         if events:
-            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events, "table": sittings, "top": top, "speakers": len(rows),
+            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "years": years_of.get(c, ""), "events": events, "table": sittings, "top": top, "speakers": len(rows),
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
                             "sittings": len(debates.get(c, {}))})

@@ -7,7 +7,7 @@
 {% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
 <h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
-<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
+<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}</nav>
 <nav class="page-menu" aria-label="Deo"><a href="{{ c.page }}"{% if part == "mere" %} aria-current="page"{% endif %}>Po sednicama i mere predsedavajućeg ({{ c.measures|length }})</a><a href="{{ c.page_exchanges }}"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika ({{ c.exchanges|length }})</a><a href="{{ c.page_who }}"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
 
 {% if part == "mere" %}
@@ -41,7 +41,7 @@
 </section>
 {% endif %}
 <section id="sednice">
-  <h2>Po sednicama <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
+  <h2>Po sednicama, {{ c.years }} <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
   <div class="scroll">
   <table class="groups">
     <thead><tr><th>Sednica</th><th class="num">Dana</th><th class="num">Mere predsedavajućeg</th><th class="num">Razmene replika</th><th class="num">Ukazivanja na Poslovnik</th><th class="num">Pauze i prekidi</th></tr></thead>
