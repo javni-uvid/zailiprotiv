@@ -100,3 +100,71 @@ def record(reply: dict, material: dict, model: str) -> dict:
                          "url": by_id[t["citat"]["govor"]]["url"]}} for t in reply["tacke"]]
     return {"mp": material["mp"], "model": model, "read": len(material["speeches"]), "speeches": material["total_speeches"],
             "sittings": len({s["id"].rsplit("/", 1)[0] for s in material["speeches"]}), "points": points}
+
+
+# Words an MP uses more than MPs as a whole (no model): a crude stem (the first seven letters) shown by its most
+# frequent form, ranked by a smoothed log-odds ratio against all speeches, used in five speeches or more.
+STOP = set("""који која које којих којим којима коју којег којем што шта јер али или ако када кад док пре после
+још само већ тако такође овај ова ово ови ове оних овог овом овим овде тамо него нити ниједан нико ништа увек никада
+сада данас јуче сутра хоћу хоће хоћемо хоћете могу може можемо можете мора морамо морате треба требало требају
+бити биће били била било будем будемо будете буде јесте јесу нису нисам ниси нисмо нисте немам нема немамо имамо
+имате имају имам имао имала имали имало каже кажем кажемо кажете рекао рекла рекли рећи говорим говори говоримо
+говорите говорили говорио питање питања питам одговор господине господо госпођо госпођа поштовани поштоване
+поштована колеге колега колегинице колегиница председниче председнице председавајући народни народне народних
+посланик посланици посланика посланицима посланичке посланичка скупштина скупштине скупштини скупштину министре
+министар министра министарка хвала молим реч речи реплику реплика пословник пословника члан члана чланом став става
+амандман амандмана амандмане тачке тачка дневног дневни редa реда закона закон закону законом законе предлог предлога
+предлогу републике републици република србије србији србија србију државе држави држава државу грађана грађани
+грађанима година године годину годинама један једна једно једног једном једне двеста хиљада милиона милијарди евра
+динара процената одсто човек људи људе много мало више мање веома врло највише најмање управо заиста стварно
+нешто неко некога некога ниједна свих свима сваки свака свако сваког свој своја своје свога својим своју својих
+нашег наша наше наши нашу нашим наших ваша ваше ваши вашу вашим ваших њихов њихова њихове њихових њега њему њима
+њихово онда тада овако онако зато зашто због око између према против изнад испод поред уместо осим током кроз
+дакле видите најзад значи односно наравно погледајте замислите прича причу причате
+""".split())
+
+
+def stem(w: str) -> str:
+    return w[:7]
+
+
+def words_of(text: str) -> list[str]:
+    return [w for w in re.findall(r"[а-яђјљњћџшжчћ]+", text.lower()) if len(w) >= 5 and w not in STOP]
+
+
+def distinctive(by_mp: dict[str, list[dict]], top: int = 12, min_speeches: int = 5) -> dict[str, list[str]]:
+    import math
+    from collections import Counter
+    total, forms = Counter(), Counter()
+    per_mp: dict[str, Counter] = {}
+    docs: dict[str, Counter] = {}
+    for key, own in by_mp.items():
+        c, d = Counter(), Counter()
+        for s in own:
+            ws = words_of(s["text"])
+            for w in ws:
+                c[stem(w)] += 1
+                forms[(stem(w), w)] += 1
+            for st in {stem(w) for w in ws}:
+                d[st] += 1
+        per_mp[key], docs[key] = c, d
+        total.update(c)
+    n_all = sum(total.values())
+    best_form = {}
+    for (st, w), n in forms.items():
+        if n > best_form.get(st, ("", 0))[1]:
+            best_form[st] = (w, n)
+    out = {}
+    for key, c in per_mp.items():
+        n_mp = sum(c.values())
+        if n_mp < 1000:
+            continue
+        scores = []
+        for st, k in c.items():
+            if docs[key][st] < min_speeches:
+                continue
+            rest, n_rest = total[st] - k, n_all - n_mp
+            lo = math.log((k + 0.5) / (n_mp - k + 0.5)) - math.log((rest + 0.5) / (n_rest - rest + 0.5))
+            scores.append((lo * math.sqrt(k), st))
+        out[key] = [best_form[st][0] for _, st in sorted(scores, reverse=True)[:top]]
+    return out

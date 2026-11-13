@@ -49,7 +49,8 @@
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
   {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
   </ul>
-  <p class="label">Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025), najmanje 20. Govori samo iz stenograma koje imamo. {{ how("aktivnost") }}</p>
+  {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
+  <p class="label">Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025), najmanje 20. Govori i reči samo iz stenograma koje imamo. {{ how("aktivnost") }} (<a class="how" href="../kako-racunamo.html#reci">i za reči</a>)</p>
 </section>
 {% endif %}
 

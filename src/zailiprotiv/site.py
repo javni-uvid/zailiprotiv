@@ -444,11 +444,15 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         shares = sorted(p / n for (k, cc), (p, n) in presence.items() if cc == c and n >= 20)
         if shares:
             median_presence[c] = shares[len(shares) // 2]
-    spoke = Counter()
+    spoke, words = Counter(), {}
     from zailiprotiv import profiles as profiles_
-    for key, own in profiles_.speeches(root).items():
+    spoken = profiles_.speeches(root)
+    distinct = profiles_.distinctive(spoken)
+    for key, own in spoken.items():
         if (k := loose_keys.get(key)):
             spoke[k] = len(own)
+            if distinct.get(key):
+                words[k] = distinct[key]
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -489,7 +493,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
-            profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0),
+            profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:
