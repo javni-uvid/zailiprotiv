@@ -50,7 +50,7 @@ def clean_urls(out: Path) -> None:
 # for a phone. The largest page now is under 0.6 MB.
 PAGE_LIMIT = 1_000_000
 # The one script from another server the pages may load: the visit counter (AGENTS.md, principle 5, second exception).
-ANALYTICS = '<script defer src="https://static.cloudflareinsights.com/beacon.min.js"'
+ANALYTICS = '<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"'
 EXTERNAL = re.compile(r"<(?:script|iframe|img|source|video|audio|embed|object)\b[^>]*\bsrc=[\"'](?:https?:)?//"
                       r"|<link\b[^>]*\bhref=[\"'](?:https?:)?//[^\"']*[\"'][^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)"
                       r"|<link\b[^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)[\"'][^>]*\bhref=[\"'](?:https?:)?//"
