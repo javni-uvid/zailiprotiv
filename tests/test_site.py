@@ -91,6 +91,9 @@ def test_site_builds_every_page(tmp_path):
     for page in out.rglob("*.html"):
         text = page.read_text()
         # The site's own script only, nothing from other servers, no plain http.
+        if page.name == "pretraga.html":  # and the search's two scripts, both from the site itself
+            assert re.findall(r'<script src="(?!site\.js)([^"?]+)', text) == ["pagefind/pagefind-ui.js", "pretraga.js"]
+            text = re.sub(r'<script src="(?:pagefind/pagefind-ui|pretraga)\.js[^>]*>', "", text)
         if page.name == "glasaj.html":  # and its own data and script, both from the site itself
             assert re.findall(r"<script[^>]*>", text)[1:] == ['<script type="application/json" id="quiz-data">',
                 '<script src="glasaj.js?v=' + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']

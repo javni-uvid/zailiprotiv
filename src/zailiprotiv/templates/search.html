@@ -9,15 +9,5 @@
 <p class="meta" data-pagefind-ignore>Pretraga radi u tvom pregledaču, nad indeksom koji je deo sajta: upit se nikome ne šalje. Piši sa našim slovima (š, đ, č, ć, ž): „generalštab“, ne „generalstab“. Za tačan izraz stavi ga pod navodnike. Pretraga po nazivu zakona i imenu poslanika, koja razume i padeže i pisanje bez kvačica, je na <a href="index.html">naslovnoj</a>.</p>
 <link rel="stylesheet" href="{{ root }}pagefind/pagefind-ui.css">
 <script src="{{ root }}pagefind/pagefind-ui.js"></script>
-<script>
-window.addEventListener("DOMContentLoaded", function () {
-  if (!window.PagefindUI) return;
-  var ui = new PagefindUI({ element: "#search", showSubResults: false, showImages: false, resetStyles: false, autofocus: true,
-    translations: { placeholder: "Reč, zakon ili ime", clear_search: "Obriši", load_more: "Još rezultata", search_label: "Pretraga sajta",
-      zero_results: "Nema rezultata za [SEARCH_TERM]", many_results: "[COUNT] rezultata za [SEARCH_TERM]", one_result: "[COUNT] rezultat za [SEARCH_TERM]",
-      searching: "Tražim [SEARCH_TERM]…" } });
-  var q = new URLSearchParams(location.search).get("q");
-  if (q) ui.triggerSearch(q);
-});
-</script>
+<script src="{{ root }}pretraga.js?v={{ css }}"></script>
 {% endblock %}
