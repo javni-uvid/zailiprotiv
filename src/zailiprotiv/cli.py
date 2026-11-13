@@ -231,7 +231,7 @@ def summaries_cmd(args) -> int:
     client = None
     done = failed = skipped = 0
     tokens = {"input": 0, "output": 0}
-    todo = {}
+    todo, claimed = {}, set()
     waiting = _waiting(Path(args.laws))[2]  # bills in procedure first: they are what is about to be voted on
     everything = waiting + sorted(store["laws"].values(), key=lambda l: l.get("passed") or "", reverse=True)
     for law in everything:
@@ -242,6 +242,10 @@ def summaries_cmd(args) -> int:
         if not memo.get("sections"):
             skipped += 1
             continue
+        if name in claimed:  # two laws linked to one memorandum: a linking error, and each would rewrite the other's
+            print(f"  {name}: also linked to {law['title'][:80]} (skipped)")
+            continue
+        claimed.add(name)
         target = out_dir / name
         text = summaries.material(law, memo)
         if target.exists() and json.loads(target.read_text(encoding="utf-8")).get("fingerprint") == \
