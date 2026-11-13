@@ -20,6 +20,9 @@ on:
       wait:
         description: "Minutes to wait for the batches in all, before leaving them for the next run"
         default: "90"
+      model:
+        description: "Model for this run (empty: the default in summaries.py)"
+        default: ""
 
 permissions:
   contents: write
@@ -51,6 +54,7 @@ jobs:
           ANTHROPIC_WORKSPACE_ID: wrkspc_01NNmkqCRfENePvimjwqYJtD
         run: |
           pip install uv && uv sync --frozen
+          [ -n "${{ inputs.model }}" ] && export ZAILIPROTIV_MODEL="${{ inputs.model }}"
           # Two passes: the first sends every batch without waiting, so they run side by side; the second waits for
           # them, all together at most the time given (what is left of it for each command).
           deadline=$(( $(date +%s) + ${{ inputs.wait || 90 }} * 60 ))
