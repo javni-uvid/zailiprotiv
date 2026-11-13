@@ -616,14 +616,18 @@ def debates_import(args) -> int:
 
 
 def _batch_client(args):
-    """The API client and the batch state, or None when there is no key (the workflow then does nothing)."""
+    """The API client and the batch state, or None when there is no way in (the workflow then does nothing): an API
+    key, or in GitHub Actions the repository's identity exchanged for a short-lived token (`federated`)."""
     import os
-    from zailiprotiv import batch
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("ANTHROPIC_API_KEY is not set: nothing sent")
-        return None, None
-    import anthropic
-    return anthropic.Anthropic(), batch.State(ROOT / "batches.json")
+    from zailiprotiv import batch, federated
+    state = batch.State(ROOT / "batches.json")
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        import anthropic
+        return anthropic.Anthropic(), state
+    if federated.available():
+        return federated.Client(), state
+    print("No ANTHROPIC_API_KEY and no federated sign-in: nothing sent")
+    return None, None
 
 
 def profiles_batch(args) -> int:

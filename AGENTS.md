@@ -24,6 +24,16 @@ in the same commit. README.md describes the project for its users; this file is 
   running and the refused replies in `data/batches.json`; a refused reply is sent once more with what was wrong, then
   left for a person (`zailiprotiv status` lists it). The session commands (`export`/`import`, `*-export`/`*-import`)
   stay for work by hand.
+- **Signing in to the Anthropic API without a key** (13 Nov 2026, `federated.py`): the **summaries** workflow asks
+  GitHub for the repository's identity token (`id-token: write`) and exchanges it, under a federation rule in the
+  maintainer's Anthropic Console (subject `repo:javni-uvid@351609597/zailiprotiv@1454693959:ref:refs/heads/main`:
+  GitHub writes the owner and repository with their ids), for a short-lived API token, minted again before it runs
+  out while a batch is waited on. The rule's ids are in the workflow; they grant nothing by themselves. A secret
+  `ANTHROPIC_API_KEY`, if set, is used instead. `anthropic-wif-test.yml` tests the exchange by hand.
+- **The project's clock is the counter's worker** (13 Nov 2026): GitHub's schedule never started the workflows, so
+  the worker (Cloudflare cron) dispatches **votes** every hour of the working day (`scheduled: true`, so a run with
+  nothing new stops the chain) and **summaries** every six hours. The **worker** workflow publishes `worker/` with
+  the secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID and DISPATCH_TOKEN.
 - **`zailiprotiv status`** says what the data still lacks per convocation; look before and after a data run.
 - **Links have no ".html"** (the maintainer, 13 Nov 2026): the files keep their names, GitHub Pages serves
   `page.html` at `/page`, and `site.clean_urls` rewrites the links after the build (pages, feeds, sitemap, scripts).

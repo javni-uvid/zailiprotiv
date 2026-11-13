@@ -2,7 +2,8 @@
 # memoranda, summaries of the debates on the laws with most votes against, and overviews of what MPs most often say.
 # Runs after each transcripts run, every six hours to pick up batches still running (their ids are in
 # data/batches.json), and by hand. Replies are checked (quotes word for word) before they are saved; a refused one is
-# sent again once with what was wrong. Needs the repository secret ANTHROPIC_API_KEY.
+# sent again once with what was wrong. Signs in with the repository's identity (no key stored), or with the
+# repository secret ANTHROPIC_API_KEY if one is set.
 name: summaries
 
 on:
@@ -22,6 +23,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write  # the repository's identity, exchanged for a short-lived Anthropic API token
   issues: write
   actions: write
 
@@ -41,11 +43,13 @@ jobs:
       - name: Write
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Signing in without a key (src/zailiprotiv/federated.py): the federation rule set up in the Anthropic
+          # Console for this repository's main branch. These ids grant nothing by themselves.
+          ANTHROPIC_FEDERATION_RULE_ID: fdrl_01NCmgWJsGrXFudbCfhmGqvD
+          ANTHROPIC_ORGANIZATION_ID: 7dd19a6e-f6b2-4240-a238-fa1268701199
+          ANTHROPIC_SERVICE_ACCOUNT_ID: svac_01B894Uyt46AtSiNR9igxMvJ
+          ANTHROPIC_WORKSPACE_ID: wrkspc_01NNmkqCRfENePvimjwqYJtD
         run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::notice::The repository secret ANTHROPIC_API_KEY is not set: nothing written."
-            exit 0
-          fi
           pip install uv && uv sync --frozen
           # Two passes: the first sends every batch without waiting, so they run side by side; the second waits for
           # them, all together at most the time given (what is left of it for each command).
