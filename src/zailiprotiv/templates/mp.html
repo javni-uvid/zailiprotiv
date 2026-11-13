@@ -41,6 +41,18 @@
   <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
 </section>
 
+{% set shown = by_conv|selectattr("present")|list %}
+{% if shown or spoke %}
+<section class="activity">
+  <h2>Aktivnost</h2>
+  <ul class="facts-line">
+  {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
+  {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
+  </ul>
+  <p class="label">Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025), najmanje 20. Govori samo iz stenograma koje imamo. {{ how("aktivnost") }}</p>
+</section>
+{% endif %}
+
 {% if profile %}
 <section class="profile">
   <h2>Šta najčešće iznosi u raspravama</h2>

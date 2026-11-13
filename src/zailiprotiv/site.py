@@ -427,6 +427,28 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                 t["when"] = ", ".join(years(c) for c in t.get("sazivi", [])) if len(spans) > 1 else ""
             profiles[k] = p
     feeds_mp: dict[str, tuple] = {}
+    # Presence at final votes, only where the Assembly lists the absent (the report layout), by convocation;
+    # with the median of all MPs listed in twenty such votes or more, to compare with.
+    presence: dict[tuple, tuple] = {}
+    for mp in people.values():
+        seen = Counter()
+        for k, how in mp.votes.items():
+            f = finals.get(k)
+            if f and f["final"]["counts"]["nije_prisutan"]:
+                seen[(f["conv"], "listed")] += 1
+                seen[(f["conv"], "present")] += how != "nije_prisutan"
+        for c in {c for c, _ in seen}:
+            presence[(mp.key, c)] = (seen[(c, "present")], seen[(c, "listed")])
+    median_presence = {}
+    for c in {c for _, c in presence}:
+        shares = sorted(p / n for (k, cc), (p, n) in presence.items() if cc == c and n >= 20)
+        if shares:
+            median_presence[c] = shares[len(shares) // 2]
+    spoke = Counter()
+    from zailiprotiv import profiles as profiles_
+    for key, own in profiles_.speeches(root).items():
+        if (k := loose_keys.get(key)):
+            spoke[k] = len(own)
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -452,7 +474,9 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                         same[g] += line[(r["it"]["law"]["final_vote"], g)] == r["vote"]
             agree = sorted(({"group": g, "same": same[g], "both": n, "share": same[g] / n, "own": g in groups}
                             for g, n in both.items() if n >= 10), key=lambda a: (-a["share"], -a["both"], a["group"]))
+            pr = presence.get((mp.key, c))
             by_conv.append({"conv": c, "name": ORDINAL_NAME.get(c, c), "groups": groups, "n": len(rs), "agree": agree,
+                            "present": pr if pr and pr[1] >= 20 else None, "median": median_presence.get(c),
                             "tally": Counter(r["vote"] for r in rs), "record": rs})
         kinds_table = []
         for k, label in kinds.KINDS.items():
@@ -465,7 +489,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
-            profile=profiles.get(mp.key),
+            profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:
