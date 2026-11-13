@@ -1,0 +1,69 @@
+{
+ "mp": "јањић јован",
+ "model": "claude-haiku-5-5",
+ "read": 13,
+ "speeches": 15,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Пита Владу зашто Србија и даље следи санкције ЕУ према Белорусији и зашто није успостављена директна ваздушна линија између Београда и Минска.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Питање Влади Србије – зашто држава Србија и даље следи санкције које је ЕУ увела према нама пријатељској Белорусији?",
+    "date": "2024-09-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 24. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се предлогом закона ствара правни основ да се локација бивших зграда Генералштаба и Министарства одбране уступи америчкој компанији.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Реч је о стварању правног основа да се ова ексклузивна локација уступи компанији „Афинитив глобал девелопмент“ у власништву Џареда Кушнера, зета америчког председника Доналда Трампа.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Упозорава да Србија све више дугује и да се новим законима о задуживању узимају нови кредити.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "И после овога вероватно последњег заседања Скупштине у досадашњем сазиву, Србија ће бити још више задужена.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да разоружавање легалних власника оружја нема стварног основа и брани право грађана на легално оружје за личну безбедност.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Реалног основа за то није било, јер чињенице указују да се 91% свих кривичних дела изврши нелегалним оружјем, 8% службеним оружјем, а само 1% оружјем које је у легалном поседу грађана.",
+    "date": "2025-03-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog rednovnog zasedanja NSRS, 11.03.2025. dan rada 4.docx"
+   }
+  },
+  {
+   "tekst": "Замера што су државе ЕУ признале Косово као независну државу, чиме се, по његовом мишљењу, угрожава територијални интегритет Србије.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато питање Влади Републике Србије – са којим правом и шта је мотив да се разговара о чланству у заједници која не признаје државни суверенитет на целој територији сопствене земље?",
+    "date": "2026-06-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Sedmog vanrednog zasedanja NSRS 2. dan 18.06.2026..docx"
+   }
+  }
+ ]
+}

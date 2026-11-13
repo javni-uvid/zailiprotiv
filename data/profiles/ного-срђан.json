@@ -1,0 +1,69 @@
+{
+ "mp": "ного срђан",
+ "model": "claude-haiku-5-5",
+ "read": 36,
+ "speeches": 49,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Navodi da zakon o stanovanju i održavanju zgrada uvodi nove namete i obaveze građanima, koje oni zbog ekonomskih prilika ne mogu da podnesu.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ово је још једно, додатно увођење намета и обавеза грађанима Србије које они због економских прилика, односно неприлика у којима се налазе већ сада не могу да поднесу.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što bi Republički geodetski zavod, koji već ima nerešene predmete, dobio novu obavezu da vodi jedinstveni registar stambenih zajednica.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Добро знате да РГЗ има још увек нерешене предмете из 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015. и 2016. године, а за решавање свих тих обавеза узет је кредит од Светске банке ради ангажовања лица на привременим и повременим пословима.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Smatra da je zakon o upravljanju aerodromima donet da bi se omogućila koncesija na aerodromu „Nikola Tesla“, i zamera što bi profit otišao privatnom koncesionaru.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "ми смо у начелу, понављам, указали да је циљ овог закона управо аеродром Београд и да се цео закон доноси да би се омогућила концесија на Аеродрому „Никола Тесла“, што сматрамо јако погрешним.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što zakon prepušta ministarstvu da utvrđuje javni interes, a da o tome nije bilo javne rasprave.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "То што у једном закону стоји да ће утврдити Министарство, не значи да Министарство може тек тако да утврђује јавни интерес.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Protivi se tome da zakon menja upotrebu muškog roda u nazivima i tvrdi da je to uvođenje džender ideologije.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "ви сте овим чланом закона извршили један продор радикалног феминистичког приступа и утврђивања некакве џендер идеологије",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  }
+ ]
+}

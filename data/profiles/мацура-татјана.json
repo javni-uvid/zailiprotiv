@@ -1,0 +1,57 @@
+{
+ "mp": "мацура татјана",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 13,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Navodi da obrazovanje zakona u objedinjenoj raspravi dovodi do lošijih usvojenih zakona, i zato traži da se o svakom predlogu raspravlja posebno.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Најгора последица тога што се у овој скупштини најчешће разговара о свим законским предлозима у обједињеној расправи јесте то да као последицу имамо лоше или недовољно добре усвојене законе.",
+    "date": "2017-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera Vladi što porodilje optužuje da su oštetile budžet, a istovremeno državnim preduzećima daje tridesetak milijardi dinara.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Мало је лицемерно говорити у том контексту да су породиље оштетиле, по основу неге детета, буџет Републике Србије, а у исто време упумпавати тридесет милијарди динара у државна предузећа",
+    "date": "2017-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/8. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Podržava predlog o kvoti na izbornim listama, po kojoj u svakih pet kandidata dve osobe budu manje zastupljenog pola.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "један од предлога, који ће упутити наша посланичка група, је такав да у сваких пет кандидата буду два мање заступљеног пола.",
+    "date": "2020-02-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvadeset drugo vanredno zasedanje NSRS 06.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Zamera što sednica o vanrednom stanju nije sazvana u roku od 48 sati, i navodi da je to bilo moguće.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "У том смислу, дакле, и даље стојим иза тога да је могла да се сазове седница Народне скупштине у року, можда не у року од 48 сати, али су сигурно постојале техничке околности",
+    "date": "2020-04-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica NSRS za vreme vanrednog stanja odrzana 29. aprila 2020. godine drugi dan rada.docx"
+   }
+  }
+ ]
+}

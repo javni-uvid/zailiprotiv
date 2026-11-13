@@ -1,0 +1,57 @@
+{
+ "mp": "олена папуга",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 13,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da porodilje po nekoliko meseci čekaju na svoju zarađenu naknadu i pita kako će se to rešiti.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Један у низу горућих проблема мајки на породиљском одсуству јесте и то што на своју зарађену накнаду чекају и по неколико месеци.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što se Beogradu daju velike isplate iz budžetske rezerve i većina slobodnih radnih mesta, a ne drugim sredinama.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Невероватна је чињеница да се најбогатијој средини у Србији, а то је Београд, одобравају оволико велике исплате из буџетске резерве док већина локалних самоуправа једва финансијски преживљава.",
+    "date": "2017-10-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što potvrde za izlazak stranaka nacionalnih manjina izdaju nacionalni saveti i traži da ih umesto toga izdaje RIK.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Тако да, те потврде свакако треба укинути и препустити све то РИК, која некад у неком случају може да тражи мишљење од националног савета и да национални савет да мишљење да ли та национална странка брине о припадницима националних заједница на конту кога је регистрована.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Podržava izmene Zakona o izboru narodnih poslanika kojima se uvodi 40% manje zastupljenog pola i poziva poslanike da ih podrže.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Тако да, желим да на неки начин очеличим све посланике и све посланице да у дану за гласање подрже измене закона које је предложила наша колегиница Гордана Чомић",
+    "date": "2020-02-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvadeset drugo vanredno zasedanje NSRS 06.02.2020..docx"
+   }
+  }
+ ]
+}

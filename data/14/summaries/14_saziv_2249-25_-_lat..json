@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "f365ec7efbd6fbe1a6ce9ac84354d4e1dd824d5149f029613fbaa560cb917e48",
+ "summary": {
+  "ukratko": "Zakon uređuje vojno obrazovanje u Vojsci Srbije: školovanje, usavršavanje i vojnostručno osposobljavanje, organizaciju vojnoškolskih ustanova, nastavno osoblje i finansiranje tih ustanova. Predlagač navodi da se donosi novi zakon, a ne izmene važećeg.",
+  "razlozi": [
+   "Predlagač navodi da bi izmene i dopune važećeg zakona obuhvatile više od polovine njegovih odredaba, pa je, u skladu sa Jedinstvenim metodološkim pravilima, izrađen novi predlog zakona.",
+   "Glavni razlog je usklađivanje normi o organizaciji i radu vojnoškolskih ustanova sa propisima u oblasti obrazovanja u Republici Srbiji, uz normativno uređenje specifičnosti vojnog obrazovanja.",
+   "Predlagač navodi da za deo podzakonskih propisa u važećem zakonu nije predviđen pravni osnov i da pojmove i materijalna rešenja treba preciznije formulisati kako bi se izbegle nejasnoće u tumačenju.",
+   "Predlagač navodi da su mnoga materijalna rešenja koja predstavljaju zakonsku materiju uređena podzakonskim propisima."
+  ],
+  "promene": [
+   "Uvodi pojmove vojno obrazovanje, školovanje, usavršavanje i vojnostručno osposobljavanje, kao i načela na kojima se vojno obrazovanje zasniva.",
+   "Uređuje školovanje, usavršavanje i vojnostručno osposobljavanje u jednom delu; uvodi opšte programe usavršavanja, karijerna usavršavanja i usavršavanje zdravstvenih radnika i saradnika te nadležnost za potpisivanje ugovora o školovanju i usavršavanju.",
+   "Uređuje kategorije učenika, kadeta, studenata, polaznika i slušalaca, opšte uslove za upis, njihove ugovorne obaveze i disciplinsku odgovornost.",
+   "Utvrđuje podelu na srednje i visoke vojnoškolske ustanove, uvodi Školu nacionalne odbrane kao vojnoškolsku ustanovu u sastavu Univerziteta odbrane i uređuje osnivanje i ukidanje tih ustanova.",
+   "Uređuje nastavno osoblje i finansiranje, uključujući prihode od pružanja usluga; za trošenje budžetskih sredstava odgovoran je organ poslovođenja, a ne organ upravljanja."
+  ],
+  "sredstva": "Predlagač navodi da su za 2025. godinu sredstva obezbeđena u okviru Zakona o budžetu Republike Srbije za 2025. godinu, a da će se sredstva za 2026. i 2027. godinu planirati u okviru programa „Operacije i funkcionisanje MO i VS”, u skladu sa projekcijom rashoda Ministarstva odbrane."
+ },
+ "usage": {},
+ "law": "Zakon o vojnom obrazovanju",
+ "depth": "standard"
+}

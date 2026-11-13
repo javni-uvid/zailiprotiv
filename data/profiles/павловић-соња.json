@@ -1,0 +1,69 @@
+{
+ "mp": "павловић соња",
+ "model": "claude-haiku-5-5",
+ "read": 38,
+ "speeches": 57,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da stambena zajednica ne bi smela da uzima kredite bez saglasnosti svih vlasnika, jer bi otplatu morali da snose i oni koji su bili protiv, a većinsko odlučivanje po Zakonu o stanovanju to može omogućiti.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Сматрам да је крајње нефер да било који власник који је противан узимању кредита улази у отплату тог истог кредита, поготово што то може да доведе до великих злоупотреба.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što Zakon o stanovanju i održavanju zgrada smanjuje broj priznatih članova porodičnog domaćinstva, što, po njoj, znači manje prostora za porodice koje žive u istom stanu.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Сматрам да је то једна од најнеправеднијих тачака овог закона, јер ми у овим условима, заправо неусловима живљења, где по три генерације станују у једној стамбеној јединици",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što Zakon o vodama ponovo vraća staru praksu da lokalna samouprava ne mora ništa da radi oko snabdevanja vodom stanovništva van opštinskih i urbanih centara.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Овим се практично озваничава постојеће стање и поново враћа стара пракса да локална самоуправа не мора ништа да ради поводом снабдевања водом становништва ван општинских и урбаних центара.",
+    "date": "2016-12-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/13. decembar 2016.pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što Zakon o dualnom obrazovanju daje Privrednoj komori važnu ulogu u obrazovanju, uključujući komisiju čiji sastav, uslovi i mandat nisu jasno određeni.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Та привредна комора не може да има толики утицај на образовање младих људи и зато ми сасвим оправдано сматрамо да ће млади људи бити јефтина радна снага",
+    "date": "2017-11-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što početak rada Nacionalne akademije za javnu upravu nije usklađen sa budžetom, jer bi njeno uvođenje bez rebalansa budžeta značilo kršenje Zakona o budžetu.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Значи да је нужно или извршити ребаланс буџета пре примене овог закона о Националној академији, односно усвојити измене и допуне Закона о буџету",
+    "date": "2017-10-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
+   }
+  }
+ ]
+}

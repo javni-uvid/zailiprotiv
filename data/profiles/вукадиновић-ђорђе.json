@@ -1,0 +1,69 @@
+{
+ "mp": "вукадиновић ђорђе",
+ "model": "claude-haiku-5-5",
+ "read": 31,
+ "speeches": 57,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Navodi da je vanredno stanje trebalo da odobri Narodna skupština, a ne uredba Vlade, i zamera što to nije urađeno.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ово је место на којем је морала бити донесена одлука о увођењу ванредног стања, ако је процењено да за то има потребе.",
+    "date": "2020-04-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica NSRS za vreme vanrednog stanja, 28. april 2020. godine.docx"
+   }
+  },
+  {
+   "tekst": "Zamera što se veliki broj tačaka dnevnog reda raspravlja zajedno i usvaja jednim glasanjem, pa poslanici nemaju dovoljno vremena da raspravljaju o svakoj temi.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Овако се стиче утисак да су састављене бабе и жабе и онда и ми сами делујемо конфузно, поготово грађанима који нас гледају",
+    "date": "2017-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. maj 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je stolica u UN za Kosovo ekvivalent priznanju njegove nezavisnosti i traži jasno razjašnjenje da do toga neće doći.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "хоћу јасно и гласно да кажем, и очекујем такву врсту разјашњења са тог места, да је столица у УН за Косово еквивалент признању независности Косова.",
+    "date": "2017-10-03",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3.10.2017.-ispravka stenografskih belezaka.pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da zakon o prodaji poljoprivrednog zemljišta strancima samo formalno menja pravilo, a da se zemljište i dalje otuđuje preko preduzeća i zajedničkih firmi.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ми овим, заправо, мењамо нешто што формално стоји у закону да се не може продавати земљиште странцима, за формулацију да се може продавати, али под условима који заправо значе да се не може продавати.",
+    "date": "2017-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/28. avgust 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što Privredna komora ima veliku ulogu u sertifikaciji poslodavaca i obuci instruktora u sistemu dualnog obrazovanja i predlaže da to preuzme međuresorno telo.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Нисам сигуран да Привредна комора може и треба да изнесе толики терет. Привредна комора је у основи једно ад хок тело, једно уговорно, добровољно удружење привредних субјеката.",
+    "date": "2017-10-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/25. oktobar 2017.pdf"
+   }
+  }
+ ]
+}

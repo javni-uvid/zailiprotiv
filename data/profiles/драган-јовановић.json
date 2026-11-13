@@ -1,0 +1,60 @@
+{
+ "mp": "драган јовановић",
+ "model": "claude-haiku-5-5",
+ "read": 14,
+ "speeches": 14,
+ "sittings": 13,
+ "points": [
+  {
+   "tekst": "Подржава увођење апликације е-аграр за подношење захтева за субвенције.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што бих посебно нагласио као веома важно јесте што сви очекујемо да ће након фебруара 2023. године заживети апликација Е-аграр.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да део газдинстава није могао да поднесе захтев за субвенције због техничких проблема, и тражи решење за њих.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "али људи су мислили да су технички све урадили добро, а испоставило се да нису, да кажем не њиховом кривицом.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се у Шумадији заврше путеви, укључујући ауто-пут „Вожд Карађорђе“, магистрални пут Топола–Крагујевац и локалне путеве.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што бих вас замолио јесте да ми појасните докле се дошло са пројектном документацијом за ауто-пут „Вожд Карађорђе“ који је најважнији за нас у Шумадији?",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да треба наставити пројекат наводњавања у Тополи, односно другу фазу тог пројекта.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Један пројекат који ми већ спроводимо са Министарством пољопривреде, односно са „Србијаводама“, а тиче се наводњавања 380 хектара у селима Тополске општине биће настављени 2023. године.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

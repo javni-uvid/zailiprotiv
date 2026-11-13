@@ -1,0 +1,69 @@
+{
+ "mp": "драган јонић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 14,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да не добија одговоре на своја посланичка питања и да не зна да ли је добио више од 20% одговора.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Такође, користим прилику да кажем да на сва питања која сам поставио од како сам овде не знам да ли сам добио више од 20% одговора.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Упозорава да се ваздух загађује из Института „Торлак“ и из термоелектрана.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Па зашто се, за име света, дозвољава загађивање атмосфере на 300–400 метара од првих кућа и зашто то траје недељама?",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Противи се изградњи дата центра у Димитровграду.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дата центар са некаквим милијардама евра које се помињу не сме бити изграђен, нама то није потребно.",
+    "date": "2026-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Osmo vanredno zasedanje NSRS 10.07.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се отрови изливају у реке и водотокове.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Отрови се неконтролисано изливају у водотокове, а ви говорите о невиђеном напретку и изградњи некаквих мегаломанских Дата центара који троше милионе литара воде.",
+    "date": "2026-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи одговор од Министарства рударства и енергетике о катастру рударског отпада.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Инсистирам да Министарство да прецизан, детаљан и темељан одговор без општих места и са именовањем људи који су одговорни за овај недопустиви катастрофални јавашлук у Министарству, за шта пре свега сматрам одговорну министарку Дубравку Ђедовић Хандановић као главу Министарства.",
+    "date": "2026-06-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Sedmog vanrednog zasedanja NSRS 2. dan 18.06.2026..docx"
+   }
+  }
+ ]
+}

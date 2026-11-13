@@ -1,0 +1,60 @@
+{
+ "mp": "мацура нада",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 12,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Navodi da se u zdravstvo ulaže mnogo novca, uz izgradnju i opremanje zdravstvenih ustanova.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сви смо сведоци колико је клиничких центара и болница изграђено и реконструисано широм Србије у претходном периоду.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Izražava podršku predsedniku Aleksandru Vučiću i ističe njegov rad za Srbiju.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "У времену глобалних изазова наш председник Александар Вучић својом способношћу, неисцрпним радом и превеликом љубављу према земљи Србији успева да оствари међудржавничку сарадњу",
+    "date": "2025-11-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 5. novembra 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Poziva kolege da u danu za glasanje podrže predložene zakone.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато сматрам да је овај закон о Споразуму важан корак напред и позивам колегинице и колеге да га у дану за гласање подрже.",
+    "date": "2026-04-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 20. aprila 2026. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Zamera što u raspravi o zakonima nema konstruktivnih primedbi i argumenata protiv predloga.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Овде нема места политизацији и зато верујем да колеге у опозицији немају ни један аргумент против предлога овог закона.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  }
+ ]
+}

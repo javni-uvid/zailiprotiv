@@ -1,0 +1,57 @@
+{
+ "mp": "весовић драган",
+ "model": "claude-haiku-5-5",
+ "read": 35,
+ "speeches": 45,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da produženje mandata predsednicima sudova stvara nejednakost prema drugim sudijama, i to naziva diskriminacijom.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Зашто некоме дозволити да буде дуже на радном месту у односу на неког, а из исте су бранше и бавили су се истим послом?",
+    "date": "2017-05-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/15. maj 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Traži od vlasti objašnjenje zašto se mandat predsednika suda menja i zašto je sada bolje nego ranije, jer mu to nije jasno.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "нико није рекао јасно, а ја вас молим да због нас којима није јасно кажете зашто је сада то боље.",
+    "date": "2017-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. maj 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što Privredna komora ima veliku ulogu u određivanju instruktora i u nadzoru dualnog obrazovanja, i smatra da je to udruženje poslodavaca sa partijskim uticajem.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Привредна комора је удружење послодаваца. Привредна комора свуда и на сваком месту протежира своје поједине чланове.",
+    "date": "2017-11-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. novembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da odnos 20:80 između teorijske i praktične nastave u dualnom obrazovanju ne odgovara učenicima koji žele da nastave školovanje.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Овај проценат у односу 20:80 никако не може да одговара ономе ко ће да настави школовање.",
+    "date": "2017-11-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
+   }
+  }
+ ]
+}

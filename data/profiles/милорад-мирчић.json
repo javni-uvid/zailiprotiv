@@ -1,0 +1,57 @@
+{
+ "mp": "милорад мирчић",
+ "model": "claude-haiku-5-5",
+ "read": 16,
+ "speeches": 16,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Navodi da su uslovi kredita i fondova EU i Svetske banke nejasni, posebno oko garancija za vraćanje sredstava i kontrole njihovog trošenja.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Али оно што је остало веома, веома нејасно, то је да ли и под којим условима могу да учествују равноправно пољопривредници Србије и какви су услови за добијање ових средстава у смислу гаранције.",
+    "date": "2016-12-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/13. decembar 2016.pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je stanje u javnim preduzećima, posebno Elektroprivrede Srbije, loše i da se država zadužuje da bi ga sanirala.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "да јавна предузећа као што је „Електропривреда“ и „Србијагас“ помажу буџету Србије, односно доприносе да се буџет Србије пуни, а не да се буџет Србије додатно задужује",
+    "date": "2017-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. maj 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da kupovina do dva hektara zemljišta za državljane EU nije glavna opasnost, i da se pitanje zemljišta mora posmatrati šire.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Не прети опасност Србији, када је у питању пољопривредно земљиште, од оних који ће купити два хектара.",
+    "date": "2017-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/28. avgust 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je Ustavni sud neosnovano poništio pravo da poslanik mandat poveri političkoj partiji i traži da se ta ustavna kategorija vrati.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Устав јасно каже да посланик свој мандат може да повери политичкој партији, коалицији и листи на којој је изабран.",
+    "date": "2020-05-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Prvog redovnog zasedanja NSRS 08.05.2020..docx"
+   }
+  }
+ ]
+}

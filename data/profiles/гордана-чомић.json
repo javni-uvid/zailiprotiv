@@ -1,0 +1,57 @@
+{
+ "mp": "гордана чомић",
+ "model": "claude-haiku-5-5",
+ "read": 49,
+ "speeches": 85,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Zamera što se zakoni donose bez podzakonskih akata, iako Rezolucija Narodne skupštine traži da idu zajedno sa predlogom zakona.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Знам да ће требати времена да заживи пракса и знам колики је отпор био у реченицама – али не знамо како да направимо подзаконска акта зато што не знамо како ће изгледати закон.",
+    "date": "2017-10-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je zakon o dualnom obrazovanju loš, da je nastao po predlogu švajcarskih eksperata i da ne doprinosi razvoju Srbije.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Дуално образовање је лоше зато што ни на који начин не доприноси било ком развоју Србије.",
+    "date": "2017-10-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/31. oktobar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Upozorava da zakon o stanovanju i održavanju zgrada nije izmeren, pa nije jasno koliko vremena registrator treba za prijave.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Зато говорим о десет хиљада минута месечно у идеалним случајевима, јер тако се ради, на једног регистратора.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Predlaže da na izbornim listama bude najmanje 40% manje zastupljenog pola, kao zakonska obaveza posle sledećih izbora.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Предлог измена Закона о избору народних посланика и локалним изборима које сам поднела имају у својој суштини само једну једину намеру да након следећих избора свугде где се људи бирају за одговорне улоге буде 40% мање заступљеног пола.",
+    "date": "2020-02-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvadeset drugo vanredno zasedanje NSRS 06.02.2020..docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "mp": "душан милисављевић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 2,
+ "points": [
+  {
+   "tekst": "Navodi da član 250. Krivičnog zakonika treba izbrisati, a obolele od HIV-a prebaciti u član 249, gde se nalaze ostale zarazne bolesti.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Предлажемо да се члан 250. избрише а да се оболели од ХИВ-а пребаце у члан 249, где се третирају остале заразне болести, и хепатитис Ц и хепатитис Б, које су у неким случајевима много опасније и теже за лечење него пацијенти оболели од ХИВ-а.",
+    "date": "2017-10-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
+   }
+  },
+  {
+   "tekst": "Predlaže zakonsku obavezu da se novorođenčadi meri sluh u porodilištima od trećeg do petog dana od rođenja.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Идеја је да се бебама мери слух од трећег до петог дана од рођења како бисмо детектовали на време да ли дете има оштећење слуха или нема и како би ОРЛ службе на време почеле са адекватном терапијом, тј. рехабилитацијом слуха.",
+    "date": "2017-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Predlaže da krivično delo nelegalno stečene imovine ne može da zastari.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Овим додатком у Кривичном законику омогућили бисмо да ниједно кривично дело нелегалног стицања имовине не може застарити и послали превентивну поруку свим људима који се у одређеном тренутку баве јавним послом да није паметно да злоупотребе свој положај и да ће пре или касније одговарати српском народу за штету коју су нанели буџету Републике Србије.",
+    "date": "2017-10-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
+   }
+  },
+  {
+   "tekst": "Predlaže da poslodavac ne sme da otpusti radnika koji boluje od malignog tumora dok je u lečenju.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Овим предлогом забранили бисмо власницима фирми да отпусте радника који болује од карцинома и у процесу је лечења или рехабилитације.",
+    "date": "2017-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Predlaže da radnici koji boluju od malignih tumora imaju pravo na 100% naknade za bolovanje, a ne 65%.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Овај предлог који сам предложио за здравствено осигурање је да радници који болују од малигних тумора имају право на 100% боловања.",
+    "date": "2017-10-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
+   }
+  }
+ ]
+}

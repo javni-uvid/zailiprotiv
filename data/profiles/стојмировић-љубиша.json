@@ -1,0 +1,46 @@
+{
+ "mp": "стојмировић љубиша",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 12,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Navodi da je ranije potpisan ССП, pa da Vlada sada pokušava da ispravi ili ublaži ono što je u njemu potpisano.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Мислим да је ово добар покушај да се колико-толико ублажи оно што је у ССП потписано и верујем да ће то бити у интересу грађана Србије.",
+    "date": "2017-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/28. avgust 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da treba pomoći seljacima i poljoprivredi, i upozorava da se domaće tržište ne bi smelo prepustiti uvozu.",
+   "govora": 2,
+   "sazivi": [
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Да ли је могуће да ћемо ми збиља препустити ово наше тржиште увозном лобију где ћемо куповати производе који су далеко од квалитета оних који су се производили код нас?",
+    "date": "2021-12-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 21. decembar 2021. godine.docx"
+   }
+  },
+  {
+   "tekst": "Traži da se izrada udžbenika vrati Zavodu za udžbenike, i zamera što je tržište udžbenika prepušteno stranima.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Обавеза и Владе и државе и свих нас је да пружимо руку том Заводу, да Заводу омогућимо да ради посао који је веома добро и квалитетно радио у претходним деценијама",
+    "date": "2021-12-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 21. decembar 2021. godine.docx"
+   }
+  }
+ ]
+}

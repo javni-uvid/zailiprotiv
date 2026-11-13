@@ -1,0 +1,59 @@
+{
+ "mp": "дубравка филиповски",
+ "model": "claude-haiku-5-5",
+ "read": 17,
+ "speeches": 17,
+ "sittings": 15,
+ "points": [
+  {
+   "tekst": "Наводи да су кредити за младе помогли младима да реше стамбено питање.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наравно да су кредити за младе нешто што је помогло младима да не само дођу до свог стамбеног решења, него да остану у Србији",
+    "date": "2026-06-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Sedmog vanrednog zasedanja NSRS 2. dan 18.06.2026..docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што блокадама и насиљем угрожава рад Скупштине и грађане.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ако сте, уважене колеге које сте прекопута мене, после седам месеци блокада и агресије схватили да је пропао покушај вашег уличног преврата и насилне смене власти, онда је то добро.",
+    "date": "2025-06-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да расту плате и пензије и да привредни раст Србије напредује.",
+   "govora": 3,
+   "sazivi": [
+    "11",
+    "12",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Две најважније новине овог буџета за мене су повећање плата и пензија и ослобађање од пореза на зараде за оснивање привредних субјеката до девет запослених радника у трајању од две године.",
+    "date": "2017-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/8. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Замера опозицији што се само декларативно залаже за европске интеграције Србије.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви се, господо из опозиције, само декларативно залажете за улазак Србије у ЕУ и за европске интеграције Србије, а до сада нисте гласали ни за један европски закон",
+    "date": "2026-04-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 22. aprila 2026. godine, 5. dan rada.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "mp": "жарко мићин",
+ "model": "claude-haiku-5-5",
+ "read": 15,
+ "speeches": 15,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Navodi da su fabrike „Lir“ i „Delfi“ u Novom Sadu zaposlile 3.000 ljudi i da će ih biti 5.000, te da je to rezultat rada gradonačelnika Miloša Vučevića.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Сада већ у Новом Саду ове две компаније запошљавају 3.000 људи, а запошљаваће 5.000 људи у року од три године.",
+    "date": "2017-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je budžetom za 2018. godinu planirano 15 milijardi dinara za subvencije privredi i investitorima, i da su te subvencije dovele nove fabrike i radna mesta.",
+   "govora": 5,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Буџетом Републике Србије за 2018. годину планирано је 15 милијарди динара за субвенције привреди и ту иду и подстицаји за инвеститоре.",
+    "date": "2017-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je prethodna vlast, koju naziva „žuto preduzeće“, u budžetu planirala sve manje kapitalnih ulaganja, a da SNS planira više.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Истина је да су 2010. године планирали 33 милијарде, истина је да су 2011. планирали 31 милијарду, дакле све мање и мање, и да су 2012. године планирали 22 милијарде.",
+    "date": "2017-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da je BDP Srbije između 2008. i 2012. godine pao, a između 2014. i 2016. godine porastao.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "У време СНС-а, од 2014. до 2016. године, исти тај БДП је нарастао за преко милијарду и триста милиона евра.",
+    "date": "2017-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+   }
+  }
+ ]
+}

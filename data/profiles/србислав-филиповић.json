@@ -1,0 +1,57 @@
+{
+ "mp": "србислав филиповић",
+ "model": "claude-haiku-5-5",
+ "read": 22,
+ "speeches": 22,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Navodi da opozicija nema konkretnih ideja i samo kritikuje SNS, bez predloga kako da se zakoni poprave.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Чули смо само голу критику на рачун СНС, нисмо чули ништа конкретно, ништа како да побољшамо већ постојеће законе у Републици Србији",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da prethodna vlast nema pravo da govori o korupciji, jer je, po njegovim rečima, korupciju gajila i sarađivala sa tajkunima.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Како неког није срамота ко је корупцију усадио, гајио у Србији, подстицао, ко је сарађивао са тајкунима, ко је гушио економију и привреду да нама данас говори о корупцији?",
+    "date": "2016-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2016.pdf"
+   }
+  },
+  {
+   "tekst": "Brani Predlog zakona o dualnom obrazovanju, jer, po njegovim rečima, mladima daje priliku da steknu praktična znanja i otvore sopstvene kompanije.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ми данас, СНС и Влада Републике Србије, Предлогом закона о дуалном образовању дајемо младима шансу, дајемо прилику онима који хоће да се остваре да направе своју приватну компанију",
+    "date": "2017-10-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/31. oktobar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Brani izmene Zakona o poljoprivrednom zemljištu, jer, po njegovim rečima, popravljaju ono što je loše urađeno za vreme prethodne vlasti.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ми данас покушавамо да оваквим изменама поправимо нешто што је лоше урађено за време претходне власти, нешто што није било добро.",
+    "date": "2017-08-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/25. avgust 2017..pdf"
+   }
+  }
+ ]
+}

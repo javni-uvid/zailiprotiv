@@ -1,0 +1,45 @@
+{
+ "mp": "михаило јокић",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 18,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Navodi da je cilj dualnog obrazovanja stručan i obrazovan radnik i da škola može da raskine ugovor sa poslodavcem ako on ne ispuni obaveze iz nastavnog plana i programa.",
+   "govora": 4,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ако послодавац не може да му обезбеди да ради то што пише у наставном плану и програму, школа раскида уговор са послодавцем.",
+    "date": "2017-11-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da oni koji završe dualno obrazovanje mogu da nastave na fakultet i da su najbolji stručni radnici u svojoj struci.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "И одговорно овде тврдим да они који су завршили дуално, који су завршили средњу стручну школу, који су добри мајстори а који су способни да заврше факултет, да су то најбољи факултетски образовани радници у својој струци.",
+    "date": "2017-11-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Upozorava na zloupotrebe i korupciju u lokalnim samoupravama i traži nadzor nad njihovim radom.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Предлажем вам да ви као министар формирате летеће стручне екипе које ће изненада проверавати како се ради у локалним самоуправама.",
+    "date": "2017-10-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. oktobar 2017..pdf"
+   }
+  }
+ ]
+}

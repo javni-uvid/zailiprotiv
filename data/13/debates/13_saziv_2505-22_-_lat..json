@@ -1,0 +1,12 @@
+{
+ "law": "Zakon o izmenama i dopuni Carinskog zakona",
+ "model": "claude-haiku-5-5",
+ "fingerprint": "072c90f0d531a25f0abfe0a2bb1ad6f743407c51ec2a62d5f94a7a3841402cf7",
+ "debate": {
+  "predlagac": [],
+  "podrska": [],
+  "zamerke": [],
+  "citati": []
+ },
+ "dropped_quotes": 0
+}
