@@ -42,7 +42,7 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
+{% set menu = [("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true), ("drugde", "Drugde", elsewhere)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
 {% if shown or spoke %}
 <section class="activity" id="aktivnost">
@@ -169,4 +169,13 @@
   {% endfor %}
   <p class="meta">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala odsutne, pa se ta glasanja ovde ne vide.</p>
 </section>
+{% if elsewhere %}
+<section class="more" id="drugde">
+  <h2>Drugde</h2>
+  <ul class="plain">
+    {% if elsewhere.otvoreni_parlament %}<li><a href="https://otvoreniparlament.rs/poslanik/{{ elsewhere.otvoreni_parlament }}" rel="noopener">Otvoreni parlament</a> <span class="meta">— govori, pitanja građana, imovinska karta kad je objavljena</span></li>{% endif %}
+  </ul>
+  <p class="meta">Spoljni sajtovi, nisu deo ovog sajta i ne odgovaramo za njihov sadržaj. Veze unosimo ručno.</p>
+</section>
+{% endif %}
 {% endblock %}

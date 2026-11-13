@@ -309,3 +309,6 @@ These are the project's promises to its readers. Never change them without the m
   renamed organisation).
   A probe confirmed that GitHub's runners reach parlament.gov.rs (the sandbox doesn't, nor can it download
   workflow artifacts, so workflows print what needs reviewing to their log).
+
+## Drugde (spoljne veze)
+- `data/elsewhere.json`: po slugu poslanika, ručno uneti identifikatori drugih sajtova (`otvoreni_parlament`: broj iz `otvoreniparlament.rs/poslanik/<broj>`). Samo obične veze, bez skripti i ugrađivanja. Njihov sajt je iza Cloudflare provere; ne zaobilazimo je, brojevi se unose ručno.
