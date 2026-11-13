@@ -29,6 +29,11 @@ in the same commit. README.md describes the project for its users; this file is 
   `page.html` at `/page`, and `site.clean_urls` rewrites the links after the build (pages, feeds, sitemap, scripts).
   A page named like a folder (`podaci.html`, `podaci/`) keeps its ending. `zailiprotiv site --html-links` keeps the
   endings, to open the built pages from disk.
+- **`site.py` is split** (13 Nov 2026): it loads the data, works out what pages share (groups, lines, key votes)
+  and renders the law and MP pages; the rest of the build is in modules called from `site.build` with what they
+  need as arguments: `pages_groups` (groups, numbers), `pages_quiz`, `pages_procedure`, `pages_lists` (areas,
+  sittings, convocations), `downloads`, `feeds`, and `publish` (clean addresses, the check). The move was checked by
+  building the site before and after and comparing every file. New kinds of page go in a module of their own.
 - **`zailiprotiv site` fails** when a page is over 1 MB or loads anything from another site (`site.check`); the
   **pages** workflow then doesn't publish.
 - **Talk to the maintainer in Serbian** (Latin script), briefly and to the point. Code, comments and docs are in

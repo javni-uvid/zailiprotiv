@@ -671,133 +671,17 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
             **common, rows=rows, conv=conv, conv_name=ORDINAL_NAME.get(conv, conv), root="",
             groups=sorted(groups.items(), key=lambda kv: (-kv[1], collate(kv[0])))), encoding="utf-8")
 
-    # A page per group and convocation: members, how united it votes, its line by area and on the key votes, and the
-    # votes that split it. The same numbers for every group; no ranking of MPs.
-    cast_in: dict[tuple, Counter] = defaultdict(Counter)
-    for key, it in finals.items():
-        for _, name, how, _ in it["final"]["rows"]:
-            cast_in[(key, seat[(key, mps.key(name))])][how] += 1
-    (out / "grupa").mkdir(exist_ok=True)
-    group_rows: dict[str, list] = defaultdict(list)
-    for (c, g), gslug in sorted(group_slug.items()):
-        ls = sorted(lines_of[(c, g)], key=lambda kl: finals[kl[0]]["final"]["when"], reverse=True)
-        # Everyone listed under this name in the convocation, with their votes while under it.
-        members = [{"mp": r["mp"], "tally": Counter(x["vote"] for x in r["by_conv"][c]["record"] if x["group"] == g)}
-                   for r in rows_mp if c in r["by_conv"] and g in r["by_conv"][c]["groups"]]
-        votes_ = []
-        for key, how in ls:
-            cc = cast_in[(key, g)]
-            voting = cc["za"] + cc["protiv"] + cc["uzdrzan"]
-            votes_.append({"it": finals[key], "line": how, "counts": {v: cc.get(v, 0) for v in VOTES}, "voting": voting,
-                           "with": cc[how], "share": cc[how] / voting})
-        listed = sum(sum(v["counts"].values()) for v in votes_ if v["it"]["final"]["counts"]["nije_prisutan"])
-        present = listed - sum(v["counts"]["nije_prisutan"] for v in votes_ if v["it"]["final"]["counts"]["nije_prisutan"])
-        by_area_g: dict[str, Counter] = defaultdict(Counter)
-        for v in votes_:
-            if v["it"]["law"].get("kind") != "treaty":
-                for a in v["it"].get("areas") or []:
-                    by_area_g[a][v["line"]] += 1
-        areas_g = [{"label": a, "n": sum(cn.values()), "za": cn["za"], "protiv": cn["protiv"], "uzdrzan": cn["uzdrzan"],
-                    "word": leaning(cn["za"], cn["protiv"])}
-                   for a, cn in sorted(by_area_g.items(), key=lambda kv: (-sum(kv[1].values()), collate(kv[0])))
-                   if sum(cn.values()) >= 5]
-        whens = sorted(finals[key]["final"]["when"][:10] for key, _ in ls)
-        info = {"name": g, "slug": gslug, "conv": c, "conv_name": ORDINAL_NAME.get(c, c),
-                "members": max(sum(cast_in[(key, g)].values()) for key, _ in ls), "first": whens[0], "last": whens[-1],
-                "former": former.get((c, g), []),
-                "votes": len(votes_), "lines": Counter(v["line"] for v in votes_),
-                "cohesion": sum(v["with"] for v in votes_) / sum(v["voting"] for v in votes_),
-                "presence": (present, listed) if listed else None}
-        group_rows[c].append(info)
-        (out / "grupa" / f"{gslug}.html").write_text(env.get_template("group.html").render(
-            **common, g=info, members=members, areas=areas_g,
-            key_votes=[v for v in votes_ if v["it"]["law"]["final_vote"] in key_finals][:8],
-            against=[v for v in votes_ if v["line"] == "protiv"],
-            split=sorted((v for v in votes_ if v["voting"] - v["with"] >= 2), key=lambda v: (v["share"], v["it"]["final"]["when"]))[:10],
-            root="../"), encoding="utf-8")
-    for c in group_rows:
-        group_rows[c].sort(key=lambda g: (-g["members"], collate(g["name"])))
-    (out / "grupe.html").write_text(env.get_template("groups.html").render(
-        **common, by_conv=[(cv, group_rows[cv["n"]]) for cv in conv_list if group_rows.get(cv["n"])], root=""), encoding="utf-8")
-    # The Assembly in numbers, by convocation: how laws are passed, and the same figures for every group.
-    def median(xs):
-        xs = sorted(xs)
-        return xs[len(xs) // 2] if xs else None
-    numbers = []
-    for cv in conv_list:
-        its = items_by_conv[cv["n"]]
-        voted = [it for it in its if it["final"]]
-        with_bill = [it for it in its if it["law"].get("bill_file")]
-        numbers.append({"conv": cv, "laws": len(its), "voted": len(voted),
-                        "treaties": sum(1 for it in its if it["law"].get("kind") == "treaty"),
-                        "urgent": sum(1 for it in with_bill if it["urgent"]), "with_bill": len(with_bill),
-                        "days": median([it["days"] for it in its if it["days"] is not None and it["days"] >= 0]),
-                        "unopposed": sum(1 for it in voted if not it["final"]["counts"]["protiv"]),
-                        "sittings": len({it["final"]["sitting"] for it in voted}), "groups": group_rows.get(cv["n"], [])})
-    (out / "brojke.html").write_text(env.get_template("numbers.html").render(**common, numbers=numbers, root=""),
-                                     encoding="utf-8")
-    # A new convocation starts with nothing voted. Until it has passed five laws, the home page and "Glasaj i ti"
-    # show the last convocation that has, and say which.
-    active = next((c for c, _ in convs if sum(1 for it in items_by_conv[c] if it["final"]) >= 5), current)
-    # "Glasaj i ti": the visitor votes on the current convocation's key laws; the page's own script compares the
-    # answers with every group's line and every MP's votes. Nothing leaves the browser.
-    quiz_laws = list(key_votes[active])
-    for r in most_against(items_by_conv[active], len(items_by_conv[active])):
-        it = by_key_all[r["key"]]
-        if len(quiz_laws) >= 10:
-            break
-        if it not in quiz_laws and it["law"].get("kind") != "treaty" and not (it["aka"] and any(it["aka"][0] == (q["aka"] or [""])[0] for q in quiz_laws)):
-            quiz_laws.append(it)
-    quiz_laws = sorted((it for it in quiz_laws if it["gist"]), key=lambda it: it["final"]["when"], reverse=True)
-    letter = {"za": "z", "protiv": "p", "uzdrzan": "u"}
-    quiz = {"laws": [{"s": it["slug"]} for it in quiz_laws],
-            "groups": [{"n": g["name"], "s": g["slug"], "m": g["members"],
-                        "v": "".join(letter.get(line.get((it["law"]["final_vote"], g["name"])), "-") for it in quiz_laws)}
-                       for g in group_rows.get(active, [])],
-            "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": (r["by_conv"][active]["groups"] or [""])[0],
-                     "v": "".join(letter.get(r["mp"].votes.get(it["law"]["final_vote"]), "-") for it in quiz_laws)}
-                    for r in rows_mp if active in r["by_conv"]]}
-    settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
-    # The laws visitors' votes are counted for: the counter (worker/) accepts no others.
-    (out / "glasaj.json").write_text(json.dumps({"laws": [it["slug"] for it in quiz_laws]}), encoding="utf-8")
-    shutil.copy(HERE / "static" / "glasaj.js", out / "glasaj.js")
-    (out / "glasaj.html").write_text(env.get_template("quiz.html").render(
-        **common, laws=quiz_laws, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
-        root=""), encoding="utf-8")
-
-    # Bills in procedure (the current convocation): what waits now, what is no longer listed, and the sittings
-    # convened whose votes are not out yet, with their agenda.
-    from zailiprotiv import link as link_, procedure as procedure_
-    proc_path, index_path = root / current / "procedure.json", root / current / "index.json"
-    proc = json.loads(proc_path.read_text(encoding="utf-8")) if proc_path.exists() else {"bills": {}, "fetched": ""}
-    sittings_index = json.loads(index_path.read_text(encoding="utf-8"))["sittings"] if index_path.exists() else {}
-    today = dt.date.today()
-    coming = sorted(({"title": sv["title"], "url": u, "starts": sv.get("starts", ""), "agenda": sv["agenda"]}
-                     for u, sv in sittings_index.items() if sv.get("agenda") and not sv.get("votes")
-                     and (sv.get("starts") or "9999")[:10] >= (today - dt.timedelta(days=45)).isoformat()),
-                    key=lambda x: x["starts"])
-    on_agenda = {}
-    for sv in coming:
-        for item in sv["agenda"]:
-            on_agenda.setdefault(link_.act_name(item), sv)
-    by_bill_pdf = {it["law"].get("bill_pdf"): it for it in items_by_conv[current] if it["law"].get("bill_pdf")}
-    waiting, gone = [], []
-    for pdf, b in proc["bills"].items():
-        row = {**b, "pdf": pdf, "who": procedure_.proposer_kind(b["proposer"]),
-               "kind": kinds.KINDS.get(kinds.kind(b["title"]), ""), "kind_key": kinds.kind(b["title"]),
-               "days": days_between(b["submitted"], today.isoformat()), "law": by_bill_pdf.get(pdf),
-               "gist": ((loaded[current][2].get(b.get("bill_file", ""), {}).get("summary") or {}).get("summary") or {}).get("ukratko", ""),
-               "areas": b.get("areas") or [],
-               "sitting": on_agenda.get(link_.act_name(b["title"]))}
-        (waiting if b["last_seen"] == proc["fetched"] and not row["law"] else gone).append(row)
-    waiting.sort(key=lambda r: (r["submitted"] or "", r["title"]), reverse=True)
-    gone.sort(key=lambda r: (r["last_seen"], r["submitted"] or ""), reverse=True)
-    who_label = {"vlada": "Vlada", "poslanici": "Poslanici", "drugi": "Drugi predlagači"}
-    (out / "u-proceduri.html").write_text(env.get_template("procedure.html").render(
-        **common, waiting=waiting, gone=gone[:200], coming=coming, checked=proc["fetched"], who_label=who_label,
-        who_counts=[(k, who_label[k], sum(1 for r in waiting if r["who"] == k)) for k in who_label],
-        oldest=min((r["submitted"] for r in waiting if r["submitted"]), default=None), root=""), encoding="utf-8")
-
+    from zailiprotiv import pages_groups
+    group_rows, numbers = pages_groups.render(common=common, conv_list=conv_list, env=env, finals=finals,
+        former=former, group_slug=group_slug, items_by_conv=items_by_conv, key_finals=key_finals,
+        lines_of=lines_of, out=out, rows_mp=rows_mp, seat=seat)
+    from zailiprotiv import pages_quiz
+    active = pages_quiz.render(by_key_all=by_key_all, common=common, convs=convs, current=current, env=env,
+        group_rows=group_rows, items_by_conv=items_by_conv, key_votes=key_votes, line=line, out=out, root=root,
+        rows_mp=rows_mp)
+    from zailiprotiv import pages_procedure
+    coming, waiting = pages_procedure.render(common=common, current=current, env=env,
+        items_by_conv=items_by_conv, loaded=loaded, out=out, root=root)
     # What the page's own script searches and filters: every law and MP, in one file fetched on first use.
     index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"] + " " + " ".join(it.get("aka") or []), "s": it["slug"], "d": it["law"].get("passed") or "",
                        "za": it["final"]["counts"]["za"] if it["final"] else None,
@@ -826,203 +710,18 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
-    # A page per area (the point of Article 97), every convocation, newest first.
-    by_area = defaultdict(list)
-    for its in items_by_conv.values():
-        for it in its:
-            for a in it.get("areas") or []:
-                by_area[a].append(it)
-    (out / "oblast").mkdir(exist_ok=True)
-    for a, its in by_area.items():
-        its.sort(key=lambda it: it["law"].get("passed") or "", reverse=True)
-        (out / "oblast" / f"{area_slug(a)}.html").write_text(env.get_template("area.html").render(
-            **common, area=a, laws=its, root="../"), encoding="utf-8")
-    (out / "oblasti.html").write_text(env.get_template("areas.html").render(
-        **common, areas=[{"name": a, "slug": area_slug(a), "n": len(by_area[a])}
-                         for a in sorted(by_area, key=lambda a: (-len(by_area[a]), collate(a)))], root=""), encoding="utf-8")
-    # A page per sitting: its laws and their final votes, the way the Assembly's own sitting page groups them.
-    by_sitting: dict[str, list] = defaultdict(list)
-    for its in items_by_conv.values():
-        for it in its:
-            if it.get("final"):
-                by_sitting[it["final"]["sitting"]].append(it)
-    sitting_slug = {}
-    (out / "sednica").mkdir(exist_ok=True)
-    for url, its in by_sitting.items():
-        its.sort(key=lambda it: it["final"]["when"])
-        first = its[0]
-        name = sitting_page(url, first["final"]["sitting_title"])
-        sitting_slug[url] = name
-        (out / "sednica" / f"{name}.html").write_text(env.get_template("sitting.html").render(
-            **common, title=first["final"]["sitting_title"], url=url, laws=its, conv_name=first["conv_name"],
-            first=its[0]["final"]["when"][:10], last=its[-1]["final"]["when"][:10], root="../"), encoding="utf-8")
-    sittings_list = sorted(({"slug": sitting_slug[u], "title": its[0]["final"]["sitting_title"], "n": len(its),
-                             "day": its[0]["final"]["when"][:10], "conv": its[0]["conv"], "conv_name": its[0]["conv_name"],
-                             "against": sum((it["final"]["counts"]["protiv"] or 0) for it in its)}
-                            for u, its in by_sitting.items()), key=lambda x: x["day"], reverse=True)
-    (out / "sednice.html").write_text(env.get_template("sittings.html").render(
-        **common, by_conv=[(cv, [x for x in sittings_list if x["conv"] == cv["n"]]) for cv in conv_list], root=""),
-        encoding="utf-8")
-    # A page per convocation: its figures, key votes, groups and sittings, and the way to its laws and MPs.
-    for n in numbers:
-        c = n["conv"]["n"]
-        (out / f"saziv-{c}.html").write_text(env.get_template("convocation.html").render(
-            **common, n=n, conv=c, cv=n["conv"], key_votes=key_votes.get(c, []),
-            against=most_against(items_by_conv[c], 5), sittings=[x for x in sittings_list if x["conv"] == c],
-            mps=sum(1 for r in rows_mp if c in r["by_conv"]),
-            first=min((it["law"].get("passed") or "9999" for it in items_by_conv[c]), default=""),
-            last=max((it["law"].get("passed") or "" for it in items_by_conv[c]), default=""), root=""), encoding="utf-8")
-
-    # Downloads: every law with its final vote, and every MP's final votes by convocation (CSV), and the roll call
-    # of each law beside its page (CSV and JSON).
-    import csv, io
-    site_url = f"https://{domain}/" if domain else ""
-
-    def display_name(name):
-        mp = people.get(mps.key(name))
-        return mp.name if mp else name
-    (out / "podaci").mkdir(exist_ok=True)
-    def write_csv(path, header, rows):
-        buf = io.StringIO()
-        w = csv.writer(buf)
-        w.writerow(header)
-        w.writerows(rows)
-        path.write_text(buf.getvalue(), encoding="utf-8")
-    write_csv(out / "podaci" / "zakoni.csv",
-              ["saziv", "usvojen", "kratak_naziv", "zvanican_naziv", "vrsta", "oblast", "za", "protiv", "uzdrzan",
-               "nije_glasao", "nije_prisutan", "strana", "glasanje_pdf", "zakon_pdf", "predlog_pdf"],
-              [[it["conv"], it["law"].get("passed"), it["law"]["short"], latin(it["law"]["title"]), latin(it["kind"]),
-                "; ".join(latin(a) for a in it.get("areas") or []),
-                *[(it["final"] or {}).get("counts", {}).get(v, "") if it.get("final") else "" for v in VOTES],
-                f"{site_url}zakon/{it['slug']}.html", (it.get("final") or {}).get("key", "").split("#")[0],
-                it["law"].get("pdf", ""), it["law"].get("bill_pdf", "")]
-               for its in items_by_conv.values() for it in its])
-    downloads = []
-    for conv, its in items_by_conv.items():
-        rows = []
-        for it in its:
-            f = it.get("final")
-            if not f:
-                continue
-            for _, name, how, group in f["rows"]:
-                rows.append([it["law"].get("passed"), it["law"]["short"], display_name(name), latin(group), how])
-        write_csv(out / "podaci" / f"glasovi-{conv}.csv", ["usvojen", "zakon", "poslanik", "grupa", "glas"], rows)
-        downloads.append({"conv": conv, "name": ORDINAL_NAME.get(conv, conv), "rows": len(rows), "laws": len(its)})
-        for it in its:
-            f = it.get("final")
-            if f:
-                roll = [[display_name(n), latin(g), how] for _, n, how, g in f["rows"]]
-                write_csv(out / "zakon" / f"{it['slug']}.csv", ["poslanik", "grupa", "glas"], roll)
-                (out / "zakon" / f"{it['slug']}.json").write_text(json.dumps(
-                    {"zakon": it["law"]["short"], "zvanican_naziv": latin(it["law"]["title"]), "usvojen": it["law"].get("passed"),
-                     "glasanje": f["when"], "pdf": f["key"].split("#")[0], "rezultat": f["counts"],
-                     "glasovi": [{"poslanik": a, "grupa": b, "glas": c} for a, b, c in roll]},
-                    ensure_ascii=False, indent=1), encoding="utf-8")
-    (out / "podaci.html").write_text(env.get_template("data.html").render(**common, downloads=downloads, root=""),
-                                     encoding="utf-8")
-    (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(**common, root=""), encoding="utf-8")
-    if domain:
-        (out / "CNAME").write_text(domain + "\n", encoding="utf-8")
-        base = f"https://{domain}/"
-        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html"))
-        (out / "sitemap.xml").write_text(
-            '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-            + "".join(f"<url><loc>{base}{p}</loc></url>\n" for p in pages) + "</urlset>\n", encoding="utf-8")
-        (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {base}sitemap.xml\n", encoding="utf-8")
-    # Atom feeds: the newest laws, and each MP's newest final votes (static files, nothing from other servers).
-    site = f"https://{domain}/" if domain else ""
-    newest = sorted((it for its in items_by_conv.values() for it in its), key=lambda it: it["law"].get("passed") or "",
-                    reverse=True)[:50]
-    word = {"za": "za", "protiv": "protiv", "uzdrzan": "uzdržan", "nije_glasao": "nije glasao", "nije_prisutan": "nije prisutan"}
-
-    def entry(it, title, summary):
-        c = (it.get("final") or {}).get("counts") or {}
-        tally = f"{c.get('za', 0)} za, {c.get('protiv', 0)} protiv. " if c else ""
-        return {"title": title, "link": f"{site}zakon/{it['slug']}.html", "id": f"{site}zakon/{it['slug']}.html",
-                "updated": (it["law"].get("passed") or "2000-01-01") + "T00:00:00Z", "summary": tally + summary}
-
-    write_feed(out / "zakoni.xml", "Za ili Protiv: novi zakoni", f"{site}zakoni.xml", f"{site}index.html",
-               [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in newest])
-    write_feed(out / "u-proceduri.xml", "Za ili Protiv: novi predlozi zakona", f"{site}u-proceduri.xml", f"{site}u-proceduri.html",
-               [{"title": latin(r["title"]), "link": r["pdf"], "id": r["pdf"],
-                 "updated": (r["submitted"] or "2000-01-01") + "T00:00:00Z", "summary": "Predlagač: " + latin(r["proposer"])}
-                for r in waiting[:50]])
-    for a, its in by_area.items():
-        write_feed(out / "oblast" / f"{area_slug(a)}.xml", f"Za ili Protiv: {latin(a)}", f"{site}oblast/{area_slug(a)}.xml",
-                   f"{site}oblast/{area_slug(a)}.html",
-                   [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in its[:40]])
-    (out / "poslanik").mkdir(exist_ok=True)
-    for mp_slug, (name, record) in feeds_mp.items():
-        write_feed(out / "poslanik" / f"{mp_slug}.xml", f"Za ili Protiv: {name}", f"{site}poslanik/{mp_slug}.xml",
-                   f"{site}poslanik/{mp_slug}.html",
-                   [entry(r["it"], f"{word.get(r['vote'], r['vote'])}: {r['it']['law']['short']}",
-                          "Drugačije od većine svoje grupe. " if r["differs"] else "") for r in record])
+    from zailiprotiv import pages_lists
+    by_area = pages_lists.render(area_slug=area_slug, common=common, conv_list=conv_list, env=env,
+        items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp)
+    from zailiprotiv import downloads
+    downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
+    from zailiprotiv import feeds
+    feeds.write(area_slug=area_slug, by_area=by_area, domain=domain, feeds_mp=feeds_mp,
+        items_by_conv=items_by_conv, out=out, waiting=waiting)
     (out / ".nojekyll").write_text("", encoding="utf-8")
     if clean:
         clean_urls(out)
     return stats
 
 
-_HREF = re.compile(r'((?:href|content)=")([^":?#]*?)\.html((?:[#?][^"]*)?")')
-
-
-def clean_urls(out: Path) -> None:
-    """Addresses without ".html" (the maintainer, 13 Nov 2026): GitHub Pages serves page.html at /page, so the files
-    keep their names and only the links change, in pages, feeds, the sitemap and the site's own scripts. "index"
-    becomes the folder itself. A page that shares its name with a folder ("podaci.html" beside "podaci/") keeps its
-    ending, as the short address would open the folder. Links to other sites are left as they are."""
-    site = None
-    cname = out / "CNAME"
-    if cname.exists():
-        site = "https://" + cname.read_text(encoding="utf-8").strip() + "/"
-
-    def absolute(m):
-        rel = m.group(2)
-        if rel == "index" or rel.endswith("/index"):
-            return m.group(1) + rel[:-5]
-        return m.group(0) if (out / rel).is_dir() else m.group(1) + rel
-    own = re.compile(r"(https://[^\s\"<>/]*zailiprotiv[^\s\"<>/]*/)([^\s\"<>?#]*?)\.html")
-    for f in out.rglob("*"):
-        if f.suffix == ".html":
-            def link(m, here=f.parent):
-                path = m.group(2)
-                if path == "index" or path.endswith("/index"):
-                    path = path[:-5] or "./"
-                elif (here / path).is_dir():
-                    return m.group(0)
-                return m.group(1) + path + m.group(3)
-            text = _HREF.sub(link, f.read_text(encoding="utf-8"))  # relative links: no scheme, so no colon
-            if site:  # the page's one address, as the old ones with ".html" still open
-                rel = f.relative_to(out).as_posix()[:-5]
-                rel = rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if (out / rel).is_dir() else "")
-                text = text.replace("</head>", f'<link rel="canonical" href="{site}{rel}">\n</head>', 1)
-            f.write_text(own.sub(absolute, text), encoding="utf-8")
-        elif f.suffix == ".xml":
-            f.write_text(own.sub(absolute, f.read_text(encoding="utf-8")), encoding="utf-8")
-        elif f.suffix == ".js":
-            text = f.read_text(encoding="utf-8")
-            f.write_text(text.replace(' + ".html"', "").replace('glasaj.html"', 'glasaj"'), encoding="utf-8")
-
-
-# What every built page must keep to (project principles): nothing loaded from another site, and pages light enough
-# for a phone. The largest page now is under 0.6 MB.
-PAGE_LIMIT = 1_000_000
-EXTERNAL = re.compile(r"<(?:script|iframe|img|source|video|audio|embed|object)\b[^>]*\bsrc=[\"'](?:https?:)?//"
-                      r"|<link\b[^>]*\bhref=[\"'](?:https?:)?//[^\"']*[\"'][^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)"
-                      r"|<link\b[^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)[\"'][^>]*\bhref=[\"'](?:https?:)?//"
-                      r"|@import\s+url\(\s*[\"']?(?:https?:)?//|url\(\s*[\"']?(?:https?:)?//", re.I)
-
-
-def check(out: Path) -> list[str]:
-    """What is wrong with a built site: pages over the limit, anything loaded from another site."""
-    bad = []
-    for f in sorted(out.rglob("*")):
-        if f.suffix not in (".html", ".css", ".js"):
-            continue
-        text = f.read_text(encoding="utf-8")
-        if f.suffix == ".html" and len(text.encode()) > PAGE_LIMIT:
-            bad.append(f"{f.relative_to(out)}: {len(text.encode()) / 1e6:.1f} MB")
-        m = EXTERNAL.search(text)
-        if m:
-            bad.append(f"{f.relative_to(out)}: spoljni resurs: {m.group(0)[:80]}")
-    return bad
+from zailiprotiv.publish import PAGE_LIMIT, check, clean_urls  # noqa: E402,F401  (used as site.check and so on)
