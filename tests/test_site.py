@@ -68,7 +68,7 @@ def test_site_builds_every_page(tmp_path):
     mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
     assert "Glasovi protiv" in mp and "Glasovi za" in mp and "Po vrsti zakona" in mp
     assert "Sa kim glasa isto" not in mp  # fewer than ten votes in common with any group
-    assert (out / "kako-racunamo.html").exists() and "kako-racunamo.html#" in (out / "zakon").iterdir().__next__().read_text(encoding="utf-8")
+    assert (out / "kako-racunamo.html").exists() and "kako-racunamo.html#" in (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
     import xml.dom.minidom as dom
     assert dom.parse(str(out / "zakoni.xml")).getElementsByTagName("entry")
     assert list((out / "poslanik").glob("*.xml")) and all(dom.parse(str(f)) for f in (out / "poslanik").glob("*.xml"))

@@ -52,7 +52,7 @@ def test_summaries_command_skips_the_unchanged(tmp_path, monkeypatch):
     (tmp_path / "bills" / "b.json").write_text(json.dumps(MEMO))
     (tmp_path / "laws.json").write_text(json.dumps({"laws": {"L": {**LAW, "bill_file": "b.json"}}}))
     client = Client('{"ukratko": "Кратко.", "razlozi": [], "promene": [], "sredstva": ""}')
-    import anthropic
+    anthropic = pytest.importorskip("anthropic")
     monkeypatch.setattr(anthropic, "Anthropic", lambda: client)
     args = ["summaries", "--laws", str(tmp_path / "laws.json"), "--bills", str(tmp_path / "bills"),
             "--out", str(tmp_path / "s")]
