@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "c5905ba26a8059c561387d160df7e6d10866d54125b3d8e64c951d392c4362e5",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom potvrđuje Sporazum između Republike Srbije i Velikog Vojvodstva Luksemburg o socijalnoj sigurnosti, potpisan u Luksemburgu 7. juna 2013. godine, kojim se uређује socijalno osiguranje u oblastima penzijskog i invalidskog, zdravstvenog, osiguranja za slučaj povrede na radu i profesionalne bolesti, nezaposlenosti, dečije zaštite i materinstva.",
+  "razlozi": [
+   "Radi regulisanja oblasti socijalne sigurnosti, nakon jedne runde pregovora, potpisan je Sporazum.",
+   "Sporazum je zasnovan na opšteprihvaćenim principima, iskustvima naše zemlje i standardima Uredbe Evropske unije broj 883/04 o socijalnoj sigurnosti radnika migranata.",
+   "Osnovni principi Sporazuma su princip nacionalnog tretmana i primena propisa države zaposlenja, uz izuzetak za upućena lica i diplomatsko-konzularne predstavnike.",
+   "Sporazum uređuje sabiranje perioda osiguranja navršenih u obe države radi ostvarivanja prava i neposrednu isplatu stečenih davanja korisniku."
+  ],
+  "promene": [
+   "Uređuje penzijsko i invalidsko osiguranje.",
+   "Uređuje zdravstveno osiguranje.",
+   "Uređuje osiguranje za slučaj povrede na radu i profesionalne bolesti.",
+   "Uređuje osiguranje za slučaj nezaposlenosti.",
+   "Uređuje dečiju zaštitu i materinstvo."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Republike Srbije i Velikog Vojvodstva Luksemburg o socijalnoj sigurnosti",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d6d952dad6fc45c845d7503febb359b4c0e2ead1885b72d4eb723d1a301870ba",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim zakonom ukida slivna vodna naknada iz Zakona o vodama, uz tehnička usklađivanja ostalih odredaba tog zakona.",
+  "razlozi": [
+   "Predlagač navodi da su u projektima za poboljšanje poslovne klime identifikovani brojni troškovi privrede koji otežavaju poslovanje i utiču na smanjenje investicija.",
+   "Predlagač navodi da privredni subjekti ukazuju na veliki broj nameta i njihovu visinu, uz tvrdnju da su mnogi uvedeni neosnovano.",
+   "Predlagač navodi da je pri razmatranju zahteva privrede uzet u obzir teški uslovi poslovanja domaće privrede i teška materijalna situacija građana, naročito poljoprivrednika.",
+   "Predlagač navodi da su prihodi od ove naknade iznosili oko 20 miliona dinara u 2011. godini, a 7,6 miliona dinara u prvih šest meseci 2012. godine."
+  ],
+  "promene": [
+   "Briše se član 153. stav 1. tačka 6), čime se ukida slivna vodna naknada.",
+   "Brišu se nazivi odeljka i pododeljka o slivnoj vodnoj naknadi i članovi 178–182, koji su uređivali osnov plaćanja, obveznike, plaćanje, izuzetke i namenu sredstava.",
+   "Član 194. menja se tako da Vlada, ako je proglašena elementarna nepogoda, može doneti odluku kojom se obveznik iz člana 170. tačka 1) oslobađa obaveze plaćanja naknade za odvodnjavanje.",
+   "U članovima 186, 187, 189, 190, 191, 193, 195 brišu se pojedine odredbe i menjaju upućivanja na član 153, radi usklađivanja sa ukidanjem naknade; brišu se i obaveze Poreske uprave i Javnog vodoprivrednog preduzeća u vezi s obračunom i naplatom te naknade.",
+   "Zakon stupa na snagu osmog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti finansijska sredstva."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o vodama",
+ "depth": "standard"
+}

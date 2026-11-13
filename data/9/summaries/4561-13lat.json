@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "5d29f386a654e132714c79233f597bc423b5254138bd6be88f659529d45c8dd5",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon precizira osnovicu poreza na zaradu fizičkih lica upućenih na rad u inostranstvo, poreski tretman prihoda od prodaje poljoprivrednih i šumskih proizvoda i lekovitog bilja, kao i način opredeljenja preduzetnika za isplatu lične zarade. Zakon sadrži i pravnotehnička i terminološka preciziranja.",
+  "razlozi": [
+   "Preciziranje osnovice poreza na zaradu za fizička lica, rezidente, upućena na rad u inostranstvo od strane pravnog lica rezidenta.",
+   "Uređenje poreskog tretmana prihoda od prodaje poljoprivrednih i šumskih proizvoda, plodova i lekovitog bilja koje ostvare određene kategorije fizičkih lica.",
+   "Preciziranje načina opredeljenja preduzetnika za utvrđivanje poreske obaveze po sistemu isplate lične zarade i vremena dostavljanja obaveštenja poreskom organu.",
+   "Materija se, prema navodu, odnosi na oporezivanje prihoda građana i uređuje se zakonom, jer se elementi sistema javnih prihoda menjaju samo zakonom."
+  ],
+  "promene": [
+   "Osnovica poreza na zaradu za fizička lica upućena na rad u inostranstvo je isplaćeni novčani iznos zarade za izvršeni rad.",
+   "Preduzetnik koji se opredeli za isplatu lične zarade dostavlja pisano obaveštenje poreskom organu najkasnije do 15. decembra tekuće godine za narednu godinu i ne može menjati to opredeljenje tokom poreskog perioda.",
+   "Za preduzetnike koji vode poslovne knjige i ne opredele se za isplatu lične zarade, u rashode se priznaju i obračunati i plaćeni doprinosi za lično obavezno socijalno osiguranje.",
+   "Porez na druge prihode se ne plaća na prihode od prodaje poljoprivrednih i šumskih proizvoda koje ostvare taksativno navedene kategorije fizičkih lica; pravo na umanjenje poreza za 40% imaju članovi omladinske ili studentske zadruge do 26 godina života na školovanju.",
+   "Kod isplate kamate kada platni promet nije radio, porez po odbitku može se platiti prvog narednog dana kada platni promet radi."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o porezu na dohodak građana",
+ "depth": "standard"
+}

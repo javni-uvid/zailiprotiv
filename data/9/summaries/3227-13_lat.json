@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "7fd5405e19bf02a1680517420fd33dcab328ce37c4858c908ae835b4ce8471ed",
+ "summary": {
+  "ukratko": "Zakon menja Zakon o ministarstvima. Према образложењу предлагача, обављање послова државне управе организује се у оквиру 18 министарстава, а делокруг појединих министарстава се мења.",
+  "razlozi": [
+   "Предлагач наводи načelo racionalnosti u organizovanju poslova državne uprave.",
+   "Предлагач наводи grupisanje istovrsnih ili srodnih poslova i specijalizaciju poslova.",
+   "Предлагач наводи da se poslovi iz oblasti finansija i privrede, koji su se obavljali u jednom ministarstvu, grupišu u dva različita ministarstva.",
+   "Предлагач наводи potrebu da se obezbedi kontinuirano funkcionisanje organa državne uprave i da se otkloni mogućnost štetnih posledica po rad organa i organizacija."
+  ],
+  "promene": [
+   "Obavljanje poslova državne uprave organizuje se u okviru 18 ministarstava.",
+   "Ministarstvo finansija i privrede se deli na Ministarstvo finansija i Ministarstvo privrede.",
+   "Menja se delokrug pojedinih ministarstava radi racionalnijeg grupisanja poslova iz srodnih oblasti.",
+   "Uređuje se preuzimanje poslova i elemenata organizacije radi nastavka rada organa državne uprave.",
+   "Zakon stupa na snagu danom objavljivanja, pre osmog dana od dana objavljivanja."
+  ],
+  "sredstva": "Предлагач наводи da za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o ministarstvima",
+ "depth": "standard"
+}

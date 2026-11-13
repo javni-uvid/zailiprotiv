@@ -1,0 +1,19 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "747f5c6a5f3e09e55d038411ce5d6a5fc1f9a8e87b8790be9fa495f65ed960e7",
+ "summary": {
+  "ukratko": "Законом се потврђује Споразум између Владе Републике Србије и Владе Мађарске о граничној контроли у друмском, железничком и водном саобраћају. Према образложењу предлагача, Споразум уређује контролу робе преко државне границе.",
+  "razlozi": [
+   "Потреба за хармонизацијом контроле робе преко државне границе.",
+   "Намера да се на заједничкој државној граници олакша и убрza контрола преласка границе на друмским, железничким и речним граничним прелазима.",
+   "Republika Srbija već duži niz godina ostvaruje dinamičnu i sadržajnu policijsku saradnju sa Mađarskom."
+  ],
+  "promene": [
+   "Потврђује се Споразум између Владе Републике Србије и Владе Мађарске о граничној контроли у друмском, железничком и водном саобраћају."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона nisu potrebna dodatna budžetska sredstva Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Mađarske o graničnoj kontroli u drumskom, železničkom i vodnom saobraćaju",
+ "depth": "standard"
+}

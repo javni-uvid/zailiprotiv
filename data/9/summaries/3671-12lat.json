@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "45b520fd348aeb19675f38dd3ee240247231a9e4ccb57da58d054134c3c30a23",
+ "summary": {
+  "ukratko": "Zakon menja Zakon o privatizaciji tako što zabranu prinudnog izvršenja naplatom novčanih potraživanja prema subjektima privatizacije u restrukturiranju ograničava rokom do 30. juna 2014. godine. Према образложењу, циљ је да субјекти у restrukturiranju могу да наставе пословање, а повериоци да планирају своје активности uz veću izvesnost naplate.",
+  "razlozi": [
+   "Postupak privatizacije i restrukturiranja traje duže nego što se pri donošenju propisa moglo proceniti.",
+   "Zabrana izvršenja onemogućava poveriocima naplatu dospelih i pravnosnažno dosuđenih potraživanja u dužem roku nego što je zakonodavac nameravao.",
+   "Povećan je broj društava u restrukturiranju i broj raskinutih ugovora o prodaji zbog neispunjenja obaveza kupaca, pa poverioci ne mogu da namire svoja potraživanja, što ugrožava njihovu likvidnost.",
+   "Oročavanjem zabrane pružiće se mogućnost nastavka poslovanja subjekata u restrukturiranju i veća izvesnost poveriocima pri planiranju poslovanja i finansiranja."
+  ],
+  "promene": [
+   "U članu 20ž stav 1. dodaju se reči „najkasnije do 30. juna 2014. godine“.",
+   "U stavu 6. zamenjuje se deo koji se odnosi na uplatu prodajne cene ili prve rate ako se prodajna cena plaća na rate, rečima „najkasnije do 30. juna 2014. godine“.",
+   "Otvara se mogućnost naplate potraživanja nakon 30. juna 2014. godine, koja do sada nije bila predviđena."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna finansijska sredstva iz budžeta."
+ },
+ "usage": {},
+ "law": "Zakon o izmeni i dopuni Zakona o privatizaciji",
+ "depth": "standard"
+}

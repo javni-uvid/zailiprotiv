@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "b4ba73accce6c3eebec6d61175c18853b2a3deedd515ef68daf12c6c6d20f15b",
+ "summary": {
+  "ukratko": "Предлагач наводи да се овим законом потврђује Уговор између Владе Републике Србије и Владе Уједињених Арапских Емирата о избегавању двоструког опорезивања у односу на порезе на доходак, сачињен 13. јануара 2013. године у Абу Dabiju.",
+  "razlozi": [
+   "Предлагач наводи да је нацрт Уговора парафиран 11. јануара 2013. године у Абу Dabiju и да су се стране сагласиле о потреби што скоријег потписивања.",
+   "Према образложењу, Уговор отклања проблем двоструког опорезивања физичких и правних лица која су резиденти две државе и утврђује заједничке критеријуме за одређивање права опорезивања појединих врста дохотка.",
+   "Предлагач наводи да Уговор подстиче улагање капитала резидената Републике Србије у Уједињеним Арапским Емиратима и резидената Уједињених Арапских Емирата у Републици Србији.",
+   "Предлагач наводи да Уговор представља предуслов за будућа улагања емиратских инвеститора у привреду Републике Србије, укључујући и њихово учешће у процесу приватизације."
+  ],
+  "promene": [
+   "Članom 1. predlaže se potvrđivanje Ugovora.",
+   "Članom 2. sadrži se tekst Ugovora na srpskom i engleskom jeziku.",
+   "Članom 3. uređuje se stupanje na snagu ovog zakona.",
+   "Prema članu 27. Ugovora, Ugovor se počinje primenjivati na poreze na dohodak koji se ostvare prvog dana ili posle prvog dana meseca koji neposredno sledi mesecu u kojem Ugovor stupa na snagu.",
+   "Предлагач наводи да се закон доноси по хитном поступку, јер и Република Србија и Уједињени Арапски Емирати желе да Уговор што pre stupi na snagu."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона нису потребна финансијска средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora između Vlade Republike Srbije i Vlade Ujedinjenih Arapskih Emirata o izbegavanju dvostrukog oporezivanja u odnosu na poreze na dohodak",
+ "depth": "standard"
+}

@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "01c9dc52d2a8e88cf00a2c6cd238febadeb7cf4551b5fef75bbbd0ef2ff253e3",
+ "summary": {
+  "ukratko": "Zakon menja rok u članu 82. stav 3. Zakona o javnoj svojini, u kojem javna preduzeća, društva kapitala i njihova zavisna društva mogu podneti zahtev za upis prava svojine na nepokretnostima u državnoj svojini na kojima imaju pravo korišćenja. Prema obrazloženju predlagača, rok se produžava.",
+  "razlozi": [
+   "Rok iz člana 82. stav 3. ističe 6. oktobra 2013. godine i prema navodima predlagača je prekluzivan.",
+   "Predlagač navodi da veliki broj navedenih preduzeća nije podneo zahtev za upis prava svojine u javnoj evidenciji o nepokretnostima.",
+   "Predlagač navodi da je potrebno da zakon stupi na snagu danom objavljivanja u „Službenom glasniku Republike Srbije”, kako bi preduzeća mogla blagovremeno da podnesu zahteve.",
+   "Predlagač navodi da se zakon predlaže po hitnom postupku kako bi se izbegle štetne posledice po rad organa i organizacija."
+  ],
+  "promene": [
+   "Rok za podnošenje zahteva za upis prava svojine produžava se sa dve na tri godine od dana stupanja na snagu zakona.",
+   "Zakon stupa na snagu danom objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti posebna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmeni Zakona o javnoj svojini",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "a7a9ec1b18e58074826d33e19b58ae4efbc555964653477fa4ad787c05f48499",
+ "summary": {
+  "ukratko": "Zakon menja Zakon o veterinarstvu i ukida troškove registracije objekata u kojima se obavlja veterinarska delatnost, odnosno utvrđivanja ispunjenosti veterinarsko-sanitarnih uslova i opštih i posebnih uslova za higijenu hrane i hrane za životinje. Predlagač navodi da se ovi troškovi ukidaju u cilju podsticaja razvoja stočarstva.",
+  "razlozi": [
+   "Privredni subjekti su ukazali na veliki broj nameta koje plaćaju i na njihovu visinu, uz navod da su mnogi nameti uvedeni neosnovano.",
+   "Predlagač navodi da su uzeti u obzir teški uslovi poslovanja domaće privrede i teška materijalna situacija građana, naročito poljoprivrednika.",
+   "Predlagač navodi da je u cilju podsticaja razvoja stočarstva potrebno ukinuti ove troškove.",
+   "Predlagač navodi da su Registar objekata, Registar odobrenih objekata i Registar izvoznih objekata u interesu Republike Srbije."
+  ],
+  "promene": [
+   "U članu 73. dodaje se stav 3: za registraciju objekata iz člana 72. plaćaju se samo troškovi u skladu sa članom 142. zakona.",
+   "U članu 78. dodaje se stav 4: za registraciju objekata za izvoz iz člana 72. plaćaju se samo troškovi u skladu sa članom 142. zakona.",
+   "Član 80. se briše.",
+   "Zakon stupa na snagu osmog dana od dana objavljivanja u „Službenom glasniku Republike Srbije“.",
+   "Predlagač predlaže donošenje zakona po hitnom postupku, u skladu sa članom 167. Poslovnika Narodne skupštine."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti finansijska sredstva."
+ },
+ "usage": {},
+ "law": "Zakon o izmeni i dopunama Zakona o veterinarstvu",
+ "depth": "standard"
+}

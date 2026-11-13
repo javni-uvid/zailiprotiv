@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "8587a4aacf60e4c0ed506d7b1a3dc8b0f3f2e26fa4bab6dc1af61dc777c626c4",
+ "summary": {
+  "ukratko": "Законом се потврђује Споразум између Швајцарске Конфедерације и Републике Аустрије о оснивању и раду Међународног центра за развој миграционе политике (ICMPD) у Бечу, с изменама и допунама наведеним у називу закона. Према образложењу предлагача, законом се стварају услови да Република Србија формално приступи овом споразуму.",
+  "razlozi": [
+   "ICMPD је основан 1993. године на иницијативу Аустрије и Швајцарске, а основна делатност је анализа миграционих токова, промоција одрживих политика миграција и размена стручњака.",
+   "Република Србија је 6. јула 2011. године потписала Декларацију о намерама са ICMPD-ом и добила место у Управљачкој групи.",
+   "Досадашња сарадња Министарства унутрашњих послова са ICMPD-ом одвијала се кроз учешће представника на семинарима о азилу, миграцијама и визама.",
+   "Потврђивањем закона окончава се процес формалног приступа, а Министарство спољних послова шаље ратификациони инструмент Министарству спољних послова Републике Аустрије."
+  ],
+  "promene": [
+   "Članom 1. предвиђено је потврђивање Споразума.",
+   "Чланом 2. садржан је текст оригиналног Споразума са преводом на српски језик.",
+   "Чланом 3. предвиђено је ступање закона на снагу.",
+   "Према образложењу, Споразум је затворен за даље измене, па земље чланице ратификују Споразум са свим његовим изменама."
+  ],
+  "sredstva": "Предлагач наводи да је годишња контрибуција за пуноправно чланство 20.000 евра, те да се средства за њену уплату могу обезбедити из апропријације 462 – Дотације међународним организацијама на разделу Министарства унутрашњих послова, која је Законом о буџету за 2013. годину опредељена у износу од 20.753.000 динара."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Švajcarske Konfederacije i Republike Austrije o osnivanju i radu Međunarodnog centra za razvoj migracione politike (ICMPD) u Beču iz 1. juna 1993. godine dopunjenog Sporazumom između Švajcarske Konfederacije, Republike Austrije i Republike Mađarske o izmenama i produženju važenja potpisanog Sporazuma o osnivanju i radu ICMPD-a iz 27. marta 1996. godine, Sporazumom između Švajcarske Konfederacije, Republike Austrije i Republike Mađarske o izmenama Sporazuma o osnivanju i radu ICMPD-a iz 26. aprila 1996. godine, kao i Sporazumom o trećoj izmeni Sporazuma o osnivanju i radu ICMPD-a iz 25. juna 2003. između Švajcarske Konfederacije, Republike Austrije, Republike Mađarske, Republike Slovenije, Češke Republike, Kraljevine Švedske, Republike Bugarske, Republike Hrvatske i Republike Poljske, potpisanog 25. juna 2003. godine na Rodosu",
+ "depth": "standard"
+}

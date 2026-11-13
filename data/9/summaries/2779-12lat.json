@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "61450d0363071c50ea65f0ca9ab0497a20b1992922468524417ba3808b21eb58",
+ "summary": {
+  "ukratko": "Predlog zakona menja Zakon o turizmu. Према образложењу предлагача, предлаже се укидање Националне туристичке развојне корпорације, бесплатно полагање дела стručnog испита за туристичке водиче и пратioце и укидање туристичке накнаде.",
+  "razlozi": [
+   "Предлагач наводи да је Predlog zakona nastao kao rezultat analize stanja na turističkom tržištu i problema sa kojima se suočavaju akteri turističke privrede.",
+   "Предлагач наводи намеру да се privreda rastereti ukidanjem raznih nameta i da se postigne veća efikasnost subjekata u oblasti turizma.",
+   "Предлагач наводи да ће ukidanje Nacionalne turističke razvojne korporacije, prema ekonomskoj opravdanosti, stvoriti preduslove za znatne uštede u budžetu Republike Srbije.",
+   "Предлагач наводи povećanu potrebu turističkih agencija za kvalifikovanim i stručnim kadrovima, radi poboljšanja kvaliteta organizovanja turističkih putovanja."
+  ],
+  "promene": [
+   "Ukida se Nacionalna turistička razvojna korporacija, a njeni poslovi se poveravaju pravnim licima koja ispunjavaju uslove za njihovo obavljanje.",
+   "Lica koja polažu stručni ispit za turističkog vodiča i turističkog pratioca neće plaćati teorijski deo ispita, izradu legitimacija i oznaka; praktični deo snose uz minimalne troškove organizacije.",
+   "Ukida se turistička naknada, koja se do sada plaćala za korišćenje pogodnosti u obavljanju delatnosti na području turističkog mesta.",
+   "Prestaju ovlašćenja turističkog inspektora u pogledu provere uplate turističke naknade i obaveštavanja nadležnog organa o nepostupanju obveznika.",
+   "Danom stupanja zakona na snagu prestaju da važe dva pravilnika o određivanju delatnosti za čije obavljanje se plaća turistička naknada."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење одредаба овог закона није потребно обезбедити додатна финансијска средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o turizmu",
+ "depth": "standard"
+}

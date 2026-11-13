@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "82258b2313f9a71bcf79dff6b33008916e8f2e1b53cd8aa5b57ad2d06677200c",
+ "summary": {
+  "ukratko": "Zakon uređuje rad pravnih i fizičkih lica u oblasti privatnog obezbeđenja, uslove za licenciranje, način obavljanja poslova i nadzor nad njihovim radom. Prema predlagaču, usluge privatnog obezbeđenja ne spadaju u policijsku ili drugu bezbednosnu delatnost države.",
+  "razlozi": [
+   "Zakonom o prestanku važenja određenih zakona stavljen je van snage Zakon o sistemu društvene samozaštite, a pitanja delatnosti privatnog obezbeđenja ostala su pravno neuređena, osim u delu o oružju i municiji.",
+   "Predlagač navodi da su u radu subjekata privatnog obezbeđenja često dolazile zloupotrebe ovlašćenja, uglavnom od strane neregistrovanih organizacija i fizičkih lica, što šteti ugledu profesionalnih privrednih društava i preduzetnika.",
+   "Strategijom nacionalne bezbednosti iz 2009. godine predviđeno je da delatnost subjekata privatnog obezbeđenja bude u celosti normativno uređena.",
+   "Predlagač navodi da je Republika Srbija jedina država u Evropi i regionu koja oblast privatnog obezbeđenja još nije uredila zakonom."
+  ],
+  "promene": [
+   "Uvodi se obaveza pribavljanja licence Ministarstva unutrašnjih poslova za pravna lica, preduzetnike i fizička lica koja obavljaju poslove privatnog obezbeđenja, uz uslov da odgovorno lice bude državljanin Srbije.",
+   "Utvrđuju se vrste poslova privatnog obezbeđenja, uslovi i način njihovog obavljanja, uz obavezu pisanog ugovora i obaveštenja nadležnoj policijskoj upravi o svakom ugovoru.",
+   "Uređuju se ovlašćenja službenika obezbeđenja, uključujući proveru identiteta, pregled, privremeno zadržavanje lica i upotrebu sredstava prinude, uz bliže propisivanje podzakonskim aktima.",
+   "Propisuju se obavezno obezbeđeni objekti, izgled uniformi i legitimacija službenika obezbeđenja, kao i evidencije i zaštita podataka.",
+   "Predviđa se da se redarska služba obavlja bez oružja i po naređenju ovlašćenog policijskog službenika na javnom skupu."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nisu potrebna dodatna finansijska sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o privatnom obezbeđenju",
+ "depth": "standard"
+}

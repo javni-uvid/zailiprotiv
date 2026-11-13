@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "0162795d9d6cbd8eb1fd89078f24795817ce1bd4a9930c6e98bb59cdfbfb9cbd",
+ "summary": {
+  "ukratko": "Према образложењу предлагача, закон уређује давање гаранције Републике Србије у корист шест домаћих и страних банака по задужењу Јавног предузећа „Србијагас” Нови Сад. Гаранција се односи на кредите у укупном износу од 190.000.000 евра, за одржавање текуће ликвидности овог предузећа.",
+  "razlozi": [
+   "Предлагач наводи да се гаранција Републике даје у форми закона, у складу са чланом 16. став 4. Закона о јавном дугу.",
+   "Предлагач наводи да ће средства кредита бити употребљена за одржавање текуће ликвидности ЈП „Србијагас” Нови Сад.",
+   "Према образложењу, издавање гаранције у износу од 190.000.000 евра предвиђено је чланом 3. Закона о буџету Републике Србије за 2012. годину.",
+   "Предлагач наводи да стављање кредита на располагање и повлачење средстава зависи од стуавања овог закона на снагу, због чега се предлаже поступак по хитном поступку и ступање на снагу пре осмог дана од дана објављивања."
+  ],
+  "promene": [
+   "Republika Srbija preuzima obavezu da izmiri obaveze Korisnika kredita po ugovorima o kreditu (član 1).",
+   "Garancija se daje u korist OTP banka Srbija a.d. Novi Sad, „Volksbank” a.d. Beograd, Vojvođanske banke a.d. Novi Sad, Societe Generale Banka Srbija a.d. Beograd, UniCredit Bank Srbija a.d. Beograd, Amsterdam Trade Bank Netherlands i Deutsche bank AG London (čl. 2–8).",
+   "Uređuju se prava banaka prema Garantu i obaveze Garanta za izvršenje preuzetih obaveza po garanciji (član 9).",
+   "Uređuju se obaveze Korisnika kredita u vezi sa ovim kreditima (član 10) i regresno pravo Garanta ako izvrši obavezu umesto Korisnika kredita (član 11).",
+   "Uređuje se stupanje zakona na snagu (član 12)."
+  ],
+  "sredstva": "Предлагач наводи да će се за спровођење овог закона обезбедити средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o davanju garancije Republike Srbije u korist OTP banka Srbija a.d. Novi Sad, ''Volksbank'' a.d. Beograd, Vojvođanske banke a.d. Novi Sad, Societe Generale Banka Srbija a.d. Beograd, UniCredit Bank Srbija a.d. Beograd, Amsterdam Trade Bank Netherlands i Deutsche bank AG London po zaduženju Javnog preduzeća ''Srbijagas'' Novi Sad",
+ "depth": "standard"
+}

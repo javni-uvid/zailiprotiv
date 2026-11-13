@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "cc7fd3c7060c24c9b4b01f7ea8edf0ccc237083eaa30eae2f4401489fa213d3e",
+ "summary": {
+  "ukratko": "Predlog zakona potvrđuje Ugovor između Vlade Republike Srbije i Vlade Republike Tunis o izbegavanju dvostrukog oporezivanja u odnosu na poreze na dohodak i na imovinu, potpisan 11. aprila 2012. godine u Beogradu. Predlagač navodi da Ugovor uređuje zajedničke kriterijume za određivanje prava oporezivanja pojedinih vrsta dohotka i imovine.",
+  "razlozi": [
+   "Predlagач наводи да се Ugovorom otklanja problem dvostrukog oporezivanja fizičkih i pravnih lica, rezidenata dveju država.",
+   "Predlagač navodi da Ugovor doprinosi unapređenju bilateralne privredne i finansijske saradnje i stimuliše ulaganje kapitala rezidenata obe države.",
+   "Predlagač navodi da je tekst Ugovora menjan zbog promena u pravnom, privrednom i poreskom sistemu država ugovornica od parafiranja 2004. godine.",
+   "Predlagač navodi da se zakon donosi po hitnom postupku, jer želja obe države jeste da Ugovor stupi na snagu u 2012. godini i počne da se primenjuje od 1. januara 2013. godine."
+  ],
+  "promene": [
+   "Članom 1. potvrđuje se Ugovor između Vlade Republike Srbije i Vlade Republike Tunis o izbegavanju dvostrukog oporezivanja u odnosu na poreze na dohodak i na imovinu, potpisan 11. aprila 2012. godine u Beogradu.",
+   "Članom 2. sadrži se tekst Ugovora u originalu na srpskom jeziku.",
+   "Članom 3. uređuje se stupanje na snagu ovog zakona."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna finansijska sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora između Vlade Republike Srbije i Vlade Republike Tunis o izbegavanju dvostrukog oporezivanja u odnosu na poreze na dohodak i na imovinu",
+ "depth": "standard"
+}

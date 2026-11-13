@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "4afc5bb17ae14ebc2f0dcb60541c6763b2281c7480d560eac1014d291c4105fc",
+ "summary": {
+  "ukratko": "Predlagач navodi da se zakonom potvrđuje Sporazum o saradnji između Vlade Republike Srbije i Vlade Ujedinjenih Arapskih Emirata, potpisan 17. februara 2013. godine u Abu Dabiju, kojim se uspostavlja pravni okvir za saradnju u oblastima od zajedničkog interesa.",
+  "razlozi": [
+   "Predlagač navodi finansijske potencijale za ulaganje subjekata iz Ujedinjenih Arapskih Emirata u Republiku Srbiju i dogovorene oblike saradnje na međudržavnom nivou.",
+   "Sporazum, prema predlagaču, pruža pravni okvir za naredne aktivnosti i polazni osnov za aranžmane u svim oblastima od zajedničkog interesa.",
+   "Predlagač navodi da su posle pregovora u Abu Dabiju tekst Sporazuma izmenjen radi preciznijeg definisanja odredbi i usklađenosti sa domaćim zakonodavstvom.",
+   "Predlagач navodi da je donošenje zakona po hitnom postupku preduslov za zaključivanje posebnih ugovora i realizaciju projekata u poljoprivredi, čija realizacija može da otpočne tokom 2013. godine."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum kao međunarodni ugovor, čime on postaje deo domaćeg pravnog poretka.",
+   "Predviđa se podsticanje bezbednosne, ekonomske i trgovinske saradnje na principima jednakosti i uzajamne koristi.",
+   "U poljoprivredi se predviđa ponuda imovine u državnim poljoprivrednim kompanijama, dugoročni zakup poljoprivrednog zemljišta i finansiranje navodnjavanja i modernizacije opreme.",
+   "U oblasti transporta i logistike predviđa se davanje na korišćenje ili kupoprodaja lučkih i aerodromskih kapaciteta, uz zajednička ulaganja tamo gde su obostrani interesi prepoznati.",
+   "Predviđa se osnivanje Mešovitog komiteta ili potkomiteta za praćenje i unapređenje saradnje."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o saradnji između Vlade Republike Srbije i Vlade Ujedinjenih Arapskih Emirata",
+ "depth": "standard"
+}

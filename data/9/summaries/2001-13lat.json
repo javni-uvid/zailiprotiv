@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "fa05b857f180eef48cd35cff60d33e398cd6b98b8df2517f4ae9df934e97053d",
+ "summary": {
+  "ukratko": "Zakon uređuje posao faktoringa, odnosno prodaju ili prenos nedospelih novčanih potraživanja nastalih iz ugovora o prodaji robe ili pružanju usluga, kao i uslove za obavljanje faktoringa i nadzor nad njim. Prema obrazloženju predlagača, zakon se donosi zato što do sada nije postojao celovit pravni okvir za ovu delatnost.",
+  "razlozi": [
+   "Predlagač navodi veću potrebu za finansiranjem obrtnih sredstava, zaštitom od kreditnog rizika i naplatom potraživanja, prvenstveno za mala i srednja preduzeća.",
+   "Predlagač navodi da nejasna postojeća regulativa predstavlja osnovnu prepreku bržem razvoju faktoringa, naročito međunarodnog faktoringa u dvofaktorskom sistemu.",
+   "Predlagač navodi rast tražnje za faktoringom u poslednje tri godine, usled ekonomske krize i pogoršane likvidnosti u realnom sektoru.",
+   "Predlagač očekuje da zakon poveća procenat naplate potraživanja, pravnu sigurnost ugovornih strana i konkurentnost privrednih subjekata."
+  ],
+  "promene": [
+   "Uvodi uslove za obavljanje poslova faktoringa, uključujući minimalni osnovni novčani kapital faktoring društva i odobrenje Ministarstva nadležnog za finansije i privredu.",
+   "Uvodi Registar faktoringa, centralnu elektronsku bazu podataka o izdatim i oduzetim odobrenjima, koji vodi Agencija za privredne registre.",
+   "Uređuje vrste faktoringa: domaći i međunarodni (u jednofaktorskom i dvofaktorskom sistemu), kao i faktoring sa regresom i bez regresa.",
+   "Uređuje obrnuti faktoring, pravila ustupanja potraživanja, obaveštavanje dužnika i naplatu potraživanja koju faktor vrši u svoje ime.",
+   "Uređuje nadzor nad obavljanjem faktoringa i kaznene odredbe, a privredna društva koja već obavljaju faktoring dužna su da usklade poslovanje u roku od šest meseci od stupanja zakona na snagu."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona u budžetu za 2013. godinu nisu potrebna dodatna sredstva, dok će se za izmenu softverskog programa FMIS, nakon stupanja na snagu člana 2. stav 2. (1. maja 2014. godine), sredstva obezbediti u budžetu, pri čemu tačan iznos zavisi od parametara koji još nisu poznati i biće planiran u pripremi budžeta za 2014. godinu."
+ },
+ "usage": {},
+ "law": "Zakon o faktoringu",
+ "depth": "standard"
+}

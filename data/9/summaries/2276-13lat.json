@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "aeff31027cdd8b931bc175831825e56698f0f9b2df0aaa809b7a5ac9b21b0619",
+ "summary": {
+  "ukratko": "Zakon uređuje vođenje poslovnih knjiga, priznavanje i vrednovanje imovine, obaveza, prihoda i rashoda, kao i sastavljanje, dostavljanje i obelodanjivanje finansijskih izveštaja pravnih lica i preduzetnika. Prema obrazloženju predlagača, ovim zakonom se materija korporativnog računovodstva izdvaja iz aktuelnog Zakona o računovodstvu i reviziji, a revizija se uređuje posebnim zakonom.",
+  "razlozi": [
+   "Usklađivanje sa Četvrtom i Sedmom direktivom Evropske unije, koje predlagač navodi kao osnovu za uređenje finansijskog izveštavanja privrednih društava.",
+   "Prilagođavanje računovodstvenih pravila ekonomskoj snazi i veličini pravnih lica, uvođenjem novih kriterijuma za razvrstavanje i kategorije mikro pravnih lica.",
+   "Uvođenje Međunarodnog standarda finansijskog izveštavanja za mala i srednja pravna lica (MSFI za MSP), koji je prepoznatljiv na širokom prostoru i zasnovan na istom okviru kao puni MRS/MSFI.",
+   "Unapređenje kontrole primene zakona i pojednostavljenje dostavljanja finansijskih izveštaja, uključujući elektronsko dostavljanje Agenciji za privredne registre."
+  ],
+  "promene": [
+   "Pravna lica se razvrstavaju na mikro, mala, srednja i velika prema novim kriterijumima o broju zaposlenih, poslovnom prihodu i vrednosti poslovne imovine.",
+   "Uvodi se kategorija mikro pravnih lica, koja sastavljaju Bilans stanja i Bilans uspeha, uz pojednostavljena pravila za vođenje poslovnih knjiga.",
+   "Velika pravna lica i javna društva i dalje primenjuju MRS/MSFI, a mala i srednja pravna lica primenjuju MSFI za MSP od finansijskih izveštaja sastavljenih na dan 31. decembra 2014. godine.",
+   "Finansijski izveštaji se Agenciji za privredne registre dostavljaju elektronskim putem, počev od godišnjih izveštaja za 2014. godinu, a za mikro pravna lica od godišnjih izveštaja za 2015. godinu; računovodstvene isprave mogu biti potpisane sertifikovanim elektronskim potpisom.",
+   "Poreska uprava se određuje kao nadzorni organ za proveru ispravnosti evidentiranja poslovnih promena u poslovnim knjigama, a rok za dostavljanje usvojenih i revidiranih finansijskih izveštaja Agenciji za privredne registre skraćuje se na 30. jun."
+  ],
+  "sredstva": "Predlagač navodi da je preliminarna procena Agencije za privredne registre za nabavku opreme i prilagođavanje informacionog sistema za elektronsko dostavljanje finansijskih izveštaja oko 2,6 miliona evra, što bi trebalo planirati kao rashod budžeta za 2014. godinu, uz mogućnost finansiranja iz donatorskih sredstava međunarodnih razvojnih institucija."
+ },
+ "usage": {},
+ "law": "Zakon o računovodstvu",
+ "depth": "standard"
+}

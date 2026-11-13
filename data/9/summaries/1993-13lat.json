@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e7fcdf270e6a7a19e12ebdc57f65f12bdd34ea7bb76163321979e7d21c109492",
+ "summary": {
+  "ukratko": "Predlagач navodi da se ovim zakonom menja Zakon o porezima na imovinu, radi integrisanja naknade za korišћење građevinskog zemljišta u porez na imovinu, uz izmene predmeta oporezivanja, poreske osnovice i oslobođenja, kao i izmene poreza na nasleđe i poklon i poreza na prenos apsolutnih prava.",
+  "razlozi": [
+   "Naknada za korišћење građevinskog zemljišta plaća se najkasnije do 31. decembra 2013. godine, pa se predlaže njena integracija u porez na imovinu.",
+   "Predlagач navodi da će obveznicima biti unapred poznat način utvrđivanja i iznos poreza, čime se uklanjaju neizvesnost i razlike među obveznicima.",
+   "Radi stvaranja i održavanja optimalnog vodnog režima poljoprivrednog zemljišta predlaže se oslobođenje od poreza na imovinu za vodno zemljište i vodne objekte, u cilju stabilnih prinosa poljoprivrednih kultura.",
+   "Predlagач navodi usklађivanje sa Zakonom o javnoj svojini i sa međunarodnim računovodstvenim standardima, kao i smanjenje administrativnih troškova."
+  ],
+  "promene": [
+   "Predmet oporezivanja porezom na imovinu proširuje se na ukupnu površinu zemljišta, bez izuzimanja površine od 10 ari, i na državinu nepokretnosti u javnoj svojini bez pravnog osnova; pravo zakupa građevinskog zemљišta u javnoj svojini iz predmeta oporezivanja se izuzima.",
+   "Za obveznike koji ne vode poslovne knjige osnovica se utvrđuje prema korisnoj površini i prosečnoj ceni kvadratnog metra u zoni, a za obveznike koji vode poslovne knjige mењa se način utvrđivanja osnovice, uz izuzetke navedene u zakonu.",
+   "Obveznici koji vode poslovne knjige vrše samooporezivanje, pa jedinice lokalne samouprave za njih neće utvrđivati porez rešenjem.",
+   "Neoporezivi iznos poreza na nasleđe i poklon povećava se sa 30.000 na 100.000 dinara u jednoj kalendarskoj godini, a nasleđena ili poklonjena vozila, plovila i vazduhoplovi postaju predmet tog poreza pod uslovom da se na to nasleđe ili poklon ne plaća porez na dodatu vrednost.",
+   "Motorna vozila, plovila i vazduhoplovi postaju predmet poreza na prenos apsolutnih prava ako su preneti uz naknadu; uvode se dodatni osnovi oslobođenja, među kojima sticanje prava svojine po osnovu komasacije i obeštećenje po zakonu kojim se uređuje vraćanje oduzete imovine."
+  ],
+  "sredstva": "Predlagач navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o porezima na imovinu",
+ "depth": "standard"
+}

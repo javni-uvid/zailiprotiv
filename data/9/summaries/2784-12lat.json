@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "9422314f599f23f4bae22a37a025e0f5bc45d0e870d30c891164c2823d718178",
+ "summary": {
+  "ukratko": "Према образложењу предлагача, закон мења Закон о енергетици: укида Агенцију за енергетску ефикасност и њене послове преноси на Министарство енергетике, развоја и заштите животне средине, уводи обавезу обележавања (маркирања) деривата нафте и исправља техничке грешке у одредбама.",
+  "razlozi": [
+   "Предлагач наводи racionalizaciju rada republičke uprave, jer se poslovi Agencije za energetsku efikasnost mogu obavljati u okviru Ministarstva.",
+   "Предлагач наводи да су при примени закона уочене техничке грешке у бројевима чланова и stavova, kao i izostavljeni razmaci između stavova, koje dovode do pogrešne primene zakona.",
+   "Предлагач наводи da se uvođenjem obeležavanja derivata nafte sprečavaju nelegalni tokovi trgovine derivatima nafte, a da se pri tom ne utiče na kvalitet derivata.",
+   "Предлагач наводи smanjenje troškova budžeta Republike Srbije kao razlog za hitan postupak, imajući u vidu ekonomsku situaciju."
+  ],
+  "promene": [
+   "Укида се Агенција за енергетску ефикасност; бришу се чл. 179. и 180. и naziv glave, а послови, запослени и постављена лица, права, обавезе, опрема и архива прелазе на Министарство.",
+   "Уводи се обавеза да деривати нафте који се стављају у промет буду обележени (маркирани), а Влада прописује услове, начин и поступак обележавања (чл. 1, 2. и 10.).",
+   "Брише се чл. 199. и одређене речи у чл. 26. став 8, као и тачка 4) у чл. 65. став 2.",
+   "Исправљају се погрешни позиви на бројеве чланова и ставова у чл. 9, 12, 13, 14, 15. и 17, а допуњују се чл. 20. и 52.",
+   "Закон ступа на снагу осмог дана од дана објављивања у „Службеном гласнику Републике Србије”."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити додатна финансијска средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o energetici",
+ "depth": "standard"
+}

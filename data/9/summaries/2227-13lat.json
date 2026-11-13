@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "401df47c588c292fd194be099fed75bc5f8bcb837fc91b4b441a0ca6cb949bd0",
+ "summary": {
+  "ukratko": "Predlog zakona menja Zakon o osnovama sistema obrazovanja i vaspitanja. Predlagač navodi da se izmene odnose na usklађivanje zakona sa Strategijom razvoja obrazovanja u Srbiji do 2020. godine i sa novim propisima, kao i na otklanjanje problema uočenih u primeni.",
+  "razlozi": [
+   "Potreba usklађivanja zakona sa Strategijom razvoja obrazovanja u Srbiji do 2020. godine, koja je stupila na snagu 9. novembra 2012. godine.",
+   "Uočeni problemi u primeni zakona i zahtevi reprezentativnih sindikata za poboljšanje pojedinih rešenja.",
+   "Usklađivanje sa zakonima donetim tokom 2012. godine (Zakon o izmenama i dopunama Zakona o visokom obrazovanju, Zakon o ministarstvima) i izmenjenim Zakonom o prekršajima.",
+   "Povlačenje iz skupštinske procedure posebnih zakona o osnovnom i srednjem obrazovanju i obrazovanju odraslih u julu 2012. godine; predlagač navodi da se ovi zakoni razmatraju zajedno i da obrazovne ustanove treba da budu pripremljene za novu školsku godinu, zbog čega se predlaže hitan postupak."
+  ],
+  "promene": [
+   "Izmene opštih principa, ciljeva i opštih ishoda i standarda obrazovanja i vaspitanja, uz naglašavanje pristupa obrazovanju za decu, učenike i odrasle sa smetnjama u razvoju i invaliditetom i smanjenje osipanja iz sistema.",
+   "Obaveza sistematskog praćenja i analize osipanja dece i učenika, i utvrđivanje predloga mera za nastavak obrazovanja osoba koje su napustile sistem.",
+   "Brisanje nadležnosti Nacionalnog prosvetnog saveta da ministru predlaže odobravanje udžbenika i nastavnih sredstava; ta obaveza se prenosi na Zavod za unapređivanje obrazovanja i vaspitanja, u skladu sa predloženim Nacrtom zakona o udžbenicima i drugim nastavnim sredstvima.",
+   "Osnivanje Agencije za obrazovanje i vaspitanje, koju bi osnivala Vlada; osnivanje je odloženo za dve godine od stupanja na snagu zakona, a početak rada je 1. januar 2016. godine.",
+   "Uvođenje škole vežbaonice radi praktične obuke studenata budućih nastavnika, primena od školske 2015/2016. godine; brisanje postojećih kriterijuma za mrežu srednjih škola, a nove kriterijume donosi Vlada, i dopuna odredbe o školi koja ima odeljenja učenika sa smetnjama u razvoju."
+  ],
+  "sredstva": "Predlagač navodi da se ogled škole vežbaonice realizuje u okviru projekta koji se finansira iz predpristupnih fondova Evropske unije (IPA 2011), i da se osnivanje Agencije odlaže kako bi se stvorile finansijske pretpostavke za njen rad, bez navođenja iznosa sredstava iz budžeta."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o osnovama sistema obrazovanja i vaspitanja",
+ "depth": "standard"
+}

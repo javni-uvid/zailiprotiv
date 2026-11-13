@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "9e473ad2fc06e5f3b669a9b92278fa04078547dcd436c5d335ef8d2b686b906d",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum između Vlade Republike Srbije i Vlade Ruske Federacije o osnivanju Srpsko-ruskog humanitarnog centra u Nišu. Prema образложењу, Sporazum уређује делатност и правни статус Центра.",
+  "razlozi": [
+   "Članom 4. stav 3. Sporazuma o saradnji u oblasti humanitarnog reagovanja predviđeno je da Strane na teritoriji Srbije stvore humanitarni centar, čija se delatnost i pravni status uređuju posebnim sporazumom.",
+   "Sporazum o osnivanju Centra i Sporazum o utvrđivanju Statuta Centra potpisani su u Nišu 25. aprila 2012. godine.",
+   "Predlagač navodi da potvrđivanje Sporazuma, što zahteva sam Sporazum, omogućava srpskoj strani ispunjenje uslova za njegovu punu primenu i dalji rad na formiranju Centra.",
+   "Predlaže se donošenje zakona po hitnom postupku, jer se Sporazum u većem delu privremeno primenjuje od dana potpisivanja, radi brzog uspostavljanja organa upravljanja i registracije Centra."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum između Vlade Republike Srbije i Vlade Ruske Federacije o osnivanju Srpsko-ruskog humanitarnog centra.",
+   "Centar se osniva na početnim udelima strana, koje čine budžetska sredstva, pokretna i nepokretna imovina koju strane daju na korišćenje.",
+   "Centar se finansira iz budžetskih sredstava strana, grantova i donacija, kao i sredstava stečenih obavljanjem dozvoljenih oblika rada, uključujući pružanje usluga.",
+   "Sporazum uređuje pitanja radno-pravnog statusa osoblja, imuniteta Centra, učešća međunarodnih organizacija, privilegija i imuniteta, prestanka rada, sporova i izmena sporazuma.",
+   "Predviđena je registracija Centra kao međuvladine humanitarne neprofitne organizacije."
+  ],
+  "sredstva": "Predlagač navodi da su za inicijalno formiranje Centra projektovana sredstva oko 31.420.000 dinara, da za 2012. godinu sredstva iz budžeta Republike Srbije neće biti potrebna, a da će se za 2013. godinu obezbediti u okviru limita planiranih za Ministarstvo unutrašnjih poslova."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Ruske Federacije o osnivanju Srpsko-ruskog humanitarnog centra",
+ "depth": "standard"
+}

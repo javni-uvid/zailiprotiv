@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e866e73411ff18b7458b23024d8344dda297fcd4460317da520dba4f45fdb5b9",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom potvrđuje Ugovor o garanciji između Republike Srbije i Kuvajtskog fonda za arapski ekonomski razvoj, zaključen 10. decembra 2012. godine, kojim Republika Srbija garantuje obaveze AD „Железнице Србије” po zајму za Пројекат железничка станица Београд Центар – Фаза I.",
+  "razlozi": [
+   "Predlagač navodi da je izgradnja Beogradskog železničkog čvora, prvenstveno glavne železničke stanice (Prokop), projekat od prioritetnog značaja za razvoj železničke infrastrukture na Panevropskom koridoru X.",
+   "Zajam Kuvajtskog fonda za AD „Железнице Србије” odobrava se pod uslovom da Republika Srbija garantuje za obaveze zajmoprimca.",
+   "Projekat je, prema navodima predlagača, u skladu sa Strategijom razvoja železničkog, drumskog, vodnog, vazdušnog i intermodalnog transporta (2008–2015) i Generalnim master planom transporta u Republici Srbiji.",
+   "Uslov za povlačenje sredstava zajma je izdavanje garancije, pa predlagač navodi da AD „Железнице Србије” što pre počne da koristi sredstva radi realizacije Projekta."
+  ],
+  "promene": [
+   "Potvrđuje se Ugovor o garanciji zaključen 10. decembra 2012. godine, u originalu na arapskom jeziku (član 1).",
+   "Zakon sadrži tekst Ugovora o garanciji u prevodu na srpski jezik (član 2).",
+   "Republika Srbija garantuje, kao glavni dužnik, a ne samo jemac, blagovremeno i potpuno izvršavanje obaveza zajmoprimca do iznosa od 10.000.000 kuvajtskih dinara.",
+   "Republika Srbija se obavezuje da na godišnjem nivou dodeli zajmoprimcu sredstva potrebna za servisiranje duga prema Kuvajtskom fondu.",
+   "Uređuje se stupanje na snagu zakona (član 3)."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje zakona obezbeđivati u budžetu Republike Srbije, a Zakonom o budžetu za 2013. godinu predviđeno je davanje garancije do 10.000.000 kuvajtskih dinara za Projekat."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o garanciji između Republike Srbije i Kuvajtskog fonda za arapski ekonomski razvoj (Projekat železnička stanica Beograd Centar – Faza I)",
+ "depth": "standard"
+}

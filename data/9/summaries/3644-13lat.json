@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "3c282f4eb742568c3d7850cabd786cd7aaaae594af05b86ad884ab2271406640",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Aneks br. 2 Sporazuma o ekonomskoj i tehničkoj saradnji u oblasti infrastrukture između Vlade Republike Srbije i Vlade Narodne Republike Kine, potpisan u Pekingu 26. avgusta 2013. godine. Prema obrazloženju predlagača, Aneksom se menjaju članovi 3, 5. i 6. Sporazuma.",
+  "razlozi": [
+   "Sporazum je potpisan 2009. godine, a na njegovu osnovu se sprovode tri kreditna aranžmana preko kineske Export-Import banke.",
+   "Aneks br. 1 je stupio na snagu 26. avgusta 2013. godine, a predlagač navodi potrebu za dodatnim izmenama Sporazuma sa stanovišta nadležnosti i realizacije projekata.",
+   "Na predlog kineske strane, umesto izmena Aneksa br. 1 usaglašen je Aneks br. 2.",
+   "Predlagač navodi da se po hitnom postupku predlaže zbog prioriteta Vlade za 2013. godinu i zato što stupanje na snagu Aneksa br. 2 prethodi zaključivanju ugovora za deonicu Obrenovac-Ljig autoputa E-763 i drugu fazu paket projekta „Termoelektrana Kostolac-B projekti”."
+  ],
+  "promene": [
+   "Brišu se odredbe člana 3. o nadležnosti Ministarstva finansija i Grada Beograda za izgradnju mosta Zemun-Borča sa pripadajućim saobraćajnicama.",
+   "Umesto Ministarstva ekonomije i regionalnog razvoja, za praćenje i sprovođenje Sporazuma određuje se ministarstvo nadležno za poslove ekonomskih odnosa sa inostranstvom.",
+   "U član 5. dodaju se tri nova stava sa posebnim pravilima za izbor inostranog izvođača radova i domaćih podizvođača i isporučilaca dobara i usluga.",
+   "Predviđa se izuzeće od obaveze raspisivanja javnog nadmetanja za investicione radove i isporuku roba i usluga za projekte na teritoriji Republike Srbije u okviru Sporazuma.",
+   "Prema izmenama člana 6., svi projekti saobraćajne infrastrukture realizuju se pod istim uslovima, bez plaćanja carine i PDV."
+  ],
+  "sredstva": "Predlagač navodi da izvršavanjem Aneksa br. 2 ne nastaju finansijske obaveze za Republiku Srbiju, pa za njegovo sprovođenje nisu potrebna dodatna sredstva u budžetu."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Aneksa br. 2. Sporazuma o ekonomskoj i tehničkoj saradnji u oblasti infrastrukture između Vlade Republike Srbije i Vlade Narodne Republike Kine",
+ "depth": "standard"
+}

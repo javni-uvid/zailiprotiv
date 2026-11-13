@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "887760a0189d6aae3e5cfc6498a9af40eee61f46f8f36a7daad9f98aeb3611c4",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum između Vlade Republike Srbije i Vlade Kraljevine Maroko o osnivanju Mešovite komisije za trgovinu, ekonomsku i naučno-tehničku saradnju, potpisan 6. juna 2013. godine u Beogradu. Prema predlagaču, Sporazum uređuje rad Mešovite komisije, koja prati saradnju dve strane i predlaže mere za njen razvoj.",
+  "razlozi": [
+   "Strane ugovornice žele da obnove, unapređuju i dalje razvijaju posebnu institucionalnu formu za praćenje ekonomske, trgovinske i naučno-tehničke saradnje.",
+   "Mešovita komisija predlaže i preduzima mere za unapređenje ukupne ekonomske saradnje i otklanja probleme koji se eventualno pojave u njoj.",
+   "Sporazum stvara pravni osnov za održavanje redovnih zasedanja Mešovite komisije.",
+   "Predlagač navodi da Sporazum otvara mogućnosti za veće angažovanje srpskih privrednika, ulaganje marokanskog kapitala u razvojne projekte u Srbiji i proširenje ekonomsko-trgovinske saradnje, uzimajući u obzir ekonomske mogućnosti Kraljevine Maroko i njen uticaj u regionu."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum između Vlade Republike Srbije i Vlade Kraljevine Maroko o osnivanju Mešovite komisije za trgovinu, ekonomsku i naučno-tehničku saradnju.",
+   "Sporazum stvara pravni osnov za redovna zasedanja Mešovite komisije."
+  ],
+  "sredstva": "Predlagač navodi da za izvršavanje međunarodnog ugovora ne stvaraju se finansijske obaveze i da nisu potrebna dodatna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Kraljevine Maroko o osnivanju Mešovite komisije za trgovinu, ekonomsku i naučno-tehničku saradnju",
+ "depth": "standard"
+}

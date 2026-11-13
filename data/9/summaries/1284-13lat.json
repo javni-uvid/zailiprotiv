@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "04eded28c916c64fedc47e8e75b808f6d696f305c617f7717c8585d4f52997dc",
+ "summary": {
+  "ukratko": "Zakon uređuje zaštitu mentalnog zdravlja, kao i način, postupak, organizaciju i uslove lečenja i smeštaja lica sa mentalnim smetnjama u stacionarnim i drugim zdravstvenim ustanovama. Predlagač navodi da u Srbiji ne postoji poseban zakon o ovoj oblasti.",
+  "razlozi": [
+   "Predlagač navodi potrebu da se oblast mentalnog zdravlja uredi potpunije, radi višeg nivoa kvaliteta zaštite u skladu sa savremenim dostignućima.",
+   "Predlagač navodi da pitanja zaštite prava lica sa mentalnim smetnjama nisu potpuno uređena postojećim zakonima, uključujući informisanu saglasnost, prisilno zadržavanje i lečenje u psihijatrijskoj ustanovi.",
+   "Predlagač navodi da zakon proizlazi iz Strategije razvoja zaštite mentalnog zdravlja („Službeni glasnik RS”, broj 8/07) i obaveza iz Deklaracije o mentalnom zdravlju i Akcionog plana sa ministarske konferencije u Helsinkiju 2005. godine.",
+   "Predlagač navodi da se lečenje u zajednici, prema naučnim dokazima, pokazuje kao efikasna alternativa bolničkom lečenju."
+  ],
+  "promene": [
+   "Unapređuju se prava lica sa mentalnim smetnjama i predviđa se formiranje organizacionih jedinica zdravstvenih ustanova za njihovo lečenje.",
+   "Uvodi se individualni plan lečenja lica sa mentalnim smetnjama.",
+   "Uređuju se dobrovoljni smeštaj, razlozi za zadržavanje i smeštaj bez pristanka u psihijatrijsku ustanovu, kao i otpust iz ustanove.",
+   "Uređuju se prava i dužnosti lica sa mentalnim smetnjama u psihijatrijskoj ustanovi, primena fizičkog sputavanja i izolacije te posebni oblici lečenja.",
+   "Uvodi se kaznena politika za kršenje pojedinih odredbi zakona."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nisu potrebna dodatna sredstva iz budžeta Republike Srbije, u odnosu na sredstva već obezbeđena za zdravstvene ustanove iz Plana mreže zdravstvenih ustanova."
+ },
+ "usage": {},
+ "law": "Zakon o zaštiti lica sa mentalnim smetnjama",
+ "depth": "standard"
+}

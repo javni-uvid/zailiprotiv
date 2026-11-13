@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "f93cebe8078bdcaeef7b5fb844a1c6b5806b590833ee8ae2dcab88de1819d1dc",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon dopunjuje Zakon o sudijama tako što uređuje izbor na stalnu sudijsku funkciju za sudije koje su prvi put birane na trogodišnji mandat, a nisu ocenjene jer kriterijumi, merila i postupak za vrednovanje rada sudija nisu utvrđeni.",
+  "razlozi": [
+   "Za izbor na stalnu sudijsku funkciju potrebno je prethodno ocenjivanje, a sudije izabrane na trogodišnji mandat nisu ocenjene jer Visoki savet sudstva nije utvrdio kriterijume, merila i postupak za vrednovanje rada sudija.",
+   "Mandat većine ovih sudija ističe 1. januara 2013. godine.",
+   "Radi nesmetanog rada sudova potrebno je stvoriti pravni osnov za izbor ovih sudija na stalnu funkciju.",
+   "Zakon obuhvata 905 sudija koje su prvi put birane na trogodišnji mandat; predlagač navodi naročito opravdane interese za stupanje na snagu pre osmog dana od objavljivanja, kako sudije ne bi snosile posledice nedonošenja propisa o vrednovanju rada."
+  ],
+  "promene": [
+   "Zakon o sudijama dopunjuje se članom 100a, kojim se predviđa izuzetak od člana 52. tog zakona, koji uređuje izbor na stalnu funkciju.",
+   "Visoki savet sudstva odlučuje o izboru ovih sudija na stalnu sudijsku funkciju najkasnije do 31. decembra 2012. godine.",
+   "Sudije stupaju na stalnu sudijsku funkciju danom isteka trogodišnjeg mandata na koji su prvi put birane.",
+   "Odluka Visokog saveta sudstva o izboru objavljuje se u „Službenom glasniku Republike Srbije”.",
+   "Zakon stupa na snagu narednog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o dopuni Zakona o sudijama",
+ "depth": "standard"
+}

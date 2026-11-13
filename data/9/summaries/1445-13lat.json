@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "0fdcefebe96082329a48e11531d149665dcec44099bb1d55b08262e8f0df8900",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum između Vlade Republike Srbije i Vlade Republike Turske o zapošljavanju članova porodica osoblja diplomatsko-konzularnih predstavništava. Према предлагачу, sporazum na recipročnoj osnovi omogućava zapošljavanje članova porodica diplomatskog i konzularnog osoblja uz naknadu, u skladu sa unutrašnjim propisima zemlje u kojoj se traži zaposlenje.",
+  "razlozi": [
+   "Предлагач наводи очување normalnog porodičnog života diplomatsko-konzularnih predstavnika и držanje porodice na okupu.",
+   "Предлагач наводи да савремени начин живота, покретљивост радне снаге и чињеница да супружници често одбијају да напусте посао ради праћења предстваника у иностранству чине ово питање значајним за министарства спољних послова.",
+   "Према образложењу, ефекти рада предстваника који раде у условима раздвојене породице су мањи него кад је породица на окупу.",
+   "Предлагач наводи да се sporazumom ograničavaju privilegije i imuniteti članova porodice samo u delu vezanom za plaćene delatnosti, u skladu sa Bečkim konvencijama o diplomatskim (1961) i konzularnim (1963) odnosima."
+  ],
+  "promene": [
+   "Омогућава се запошљавање, уз накнаду, чланова породице дипломатског и конзуларног особља на реципрочној основи.",
+   "Чланови породице нису изузети од грађанскоправног и управног поступка у вези са питањима која проистичу из тако заснованог радног односа.",
+   "Имунитет од кривичног судства се не укида; држава именовања се обавезује да ће озбиљно размотрити сваки писмени захтев државе пријема за одрицање од тог имунитета.",
+   "Чланови породице запослени у држави пријема подлежу систему социјалног осигурања те државе у вези са свим питањима која се тичу њиховог запослења.",
+   "Чланови породице су у обавези да у држави пријема плаћају порез на приход остварен по основу посла који обављају."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог споразума није потребно издвајање посебних финансијских средстава."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Turske o zapošljavanju članova porodica osoblja diplomatsko-konzularnih predstavništava",
+ "depth": "standard"
+}

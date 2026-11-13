@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "aa3016e9f6468f92994affa49623e80e364b6449c46866b793618794c8f97c5b",
+ "summary": {
+  "ukratko": "Предлог закона мења Закон о вину. Према образложењу предлагача, измене се односе на трошкове које сносе произвођачи грожђа и вина, а циљ је унапређење производње грожђа и вина у Републици Србији.",
+  "razlozi": [
+   "Предлагач наводи потребу унапређења производње грожђа и вина у Републици Србији.",
+   "Предлагач наводи циљ да се обезбеди повољније предузетничко окружење, односно да се смање или укину трошкови за пољопривредне произвођаче и прерађиваче.",
+   "Према образложењу, највећи део производње вина у Републици Србији чини вино без географског порекла, па измена треба да утиче на повећање броја вина са географским пореклом и броја произвођача који их производе.",
+   "Предлагач наводи да је један од разлога недовољне регистрације произвођача грожђа у Виноградарски регистар управо трошак upravnog поступка и накнада за утврђивање испуњености услова."
+  ],
+  "promene": [
+   "Članom 1. menja se član 43. stav 1. tako što se troškovi kontrole i ispitivanja vina sa geografskim poreklom obezbeđuju iz sredstava budžeta Republike Srbije, umesto da ih snosi proizvođač.",
+   "Članom 2. briše se član 54. Zakona o vinu, čime se ukidaju troškovi vođenja upravnog postupka i naknade za utvrđivanje ispunjenosti uslova za obavljanje proizvodnje, za taksativno navedene slučajeve.",
+   "Prelaznom odredbom (član 3) predviđa se da danom stupanja na snagu zakona prestaju da važe odluke koje su bile pravni osnov za određivanje visine tih javnih dažbina."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити додатна финансијска средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o vinu",
+ "depth": "standard"
+}

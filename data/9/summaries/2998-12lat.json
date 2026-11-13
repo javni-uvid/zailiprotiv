@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "0fc98b50597e3c31fed2b1675f84138dcb94fcce61fdc3cefaaa61f9590801e1",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Ugovor o garanciji između Republike Srbije i Evropske banke za obnovu i razvoj, potpisan 27. januara 2012. godine u Beogradu. Prema образложењу, Republika Srbija tim ugovorom garantuje obaveze AD „Železnice Srbije” po zajmu od 95.000.000 evra za rehabilitaciju pruga na Koridoru X.",
+  "razlozi": [
+   "Banka je, према предлагачу, спремна да одобри зајам од 95.000.000 евра за Пројекат, под условом да Република Србија гарантује обавезе АД „Железнице Србије”.",
+   "Пројекат обухвата обнову грађевинске и електротехничке инфраструктуре на пет деоница магистралних пруга.",
+   "Радови ће, према образложењу, омогућити саобраћај возова пројектованом брзином, што ће скратити време путовања и донети уштеде у оперативним трошковима железнице.",
+   "Предлагач наводи да је услов за повлачење средстава зајма издавање гаранције Републике Србије, па би АД „Железнице Србије” што пре почело да користи средства по зајму."
+  ],
+  "promene": [
+   "Потврђује се Уговор о гаранцији (АД Железнице Србије: Рехабилитација пруга), потписан 27. јануара 2012. године у Београду (члан 1).",
+   "Текст уговора, на енглеском језику и у превođу на српски, налази се у члану 2.",
+   "Република Србија, као примарни дужник, безусловно гарантује уредно и благовремено плаћање износа по Уговору о зајму.",
+   "Гарант ће до 31. децембра 2013. године implementirati Ugovor o nivou usluga sa Upravljačem infrastrukturom i otvoriti pristup železničkoj mreži za najmanje 2 druga domaća operatera.",
+   "Стјује се ступање на снагу закона уређено је чланом 3."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије, те да је Законом о буџету Републике Србије за 2012. годину предвиђено давање гаранције у износу од 95.000.000 евра."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o garanciji (AD Železnice Srbije: Rehabilitacija pruga) između Republike Srbije i Evropske banke za obnovu i razvoj",
+ "depth": "standard"
+}

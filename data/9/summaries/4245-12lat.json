@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "94ad025ef24656b473319e7a149e0afc337aa0fb2497d0702b3e16513f468be1",
+ "summary": {
+  "ukratko": "Zakon o dopuni Zakona o potvrђivanju Konvencije Međunarodne organizacije rada o radu pomoraca, 2006, prema predlagaču, utvrђuje područja delatnosti socijalnog osiguranja pomoraca u kojima Republika Srbija obezbeđuje zaštitu, u skladu sa Konvencijom.",
+  "razlozi": [
+   "Konvencija u Standardu A 4.5. uređuje socijalno osiguranje pomoraca i zahteva preduzimanje mera za pružanje te zaštite.",
+   "Standard A 4.5. stav 2. propisuje da zaštita koju država predvidi pri potvrđivanju mora obuhvatiti najmanje tri od devet područja delatnosti nabrojanih u stavu 1.",
+   "Standard A 4.5. stav 10. propisuje da država navodi područja delatnosti pri potvrđivanju i naknadno obaveštava generalnog direktora Međunarodne kancelarije rada kada obezbedi zaštitu za još područja.",
+   "Zakon o potvrđivanju Konvencije usvojila je Narodna skupština 18. oktobra 2011. godine („Službeni glasnik RS – Međunarodni ugovori”, broj 8/11)."
+  ],
+  "promene": [
+   "Iza člana 2. Zakona dodaje se član 2a.",
+   "Članom 2a utvrđuje se da će područja delatnosti socijalnog osiguranja pomoraca u kojima Republika Srbija obezbeđuje zaštitu biti: zdravstvena nega.",
+   "Članom 2a utvrđuje se da će područja delatnosti socijalnog osiguranja pomoraca u kojima Republika Srbija obezbeđuje zaštitu biti: naknade u slučaju bolesti.",
+   "Članom 2a utvrđuje se da će područja delatnosti socijalnog osiguranja pomoraca u kojima Republika Srbija obezbeđuje zaštitu biti: naknade u slučaju nezaposlenosti.",
+   "Članom 2a utvrđuje se da će područja delatnosti socijalnog osiguranja pomoraca u kojima Republika Srbija obezbeđuje zaštitu biti: naknade u slučaju povrede na radu."
+  ],
+  "sredstva": "Prema predlagaču, za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o dopuni Zakona o potvrđivanju Konvencije Međunarodne organizacije rada o radu pomoraca, 2006",
+ "depth": "standard"
+}

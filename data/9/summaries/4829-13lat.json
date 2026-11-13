@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "4dc56ad4d04bdf6330c59144a53fe2b9a32cd45a27ed19f1146d6525b27d2935",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon menja Zakon o osiguranju tako što omogućava neposredno reosiguranje u inostranstvu za određene rizike od elementarnih i prirodnih nepogoda i produžava rok za razdvajanje poslova životnih i neživotnih osiguranja.",
+  "razlozi": [
+   "Republika Srbija je učesnica Projekta regionalnog osiguranja od prirodnih katastrofa i akcionar u Evropa Re, a obaveza je stvaranje regulatornog okvira za poslovanje te kompanije.",
+   "Pregovori o pristupanju Svetskoj trgovinskoj organizaciji i zahtevi pojedinih članica za liberalizaciju poslova reosiguranja.",
+   "Novi Zakon o osiguranju je u završnoj fazi izrade, a produženje roka treba da spreči pravnu nesigurnost zbog neusklađenosti rokova.",
+   "Rok iz člana 234. ističe 31. decembra 2013. godine, zbog čega se zakon donosi po hitnom postupku."
+  ],
+  "promene": [
+   "Dopunom člana 15. društvu za osiguranje se omogućava da celokupan rizik osiguranja imovine od elementarnih i drugih opasnosti i prirodnih nepogoda (grad, mraz, zemljotres, poplava, suša) neposredno reosigura u inostranstvu.",
+   "Dopunom člana 15. omogućava se neposredno reosiguranje u inostranstvu i za osiguranje finansijskih gubitaka zbog lošeg vremena.",
+   "Izmenom člana 234. produžava se rok do kog organizacije za osiguranje, koje su obavljale i životna i neživotna osiguranja, moraju Narodnoj banci Srbije da podnesu dokaze o razgraničenju tih poslova.",
+   "Zakon stupa na snagu osmog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": ""
+ },
+ "usage": {},
+ "law": "Zakon o izmeni i dopuni Zakona o osiguranju",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d941daea63472b8834ab8252699e6cc37d2723e663df86dec7b036b036517a66",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim zakonom menja i dopunjuje Zakon o uređenju sudova, u delu koji se odnosi na nadležnost sudova, sudsku upravu i zaštitu prava na suđenje u razumnom roku. Cilj je, prema obrazloženju, efikasniji rad sudova.",
+  "razlozi": [
+   "Zakon o uređenju sudova donet je 2008. godine, a primenjuje se od 1. januara 2010. godine.",
+   "Predlagač navodi da su u primeni uočeni normativni nedostaci, pre svega u podeli nadležnosti između osnovnih i viših sudova i u neujednačenosti sudske prakse apelacionih sudova.",
+   "Predlagač navodi da su ti nedostaci, zajedno sa mrežom sudova iz Zakona o sedištima i područjima sudova i javnih tužilaštava iz 2008. godine, doveli do problema u ostvarivanju prava na pravično suđenje i suđenje u razumnom roku.",
+   "Pri izradi zakona, prema obrazloženju, uzeto je u obzir mišljenje Venecijanske komisije."
+  ],
+  "promene": [
+   "Uvodi se upravitelj suda, koji bi se bavio tehničkim poslovima funkcionisanja suda, čime bi se rasteretio predsednik suda.",
+   "Uvodi se poseban postupak za zaštitu prava na suđenje u razumnom roku, u kojem stranka zahtev podnosi neposredno višem sudu, a žalba se može izjaviti Vrhovnom kasacionom sudu.",
+   "Proširuje se prvostepena i drugostepena nadležnost višeg suda, uključujući krivična dela protiv čovečnosti i drugih dobara zaštićenih međunarodnim pravom.",
+   "Privredni sudovi mogu održavati sudske dane van sedišta suda, ako za to postoje uslovi.",
+   "Vrhovni kasacioni sud odlučuje u veću od pet sudija, a brišu se njegova ovlašćenja za utvrđivanje načelnih pravnih stavova."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o uređenju sudova",
+ "depth": "standard"
+}

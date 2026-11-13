@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e907e5d095ec62a95c78d8b9267e76ca9b4164d79b03c250f35780e8982c8f8f",
+ "summary": {
+  "ukratko": "Предлог закона уређује усклађивање пензија у оквиру Закона о пензијском и инвалидском осигурању. Према предлагачу, закон се доноси ради usklađivanja tog zakona sa propisima o budžetskom sistemu, u delu koji se odnosi na usklађivanje penzija.",
+  "razlozi": [
+   "Usklađivanje sa odredbama propisa o budžetskom sistemu, čijim su izmenama i dopunama predložene promene i u delu koji se odnosi na usklađivanje penzija.",
+   "Potreba da se Zakon o penzijskom i invalidskom osiguranju u tom delu uskladi sa tim propisima.",
+   "Stupanje na snagu narednog dana od dana objavljivanja, radi nesmetanog funkcionisanja sistema penzijskog i invalidskog osiguranja.",
+   "Društveno-ekonomska situacija, zbog koje je pitanje načina usklađivanja penzija posebno aktuelizovano, i efekti primene u oblasti penzijskog i invalidskog osiguranja i ukupnih javnih finansija; zato se predlaže donošenje po hitnom postupku."
+  ],
+  "promene": [
+   "Članom 1. u članu 80a utvrđuje se, izuzetno od člana 80. tog zakona, način usklađivanja penzija.",
+   "Penzija se u oktobru 2013. i aprilu 2014. povećava za po 0,5%, a u oktobru 2014. za 1%.",
+   "U aprilu 2015. penzija se usklađuje stopom rasta potrošačkih cena u prethodnih šest meseci, a u oktobru 2015. zbirom te stope i dela stope realnog rasta bruto domaćeg proizvoda u prethodnoj godini iznad 4%.",
+   "Od 2016. u aprilu se penzija usklađuje zbirom stope rasta potrošačkih cena i dela stope realnog rasta bruto domaćeg proizvoda iznad 4%, a u oktobru stopom rasta potrošačkih cena.",
+   "Ovakvo usklађivanje se, prema predlogu, nastavlja dok učešće penzija u bruto domaćem proizvodu ne dostigne 10%."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna dodatna finansijska sredstva."
+ },
+ "usage": {},
+ "law": "Zakon o izmeni Zakona o penzijskom i invalidskom osiguranju",
+ "depth": "standard"
+}

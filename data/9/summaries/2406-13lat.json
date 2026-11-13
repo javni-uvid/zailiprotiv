@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "82bc869df753c61fe3849e38937afb71b510212921d4465e8ad0cfb1a1e71ea8",
+ "summary": {
+  "ukratko": "Predlog zakona menja Zakon o javnim putevima. Prema obrazloženju predlagača, izmene se odnose na stanice za snabdevanje motornih vozila gorivom, infrastrukturne sisteme, zaštitni pojas, vanredni prevoz i uslove za tunele.",
+  "razlozi": [
+   "Stanice za snabdevanje motornih vozila gorivom postaju deo javnog puta, čime, prema predlagaču, upravljač državnih puteva dobija veća sredstva po osnovu naknada za zakup zemljišta.",
+   "Uređuje se pravni osnov za izdavanje dozvole za vanredni prevoz (uslovi, način izdavanja, vrste, rokovi važenja i obrazac), jer ta pitanja do sada nisu bila regulisana.",
+   "Uređuje se način korišćenja putnog pojasa i broj i rastojanje lokacija za stanice za snabdevanje gorivom, zbog primera izgradnje na neodgovarajućem rastojanju.",
+   "Propisuje se pravni osnov za primenu Direktive 2004/54/EC o minimalnim uslovima bezbednosti tunela; predlaže se akt Vlade, jer je za njeno sprovođenje potrebno učešće više ministarstava."
+  ],
+  "promene": [
+   "Brišu se reči „stanice za snabdevanje motornih vozila gorivom” iz pojma pratećih sadržaja javnog puta, a stanice postaju deo javnog puta, osim u pogledu primene poreskih propisa.",
+   "U infrastrukturne sisteme dodaju se naftovodi, produktovodi, skladišta nafte i derivata nafte i naftne baze, osim u pogledu primene poreskih propisa.",
+   "Zaštitni pojas može biti veće širine ako je planskim dokumentom predviđena izgradnja stanice za snabdevanje gorivom; ispravljaju se tehničke greške u članovima 24. i 25. Zakona.",
+   "Vanredni prevoz može se obavljati na osnovu posebne dozvole za svaki pojedinačni prevoz ili za više prevoza; ministar nadležan za saobraćaj dobija ovlašćenje da propiše uslove, vrste, rokove važenja i obrazac dozvole.",
+   "Vlada dobija ovlašćenje da propiše uslove koje mora da ispunjava tunel u pogledu bezbednosti saobraćaja."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o javnim putevima",
+ "depth": "standard"
+}
