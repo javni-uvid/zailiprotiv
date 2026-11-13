@@ -632,3 +632,4 @@ td.lean { white-space: nowrap; }
 .home-quiz { margin: .6rem 0 1.6rem; }
 .subtabs { scroll-margin-top: 1rem; }
 .faces-row { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.6rem 2rem; }
+.floor.measures details > summary { text-decoration: none; font-weight: 400; }

@@ -55,7 +55,7 @@
           <span class="measure-main">
             <span class="measure-head"><b>{{ e.label }}</b>{% if e.to %}: {{ e.to.name }}{% endif %}</span>
             <span class="measure-said">„{{ (e.sentence or e.chair.text)|latin|truncate(260, killwords=False, end=" …") }}“</span>
-            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if not e.to %} · ime nije u rečenici kojom je mera izrečena{% endif %}</span>
+            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
           </span>
         </summary>
         <div class="measure-more">
@@ -68,7 +68,7 @@
     </li>
   {% endfor %}
   </ul>
-  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji samo kad u toj rečenici oslovi govornika prezimenom koje na sednici nosi jedan govornik. Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
+  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji samo kad u toj rečenici oslovi govornika prezimenom koje na sednici nosi jedan govornik. Kad ime ne navede, pišemo posle čijeg govora je mera izrečena: to je najčešće, ali ne uvek, onaj kome je upućena (mera može da ide i nekome ko dobacuje iz klupe). Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
 </section>
 {% endif %}
 <section id="sednice">
