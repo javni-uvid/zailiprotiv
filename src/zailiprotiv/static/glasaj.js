@@ -111,6 +111,11 @@
       against === n ? "Da se ja pitam, ne bi prošao nijedan od " + n + " " + plural(n, "zakona", "zakona", "zakona") + "." :
       "Da se ja pitam, palo bi " + against + " od " + n + " " + plural(n, "zakona", "zakona", "zakona") + ".";
     card.who = who; card.score = top.length ? top[0].m.same + " od " + top[0].m.both : "";
+    // The one MP on the picture: of those level at the top, one with a portrait when there is one (the maintainer,
+    // 13 Nov 2026); which of several is fixed by the answers, not chosen by us.
+    var faces = top.filter(function (x) { return x.p.f; }), pool = faces.length ? faces : top, cs = 0;
+    answers.join("").split("").forEach(function (ch, k) { cs = (cs * 31 + ch.charCodeAt(0) + k) % 9973; });
+    card.mp = pool.length ? pool[cs % pool.length].p : null; card.more = Math.max(0, top.length - 1);
     document.getElementById("q-fact").textContent = card.fact.replace("Da se ja pitam", "Da se ti pitaš") +
       " Skupština je usvojila svih " + answers.length + ".";
     // Something the closest MP said (the shortest verbatim quote of the overview of their speeches), when one of
@@ -212,56 +217,77 @@
     return out;
   }
   function drawCard() {
-    var c = document.createElement("canvas"), W = 1080, H = 1350, P = 84, ctx = c.getContext("2d"), y;
+    // Dark, with one message: the MP who voted most like the visitor (portrait, name, how many votes alike), the
+    // ballot as a strip, and "A ti?". Without a matching MP, the fact about the laws takes the name's place.
+    var c = document.createElement("canvas"), W = 1080, H = 1350, P = 84, ctx = c.getContext("2d");
     var serif = '"Literata", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    var ZA = "#7cc0f5", PROTIV = "#ff9a52", SOFT = "#c9ccd3", TONE = { z: ZA, p: PROTIV, u: "#7d8390", "": "#30343c" };
     c.width = W; c.height = H;
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
-    ctx.textBaseline = "alphabetic";
-    ctx.font = "700 52px " + serif;
-    var x = P; [["Za", COLORS.z], [" ili ", "#111"], ["Protiv", COLORS.p]].forEach(function (p) {
-      ctx.fillStyle = p[1]; ctx.fillText(p[0], x, 130); x += ctx.measureText(p[0]).width;
-    });
-    ctx.fillStyle = "#111"; ctx.fillRect(P, 160, W - 2 * P, 6);
-    ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Kako bih ja glasao u Skupštini", P, 236);
-    ctx.fillStyle = "#111"; ctx.font = "700 96px " + serif; y = 370;
-    wrapText(ctx, card.fact, W - 2 * P, 3).forEach(function (l) { ctx.fillText(l, P, y); y += 108; });
-    // the ballot: one square per law
-    var n = answers.length, gap = 14, size = Math.min(96, (W - 2 * P - gap * (n - 1)) / n); y += 10;
-    answers.forEach(function (a, i) {
-      ctx.fillStyle = COLORS[a]; ctx.fillRect(P + i * (size + gap), y, size, size);
-      ctx.fillStyle = a ? "#fff" : "#888"; ctx.font = "700 " + Math.round(size * .42) + "px " + sans; ctx.textAlign = "center";
-      ctx.fillText(String(i + 1), P + i * (size + gap) + size / 2, y + size * .65); ctx.textAlign = "left";
-    });
-    y += size + 48;
-    ctx.font = "400 30px " + sans; x = P;
-    [["za", COLORS.z], ["protiv", COLORS.p], ["uzdržan", COLORS.u]].forEach(function (k) {
-      ctx.fillStyle = k[1]; ctx.fillRect(x, y - 24, 26, 26); ctx.fillStyle = "#555"; ctx.fillText(k[0], x + 38, y);
-      x += 38 + ctx.measureText(k[0]).width + 40;
-    });
-    if (card.who) {
-      y += 104; ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Najviše glasova kao ja", P, y);
-      ctx.fillStyle = "#111"; ctx.font = "700 60px " + serif; y += 74;
-      wrapText(ctx, card.who, W - 2 * P, 2).forEach(function (l) { ctx.fillText(l, P, y); y += 70; });
-      ctx.fillStyle = "#555"; ctx.font = "400 36px " + sans; ctx.fillText("isti glas na " + card.score + " zakona", P, y - 8);
+    function paint(face) {
+      var y, x;
+      ctx.fillStyle = "#111111"; ctx.fillRect(0, 0, W, H);
+      ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
+      // the mark and the name of the site
+      ctx.lineWidth = 19; ctx.strokeStyle = ZA; ctx.beginPath(); ctx.arc(P + 56, 150, 54, Math.PI, Math.PI * 300 / 180); ctx.stroke();
+      ctx.strokeStyle = PROTIV; ctx.beginPath(); ctx.arc(P + 56, 150, 54, Math.PI * 310 / 180, Math.PI * 2); ctx.stroke();
+      ctx.font = "700 54px " + serif; x = P + 142;
+      [["Za", ZA], [" ili ", "#ffffff"], ["Protiv", PROTIV]].forEach(function (p) {
+        ctx.fillStyle = p[1]; ctx.fillText(p[0], x, 150); x += ctx.measureText(p[0]).width;
+      });
+      if (card.mp) {
+        ctx.fillStyle = SOFT; ctx.font = "400 46px " + sans; ctx.fillText("U Skupštini glasam kao", P, 282);
+        var fw = 330, fh = 440, fy = 322;
+        ctx.fillStyle = "#30343c"; ctx.fillRect(P, fy, fw, fh);
+        if (face) {  // cover the frame, keeping the portrait's proportions
+          var k = Math.max(fw / face.width, fh / face.height), sw = fw / k, sh = fh / k;
+          ctx.drawImage(face, (face.width - sw) / 2, Math.max(0, (face.height - sh) / 4), sw, sh, P, fy, fw, fh);
+        }
+        var nx = P + fw + 50, lines;
+        ctx.fillStyle = "#ffffff"; ctx.font = "800 96px " + serif;
+        lines = wrapText(ctx, card.mp.n, W - P - nx, 4);
+        if (lines.length > 3) { ctx.font = "800 76px " + serif; lines = wrapText(ctx, card.mp.n, W - P - nx, 4); }
+        lines = lines.filter(Boolean);
+        y = fy + fh - (lines.length - 1) * 102 - 8;
+        lines.forEach(function (l) { ctx.fillText(l, nx, y); y += 102; });
+        y = fy + fh + 112;
+        ctx.fillStyle = PROTIV; ctx.font = "800 92px " + serif; ctx.fillText(card.score, P, y);
+        x = P + ctx.measureText(card.score).width + 24;
+        ctx.fillStyle = "#ffffff"; ctx.font = "400 46px " + sans; ctx.fillText(plural(+card.score.split(" ").pop(), "isti glas", "ista glasa", "istih glasova"), x, y);
+        if (card.more) {
+          ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans;
+          ctx.fillText("i kao još " + card.more + " " + plural(card.more, "poslanik", "poslanika", "poslanika"), P, y + 58);
+        }
+      } else {
+        ctx.fillStyle = "#ffffff"; ctx.font = "800 104px " + serif; y = 420;
+        wrapText(ctx, card.fact, W - 2 * P, 4).forEach(function (l) { ctx.fillText(l, P, y); y += 118; });
+      }
+      // the ballot: a strip, one piece per law
+      var n = answers.length, gap = 12, w = (W - 2 * P - gap * (n - 1)) / n, by = H - 318;
+      if (card.mp) { ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans; ctx.fillText(card.fact, P, by - 28); }
+      answers.forEach(function (a, i) { ctx.fillStyle = TONE[a]; ctx.fillRect(P + i * (w + gap), by, w, 52); });
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(P, H - 206, W - 2 * P, 6);
+      ctx.font = "700 64px " + serif; ctx.fillText("A ti?", P, H - 104);
+      ctx.font = "400 40px " + sans; ctx.textAlign = "right";
+      ctx.fillText((location.host || "zailiprotiv.rs") + "/glasaj", W - P, H - 104); ctx.textAlign = "left";
+      var img = document.getElementById("q-card");
+      img.alt = (card.mp ? "U Skupštini glasam kao " + card.mp.n + ": " + card.score + " istih glasova. " : "") + card.fact;
+      c.toBlob(function (blob) {
+        if (!blob) return;
+        cardBlob = blob;
+        var url = URL.createObjectURL(blob);
+        img.src = url; document.getElementById("q-save").href = url;
+      }, "image/png");
     }
-    if (card.crowd) {
-      y += 92; ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Kao većina posetilaca sajta", P, y);
-      ctx.fillStyle = "#111"; ctx.font = "700 60px " + serif; y += 72;
-      ctx.fillText("na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona"), P, y);
-    }
-    ctx.fillStyle = "#111"; ctx.fillRect(P, H - 150, W - 2 * P, 3);
-    ctx.font = "700 44px " + serif; ctx.fillText("A ti?", P, H - 78);
-    ctx.font = "400 38px " + sans; ctx.fillStyle = "#555"; ctx.textAlign = "right";
-    ctx.fillText(location.host ? location.host + "/glasaj.html" : "zailiprotiv.rs/glasaj.html", W - P, H - 78); ctx.textAlign = "left";
-    var img = document.getElementById("q-card");
-    img.alt = card.fact + " " + (card.who ? "Najviše glasova kao ja: " + card.who + " (" + card.score + ")." : "");
-    c.toBlob(function (blob) {
-      cardBlob = blob;
-      var url = URL.createObjectURL(blob);
-      img.src = url; document.getElementById("q-save").href = url;
-    }, "image/png");
+    var ready = document.fonts && document.fonts.load ? document.fonts.load('800 96px "Literata"').catch(function () {}) : Promise.resolve();
+    ready.then(function () {
+      if (!card.mp) return paint(null);
+      var face = new Image();
+      face.onload = function () { paint(face); };
+      face.onerror = function () { paint(null); };
+      face.src = card.mp.f ? "foto/" + card.mp.f : "bez-slike.svg";
+    });
   }
-  var card = { fact: "", who: "", score: "", crowd: null };
+  var card = { fact: "", who: "", score: "", crowd: null, mp: null, more: 0 };
   // On how many laws the visitor voted as most visitors did, among the laws five or more visitors voted on.
   function crowdFact() {
     var same = 0, of = 0;

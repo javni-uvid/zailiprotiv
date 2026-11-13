@@ -773,7 +773,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
         spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
                             (most_against(items, 1) or [{}])[0].get("key")),
-        featured=next((it for it in most_against(items, 9) if len(it["pair"]) == 2), None),
+        # The pair of quotes is the lead law's when it has one, so the page reads on from the chamber above it.
+        featured=divisive if divisive and len(divisive["pair"]) == 2 else next(
+            (it for it in most_against(items, 9) if len(it["pair"]) == 2), None),
         ranked=most_against([it for its in items_by_conv.values() for it in its], 8),
         kinds_count=[(k, kinds.KINDS[k], n) for k, n in sorted(Counter(it["law"].get("kind", "other") for it in items)
                                                                 .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],

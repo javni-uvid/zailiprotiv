@@ -613,3 +613,20 @@ td.lean { white-space: nowrap; }
 .subtabs a:hover { background: var(--card); }
 .subtabs a[aria-current="page"] { background: var(--fg); color: var(--bg); }
 .subtabs .count { color: inherit; opacity: .7; }
+
+/* The chair's measures: a line each (what, to whom, the sentence, who pronounced it), the rest folded. */
+.measures > li { padding: 0; border-bottom: 1px solid var(--line); margin: 0; }
+.measures summary { display: flex; gap: .9rem; align-items: flex-start; padding: .8rem 0; cursor: pointer; list-style: none; }
+.measures summary::-webkit-details-marker { display: none; }
+.measures summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; line-height: 1; padding: .1rem .3rem; color: var(--muted); }
+.measures details[open] summary::after { content: "–"; }
+.measure-main { display: flex; flex-direction: column; gap: .2rem; min-width: 0; flex: 1 1 0; }
+.measure-head { font-size: 1.05rem; }
+.measure-said { font-family: var(--serif); font-size: 1.08rem; line-height: 1.4; }
+.measure-more { padding: 0 0 1.2rem 3.5rem; }
+.measure-more .turn-who { font-weight: 700; margin: .9rem 0 .3rem; }
+@media (max-width: 600px) { .measure-more { padding-left: 0; } }
+.measures summary, .measures summary * { text-decoration: none; }
+.measures summary:hover .measure-head b { text-decoration: underline; }
+.home-hooks { border-bottom: 0; padding-bottom: 1.2rem; }
+.home-quiz { margin: .6rem 0 1.6rem; }

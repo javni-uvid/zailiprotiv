@@ -45,16 +45,30 @@
 {% if c.measures %}
 <section id="mere">
   <h2>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h2>
-  <ul class="floor">
+  <ul class="floor measures">
   {% for e in c.measures %}
+    {% set role = e.chair.speaker|latin|lower %}
     <li id="{{ e.id }}">
-      <p class="floor-head"><b>{{ e.label }}</b>{% if e.to %}: {{ person(e.to) }}{% endif %} · {{ where(e) }}</p>
-      <blockquote class="said"><p>{{ e.chair.text|latin }}</p><footer>Predsedavajući{% if e.notes %} · <a href="{{ e.notes }}">beleške tog dana</a>{% endif %}</footer></blockquote>
-      {% if e.before %}<details><summary>Govor pre toga: {{ e.before_who.name }}</summary><blockquote class="said"><p>{{ e.before.text|latin }}</p><footer>{{ person(e.before_who) }}</footer></blockquote></details>{% endif %}
+      <details>
+        <summary>
+          <img class="row-face" src="{{ "foto/" ~ e.to.photo if e.to and e.to.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
+          <span class="measure-main">
+            <span class="measure-head"><b>{{ e.label }}</b>{% if e.to %}: {{ e.to.name }}{% endif %}</span>
+            <span class="measure-said">„{{ (e.sentence or e.chair.text)|latin|truncate(260, killwords=False, end=" …") }}“</span>
+            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if not e.to %} · ime nije u rečenici kojom je mera izrečena{% endif %}</span>
+          </span>
+        </summary>
+        <div class="measure-more">
+          <p class="meta">{{ where(e) }}{% if e.to and e.to.slug %} · <a href="poslanik/{{ e.to.slug }}.html#mere">sve mere: {{ e.to.name }}</a>{% endif %}</p>
+          {% if e.before %}<p class="turn-who">Govor pre toga: {{ person(e.before_who) }}</p><blockquote class="said"><p>{{ e.before.text|latin }}</p></blockquote>{% endif %}
+          <p class="turn-who">Sve reči predsedavajućeg</p>
+          <blockquote class="said"><p>{{ e.chair.text|latin }}</p>{% if e.notes %}<footer><a href="{{ e.notes }}">Stenografske beleške tog dana</a></footer>{% endif %}</blockquote>
+        </div>
+      </details>
     </li>
   {% endfor %}
   </ul>
-  <p class="label">Ime uz meru stoji samo kad predsedavajući u toj rečenici oslovi govornika prezimenom i kad to prezime na sednici nosi jedan govornik; inače su tu samo njegove reči.</p>
+  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji samo kad u toj rečenici oslovi govornika prezimenom koje na sednici nosi jedan govornik. Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
 </section>
 {% endif %}
 <section id="sednice">

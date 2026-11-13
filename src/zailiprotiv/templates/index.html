@@ -35,6 +35,36 @@
 </li>
 {%- endmacro %}
 
+{% if floor_top or featured %}
+<div class="home-hooks">
+{% if featured %}
+<section>
+  <h2>Rečeno u raspravi{% if divisive and featured.slug == divisive.slug %} o ovom zakonu{% endif %}</h2>
+  {% if not (divisive and featured.slug == divisive.slug) %}<p><a href="zakon/{{ featured.slug }}.html">{{ featured.law.short }}</a></p>{% endif %}
+  {% for q in featured.pair %}
+  <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
+  {% endfor %}
+  <p class="hook-more"><a href="zakon/{{ featured.slug }}.html">Cela rasprava: {% if featured.aka %}{{ featured.aka[0][:1]|upper }}{{ featured.aka[0][1:] }}{% else %}{{ featured.law.short }}{% endif %}</a></p>
+</section>
+{% endif %}
+{% if floor_top %}
+<section>
+  <h2><a href="replike.html">Varnice u sali</a></h2>
+  <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
+  <dl class="hook-nums">
+    {% macro who(r, at) %}{% if r.who.slug %}<a href="poslanik/{{ r.who.slug }}.html#{{ at }}">{{ r.who.name }}</a>{% else %}{{ r.who.name }}{% endif %}{% endmacro %}
+    {% if floor_top.speeches %}<dt>{{ floor_top.speeches.speeches }}</dt><dd>{{ plural(floor_top.speeches.speeches, "govor", "govora", "govora") }}: {{ who(floor_top.speeches, "aktivnost") }}, najviše u sazivu</dd>{% endif %}
+    {% if floor_top.points %}<dt>{{ floor_top.points.points }}</dt><dd>{{ plural(floor_top.points.points, "ukazivanje", "ukazivanja", "ukazivanja") }} na Poslovnik: {{ who(floor_top.points, "aktivnost") }}</dd>{% endif %}
+    {% if floor_top.measures %}<dt>{{ floor_top.measures.measures }}</dt><dd>{{ plural(floor_top.measures.measures, "mera", "mere", "mera") }} predsedavajućeg: {{ who(floor_top.measures, "mere") }}</dd>{% endif %}
+    {% if floor_top.harsh %}<dt>{{ floor_top.harsh.harsh|length }}</dt><dd>{{ plural(floor_top.harsh.harsh|length, "teška reč", "teške reči", "teških reči") }}: {{ who(floor_top.harsh, "reci") }}</dd>{% endif %}
+  </dl>
+  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a></p>
+  <p class="label">Brojano u pročitanim beleškama, ne u svim sednicama.</p>
+</section>
+{% endif %}
+</div>
+{% endif %}
+
 {% if quiz_laws %}
 {% set q = (quiz_laws|rejectattr("slug", "equalto", divisive.slug if divisive else "")|list or quiz_laws)[0] %}
 <section class="home-quiz" aria-labelledby="hq">
@@ -47,35 +77,6 @@
     <p class="hq-buttons"><a class="hq-btn hq-za" href="glasaj.html?z={{ q.slug }}&amp;g=z" rel="nofollow">Za</a><a class="hq-btn hq-protiv" href="glasaj.html?z={{ q.slug }}&amp;g=p" rel="nofollow">Protiv</a><a class="hq-btn hq-uzd" href="glasaj.html?z={{ q.slug }}&amp;g=u" rel="nofollow">Uzdržan</a></p>
   </div>
 </section>
-{% endif %}
-
-{% if floor_top or featured %}
-<div class="home-hooks">
-{% if floor_top %}
-<section>
-  <h2><a href="replike.html">Varnice u sali</a></h2>
-  <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
-  <dl class="hook-nums">
-    {% macro who(r) %}{% if r.who.slug %}<a href="poslanik/{{ r.who.slug }}.html">{{ r.who.name }}</a>{% else %}{{ r.who.name }}{% endif %}{% endmacro %}
-    {% if floor_top.speeches %}<dt>{{ floor_top.speeches.speeches }}</dt><dd>{{ plural(floor_top.speeches.speeches, "govor", "govora", "govora") }}: {{ who(floor_top.speeches) }}, najviše u sazivu</dd>{% endif %}
-    {% if floor_top.points %}<dt>{{ floor_top.points.points }}</dt><dd>{{ plural(floor_top.points.points, "ukazivanje", "ukazivanja", "ukazivanja") }} na Poslovnik: {{ who(floor_top.points) }}</dd>{% endif %}
-    {% if floor_top.measures %}<dt>{{ floor_top.measures.measures }}</dt><dd>{{ plural(floor_top.measures.measures, "mera", "mere", "mera") }} predsedavajućeg: {{ who(floor_top.measures) }}</dd>{% endif %}
-    {% if floor_top.harsh %}<dt>{{ floor_top.harsh.harsh|length }}</dt><dd>{{ plural(floor_top.harsh.harsh|length, "teška reč", "teške reči", "teških reči") }}: {{ who(floor_top.harsh) }}</dd>{% endif %}
-  </dl>
-  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a></p>
-  <p class="label">Brojano u pročitanim beleškama, ne u svim sednicama.</p>
-</section>
-{% endif %}
-{% if featured %}
-<section>
-  <h2>Rečeno u raspravi</h2>
-  {% for q in featured.pair %}
-  <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
-  {% endfor %}
-  <p class="hook-more"><a href="zakon/{{ featured.slug }}.html">{{ featured.law.short }}</a></p>
-</section>
-{% endif %}
-</div>
 {% endif %}
 
 <div class="home-now">
