@@ -315,3 +315,12 @@ def test_a_speech_is_linked_among_the_notes_only_when_its_page_is_in_the_bucket(
     from zailiprotiv import pages_floor
     src = inspect.getsource(pages_floor.render)
     assert "notes_pages" in inspect.signature(pages_floor.render).parameters and "v[0] in notes_pages" in src
+
+
+def test_links_to_the_notes_bucket_keep_their_ending(tmp_path):
+    from zailiprotiv import publish
+    (tmp_path / "a.html").write_text('<head></head><a href="https://beleske.zailiprotiv.rs/14/1/dan-1.html#g1">x</a>'
+                                     '<a href="https://zailiprotiv.rs/b.html">y</a>')
+    publish.clean_urls(tmp_path)
+    text = (tmp_path / "a.html").read_text()
+    assert "beleske.zailiprotiv.rs/14/1/dan-1.html#g1" in text and 'href="https://zailiprotiv.rs/b"' in text

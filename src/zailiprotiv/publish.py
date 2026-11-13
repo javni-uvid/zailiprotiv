@@ -20,6 +20,8 @@ def clean_urls(out: Path) -> None:
 
     def absolute(m):
         rel = m.group(2)
+        if m.group(1).startswith("https://beleske."):  # the notes' pages live in a bucket, which serves files by their full name
+            return m.group(0)
         if rel == "index" or rel.endswith("/index"):
             return m.group(1) + rel[:-5]
         return m.group(0) if (out / rel).is_dir() else m.group(1) + rel
