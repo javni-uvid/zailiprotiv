@@ -35,6 +35,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
+          wranglerVersion: "4.152.0"  # the action's own default (3.x) doesn't know the rate limiter
           command: d1 execute zailiprotiv-glasovi --remote --file schema.sql
       - name: Publish
         if: steps.ready.outputs.go == 'yes'
@@ -43,6 +44,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
+          wranglerVersion: "4.152.0"  # the action's own default (3.x) doesn't know the rate limiter
           command: deploy
           secrets: |
             DISPATCH_TOKEN
