@@ -288,6 +288,20 @@ def most_against(items: list[dict], n: int) -> list[dict]:
             for it in ranked[:n]]
 
 
+def hemicycle(counts: dict, rows=((60, 17), (75, 21), (90, 25), (105, 29), (120, 33), (135, 37), (150, 42), (165, 46))) -> list[tuple]:
+    """The chamber's 250 seats as (x, y, vote) in a half circle, filled from the left: for, then those who did not
+    vote, abstained or were absent, then against. A picture of the count, not of where anyone sits."""
+    import math
+    seats = sorted(((math.pi - math.pi * i / (n - 1), r) for r, n in rows for i in range(n)), reverse=True)
+    za, protiv = counts.get("za") or 0, counts.get("protiv") or 0
+    total = len(seats)
+    out = []
+    for i, (t, r) in enumerate(seats):
+        kind = "za" if i < za else ("protiv" if i >= total - protiv else "ostali")
+        out.append((round(170 + r * math.cos(t), 1), round(172 - r * math.sin(t), 1), kind))
+    return out
+
+
 ORDINAL_NAME = {"10": "Deseti", "11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
 
 
@@ -353,7 +367,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
-    for name in ("style.css", "site.js"):
+    for name in ("style.css", "site.js", "favicon.svg"):
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     # The stylesheet's and script's address changes with their content, so a browser or cache never pairs new pages
@@ -712,8 +726,19 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
              "treaties": sum(1 for it in items if it["law"].get("kind") == "treaty"),
              "sittings": len({v["sitting"] for v in votes.values()}),
              "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people), "waiting": len(waiting)}
+    # The home page's lead: the law of the last year (of the convocation shown) with the largest share against.
+    newest = max((it["law"].get("passed") or "" for it in items), default="")
+    year_ago = f"{int(newest[:4]) - 1}{newest[4:]}" if newest else ""
+    divisive = (most_against([it for it in items if (it["law"].get("passed") or "") >= year_ago], 1) or most_against(items, 1) or [None])[0]
+    # The newest sitting's laws, the most votes against first (a sitting often passes a run of alike laws).
+    last_sitting = [it for it in items if it["final"] and it["final"]["sitting"] == next(
+        (x["final"]["sitting"] for x in items if x["final"]), None)]
+    last_sitting.sort(key=lambda it: -(it["final"]["counts"]["protiv"] or 0))
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
+        **common, divisive=divisive, seats=hemicycle(divisive["final"]["counts"]) if divisive else [],
+        quiz_laws=getattr(pages_quiz.render, "laws", []), floor_top=getattr(pages_floor.render, "top", {}).get(active),
+        last_sitting=last_sitting, last_sitting_slug=sitting_page(last_sitting[0]["final"]["sitting"], last_sitting[0]["final"]["sitting_title"]) if last_sitting else "",
+        stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
         spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
                             (most_against(items, 1) or [{}])[0].get("key")),
         featured=next((it for it in most_against(items, 9) if len(it["pair"]) == 2), None),

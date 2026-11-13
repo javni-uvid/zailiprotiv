@@ -57,4 +57,5 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
     (out / "glasaj.html").write_text(env.get_template("quiz.html").render(
         **common, laws=quiz_laws, chosen_by_hand=chosen_by_hand, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         root=""), encoding="utf-8")
+    render.laws = quiz_laws  # for the home page's band
     return active

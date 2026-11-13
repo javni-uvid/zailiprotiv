@@ -444,3 +444,46 @@ td.lean { white-space: nowrap; }
 .board-open summary { display: inline; cursor: pointer; }
 .board-open summary .board-who { text-decoration: underline; text-underline-offset: 2px; }
 .harsh li { margin: .5rem 0 .5rem 1.9rem; line-height: 1.45; }
+
+/* The mark: the chamber as one arc, for and against. */
+.brand { display: inline-flex; align-items: center; gap: .55rem; }
+.brand-mark { width: 2.4rem; height: auto; flex-shrink: 0; }
+.brand-mark path { fill: none; stroke-width: 16; }
+.brand-mark .m-za { stroke: var(--za); } .brand-mark .m-protiv { stroke: var(--protiv); }
+
+/* Home, 13 Nov 2026: the lead vote as the chamber, the quiz as a band, two hooks, then the lists. */
+.home-hero { display: flex; flex-wrap: wrap; gap: 2rem 3.5rem; align-items: center; padding: 2.6rem 0 2.4rem; }
+.hero-text { flex: 1 1 26rem; min-width: 0; }
+.home-hero h1 { font-size: clamp(2.2rem, 5.2vw, 3.6rem); line-height: 1.05; }
+.hero-vote { flex: 0 1 23rem; min-width: 0; display: flex; flex-direction: column; gap: .5rem; text-decoration: none; color: inherit; }
+.hero-kicker, .hero-meta { font-size: .9rem; color: var(--muted); }
+.chamber { width: 100%; max-width: 340px; height: auto; display: block; }
+.chamber .s-za { fill: var(--za); } .chamber .s-protiv { fill: var(--protiv-bar); } .chamber .s-ostali { fill: var(--nije_glasao); }
+.chamber text { font-family: var(--serif); font-size: 25px; font-weight: 700; fill: var(--fg); }
+.chamber tspan.s-protiv { fill: var(--protiv); }
+.hero-law { font-family: var(--serif); font-size: 1.45rem; font-weight: 700; line-height: 1.2; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.hero-vote:hover .hero-law { color: var(--za); }
+
+.home-quiz { display: flex; flex-wrap: wrap; gap: 1.4rem 3rem; align-items: center; background: var(--fg); color: var(--bg); padding: 1.8rem 2rem; margin: 0 0 .4rem; }
+.home-quiz h2 { margin: 0 0 .3rem; font-size: clamp(1.7rem, 3.6vw, 2.3rem); line-height: 1.1; color: inherit; }
+.hq-text { flex: 1 1 18rem; min-width: 0; } .hq-text p { margin: 0; font-size: 1.05rem; }
+.hq-try { flex: 1.4 1 22rem; min-width: 0; }
+.hq-law { margin: 0 0 .8rem; font-family: var(--serif); font-size: 1.2rem; line-height: 1.35; }
+.hq-buttons { margin: 0; display: flex; gap: .5rem; }
+.hq-btn { flex: 1 1 0; text-align: center; padding: .8rem .4rem; font-weight: 700; font-size: 1.15rem; text-decoration: none; border: 2px solid transparent; }
+.hq-za { background: #1f5fa8; color: #fff; } .hq-protiv { background: #c2410c; color: #fff; }
+.hq-uzd { border-color: var(--bg); color: var(--bg); }
+.hq-btn:hover { outline: 3px solid var(--bg); outline-offset: 2px; }
+
+.home-hooks { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 2rem 3.5rem; padding: 2.2rem 0; border-bottom: 1px solid var(--line); }
+.home-hooks h2 { margin: 0 0 .4rem; } .home-hooks h2 a { color: inherit; }
+.home-hooks section > p { margin: 0 0 .8rem; }
+.hook-nums { margin: 0 0 1rem; display: grid; grid-template-columns: auto 1fr; gap: .45rem .9rem; align-items: baseline; }
+.hook-nums dt { font-family: var(--serif); font-size: 1.7rem; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.hook-nums dd { margin: 0; }
+.hook-more a { font-weight: 600; }
+.home-hooks .q { margin: 0 0 1.1rem; padding-left: .9rem; border-left: 4px solid var(--line); }
+.home-hooks .q-za, .home-hooks .q-vlada { border-left-color: var(--za); } .home-hooks .q-protiv { border-left-color: var(--protiv); }
+.home-hooks .q blockquote { font-size: 1.1rem; margin-bottom: .4rem; }
+.side-box b { font-size: 1.5rem; }
+@media (max-width: 600px) { .home-quiz { padding: 1.4rem 1.1rem; margin-left: -1rem; margin-right: -1rem; } }

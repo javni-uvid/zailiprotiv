@@ -10,13 +10,14 @@
 <meta property="og:description" content="{{ self.description() }}">
 {% block share %}{% if site_url %}<meta property="og:image" content="{{ site_url }}za-ili-protiv.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">{% endif %}{% endblock %}
+<link rel="icon" type="image/svg+xml" href="{{ root }}favicon.svg">
 <link rel="stylesheet" href="{{ root }}style.css?v={{ css }}">
 <script src="{{ root }}site.js?v={{ css }}" defer></script>
 <link rel="alternate" type="application/atom+xml" title="Novi zakoni" href="{{ root }}zakoni.xml">{% block feeds %}{% endblock %}
 </head>
 <body data-root="{{ root }}" data-v="{{ css }}">
 <header class="top">
-  <a class="brand" href="{{ root }}index.html"><span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span></a>
+  <a class="brand" href="{{ root }}index.html"><svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/><path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg><span><span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span></span></a>
   <nav>
     <a href="{{ root }}zakoni.html">Zakoni</a>
     <a href="{{ root }}u-proceduri.html">U proceduri</a>

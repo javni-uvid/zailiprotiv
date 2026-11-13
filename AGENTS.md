@@ -90,6 +90,10 @@ These are the project's promises to its readers. Never change them without the m
      names the laws and gives each a short plain description written from its summary (what the law does, no
      verdict). The page says so. After a vote it shows one verbatim quote from an MP who voted for and one who
      voted against, and with the result a verbatim quote of the closest MP. Without the file the old rule holds.
+   - **The home page (the maintainer's choice of design, 13 Nov 2026):** the lead is the law of the last year with
+     the largest share against, drawn as the chamber (`site.hemicycle`: a picture of the count, not of seats);
+     then "Glasaj i ti" as a full-width band, "Varnice" and a pair of quotes, the newest sitting's laws (most
+     votes against first). The mark is the chamber as one arc (`favicon.svg`, `.brand-mark`).
    - **A second exception, the maintainer's (13 Nov 2026): counting visits.** Every page loads Cloudflare Web
      Analytics' script (no cookies, no following of a person; totals per page) when `data/settings.json` has
      `analytics_token`; without it nothing is loaded. The footer and "O projektu" say so. `publish.check` lets this

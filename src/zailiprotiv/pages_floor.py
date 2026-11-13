@@ -246,4 +246,6 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for part, name in (("mere", c["page"]), ("razmene", c["page_exchanges"]), ("ko", c["page_who"])):
             (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
                                     encoding="utf-8")
+    # For the home page: the first of each count in each convocation.
+    render.top = {c["n"]: {k: (v[0] if v else None) for k, v in c["top"].items()} | {"page": c["page_who"]} for c in by_conv}
     return by_mp, by_law
