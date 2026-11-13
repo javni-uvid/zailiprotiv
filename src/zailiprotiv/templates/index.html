@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, plural, how with context %}
 {% block main %}
-<p class="masthead">Narodna skupština Srbije · {{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} · {{ stats.all_mps }} poslanika · iz dokumenata same Skupštine</p>
+<p class="masthead">Narodna skupština Srbije · {{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} · {{ stats.all_mps }} poslanika · <a href="u-proceduri.html">{{ stats.waiting }} {{ plural(stats.waiting, "predlog", "predloga", "predloga") }} u proceduri</a> · iz dokumenata same Skupštine</p>
 
 {% macro row(it, n) -%}
 <li class="row">

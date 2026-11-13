@@ -120,6 +120,38 @@ class Sitting:
     url: str
     title: str
     votes: list[Vote] = field(default_factory=list)
+    agenda: list[str] = field(default_factory=list)  # the items it was convened for, as its page lists them
+    starts: str = ""  # "2026-08-24T10:00", from the notice that convened it
+
+
+_MONTHS = ("јануар", "фебруар", "март", "април", "мај", "јун", "јул", "август", "септембар", "октобар", "новембар",
+           "децембар")
+
+
+def convened(html: str) -> str:
+    """When a sitting was convened for, from its page's notice: "… за понедељак, 24. август 2026. године, са почетком
+    у 10.00 часова". The day alone when no hour is given; empty when the notice has no day."""
+    m = re.search(r'class="preamble"[^>]*>(.*?)</p>', html, flags=re.S)
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1) if m else ""))
+    d = re.search(r"за\s+(?:\w+,\s*)?(\d{1,2})\.\s*(\w+)\s+(\d{4})\.", text)
+    if not d or d.group(2).lower() not in _MONTHS:
+        return ""
+    day = f"{d.group(3)}-{_MONTHS.index(d.group(2).lower()) + 1:02d}-{int(d.group(1)):02d}"
+    h = re.search(r"почетком у (\d{1,2})[.:,](\d{2})", text[d.end():])
+    return f"{day}T{int(h.group(1)):02d}:{h.group(2)}" if h else day
+
+
+def agenda(html: str) -> list[str]:
+    """The items a sitting was convened for: the first numbered list of its page that links no roll calls (the list
+    of results, further down, links one per item)."""
+    start = html.find('class="preamble"')
+    for block in re.findall(r"<ol\b.*?</ol>", html[max(start, 0):], flags=re.S | re.I):
+        if any(p.lower() in urllib.parse.unquote(block).lower() for p in VOTES_PATHS):
+            continue
+        items = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", li)).strip(" ;.") for li in
+                 re.findall(r"<li\b[^>]*>(.*?)</li>", block, flags=re.S | re.I)]
+        return [i for i in items if i]
+    return []
 
 
 def sittings(get: Callable[[str], bytes] = fetch, listings=LISTINGS) -> list[Sitting]:
@@ -182,5 +214,6 @@ def index(get: Callable[[str], bytes] = fetch, delay: float = DELAY, convocation
     found = [s for s in found if not other_convocation(s.title, conf["ordinal"])]
     for sitting in found:
         time.sleep(delay)
-        sitting.votes = votes(get(sitting.url).decode("utf-8", "replace"), sitting.url)
+        page = get(sitting.url).decode("utf-8", "replace")
+        sitting.votes, sitting.agenda, sitting.starts = votes(page, sitting.url), agenda(page), convened(page)
     return found

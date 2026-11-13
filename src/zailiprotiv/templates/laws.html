@@ -3,7 +3,7 @@
 {% block title %}Zakoni, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block main %}
 <h1>Zakoni</h1>
-<p class="meta follow"><a href="{{ root }}zakoni.xml">Prati nove zakone (RSS)</a></p>
+<p class="meta follow"><a href="saziv-{{ conv }}.html">O {{ conv_name|lower }}m sazivu: brojke, grupe, sednice</a> · <a href="u-proceduri.html">Predlozi u proceduri</a> · <a href="{{ root }}zakoni.xml">Prati nove zakone (RSS)</a></p>
 {{ tabs(convs, conv, "page") }}
 <div class="finder js-only" hidden data-filter="f-rows">
   <label class="sr" for="f-q">Pretraži zakone</label>

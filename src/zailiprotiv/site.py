@@ -367,7 +367,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         return f"{first}–{last}" if first and last and first != last else first or last
 
     conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
-                  "mps_page": mps_page(c, current), "years": years(c),
+                  "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     common = {"css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else ""}
@@ -508,12 +508,18 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         lines_of[(finals[key]["conv"], g)].append((key, how))
     group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and slug(g)}
     from zailiprotiv import card
+    import os
+    cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
+    cache.mkdir(parents=True, exist_ok=True)
     for args in law_pages:
         it = args["it"]
         if it["final"]:  # the picture shown when the page is shared
             name = it["aka"][0][:1].upper() + it["aka"][0][1:] if it["aka"] else it["law"]["short"]
-            card.draw(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
-                      "hitan postupak" if it["urgent"] else "")
+            args_ = (name, day(it["law"].get("passed")), it["final"]["counts"], "hitan postupak" if it["urgent"] else "")
+            kept = cache / (hashlib.sha256(repr((card.VERSION, args_)).encode()).hexdigest()[:24] + ".png")
+            if not kept.exists():  # drawing 1,500 pictures takes a minute; a picture only changes with what it shows
+                card.draw(kept, *args_)
+            shutil.copy(kept, out / "zakon" / f"{it['slug']}.png")
         (out / "zakon" / f"{args['it']['slug']}.html").write_text(
             env.get_template("law.html").render(**common, **args, group_slug=group_slug), encoding="utf-8")
     # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
@@ -712,6 +718,37 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         **common, laws=quiz_laws, quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         root=""), encoding="utf-8")
 
+    # Bills in procedure (the current convocation): what waits now, what is no longer listed, and the sittings
+    # convened whose votes are not out yet, with their agenda.
+    from zailiprotiv import link as link_, procedure as procedure_
+    proc_path, index_path = root / current / "procedure.json", root / current / "index.json"
+    proc = json.loads(proc_path.read_text(encoding="utf-8")) if proc_path.exists() else {"bills": {}, "fetched": ""}
+    sittings_index = json.loads(index_path.read_text(encoding="utf-8"))["sittings"] if index_path.exists() else {}
+    today = dt.date.today()
+    coming = sorted(({"title": sv["title"], "url": u, "starts": sv.get("starts", ""), "agenda": sv["agenda"]}
+                     for u, sv in sittings_index.items() if sv.get("agenda") and not sv.get("votes")
+                     and (sv.get("starts") or "9999")[:10] >= (today - dt.timedelta(days=45)).isoformat()),
+                    key=lambda x: x["starts"])
+    on_agenda = {}
+    for sv in coming:
+        for item in sv["agenda"]:
+            on_agenda.setdefault(link_.act_name(item), sv)
+    by_bill_pdf = {it["law"].get("bill_pdf"): it for it in items_by_conv[current] if it["law"].get("bill_pdf")}
+    waiting, gone = [], []
+    for pdf, b in proc["bills"].items():
+        row = {**b, "pdf": pdf, "who": procedure_.proposer_kind(b["proposer"]),
+               "kind": kinds.KINDS.get(kinds.kind(b["title"]), ""), "kind_key": kinds.kind(b["title"]),
+               "days": days_between(b["submitted"], today.isoformat()), "law": by_bill_pdf.get(pdf),
+               "sitting": on_agenda.get(link_.act_name(b["title"]))}
+        (waiting if b["last_seen"] == proc["fetched"] and not row["law"] else gone).append(row)
+    waiting.sort(key=lambda r: (r["submitted"] or "", r["title"]), reverse=True)
+    gone.sort(key=lambda r: (r["last_seen"], r["submitted"] or ""), reverse=True)
+    who_label = {"vlada": "Vlada", "poslanici": "Poslanici", "drugi": "Drugi predlagači"}
+    (out / "u-proceduri.html").write_text(env.get_template("procedure.html").render(
+        **common, waiting=waiting, gone=gone[:200], coming=coming, checked=proc["fetched"], who_label=who_label,
+        who_counts=[(k, who_label[k], sum(1 for r in waiting if r["who"] == k)) for k in who_label],
+        oldest=min((r["submitted"] for r in waiting if r["submitted"]), default=None), root=""), encoding="utf-8")
+
     # What the page's own script searches and filters: every law and MP, in one file fetched on first use.
     index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"] + " " + " ".join(it.get("aka") or []), "s": it["slug"], "d": it["law"].get("passed") or "",
                        "za": it["final"]["counts"]["za"] if it["final"] else None,
@@ -728,7 +765,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
              "mps": len({mps.key(r[1]) for v in votes.values() for r in v["rows"]}),
              "treaties": sum(1 for it in items if it["law"].get("kind") == "treaty"),
              "sittings": len({v["sitting"] for v in votes.values()}),
-             "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people)}
+             "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people), "waiting": len(waiting)}
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, stats=stats, latest=items[:6], contested=most_against(items, 9), root="",
         spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
@@ -774,8 +811,18 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                              "day": its[0]["final"]["when"][:10], "conv": its[0]["conv"], "conv_name": its[0]["conv_name"],
                              "against": sum((it["final"]["counts"]["protiv"] or 0) for it in its)}
                             for u, its in by_sitting.items()), key=lambda x: x["day"], reverse=True)
-    (out / "sednice.html").write_text(env.get_template("sittings.html").render(**common, sittings=sittings_list, root=""),
-                                      encoding="utf-8")
+    (out / "sednice.html").write_text(env.get_template("sittings.html").render(
+        **common, by_conv=[(cv, [x for x in sittings_list if x["conv"] == cv["n"]]) for cv in conv_list], root=""),
+        encoding="utf-8")
+    # A page per convocation: its figures, key votes, groups and sittings, and the way to its laws and MPs.
+    for n in numbers:
+        c = n["conv"]["n"]
+        (out / f"saziv-{c}.html").write_text(env.get_template("convocation.html").render(
+            **common, n=n, conv=c, cv=n["conv"], key_votes=key_votes.get(c, []),
+            against=most_against(items_by_conv[c], 5), sittings=[x for x in sittings_list if x["conv"] == c],
+            mps=sum(1 for r in rows_mp if c in r["by_conv"]),
+            first=min((it["law"].get("passed") or "9999" for it in items_by_conv[c]), default=""),
+            last=max((it["law"].get("passed") or "" for it in items_by_conv[c]), default=""), root=""), encoding="utf-8")
 
     # Downloads: every law with its final vote, and every MP's final votes by convocation (CSV), and the roll call
     # of each law beside its page (CSV and JSON).
@@ -847,6 +894,10 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
 
     write_feed(out / "zakoni.xml", "Za ili Protiv: novi zakoni", f"{site}zakoni.xml", f"{site}index.html",
                [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in newest])
+    write_feed(out / "u-proceduri.xml", "Za ili Protiv: novi predlozi zakona", f"{site}u-proceduri.xml", f"{site}u-proceduri.html",
+               [{"title": latin(r["title"]), "link": r["pdf"], "id": r["pdf"],
+                 "updated": (r["submitted"] or "2000-01-01") + "T00:00:00Z", "summary": "Predlagač: " + latin(r["proposer"])}
+                for r in waiting[:50]])
     for a, its in by_area.items():
         write_feed(out / "oblast" / f"{area_slug(a)}.xml", f"Za ili Protiv: {latin(a)}", f"{site}oblast/{area_slug(a)}.xml",
                    f"{site}oblast/{area_slug(a)}.html",

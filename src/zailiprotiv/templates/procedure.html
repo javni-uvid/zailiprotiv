@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, how with context %}
+{% block title %}Predlozi zakona u proceduri — Za ili Protiv{% endblock %}
+{% block description %}Predlozi zakona koji čekaju u Narodnoj skupštini: ko ih je podneo, kada, i koliko čekaju. Sazvane sednice i njihov dnevni red.{% endblock %}
+{% block feeds %}
+<link rel="alternate" type="application/atom+xml" title="Novi predlozi zakona" href="u-proceduri.xml">{% endblock %}
+{% block main %}
+<h1>U proceduri</h1>
+<p class="standfirst">{{ waiting|length }} {{ plural(waiting|length, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u Skupštini{% if oldest %}, najstariji od {{ oldest|day_of }}{% endif %}.</p>
+<p class="meta">Sa strane „Zakoni u proceduri“ na sajtu Skupštine{% if checked %}, provereno {{ checked|day_of }}{% endif %}. Predlog je u proceduri od podnošenja do usvajanja, povlačenja ili kraja saziva. {{ how("procedura") }} · <a href="u-proceduri.xml">Prati nove predloge (RSS)</a></p>
+
+{% if coming %}
+<section id="sednice">
+  <h2>Sazvane sednice</h2>
+  {% for s in coming %}
+  <article class="card coming">
+    <p class="kicker">{% if s.starts %}{{ s.starts[:10]|day }}{% if s.starts|length > 10 %} u {{ s.starts[11:16] }}{% endif %}{% else %}sazvana{% endif %}</p>
+    <h3><a href="{{ s.url }}">{{ s.title|latin }}</a></h3>
+    <details{% if s.agenda|length <= 8 %} open{% endif %}><summary>Dnevni red: {{ s.agenda|length }} {{ plural(s.agenda|length, "tačka", "tačke", "tačaka") }}</summary>
+    <ol>{% for a in s.agenda %}<li>{{ a|latin }}</li>{% endfor %}</ol></details>
+  </article>
+  {% endfor %}
+  <p class="label">Sednice koje je Skupština sazvala, a čiji rezultati glasanja još nisu objavljeni, sa dnevnim redom kako ga navodi strana sednice.</p>
+</section>
+{% endif %}
+
+<section id="predlozi">
+  <h2>Predlozi koji čekaju <span class="count">{{ waiting|length }}</span></h2>
+  {% if waiting %}
+  <div class="finder js-only" hidden data-filter="p-rows">
+    <label class="sr" for="f-q">Pretraži predloge</label>
+    <input id="f-q" type="search" placeholder="Pretraži predloge i predlagače" autocomplete="off">
+    <div class="chips" role="group" aria-label="Predlagač">
+      <button type="button" class="chip on" data-k="">Svi</button>
+      {% for k, label, n in who_counts %}{% if n %}<button type="button" class="chip" data-k="{{ k }}">{{ label }} <span>{{ n }}</span></button>{% endif %}{% endfor %}
+      {% if waiting|selectattr("sitting")|list %}<button type="button" class="chip" data-k="dr">Na dnevnom redu</button>{% endif %}
+      <label class="sr" for="f-sort">Redosled</label>
+      <select id="f-sort"><option value="d">Najnoviji prvo</option><option value="w">Najduže čekaju</option></select>
+    </div>
+  </div>
+  <p id="f-n" class="row-meta" aria-live="polite"></p>
+  <ol class="rows proc" id="p-rows">
+  {% for r in waiting %}
+    <li class="row" data-i="{{ loop.index0 }}" data-k="{{ r.who }}{% if r.sitting %} dr{% endif %}" data-d="{{ r.submitted or "" }}" data-w="{{ r.days or 0 }}">
+      <div class="row-main">
+        <a class="row-title" href="{{ r.pdf }}">{{ r.title|latin }}</a>
+        <p class="row-meta">{{ r.proposer|latin }} · podnet {{ r.submitted|day }}{% if r.kind %} · {{ r.kind|latin }}{% endif %}{% if r.sitting %} · <b>na dnevnom redu: {{ r.sitting.title|latin }}{% if r.sitting.starts %}, {{ r.sitting.starts[:10]|day }}{% endif %}</b>{% endif %}</p>
+      </div>
+      <div class="row-vote row-meta nowrap">{% if r.days is not none %}čeka {{ r.days }} {{ plural(r.days, "dan", "dana", "dana") }}{% endif %}</div>
+    </li>
+  {% endfor %}
+  </ol>
+  {% else %}
+  <p class="meta">Na spisku Skupštine trenutno nema predloga zakona. Novi saziv počinje sa praznim spiskom; predlozi koji nisu usvojeni do kraja prethodnog saziva više nisu u proceduri.</p>
+  {% endif %}
+  <p class="label">Naslov vodi na tekst predloga sa obrazloženjem (PDF na sajtu Skupštine). Predlagač i datum su kako ih navodi Skupština. Koliko predlog čeka ne govori zašto: o dnevnom redu odlučuje Skupština.</p>
+</section>
+
+{% if gone %}
+<section class="more" id="skinuti">
+  <h2>Više nisu na spisku <span class="count">{{ gone|length }}</span></h2>
+  <ul class="rows compact proc">
+  {% for r in gone %}
+    <li class="row"><div class="row-main">
+      {% if r.law %}<a class="row-title" href="zakon/{{ r.law.slug }}.html">{{ r.law.law.short }}</a><p class="row-meta">usvojen {{ r.law.law.passed|day }} · {{ r.proposer|latin }}</p>
+      {% else %}<a class="row-title" href="{{ r.pdf }}">{{ r.title|latin }}</a><p class="row-meta">{{ r.proposer|latin }} · podnet {{ r.submitted|day }} · poslednji put na spisku {{ r.last_seen|day }}</p>{% endif %}
+    </div></li>
+  {% endfor %}
+  </ul>
+  <p class="label">Predlozi koje smo videli na spisku, a više ih tamo nema: usvojeni (sa vezom ka zakonu), povučeni, ili im je postupak prestao sa krajem saziva. Skupština ne navodi razlog, pa ga ne navodimo ni mi. Pratimo od 13. novembra 2026.</p>
+</section>
+{% endif %}
+{% endblock %}

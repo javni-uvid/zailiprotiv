@@ -314,6 +314,19 @@ These are the project's promises to its readers. Never change them without the m
      answers stay in sessionStorage; the page says the description is the proposer's side; Public Whip). This is the
      interaction for readers that needs no server. Not done: bills still in procedure and coming sittings (needs new
      reading of the Assembly's site), a finer scale of words.
+  6f. **bills in procedure and convened sittings** (the maintainer, 13 Nov 2026: "live" data): `procedure.py` reads
+     the Assembly's page "Zakoni u proceduri" (title, PDF, day submitted, proposer) into `data/<N>/procedure.json`
+     (current convocation only), which remembers when each bill was first and last listed, as the page keeps no
+     history; a bill no longer listed and not among the adopted laws is shown as "no longer listed", with no reason
+     given. `skupstina.agenda` and `convened` read a sitting page's agenda list and the day and hour it was convened
+     for, kept in `index.json`; a sitting with an agenda and no roll calls yet is shown as convened
+     (`u-proceduri.html`, feed `u-proceduri.xml`). The **votes** workflow runs every hour of the working day; a
+     scheduled run that finds nothing new but the time of reading makes no commit and stops. Real pages of the
+     Assembly are test fixtures (`tests/fixtures/pages`, fetched by the **fixtures** workflow). The share pictures are
+     cached by what they show (`.cache/og`, `actions/cache` in **pages**), so an hourly build stays under a minute.
+     Not done: summaries of the memoranda of bills in procedure; an agenda written as a sentence, not a list.
+  6g. **by convocation** (the maintainer, 13 Nov 2026): `sednice.html` in a section per convocation; a page per
+     convocation (`saziv-<N>.html`: figures, key votes, groups, sittings, links to its laws and MPs), tabs between them.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

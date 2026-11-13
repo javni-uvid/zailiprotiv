@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+VERSION = 1  # raise when the drawing changes, so cached pictures are drawn again
 W, H, PAD = 1200, 630, 72
 FG, MUTED, ZA, PROTIV, PROTIV_BAR, REST = "#111111", "#555555", "#1f5fa8", "#c2410c", "#e0782f", "#e8e8e8"
 FONTS = Path(__file__).parent / "og"

@@ -27,7 +27,8 @@ def index(args) -> int:
     store = {
         "fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "sittings": {
-            s.url: {"listed": i, "title": s.title, "votes": [[v.item, v.pdf] for v in s.votes]}
+            s.url: {"listed": i, "title": s.title, "votes": [[v.item, v.pdf] for v in s.votes],
+                    "agenda": s.agenda, "starts": s.starts}
             for i, s in enumerate(found)
         },
     }
@@ -41,6 +42,22 @@ def index(args) -> int:
     if found and not total:
         print("no roll calls found: has the sittings' page layout changed?")
         return 1
+    return 0
+
+
+def in_procedure(args) -> int:
+    """The bills waiting in the Assembly now, from its page "Zakoni u proceduri", into data/<N>/procedure.json, which
+    also remembers the bills no longer listed and when each was first and last seen."""
+    from zailiprotiv import procedure
+    found = procedure.parse(skupstina.fetch(procedure.PAGE).decode("utf-8", "replace"))
+    out = Path(args.out)
+    store = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+    today = dt.datetime.now(dt.timezone.utc).date().isoformat()
+    before = {k for k, b in (store.get("bills") or {}).items() if b["last_seen"] == store.get("fetched")}
+    store = procedure.merge(store, found, today)
+    now = {b.pdf for b in found}
+    out.write_text(jsonfile.dumps(store, "bills"), encoding="utf-8")
+    print(f"bills in procedure: {len(found)}, new: {len(now - before)}, no longer listed: {len(before - now)}")
     return 0
 
 
@@ -793,6 +810,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--top", type=int, default=20)
     p.add_argument("--wait", type=float, default=300)
     p.set_defaults(run=debates_batch)
+    p = commands.add_parser("procedure", help="the bills in procedure now → data/<N>/procedure.json")
+    p.add_argument("--out", default=str(DATA / "procedure.json"))
+    p.set_defaults(run=in_procedure)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")
     p.add_argument("--min", type=int, default=10)
     p.set_defaults(run=status)

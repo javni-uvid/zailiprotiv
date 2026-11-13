@@ -1,10 +1,12 @@
-# Every morning for the current convocation, or by hand for another: index a convocation's sittings and laws (the current one unless another is chosen), read every roll
-# call and bill not read yet, link laws to their votes, and commit data/<convocation>/ when it changed.
+# Every hour of the working day for the current convocation, or by hand for another: index a convocation's sittings
+# (with the agenda of those convened) and laws, the bills in procedure, read every roll call and bill not read yet,
+# link laws to their votes, and commit data/<convocation>/ when it changed. A scheduled run that finds nothing new
+# stops there; one that does continues the chain (transcripts, the model's writing, the site).
 name: votes
 
 on:
   schedule:
-    - cron: "17 4 * * *"  # 05:17 in Belgrade (winter)
+    - cron: "17 5-21 * * *"  # every hour, 06:17 to 22:17 in Belgrade (winter)
   workflow_dispatch:
     inputs:
       convocation:
@@ -44,6 +46,8 @@ jobs:
           c="--convocation ${{ inputs.convocation || '14' }}"
           uv run zailiprotiv $c index
           uv run zailiprotiv $c laws
+          # The bills in procedure are the current convocation's only.
+          if [ "${{ inputs.convocation || '14' }}" = "$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')" ]; then uv run zailiprotiv $c procedure; fi
           uv run zailiprotiv $c votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
@@ -55,7 +59,11 @@ jobs:
           git add data
           c="${{ inputs.convocation || '14' }}"
           # Next in the chain: the notes of the debates, then the model's writing, which publishes the site.
-          git diff --cached --quiet && { gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0; }
+          if ! git diff --cached -I'"fetched": "[^"]*"' | grep -q '^@@'; then
+            # Nothing new but the time of reading: no commit. An hourly run stops here; one by hand goes on.
+            [ "${{ github.event_name }}" = "schedule" ] && exit 0
+            gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
+          fi
           git commit -m "Roll calls read from the Assembly's site (convocation ${{ inputs.convocation || '14' }})"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
           if git status -sb | grep -q ahead; then exit 1; fi

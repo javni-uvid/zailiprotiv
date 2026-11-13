@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, plural, tabs, how with context %}
+{% block title %}{{ cv.name }} saziv ({{ cv.years }}) — Za ili Protiv{% endblock %}
+{% block description %}{{ cv.name }} saziv Narodne skupštine Srbije ({{ cv.years }}): zakoni, poslanici, poslaničke grupe, sednice i izdvojena glasanja.{% endblock %}
+{% block main %}
+<h1>{{ cv.name }} saziv</h1>
+{{ tabs(convs, conv, "saziv_page") }}
+<p class="standfirst">{{ n.laws }} {{ plural(n.laws, "zakon", "zakona", "zakona") }}{% if first and last %} od {{ first|day_of }} do {{ last|day_of }}{% endif %}, {{ mps }} {{ plural(mps, "poslanik", "poslanika", "poslanika") }} na spiskovima glasanja, {{ n.sittings }} {{ plural(n.sittings, "sednica", "sednice", "sednica") }} sa usvojenim zakonima.</p>
+<p class="conv-links"><a class="button" href="{{ cv.page }}">Zakoni ovog saziva</a> <a class="button" href="{{ cv.mps_page }}">Poslanici ovog saziva</a></p>
+
+<section>
+  <h2>U brojkama</h2>
+  <ul class="facts-line">
+    <li><b>{{ (100 * n.treaties / n.laws)|round|int }}%</b> zakona su potvrđeni međunarodni ugovori</li>
+    {% if n.with_bill %}<li><b>{{ (100 * n.urgent / n.with_bill)|round|int }}%</b> po hitnom postupku</li>{% endif %}
+    {% if n.days is not none %}<li>polovina zakona usvojena za <b>{{ n.days }}</b> {{ plural(n.days, "dan", "dana", "dana") }} ili manje od podnošenja predloga</li>{% endif %}
+    {% if n.voted %}<li><b>{{ (100 * n.unopposed / n.voted)|round|int }}%</b> bez ijednog glasa protiv</li>{% endif %}
+  </ul>
+  <p class="label">Ista pravila za svaki saziv; poređenje svih saziva je na strani <a href="brojke.html">Skupština u brojkama</a>. {{ how("brojke") }}</p>
+</section>
+
+{% if key_votes %}
+<section>
+  <h2>Izdvojena glasanja</h2>
+  <ul class="rows compact">
+  {% for it in key_votes %}
+    <li class="row"><div class="row-main"><a class="row-title" href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a>
+      <p class="row-meta">{{ it.law.passed|day }}{% if it.aka %} · {{ it.law.short }}{% endif %}{% if it.urgent %} · hitan postupak{% endif %}</p></div>
+      <div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div></li>
+  {% endfor %}
+  </ul>
+  <p class="label">Zakoni koje javnost zna pod drugim imenom i zakoni sa najvećim udelom glasova protiv u sazivu. {{ how("izdvojena") }}</p>
+</section>
+{% endif %}
+
+{% if n.groups %}
+<section>
+  <h2>Poslaničke grupe</h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Grupa</th><th class="num">Najviše članova</th><th class="num">Za</th><th class="num">Protiv</th><th class="num">Glasa kao većina grupe</th></tr></thead>
+    <tbody>
+    {% for g in n.groups %}<tr><td><a href="grupa/{{ g.slug }}.html">{{ g.name }}</a></td><td class="num">{{ g.members }}</td><td class="num v-text-za">{{ g.lines.za or "" }}</td><td class="num v-text-protiv">{{ g.lines.protiv or "" }}</td><td class="num">{{ (100 * g.cohesion)|round|int }}%</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Za i protiv: konačna glasanja o zakonima na kojima je većina grupe tako glasala. {{ how("grupa") }}</p>
+</section>
+{% endif %}
+
+{% if sittings %}
+<section class="more">
+  <h2>Sednice <span class="count">{{ sittings|length }}</span></h2>
+  <ul class="plain sittings-list">
+  {% for s in sittings[:12] %}<li><span class="meta">{{ s.day|day }}</span> <a href="sednica/{{ s.slug }}.html">{{ s.title|latin }}</a> <span class="meta">· {{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }}</span></li>{% endfor %}
+  </ul>
+  {% if sittings|length > 12 %}<p><a href="sednice.html#saziv-{{ conv }}">Svih {{ sittings|length }} sednica ovog saziva</a></p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

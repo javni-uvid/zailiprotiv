@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Sednice — Za ili Protiv{% endblock %}
-{% block description %}Sednice Narodne skupštine na kojima su usvajani zakoni, po datumu.{% endblock %}
+{% block description %}Sednice Narodne skupštine na kojima su usvajani zakoni, po sazivima i datumu.{% endblock %}
 {% block main %}
 <h1>Sednice</h1>
-<p class="meta">Sednice na kojima su usvajani zakoni, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv.</p>
-<ul class="plain sittings-list">
-{% for s in sittings %}<li><span class="meta">{{ s.day|day }}</span> <a href="sednica/{{ s.slug }}.html">{{ s.title|latin }}</a> <span class="meta">· {{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span></span></li>{% endfor %}
-</ul>
+<p class="meta">Sednice na kojima su usvajani zakoni, po sazivima, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv. Sazvane sednice čiji rezultati još nisu objavljeni su na strani <a href="u-proceduri.html#sednice">U proceduri</a>.</p>
+<nav class="page-menu" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav>
+{% for cv, ss in by_conv if ss %}
+<section id="saziv-{{ cv.n }}">
+  <h2><a href="{{ cv.saziv_page }}">{{ cv.name }} saziv</a> <span class="count">{{ cv.years }} · {{ ss|length }} {{ "sednica" if ss|length % 10 == 1 and ss|length % 100 != 11 else ("sednice" if ss|length % 10 in [2, 3, 4] and ss|length % 100 not in [12, 13, 14] else "sednica") }}</span></h2>
+  <ul class="plain sittings-list">
+  {% for s in ss %}<li><span class="meta">{{ s.day|day }}</span> <a href="sednica/{{ s.slug }}.html">{{ s.title|latin }}</a> <span class="meta">· {{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span></span></li>{% endfor %}
+  </ul>
+</section>
+{% endfor %}
 {% endblock %}

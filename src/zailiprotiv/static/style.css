@@ -286,3 +286,9 @@ td.lean { white-space: nowrap; }
 .q-real { margin: .6rem 0 0; }
 .q-result { padding-top: 1rem; border-top: 2px solid var(--ink, currentColor); }
 .spot-more { margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; }
+.coming { margin: .8rem 0; }
+.coming h3 { margin: 0 0 .4rem; font-family: var(--serif); font-size: 1.2rem; }
+.coming ol { margin: .5rem 0 0; padding-left: 1.4rem; font-size: .93rem; }
+.coming li { margin: .25rem 0; }
+.conv-links { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0 0; }
+.proc .row-title { font-size: 1.02rem; line-height: 1.35; }
