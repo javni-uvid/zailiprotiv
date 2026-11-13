@@ -386,6 +386,13 @@ These are the project's promises to its readers. Never change them without the m
      pages point to the one copy. What the scripts write is put in Cyrillic by an observer in `site.js`; search
      compares everything in Latin, so either script finds either. The typeface's Cyrillic subset is in
      `static/fonts`. The share pictures and the feeds stay Latin. `zailiprotiv site --latin-only` skips it.
+  6l. **replies and the chair's measures** (13 Nov 2026, the maintainer: "can we find the debates and personal
+     quarrels?"; `pages_floor.py`, no model): from the notes read, the places where the chair pronounces a warning,
+     takes the floor away or removes an MP ("изричем вам опомену", `MEASURES`), with the chair's words and the speech
+     before them, and exchanges of replies (two speakers taking turns four times or more in a day, no speech over
+     400 words), every speech in full. `replike.html` and one page per earlier convocation; an MP's exchanges are
+     listed on the MP's page. The rule can't tell whether an exchange is personal and the page doesn't claim it; to
+     whom a measure went is not written by us. Stenographers' page marks are taken out of the text shown.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

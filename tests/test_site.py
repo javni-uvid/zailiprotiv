@@ -224,3 +224,16 @@ def test_the_cyrillic_edition(tmp_path):
     assert "Закон о оружју" in text and "гласа" in text and not re.search(r"\b(Zakon|glasao|protiv|poslanik)\b", text)
     assert "cir/zakon/zakon-o-oruzju</loc>" in (out / "sitemap.xml").read_text()
     assert site.check(out) == []
+
+
+def test_replies_and_the_chairs_measures_are_found_by_rule():
+    from zailiprotiv import pages_floor
+    say = lambda who, text, chair=False: {"speaker": who, "text": text, "chair": chair, "day": 1}
+    speeches = [say("А", "Први."), say("ПРЕДСЕДНИК", "Реч има Б.", True), say("Б", "Одговор."), say("А", "Реплика."),
+                say("Б", "Опет."), say("ПРЕДСЕДНИК", "Господине Б, изричем вам опомену.\n39/2AL/JG", True),
+                say("В", "Нешто треће."), say("ПРЕДСЕДНИК", "Могао бих да вам изрекнем опомену, али нећу.", True)]
+    runs = pages_floor.exchanges(speeches)
+    assert [[s["speaker"] for s in r] for r in runs] == [["А", "Б", "А", "Б"]]
+    found = pages_floor.measures(speeches)
+    assert [(m["kind"], m["before"]["speaker"]) for m in found] == [("opomena", "Б")]
+    assert pages_floor.spoken(speeches[5]["text"]) == "Господине Б, изричем вам опомену."

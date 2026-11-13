@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, how with context %}
+{% block title %}Replike i opomene, {{ c.name|lower }} saziv — Za ili Protiv{% endblock %}
+{% block description %}Razmene replika između poslanika i mere koje je izrekao predsedavajući (opomena, oduzimanje reči, udaljenje sa sednice), doslovno iz stenografskih beleški Narodne skupštine.{% endblock %}
+{% block main %}
+{% macro person(p) %}{% if p.slug %}<a href="poslanik/{{ p.slug }}.html">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% endmacro %}
+<h1>Replike i opomene</h1>
+<p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
+<p class="meta">Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali (sednice zakona sa najviše glasova protiv). Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
+<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
+<section id="saziv-{{ c.n }}">
+  <h2>{{ c.name }} saziv <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana sednica", "pročitane sednice", "pročitanih sednica") }}</span></h2>
+  {% if c.measures %}
+  <h3>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h3>
+  <ul class="floor">
+  {% for e in c.measures %}
+    <li id="{{ e.id }}">
+      <p class="floor-head"><b>{{ e.label }}</b> · {{ e.date|day }} · {{ e.sitting }}</p>
+      <blockquote class="said"><p>{{ e.chair.text|latin }}</p><footer>Predsedavajući{% if e.notes %} · <a href="{{ e.notes }}">beleške tog dana</a>{% endif %}</footer></blockquote>
+      {% if e.before %}<details><summary>Govor pre toga: {{ e.before_who.name }}</summary><blockquote class="said"><p>{{ e.before.text|latin }}</p><footer>{{ person(e.before_who) }}</footer></blockquote></details>{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  {% if c.exchanges %}
+  <h3>Razmene replika <span class="count">{{ c.exchanges|length }}</span></h3>
+  <ul class="floor">
+  {% for e in c.exchanges %}
+    <li id="{{ e.id }}">
+      <p class="floor-head"><b>{{ person(e.a) }} i {{ person(e.b) }}</b> · {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ e.date|day }} · {{ e.sitting }}</p>
+      <details><summary>Cela razmena, od reči do reči</summary>
+      {% for s in e.speeches %}<blockquote class="said"><p>{{ s.text|latin }}</p><footer>{{ person(s.who) }}</footer></blockquote>{% endfor %}
+      {% if e.notes %}<p class="meta"><a href="{{ e.notes }}">Stenografske beleške tog dana</a> (privremene, neautorizovane)</p>{% endif %}
+      </details>
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+<p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština. Reči predsedavajućeg između dva govora u razmeni nisu prikazane; cele su u beleškama.</p>
+{% endblock %}

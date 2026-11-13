@@ -559,6 +559,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                     "hitan postupak" if it["urgent"] else "")
         (out / "zakon" / f"{args['it']['slug']}.html").write_text(
             env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now), encoding="utf-8")
+    # Replies and the chair's measures, from the notes read; each MP's exchanges go on the MP's page.
+    from zailiprotiv import pages_floor
+    exchanges_of = pages_floor.render(env=env, common=common, out=out, debates=debates, people=people, convs=convs)
     # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
     # four with the largest share of votes against. Shown on MP pages, group pages and in "Glasaj i ti".
     key_votes: dict[str, list] = {}
@@ -660,7 +663,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table, areas_table=areas_table, periods=periods,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
-            timeline=timeline, key_votes=keys_, group_slug=group_slug,
+            timeline=timeline, key_votes=keys_, group_slug=group_slug, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")

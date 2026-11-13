@@ -44,7 +44,7 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
+{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke), ("replike", "Replike", exchanges), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
 {% if key_votes %}
 <section id="kljucna">
@@ -78,6 +78,15 @@
   {% endif %}
   <p class="label">Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025), najmanje 20. Govori i reči samo iz stenograma koje imamo. {{ how("aktivnost") }} (<a class="how" href="../kako-racunamo.html#reci">i za reči</a>)</p>
 </section>
+{% if exchanges %}
+<section id="replike">
+  <h2>Razmene replika <span class="count">{{ exchanges|length }}</span></h2>
+  <ul class="plain sittings-list">
+  {% for e in exchanges[:8] %}<li><span class="meta">{{ e.date|day }}</span> <a href="../{{ e.page }}#{{ e.id }}">sa: {{ e.b.name if e.a.slug == mp.slug else e.a.name }}</a> <span class="meta">· {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ e.sitting }}</span></li>{% endfor %}
+  </ul>
+  <p class="label">Kad dvoje govornika četiri ili više puta zaredom govore naizmenično, u beleškama koje smo pročitali. Cela razmena je od reči do reči na strani <a href="../replike.html">Replike i opomene</a>. {{ how("replike") }}</p>
+</section>
+{% endif %}
 {% endif %}
 
 {% if profile %}
