@@ -252,3 +252,18 @@ td.lean { white-space: nowrap; }
 .period[hidden] { display: none; }
 .period-sum { margin-top: 1rem; }
 @media (max-width: 640px) { .period-tabs { flex-wrap: nowrap; overflow-x: auto; } .period-tabs button { white-space: nowrap; } }
+
+/* Home page: votes picked out by a rule */
+.spotlight { padding: 2.2rem 0 1.4rem; border-bottom: 1px solid var(--line); }
+.spotlight > .meta { margin-top: -.3rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 1rem; margin-top: 1.2rem; }
+.card { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 6px; padding: 1.1rem 1.2rem 1rem; }
+.card .kicker { margin-bottom: .4rem; }
+.card h3 { margin: 0 0 .2rem; font-family: var(--serif); font-size: 1.2rem; line-height: 1.25; }
+.card h3 a { color: inherit; text-decoration: none; }
+.card h3 a:hover { text-decoration: underline; }
+.card-official { margin: 0 0 .5rem; font-size: .85rem; color: var(--muted); }
+.card-gist { margin: .3rem 0 .8rem; font-size: .92rem; line-height: 1.45; }
+.card-vote { margin-top: auto; }
+.card-outcome { margin: 0 0 .35rem; font-size: .9rem; }
+.card-why { margin: .6rem 0 0; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }

@@ -254,6 +254,27 @@ def against_by_group(vote: dict) -> list[tuple[str, int]]:
     return sorted(c.items(), key=lambda kv: (-kv[1], collate(kv[0])))
 
 
+def spotlight(all_items: list[dict], current: list[dict], skip: str | None, n: int = 6) -> list[dict]:
+    """Votes picked out on the home page, by a rule rather than by hand: laws the public knows by another name
+    (one per name, newest first), then the most divided laws of the current convocation."""
+    out, names, keys = [], set(), {skip}
+    named = sorted((it for it in all_items if it["aka"] and it["final"]), key=lambda it: it["law"].get("passed") or "",
+                   reverse=True)
+    for it in named:
+        if it["aka"][0] in names or it["key"] in keys:
+            continue
+        names.add(it["aka"][0]); keys.add(it["key"])
+        out.append({**it, "why": "naziv iz javnosti", "share": against_share(it["final"]["counts"])})
+    out = out[:n - 2] if len(out) > n - 2 else out
+    for it in most_against(current, n * 2):
+        if len(out) >= n:
+            break
+        if it["key"] not in keys and not (it["aka"] and it["aka"][0] in names):
+            keys.add(it["key"])
+            out.append({**it, "why": "podelio Skupštinu"})
+    return sorted(out, key=lambda it: it["law"].get("passed") or "", reverse=True)
+
+
 def most_against(items: list[dict], n: int) -> list[dict]:
     """The laws whose final vote had the largest share against, the same rule for every law; ties go to more
     votes against, then the newer law."""
@@ -577,6 +598,8 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
              "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people)}
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, stats=stats, latest=items[:6], contested=most_against(items, 9), root="",
+        spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
+                            (most_against(items, 1) or [{}])[0].get("key")),
         featured=next((it for it in most_against(items, 9) if len(it["pair"]) == 2), None),
         ranked=most_against([it for its in items_by_conv.values() for it in its], 8),
         kinds_count=[(k, kinds.KINDS[k], n) for k, n in sorted(Counter(it["law"].get("kind", "other") for it in items)

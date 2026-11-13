@@ -43,6 +43,29 @@
 {% endif %}
 {% endif %}
 
+{% if spotlight %}
+<section class="spotlight" aria-labelledby="izdvojeno">
+  <h2 id="izdvojeno">Izdvojena glasanja</h2>
+  <p class="meta">Zakoni koje javnost zna pod drugim imenom i zakoni koji su najviše podelili Skupštinu u ovom sazivu. Bira ih isto pravilo, ne urednik.</p>
+  <div class="cards">
+  {% for it in spotlight %}
+    <article class="card">
+      <p class="kicker muted">{{ it.law.passed|day }}{% if it.areas %} · {{ it.areas[0]|latin }}{% endif %}</p>
+      <h3><a href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a></h3>
+      {% if it.aka %}<p class="card-official">{{ it.law.short }}</p>{% endif %}
+      {% if it.gist %}<p class="card-gist">{{ it.gist|latin|truncate(220, killwords=False, end="…") }}</p>{% endif %}
+      <div class="card-vote">
+        <p class="card-outcome"><b>Usvojen</b> <span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span>{% if it.urgent %} · hitan postupak{% endif %}</p>
+        {{ bar(it.final.counts) }}
+        {% if it.against %}<p class="row-meta">Protiv: {% for g, n in it.against[:3] %}{{ g }} {{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+      </div>
+      <p class="card-why">{{ it.why }}</p>
+    </article>
+  {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 <section id="zakoni">
   <h2 id="lista-naslov">Zakoni koji su podelili Skupštinu</h2>
   <div class="finder js-only" hidden>
