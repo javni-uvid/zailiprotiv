@@ -361,6 +361,11 @@ These are the project's promises to its readers. Never change them without the m
      like the bills of adopted laws (`cli._waiting`: `bills` and `summaries` take them from `procedure.json`), their
      gist shown on "U proceduri"; **votes**, **transcripts** and **summaries** open (or comment on) one GitHub issue
      when a run fails.
+  6j. **the week in the Assembly** (13 Nov 2026, `digest.py`): a page per week with a law passed or a bill submitted
+     (`nedelja/<ISO year>-<week>.html`), the list (`nedelje.html`) and a feed with each week's text in full
+     (`nedelje.xml`, twelve weeks), made by rule with no editor's choice. The newsletter is that feed sent by a
+     mailing service ("RSS to e-mail"); the site keeps no addresses. `newsletter_url` in `data/settings.json`
+     (the service's sign-up page) shows a link "Primaj e-poštom"; empty until the maintainer picks a service.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

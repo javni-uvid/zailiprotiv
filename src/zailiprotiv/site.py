@@ -682,6 +682,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
     from zailiprotiv import pages_procedure
     coming, waiting = pages_procedure.render(common=common, current=current, env=env,
         items_by_conv=items_by_conv, loaded=loaded, out=out, root=root)
+    from zailiprotiv import digest
+    digest.render(env=env, common=common, out=out, root=root, current=current, items_by_conv=items_by_conv,
+                  site_url=f"https://{domain}/" if domain else "")
     # What the page's own script searches and filters: every law and MP, in one file fetched on first use.
     index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"] + " " + " ".join(it.get("aka") or []), "s": it["slug"], "d": it["law"].get("passed") or "",
                        "za": it["final"]["counts"]["za"] if it["final"] else None,

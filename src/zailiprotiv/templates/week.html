@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, plural, how with context %}
+{% block title %}U Skupštini, {{ w.span }} — Za ili Protiv{% endblock %}
+{% block description %}Nedelja u Narodnoj skupštini, {{ w.span }}: {{ w.n }} {{ plural(w.n, "usvojen zakon", "usvojena zakona", "usvojenih zakona") }}{% if w.bills %}, {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }}{% endif %}.{% endblock %}
+{% block feeds %}
+<link rel="alternate" type="application/atom+xml" title="Nedelja u Skupštini" href="../nedelje.xml">{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="../nedelje.html">Nedelja u Skupštini</a></p>
+<h1>{{ w.span }}</h1>
+<p class="standfirst">{% if w.n %}Skupština je usvojila {{ w.n }} {{ plural(w.n, "zakon", "zakona", "zakona") }}{% if w.opposed %}, od toga {{ w.opposed }} sa glasovima protiv{% else %}, nijedan sa glasom protiv{% endif %}{% if w.urgent %}; {{ w.urgent }} po hitnom postupku{% endif %}.{% else %}Skupština ove nedelje nije usvojila nijedan zakon.{% endif %}{% if w.bills %} Podneto je {{ w.bills|length }} {{ plural(w.bills|length, "predlog zakona koji", "predloga zakona koja", "predloga zakona koji") }} još {{ plural(w.bills|length, "čeka", "čekaju", "čeka") }}.{% endif %}</p>
+{% if w.laws %}
+<section>
+  <h2>Usvojeno <span class="count">{{ w.n }}</span></h2>
+  <ol class="rows">
+  {% for it in w.laws %}
+    <li class="row">
+      <div class="row-main">
+        <a class="row-title" href="../zakon/{{ it.slug }}.html">{{ it.law.short }}</a>
+        {% if it.gist and loop.index <= 5 %}<p class="proc-gist">{{ it.gist|latin|truncate(240, killwords=False, end=" …") }}</p>{% endif %}
+        <p class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.against %} · protiv: {% for g, n in it.against[:3] %}{{ g }} {{ n }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p>
+      </div>
+      {% if it.final %}<div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div>{% endif %}
+    </li>
+  {% endfor %}
+  </ol>
+  <p class="label">Od zakona sa najvećim udelom glasova protiv. Opis uz prvih pet je AI sažetak predlagačevog obrazloženja.</p>
+</section>
+{% endif %}
+{% if w.bills %}
+<section>
+  <h2>Novi predlozi <span class="count">{{ w.bills|length }}</span></h2>
+  <ul class="rows compact proc">
+  {% for b in w.bills %}<li class="row"><div class="row-main"><a class="row-title" href="{{ b.pdf }}">{{ b.title|latin }}</a><p class="row-meta">{{ b.proposer|latin }} · podnet {{ b.submitted|day }}</p></div></li>{% endfor %}
+  </ul>
+  <p class="label">Predlozi podneti ove nedelje koje smo videli na spisku Skupštine „u proceduri“. <a href="../u-proceduri.html">Svi predlozi koji čekaju</a></p>
+</section>
+{% endif %}
+<p class="week-nav">{% if older %}<a href="{{ older.key }}.html">← {{ older.span }}</a>{% endif %}{% if newer %}<a href="{{ newer.key }}.html">{{ newer.span }} →</a>{% endif %}</p>
+<p class="meta foot-note">Pregled se pravi sam, iz istih podataka kao ostatak sajta, bez uredničkog izbora. <a href="../nedelje.xml">Prati nedeljni pregled (RSS)</a>{% if newsletter_url %} · <a href="{{ newsletter_url }}" rel="noopener">Primaj ga e-poštom</a>{% endif %}</p>
+{% endblock %}

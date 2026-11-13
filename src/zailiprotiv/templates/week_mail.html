@@ -1,0 +1,12 @@
+{% macro plural(n, one, few, many) %}{% if n % 10 == 1 and n % 100 != 11 %}{{ one }}{% elif n % 10 in [2, 3, 4] and n % 100 not in [12, 13, 14] %}{{ few }}{% else %}{{ many }}{% endif %}{% endmacro -%}
+<p>{% if w.n %}Skupština je od {{ w.span }} usvojila {{ w.n }} {{ plural(w.n, "zakon", "zakona", "zakona") }}{% if w.opposed %}, od toga {{ w.opposed }} sa glasovima protiv{% endif %}.{% else %}U nedelji {{ w.span }} Skupština nije usvojila nijedan zakon.{% endif %}{% if w.bills %} Podneto je {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }} zakona.{% endif %}</p>
+{% if w.laws %}<h3>Usvojeno</h3>
+<ul>
+{% for it in w.laws[:12] %}<li><a href="{{ site }}zakon/{{ it.slug }}.html">{{ it.law.short }}</a>{% if it.final %}: {{ it.final.counts.za }} za, {{ it.final.counts.protiv }} protiv{% endif %}{% if it.urgent %}, hitan postupak{% endif %}{% if it.gist and loop.index <= 3 %}<br>{{ it.gist|latin|truncate(240, killwords=False, end=" …") }}{% endif %}</li>
+{% endfor %}</ul>
+{% if w.laws|length > 12 %}<p>I još {{ w.laws|length - 12 }}: <a href="{{ url }}">ceo pregled nedelje</a>.</p>{% endif %}{% endif %}
+{% if w.bills %}<h3>Novi predlozi</h3>
+<ul>
+{% for b in w.bills[:10] %}<li><a href="{{ b.pdf }}">{{ b.title|latin }}</a> ({{ b.proposer|latin|truncate(80, killwords=False, end=" …") }})</li>
+{% endfor %}</ul>{% endif %}
+<p><a href="{{ url }}">Ceo pregled na sajtu</a>. Pregled se pravi sam iz dokumenata Narodne skupštine; opisi zakona su AI sažeci predlagačevog obrazloženja.</p>

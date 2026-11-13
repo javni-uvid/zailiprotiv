@@ -196,3 +196,13 @@ def test_links_without_html_when_published(tmp_path):
     assert "/zakon/zakon-o-oruzju\"" in (out / "zakoni.xml").read_text()
     assert 'href="podaci.html"' in home  # beside the folder podaci/, so it keeps its ending
     assert '+ ".html"' not in (out / "site.js").read_text() and '+ ".html"' not in (out / "glasaj.js").read_text()
+
+
+def test_the_week_in_the_assembly_and_its_feed(tmp_path):
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs")
+    week = (out / "nedelja" / "2026-28.html").read_text()  # the law in the test data was passed on 10 July 2026
+    assert "6–12. jul 2026." in week and "zakon-o-oruzju.html" in week
+    feed = (out / "nedelje.xml").read_text()
+    assert '<content type="html">' in feed and "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in feed
+    assert "nedelja/2026-28.html" in (out / "nedelje.html").read_text()

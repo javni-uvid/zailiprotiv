@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural with context %}
+{% block title %}Nedelja u Skupštini — Za ili Protiv{% endblock %}
+{% block description %}Nedeljni pregled rada Narodne skupštine Srbije: usvojeni zakoni i novi predlozi, nedelju po nedelju.{% endblock %}
+{% block feeds %}
+<link rel="alternate" type="application/atom+xml" title="Nedelja u Skupštini" href="nedelje.xml">{% endblock %}
+{% block main %}
+<h1>Nedelja u Skupštini</h1>
+<p class="standfirst">Šta je Skupština usvojila i šta je novo podneto, nedelju po nedelju.</p>
+<p class="conv-links"><a class="button" href="nedelje.xml">Prati (RSS)</a>{% if newsletter_url %} <a class="button" href="{{ newsletter_url }}" rel="noopener">Primaj e-poštom</a>{% endif %}</p>
+<p class="meta">Pregled se pravi sam, bez uredničkog izbora; nedelje bez usvojenih zakona i novih predloga nisu na spisku.{% if newsletter_url %} Bilten šalje spoljni servis; adrese e-pošte ne čuvamo mi.{% endif %}</p>
+{% for year, group in weeks|groupby("monday.year")|reverse %}
+<section>
+  <h2>{{ year }}.</h2>
+  <ul class="plain sittings-list">
+  {% for w in group|reverse %}<li><a href="nedelja/{{ w.key }}.html">{{ w.span }}</a> <span class="meta">{% if w.n %}· {{ w.n }} {{ plural(w.n, "zakon", "zakona", "zakona") }}{% if w.opposed %} · <span class="t-protiv">{{ w.opposed }} sa glasovima protiv</span>{% endif %}{% endif %}{% if w.bills %} · {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }}{% endif %}</span></li>{% endfor %}
+  </ul>
+</section>
+{% endfor %}
+{% endblock %}
