@@ -362,6 +362,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
                       trim_blocks=True, lstrip_blocks=True)
     area_slug = lambda a: slug(latin(a))[:80]
+    env.globals.update(hemicycle=hemicycle)
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     if out.exists():
         shutil.rmtree(out)
@@ -743,7 +744,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         (x["final"]["sitting"] for x in items if x["final"]), None)]
     last_sitting.sort(key=lambda it: -(it["final"]["counts"]["protiv"] or 0))
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, divisive=divisive, seats=hemicycle(divisive["final"]["counts"]) if divisive else [],
+        **common, divisive=divisive,
         quiz_laws=getattr(pages_quiz.render, "laws", []), floor_top=getattr(pages_floor.render, "top", {}).get(active),
         last_sitting=last_sitting, last_sitting_slug=sitting_page(last_sitting[0]["final"]["sitting"], last_sitting[0]["final"]["sitting_title"]) if last_sitting else "",
         stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",

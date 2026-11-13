@@ -493,3 +493,22 @@ td.lean { white-space: nowrap; }
 .q-face { width: 3.5rem; height: 4.6rem; object-fit: cover; flex-shrink: 0; background: var(--card); }
 .row-face { width: 2.6rem; height: 3.4rem; object-fit: cover; flex-shrink: 0; background: var(--card); }
 @media (max-width: 600px) { .mp-photo { width: 5.5rem; margin-left: 1rem; } }
+
+/* The law's page: the title beside the chamber. */
+.law-hero { display: flex; flex-wrap: wrap; gap: 1.2rem 3rem; align-items: flex-end; margin: 0 0 .4rem; }
+.law-head { flex: 1 1 26rem; min-width: 0; }
+.law-chamber { flex: 0 1 21rem; min-width: 0; }
+.score-rest { font-size: 1rem; font-weight: 400; color: var(--muted); }
+/* Selected votes on the home page: a list with the chamber, not cards. */
+.spot { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); gap: 0 3.5rem; }
+.spot li { display: flex; gap: 1.2rem; align-items: center; padding: 1.1rem 0; border-top: 1px solid var(--line); }
+.spot-main { flex: 1 1 0; min-width: 0; }
+.spot h3 { margin: 0 0 .3rem; font-family: var(--serif); font-size: 1.3rem; line-height: 1.2; }
+.spot h3 a { color: inherit; }
+.spot-gist { margin: 0 0 .4rem; font-size: .95rem; line-height: 1.45; }
+.spot-vote { flex: 0 0 9.5rem; text-decoration: none; }
+.spot-vote .chamber text { font-size: 28px; }
+@media (max-width: 520px) { .spot-vote { flex-basis: 6.5rem; } }
+/* Areas and filters as words, not pills. */
+.tag { border: 0; padding: 0; border-radius: 0; font-size: .85rem; text-decoration: underline; text-underline-offset: 2px; }
+.tags { gap: .2rem .8rem; }

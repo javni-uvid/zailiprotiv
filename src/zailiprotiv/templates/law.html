@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, tally, quote, plural, how with context %}
+{% from "macros.html" import bar, chamber, tally, quote, plural, how with context %}
 {% block title %}{{ law.title }} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.title }}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
@@ -11,17 +11,20 @@
 {% set sd = it.said.debate if it.said else none %}
 {% set db = it.debate %}
 <p class="crumbs"><a href="../{{ it.conv_page }}">Zakoni — {{ it.conv_name }} saziv</a> › <a href="../{{ it.conv_page }}#{{ law.kind }}">{{ it.kind|latin }}</a></p>
+<div class="law-hero">
+<div class="law-head">
 <h1>{{ law.short }}</h1>
 {% if law.short != law.title %}<p class="official">{{ law.title }}</p>{% endif %}
 {% if it.aka %}<p class="meta aka">U javnosti i: {% for a in it.aka %}„{{ a }}“{% if not loop.last %}, {% endif %}{% endfor %}{% if it.aka_source %} (<a href="{{ it.aka_source }}" rel="nofollow">primer</a>){% endif %}</p>{% endif %}
-{% if it.areas %}<p class="tags">{% for a in it.areas %}<a class="tag" href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{% endfor %}</p>{% endif %}
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
+</div>
+{% if final %}<div class="law-chamber">{{ chamber(final.counts) }}</div>{% endif %}
+</div>
 
 {# 1. The outcome. #}
 {% if final %}
 <section class="outcome" aria-label="Konačno glasanje">
-  <p class="score"><span class="t-za">{{ final.counts.za }} za</span> <span class="sep">·</span> <span class="t-protiv">{{ final.counts.protiv }} protiv</span></p>
-  {{ bar(final.counts) }}
+  <p class="score"><span class="t-za">{{ final.counts.za }} za</span> <span class="sep">·</span> <span class="t-protiv">{{ final.counts.protiv }} protiv</span>{% set rest = (final.counts.uzdrzan or 0) + (final.counts.nije_glasao or 0) + (final.counts.nije_prisutan or 0) %}{% if rest %} <span class="score-rest">· {{ rest }} {{ plural(rest, "ostali", "ostalih", "ostalih") }}</span>{% endif %}</p>
   {% if it.against %}<p class="against"><span class="meta">Protiv su glasali:</span> {% for g, n in it.against %}<span class="g">{{ g }} <b>{{ n }}</b></span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
   {% else %}<p class="against meta">Niko nije glasao protiv.</p>{% endif %}
   <ul class="facts-line">
@@ -31,6 +34,7 @@
     {% if db and db.joint %}<li>rasprava zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}</li>{% endif %}
     {% if db and db.amendments %}<li>{{ db.amendments }} {{ plural(db.amendments, "amandman", "amandmana", "amandmana") }} u raspravi</li>{% endif %}
     {% if it.rank %}<li>{{ (100 * it.share)|round|int }}% glasova protiv, {{ it.rank }}. u sazivu ({{ how("protiv") }})</li>{% endif %}
+    {% if it.areas %}<li>{% for a in it.areas %}<a href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</li>{% endif %}
   </ul>
 </section>
 {% else %}

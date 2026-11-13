@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, how with context %}
+{% from "macros.html" import bar, chamber, plural, how with context %}
 {% block main %}
 <section class="home-hero">
   <div class="hero-text">
@@ -16,7 +16,7 @@
   {% set c = divisive.final.counts %}
   <a class="hero-vote" href="zakon/{{ divisive.slug }}.html">
     <span class="hero-kicker">Zakon koji je najviše podelio salu u poslednjih godinu dana</span>
-    <svg class="chamber" viewBox="0 0 340 180" role="img" aria-label="{{ c.za }} za, {{ c.protiv }} protiv, od 250 poslanika">{% for x, y, k in seats %}<circle class="s-{{ k }}" cx="{{ x }}" cy="{{ y }}" r="4"/>{% endfor %}<text x="170" y="170" text-anchor="middle"><tspan class="s-za">{{ c.za }}</tspan> : <tspan class="s-protiv">{{ c.protiv }}</tspan></text></svg>
+    {{ chamber(c) }}
     <span class="hero-law">{% if divisive.aka %}{{ divisive.aka[0][:1]|upper }}{{ divisive.aka[0][1:] }}: {% endif %}{{ divisive.law.short }}</span>
     <span class="hero-meta">{{ divisive.law.passed|day }}{% if divisive.urgent %} · hitan postupak{% endif %}{% if divisive.against %} · protiv: {% for g, n in divisive.against[:3] %}{{ g }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span>
   </a>
@@ -108,22 +108,18 @@
 <section class="spotlight" aria-labelledby="izdvojeno">
   <h2 id="izdvojeno">Izdvojena glasanja</h2>
   <p class="meta">Zakoni koje javnost zna pod drugim imenom i zakoni koji su najviše podelili Skupštinu u ovom sazivu. Bira ih isto pravilo, ne urednik.</p>
-  <div class="cards">
+  <ol class="spot">
   {% for it in spotlight %}
-    <article class="card">
-      <p class="kicker muted">{{ it.law.passed|day }}{% if it.areas %} · {{ it.areas[0]|latin }}{% endif %}</p>
-      <h3><a href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a></h3>
-      {% if it.aka %}<p class="card-official">{{ it.law.short }}</p>{% endif %}
-      {% if it.gist %}<p class="card-gist">{{ it.gist|latin|truncate(220, killwords=False, end="…") }}</p>{% endif %}
-      <div class="card-vote">
-        <p class="card-outcome"><b>Usvojen</b> <span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span>{% if it.urgent %} · hitan postupak{% endif %}</p>
-        {{ bar(it.final.counts) }}
-        {% if it.against %}<p class="row-meta">Protiv: {% for g, n in it.against[:3] %}{{ g }} {{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+    <li>
+      <div class="spot-main">
+        <h3><a href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a></h3>
+        {% if it.gist %}<p class="spot-gist">{{ it.gist|latin|truncate(200, killwords=False, end="…") }}</p>{% endif %}
+        <p class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.against %} · protiv: {% for g, n in it.against[:3] %}{{ g }} {{ n }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %} · {{ it.why|lower }}</p>
       </div>
-      <p class="card-why">{{ it.why }}</p>
-    </article>
+      <a class="spot-vote" href="zakon/{{ it.slug }}.html" aria-label="{{ it.final.counts.za }} za, {{ it.final.counts.protiv }} protiv">{{ chamber(it.final.counts) }}</a>
+    </li>
   {% endfor %}
-  </div>
+  </ol>
   <p class="spot-more"><a href="grupe.html">Kako glasaju poslaničke grupe</a> · <a href="brojke.html">Skupština u brojkama</a></p>
 </section>
 {% endif %}

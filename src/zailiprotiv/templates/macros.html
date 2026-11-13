@@ -27,3 +27,8 @@
 {%- endmacro %}
 
 {% macro how(anchor) %}<a class="how" href="{{ root }}kako-racunamo.html#{{ anchor }}">Kako računamo</a>{% endmacro %}
+
+{# The chamber: the count of a vote as 250 seats, for from the left, against from the right. #}
+{% macro chamber(counts) -%}
+<svg class="chamber" viewBox="0 0 340 180" role="img" aria-label="{{ counts.za }} za, {{ counts.protiv }} protiv, od 250 poslanika">{% for x, y, k in hemicycle(counts) %}<circle class="s-{{ k }}" cx="{{ x }}" cy="{{ y }}" r="4"/>{% endfor %}<text x="170" y="170" text-anchor="middle"><tspan class="s-za">{{ counts.za }}</tspan> : <tspan class="s-protiv">{{ counts.protiv }}</tspan></text></svg>
+{%- endmacro %}
