@@ -82,6 +82,10 @@
   <h2>Rasprava u Skupštini</h2>
   {% set n = db.joint|length %}
   <p>{% if db.n_days %}O zakonu se raspravljalo {{ db.n_days }} {{ plural(db.n_days, "dan", "dana", "dana") }}{% if db.first %}, {% if db.first == db.last %}{{ db.first|day_of }}{% else %}od {{ db.first|day_of }} do {{ db.last|day_of }}{% endif %}{% endif %}. {% endif %}{% if db.joint %}U načelu zajedno sa još {{ n }} {{ plural(n, "tačkom", "tačke", "tačaka") }} dnevnog reda{% else %}U načelu posebno{% endif %}{% if db.amendments %}, a zatim o {{ db.amendments }} {{ plural(db.amendments, "amandmanu", "amandmana", "amandmana") }} na ovaj zakon{% elif db.detail %}, a zatim o pojedinostima{% else %}; rasprave o amandmanima nije bilo{% endif %}.</p>
+  {% if floor %}
+  {% set fm = floor|selectattr("type", "equalto", "mera")|list %}{% set fr = floor|selectattr("type", "equalto", "razmena")|list %}
+  <p class="floor-line">U raspravi o ovoj tački:{% if fm %} {{ fm|length }} {{ plural(fm|length, "mera", "mere", "mera") }} predsedavajućeg ({% for e in fm %}<a href="../{{ e.page }}#{{ e.id }}">{{ e.label|lower }}{% if e.to %}, {{ e.to.name }}{% endif %}</a>{% if not loop.last %}; {% endif %}{% endfor %}){% endif %}{% if fm and fr %} i{% endif %}{% if fr %} {{ fr|length }} {{ plural(fr|length, "razmena", "razmene", "razmena") }} replika ({% for e in fr %}<a href="../{{ e.page }}#{{ e.id }}">{{ e.a.name }} i {{ e.b.name }}</a>{% if not loop.last %}; {% endif %}{% endfor %}){% endif %}. {{ how("replike") }}</p>
+  {% endif %}
   {% if sd %}
   {% for key, heading in [("predlagac", "Predlagač i Vlada"), ("podrska", "Za zakon"), ("zamerke", "Protiv zakona")] %}
   {% if sd[key] %}<h3>{{ heading }}</h3><ul>{% for x in sd[key] %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}

@@ -540,6 +540,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     for (key, g), how in line.items():
         lines_of[(finals[key]["conv"], g)].append((key, how))
     group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and slug(g)}
+    # Replies and the chair's measures, from the notes read; an MP's exchanges go on the MP's page, a law's on its page.
+    from zailiprotiv import pages_floor
+    exchanges_of, floor_of = pages_floor.render(env=env, common=common, out=out, debates=debates, people=people,
+                                                convs=convs, items_by_conv=items_by_conv)
     from zailiprotiv import card
     import os
     cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
@@ -558,10 +562,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             picture(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
                     "hitan postupak" if it["urgent"] else "")
         (out / "zakon" / f"{args['it']['slug']}.html").write_text(
-            env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now), encoding="utf-8")
-    # Replies and the chair's measures, from the notes read; each MP's exchanges go on the MP's page.
-    from zailiprotiv import pages_floor
-    exchanges_of = pages_floor.render(env=env, common=common, out=out, debates=debates, people=people, convs=convs)
+            env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now,
+                                                floor=floor_of.get(it["key"], [])), encoding="utf-8")
     # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
     # four with the largest share of votes against. Shown on MP pages, group pages and in "Glasaj i ti".
     key_votes: dict[str, list] = {}

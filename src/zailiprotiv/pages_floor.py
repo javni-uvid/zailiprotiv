@@ -45,60 +45,124 @@ def measures(speeches: list[dict]) -> list[dict]:
 
 
 def exchanges(speeches: list[dict]) -> list[list[dict]]:
-    """Runs of speeches in which two speakers take turns (the chair's words between them aside)."""
-    seq = [s for s in speeches if not s.get("chair")]
+    """Runs of speeches in which two speakers take turns, with the chair's words between them."""
+    idx = [i for i, s in enumerate(speeches) if not s.get("chair")]
     out, i = [], 0
-    while i < len(seq) - TURNS + 1:
-        a, b = seq[i]["speaker"], seq[i + 1]["speaker"]
+    while i < len(idx) - TURNS + 1:
+        a, b = speeches[idx[i]]["speaker"], speeches[idx[i + 1]]["speaker"]
         j = i
-        while (j < len(seq) and a != b and seq[j]["speaker"] == (a if (j - i) % 2 == 0 else b)
-               and seq[j]["day"] == seq[i]["day"] and len(seq[j]["text"].split()) <= SHORT):
+        while (j < len(idx) and a != b and speeches[idx[j]]["speaker"] == (a if (j - i) % 2 == 0 else b)
+               and speeches[idx[j]]["day"] == speeches[idx[i]]["day"] and len(speeches[idx[j]]["text"].split()) <= SHORT):
             j += 1
         if j - i >= TURNS:
-            out.append(seq[i:j])
+            out.append(speeches[idx[i]:idx[j - 1] + 1])
             i = j
         else:
             i += 1
     return out
 
 
-def render(*, env, common, out: Path, debates: dict, people: dict, convs: list) -> dict:
+_ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођице|колега|колегинице|посланиче|посланице|посланику|посланици)\s+"
+                        r"((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){1,3})")
+_POINT = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
+_PAUSE = re.compile(r"одређујем паузу|прекидам седницу|прекидам рад", re.I)
+
+
+def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
+    """The speaker a measure went to, when the chair's own sentence names them: a speaker of the sitting whose
+    surname stands in the sentence that pronounces the measure ("Господине Живковићу, … изричем вам опомену",
+    "Народном посланику Александру Јовановићу изричем опомену"), or failing that in the sentence before it. When two
+    speakers share the surname, the first name must be there too. None when nobody or more than one fits: the page
+    then shows the chair's words only."""
+    text = measure["chair"]["text"]
+    pattern = next(p for k, _, p in MEASURES if k == measure["kind"])
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    at = next((i for i, x in enumerate(sentences) if pattern.search(x)), 0)
+
+    def stems(word: str) -> set[str]:  # the word as it may stand in another case: "Живковићу", "Јованове", "Марији"
+        w = word.lower()
+        return {w, w[:-1], w[:-2]} if len(w) > 4 else {w}
+    for sentence in (sentences[at], sentences[at - 1] if at else ""):
+        # Only a name the chair addresses ("господине …", "посланику …") counts: another name in the sentence may be
+        # the person the speech was about ("зато што сте колеги Филиповићу рекли …").
+        fits = []
+        for m in _ADDRESSED.finditer(sentence):
+            words = re.findall(r"[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+", m.group(1))
+            said = set().union(*(stems(w) for w in words)) if words else set()
+            named = [name for name, surname in speakers.items() if surname in said]
+            if len(named) > 1:  # two with the surname: the first name decides
+                named = [n for n in named if n.split()[0].lower()[:4] in {w.lower()[:4] for w in words}]
+            fits += named
+        if len(set(fits)) == 1:
+            return fits[0]
+        if fits:
+            return None
+    return None
+
+
+def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict) -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
 
     def who(name: str) -> dict:
         key = loose.get(debates_.loose(mps.key(name)))
         return {"name": people[key].name if key else latin(name).title(), "slug": people[key].slug if key else ""}
 
-    by_conv, by_mp = [], defaultdict(list)
+    # The law debated under an agenda item of a sitting, where the notes tell.
+    law_at = {(it["final"]["sitting"], str(it["debate"]["item"])): it for its in items_by_conv.values() for it in its
+              if it.get("final") and it.get("debate") and it["debate"].get("item")}
+    by_conv, by_mp, by_law = [], defaultdict(list), defaultdict(list)
     for c, _ in convs:
-        events = []
+        events, sittings = [], []
         for url, notes in debates.get(c, {}).items():
             speeches = [{**notes["speeches"][k], "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
             days = {d["day"]: d for d in notes["days"]}
             title = latin(re.sub(r"^СТЕНОГРАФСКЕ БЕЛЕШКЕ\s*-\s*", "", notes["days"][0]["title"]).split(" - ")[0]) if notes["days"] else ""
+            agenda = notes["agenda"] if isinstance(notes["agenda"], dict) else dict(notes["agenda"])
+            # surnames of the sitting's speakers: the last word of the name as the notes write it
+            surnames = {s["speaker"]: s["speaker"].split()[-1].lower() for s in speeches if not s.get("chair") and s["speaker"].split()}
 
             def meta(s):
                 d = days.get(s["day"], {})
                 date = next((x for x in (d.get("date"), d.get("listed_date")) if re.fullmatch(r"\d{4}-\d\d-\d\d", x or "")), "")
-                return {"date": date, "notes": d.get("url", ""), "sitting": title,
-                        "sitting_url": url}
+                items = [str(i) for i in s.get("items") or []]
+                on = None
+                if 1 <= len(items) <= 3:  # a debate on one act (or a few): say which; a joint debate on dozens is not "on" any
+                    law = law_at.get((url, items[0]))
+                    on = {"text": latin(agenda.get(items[0], "")), "law": law, "more": len(items) - 1}
+                return {"date": date, "notes": d.get("url", ""), "sitting": title, "sitting_url": url, "on": on,
+                        "joint": len(items) if len(items) > 3 else 0}
+            found = []
             for m in measures(speeches):
-                events.append({"type": "mera", **m, **meta(m["chair"]), "id": f"m{len(events)}",
-                               "before_who": who(m["before"]["speaker"]) if m["before"] else None})
+                to = to_whom(m, surnames)
+                found.append({"type": "mera", **m, **meta(m["chair"]), "to": who(to) if to else None,
+                              "before_who": who(m["before"]["speaker"]) if m["before"] else None})
             for run in exchanges(speeches):
-                a, b = who(run[0]["speaker"]), who(run[1]["speaker"])
-                ev = {"type": "razmena", "a": a, "b": b, "speeches": [{"who": who(s["speaker"]), "text": s["text"]} for s in run],
-                      "n": len(run), **meta(run[0]), "id": f"r{len(events)}"}
-                events.append(ev)
-                for p in (a, b):
-                    if p["slug"]:
-                        by_mp[p["slug"]].append(ev)
+                pair = [s for s in run if not s.get("chair")]
+                a, b = who(pair[0]["speaker"]), who(pair[1]["speaker"])
+                found.append({"type": "razmena", "a": a, "b": b, "n": len(pair), **meta(pair[0]),
+                              "speeches": [{"who": who(s["speaker"]) if not s.get("chair") else None, "text": s["text"],
+                                            "side": "chair" if s.get("chair") else ("a" if s["speaker"] == pair[0]["speaker"] else "b")}
+                                           for s in run]})
+            events += found
+            dates = sorted(e["date"] for e in found if e["date"]) or sorted(
+                d.get("listed_date") or "" for d in notes["days"] if d.get("listed_date"))
+            sittings.append({"title": title, "date": dates[0] if dates else "", "days": len(notes["days"]),
+                             "measures": sum(1 for e in found if e["type"] == "mera"),
+                             "exchanges": sum(1 for e in found if e["type"] == "razmena"),
+                             "points": sum(1 for s in speeches if not s.get("chair") and _POINT.search(s["text"][:300])),
+                             "pauses": sum(1 for s in speeches if s.get("chair") and _PAUSE.search(s["text"]))})
         events.sort(key=lambda e: e["date"], reverse=True)
+        sittings.sort(key=lambda x: x["date"], reverse=True)
         for i, e in enumerate(events):
-            e["id"] = f"{c}-{i + 1}"
-            e["conv"] = c
+            e["id"], e["conv"] = f"e{c}-{i + 1}", c
+            if e["type"] == "razmena":
+                for p_ in (e["a"], e["b"]):
+                    if p_["slug"]:
+                        by_mp[p_["slug"]].append(e)
+            if e["on"] and e["on"]["law"]:
+                by_law[e["on"]["law"]["key"]].append(e)
         if events:
-            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events,
+            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events, "table": sittings,
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
                             "sittings": len(debates.get(c, {}))})
@@ -110,4 +174,4 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list) 
             e["page"] = c["page"]
         (out / c["page"]).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, root=""),
                                      encoding="utf-8")
-    return by_mp
+    return by_mp, by_law

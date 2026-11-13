@@ -4,38 +4,58 @@
 {% block description %}Razmene replika između poslanika i mere koje je izrekao predsedavajući (opomena, oduzimanje reči, udaljenje sa sednice), doslovno iz stenografskih beleški Narodne skupštine.{% endblock %}
 {% block main %}
 {% macro person(p) %}{% if p.slug %}<a href="poslanik/{{ p.slug }}.html">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% endmacro %}
+{% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
 <h1>Replike i opomene</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
-<p class="meta">Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali (sednice zakona sa najviše glasova protiv). Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
+<p class="meta">Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali. Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
 <nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
-<section id="saziv-{{ c.n }}">
-  <h2>{{ c.name }} saziv <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana sednica", "pročitane sednice", "pročitanih sednica") }}</span></h2>
-  {% if c.measures %}
-  <h3>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h3>
+<nav class="page-menu" aria-label="Na ovoj strani"><a href="#sednice">Po sednicama</a>{% if c.measures %}<a href="#mere">Mere predsedavajućeg ({{ c.measures|length }})</a>{% endif %}{% if c.exchanges %}<a href="#razmene">Razmene replika ({{ c.exchanges|length }})</a>{% endif %}</nav>
+
+<section id="sednice">
+  <h2>Po sednicama <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Sednica</th><th class="num">Dana</th><th class="num">Mere predsedavajućeg</th><th class="num">Razmene replika</th><th class="num">Ukazivanja na Poslovnik</th><th class="num">Pauze i prekidi</th></tr></thead>
+    <tbody>
+    {% for x in c.table %}<tr><td>{{ x.title }} <span class="meta nowrap">{{ x.date|day }}</span></td><td class="num">{{ x.days }}</td><td class="num">{{ x.measures or "" }}</td><td class="num">{{ x.exchanges or "" }}</td><td class="num">{{ x.points or "" }}</td><td class="num">{{ x.pauses or "" }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Ukazivanje na Poslovnik: govor poslanika koji na početku pominje povredu Poslovnika ili njegov član. Pauze i prekidi: mesta gde predsedavajući određuje pauzu ili prekida sednicu. Broj ne govori ko je za šta odgovoran: mere izriče predsedavajući.</p>
+</section>
+
+{% if c.measures %}
+<section id="mere">
+  <h2>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h2>
   <ul class="floor">
   {% for e in c.measures %}
     <li id="{{ e.id }}">
-      <p class="floor-head"><b>{{ e.label }}</b> · {{ e.date|day }} · {{ e.sitting }}</p>
+      <p class="floor-head"><b>{{ e.label }}</b>{% if e.to %}: {{ person(e.to) }}{% endif %} · {{ where(e) }}</p>
       <blockquote class="said"><p>{{ e.chair.text|latin }}</p><footer>Predsedavajući{% if e.notes %} · <a href="{{ e.notes }}">beleške tog dana</a>{% endif %}</footer></blockquote>
       {% if e.before %}<details><summary>Govor pre toga: {{ e.before_who.name }}</summary><blockquote class="said"><p>{{ e.before.text|latin }}</p><footer>{{ person(e.before_who) }}</footer></blockquote></details>{% endif %}
     </li>
   {% endfor %}
   </ul>
-  {% endif %}
-  {% if c.exchanges %}
-  <h3>Razmene replika <span class="count">{{ c.exchanges|length }}</span></h3>
+  <p class="label">Ime uz meru stoji samo kad predsedavajući u toj rečenici oslovi govornika prezimenom i kad to prezime na sednici nosi jedan govornik; inače su tu samo njegove reči.</p>
+</section>
+{% endif %}
+{% if c.exchanges %}
+<section id="razmene">
+  <h2>Razmene replika <span class="count">{{ c.exchanges|length }}</span></h2>
   <ul class="floor">
   {% for e in c.exchanges %}
     <li id="{{ e.id }}">
-      <p class="floor-head"><b>{{ person(e.a) }} i {{ person(e.b) }}</b> · {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ e.date|day }} · {{ e.sitting }}</p>
+      <p class="floor-head"><b>{{ person(e.a) }} i {{ person(e.b) }}</b> · {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ where(e) }}</p>
       <details><summary>Cela razmena, od reči do reči</summary>
-      {% for s in e.speeches %}<blockquote class="said"><p>{{ s.text|latin }}</p><footer>{{ person(s.who) }}</footer></blockquote>{% endfor %}
+      <div class="talk">
+      {% for s in e.speeches %}<div class="turn turn-{{ s.side }}"><p class="turn-who">{% if s.who %}{{ person(s.who) }}{% else %}Predsedavajući{% endif %}</p><p class="turn-text">{{ s.text|latin }}</p></div>{% endfor %}
+      </div>
       {% if e.notes %}<p class="meta"><a href="{{ e.notes }}">Stenografske beleške tog dana</a> (privremene, neautorizovane)</p>{% endif %}
       </details>
     </li>
   {% endfor %}
   </ul>
-  {% endif %}
 </section>
-<p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština. Reči predsedavajućeg između dva govora u razmeni nisu prikazane; cele su u beleškama.</p>
+{% endif %}
+<p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština.</p>
 {% endblock %}

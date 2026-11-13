@@ -233,7 +233,14 @@ def test_replies_and_the_chairs_measures_are_found_by_rule():
                 say("Б", "Опет."), say("ПРЕДСЕДНИК", "Господине Б, изричем вам опомену.\n39/2AL/JG", True),
                 say("В", "Нешто треће."), say("ПРЕДСЕДНИК", "Могао бих да вам изрекнем опомену, али нећу.", True)]
     runs = pages_floor.exchanges(speeches)
-    assert [[s["speaker"] for s in r] for r in runs] == [["А", "Б", "А", "Б"]]
+    assert [[s["speaker"] for s in r] for r in runs] == [["А", "ПРЕДСЕДНИК", "Б", "А", "Б"]]  # with the chair's words between
     found = pages_floor.measures(speeches)
     assert [(m["kind"], m["before"]["speaker"]) for m in found] == [("opomena", "Б")]
+    assert pages_floor.to_whom(found[0], {"А": "а", "Б": "б"}) is None  # "Господине Б": no surname of a speaker
+    call = {"kind": "opomena", "chair": {"text": "Извините, господине Ђуришићу. Господине Живковићу, зато што сте то рекли, изричем вам опомену."}}
+    assert pages_floor.to_whom(call, {"ЗОРАН ЖИВКОВИЋ": "живковић", "МАРКО ЂУРИШИЋ": "ђуришић"}) == "ЗОРАН ЖИВКОВИЋ"
+    about = {"kind": "opomena", "chair": {"text": "Господине Живковићу, зато што сте колеги Србиславу Филиповићу рекли то, изричем вам опомену."}}
+    assert pages_floor.to_whom(about, {"ЗОРАН ЖИВКОВИЋ": "живковић", "СРБИСЛАВ ФИЛИПОВИЋ": "филиповић"}) == "ЗОРАН ЖИВКОВИЋ"
+    victim = {"kind": "opomena", "chair": {"text": "Изричем вам опомену јер сте увредили Мартиновића."}}
+    assert pages_floor.to_whom(victim, {"АЛЕКСАНДАР МАРТИНОВИЋ": "мартиновић"}) is None
     assert pages_floor.spoken(speeches[5]["text"]) == "Господине Б, изричем вам опомену."

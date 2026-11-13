@@ -413,3 +413,14 @@ td.lean { white-space: nowrap; }
 .said p { margin: 0; font-family: var(--serif); font-size: 1.02rem; line-height: 1.5; white-space: pre-line; }
 .said footer { margin: .3rem 0 0; padding: 0; border: 0; max-width: none; font-size: .85rem; color: var(--muted); }
 .floor details > summary { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.floor-on { color: var(--muted); font-size: .92rem; }
+.talk { margin: .8rem 0; display: grid; gap: .7rem; max-width: 48rem; }
+.turn { padding: .7rem .9rem; border: 1px solid var(--line); }
+.turn-a { margin-right: 12%; border-left: 4px solid var(--fg); }
+.turn-b { margin-left: 12%; border-right: 4px solid var(--muted); background: var(--card); }
+.turn-chair { margin: 0 6%; border: 0; padding: 0 .9rem; color: var(--muted); font-size: .9rem; }
+.turn-who { margin: 0 0 .25rem; font-weight: 700; font-size: .9rem; }
+.turn-text { margin: 0; white-space: pre-line; line-height: 1.5; }
+.turn-chair .turn-text { font-style: italic; }
+@media (max-width: 600px) { .turn-a { margin-right: 5%; } .turn-b { margin-left: 5%; } .turn-chair { margin: 0; } }
+.floor-line { font-size: .95rem; }

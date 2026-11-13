@@ -391,8 +391,14 @@ These are the project's promises to its readers. Never change them without the m
      takes the floor away or removes an MP ("изричем вам опомену", `MEASURES`), with the chair's words and the speech
      before them, and exchanges of replies (two speakers taking turns four times or more in a day, no speech over
      400 words), every speech in full. `replike.html` and one page per earlier convocation; an MP's exchanges are
-     listed on the MP's page. The rule can't tell whether an exchange is personal and the page doesn't claim it; to
-     whom a measure went is not written by us. Stenographers' page marks are taken out of the text shown.
+     listed on the MP's page, a law's events on the law's page. An exchange is shown as a conversation, the chair's
+     words between; each event names the agenda item debated then (one to three items; in a joint debate only their
+     number, and the event belongs to no law). To whom a measure went is written only when the chair's sentence
+     addresses a speaker of the sitting by surname ("господине …", "посланику …"; a name merely mentioned doesn't
+     count), 25 of 69. A table per sitting counts measures, exchanges, points of order and pauses. The rule can't
+     tell whether an exchange is personal and the page doesn't claim it. Stenographers' page marks are taken out.
+     The current convocation's notes are read for every sitting (`transcripts --top 1000`); the earlier ones for
+     the laws with most votes against only, as each sitting's notes are 2–3 MB in the repository.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 
