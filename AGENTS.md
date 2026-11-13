@@ -319,6 +319,11 @@ These are the project's promises to its readers. Never change them without the m
      answers stay in sessionStorage; the page says the description is the proposer's side; Public Whip). This is the
      interaction for readers that needs no server. Not done: bills still in procedure and coming sittings (needs new
      reading of the Assembly's site), a finer scale of words.
+     "Glasaj i ti" was then made plain and playful at the maintainer's wish (13 Nov 2026): one law at a time, a
+     strip of numbered squares as the visitor's ballot, large Za/Protiv keys, after each vote the chamber's result
+     ("Glasao si protiv, kao 33 poslanika") with the bar growing, at the end the groups with most votes in common (ties
+     named, never one picked), a share button (the device's share sheet or the clipboard), and a point for and
+     against from the debate summary behind one click.
   6f. **bills in procedure and convened sittings** (the maintainer, 13 Nov 2026: "live" data): `procedure.py` reads
      the Assembly's page "Zakoni u proceduri" (title, PDF, day submitted, proposer) into `data/<N>/procedure.json`
      (current convocation only), which remembers when each bill was first and last listed, as the page keeps no
