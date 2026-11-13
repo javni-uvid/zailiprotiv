@@ -1,0 +1,17 @@
+# Look the site's domain up from outside, with DNSSEC, at the public resolvers. By hand.
+name: dns-check
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  dig:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for r in 1.1.1.1 8.8.8.8 9.9.9.9; do
+            echo "== $r"
+            for t in NS A DS; do echo "-- $t"; dig +dnssec +noall +comments +answer zailiprotiv.rs $t @$r | grep -E "status|flags|IN" ; done
+            echo "-- www"; dig +noall +comments +answer www.zailiprotiv.rs @$r | grep -E "status|IN"
+          done
+          echo "== registry"; dig +noall +answer +authority zailiprotiv.rs NS @a.nic.rs; dig +noall +answer +authority zailiprotiv.rs DS @a.nic.rs
+          echo "== cd (no validation)"; dig +cd +noall +comments +answer zailiprotiv.rs A @1.1.1.1 | grep -E "status|IN"
