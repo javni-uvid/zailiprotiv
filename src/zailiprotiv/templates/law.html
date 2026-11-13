@@ -67,7 +67,7 @@
     <thead><tr><th>Grupa</th><th class="vote-cell"></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
     <tbody>
     {% for g in groups %}
-      <tr><td>{% if group_slug.get((it.conv, g.group.strip("() "))) %}<a href="../grupa/{{ group_slug[(it.conv, g.group.strip("() "))] }}.html">{{ g.group }}</a>{% else %}{{ g.group }}{% endif %} <span class="meta nowrap">glasalo {{ g.za + g.protiv + g.uzdrzan }} od {{ g.total }}</span></td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
+      <tr><td>{% set now = group_now.get((it.conv, g.group.strip("() ")), g.group.strip("() ")) %}{% if group_slug.get((it.conv, now)) %}<a href="../grupa/{{ group_slug[(it.conv, now)] }}.html">{{ g.group }}</a>{% else %}{{ g.group }}{% endif %} <span class="meta nowrap">glasalo {{ g.za + g.protiv + g.uzdrzan }} od {{ g.total }}</span></td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table>

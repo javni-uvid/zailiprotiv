@@ -4,7 +4,7 @@
 {% block description %}Glasaj o {{ laws|length }} zakona iz ovog saziva i vidi sa kojim poslaničkim grupama i poslanicima se tvoji glasovi poklapaju.{% endblock %}
 {% block main %}
 <h1 class="q-h1">Kako bi ti glasao?</h1>
-<p class="standfirst q-lead">Glasaj o {{ laws|length }} {{ plural(laws|length, "zakonu", "zakona", "zakona") }}, pa vidi ko je u sali glasao kao ti.</p>
+<p class="standfirst q-lead">Glasaj o {{ laws|length }} {{ plural(laws|length, "zakonu", "zakona", "zakona") }}, pa vidi ko je u sali glasao kao ti.{% if of_conv %} Novi saziv još nije glasao o zakonima, pa su ovo zakoni prethodnog, {{ of_conv|lower }}g saziva.{% endif %}</p>
 {% if votes_api %}<p class="meta q-notice">Tvoji glasovi ulaze u zbir svih posetilaca. Šalje se samo „za“, „protiv“ ili „uzdržan“ za svaki zakon: bez imena i kolačića, a adresu i vreme ne čuvamo.</p>{% endif %}
 <noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
 <nav class="q-strip js-only" hidden id="q-strip" aria-label="Tvoj listić">{% for it in laws %}<button type="button" data-go="{{ loop.index0 }}" aria-label="Zakon {{ loop.index }}"><span>{{ loop.index }}</span></button>{% endfor %}<button type="button" data-go="kraj" class="q-strip-end" aria-label="Rezultat" disabled>Rezultat</button></nav>

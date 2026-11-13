@@ -24,6 +24,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
   actions: write
 
 concurrency:
@@ -71,3 +72,14 @@ jobs:
           gh workflow run transcripts.yml --ref main -f convocation=$c
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Tell the maintainer when this failed
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # One open issue per workflow, not one per failed run.
+          title="Workflow ${{ github.workflow }} ne prolazi"
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          n=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${{ github.repository }}" --body "Ponovo: $url"
+          else gh issue create -R "${{ github.repository }}" --title "$title" --body "Pokretanje nije prošlo: $url"; fi

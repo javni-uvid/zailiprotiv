@@ -34,3 +34,14 @@ def test_a_sittings_agenda_and_the_day_it_was_convened_for():
     # An agenda given in a sentence, not a list: none read, the day still is.
     other = (PAGES / "sednica.53810.43.html").read_text(encoding="utf-8")
     assert skupstina.agenda(other) == [] and skupstina.convened(other) == "2026-07-27T10:00"
+
+
+def test_a_reading_with_far_fewer_entries_does_not_replace_the_file(tmp_path, capsys):
+    import json
+
+    from zailiprotiv import cli
+    path = tmp_path / "laws.json"
+    path.write_text(json.dumps({"laws": {str(i): {} for i in range(100)}}))
+    assert cli._shrunk(path, "laws", 0) and cli._shrunk(path, "laws", 79) and "::warning::" in capsys.readouterr().out
+    assert not cli._shrunk(path, "laws", 80) and not cli._shrunk(path, "laws", 130)
+    assert not cli._shrunk(tmp_path / "none.json", "laws", 0)

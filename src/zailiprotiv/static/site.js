@@ -44,6 +44,11 @@
   function norm(s) {
     return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
   }
+  // Case endings off, so "budžetu" finds "budžet" and "Vučiću" finds "Vučić". Short words stay whole.
+  function stem(w) {
+    var m = w.length > 4 && w.match(/^(.{4,}?)(ovima|evima|ama|ima|om|em|og|eg|oj|ih|im|a|e|i|o|u)$/);
+    return m ? m[1] : w;
+  }
   function el(tag, cls, text) {
     var e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -64,7 +69,7 @@
       var q = norm(input.value.trim());
       list.textContent = "";
       if (q.length < 2 || !data) { list.hidden = true; return; }
-      var words = q.split(/\s+/), hits = [];
+      var words = q.split(/\s+/).map(stem), hits = [];
       function has(text) { var t = norm(text); return words.every(function (w) { return t.indexOf(w) >= 0; }); }
       if (kinds.indexOf("mp") >= 0) data.mps.forEach(function (m) {
         if (hits.length < 6 && has(m.n)) hits.push({ href: "poslanik/" + m.s + ".html", title: m.n, sub: m.g || "poslanik" });
@@ -167,9 +172,14 @@
   function norm(s) {
     return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
   }
+  // Case endings off, so "budžetu" finds "budžet" and "Vučiću" finds "Vučić". Short words stay whole.
+  function stem(w) {
+    var m = w.length > 4 && w.match(/^(.{4,}?)(ovima|evima|ama|ima|om|em|og|eg|oj|ih|im|a|e|i|o|u)$/);
+    return m ? m[1] : w;
+  }
   rows.forEach(function (r) { r._t = norm(r.querySelector(".row-main").textContent); });
   function apply() {
-    var words = norm(q.value.trim()).split(/\s+/).filter(Boolean), shown = 0;
+    var words = norm(q.value.trim()).split(/\s+/).filter(Boolean).map(stem), shown = 0;
     rows.forEach(function (r) {
       var ok = words.every(function (w) { return r._t.indexOf(w) >= 0; })
         && (!kind || (" " + r.dataset.k + " ").indexOf(" " + kind + " ") >= 0)

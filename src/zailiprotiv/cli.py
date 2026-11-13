@@ -21,6 +21,20 @@ ROOT = Path("data")
 DATA = ROOT / CURRENT  # the convocation's own folder; `--convocation N` before the command picks another
 
 
+def _shrunk(path: Path, what: str, now: int, counts=lambda v: True) -> bool:
+    """True, with a warning, when a new reading has far fewer entries than the file it would replace: the Assembly's
+    page then shows something else (a new convocation's empty list, an error page), and what was read is kept. A
+    convocation's laws and sittings only grow."""
+    if not path.exists():
+        return False
+    before = sum(1 for v in json.loads(path.read_text(encoding="utf-8"))[what].values() if counts(v))
+    if before >= 10 and now < before * 0.8:
+        print(f"::warning::{what}: the Assembly's page gives {now}, the file has {before}. Kept the file: has a new "
+              f"convocation taken over the page? See AGENTS.md, 'The Fifteenth convocation'.")
+        return True
+    return False
+
+
 def index(args) -> int:
     """The current convocation's sittings and the roll-call PDF of each agenda item, into data/index.json."""
     found = skupstina.index(convocation=CONVOCATION)
@@ -34,8 +48,10 @@ def index(args) -> int:
     }
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(jsonfile.dumps(store, "sittings"), encoding="utf-8")
     total = sum(len(s.votes) for s in found)
+    if _shrunk(out, "sittings", sum(1 for s in found if s.votes), lambda v: bool(v.get("votes"))):
+        return 0
+    out.write_text(jsonfile.dumps(store, "sittings"), encoding="utf-8")
     print(f"sittings: {len(found)}, roll calls: {total}")
     for s in found:
         print(f"  {len(s.votes):4}  {s.title[:100]}")
@@ -68,6 +84,8 @@ def adopted(args) -> int:
     store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": source,
              "convocation": CONVOCATION,
              "laws": {law.pdf: law.as_dict() for law in found}}
+    if _shrunk(Path(args.out), "laws", len(found)):
+        return 0
     Path(args.out).write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
     print(f"laws: {len(found)}, international treaties: {sum(l.treaty for l in found)}, "
           f"without a bill: {sum(not l.bill_pdf for l in found)}")
@@ -114,6 +132,21 @@ def linked(args) -> int:
     return 0
 
 
+def _waiting(laws_path: Path) -> tuple[Path, dict, list[dict]]:
+    """The bills in procedure now (procedure.json beside laws.json), as records the commands for laws can read: each
+    with its `bill_pdf`. They are read and summarised like the bills of adopted laws, before the vote."""
+    path = laws_path.parent / "procedure.json"
+    if not path.exists():
+        return path, {}, []
+    store = json.loads(path.read_text(encoding="utf-8"))
+    out = []
+    for pdf, b in store["bills"].items():
+        if b["last_seen"] == store["fetched"]:
+            b["bill_pdf"] = pdf
+            out.append(b)
+    return path, store, out
+
+
 def memoranda(args) -> int:
     """Each adopted law's bill, read once: its memorandum's sections and constitutional basis, into
     data/bills/<file>.json, and the law's area(s) into data/laws.json."""
@@ -122,7 +155,8 @@ def memoranda(args) -> int:
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     read = failed = 0
-    for law in store["laws"].values():
+    proc_path, proc, waiting = _waiting(path)
+    for law in list(store["laws"].values()) + waiting:
         url = law.get("bill_pdf")
         if not url:
             continue
@@ -163,6 +197,10 @@ def memoranda(args) -> int:
         law["constitution"] = memo["articles"]
         law["areas"] = kinds.areas(memo["articles"])
     path.write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    if waiting:
+        for b in waiting:
+            b.pop("bill_pdf", None)
+        proc_path.write_text(jsonfile.dumps(proc, "bills"), encoding="utf-8")
     all_laws = store["laws"].values()
     no_memo = [l for l in all_laws if l.get("bill_file") and not l.get("constitution")]
     print(f"bills read now: {read}, failed: {failed}; laws with an area: {sum(1 for l in all_laws if l.get('areas'))}, "
@@ -194,7 +232,9 @@ def summaries_cmd(args) -> int:
     done = failed = skipped = 0
     tokens = {"input": 0, "output": 0}
     todo = {}
-    for law in sorted(store["laws"].values(), key=lambda l: l.get("passed") or "", reverse=True):
+    waiting = _waiting(Path(args.laws))[2]  # bills in procedure first: they are what is about to be voted on
+    everything = waiting + sorted(store["laws"].values(), key=lambda l: l.get("passed") or "", reverse=True)
+    for law in everything:
         name = law.get("bill_file")
         if not name or not (Path(args.bills) / name).exists():
             continue
@@ -234,7 +274,7 @@ def summaries_cmd(args) -> int:
         pending = state.pending(kind)
         for name in (pending or {}).get("names", []):
             if name not in todo:
-                law = next(l for l in store["laws"].values() if l.get("bill_file") == name)
+                law = next(l for l in everything if l.get("bill_file") == name)
                 todo[name] = (law, json.loads((Path(args.bills) / name).read_text(encoding="utf-8")), out_dir / name)
         requests = {name: {"model": summaries.MODEL, "max_tokens": 1500, "system": summaries.SYSTEM,
                            "messages": [{"role": "user", "content": summaries.material(law, memo)}]}

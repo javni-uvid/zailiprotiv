@@ -11,7 +11,7 @@
 <section>
   <h2>U brojkama</h2>
   <ul class="facts-line">
-    <li><b>{{ (100 * n.treaties / n.laws)|round|int }}%</b> zakona su potvrđeni međunarodni ugovori</li>
+    {% if n.laws %}<li><b>{{ (100 * n.treaties / n.laws)|round|int }}%</b> zakona su potvrđeni međunarodni ugovori</li>{% else %}<li>Saziv još nije usvojio nijedan zakon.</li>{% endif %}
     {% if n.with_bill %}<li><b>{{ (100 * n.urgent / n.with_bill)|round|int }}%</b> po hitnom postupku</li>{% endif %}
     {% if n.days is not none %}<li>polovina zakona usvojena za <b>{{ n.days }}</b> {{ plural(n.days, "dan", "dana", "dana") }} ili manje od podnošenja predloga</li>{% endif %}
     {% if n.voted %}<li><b>{{ (100 * n.unopposed / n.voted)|round|int }}%</b> bez ijednog glasa protiv</li>{% endif %}

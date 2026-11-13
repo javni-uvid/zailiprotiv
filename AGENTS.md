@@ -344,9 +344,26 @@ These are the project's promises to its readers. Never change them without the m
      Not done: summaries of the memoranda of bills in procedure; an agenda written as a sentence, not a list.
   6g. **by convocation** (the maintainer, 13 Nov 2026): `sednice.html` in a section per convocation; a page per
      convocation (`saziv-<N>.html`: figures, key votes, groups, sittings, links to its laws and MPs), tabs between them.
+  6h. **one group under two names, one MP under two spellings** (13 Nov 2026). Groups by a rule, in `site.build`:
+     within a convocation a name that stops being used is the same group as a later name when two thirds or more of
+     its MPs are next listed under that name and make up half or more of it (`renamed`, `group_of`); the newest name
+     is shown, earlier ones listed on the group's page. MPs by hand only: `data/mp_aliases.json` (spelling → the
+     spelling it is, with the reason), applied in `mps.key`; candidates are same-convocation names one word or letter
+     apart that never appear in one vote. Ambiguous ones are left apart.
+  6i. also 13 Nov 2026: search and list filters take case endings off the words typed ("budžetu" finds "budžet",
+     `stem` in `site.js`); the menu's rarer pages fold under "Više" (`<details>`, no script); every page has a
+     canonical address; a share picture for the site and for each MP; bills in procedure are read and summarised
+     like the bills of adopted laws (`cli._waiting`: `bills` and `summaries` take them from `procedure.json`), their
+     gist shown on "U proceduri"; **votes**, **transcripts** and **summaries** open (or comment on) one GitHub issue
+     when a run fails.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 
+- **Ready for the change of convocation (13 Nov 2026):** `index` and `laws` keep the file when a reading has far
+  fewer entries than it (`cli._shrunk`, with a `::warning::`), so the Fifteenth's empty pages can't wipe the
+  Fourteenth's data during the hourly runs; the site builds with an empty current convocation, and the home page
+  and "Glasaj i ti" then show the last convocation with five final votes or more, saying so (`active` in
+  `site.build`). Still by hand: the steps in the next point.
 - The Fifteenth convocation was convened in November 2026, after the October elections. The listings show the
   Fourteenth's sittings (2024–2026). When the Fifteenth's appear there, the Fourteenth moves to the archive:
   add its archive page to `config.CONVOCATIONS`, the Fifteenth's listings and laws page, and set `CURRENT`.

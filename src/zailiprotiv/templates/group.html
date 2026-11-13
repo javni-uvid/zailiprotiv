@@ -20,6 +20,7 @@
 <h1>{{ g.name }}</h1>
 <p class="meta">{{ g.conv_name }} saziv · najviše {{ g.members }} {{ plural(g.members, "poslanik", "poslanika", "poslanika") }} na jednom glasanju · pod ovim nazivom u listinzima glasanja od {{ g.first|day_of }} do {{ g.last|day_of }}</p>
 
+{% if g.former %}<p class="meta">Ranije u ovom sazivu u listinzima kao: {{ g.former|join("; ") }}. Vodimo ih kao istu grupu jer je najmanje dve trećine poslanika prešlo pod novi naziv. {{ how("grupa") }}</p>{% endif %}
 <section class="outcome mp-outcome">
   <div class="big"><div class="t-za"><b>{{ g.lines.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ g.lines.protiv or 0 }}</b><span>protiv</span></div></div>
   <p class="row-meta">Kako je glasala većina grupe na {{ g.votes }} konačnih glasanja o zakonima{% if g.lines.uzdrzan %} · {{ g.lines.uzdrzan }} uzdržana{% endif %}</p>
@@ -75,6 +76,6 @@
     <div class="row-vote">{{ bar({"za": m.tally.za or 0, "protiv": m.tally.protiv or 0, "uzdrzan": m.tally.uzdrzan or 0, "nije_glasao": m.tally.nije_glasao or 0, "nije_prisutan": m.tally.nije_prisutan or 0}) }}<span class="row-score"><span class="t-za">{{ m.tally.za or 0 }}</span> : <span class="t-protiv">{{ m.tally.protiv or 0 }}</span></span></div></li>
   {% endfor %}
   </ul>
-  <p class="meta">Svi poslanici koji su u ovom sazivu bili na spisku pod ovim nazivom grupe, po azbučnom redu, sa glasovima dok su bili u njoj. Skupština je tokom saziva menjala način pisanja naziva, pa ista grupa može imati dve strane.</p>
+  <p class="meta">Svi poslanici koji su u ovom sazivu bili na spisku pod ovim nazivom grupe, po azbučnom redu, sa glasovima dok su bili u njoj. Poslanik koji je promenio grupu nalazi se na strani svake u kojoj je bio.</p>
 </section>
 {% endblock %}

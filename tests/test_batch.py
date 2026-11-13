@@ -68,3 +68,24 @@ def test_summaries_through_a_batch(tmp_path, monkeypatch):
     assert cli.main(args) == 0 and cli.main(args) == 0
     assert len(client.sent) == 1 and len(client.sent[0]) == 1
     assert json.loads((tmp_path / "s" / "b.json").read_text())["summary"]["ukratko"] == "Кратко."
+
+
+def test_bills_in_procedure_are_summarised_too(tmp_path, monkeypatch):
+    import anthropic
+
+    from zailiprotiv import cli
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "x")
+    monkeypatch.setattr(batch, "POLL", 0)
+    client = Batches(lambda p: '{"ukratko": "Кратко.", "razlozi": [], "promene": [], "sredstva": ""}')
+    monkeypatch.setattr(anthropic, "Anthropic", lambda: client)
+    monkeypatch.setattr(cli, "ROOT", tmp_path)
+    (tmp_path / "bills").mkdir()
+    (tmp_path / "bills" / "p.json").write_text(json.dumps(MEMO))
+    (tmp_path / "laws.json").write_text(json.dumps({"laws": {}}))
+    (tmp_path / "procedure.json").write_text(json.dumps({"fetched": "2026-11-13", "bills": {
+        "https://x/p.pdf": {"title": "Predlog zakona", "last_seen": "2026-11-13", "bill_file": "p.json"},
+        "https://x/gone.pdf": {"title": "Stari predlog", "last_seen": "2026-11-01", "bill_file": "gone.json"}}}))
+    args = ["summaries", "--batch", "--laws", str(tmp_path / "laws.json"), "--bills", str(tmp_path / "bills"),
+            "--out", str(tmp_path / "s")]
+    assert cli.main(args) == 0
+    assert [p.name for p in (tmp_path / "s").iterdir()] == ["p.json"]

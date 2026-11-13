@@ -17,9 +17,27 @@ from zailiprotiv.rollcall import cyrillic
 TITLES = {"проф", "др", "мр", "доц", "прим", "сц", "сци", "мед", "дипл", "инж", "академик", "ванр", "вет", "спец"}
 
 
-def key(name: str) -> str:
+# One person under two spellings (data/mp_aliases.json, entered by hand with the reason): the key of the one spelling
+# → the key of the other. Empty until `load_aliases` is called; the site build calls it.
+ALIASES: dict[str, str] = {}
+
+
+def base_key(name: str) -> str:
     words = re.split(r"[\s.]+", cyrillic(name).lower().replace("і", "и"))
     return " ".join(sorted(w for w in words if w and w not in TITLES))
+
+
+def key(name: str) -> str:
+    k = base_key(name)
+    return ALIASES.get(k, k)
+
+
+def load_aliases(path) -> None:
+    import json
+    ALIASES.clear()
+    if path.exists():
+        for name, to in json.loads(path.read_text(encoding="utf-8")).items():
+            ALIASES[base_key(name)] = base_key(to["is"])
 
 
 def clashes(votes) -> dict[str, set[str]]:

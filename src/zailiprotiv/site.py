@@ -337,6 +337,7 @@ def write_feed(path: Path, title: str, self_url: str, page_url: str, entries: li
 def build(root: Path, out: Path, domain: str | None = None, clean: bool = False) -> dict:
     convs = convocations(root)
     current = convs[0][0]
+    mps.load_aliases(root / "mp_aliases.json")
     loaded = {c: load(path) for c, path in convs}
     debates = {c: load_transcripts(path) for c, path in convs}
     all_votes = {k: v for _, votes, _ in loaded.values() for k, v in votes.items()}
@@ -436,6 +437,38 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
             conv_name=ORDINAL_NAME.get(conv, conv), root=""), encoding="utf-8")
 
     by_key_all = {it["key"]: it for its in items_by_conv.values() for it in its}
+    # One group under two names. The Assembly's listings changed how they write groups, and groups rename: within a
+    # convocation, a name that stops being used is the same group as a later name when two thirds or more of its
+    # MPs are next listed under that name and make up half or more of it. The newest name is shown.
+    listed: dict[tuple, dict] = defaultdict(lambda: {"mps": set(), "first": "9999", "last": ""})
+    for it in by_key_all.values():
+        if it["final"]:
+            for _, name, _, group in it["final"]["rows"]:
+                g = listed[(it["conv"], (latin(group) or "Bez poslaničke grupe").strip("() "))]
+                g["mps"].add(mps.key(name))
+                g["first"], g["last"] = min(g["first"], it["final"]["when"]), max(g["last"], it["final"]["when"])
+    renamed: dict[tuple, str] = {}
+    for (c, a), A in listed.items():
+        later = [(B["first"], b) for (c2, b), B in listed.items()
+                 if c2 == c and b != a and A["last"] < B["first"] and b not in ("Bez poslaničke grupe", "-")
+                 and b.lower() != "samostalni" and len(A["mps"]) >= 3
+                 and len(A["mps"] & B["mps"]) * 3 >= len(A["mps"]) * 2 and len(A["mps"] & B["mps"]) * 2 >= len(B["mps"])]
+        if later and a not in ("Bez poslaničke grupe", "-") and a.lower() != "samostalni":
+            renamed[(c, a)] = min(later)[1]
+    former: dict[tuple, list] = defaultdict(list)
+    group_now: dict[tuple, str] = {}
+
+    def group_of(c: str, group: str) -> str:
+        g = first = (latin(group) or "Bez poslaničke grupe").strip("() ")  # "(NADA …)" and "NADA …" are one group
+        for _ in range(5):
+            if (c, g) not in renamed:
+                break
+            g = renamed[(c, g)]
+        if g != first and first not in former[(c, g)]:
+            former[(c, g)].append(first)
+        group_now[(c, first)] = g
+        return g
+
     # MPs: their final votes on laws, in every convocation.
     finals = {it["law"]["final_vote"]: it for items in items_by_conv.values() for it in items
               if it["law"].get("final_vote")}
@@ -444,7 +477,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
     for key, it in finals.items():
         cast: dict[str, Counter] = defaultdict(Counter)
         for _, name, how, group in it["final"]["rows"]:
-            g = (latin(group) or "Bez poslaničke grupe").strip("() ")  # "(NADA …)" and "NADA …" are one group
+            g = group_of(it["conv"], group)
             seat[(key, mps.key(name))] = g
             if how in ("za", "protiv", "uzdrzan"):
                 cast[g][how] += 1
@@ -511,17 +544,21 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
     import os
     cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
     cache.mkdir(parents=True, exist_ok=True)
+    def picture(path: Path, *args_) -> None:
+        """A share picture, drawn once for what it shows and copied from the cache after that."""
+        kept = cache / (hashlib.sha256(repr((card.VERSION, args_)).encode()).hexdigest()[:24] + ".png")
+        if not kept.exists():
+            card.draw(kept, *args_)
+        shutil.copy(kept, path)
+    picture(out / "za-ili-protiv.png", "Kako glasaju poslanici Narodne skupštine Srbije", "Zakoni, glasanja, rasprave", None, "")
     for args in law_pages:
         it = args["it"]
         if it["final"]:  # the picture shown when the page is shared
             name = it["aka"][0][:1].upper() + it["aka"][0][1:] if it["aka"] else it["law"]["short"]
-            args_ = (name, day(it["law"].get("passed")), it["final"]["counts"], "hitan postupak" if it["urgent"] else "")
-            kept = cache / (hashlib.sha256(repr((card.VERSION, args_)).encode()).hexdigest()[:24] + ".png")
-            if not kept.exists():  # drawing 1,500 pictures takes a minute; a picture only changes with what it shows
-                card.draw(kept, *args_)
-            shutil.copy(kept, out / "zakon" / f"{it['slug']}.png")
+            picture(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
+                    "hitan postupak" if it["urgent"] else "")
         (out / "zakon" / f"{args['it']['slug']}.html").write_text(
-            env.get_template("law.html").render(**common, **args, group_slug=group_slug), encoding="utf-8")
+            env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now), encoding="utf-8")
     # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
     # four with the largest share of votes against. Shown on MP pages, group pages and in "Glasaj i ti".
     key_votes: dict[str, list] = {}
@@ -616,6 +653,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
         kinds_table, areas_table = periods[0]["kinds"], periods[0]["areas"]
         rows_mp.append({"mp": mp, "tally": tally, "n": len(record), "by_conv": {c["conv"]: c for c in by_conv},
                         "convs": sorted({r["it"]["conv"] for r in record}, key=int, reverse=True)})
+        if tally:  # the picture shown when the MP's page is shared: the name and the final votes
+            picture(out / "poslanik" / f"{mp.slug}.png", mp.name, "Konačna glasanja o zakonima",
+                    {k: tally.get(k, 0) for k in VOTES}, (by_conv[0]["groups"] or [""])[0] if by_conv else "")
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table, areas_table=areas_table, periods=periods,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
@@ -664,6 +704,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
         whens = sorted(finals[key]["final"]["when"][:10] for key, _ in ls)
         info = {"name": g, "slug": gslug, "conv": c, "conv_name": ORDINAL_NAME.get(c, c),
                 "members": max(sum(cast_in[(key, g)].values()) for key, _ in ls), "first": whens[0], "last": whens[-1],
+                "former": former.get((c, g), []),
                 "votes": len(votes_), "lines": Counter(v["line"] for v in votes_),
                 "cohesion": sum(v["with"] for v in votes_) / sum(v["voting"] for v in votes_),
                 "presence": (present, listed) if listed else None}
@@ -695,10 +736,13 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
                         "sittings": len({it["final"]["sitting"] for it in voted}), "groups": group_rows.get(cv["n"], [])})
     (out / "brojke.html").write_text(env.get_template("numbers.html").render(**common, numbers=numbers, root=""),
                                      encoding="utf-8")
+    # A new convocation starts with nothing voted. Until it has passed five laws, the home page and "Glasaj i ti"
+    # show the last convocation that has, and say which.
+    active = next((c for c, _ in convs if sum(1 for it in items_by_conv[c] if it["final"]) >= 5), current)
     # "Glasaj i ti": the visitor votes on the current convocation's key laws; the page's own script compares the
     # answers with every group's line and every MP's votes. Nothing leaves the browser.
-    quiz_laws = list(key_votes[current])
-    for r in most_against(items_by_conv[current], len(items_by_conv[current])):
+    quiz_laws = list(key_votes[active])
+    for r in most_against(items_by_conv[active], len(items_by_conv[active])):
         it = by_key_all[r["key"]]
         if len(quiz_laws) >= 10:
             break
@@ -709,16 +753,16 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
     quiz = {"laws": [{"s": it["slug"]} for it in quiz_laws],
             "groups": [{"n": g["name"], "s": g["slug"], "m": g["members"],
                         "v": "".join(letter.get(line.get((it["law"]["final_vote"], g["name"])), "-") for it in quiz_laws)}
-                       for g in group_rows.get(current, [])],
-            "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": (r["by_conv"][current]["groups"] or [""])[0],
+                       for g in group_rows.get(active, [])],
+            "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": (r["by_conv"][active]["groups"] or [""])[0],
                      "v": "".join(letter.get(r["mp"].votes.get(it["law"]["final_vote"]), "-") for it in quiz_laws)}
-                    for r in rows_mp if current in r["by_conv"]]}
+                    for r in rows_mp if active in r["by_conv"]]}
     settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
     # The laws visitors' votes are counted for: the counter (worker/) accepts no others.
     (out / "glasaj.json").write_text(json.dumps({"laws": [it["slug"] for it in quiz_laws]}), encoding="utf-8")
     shutil.copy(HERE / "static" / "glasaj.js", out / "glasaj.js")
     (out / "glasaj.html").write_text(env.get_template("quiz.html").render(
-        **common, laws=quiz_laws, votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+        **common, laws=quiz_laws, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         root=""), encoding="utf-8")
 
     # Bills in procedure (the current convocation): what waits now, what is no longer listed, and the sittings
@@ -742,6 +786,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
         row = {**b, "pdf": pdf, "who": procedure_.proposer_kind(b["proposer"]),
                "kind": kinds.KINDS.get(kinds.kind(b["title"]), ""), "kind_key": kinds.kind(b["title"]),
                "days": days_between(b["submitted"], today.isoformat()), "law": by_bill_pdf.get(pdf),
+               "gist": ((loaded[current][2].get(b.get("bill_file", ""), {}).get("summary") or {}).get("summary") or {}).get("ukratko", ""),
+               "areas": b.get("areas") or [],
                "sitting": on_agenda.get(link_.act_name(b["title"]))}
         (waiting if b["last_seen"] == proc["fetched"] and not row["law"] else gone).append(row)
     waiting.sort(key=lambda r: (r["submitted"] or "", r["title"]), reverse=True)
@@ -762,15 +808,15 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
              "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": r["mp"].group or ""} for r in rows_mp]}
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
-    items = items_by_conv[current]
-    votes = loaded[current][1]
+    items = items_by_conv[active]
+    votes = loaded[active][1]
     stats = {"laws": len(items), "linked": sum(1 for it in items if it["final"]), "votes": len(votes),
              "mps": len({mps.key(r[1]) for v in votes.values() for r in v["rows"]}),
              "treaties": sum(1 for it in items if it["law"].get("kind") == "treaty"),
              "sittings": len({v["sitting"] for v in votes.values()}),
              "all_laws": sum(len(i) for i in items_by_conv.values()), "all_mps": len(people), "waiting": len(waiting)}
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, stats=stats, latest=items[:6], contested=most_against(items, 9), root="",
+        **common, stats=stats, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
         spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
                             (most_against(items, 1) or [{}])[0].get("key")),
         featured=next((it for it in most_against(items, 9) if len(it["pair"]) == 2), None),
@@ -925,6 +971,11 @@ def clean_urls(out: Path) -> None:
     keep their names and only the links change, in pages, feeds, the sitemap and the site's own scripts. "index"
     becomes the folder itself. A page that shares its name with a folder ("podaci.html" beside "podaci/") keeps its
     ending, as the short address would open the folder. Links to other sites are left as they are."""
+    site = None
+    cname = out / "CNAME"
+    if cname.exists():
+        site = "https://" + cname.read_text(encoding="utf-8").strip() + "/"
+
     def absolute(m):
         rel = m.group(2)
         if rel == "index" or rel.endswith("/index"):
@@ -941,6 +992,10 @@ def clean_urls(out: Path) -> None:
                     return m.group(0)
                 return m.group(1) + path + m.group(3)
             text = _HREF.sub(link, f.read_text(encoding="utf-8"))  # relative links: no scheme, so no colon
+            if site:  # the page's one address, as the old ones with ".html" still open
+                rel = f.relative_to(out).as_posix()[:-5]
+                rel = rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if (out / rel).is_dir() else "")
+                text = text.replace("</head>", f'<link rel="canonical" href="{site}{rel}">\n</head>', 1)
             f.write_text(own.sub(absolute, text), encoding="utf-8")
         elif f.suffix == ".xml":
             f.write_text(own.sub(absolute, f.read_text(encoding="utf-8")), encoding="utf-8")

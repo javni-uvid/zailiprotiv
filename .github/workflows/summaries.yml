@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
   actions: write
 
 concurrency:
@@ -74,3 +75,14 @@ jobs:
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
           if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main
+      - name: Tell the maintainer when this failed
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # One open issue per workflow, not one per failed run.
+          title="Workflow ${{ github.workflow }} ne prolazi"
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          n=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${{ github.repository }}" --body "Ponovo: $url"
+          else gh issue create -R "${{ github.repository }}" --title "$title" --body "Pokretanje nije prošlo: $url"; fi

@@ -45,6 +45,10 @@ def draw(path: Path, title: str, when: str, counts: dict, note: str = "") -> Non
     for line in wrap(d, title, bold(size), W - 2 * PAD, 3):
         d.text((PAD, y), line, font=bold(size), fill=FG)
         y += int(size * 1.16)
+    if counts is None:  # the site's own picture: no vote to show
+        d.text((PAD, 520), "zailiprotiv.rs", font=regular(40), fill=MUTED, anchor="ls")
+        im.quantize(48).save(path)
+        return
     za, protiv, total = counts["za"], counts["protiv"], sum(counts.values()) or 1
     x = PAD
     for text, font, color in ((str(za), bold(84), ZA), (" za", regular(40), ZA), ("   ", regular(40), FG),

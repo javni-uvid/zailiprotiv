@@ -44,6 +44,7 @@
     <li class="row" data-i="{{ loop.index0 }}" data-k="{{ r.who }}{% if r.sitting %} dr{% endif %}" data-d="{{ r.submitted or "" }}" data-w="{{ r.days or 0 }}">
       <div class="row-main">
         <a class="row-title" href="{{ r.pdf }}">{{ r.title|latin }}</a>
+        {% if r.gist %}<p class="proc-gist">{{ r.gist|latin }}</p>{% endif %}
         <p class="row-meta">{{ r.proposer|latin }} · podnet {{ r.submitted|day }}{% if r.kind %} · {{ r.kind|latin }}{% endif %}{% if r.sitting %} · <b>na dnevnom redu: {{ r.sitting.title|latin }}{% if r.sitting.starts %}, {{ r.sitting.starts[:10]|day }}{% endif %}</b>{% endif %}</p>
       </div>
       <div class="row-vote row-meta nowrap">{% if r.days is not none %}čeka {{ r.days }} {{ plural(r.days, "dan", "dana", "dana") }}{% endif %}</div>
@@ -53,7 +54,7 @@
   {% else %}
   <p class="meta">Na spisku Skupštine trenutno nema predloga zakona. Novi saziv počinje sa praznim spiskom; predlozi koji nisu usvojeni do kraja prethodnog saziva više nisu u proceduri.</p>
   {% endif %}
-  <p class="label">Naslov vodi na tekst predloga sa obrazloženjem (PDF na sajtu Skupštine). Predlagač i datum su kako ih navodi Skupština. Koliko predlog čeka ne govori zašto: o dnevnom redu odlučuje Skupština.</p>
+  <p class="label">Naslov vodi na tekst predloga sa obrazloženjem (PDF na sajtu Skupštine). Predlagač i datum su kako ih navodi Skupština. Rečenica ispod naslova, gde je ima, sažetak je predlagačevog obrazloženja koji je napisao AI model. Koliko predlog čeka ne govori zašto: o dnevnom redu odlučuje Skupština.</p>
 </section>
 
 {% if gone %}

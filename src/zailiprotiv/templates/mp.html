@@ -4,6 +4,8 @@
 {% block description %}Kako je glasao poslanik {{ mp.name }}: zakoni za i protiv, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Glasovi: {{ mp.name }}" href="{{ mp.slug }}.xml">{% endblock %}
+{% block share %}{% if site_url and tally %}<meta property="og:image" content="{{ site_url }}poslanik/{{ mp.slug }}.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">{% else %}{{ super() }}{% endif %}{% endblock %}
 {% block main %}
 {% macro rows(rs, show_line=false) -%}
 <ul class="rows compact">

@@ -8,7 +8,8 @@
 <meta property="og:site_name" content="Za ili Protiv">
 <meta property="og:title" content="{{ self.title() }}">
 <meta property="og:description" content="{{ self.description() }}">
-{% block share %}{% endblock %}
+{% block share %}{% if site_url %}<meta property="og:image" content="{{ site_url }}za-ili-protiv.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">{% endif %}{% endblock %}
 <link rel="stylesheet" href="{{ root }}style.css?v={{ css }}">
 <script src="{{ root }}site.js?v={{ css }}" defer></script>
 <link rel="alternate" type="application/atom+xml" title="Novi zakoni" href="{{ root }}zakoni.xml">{% block feeds %}{% endblock %}
@@ -21,10 +22,17 @@
     <a href="{{ root }}u-proceduri.html">U proceduri</a>
     <a href="{{ root }}poslanici.html">Poslanici</a>
     <a href="{{ root }}grupe.html">Grupe</a>
-    <a href="{{ root }}oblasti.html">Oblasti</a>
-    <a href="{{ root }}sednice.html">Sednice</a>
-    <a href="{{ root }}saziv-{{ current }}.html">Sazivi</a>
     <a href="{{ root }}glasaj.html">Glasaj i ti</a>
+    <details class="nav-more"><summary>Više</summary>
+      <div>
+        <a href="{{ root }}oblasti.html">Oblasti</a>
+        <a href="{{ root }}sednice.html">Sednice</a>
+        <a href="{{ root }}saziv-{{ current }}.html">Sazivi</a>
+        <a href="{{ root }}brojke.html">Skupština u brojkama</a>
+        <a href="{{ root }}podaci.html">Podaci</a>
+        <a href="{{ root }}o-projektu.html">O projektu</a>
+      </div>
+    </details>
   </nav>
 </header>
 <main>

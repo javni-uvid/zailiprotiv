@@ -4,7 +4,7 @@
 {% block description %}Poslaničke grupe Narodne skupštine Srbije po sazivima: članovi, kako glasaju i koliko jedinstveno.{% endblock %}
 {% block main %}
 <h1>Poslaničke grupe</h1>
-<p class="meta">Grupe kako ih Skupština piše u listingu glasanja, poređane po broju članova. Kad Skupština promeni način pisanja naziva, ista grupa se javlja dva puta. Iste brojke za svaku grupu. {{ how("grupa") }}</p>
+<p class="meta">Grupe kako ih Skupština piše u listingu glasanja, poređane po broju članova. Iste brojke za svaku grupu. {{ how("grupa") }}</p>
 {% for cv, groups in by_conv %}
 <section>
   <h2>{{ cv.name }} saziv <span class="count">{{ cv.years }}</span></h2>
