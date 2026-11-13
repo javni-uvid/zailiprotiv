@@ -373,7 +373,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
-    common = {"css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
+    settings_file = root / "settings.json"
+    settings = json.loads(settings_file.read_text(encoding="utf-8")) if settings_file.exists() else {}
+    common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.

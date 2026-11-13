@@ -43,7 +43,8 @@
 </main>
 <footer>
   <p>Podaci: <a href="https://www.parlament.gov.rs">Narodna skupština Republike Srbije</a>, poimenični rezultati glasanja i predlozi zakona; preuzeto {{ fetched }}. Sajt izgrađen {{ built }}.</p>
-  <p>Ista pravila za svakog poslanika i svaku poslaničku grupu. Bez kolačića, analitike i ičega sa drugih servera. <a href="{{ root }}o-projektu.html">O projektu</a> · <a href="{{ root }}brojke.html">Skupština u brojkama</a> · <a href="{{ root }}kako-racunamo.html">Kako računamo</a> · <a href="{{ root }}podaci.html">Podaci</a> · <a href="https://github.com/javni-uvid/zailiprotiv/issues/new?title={{ ('Greška: ' ~ self.title())|urlencode }}&amp;body={{ ('Strana: ' ~ self.title() ~ '\n\nŠta nije tačno:\n\nIzvor (ako ga imate):\n')|urlencode }}">Prijavi grešku</a> · <a href="https://github.com/javni-uvid/zailiprotiv">Kod i podaci</a>.</p>
+  <p>Ista pravila za svakog poslanika i svaku poslaničku grupu. {% if analytics %}Bez kolačića. Posete se samo broje (Cloudflare Web Analytics: bez kolačića, bez praćenja pojedinaca); osim toga ništa sa drugih servera.{% else %}Bez kolačića, analitike i ičega sa drugih servera.{% endif %} <a href="{{ root }}o-projektu.html">O projektu</a> · <a href="{{ root }}brojke.html">Skupština u brojkama</a> · <a href="{{ root }}kako-racunamo.html">Kako računamo</a> · <a href="{{ root }}podaci.html">Podaci</a> · <a href="https://github.com/javni-uvid/zailiprotiv/issues/new?title={{ ('Greška: ' ~ self.title())|urlencode }}&amp;body={{ ('Strana: ' ~ self.title() ~ '\n\nŠta nije tačno:\n\nIzvor (ako ga imate):\n')|urlencode }}">Prijavi grešku</a> · <a href="https://github.com/javni-uvid/zailiprotiv">Kod i podaci</a>.</p>
 </footer>
-</body>
+{% if analytics %}<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ analytics }}"}'></script>
+{% endif %}</body>
 </html>

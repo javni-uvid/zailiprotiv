@@ -244,3 +244,10 @@ def test_replies_and_the_chairs_measures_are_found_by_rule():
     victim = {"kind": "opomena", "chair": {"text": "Изричем вам опомену јер сте увредили Мартиновића."}}
     assert pages_floor.to_whom(victim, {"АЛЕКСАНДАР МАРТИНОВИЋ": "мартиновић"}) is None
     assert pages_floor.spoken(speeches[5]["text"]) == "Господине Б, изричем вам опомену."
+
+
+def test_the_visit_counter_is_the_only_script_from_elsewhere(tmp_path):
+    from zailiprotiv import publish
+    (tmp_path / "a.html").write_text(publish.ANALYTICS + " data-cf-beacon='{}'></script>")
+    (tmp_path / "b.html").write_text('<script src="https://example.com/x.js"></script>')
+    assert [b.split(":")[0] for b in publish.check(tmp_path)] == ["b.html"]

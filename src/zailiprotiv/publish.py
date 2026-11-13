@@ -49,6 +49,8 @@ def clean_urls(out: Path) -> None:
 # What every built page must keep to (project principles): nothing loaded from another site, and pages light enough
 # for a phone. The largest page now is under 0.6 MB.
 PAGE_LIMIT = 1_000_000
+# The one script from another server the pages may load: the visit counter (AGENTS.md, principle 5, second exception).
+ANALYTICS = '<script defer src="https://static.cloudflareinsights.com/beacon.min.js"'
 EXTERNAL = re.compile(r"<(?:script|iframe|img|source|video|audio|embed|object)\b[^>]*\bsrc=[\"'](?:https?:)?//"
                       r"|<link\b[^>]*\bhref=[\"'](?:https?:)?//[^\"']*[\"'][^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)"
                       r"|<link\b[^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)[\"'][^>]*\bhref=[\"'](?:https?:)?//"
@@ -64,7 +66,7 @@ def check(out: Path) -> list[str]:
         text = f.read_text(encoding="utf-8")
         if f.suffix == ".html" and len(text.encode()) > PAGE_LIMIT:
             bad.append(f"{f.relative_to(out)}: {len(text.encode()) / 1e6:.1f} MB")
-        m = EXTERNAL.search(text)
+        m = EXTERNAL.search(text.replace(ANALYTICS, ""))
         if m:
             bad.append(f"{f.relative_to(out)}: spoljni resurs: {m.group(0)[:80]}")
     return bad

@@ -86,6 +86,10 @@ These are the project's promises to its readers. Never change them without the m
      under a law as soon as the visitor has voted on it (the maintainer, 13 Nov 2026; fewer than ten votes are marked
      as few), and in a table at the end beside the chamber's result. The page says it is not a poll. The address is in `data/settings.json`
      (`votes_api`); empty, the page sends nothing.
+   - **A second exception, the maintainer's (13 Nov 2026): counting visits.** Every page loads Cloudflare Web
+     Analytics' script (no cookies, no following of a person; totals per page) when `data/settings.json` has
+     `analytics_token`; without it nothing is loaded. The footer and "O projektu" say so. `publish.check` lets this
+     one script through and nothing else.
 6. **What MPs say is not censored and not shaped** (the maintainer, 13 Nov 2026). Speeches and quotes are given as
    spoken, from the Assembly's stenographic notes:
    - quotes are word for word, checked against the notes, and never cut inside, softened or cleaned up;
