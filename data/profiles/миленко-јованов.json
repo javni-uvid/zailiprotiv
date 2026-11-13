@@ -1,53 +1,73 @@
 {
  "mp": "миленко јованов",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 28,
  "speeches": 558,
  "sittings": 15,
  "points": [
   {
-   "tekst": "Брани резултате Владе и наводи да раст плата и пензија, инвестиције и помоћ грађанима показују да су мере власти биле добре.",
-   "govora": 4,
-   "citat": {
-    "tekst": "Већ новембра месеца ће бити раст пензија од 9%, а од нове године 12,1%, а минимална цена рада ће бити, по први пут, 40 хиљада динара. То су веома важни и добри резултати.",
-    "date": "2022-10-18",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
-   }
-  },
-  {
-   "tekst": "Замера опозицији што, како наводи, не познаје Пословник и подноси амандмане који нису у складу са њим или немају везе са тачком дневног реда.",
+   "tekst": "Наводи да Србија води сопствену политику и не испуњава захтеве ни са истока ни са запада, а опозицији замера што слуша стране налогодавце („сви имате газду“).",
    "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
    "citat": {
-    "tekst": "Нећемо то да радимо, него по Пословнику. Ако амандман ваља, ваља, ако не ваља, не ваља. Три хиљаде напишите, о три хиљаде ћемо расправљати 10 сати, а ви размислите како ћете да их објасните.",
-    "date": "2022-12-06",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+    "tekst": "И не интересује ме ни Москва, ни Брисел, ни Вашингтон, интересује ме само Србија. И за мене сте и ви и они исти. За мене сте ви сви исти, јер сви имате газду.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да су оптужбе које опозиција износи на рачун њега и власти неистините и тражи да се за њих изнесу докази.",
-   "govora": 4,
-   "citat": {
-    "tekst": "Мислите да ће то да вам прође? Па, неће. Добићете одговор увек. На ваше неистине, на ваше измишљотине, на ваше лажи, добићете аргументоване чињенице.",
-    "date": "2022-12-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да се протести одвијају по раније виђеном сценарију иза ког стоје опозициони политичари и да нису усмерени против литијума него против председника Републике.",
+   "tekst": "Наводи да су они који данас протестују против литијума, док су били на власти, довели „Рио Тинто“ и припремали отварање рудника.",
    "govora": 2,
+   "sazivi": [
+    "14"
+   ],
    "citat": {
-    "tekst": "Дакле, организује се више протеста, никад у истом дану, у целој Србији зато што селе једне те исте људе у круг.",
+    "tekst": "Неће јер ни сада немате политику и народ види колико сте лицемерни и чули су врло добро питања која је председница Скупштине јуче поставили зашто сте доводили Рио Тинто, зашто сте усвајали законе по налогу Рио Тинта, зашто сте радили све што је требало да радите за литију, а данас сте од једном против.",
     "date": "2024-07-30",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog varednog zasedanja NSRS, odrzane 30. jula 2024. godine, peti dan rada.docx"
    }
   },
   {
-   "tekst": "Брани став да Србија не треба да се сврстава ни на једну страну у сукобима великих сила, да није увела санкције Русији и да води рачуна о сопственим интересима.",
-   "govora": 3,
+   "tekst": "Наводи да су припадници криминалног клана за пет милиона евра припремали атентат на председника Александра Вучића и одбацује тврдње да је Вучић с тим кланом повезан.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
    "citat": {
-    "tekst": "Дакле, једни хоће да нас угурају у сукоб на једну страну, други хоће да нас угурају у сукоб на другу страну. Поента је у томе да ми сукоб нећемо.",
-    "date": "2025-11-28",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+    "tekst": "Оно што нећете успети, то је да припишете председнику Вучићу било какву везу са овим, осим што су хтели да га убију.",
+    "date": "2026-01-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 21. januara 2026. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозиционим посланицима што не познају Пословник, ни како се пишу амандмани ни када се добија право на реплику.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Никада нисмо били у прилици да имамо толико неспособну опозицију да није у стању да напише смислен амандман у складу са Пословником.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани повећања пензија и исплате помоћи грађанима и наводи да се економија не води због статистике, него да грађани од ње имају користи.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ваљда то не радимо због статистике и због бројева, па да кажемо – статистика тако каже, него је поента да људи осете да боље живе, а у овом случају да људи осете да њихова држава стоји уз њих кад им је тешко и када им треба помоћи, да је држава ту да помогне, и грађанима и привреди.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
    }
   }
  ]

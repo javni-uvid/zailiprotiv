@@ -1,53 +1,70 @@
 {
  "mp": "мрдић угљеша",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 32,
  "speeches": 119,
  "sittings": 18,
  "points": [
   {
-   "tekst": "Брани буџете и законе које предлаже Влада и наводи да власт улаже у инфраструктуру, здравство, просвету, спорт, плате и пензије.",
+   "tekst": "Тврди да је Драган Ђилас, бивши градоначелник Београда, кроз „корупционашке афере“ узео од грађана стотине милиона евра и тражи да тужилаштво поводом тога реагује.",
+   "govora": 3,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Надам се да ћемо једног дана добити овакав одговор од Тужилаштва, да је у току истрага и истражне радње што се тиче пословања Драгана Ђиласа, 619 милиона евра и многих других ствари које је он радио заједно са својим сарадницима.",
+    "date": "2020-12-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sedma sednica Drugog redovnog zasedanja NSRS 17.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су до 2012. године, док је бивши режим предвођен Демократском странком био на власти, Србијом владали криминал и корупција.",
    "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
    "citat": {
-    "tekst": "Ми данас имамо буџет где се искључиво гледа интерес грађана Републике Србије. Гледа се да се уложи у здравство, у просвету, у инфраструктуру, у све оно што је потребно, увећање плата и пензије.",
-    "date": "2020-12-10",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sesta sednica Drugog redovnog zasedanja NSRS, 10.12.2020..docx"
+    "tekst": "Наравно, ми смо их подсетили на период њихове владавине, владавине бившег режима до 2012. године, када је Србијом владала криминал и корупција на нивоу Србије, а у граду Београду до 2014. године, као и у већини општина до 2016. године, где бивши режим био тада на власти.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
    }
   },
   {
-   "tekst": "Наводи да су за време власти коју назива „бивши режим“, до 2012. године, Србијом владали корупција и криминал и да су приватизације и управљање јавном имовином били штетни.",
-   "govora": 5,
+   "tekst": "Наводи да власт Александра Вучића води борбу против мафије и да су чланови клана Вељка Беливука похапшени, и тражи да тужиоци и судије у тој борби раде свој посао.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13"
+   ],
    "citat": {
-    "tekst": "До 2012. године, пошто се овде јуче и данас доста говорило о речи корупција, ја бих само подсетио да је до 2012. године, док је бивши режим био на власти, корупција била једна од највећих пошасти савременог српског друштва.",
-    "date": "2022-10-19",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+    "tekst": "Ова власт није дозволила да Беливуков клан влада као што је радио земунски клан, него је похапсила чланове Беливуковог клана и они се сада налазе тамо где им је место – иза решетака.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, treci dan rada.docx"
    }
   },
   {
-   "tekst": "Брани уставне промене и законе о правосуђу и тражи да судије и тужиоци раде ефикасно и у служби државе и грађана, а не под утицајем странака или страних центара моћи.",
-   "govora": 5,
-   "citat": {
-    "tekst": "Судија треба да буде не у служби Владе Србије, председника или нас посланика, него у служби грађана и државе. Дакле, сваки судија мора да преузме одређену врсту одговорности, како тужилац, тако и судија.",
-    "date": "2021-07-21",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanestom sazivu, 21. jul 2021. godine.docx"
-   }
-  },
-  {
-   "tekst": "Тражи пуну подршку полицији, тужилаштву и судовима у борби против мафије и наводи да су део опозиције и поједини медији повезани са криминалним клановима.",
+   "tekst": "Тврди да медији које повезује са Драганом Ђиласом воде кампању против председника Александра Вучића и његове породице.",
    "govora": 4,
+   "sazivi": [
+    "12"
+   ],
    "citat": {
-    "tekst": "Знате како, када имамо ситуацију да мафијашки кланови у Србији убијају, отимају и кидају главе грађанима Србије, ту морамо бити или против мафије или на страни мафије. Свако нормалан је против мафије.",
-    "date": "2021-07-21",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Deveto vanredno zasedanje NSRS u Dvanaestom sazivu, 21. jul 2021. godine, drugi dan rada.docx"
+    "tekst": "Из дана у дан видимо жестоке и срамне нападе и видимо и осетимо дивљање Ђиласових медија.",
+    "date": "2021-05-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Dvanaesta sednica Prvog redovnog zasedanja NSRS 20.05.2021..docx"
    }
   },
   {
-   "tekst": "Замера опозицији што, како наводи, уместо аргумената користи увреде и претње и напада председника Републике и његову породицу.",
-   "govora": 4,
+   "tekst": "Тврди да се део тужилаштва одвојио од државе и брани сет правосудних закона који је предложио као корак ка самосталности тужилаца и независности судија.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
    "citat": {
-    "tekst": "Из дана у дан настављате да претите, да вређате и нападате зато што немате ни један аргумент да нешто критички кажете шта не ваља или шта треба да се уради.",
-    "date": "2022-12-06",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+    "tekst": "Усвајање ових закона је само први корак ка враћању отетог правосуђа држави и народу Србије, како њиме више не би управљали отуђени центри моћи под контролом страних центара моћи.",
+    "date": "2026-01-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 14. januara 2026. godine.docx"
    }
   }
  ]

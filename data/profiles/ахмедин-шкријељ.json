@@ -1,37 +1,25 @@
 {
  "mp": "ахмедин шкријељ",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 44,
  "speeches": 121,
  "sittings": 8,
  "points": [
   {
-   "tekst": "Наводи да Бошњаци нису заступљени у полицији, судовима, тужилаштвима и другим државним органима сразмерно свом уделу у становништву санџачких општина, и тражи да Влада то усклади.",
+   "tekst": "Тражи да Бошњаци у Санџаку буду сразмерно заступљени у полицији, судству, тужилаштву и другим државним органима, како наводи да Устав налаже.",
    "govora": 5,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Подсећам вас и на то да Бошњаци у Републици Србији не могу да остваре своја Уставом гарантована права као што је право на сразмерну заступљеност у полицији, судству и тужилаштву.",
-    "date": "2024-09-30",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
+    "tekst": "Користим прилику и присуство чланова Владе да вас подсетим да је Бошњацима у Санџаку онемогућено остваривање Уставом гарантованог права, незаступљеност у полицији, судству, тужилаштву, војсци, службама сигурности и другим државним органима и службама у складу са националном структуром становништва.",
+    "date": "2024-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prvog vanrednog zasedanja NSRS, odrzane 29. jula 2024. godine, cetvrti dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да су санџачке општине неразвијене и да буџет не испуњава уставну обавезу равномерног регионалног развоја, па амандманима тражи новац за струјну мрежу, школе, депоније и друге пројекте у Санџаку.",
-   "govora": 6,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Где су најниже просечне зараде на територији Републике Србије? Код нас. Где је највећи проценат незапослености? Код нас.",
-    "date": "2026-08-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Тражи да се оснују судови и тужилаштва у Тутину, Прешеву и Сјеници и замера што се за те општине не примењују исти критеријуми као за друге.",
-   "govora": 5,
+   "tekst": "Тражи да се оснују основни судови у Тутину и Прешеву и основно јавно тужилаштво у Сјеници и замера што за општине у којима живе Бошњаци важе друга мерила него за остале.",
+   "govora": 4,
    "sazivi": [
     "14"
    ],
@@ -42,27 +30,39 @@
    }
   },
   {
-   "tekst": "Тражи да се доврши Владин програм повратка избеглих и расељених Бошњака у општину Прибој и да се уреди статус жртава и породица жртава из Сјеверина, Штрбаца и Кукуровића.",
-   "govora": 6,
+   "tekst": "Тражи да се у буџету обезбеди новац за завршетак програма Владе за повратак прогнаних Бошњака у општину Прибој, усвојеног на предлог тадашњег министра Сулејмана Угљанина.",
+   "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Тај програм је донела Влада Републике Србије и обавезе које су њиме преузете, а нису извршене морају бити завршене.",
-    "date": "2026-08-25",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+    "tekst": "Други предлог односи се на издвајање 200 милиона динара за завршетак програма повратка протераних и прогнаних Бошњака општине Прибој у периоду од 1991. до 1999. године.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да Бошњаци не могу да остваре права на информисање и образовање на матерњем језику, као ни службену употребу босанског језика у Прибоју, иако су за то, како каже, испуњени законски услови.",
-   "govora": 6,
+   "tekst": "Тражи да се породицама жртава отмица у Сјеверину и Штрпцима уреди статус и призна статус цивилних жртава рата.",
+   "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Дакле, испуњени су сви услови да се у општини Прибој, босански језик уведе у службену употребу. Међутим, локална власт у Прибоју то одбија да уради.",
-    "date": "2025-12-02",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 2. decembra 2025. godine, sesti dan rada.docx"
+    "tekst": "Питање за министра за рад, запошљавање, борачка и социјална питања – да ли Влада Републике Србије и ресорно министарство имају у плану да изменом одговарајућих закона породицама отетих и убијених Бошњака из отмица у Сјеверину и Штрпцима признају статус цивилних жртава рата?",
+    "date": "2024-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene  stenografske beleske Prvog vanrednog zasedanja NSRS, odrazane 25. jula 2024. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што Бошњаци и други мањински народи ван Војводине немају информисање на матерњем језику и што јавни медијски сервис нема редакцију на језицима националних мањина.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Колегинице и колеге народни посланици, подсетићу вас да је бошњацима и другим мањинским народима који живе ван територије АП Војводине, ускраћено Уставом и законом гарантовано право на информисање на свом матерњем језику, јер јавни медијски сервис РТС није формирао посебну редакцију за информисање на мањинским језицима.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
    }
   }
  ]

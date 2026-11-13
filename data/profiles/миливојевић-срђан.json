@@ -1,71 +1,70 @@
 {
  "mp": "миливојевић срђан",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 42,
  "speeches": 156,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Наводи да постоји спрега организованог криминала и врха власти, а Српску напредну странку назива „политичким крилом организованог криминала“.",
-   "govora": 9,
-   "sazivi": [
-    "13"
-   ],
-   "citat": {
-    "tekst": "Нажалост, безбедносни систем Србије је начет. Србија је по глобалном индексу организованог криминала прва у Европи, подвлачим, прва у Европи и међу 10 првих земаља у свету.",
-    "date": "2022-12-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 8. decembar 2022. godine, cetvrti dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да се буџетски новац и кредити расипају и завршавају код људи из власти, и замера издвајања за национални стадион и прескупе ауто-путеве.",
-   "govora": 9,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "За национални стадион ова власт је предвидела 900 милиона евра. Толико ће коштати национални стадион, јер они су вас убедили да смо прваци света у фудбалу.",
-    "date": "2022-12-07",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Замера председнику Скупштине и владајућој већини што опозицији онемогућавају да предлаже допуне дневног реда, анкетне одборе и амандмане и да реплицира.",
+   "tekst": "Наводи да је Вељко Беливук, кога назива „истакнутим чланом СНС“, у сведочењу пред Специјалним судом за организовани криминал говорио о вези свог клана са врхом власти, међу њима и са Александром Вучићем.",
    "govora": 5,
    "sazivi": [
     "13"
    ],
    "citat": {
-    "tekst": "Ми смо ту да вам помогнемо да Скупштина сачува и поврати пољуљани углед. Разумем да ви не можете да се навикнете да овде има опозиције, али вас позивам да не опструирате и покушавате да опструирате рад и напоре опозиције.",
-    "date": "2022-11-07",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+    "tekst": "Ово сведочење у коме је Вељко Беливук поменуо највише државне функционере показује јасну спрегу организованог криминала и врха режима. Поменути су и Дарко Глишић, председник Извршног одбора СНС, поменут је и Александар Вулин, министар полиције, као и сам Александар Вучић кога ословљава са шефе.",
+    "date": "2022-10-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 18. oktobar 2022. godine.docx"
    }
   },
   {
-   "tekst": "Противи се ископавању литијума и пројекту „Јадар“ и наводи да власт избегава седницу о забрани рударења литијума.",
-   "govora": 8,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Када не будемо могли да вратимо дугове, ви ћете казати – у реду је, морамо сада Јадар и Рађевину да дамо за ископавање литијума. То је ваша стратегија.",
-    "date": "2024-09-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да су странке садашње власти владале и деведесетих и подсећа на тадашњу инфлацију, бонове за основне намирнице и губитак радних места.",
+   "tekst": "Тврди да је власт СНС законом о општој амнестији из новембра 2012. године без селекције пустила хиљаде осуђених и да је тако настао клан Вељка Беливука.",
    "govora": 3,
    "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ми смо 8. новембра 2012. године имали Закон о општој амнестији где сте 4.300 људи из криминогене средине без икакве селекције амнестирали, све у циљу да формирате Беливуков клан, јер вам је требао да утерује страх на изборима по Србији.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи изјаву Зоране Михајловић, чланице председништва СНС, да је СНС постала „џубокс за богаћење и бахаћење“ појединаца из те странке, и тврди да ће новац из буџета завршити у џеповима људи из власти.",
+   "govora": 6,
+   "sazivi": [
     "13",
     "14"
    ],
    "citat": {
-    "tekst": "Сећате ли се, грађани Србије, бонова за бензин? То су нам оставили. Опљачкали су 36 пољопривредних пензија. То је неко морао да врати.",
-    "date": "2024-09-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 26. septembra 2024. godine, cetvrti dan rada.docx"
+    "tekst": "Поштовани грађани Србије, Зорана Михајловић, чланица Председништва СНС и до недавно министарка у овој овде Влади, која је седела ту негде у првом реду, 24. октобра 2022. године изјавила је да је СНС постала џубокс за богаћење и бахаћење појединаца из СНС.",
+    "date": "2022-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 5. dan rada, 9. decembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Тврди да је плантажа марихуане на „Јовањици“ добијала државне подстицаје и да је у њу био умешан државни врх, а инспекторе који су је открили назива херојима.",
+   "govora": 4,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Након тога, истог дана ухапшен је Предраг Колувија у највећој фабрици за производњу дроге у Европи, на 14 хектара, која је добијала подстицаје од државе Србије за производњу дроге, где је комплетан државни врх умешан.",
+    "date": "2023-07-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Противи се пројекту „Рио Тинто“ за ископавање литијума у Јадру, власт назива „Рио Тинто коалицијом“ и замера јој што избегава седницу о закону о забрани рударења литијума.",
+   "govora": 7,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато је Рио Тинто ваша коалиција и зато сте ви Рио Тинто коалиција, а не ми. Ми смо их истерали са онога где сте им дали експериментално право, отерали.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
    }
   }
  ]

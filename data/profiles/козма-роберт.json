@@ -1,71 +1,68 @@
 {
  "mp": "козма роберт",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 42,
  "speeches": 110,
  "sittings": 13,
  "points": [
   {
-   "tekst": "Наводи да власт посебним законима („лекс специјалис“) и бесплатном конверзијом земљишта јавну имовину и културно наслеђе поклања „тајкунима“ и инвеститорима, а као примере наводи „Београд на води“, ЕКСПО и Генералштаб.",
-   "govora": 9,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Ви настављате са вашим лекс специјалисима који служе за уништавање јавног интереса, за бесплатно поклањање нашег земљишта, за нетранспарентно трошење јавних финансија и ово последње за уништавање нашег југословенског и српског културног наслеђа.",
-    "date": "2025-11-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Тражи да се повећају плате наставника и улагања у школе и наводи да новца за то у буџету има, јер се издваја за ЕКСПО, Национални стадион и авионе „Рафал“.",
-   "govora": 6,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Ми се залажемо да се плате просветара моментално повећају, да се почетна плата наставника изједначи са просечном платом у Србији. Одмах да кажемо, пара за то у буџету има, то је свега 5,5 милијарди динара за последње тромесечје ове године.",
-    "date": "2024-09-25",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да хиљаде грађана годишње прерано умре због загађења ваздуха и замера што предложени закони о заштити ваздуха и контроли загађивања то неће решити, јер се ваздух не мери свуда, а постројења се не контролишу.",
-   "govora": 6,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Зато што имамо горући проблем, 15.000 грађана на годишњем нивоу раније премине услед загађења ваздуха, 60% грађана живи у подручјима Србије, у градовима где је ваздух прекомерно загађен.",
-    "date": "2025-06-16",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да већина младих живи код родитеља и једва зарађује за основне трошкове и замера што се из буџета за младе издваја све мање.",
+   "tekst": "Наводи да је део буџета за младе премали, 0,08% а после ребаланса 0,05%, док 65% младих живи код родитеља јер не може да изнајми или купи стан.",
    "govora": 4,
    "sazivi": [
     "13"
    ],
    "citat": {
-    "tekst": "Млади и пунолетни грађани Србије најчешће живе у домовима својих родитеља. Њих 65% живи код родитеља јер не могу да изнајме или да купе стан.",
-    "date": "2022-10-19",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+    "tekst": "Затим сте онај буџет од 0,08% срамни буџет из 2022. године ребалансом додатно умањили на 0,05% а за следећу годину младима сте наменили 0,03%.",
+    "date": "2022-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
    }
   },
   {
-   "tekst": "Замера што правосудни закони и даље омогућавају утицај извршне власти на судије и тужиоце.",
-   "govora": 4,
+   "tekst": "Тражи да се плате наставника одмах повећају и наводи да за то има новца, јер се милијарде динара издвајају за ЕКСПО и Национални стадион.",
+   "govora": 3,
    "sazivi": [
-    "13",
     "14"
    ],
    "citat": {
-    "tekst": "Међутим, онако како су постављени ови правосудни закони и како је урађена измена Устава Србије прошле године, то и даље омогућава СНС, владајућем режиму да утиче на правосуђе, односно на судије и на тужиоце.",
-    "date": "2023-02-05",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, 5. februar 2023. godine, drugi dan rada.docx"
+    "tekst": "Нико нас не може убедити да пара за повећање плате наставницима нема, када се има 43 милијарде динара за ЕКСПО, када се има 31 милијарда динара за један национални стадион.",
+    "date": "2024-09-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenoografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 30. septembra 2024. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да у Србији сваке године хиљаде грађана раније умре због загађеног ваздуха и да предложени закон о заштити ваздуха то неће решити.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Као што смо рекли, питање загађења ваздуха је изузетан проблем у Србији јер, поновићу поново, око 15 хиљада грађана на годишњем нивоу раније премине услед загађења ваздуха.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су држава и град Београд у пројекат „Београд на води“ дали више од две милијарде евра, а да су грађани од тога добили мало или ништа.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сви грађани Србије, од Суботице преко Чачка до Прешева, сви они су плаћали тај \"Београд на води\" из буџета и сви они су платили, односно поклонили више од две милијарде евра тзв. инвеститору.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера што се посебним законом зграда Генералштаба, по његовим речима, поклања „Трамповом зету“ за луксузни хотел, уместо да остане заштићени споменик културе.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Не треба да поклањате екстра локацију, срушену зграду Генералштаба да буде хотел, луксузни хотел Трамповог зета, то вам говоримо.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
    }
   }
  ]
