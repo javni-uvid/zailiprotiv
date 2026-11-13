@@ -1,13 +1,24 @@
-# Run by hand (and after each data run): Claude's summary of every bill's memorandum not summarised yet, or whose
-# memorandum changed, in every convocation, committed to data/<convocation>/summaries/. Needs the repository secret ANTHROPIC_API_KEY.
+# The model's writing, through the Message Batches API (half the price of single calls): summaries of the bills'
+# memoranda, summaries of the debates on the laws with most votes against, and overviews of what MPs most often say.
+# Runs after each transcripts run, every six hours to pick up batches still running (their ids are in
+# data/batches.json), and by hand. Replies are checked (quotes word for word) before they are saved; a refused one is
+# sent again once with what was wrong. Needs the repository secret ANTHROPIC_API_KEY.
 name: summaries
 
 on:
+  schedule:
+    - cron: "43 */6 * * *"
   workflow_dispatch:
     inputs:
+      convocation:
+        description: "Only this convocation (empty: every one)"
+        default: ""
       limit:
-        description: "Write at most this many summaries (0: all)"
+        description: "Summaries of memoranda: at most this many per convocation (0: all)"
         default: "0"
+      wait:
+        description: "Minutes to wait for the batches in all, before leaving them for the next run"
+        default: "90"
 
 permissions:
   contents: write
@@ -18,27 +29,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  summaries:
+  write:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Summarise
+      - name: Write
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::notice::The repository secret ANTHROPIC_API_KEY is not set: no summaries written."
+            echo "::notice::The repository secret ANTHROPIC_API_KEY is not set: nothing written."
             exit 0
           fi
           pip install uv && uv sync --frozen
-          for c in $(ls data); do
-            [ -f "data/$c/laws.json" ] && uv run zailiprotiv --convocation "$c" summaries --limit "${{ inputs.limit || 0 }}"
+          # Two passes: the first sends every batch without waiting, so they run side by side; the second waits for
+          # them, all together at most the time given (what is left of it for each command).
+          deadline=$(( $(date +%s) + ${{ inputs.wait || 90 }} * 60 ))
+          for pass in 1 2; do
+            for c in $(ls data); do
+              [ -f "data/$c/laws.json" ] || continue
+              [ -n "${{ inputs.convocation }}" ] && [ "$c" != "${{ inputs.convocation }}" ] && continue
+              wait=$(( pass == 1 ? 0 : ($deadline - $(date +%s)) / 60 )); [ "$wait" -lt 0 ] && wait=0
+              uv run zailiprotiv --convocation "$c" summaries --batch --wait "$wait" --limit "${{ inputs.limit || 0 }}"
+              uv run zailiprotiv --convocation "$c" debates-batch --wait "$wait"
+            done
+            wait=$(( pass == 1 ? 0 : ($deadline - $(date +%s)) / 60 )); [ "$wait" -lt 0 ] && wait=0
+            uv run zailiprotiv profiles-batch --wait "$wait"
           done
+          uv run zailiprotiv status
       - name: Commit
+        if: always()  # keep what was written, and the ids of batches still running
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -46,7 +70,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           git diff --cached --quiet && exit 0
-          git commit -m "Summaries of the bills' memoranda"
+          git commit -m "Written by the model: summaries, debates, MP overviews"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
           if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main

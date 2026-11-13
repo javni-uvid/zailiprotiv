@@ -160,7 +160,10 @@ def website(args) -> int:
     from zailiprotiv import site
     stats = site.build(ROOT, Path(args.out), args.domain or None)
     print(", ".join(f"{k}: {v}" for k, v in stats.items()))
-    return 0
+    bad = site.check(Path(args.out))  # the site is not published while any page breaks the rules
+    for b in bad:
+        print(f"  {b}")
+    return 1 if bad else 0
 
 
 def summaries_cmd(args) -> int:
@@ -173,6 +176,7 @@ def summaries_cmd(args) -> int:
     client = None
     done = failed = skipped = 0
     tokens = {"input": 0, "output": 0}
+    todo = {}
     for law in sorted(store["laws"].values(), key=lambda l: l.get("passed") or "", reverse=True):
         name = law.get("bill_file")
         if not name or not (Path(args.bills) / name).exists():
@@ -186,8 +190,11 @@ def summaries_cmd(args) -> int:
         if target.exists() and json.loads(target.read_text(encoding="utf-8")).get("fingerprint") == \
                 summaries.fingerprint(text):
             continue
-        if args.limit and done >= args.limit:
+        if args.limit and done + len(todo) >= args.limit:
             break
+        if getattr(args, "batch", False):
+            todo[name] = (law, memo, target)
+            continue
         if client is None:
             import anthropic
             client = anthropic.Anthropic()
@@ -201,6 +208,31 @@ def summaries_cmd(args) -> int:
         tokens["input"] += result["usage"]["input"]
         tokens["output"] += result["usage"]["output"]
         done += 1
+    if getattr(args, "batch", False):
+        from zailiprotiv import batch
+        client, state = _batch_client(args)
+        if client is None:
+            return 0
+        kind = f"summaries-{CONVOCATION}"
+        pending = state.pending(kind)
+        for name in (pending or {}).get("names", []):
+            if name not in todo:
+                law = next(l for l in store["laws"].values() if l.get("bill_file") == name)
+                todo[name] = (law, json.loads((Path(args.bills) / name).read_text(encoding="utf-8")), out_dir / name)
+        requests = {name: {"model": summaries.MODEL, "max_tokens": 1500, "system": summaries.SYSTEM,
+                           "messages": [{"role": "user", "content": summaries.material(law, memo)}]}
+                    for name, (law, memo, _) in todo.items()}
+        replies = batch.run(client, state, kind, requests, args.wait)
+        for name, text in sorted((replies or {}).items()):
+            law, memo, target = todo[name]
+            try:
+                result = summaries.record(law, memo, summaries.parse(text), summaries.MODEL)
+            except (ValueError, json.JSONDecodeError) as e:
+                failed += 1
+                print(f"  failed {law['title'][:90]}: {e}")
+                continue
+            target.write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            done += 1
     print(f"summaries written: {done}, failed: {failed}, bills without a memorandum: {skipped}; "
           f"tokens in {tokens['input']:,}, out {tokens['output']:,}")
     return 1 if failed and not done else 0
@@ -526,6 +558,148 @@ def debates_import(args) -> int:
     return 1 if refused and not saved else 0
 
 
+def _batch_client(args):
+    """The API client and the batch state, or None when there is no key (the workflow then does nothing)."""
+    import os
+    from zailiprotiv import batch
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        print("ANTHROPIC_API_KEY is not set: nothing sent")
+        return None, None
+    import anthropic
+    return anthropic.Anthropic(), batch.State(ROOT / "batches.json")
+
+
+def profiles_batch(args) -> int:
+    """Overviews of what MPs most often say, for every MP with enough speeches and no overview yet, written through
+    the Batch API, checked like a session's (quotes word for word) and saved to data/profiles/."""
+    from zailiprotiv import batch, profiles, summaries
+    client, state = _batch_client(args)
+    if client is None:
+        return 0
+    kind, system = "profiles", profiles.system(ROOT)
+    materials = {}
+    for key, own in sorted(profiles.speeches(ROOT).items()):
+        long = [s for s in own if len(s["text"].split()) >= profiles.LONG]
+        name = key.replace(" ", "-") + ".json"
+        if len(long) < args.min or ((ROOT / "profiles" / name).exists() and not args.again) or state.gave_up(kind, name):
+            continue
+        materials[name] = {"mp": key, "total_speeches": len(own), "speeches": profiles.selection(own)}
+        if args.limit and len(materials) >= args.limit:
+            break
+    pending = state.pending(kind)
+    if pending:  # the material of a batch already sent, so its replies can be checked
+        for name in pending["names"]:
+            if name not in materials:
+                key = name.removesuffix(".json").replace("-", " ")
+                own = profiles.speeches(ROOT).get(key, [])
+                materials[name] = {"mp": key, "total_speeches": len(own), "speeches": profiles.selection(own)}
+    requests = {n: {"model": summaries.MODEL, "max_tokens": 4000, "system": system,
+                    "messages": batch.messages(kind, n, json.dumps(m, ensure_ascii=False), state)}
+                for n, m in materials.items()}
+    replies = batch.run(client, state, kind, requests, args.wait)
+    if replies is None:
+        return 0
+    saved = refused = 0
+    for name, text in sorted(replies.items()):
+        material = materials[name]
+        try:
+            reply = profiles.reply_json(text)
+            bad = profiles.check(reply, material)
+        except (ValueError, KeyError, TypeError) as e:
+            reply, bad = None, [f"nečitljivo: {e}"]
+        if bad:
+            state.refuse(kind, name, text, bad)
+            refused += 1
+            print(f"  refused {name}: " + "; ".join(bad)[:300])
+            continue
+        (ROOT / "profiles" / name).write_text(json.dumps(profiles.record(reply, material, summaries.MODEL),
+                                                         ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        state.accept(kind, name)
+        saved += 1
+    state.save()
+    print(f"profiles saved: {saved}, refused: {refused} (sent again next run, at most {batch.TRIES} tries)")
+    return 0
+
+
+def debates_batch(args) -> int:
+    """Debate summaries for the laws with most votes against whose notes were read and that have none (or whose
+    material changed), written through the Batch API; quotes not in the notes word for word are dropped."""
+    from zailiprotiv import batch, debates, summaries
+    client, state = _batch_client(args)
+    if client is None:
+        return 0
+    kind = f"debates-{CONVOCATION}"
+    found, votes_, bills_ = _debated(args)
+    seated, df = debates.seats(votes_), debates.document_frequency(bills_)
+    out = DATA / "debates"
+    out.mkdir(parents=True, exist_ok=True)
+    chosen, pending = {}, state.pending(kind)
+    wanted = set(pending["names"]) if pending else set()
+    for i, (law, bill, n, final, item) in enumerate(found):
+        name = law["bill_file"]
+        text = debates.material(law, bill, n, final, seated, item, df)
+        done = (out / name).exists() and json.loads((out / name).read_text(encoding="utf-8")).get("fingerprint") == \
+            debates.fingerprint(text)
+        if name in wanted or (i < args.top and not done and not state.gave_up(kind, name)):
+            chosen[name] = (law, n, final, text)
+    requests = {name: {"model": summaries.MODEL, "max_tokens": 3000, "system": debates.SYSTEM,
+                       "messages": batch.messages(kind, name, text, state)}
+                for name, (law, n, final, text) in chosen.items()}
+    replies = batch.run(client, state, kind, requests, args.wait)
+    if replies is None:
+        return 0
+    saved = refused = 0
+    for name, reply in sorted(replies.items()):
+        law, n, final, text = chosen[name]
+        try:
+            debate, dropped = debates.parse(reply, n, debates.speaker_groups(n, final, seated))
+        except (ValueError, AttributeError, TypeError) as e:
+            state.refuse(kind, name, reply, [str(e) or type(e).__name__])
+            refused += 1
+            print(f"  refused {name}: {e}")
+            continue
+        (out / name).write_text(json.dumps(debates.record(law, text, debate, summaries.MODEL, dropped),
+                                           ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        state.accept(kind, name)
+        saved += 1
+        print(f"  {name}: {len(debate['citati'])} quotes kept, {len(dropped)} dropped")
+    state.save()
+    print(f"debates saved: {saved}, refused: {refused}")
+    return 0
+
+
+def status(args) -> int:
+    """What the data still lacks, per convocation: laws without a final vote, a memorandum, a summary or a debate
+    summary; notes read; and the batches still running or refused. Read-only."""
+    from zailiprotiv import batch, profiles, site
+    rows = []
+    for conv in sorted((d.name for d in ROOT.iterdir() if (d / "laws.json").exists()), key=int, reverse=True):
+        d = ROOT / conv
+        laws_ = json.loads((d / "laws.json").read_text(encoding="utf-8"))["laws"].values()
+        names = {l.get("bill_file") for l in laws_ if l.get("bill_file")}
+        have = lambda sub: {f.name for f in (d / sub).glob("*.json")} if (d / sub).is_dir() else set()
+        memos = {n for n in names if (d / "bills" / n).exists() and
+                 json.loads((d / "bills" / n).read_text(encoding="utf-8")).get("sections")}
+        notes = have("transcripts")
+        read = sum(1 for n in notes if json.loads((d / "transcripts" / n).read_text(encoding="utf-8")).get("speeches"))
+        rows.append((conv, len(laws_), sum(1 for l in laws_ if not l.get("final_vote")), len(names - memos),
+                     len(memos - have("summaries")), len(notes), read, len(have("debates"))))
+    print(f"{'saziv':>5} {'zakona':>7} {'bez konačnog':>13} {'bez obrazl.':>11} {'bez sažetka':>11} "
+          f"{'beleške':>8} {'sa govorima':>11} {'rasprave':>9}")
+    for r in rows:
+        print(f"{r[0]:>5} {r[1]:>7} {r[2]:>13} {r[3]:>11} {r[4]:>11} {r[5]:>8} {r[6]:>11} {r[7]:>9}")
+    eligible = sum(1 for own in profiles.speeches(ROOT).values()
+                   if len([s for s in own if len(s["text"].split()) >= profiles.LONG]) >= args.min)
+    done = len([f for f in (ROOT / "profiles").glob("*.json")])
+    print(f"pregledi poslanika: {done} (sa dovoljno govora: {eligible})")
+    state = batch.State(ROOT / "batches.json")
+    for kind, p in state.data["pending"].items():
+        print(f"batch u toku: {kind} {p['id']} ({len(p['names'])})")
+    for kind, names in state.data["refused"].items():
+        print(f"odbijeno: {kind}: " + ", ".join(f"{n} ({r['tries']}x)" for n, r in sorted(names.items())))
+    return 0
+
+
 CONVOCATION = CURRENT
 
 
@@ -563,6 +737,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--bills", default=str(DATA / "bills"))
     p.add_argument("--out", default=str(DATA / "summaries"))
     p.add_argument("--limit", type=int, default=0, help="write at most this many (0: all)")
+    p.add_argument("--batch", action="store_true", help="through the Batch API (half the price; results may come next run)")
+    p.add_argument("--wait", type=float, default=300, help="with --batch: minutes to wait for the batch")
     p.set_defaults(run=summaries_cmd)
     for name, run, help_ in (("export", export, "write the material of laws still without a summary"),
                              ("import", import_summaries, "save summaries written in a session (JSON Lines)")):
@@ -607,6 +783,19 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("file")
     p.add_argument("--model", required=True)
     p.set_defaults(run=debates_import)
+    p = commands.add_parser("profiles-batch", help="overviews of MPs' speeches through the Batch API → data/profiles/")
+    p.add_argument("--min", type=int, default=10, help="speeches of some length an MP needs")
+    p.add_argument("--again", action="store_true")
+    p.add_argument("--limit", type=int, default=0, help="send at most this many (0: all)")
+    p.add_argument("--wait", type=float, default=300, help="minutes to wait for the batch before leaving it for next run")
+    p.set_defaults(run=profiles_batch)
+    p = commands.add_parser("debates-batch", help="debate summaries through the Batch API → data/<N>/debates/")
+    p.add_argument("--top", type=int, default=20)
+    p.add_argument("--wait", type=float, default=300)
+    p.set_defaults(run=debates_batch)
+    p = commands.add_parser("status", help="what the data still lacks, per convocation")
+    p.add_argument("--min", type=int, default=10)
+    p.set_defaults(run=status)
     p = commands.add_parser("site", help="build the static site")
     p.add_argument("--out", default="_site")
     p.add_argument("--domain", default="zailiprotiv.rs")

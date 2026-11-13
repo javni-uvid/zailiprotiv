@@ -1,8 +1,10 @@
-# Run by hand: index a convocation's sittings and laws (the current one unless another is chosen), read every roll
+# Every morning for the current convocation, or by hand for another: index a convocation's sittings and laws (the current one unless another is chosen), read every roll
 # call and bill not read yet, link laws to their votes, and commit data/<convocation>/ when it changed.
 name: votes
 
 on:
+  schedule:
+    - cron: "17 4 * * *"  # 05:17 in Belgrade (winter)
   workflow_dispatch:
     inputs:
       convocation:
@@ -51,12 +53,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
-          git diff --cached --quiet && { gh workflow run pages.yml --ref main; exit 0; }
-          # New bills get their summaries in a run of their own, which then publishes the site.
+          c="${{ inputs.convocation || '14' }}"
+          # Next in the chain: the notes of the debates, then the model's writing, which publishes the site.
+          git diff --cached --quiet && { gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0; }
           git commit -m "Roll calls read from the Assembly's site (convocation ${{ inputs.convocation || '14' }})"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
           if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main
-          gh workflow run summaries.yml --ref main || true
+          gh workflow run transcripts.yml --ref main -f convocation=$c
         env:
           GH_TOKEN: ${{ github.token }}

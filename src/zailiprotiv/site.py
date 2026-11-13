@@ -722,3 +722,27 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                           "Drugačije od većine svoje grupe. " if r["differs"] else "") for r in record])
     (out / ".nojekyll").write_text("", encoding="utf-8")
     return stats
+
+
+# What every built page must keep to (project principles): nothing loaded from another site, and pages light enough
+# for a phone. The largest page now is under 0.6 MB.
+PAGE_LIMIT = 1_000_000
+EXTERNAL = re.compile(r"<(?:script|iframe|img|source|video|audio|embed|object)\b[^>]*\bsrc=[\"'](?:https?:)?//"
+                      r"|<link\b[^>]*\bhref=[\"'](?:https?:)?//[^\"']*[\"'][^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)"
+                      r"|<link\b[^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)[\"'][^>]*\bhref=[\"'](?:https?:)?//"
+                      r"|@import\s+url\(\s*[\"']?(?:https?:)?//|url\(\s*[\"']?(?:https?:)?//", re.I)
+
+
+def check(out: Path) -> list[str]:
+    """What is wrong with a built site: pages over the limit, anything loaded from another site."""
+    bad = []
+    for f in sorted(out.rglob("*")):
+        if f.suffix not in (".html", ".css", ".js"):
+            continue
+        text = f.read_text(encoding="utf-8")
+        if f.suffix == ".html" and len(text.encode()) > PAGE_LIMIT:
+            bad.append(f"{f.relative_to(out)}: {len(text.encode()) / 1e6:.1f} MB")
+        m = EXTERNAL.search(text)
+        if m:
+            bad.append(f"{f.relative_to(out)}: spoljni resurs: {m.group(0)[:80]}")
+    return bad

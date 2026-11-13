@@ -1,4 +1,4 @@
-# Run by hand: the stenographic notes of the debates on the laws with the most votes against, read into
+# After each votes run (or by hand): the stenographic notes of the debates on the laws with the most votes against, read into
 # data/<convocation>/transcripts/<sitting>.json and committed.
 name: transcripts
 
@@ -48,7 +48,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
-          git diff --cached --quiet && exit 0
-          git commit -m "Stenographic notes of the debates (convocation ${{ inputs.convocation }})"
-          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-          if git status -sb | grep -q ahead; then exit 1; fi
+          if ! git diff --cached --quiet; then
+            git commit -m "Stenographic notes of the debates (convocation ${{ inputs.convocation }})"
+            for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+            if git status -sb | grep -q ahead; then exit 1; fi
+          fi
+          gh workflow run summaries.yml --ref main -f convocation=${{ inputs.convocation }}

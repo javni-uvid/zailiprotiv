@@ -16,6 +16,17 @@ in the same commit. README.md describes the project for its users; this file is 
 - **The development sandbox may not reach parlament.gov.rs; GitHub's runners may.** Run anything that needs the
   site through `workflow_dispatch`.
 - **Only one pending run per workflow.** Each workflow has a concurrency group.
+- **The data runs are a chain** (13 Nov 2026): **votes** every morning (current convocation) → **transcripts** →
+  **summaries** (the model's writing) → **pages**. A run by hand of any link continues the chain from there.
+- **The model's writing runs in GitHub Actions, not in a session** (13 Nov 2026: session agents used up the
+  maintainer's limits). `summaries --batch`, `debates-batch` and `profiles-batch` send Message Batches (half the
+  price), check every reply as the session imports did (quotes word for word), and keep the ids of batches still
+  running and the refused replies in `data/batches.json`; a refused reply is sent once more with what was wrong, then
+  left for a person (`zailiprotiv status` lists it). The session commands (`export`/`import`, `*-export`/`*-import`)
+  stay for work by hand.
+- **`zailiprotiv status`** says what the data still lacks per convocation; look before and after a data run.
+- **`zailiprotiv site` fails** when a page is over 1 MB or loads anything from another site (`site.check`); the
+  **pages** workflow then doesn't publish.
 - **Talk to the maintainer in Serbian** (Latin script), briefly and to the point. Code, comments and docs are in
   English.
 
@@ -159,8 +170,8 @@ These are the project's promises to its readers. Never change them without the m
   and from the debate in principle all of it, or, when it was joint, the paragraphs naming the law's subject
   (words of its title and rare words of its memorandum). A speaker's group is the one in the roll call nearest in
   time, within two months; ministers and others on no roll call are marked. Every quote is checked word for word
-  against the notes, and against its speaker, and dropped if not found. `zailiprotiv debates-export` / `debates-import`
-  for summaries written in a session; kept in `data/<N>/debates/<bill file>.json`.
+  against the notes, and against its speaker, and dropped if not found. `zailiprotiv debates-batch` (Actions), or
+  `debates-export` / `debates-import` for summaries written in a session; kept in `data/<N>/debates/<bill file>.json`.
 
 - **What an MP most often says** (the maintainer, 12 Nov 2026; a first batch of nine MPs, the ones who spoke most in the
   notes read, as a trial): `data/profiles/<name>.json`, three to five points a model wrote from a selection of the MP's

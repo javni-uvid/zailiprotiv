@@ -139,3 +139,13 @@ def test_site_builds_every_convocation(tmp_path):
     assert "abramovic-nenad.html" in (out / "poslanici.html").read_text()  # one page of MPs per convocation
     assert "abramovic-nenad.html" in (out / "poslanici-13.html").read_text()
     assert 'href="poslanici-13.html"' in (out / "poslanici.html").read_text()
+
+
+def test_a_built_site_loads_nothing_from_other_sites(tmp_path):
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs")
+    assert site.check(out) == []
+    (out / "x.html").write_text('<script src="https://cdn.example.com/a.js"></script>')
+    (out / "y.css").write_text("@import url('https://fonts.googleapis.com/css2?family=X');")
+    (out / "z.html").write_text('<a href="https://www.parlament.gov.rs/">izvor</a>' + "x" * (site.PAGE_LIMIT + 1))
+    assert [b.split(":")[0] for b in site.check(out)] == ["x.html", "y.css", "z.html"]

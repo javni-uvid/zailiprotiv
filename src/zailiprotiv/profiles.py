@@ -168,3 +168,21 @@ def distinctive(by_mp: dict[str, list[dict]], top: int = 12, min_speeches: int =
             scores.append((lo * math.sqrt(k), st))
         out[key] = [best_form[st][0] for _, st in sorted(scores, reverse=True)[:top]]
     return out
+
+
+def system(root: Path) -> str:
+    """The rules a model writes an overview under (data/profiles/RULES.md), for a batch: the reply is the JSON
+    itself, instead of a file written in a session."""
+    rules = (root / "profiles" / "RULES.md").read_text(encoding="utf-8").split("\nIzlaz:")[0].rstrip()
+    return rules + """
+
+Izlaz: SAMO JSON objekat, bez ijedne reči pre ili posle, oblika:
+{"mp": "<kao u ulazu>", "tacke": [{"tekst": "…", "govori": ["id", "id"], "citat": {"tekst": "…", "govor": "id"}}]}"""
+
+
+def reply_json(text: str) -> dict:
+    """The JSON object in a model's reply."""
+    m = re.search(r"\{.*\}", text, flags=re.S)
+    if not m:
+        raise ValueError("nema JSON objekta u odgovoru")
+    return json.loads(m.group(0))
