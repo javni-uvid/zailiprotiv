@@ -1,0 +1,26 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2907-12Lat.pdf",
+ "sha256": "8ec6501e5e760f8c583bc8ba8ef715f70718e46b318d63a87ca384793ce8df10",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV\nUstavni osnov za donošenje ovog zakona sadržan je u članu 97. tačka 1.\nUstava Republike Srbije, prema kome Republika Srbija uređuje i obezbeđuje njen\nmeđunarodni položaj i odnose sa drugim državama i međunarodnim organizacijama i\nu članu 99. stav 1. tačka 4. Ustava Republike Srbije, prema kome Narodna skupština\npotvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog\npotvrđivanja.",
+  "reasons": "RAZLOZI ZA POTVRĐIVANJE SPORAZUMA\nU cilju regulisanja oblasti socijalne sigurnosti, nakon jedne runde pregovora, u\nBeogradu je 26. januara 2012. godine potpisan Sporazum između Republike Srbije i\nRepublike Austrije o socijalnoj sigurnosti (u daljem tekstu: Sporazum).\nSporazum predstavlja sveobuhvatni međunarodni sporazum iz oblasti\npenzijskog i invalidskog osiguranja; zdravstvenog osiguranja i zdravstvene zaštite;\npovrede na radu i profesionalne bolesti; materinstva i novčane naknade za slučaj\nnezaposlenosti.\nSporazum je zasnovan na opšteprihvaćenim principima, iskustvima naše\nzemlje u ovoj oblasti, kao i na standardima koje predviđa Uredba Evropske unije broj\n1408/71 koja reguliše socijalno osiguranje radnika migranata.\nOsnovni principi zastupljeni kroz odredbe sporazuma su: princip nacionalnog\ntretmana; primena pravnih propisa države zaposlenja na utvrđivanje obaveze za\nsprovođenje socijalnog osiguranja – sa izuzetkom sprovođenja socijalnog osiguranja\nupućenih lica i diplomatsko-konzularnih predstavnika; princip osiguranja – koji\nomogućava da teret davanja iz socijalnog osiguranja snosi ona država čiji je\nosiguranik u pitanju; sabiranje perioda osiguranja navršenih u obe države ugovornice\nradi ostvarivanja prava na davanja; neposredna isplata stečenih davanja korisniku\nkoji je ostvario pravo na davanja (penzija).",
+  "funds": "FINANSIJSKA SREDSTVA POTREBNA ZA SPROVOĐENJE\nZAKONA\nZa sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u\nbudžetu Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 97,
+   "paragraph": null,
+   "points": [
+    1
+   ]
+  },
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

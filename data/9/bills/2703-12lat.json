@@ -1,0 +1,26 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2703-12Lat.pdf",
+ "sha256": "c7a0cab937ff144eeba1104547712b6cb3e0d54ec5269992a32aefbc6b8ba7ce",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV\nUstavni osnov za donošenje ovog zakona sadržan je u članu 70. stav 1.\nUstava Republike Srbije, kojim je propisano da se penzijsko osiguranje uređuje\nzakonom i u članu 97. tačka 8. Ustava Republike Srbije, kojim je propisano da\nRepublika Srbija uređuje i obezbeđuje sistem u oblasti socijalnog osiguranja i drugih\noblika socijalne sigurnosti.",
+  "reasons": "RAZLOZI ZA DONOŠENJE\nRazlozi za donošenje ovog zakona proizlaze iz potrebe usklađivanja\nodredaba Zakona o penzijskom i invalidskom osiguranju („Službeni glasnik RS”, br.\n34/03, 64/04, 84/04, 85/05, 101/05, 63/06, 5/09, 107/09, 101/10), sa odredbama\npropisa o budžetskom sistemu. Kako su tim propisima predložene izmene i dopune i\nu delu koji se odnosi na usklađivanje penzije, potrebno je u tom delu uskladiti Zakon\no penzijskom i invalidskom osiguranju, pa je predloženo da se penzije u periodu\noktobar 2012. i april 2013. godine usklađuju tako što će se povećati za po 2%.\nRAZLOZI ZA STUPANjE NA SNAGU ZAKONA PRE OSMOG\nDANA OD DANA OBJAVLjIVANjA U „SLUŽBENOM GLASNIKU\nREPUBLIKE SRBIJE”\nPredlaže se da ovaj zakon stupa na snagu narednog dana od dana\nobjavljivanja u ,,Službenom glasniku Republike Srbije”, kako bi se obezbedilo\nnesmetano funkcionisanje sistema penzijskog i invalidskog osiguranja.",
+  "explained": "OBJAŠNjENjE OSNOVNIH PRAVNIH INSTITUTA I\nPOJEDINAČNIH REŠENjA\n\nUz član 1.\nČlanom 1. predloženo je da se posle člana 80. Zakona doda član 80a, kojim\nje utvrđeno da će se, izuzetno od člana 80. Zakona, penzije u periodu oktobar 2012. i\napril 2013. godine uskladiti tako što će se povećati za po 2%.\n\nUz član 2.\nOvom odredbom predlaže se da ovaj zakon stupa na snagu narednog dana\nod dana objavljivanja u ,,Službenom glasniku Republike Srbije”.",
+  "funds": "FINANSIJSKA SREDSTVA POTREBNA ZA SPROVOĐENjE\nZAKONA\nZa sprovođenje ovog zakona nisu potrebna dodatna finansijska sredstava.",
+  "urgency": "RAZLOZI ZA DONOŠENjE ZAKONA PO HITNOM POSTUPKU\nUkupna društveno ekonomska situacija posebno je aktuelizovala pitanje\nnačina usklađivanja penzija. S obzirom na potrebe usklađivanja odredaba ovog\nzakona sa odredbama zakona kojim se uređuje budžetski sistem, a posebno imajući\nu vidu činjenicu da bi njegova primena imala efekte, ne samo u oblasti penzijskog i\ninvalidskog osiguranja, već i u oblasti ukupnih javnih finansija, predlaže se da se ovaj\nzakon donese po hitnom postupku."
+ },
+ "articles": [
+  {
+   "article": 70,
+   "paragraph": 1,
+   "points": []
+  },
+  {
+   "article": 97,
+   "paragraph": null,
+   "points": [
+    8
+   ]
+  }
+ ]
+}

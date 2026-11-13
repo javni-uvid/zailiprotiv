@@ -1,0 +1,26 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2293-13Lat.pdf",
+ "sha256": "7e7130818ad6b8b1625a352385e6f52137ee318b54182ddbc12043def15e4551",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV\nUstavni osnov za donošenje ovog zakona sadržan je u članu 97. tačka 1. Ustava\nRepublike Srbije, prema kome Republika Srbija uređuje i obezbeđuje njen\nmeđunarodni položaj i odnose sa drugim državama i međunarodnim organizacijama i\nu članu 99. stav 1. tačka 4. Ustava Republike Srbije, prema kome Narodna skupština\npotvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog\npotvrđivanja.",
+  "reasons": "RAZLOZI ZA POTVRĐIVANjE SPORAZUMA\nRadi regulisanja oblasti socijalne sigurnosti, nakon četiri runde pregovora, u\nBeogradu je 12. aprila 2013. godine potpisan Sporazum o socijalnoj sigurnosti\nizmeđu Republike Srbije i Kanade (u daljem tekstu: Sporazum).\nSporazum predstavlja međunarodni sporazum kojim se reguliše penzijsko i\ninvalidsko osiguranje i pravo na osnovu povrede na radu i profesionalne bolesti.\nSporazum je zasnovan na opšteprihvaćenim principima, iskustvima naše zemlje\nu ovoj oblasti, kao i na standardima koje predviđa Uredba Evropske unije broj 883/04\nkoja reguliše socijalnu sigurnost radnika migranata.\nOsnovni principi zastupljeni kroz odredbe sporazuma su: princip nacionalnog\ntretmana; primena pravnih propisa države zaposlenja na utvrđivanje obaveze za\nsprovođenje socijalnog osiguranja – sa izuzetkom sprovođenja socijalnog osiguranja\nupućenih lica i diplomatsko-konzularnih predstavnika; princip osiguranja – koji\nomogućava da teret davanja iz socijalnog osiguranja snosi ona država čiji je\nosiguranik u pitanju; sabiranje perioda osiguranja navršenih u obe države ugovornice\nradi ostvarivanja prava na davanja; neposredna isplata stečenih davanja korisniku\nkoji je ostvario pravo na davanja (penzija).",
+  "funds": "FINANSIJSKA SREDSTVA POTREBNA ZA SPROVOĐENjE ZAKONA\nZa sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u\nbudžetu Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 97,
+   "paragraph": null,
+   "points": [
+    1
+   ]
+  },
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

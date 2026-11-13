@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2496-13Lat.pdf",
+ "sha256": "f1db8391d77dc19151be1e6d271b1923e40f8b76fd1ef3fbfe4cdfa3393324e8",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV ZA DONOŠENJE ZAKONA\nUstavni osnov za donošenje Zakona o izmeni Zakona o potvrđivanju\nKonvencije o izvođenju dokaza u inostranstvu u građanskim i trgovačkim stvarima\nsadržan je u članu 99. stav 1. tačka 4. Ustava Republike Srbije, koji propisuje da\nNarodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena\nobaveza njihovog potvrđivanja.",
+  "reasons": "RAZLOZI ZA DONOŠENJE ZAKONA\nMinistarstvo pravde i državne uprave je organ preko kog se odvija\nmeđunarodna pravna pomoć na osnovu svih bilateralnih ugovora o pravnoj pomoći u\ngrađanskim i krivičnim stvarima. Određivanje Ministarstva pravde i državne uprave\nza centralni izvršni organ preko kog bi se odvijala pravna pomoć po osnovu\nKonvencije o izvođenju dokaza u inostranstvu u građanskim i trgovačkim stvarima,\ndoprinelo bi većoj efikasnosti u pružanju međunarodne pravne pomoći, jer bi se na\ntaj način celokupna međunarodna pravna pomoć, kako po osnovu bilateralnih tako i\nmultilateralnih ugovora, odvijala preko jednog organa. To omogućava u značajnoj\nmeri jednostavniju proceduru za domaće i strane organe, kao i ujednačavanje prakse\nprilikom postupanja po zamolnicama.",
+  "funds": "OCENA POTREBNIH FINANSIJSKIH SREDSTAVA\nZa sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska\nsredstva u budžetu Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/4148-12Lat.pdf",
+ "sha256": "c58095fb199bd6075ed63c17cc78e35f293f7d246dc74b36f8175596c706afef",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Protokola o vodi i zdravlju\nuz Konvenciju o zaštiti i korišćenju prekograničnih vodotokova i međunarodnih jezera\n(u daljem tekstu: Zakon) sadržan je u članu 97. tač. 1. i 10. Ustava Republike Srbije,\nkojim je propisano da Republika Srbija uređuje i obezbeđuje, između ostalog, njen\nmeđunarodni položaj i odnose sa drugim državama i međunarodnim organizacijama i\nsistem u oblasti zdravstva, kao i u članu 99. stav 1. tačka 4. Ustava Republike Srbije,\nprema kojem Narodna skupština potvrđuje međunarodne ugovore kada je zakonom\npredviđena obaveza njihovog potvrđivanja.",
+  "reasons": "Razlozi zbog kojih se predlaže potvrđivanje\nRepublika Srbija je 2010. godine ratifikovala Konvenciju o zaštiti i korišćenju\nprekograničnih vodotokova i međunarodnih jezera i Amandmana na čl. 25. i 26.\nKonvencije o zaštiti i korišćenju prekograničnih vodotokova i međunarodnih jezera.\nProtokol o vodi i zdravlju (u daljem tekstu: Protokol) je protokol koji ide uz ovu\nkonvenciju. Obaveza ratifikacije Protokola proizilazi iz Akcionog plana za period od\n2009. do 2013. godine Strategije javnog zdravlja Republike Srbije („Službeni glasnik\nRepublike Srbije” broj 22/09) i Plan akcije za životnu sredinu i zdravlje dece u\nRepublici Srbiji za period od 2009. do 2019. godine („Službeni glasnik Republike\nSrbije” broj 83/09). Ratifikacija Protokola je važna i sa stanovišta činjenice da je\nRepublika Srbija bogata prirodnim izvorištima voda i da ima razvijen i očuvan\nekosistem.\nCilj Protokola je da se na svim nivoima promoviše zaštita zdravlja ljudi,\nblagostanje pojedinca i kolektiva, kao i da se podrži održivi razvoj kroz zaštitu\nekosistema, unapređenje vodosnabdevanja, prevenciju, kontrolu i smanjenje bolesti\npovezanih sa vodom. Cilj Protokola je i obezbeđenje pristupa vodi za piće za\nsvakoga i obezbeđenje sanitacija za sve u okviru integrisanih vodovodnih sistema\nusmerenih na održivu uporebu vodnih resursa, na kvalitet okolnih voda i zaštitu\nokolnih ekosistema.\nZnačaj ratifikacije Protokola se ogleda u mogućnosti da se kroz njegovu\nimplementaciju obezbedi:\n1) bolji nadzor nad bolestima koje su povezane sa vodom i uspostavljanje sistema\nranog upozorenja i reagovanja radi sprečavanja, suzbijanja i smanjivanja tih bolesti;\n2) bolji pristup vodi za piće za svakoga;\n3) bolje obezbeđenje sanitacija za svakoga;\n4) jačanje bilateralne i multilateralne saradnje u oblasti sprečavanja, suzbijanja i\nsmanjenja bolesti koje se odnose na vodu za piće.",
+  "funds": "Ocena potrebnih finansijskih sredstava\nZa sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u\nbudžetu Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 97,
+   "paragraph": null,
+   "points": [
+    1,
+    10
+   ]
+  },
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

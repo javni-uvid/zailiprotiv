@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/3119-12Lat.pdf",
+ "sha256": "1db26a985b02a37354566895df719ba2678dccc93f80826d405f6736d7f6595d",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje ovog zakona je član 99. stav 1. tačka 4. Ustava\nRepublike Srbije, prema kome Narodna skupština potvrđuje međunarodne ugovore\nkad je zakonom predviđena obaveza njihovog potvrđivanja.",
+  "reasons": "Razlozi za potvrđivanje međunarodnog ugovora\nOvim zakonom se omogućava sprovođenje dvostranog međunarodnog\nSporazuma između Vlade Republike Srbije i Vlade Gruzije o saradnji i uzajamnoj\npomoći u carinskim pitanjima u cilju predupređivanja i suzbijanja povreda carinskih,\nspoljnotrgovinskih i deviznih propisa, suzbijanja krijumčarenja, olakšanja i ubrzanja\nrobnog i putničkog prometa između dve zemlje i razmene iskustava u radu carinskih\norgana.\nOsim toga, potvrđivanjem ovog sporazuma obezbeđuje se pravilna primena\ncarinskih propisa kroz razmenu informacija između dve zemlje o prevozu i isporuci\nrobe, odredištu robe, njenoj tarifnoj oznaci, vrednosti i poreklu i robe, kao i\ninformacije o izvršenim ili planiranim radnjama kojima se krše ili mogu da se prekrše\ncarinski propisi.",
+  "funds": "Finansijske obaveze za izvršavanje međunarodnog ugovora\n\n\nIzvršavanjem Sporazuma između Vlade Republike Srbije i Vlade Gruzije o\nsaradnji i uzajamnoj pomoći u carinskim pitanjima ne stvaraju se finansijske obaveze\nza Republiku Srbiju.\nProcena finansijskih sredstava potrebnih za izvršavanje međunarodnog\nugovora\nZa izvršavanje Sporazuma između Vlade Republike Srbije i Vlade Gruzije o\nsaradnji i uzajamnoj pomoći u carinskim pitanjima nije potrebno obezbediti sredstva\niz budžeta Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

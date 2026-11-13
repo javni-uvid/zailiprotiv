@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/3332-12Lat.pdf",
+ "sha256": "28d9fdfd9b7c72cc502eb92b4bd75088d684a3633cd1f28abc0f6edd532dbad6",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Ugovora između\nRepublike Srbije i Republike Slovenije o međusobnom izvršavanju sudskih odluka u\nkrivičnim stvarima sadržan je u članu 99. stav 1. tačka 4. Ustava Republike Srbije\nprema kojoj je u nadležnosti Narodne skupštine da potvrđuje međunarodne ugovore\nkada je zakonom predviđena obaveza njihovog potvrđivanja.",
+  "reasons": "Razlozi za potvrđivanje Ugovora\nIzmeđu Republike Srbije i Republike Slovenije ne postoji bilateralni\nugovor o međusobnom izvršavanju sudskih odluka u krivičnim stvarima, kojim bi bila\npravno uređena ova oblast.\nIzmeđu dve države pravna saradnja u krivičnoj oblasti je veoma\nintenzivna. Zaključenjem Ugovora između dve države kojim će se regulisati pravna\nsaradnja u oblasti međusobnog izvršavanja sudskih odluka u krivičnim stvarima, ista\nće se učiniti još efikasnijom, što je u obostranom interesu.",
+  "funds": "Ocena potrebe finansijskih sredstava za sprovođenje Zakona\nZa primenu ovog zakona nije potrebno obezbediti dodatna finansijska\nsredstva iz budžeta Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

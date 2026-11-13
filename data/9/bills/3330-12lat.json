@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/3330-12Lat.pdf",
+ "sha256": "f55f664a11829cd558d4a851d0047f1522f9fd8763fd57bb48f2c6ac5301a76b",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Ugovora između\nRepublike Srbije i Republike Makedonije o međusobnom izvršavanju sudskih odluka\nu krivičnim stvarima sadržan je u članu 99. stav 1. tačka 4. Ustava Republike Srbije\nprema kojoj je u nadležnosti Narodne skupštine da potvrđuje međunarodne ugovore\nkada je zakonom predviđena obaveza njihovog potvrđivanja.",
+  "reasons": "Razlozi za potvrđivanje Ugovora\nIzmeđu Republike Srbije i Republike Makedonije pravna pomoć je sada\nregulisana Ugovorom između Srbije i Crne Gore i Republike Makedonije zaključenim\n2004. godine.\nIzmeđu dve države pravna saradnja je veoma intenzivna. Zaključenjem novog\n- posebnog Ugovora o međusobnom izvršavanju sudskih odluka u krivičnim stvarima\nstvoriće se uslovi za čvršću i efikasniju pravnu saradnju između dve države u\npogledu međusobnog izvršavanja krivičnih presuda.",
+  "funds": "Ocena potrebe finansijskih sredstava za sprovođenje Zakona\nZa primenu ovog zakona nije potrebno obezbediti dodatna finansijska\nsredstva iz budžeta Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

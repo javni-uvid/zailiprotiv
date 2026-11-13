@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/3331-12Lat.pdf",
+ "sha256": "0349271984aa84db5565da0dfd565df088448352c66e7dd56c8393b2dbdb2301",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Ugovora između\nRepublike Srbije i Republike Makedonije o izručenju sadržan je u članu 99. stav 1.\ntačka 4. Ustava Republike Srbije prema kojoj je u nadležnosti Narodne skupštine da\npotvrđuje međunarodne ugovore kada je zakonom predviđena obaveza njihovog\npotvrđivanja.",
+  "reasons": "Razlozi za potvrđivanje Ugovora\nIzmeđu Republike Srbije i Republike Makedonije pravna pomoć je sada\nregulisana Ugovorom između Srbije i Crne Gore i Republike Makedonije zaključenim\n2004. godine.\nIzmeđu dve države pravna saradnja je veoma intenzivna. Zaključenjem novog\n- posebnog Ugovora o izručenju, stvoriće se uslovi za efikasnije odvijanje ovog vida\npravne pomoći između dve države, pre svega stvaranjem mogućnosti za izručenje\nsopstvenih državljanja za krivična dela organizovanog kriminala, korupcije i pranja\nnovca.",
+  "funds": "Ocena potrebe finansijskih sredstava za sprovođenje Zakona\nZa primenu ovog zakona nije potrebno obezbediti dodatna finansijska\nsredstva iz budžeta Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}
