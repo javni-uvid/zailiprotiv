@@ -1,0 +1,59 @@
+# A sample of debate summaries written by another model, into samples/<model>/<convocation>/, to compare its
+# quality and cost with the published texts before changing the model. By hand only; run again to pick up a batch
+# that was still running.
+name: sample
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model"
+        default: "claude-haiku-5-5"
+      convocation:
+        description: "Convocation"
+        default: "13"
+      only:
+        description: "Bill files, comma-separated (names in data/<N>/debates/)"
+        required: true
+      wait:
+        description: "Minutes to wait for the batch"
+        default: "60"
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: summaries  # one writer of data/batches.json at a time
+  cancel-in-progress: false
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Write
+        env:
+          ZAILIPROTIV_MODEL: ${{ inputs.model }}
+          ANTHROPIC_FEDERATION_RULE_ID: fdrl_01NCmgWJsGrXFudbCfhmGqvD
+          ANTHROPIC_ORGANIZATION_ID: 7dd19a6e-f6b2-4240-a238-fa1268701199
+          ANTHROPIC_SERVICE_ACCOUNT_ID: svac_01B894Uyt46AtSiNR9igxMvJ
+          ANTHROPIC_WORKSPACE_ID: wrkspc_01NNmkqCRfENePvimjwqYJtD
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv --convocation "${{ inputs.convocation }}" debates-batch --only "${{ inputs.only }}" \
+            --out "samples/${{ inputs.model }}/${{ inputs.convocation }}" --wait "${{ inputs.wait }}"
+          uv run zailiprotiv status | grep -E "potrošeno|batch u toku" || true
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/batches.json samples 2>/dev/null || git add data/batches.json
+          git diff --cached --quiet && exit 0
+          git commit -m "A sample written by ${{ inputs.model }}"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

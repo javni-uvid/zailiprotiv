@@ -689,10 +689,15 @@ def debates_batch(args) -> int:
     client, state = _batch_client(args)
     if client is None:
         return 0
-    kind = f"debates-{CONVOCATION}"
+    # A sample (--only, with --out): the named laws written again by the model in ZAILIPROTIV_MODEL into a folder
+    # of their own, to compare models without touching the published texts.
+    only = set(filter(None, (args.only or "").split(",")))
+    kind = f"sample-{CONVOCATION}" if only else f"debates-{CONVOCATION}"
     found, votes_, bills_ = _debated(args)
     seated, df = debates.seats(votes_), debates.document_frequency(bills_)
-    out = DATA / "debates"
+    out = Path(args.out) if args.out else DATA / "debates"
+    if only and not args.out:
+        raise SystemExit("--only needs --out: a sample must not replace the published texts")
     out.mkdir(parents=True, exist_ok=True)
     chosen, pending = {}, state.pending(kind)
     wanted = set(pending["names"]) if pending else set()
@@ -701,12 +706,15 @@ def debates_batch(args) -> int:
         text = debates.material(law, bill, n, final, seated, item, df)
         done = (out / name).exists() and json.loads((out / name).read_text(encoding="utf-8")).get("fingerprint") == \
             debates.fingerprint(text)
-        if name in wanted or (i < args.top and not done and not state.gave_up(kind, name)):
+        if only:
+            if name in only and not done:
+                chosen[name] = (law, n, final, text)
+        elif name in wanted or (i < args.top and not done and not state.gave_up(kind, name)):
             chosen[name] = (law, n, final, text)
     requests = {name: {"model": summaries.MODEL, "max_tokens": batch.ROOM, "system": batch.cached(debates.SYSTEM),
                        "messages": batch.messages(kind, name, text, state)}
                 for name, (law, n, final, text) in chosen.items()}
-    replies = batch.run(client, state, kind, requests, args.wait)
+    replies = batch.run(client, state, kind, requests, args.wait, force=bool(only))
     if replies is None:
         return 0
     saved = refused = 0
@@ -857,6 +865,8 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("debates-batch", help="debate summaries through the Batch API → data/<N>/debates/")
     p.add_argument("--top", type=int, default=20)
     p.add_argument("--wait", type=float, default=300)
+    p.add_argument("--only", help="a sample: these bill files only (comma-separated), sent even while paused")
+    p.add_argument("--out", help="where a sample is written")
     p.set_defaults(run=debates_batch)
     p = commands.add_parser("procedure", help="the bills in procedure now → data/<N>/procedure.json")
     p.add_argument("--out", default=str(DATA / "procedure.json"))

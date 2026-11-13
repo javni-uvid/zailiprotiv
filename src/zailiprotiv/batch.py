@@ -80,7 +80,8 @@ def messages(kind: str, name: str, user: str, state: State) -> list[dict]:
     return msgs
 
 
-def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes: float) -> dict[str, str] | None:
+def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes: float,
+        force: bool = False) -> dict[str, str] | None:
     """Send `requests` ({name: Messages API params}) as one batch, or pick up the batch of this kind already sent,
     and wait for it. The text of each reply by name; None if the batch is still running after `wait_minutes` (its id
     stays in the state for the next run). Names may be any text: the API sees their position only."""
@@ -88,7 +89,7 @@ def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes
     if pending is None:
         if not requests:
             return {}
-        if state.data.get("paused"):  # "paused": true in data/batches.json: finish what was sent, send nothing new
+        if state.data.get("paused") and not force:  # "paused": true in data/batches.json: finish what was sent, send nothing new
             print(f"{kind}: paused, {len(requests)} requests not sent")
             return {}
         names = sorted(requests)
