@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, plural, how with context %}
+{% block title %}{{ g.name }}, {{ g.conv_name }} saziv — Za ili Protiv{% endblock %}
+{% block description %}Poslanička grupa {{ g.name }} u {{ g.conv_name|lower }} sazivu: članovi, kako glasa po oblastima i na kojim zakonima se podelila.{% endblock %}
+{% block main %}
+{% macro vrows(vs) -%}
+<ul class="rows compact">
+{% for v in vs %}
+  <li class="row">
+    <div class="row-main">
+      <a class="row-title" href="../zakon/{{ v.it.slug }}.html">{{ v.it.law.short }}</a>
+      <p class="row-meta">{{ v.it.final.when[:10]|day }} · većina grupe: <span class="v-text-{{ v.line }}">{{ vote_label[v.line]|lower }}</span> ({{ v.with }} od {{ v.voting }} koji su glasali)</p>
+    </div>
+    <div class="row-vote">{{ bar(v.counts) }}<span class="row-score"><span class="t-za">{{ v.counts.za }}</span> : <span class="t-protiv">{{ v.counts.protiv }}</span></span></div>
+  </li>
+{% endfor %}
+</ul>
+{%- endmacro %}
+<p class="crumbs"><a href="../grupe.html">Poslaničke grupe</a> › {{ g.conv_name }} saziv</p>
+<h1>{{ g.name }}</h1>
+<p class="meta">{{ g.conv_name }} saziv · najviše {{ g.members }} {{ plural(g.members, "poslanik", "poslanika", "poslanika") }} na jednom glasanju · pod ovim nazivom u listinzima glasanja od {{ g.first|day_of }} do {{ g.last|day_of }}</p>
+
+<section class="outcome mp-outcome">
+  <div class="big"><div class="t-za"><b>{{ g.lines.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ g.lines.protiv or 0 }}</b><span>protiv</span></div></div>
+  <p class="row-meta">Kako je glasala većina grupe na {{ g.votes }} konačnih glasanja o zakonima{% if g.lines.uzdrzan %} · {{ g.lines.uzdrzan }} uzdržana{% endif %}</p>
+  <ul class="facts-line">
+    <li>U proseku <b>{{ (100 * g.cohesion)|round|int }}%</b> članova koji glasaju glasa kao većina grupe</li>
+    {% if g.presence %}<li>prisutno <b>{{ (100 * g.presence[0] / g.presence[1])|round|int }}%</b> članova na glasanjima na kojima Skupština navodi odsutne</li>{% endif %}
+  </ul>
+  <p class="label">Većina grupe: glas koji je dalo više od polovine članova koji su glasali, kad ih je troje ili više. {{ how("grupa") }}</p>
+</section>
+
+{% if key_votes %}
+<section>
+  <h2>Izdvojena glasanja</h2>
+  {{ vrows(key_votes) }}
+  <p class="label">Zakoni koje javnost zna pod drugim imenom i zakoni sa najvećim udelom glasova protiv u sazivu. {{ how("izdvojena") }}</p>
+</section>
+{% endif %}
+
+{% if areas %}
+<section>
+  <h2>Po oblasti</h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Oblast</th><th>Većina grupe</th><th class="num">Za</th><th class="num">Protiv</th><th class="num">Uzdržana</th></tr></thead>
+    <tbody>
+    {% for a in areas %}<tr><td><a href="../oblast/{{ a.label|area_slug }}.html">{{ a.label|latin }}</a></td><td class="lean">{{ a.word }}</td><td class="num v-text-za">{{ a.za or "" }}</td><td class="num v-text-protiv">{{ a.protiv or "" }}</td><td class="num">{{ a.uzdrzan or "" }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Oblasti sa pet zakona ili više; međunarodni ugovori nisu uračunati. {{ how("oblasti") }}</p>
+</section>
+{% endif %}
+
+<section>
+  <h2>Glasanja na kojima se grupa podelila <span class="count">{{ split|length }}</span></h2>
+  {% if split %}{{ vrows(split) }}{% else %}<p class="meta">Nema glasanja na kojem su dva člana ili više glasala drugačije od većine grupe.</p>{% endif %}
+  <p class="label">Najviše deset, od najmanjeg udela članova koji su glasali kao većina.</p>
+</section>
+
+{% if against %}
+<section>
+  <h2>Zakoni protiv kojih je glasala većina grupe <span class="count">{{ against|length }}</span></h2>
+  {{ vrows(against[:8]) }}
+  {% if against|length > 8 %}<details><summary>Još {{ against|length - 8 }}</summary>{{ vrows(against[8:]) }}</details>{% endif %}
+</section>
+{% endif %}
+
+<section class="more">
+  <h2>Članovi <span class="count">{{ members|length }}</span></h2>
+  <ul class="rows compact">
+  {% for m in members %}
+    <li class="row"><div class="row-main"><a class="row-title" href="../poslanik/{{ m.mp.slug }}.html">{{ m.mp.name }}</a></div>
+    <div class="row-vote">{{ bar({"za": m.tally.za or 0, "protiv": m.tally.protiv or 0, "uzdrzan": m.tally.uzdrzan or 0, "nije_glasao": m.tally.nije_glasao or 0, "nije_prisutan": m.tally.nije_prisutan or 0}) }}<span class="row-score"><span class="t-za">{{ m.tally.za or 0 }}</span> : <span class="t-protiv">{{ m.tally.protiv or 0 }}</span></span></div></li>
+  {% endfor %}
+  </ul>
+  <p class="meta">Svi poslanici koji su u ovom sazivu bili na spisku pod ovim nazivom grupe, po azbučnom redu, sa glasovima dok su bili u njoj. Skupština je tokom saziva menjala način pisanja naziva, pa ista grupa može imati dve strane.</p>
+</section>
+{% endblock %}

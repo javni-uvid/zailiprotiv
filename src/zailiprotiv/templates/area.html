@@ -2,10 +2,12 @@
 {% from "macros.html" import bar, plural, how with context %}
 {% block title %}{{ area|latin }} — Za ili Protiv{% endblock %}
 {% block description %}Zakoni iz oblasti „{{ area|latin }}" (član 97. Ustava) i kako su glasali poslanici.{% endblock %}
+{% block feeds %}
+<link rel="alternate" type="application/atom+xml" title="Novi zakoni: {{ area|latin }}" href="{{ area|area_slug }}.xml">{% endblock %}
 {% block main %}
 <p class="crumbs"><a href="../oblasti.html">Oblasti</a></p>
 <h1>{{ area|latin }}</h1>
-<p class="meta">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} u svim sazivima. Oblast je tačka člana 97. Ustava na koju se predlagač poziva. {{ how("vrste") }}</p>
+<p class="meta">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} u svim sazivima. Oblast je tačka člana 97. Ustava na koju se predlagač poziva. {{ how("vrste") }} · <a href="{{ area|area_slug }}.xml">Prati ovu oblast (RSS)</a></p>
 <ul class="rows">
 {% for it in laws %}
 <li class="row">

@@ -299,6 +299,21 @@ These are the project's promises to its readers. Never change them without the m
      lists show six rows and link to the full table at the bottom, to keep pages light (tabs had made them 2 MB).
   6d. names the public uses for a law (`data/aliases.json`, key → names and a press link; 23 laws, each checked in
      the press by a model, 13 Nov 2026): searched, and shown on the law page as "U javnosti i: …" with the link.
+  6e. a second look at the same sites' vote and MP pages (done 13 Nov 2026): **key votes** by a rule (`key_votes`
+     in `site.build`: per convocation the laws with a public name, one per name, and the four non-treaty laws with the
+     largest share against) on the MP page with the MP's vote and whether it was the group's (Datan); **a page per
+     group and convocation** (`grupa/<N>-<slug>.html`, `grupe.html`: the group's majority vote, share voting with it,
+     presence, by area, votes that split it, members; a group is the name the Assembly writes, so a renamed group has
+     two pages; Datan, Parlametar); **"Skupština u brojkama"** (`brojke.html`: urgent procedure, median days to
+     passing, laws with no vote against, the groups' figures; no ranking of MPs); **a share picture per law**
+     (`card.py`, Pillow, `zakon/<slug>.png`, og:image; the typeface in `src/zailiprotiv/og/` is the site's own, made
+     static from the woff2 files; HowTheyVote); **a feed per area** (`oblast/<slug>.xml`); the MP's last days of
+     voting and speaking, folded (openparliament.ca); a filter by group and vote over a law's roll call, and
+     "glasalo N od M" per group (HowTheyVote); **"Glasaj i ti"** (`glasaj.html`, `static/glasaj.js`: the visitor
+     votes on the current convocation's key laws, compared in the browser with each group's majority and each MP;
+     answers stay in sessionStorage; the page says the description is the proposer's side; Public Whip). This is the
+     interaction for readers that needs no server. Not done: bills still in procedure and coming sittings (needs new
+     reading of the Assembly's site), a finer scale of words.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

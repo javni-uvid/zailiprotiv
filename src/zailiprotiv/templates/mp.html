@@ -33,7 +33,7 @@
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 <h1>{{ mp.name }}</h1>
 <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
-<p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {{ c.groups|join(", ") or "—" }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+<p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 
 <section class="outcome mp-outcome">
   <div class="big"><div class="t-za"><b>{{ tally.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ tally.protiv or 0 }}</b><span>protiv</span></div></div>
@@ -42,8 +42,21 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
+{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
+{% if key_votes %}
+<section id="kljucna">
+  <h2>Izdvojena glasanja</h2>
+  <ul class="keyvotes">
+  {% for r in key_votes %}
+    <li><span class="kv-vote v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</span>
+      <span class="kv-law"><a href="../zakon/{{ r.it.slug }}.html">{% if r.it.aka %}{{ r.it.aka[0][:1]|upper }}{{ r.it.aka[0][1:] }}{% else %}{{ r.it.law.short }}{% endif %}</a>
+      <span class="meta">{{ r.it.final.when[:10]|day }} · usvojen {{ r.it.final.counts.za }} : {{ r.it.final.counts.protiv }}{% if r.line and r.vote in ["za", "protiv", "uzdrzan"] %} · {% if r.differs %}drugačije od većine svoje grupe ({{ vote_label[r.line]|lower }}){% else %}kao većina svoje grupe{% endif %}{% endif %}</span></span></li>
+  {% endfor %}
+  </ul>
+  <p class="label">Zakoni koje javnost zna pod drugim imenom i zakoni sa najvećim udelom glasova protiv u sazivu, najnoviji prvo, najviše šest. Bira ih isto pravilo za svakog poslanika. {{ how("izdvojena") }}</p>
+</section>
+{% endif %}
 {% if shown or spoke %}
 <section class="activity" id="aktivnost">
   <h2>Aktivnost</h2>
@@ -52,6 +65,15 @@
   {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
   </ul>
   {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
+  {% if timeline %}
+  <details class="inline"><summary>Poslednji dani u kojima je glasao ili govorio</summary>
+  <ul class="timeline">
+  {% for d in timeline %}
+    <li><b>{{ d.day|day }}</b>{% set n = d.votes.values()|sum %}{% if n %} · glasao o {{ n }} {{ plural(n, "zakonu", "zakona", "zakona") }}: {% for k in VOTES if d.votes[k] %}<span class="v-text-{{ k }}">{{ d.votes[k] }} {{ vote_label[k]|lower }}</span>{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}{% if d.speeches %} · {% if d.url %}<a href="{{ d.url }}">{{ d.speeches }} {{ plural(d.speeches, "govor", "govora", "govora") }}</a>{% else %}{{ d.speeches }} {{ plural(d.speeches, "govor", "govora", "govora") }}{% endif %}{% endif %}</li>
+  {% endfor %}
+  </ul>
+  </details>
+  {% endif %}
   <p class="label">Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025), najmanje 20. Govori i reči samo iz stenograma koje imamo. {{ how("aktivnost") }} (<a class="how" href="../kako-racunamo.html#reci">i za reči</a>)</p>
 </section>
 {% endif %}

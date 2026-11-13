@@ -22,6 +22,20 @@
     });
   });
 
+  // Law page: the roll call filtered by group and by vote.
+  var roll = document.getElementById("roll"), rg = document.getElementById("r-g"), rv = document.getElementById("r-v");
+  if (roll && rg && rv) {
+    var filterRoll = function () {
+      var shown = 0, rows = roll.tBodies[0].rows;
+      for (var i = 0; i < rows.length; i++) {
+        var ok = (!rg.value || rows[i].dataset.g === rg.value) && (!rv.value || rows[i].dataset.v === rv.value);
+        rows[i].hidden = !ok; if (ok) shown++;
+      }
+      document.getElementById("r-n").textContent = shown === rows.length ? "" : "Prikazano " + shown + " od " + rows.length;
+    };
+    rg.addEventListener("change", filterRoll); rv.addEventListener("change", filterRoll);
+  }
+
   function load() {
     return loading || (loading = fetch(root + "podaci.json?v=" + (body.dataset.v || "")).then(function (r) { return r.json(); })
       .then(function (d) { data = d; return d; }));

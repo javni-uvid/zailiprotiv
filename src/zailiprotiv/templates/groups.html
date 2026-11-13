@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, how with context %}
+{% block title %}Poslaničke grupe — Za ili Protiv{% endblock %}
+{% block description %}Poslaničke grupe Narodne skupštine Srbije po sazivima: članovi, kako glasaju i koliko jedinstveno.{% endblock %}
+{% block main %}
+<h1>Poslaničke grupe</h1>
+<p class="meta">Grupe kako ih Skupština piše u listingu glasanja, poređane po broju članova. Kad Skupština promeni način pisanja naziva, ista grupa se javlja dva puta. Iste brojke za svaku grupu. {{ how("grupa") }}</p>
+{% for cv, groups in by_conv %}
+<section>
+  <h2>{{ cv.name }} saziv <span class="count">{{ cv.years }}</span></h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Grupa</th><th class="num">Najviše članova</th><th class="num">Za</th><th class="num">Protiv</th><th class="num">Glasa kao većina grupe</th><th class="num">Prisutno</th></tr></thead>
+    <tbody>
+    {% for g in groups %}<tr><td><a href="grupa/{{ g.slug }}.html">{{ g.name }}</a> <span class="meta nowrap">{{ g.first[:4] }}{% if g.last[:4] != g.first[:4] %}–{{ g.last[:4] }}{% endif %}</span></td><td class="num">{{ g.members }}</td><td class="num v-text-za">{{ g.lines.za or "" }}</td><td class="num v-text-protiv">{{ g.lines.protiv or "" }}</td><td class="num">{{ (100 * g.cohesion)|round|int }}%</td><td class="num">{% if g.presence %}{{ (100 * g.presence[0] / g.presence[1])|round|int }}%{% else %}—{% endif %}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endfor %}
+<p class="meta foot-note">Za i protiv: broj konačnih glasanja o zakonima na kojima je većina grupe tako glasala. Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025). Grupe sa većinom na manje od pet glasanja nemaju stranu.</p>
+{% endblock %}

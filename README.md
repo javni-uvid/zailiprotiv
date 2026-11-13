@@ -42,12 +42,20 @@ uv run zailiprotiv votes               # read every roll call not read yet → d
 uv run pytest
 ```
 
+## Pages
+
+Laws (by convocation, area and sitting), a page per law (final vote by group and MP, summary of the memorandum, the
+debate, a picture for sharing), a page per MP (key votes, activity, votes by area and period), a page per
+parliamentary group, "Skupština u brojkama", "Glasaj i ti" (vote on the key laws and compare with groups and MPs, in
+the browser), feeds (new laws, per area, per MP) and downloads (CSV, JSON).
+
 ## Workflows
 
 | Workflow | When | What |
 |---|---|---|
-| votes | by hand (choose the convocation) | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/<N>/` |
-| summaries | by hand, and after each data run | Claude's summaries of new bills' memoranda (secret `ANTHROPIC_API_KEY`) |
+| votes | every morning, and by hand (choose the convocation) | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/<N>/` |
+| transcripts | after votes, and by hand | stenographic notes of the debates on the most contested laws |
+| summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API: bill summaries, debate summaries, MP overviews (secret `ANTHROPIC_API_KEY`) |
 | pages | on push, and after each data run | build the site and publish it on GitHub Pages |
 | fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
 | test | on push | the whole test suite |

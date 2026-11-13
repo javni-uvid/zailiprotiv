@@ -370,12 +370,13 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                   "mps_page": mps_page(c, current), "years": years(c),
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     common = {"css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
-              "VOTES": VOTES, "convs": conv_list, "current": current}
+              "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else ""}
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
     aliases = json.loads((root / "aliases.json").read_text(encoding="utf-8")) if (root / "aliases.json").exists() else {}
     items_by_conv, taken = {}, Counter()
+    law_pages = []  # written once the groups' pages are known, so a law's table can link to them
     for conv, _ in convs:
         laws_store, votes, bills = loaded[conv]
         items = []
@@ -417,13 +418,12 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                 listed = {mps.key(r[1]): r for r in final["rows"]}
                 roll = sorted(({"mp": people[k], "vote": r[2], "group": latin(r[3])} for k, r in listed.items()),
                               key=lambda x: collate(x["mp"].name))
-            page = env.get_template("law.html").render(
-                **common, it=it, law=law, final=final,
+            law_pages.append(dict(
+                it=it, law=law, final=final,
                 sitting_slug=sitting_page(final["sitting"], final["sitting_title"]) if final else "", groups=by_group(final) if final else [], roll=roll,
                 others=others, reasons=excerpt(sections.get("reasons", ""), 1200),
                 funds=excerpt(sections.get("funds", ""), 500), effects=excerpt(sections.get("effects", ""), 600),
-                report=bool(final and final["counts"]["nije_prisutan"]), root="../")
-            (out / "zakon" / f"{it['slug']}.html").write_text(page, encoding="utf-8")
+                report=bool(final and final["counts"]["nije_prisutan"]), root="../"))
         by_kind = defaultdict(list)
         for it in items:
             by_kind[it["law"].get("kind", "other")].append(it)
@@ -435,6 +435,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             year_options=sorted({(it["law"].get("passed") or "")[:4] for it in items if it["law"].get("passed")}, reverse=True),
             conv_name=ORDINAL_NAME.get(conv, conv), root=""), encoding="utf-8")
 
+    by_key_all = {it["key"]: it for its in items_by_conv.values() for it in its}
     # MPs: their final votes on laws, in every convocation.
     finals = {it["law"]["final_vote"]: it for items in items_by_conv.values() for it in items
               if it["law"].get("final_vote")}
@@ -501,6 +502,41 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             spoke[k] = len(own)
             if distinct.get(key):
                 words[k] = distinct[key]
+    # Groups with a page: those with a line (most of three or more voting) in five final votes or more of a convocation.
+    lines_of: dict[tuple, list] = defaultdict(list)
+    for (key, g), how in line.items():
+        lines_of[(finals[key]["conv"], g)].append((key, how))
+    group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and slug(g)}
+    from zailiprotiv import card
+    for args in law_pages:
+        it = args["it"]
+        if it["final"]:  # the picture shown when the page is shared
+            name = it["aka"][0][:1].upper() + it["aka"][0][1:] if it["aka"] else it["law"]["short"]
+            card.draw(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
+                      "hitan postupak" if it["urgent"] else "")
+        (out / "zakon" / f"{args['it']['slug']}.html").write_text(
+            env.get_template("law.html").render(**common, **args, group_slug=group_slug), encoding="utf-8")
+    # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
+    # four with the largest share of votes against. Shown on MP pages, group pages and in "Glasaj i ti".
+    key_votes: dict[str, list] = {}
+    for c, its in items_by_conv.items():
+        chosen, names = [], set()
+        for it in its:
+            if it["aka"] and it["final"] and it["aka"][0] not in names:
+                names.add(it["aka"][0])
+                chosen.append(it)
+        divided = [by_key_all[r["key"]] for r in most_against(its, len(its))
+                   if not (r["aka"] and r["aka"][0] in names) and r["law"].get("kind") != "treaty"][:4]
+        key_votes[c] = sorted(chosen + divided, key=lambda it: it["final"]["when"], reverse=True)
+    key_finals = {it["law"]["final_vote"]: it for its in key_votes.values() for it in its}
+    # Speeches by day, for the MP page's timeline.
+    spoke_days: dict[str, Counter] = {}
+    speech_url: dict[tuple, str] = {}
+    for key, own in spoken.items():
+        if (k := loose_keys.get(key)):
+            spoke_days[k] = Counter(sp["date"] for sp in own if sp["date"])
+            for sp in own:
+                speech_url[(k, sp["date"])] = sp["url"]
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -559,6 +595,15 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                     "against": [r for r in rs if r["vote"] == "protiv"], "for_": [r for r in rs if r["vote"] == "za"],
                     "apart": [r for r in rs if r["differs"]]}
 
+        # The last days the MP voted or spoke, newest first: the two kinds of activity side by side.
+        days_: dict[str, dict] = defaultdict(lambda: {"votes": Counter(), "speeches": 0, "url": ""})
+        for r in record:
+            days_[r["it"]["final"]["when"][:10]]["votes"][r["vote"]] += 1
+        for d, n in spoke_days.get(mp.key, {}).items():
+            days_[d].update(speeches=n, url=speech_url.get((mp.key, d), ""))
+        timeline = [{"day": d, **v} for d, v in sorted(days_.items(), reverse=True)[:10]]
+        keys_ = sorted((r for r in record if r["it"]["law"]["final_vote"] in key_finals),
+                       key=lambda r: r["it"]["final"]["when"], reverse=True)[:6]
         periods = [{"key": "sve", "label": "Svi sazivi", **view(record)}]
         if len(by_conv) > 1:
             periods += [{"key": c["conv"], "label": f"{c['name']} saziv", **view(c["record"])} for c in by_conv]
@@ -569,6 +614,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table, areas_table=areas_table, periods=periods,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
+            timeline=timeline, key_votes=keys_, group_slug=group_slug,
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
@@ -578,6 +624,93 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         (out / mps_page(conv, current)).write_text(env.get_template("mps.html").render(
             **common, rows=rows, conv=conv, conv_name=ORDINAL_NAME.get(conv, conv), root="",
             groups=sorted(groups.items(), key=lambda kv: (-kv[1], collate(kv[0])))), encoding="utf-8")
+
+    # A page per group and convocation: members, how united it votes, its line by area and on the key votes, and the
+    # votes that split it. The same numbers for every group; no ranking of MPs.
+    cast_in: dict[tuple, Counter] = defaultdict(Counter)
+    for key, it in finals.items():
+        for _, name, how, _ in it["final"]["rows"]:
+            cast_in[(key, seat[(key, mps.key(name))])][how] += 1
+    (out / "grupa").mkdir(exist_ok=True)
+    group_rows: dict[str, list] = defaultdict(list)
+    for (c, g), gslug in sorted(group_slug.items()):
+        ls = sorted(lines_of[(c, g)], key=lambda kl: finals[kl[0]]["final"]["when"], reverse=True)
+        # Everyone listed under this name in the convocation, with their votes while under it.
+        members = [{"mp": r["mp"], "tally": Counter(x["vote"] for x in r["by_conv"][c]["record"] if x["group"] == g)}
+                   for r in rows_mp if c in r["by_conv"] and g in r["by_conv"][c]["groups"]]
+        votes_ = []
+        for key, how in ls:
+            cc = cast_in[(key, g)]
+            voting = cc["za"] + cc["protiv"] + cc["uzdrzan"]
+            votes_.append({"it": finals[key], "line": how, "counts": {v: cc.get(v, 0) for v in VOTES}, "voting": voting,
+                           "with": cc[how], "share": cc[how] / voting})
+        listed = sum(sum(v["counts"].values()) for v in votes_ if v["it"]["final"]["counts"]["nije_prisutan"])
+        present = listed - sum(v["counts"]["nije_prisutan"] for v in votes_ if v["it"]["final"]["counts"]["nije_prisutan"])
+        by_area_g: dict[str, Counter] = defaultdict(Counter)
+        for v in votes_:
+            if v["it"]["law"].get("kind") != "treaty":
+                for a in v["it"].get("areas") or []:
+                    by_area_g[a][v["line"]] += 1
+        areas_g = [{"label": a, "n": sum(cn.values()), "za": cn["za"], "protiv": cn["protiv"], "uzdrzan": cn["uzdrzan"],
+                    "word": leaning(cn["za"], cn["protiv"])}
+                   for a, cn in sorted(by_area_g.items(), key=lambda kv: (-sum(kv[1].values()), collate(kv[0])))
+                   if sum(cn.values()) >= 5]
+        whens = sorted(finals[key]["final"]["when"][:10] for key, _ in ls)
+        info = {"name": g, "slug": gslug, "conv": c, "conv_name": ORDINAL_NAME.get(c, c),
+                "members": max(sum(cast_in[(key, g)].values()) for key, _ in ls), "first": whens[0], "last": whens[-1],
+                "votes": len(votes_), "lines": Counter(v["line"] for v in votes_),
+                "cohesion": sum(v["with"] for v in votes_) / sum(v["voting"] for v in votes_),
+                "presence": (present, listed) if listed else None}
+        group_rows[c].append(info)
+        (out / "grupa" / f"{gslug}.html").write_text(env.get_template("group.html").render(
+            **common, g=info, members=members, areas=areas_g,
+            key_votes=[v for v in votes_ if v["it"]["law"]["final_vote"] in key_finals][:8],
+            against=[v for v in votes_ if v["line"] == "protiv"],
+            split=sorted((v for v in votes_ if v["voting"] - v["with"] >= 2), key=lambda v: (v["share"], v["it"]["final"]["when"]))[:10],
+            root="../"), encoding="utf-8")
+    for c in group_rows:
+        group_rows[c].sort(key=lambda g: (-g["members"], collate(g["name"])))
+    (out / "grupe.html").write_text(env.get_template("groups.html").render(
+        **common, by_conv=[(cv, group_rows[cv["n"]]) for cv in conv_list if group_rows.get(cv["n"])], root=""), encoding="utf-8")
+    # The Assembly in numbers, by convocation: how laws are passed, and the same figures for every group.
+    def median(xs):
+        xs = sorted(xs)
+        return xs[len(xs) // 2] if xs else None
+    numbers = []
+    for cv in conv_list:
+        its = items_by_conv[cv["n"]]
+        voted = [it for it in its if it["final"]]
+        with_bill = [it for it in its if it["law"].get("bill_file")]
+        numbers.append({"conv": cv, "laws": len(its), "voted": len(voted),
+                        "treaties": sum(1 for it in its if it["law"].get("kind") == "treaty"),
+                        "urgent": sum(1 for it in with_bill if it["urgent"]), "with_bill": len(with_bill),
+                        "days": median([it["days"] for it in its if it["days"] is not None and it["days"] >= 0]),
+                        "unopposed": sum(1 for it in voted if not it["final"]["counts"]["protiv"]),
+                        "sittings": len({it["final"]["sitting"] for it in voted}), "groups": group_rows.get(cv["n"], [])})
+    (out / "brojke.html").write_text(env.get_template("numbers.html").render(**common, numbers=numbers, root=""),
+                                     encoding="utf-8")
+    # "Glasaj i ti": the visitor votes on the current convocation's key laws; the page's own script compares the
+    # answers with every group's line and every MP's votes. Nothing leaves the browser.
+    quiz_laws = list(key_votes[current])
+    for r in most_against(items_by_conv[current], len(items_by_conv[current])):
+        it = by_key_all[r["key"]]
+        if len(quiz_laws) >= 10:
+            break
+        if it not in quiz_laws and it["law"].get("kind") != "treaty" and not (it["aka"] and any(it["aka"][0] == (q["aka"] or [""])[0] for q in quiz_laws)):
+            quiz_laws.append(it)
+    quiz_laws = sorted((it for it in quiz_laws if it["gist"]), key=lambda it: it["final"]["when"], reverse=True)
+    letter = {"za": "z", "protiv": "p", "uzdrzan": "u"}
+    quiz = {"laws": [{"s": it["slug"]} for it in quiz_laws],
+            "groups": [{"n": g["name"], "s": g["slug"], "m": g["members"],
+                        "v": "".join(letter.get(line.get((it["law"]["final_vote"], g["name"])), "-") for it in quiz_laws)}
+                       for g in group_rows.get(current, [])],
+            "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": (r["by_conv"][current]["groups"] or [""])[0],
+                     "v": "".join(letter.get(r["mp"].votes.get(it["law"]["final_vote"]), "-") for it in quiz_laws)}
+                    for r in rows_mp if current in r["by_conv"]]}
+    shutil.copy(HERE / "static" / "glasaj.js", out / "glasaj.js")
+    (out / "glasaj.html").write_text(env.get_template("quiz.html").render(
+        **common, laws=quiz_laws, quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+        root=""), encoding="utf-8")
 
     # What the page's own script searches and filters: every law and MP, in one file fetched on first use.
     index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"] + " " + " ".join(it.get("aka") or []), "s": it["slug"], "d": it["law"].get("passed") or "",
@@ -714,6 +847,10 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
 
     write_feed(out / "zakoni.xml", "Za ili Protiv: novi zakoni", f"{site}zakoni.xml", f"{site}index.html",
                [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in newest])
+    for a, its in by_area.items():
+        write_feed(out / "oblast" / f"{area_slug(a)}.xml", f"Za ili Protiv: {latin(a)}", f"{site}oblast/{area_slug(a)}.xml",
+                   f"{site}oblast/{area_slug(a)}.html",
+                   [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in its[:40]])
     (out / "poslanik").mkdir(exist_ok=True)
     for mp_slug, (name, record) in feeds_mp.items():
         write_feed(out / "poslanik" / f"{mp_slug}.xml", f"Za ili Protiv: {name}", f"{site}poslanik/{mp_slug}.xml",

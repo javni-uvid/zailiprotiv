@@ -2,6 +2,10 @@
 {% from "macros.html" import bar, tally, quote, plural, how with context %}
 {% block title %}{{ law.title }} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.title }}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
+{% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:type" content="article"><meta property="og:url" content="{{ site_url }}zakon/{{ it.slug }}.html">
+<meta name="twitter:card" content="summary_large_image">{% endif %}{% endblock %}
 {% block main %}
 {% set sm = it.summary.summary if it.summary else none %}
 {% set sd = it.said.debate if it.said else none %}
@@ -63,7 +67,7 @@
     <thead><tr><th>Grupa</th><th class="vote-cell"></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
     <tbody>
     {% for g in groups %}
-      <tr><td>{{ g.group }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
+      <tr><td>{% if group_slug.get((it.conv, g.group.strip("() "))) %}<a href="../grupa/{{ group_slug[(it.conv, g.group.strip("() "))] }}.html">{{ g.group }}</a>{% else %}{{ g.group }}{% endif %} <span class="meta nowrap">glasalo {{ g.za + g.protiv + g.uzdrzan }} od {{ g.total }}</span></td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table>
@@ -137,12 +141,17 @@
   {% if final %}
   <details>
     <summary>Kako je glasao svaki poslanik ({{ roll|length }})</summary>
+    <p class="roll-filter js-only" hidden>
+      <label class="sr" for="r-g">Grupa</label><select id="r-g"><option value="">Sve grupe</option>{% for g in groups %}<option>{{ g.group }}</option>{% endfor %}</select>
+      <label class="sr" for="r-v">Glas</label><select id="r-v"><option value="">Svi glasovi</option>{% for k in VOTES %}{% if final.counts[k] %}<option value="{{ k }}">{{ vote_label[k] }}</option>{% endif %}{% endfor %}</select>
+      <span id="r-n" class="row-meta" aria-live="polite"></span>
+    </p>
     <div class="scroll">
-    <table class="roll">
+    <table class="roll" id="roll">
       <thead><tr><th>Poslanik</th><th>Grupa</th><th>Glas</th></tr></thead>
       <tbody>
       {% for r in roll %}
-        <tr><td><a href="../poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td><td>{{ r.group }}</td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
+        <tr data-g="{{ r.group or "Bez poslaničke grupe" }}" data-v="{{ r.vote }}"><td><a href="../poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td><td>{{ r.group }}</td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
       {% endfor %}
       </tbody>
     </table>

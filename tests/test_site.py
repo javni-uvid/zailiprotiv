@@ -91,6 +91,11 @@ def test_site_builds_every_page(tmp_path):
     for page in out.rglob("*.html"):
         text = page.read_text()
         # The site's own script only, nothing from other servers, no plain http.
+        if page.name == "glasaj.html":  # and its own data and script, both from the site itself
+            assert re.findall(r"<script[^>]*>", text)[1:] == ['<script type="application/json" id="quiz-data">',
+                '<script src="glasaj.js?v=' + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
+            text = text.replace('<script type="application/json" id="quiz-data">', "").replace(
+                '<script src="glasaj.js?v=' + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>', "")
         assert re.findall(r"<script[^>]*>", text) == [f'<script src="{"../" if page.parent != out else ""}site.js?v='
                                                       + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
         assert "http://" not in text and not re.search(r'(?:src|href)="https?://(?!www\.parlament\.gov\.rs|github\.com)'
@@ -149,3 +154,17 @@ def test_a_built_site_loads_nothing_from_other_sites(tmp_path):
     (out / "y.css").write_text("@import url('https://fonts.googleapis.com/css2?family=X');")
     (out / "z.html").write_text('<a href="https://www.parlament.gov.rs/">izvor</a>' + "x" * (site.PAGE_LIMIT + 1))
     assert [b.split(":")[0] for b in site.check(out)] == ["x.html", "y.css", "z.html"]
+
+
+def test_groups_numbers_quiz_and_share_picture(tmp_path):
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs")
+    law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
+    assert 'og:image" content="https://zailiprotiv.rs/zakon/zakon-o-oruzju.png"' in law
+    assert (out / "zakon" / "zakon-o-oruzju.png").read_bytes()[:4] == b"\x89PNG"
+    assert "Skupština u brojkama" in (out / "brojke.html").read_text()
+    assert (out / "grupe.html").exists() and (out / "glasaj.js").exists()
+    quiz = json.loads(re.search(r'id="quiz-data">(.*?)</script>', (out / "glasaj.html").read_text(), re.S).group(1))
+    assert quiz["laws"] == [{"s": "zakon-o-oruzju"}] and {m["v"] for m in quiz["mps"]} == {"z", "p", "-"}
+    area = next((out / "oblast").glob("*.xml")).read_text()
+    assert "<feed" in area and "zakon-o-oruzju.html" in area

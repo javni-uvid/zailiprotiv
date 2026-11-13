@@ -6,7 +6,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 # Roll calls are read with poppler's pdftotext (poppler-utils), which keeps a PDF's columns apart.
-dependencies = ["jinja2>=3.1", "anthropic>=0.50"]
+dependencies = [
+    "jinja2>=3.1",
+    "anthropic>=0.50",
+    "pillow>=13.0.0",
+]
 
 [project.scripts]
 zailiprotiv = "zailiprotiv.cli:main"
@@ -20,7 +24,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/zailiprotiv"]
-artifacts = ["src/zailiprotiv/templates/*", "src/zailiprotiv/static/*"]
+artifacts = ["src/zailiprotiv/templates/*", "src/zailiprotiv/static/*", "src/zailiprotiv/og/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
