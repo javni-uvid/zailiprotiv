@@ -487,10 +487,21 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             c = Counter(r["vote"] for r in record if r["it"]["law"].get("kind", "other") == k)
             if c:
                 kinds_table.append({"label": label, "total": sum(c.values()), **{v: c.get(v, 0) for v in VOTES}})
+        # By area (the point of Article 97 the proposer relies on): the areas with five laws or more.
+        by_area: dict[str, list] = defaultdict(list)
+        for r in record:
+            for a in r["it"].get("areas") or []:
+                by_area[a].append(r)
+        areas_table = []
+        for a, rs in sorted(by_area.items(), key=lambda kv: (-len(kv[1]), collate(kv[0]))):
+            if len(rs) >= 5:
+                c = Counter(r["vote"] for r in rs)
+                areas_table.append({"label": a, "total": len(rs), **{v: c.get(v, 0) for v in VOTES},
+                                    "against": [r for r in rs if r["vote"] == "protiv"]})
         rows_mp.append({"mp": mp, "tally": tally, "n": len(record), "by_conv": {c["conv"]: c for c in by_conv},
                         "convs": sorted({r["it"]["conv"] for r in record}, key=int, reverse=True)})
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
-            **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
+            **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table, areas_table=areas_table[:15],
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),

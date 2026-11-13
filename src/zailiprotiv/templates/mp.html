@@ -104,6 +104,23 @@
 </section>
 {% endif %}
 
+{% if areas_table %}
+<section>
+  <h2>Po oblasti</h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Oblast</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for g in areas_table %}
+      <tr><td>{{ g.label|latin }}{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Oblast je tačka člana 97. Ustava na koju se predlagač poziva u ustavnom osnovu predloga; jedan zakon može imati više oblasti. Prikazane su oblasti sa najmanje pet zakona. {{ how("vrste") }}</p>
+</section>
+{% endif %}
+
 {% if kinds_table %}
 <section>
   <h2>Po vrsti zakona</h2>

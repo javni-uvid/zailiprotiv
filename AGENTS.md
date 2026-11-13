@@ -260,7 +260,8 @@ These are the project's promises to its readers. Never change them without the m
 
 - **Next, chosen by the maintainer (13 Nov 2026), after looking at TheyWorkForYou, abgeordnetenwatch, GovTrack,
   NosDéputés and Parlameter:**
-  1. votes by topic, not only by law: how an MP voted on the laws of each area (the Constitution's Article 97 point);
+  1. votes by topic, not only by law (done 13 Nov 2026, from TheyWorkForYou): "Po oblasti" on the MP page, the areas
+     with five laws or more, each with its votes and the laws voted against, folded;
   2. a short note of method on every page that shows a figure, linked to one page "Kako računamo" (done 13 Nov
      2026: `kako-racunamo.html`, a section per figure, linked from each label and the footer; keep it in step with
      any change to how a figure is computed);
