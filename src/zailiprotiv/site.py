@@ -489,6 +489,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
+    (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(**common, root=""), encoding="utf-8")
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")
         base = f"https://{domain}/"

@@ -232,3 +232,5 @@ table.agree tr.own td:first-child { font-weight: 600; }
 .points li { margin: 0 0 1.1rem; }
 .points p { margin: 0 0 .3rem; }
 .points blockquote { margin: 0; padding-left: .9rem; border-left: 2px solid var(--line); color: var(--muted); font-size: .95rem; }
+.how { white-space: nowrap; color: var(--muted); }
+#glasanje, section[id] { scroll-margin-top: 1rem; }

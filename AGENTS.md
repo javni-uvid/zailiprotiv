@@ -261,7 +261,9 @@ These are the project's promises to its readers. Never change them without the m
 - **Next, chosen by the maintainer (13 Nov 2026), after looking at TheyWorkForYou, abgeordnetenwatch, GovTrack,
   NosDéputés and Parlameter:**
   1. votes by topic, not only by law: how an MP voted on the laws of each area (the Constitution's Article 97 point);
-  2. a short note of method on every page that shows a figure, linked to one page "Kako računamo";
+  2. a short note of method on every page that shows a figure, linked to one page "Kako računamo" (done 13 Nov
+     2026: `kako-racunamo.html`, a section per figure, linked from each label and the footer; keep it in step with
+     any change to how a figure is computed);
   3. following an MP or the laws: RSS feeds (static, nothing from third parties); e-mail needs a sending service;
   4. an MP's activity: presence at final votes where the absent are listed, speeches and amendments in the notes read;
   5. the words an MP uses most, against all MPs (no model);

@@ -25,3 +25,5 @@
 {% macro tabs(convs, conv, key) -%}
 {% if convs|length > 1 %}<nav class="tabs" aria-label="Saziv">{% for c in convs %}<a href="{{ c[key] }}"{% if c.n == conv %} aria-current="page"{% endif %}>{{ c.years }}<span>{{ c.name }} saziv</span></a>{% endfor %}</nav>{% endif %}
 {%- endmacro %}
+
+{% macro how(anchor) %}<a class="how" href="{{ root }}kako-racunamo.html#{{ anchor }}">Kako računamo</a>{% endmacro %}

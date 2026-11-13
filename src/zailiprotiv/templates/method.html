@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Kako računamo — Za ili Protiv{% endblock %}
+{% block description %}Kako sajt dolazi do svakog broja i pregleda: izvori, pravila i ograničenja.{% endblock %}
+{% block main %}
+<h1>Kako računamo</h1>
+<p class="gist">Svaki broj na sajtu izračunat je istim pravilom za svakog poslanika i svaku poslaničku grupu, iz dokumenata Narodne skupštine. Ovde je, za svaki, kako.</p>
+
+<section id="glasanje">
+<h2>Konačno glasanje o zakonu</h2>
+<p>Za svaki zakon uzimamo poimenično glasanje „u celini" sa dana kad je zakon usvojen, iz PDF-a koji Skupština objavljuje uz sednicu. Glasanje vezujemo za zakon po nazivu akta u tom PDF-u. Kad se nazivi ne poklapaju potpuno (slovna greška, reč viška), uzimamo glasanje tog dana koje se poklapa u 90% reči; retke slučajeve povezujemo ručno, uz zapisan razlog.</p>
+<p>Za glasanja iz 2024. i prve polovine 2025, kao i za stare sazive, Skupština je objavljivala samo prisutne poslanike, pa odsutni tu nisu prikazani.</p>
+</section>
+
+<section id="protiv">
+<h2>Udeo glasova protiv i „najviše glasova protiv"</h2>
+<p>Udeo je broj glasova protiv podeljen zbirom glasova za i protiv. Uzdržani i oni koji nisu glasali se ne računaju. Zakoni sa najvećim udelom su na vrhu; kod istog udela prednost ima zakon sa više glasova protiv, pa noviji. Ovo meri samo podeljenost glasanja, ne da li je zakon dobar ili loš.</p>
+</section>
+
+<section id="grupe">
+<h2>Kako je glasala poslanička grupa</h2>
+<p>Grupe navodimo onako kako ih Skupština piše u listingu glasanja. „Većina grupe" je glas (za, protiv ili uzdržan) koji je izabralo više od polovine njenih poslanika koji su glasali, kad su glasala bar tri.</p>
+</section>
+
+<section id="drugacije">
+<h2>Drugačije od većine svoje grupe</h2>
+<p>Glasanja u kojima je poslanik glasao za, protiv ili uzdržano, a većina njegove grupe drugačije.</p>
+</section>
+
+<section id="slaganje">
+<h2>Sa kim glasa isto</h2>
+<p>Za svaku grupu: u koliko konačnih glasanja je poslanik glasao isto kao većina te grupe, od glasanja u kojima su glasali i on i ta grupa. Prikazujemo samo grupe sa bar 10 takvih glasanja. Kada opozicija ne glasa, broj zajedničkih glasanja je mali, pa je i procenat manje pouzdan.</p>
+</section>
+
+<section id="vrste">
+<h2>Vrsta i oblast zakona</h2>
+<p>Vrstu (međunarodni ugovor, budžet, nov zakon ili izmena…) čitamo iz naziva akta i oznake Službenog glasnika. Oblast je tačka člana 97. Ustava na koju se predlagač poziva u „Ustavnom osnovu" predloga. Nijednu kategoriju ne biramo sami.</p>
+</section>
+
+<section id="sazetak">
+<h2>Šta zakon menja (sažetak)</h2>
+<p>AI model sažima samo obrazloženje predloga zakona: razloge, analizu efekata i potrebna sredstva. To je ocena predlagača, ne naša. Model ne dodaje brojke kojih u obrazloženju nema, ne imenuje osobe i preuzima izraze predlagača pod navodnicima. Uz svaki sažetak je link ka predlogu.</p>
+</section>
+
+<section id="rasprava">
+<h2>Pregled rasprave i citati</h2>
+<p>Za zakone sa najviše glasova protiv AI model čita stenografske beleške i piše šta su rekli predlagač i Vlada, oni koji su podržali zakon i oni protiv. Svaki navod je pripisan govorniku i njegovoj grupi. Citati su provereni reč po reč u beleškama; najviše jedan po grupi. Beleške su privremene, neredigovane i neautorizovane.</p>
+</section>
+
+<section id="iznosi">
+<h2>Šta poslanik najčešće iznosi u raspravama</h2>
+<p>AI model čita najduže govore poslanika sa svake sednice čije beleške imamo (do oko 18.000 reči, duži govori do 700. reči) i navodi 3 do 5 stvari koje ponavlja u bar dva govora, svaku sa doslovnim citatom proverenim u beleškama. Ne cenzurišemo šta je poslanik rekao: javne ličnosti su navedene imenom, obični građani samo ulogom. Opisujemo sadržaj, ne ton ni ličnost, i ne ocenjujemo da li su tvrdnje tačne. Računaju se samo govori dok je govornik bio poslanik, ne kao ministar. Pregled ima poslanik sa bar 10 dužih govora.</p>
+</section>
+
+<section id="drugi">
+<h2>Šta kažu drugi</h2>
+<p>Za neke od zakona sa najviše glasova protiv navodimo mišljenja nezavisnih tela i analize medija i civilnog društva, sa izvorom, datumom i linkom. To su njihovi stavovi; nijedan broj ni glas ne dolazi odatle.</p>
+</section>
+
+<section id="kratki">
+<h2>Kratki nazivi zakona</h2>
+<p>Kratke nazive za liste i naslove pisao je AI model iz zvaničnog naziva i sažetka, a pregledani su. Zvaničan naziv je uvek na strani zakona.</p>
+</section>
+{% endblock %}

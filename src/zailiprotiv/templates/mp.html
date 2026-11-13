@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural %}
+{% from "macros.html" import bar, plural, how with context %}
 {% block title %}{{ mp.name }} — Za ili Protiv{% endblock %}
 {% block description %}Kako je glasao poslanik {{ mp.name }}: zakoni za i protiv, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
 {% block main %}
@@ -24,6 +24,7 @@
   {{ rows(rs[:6], show_line) }}
   {% if rs|length > 6 %}<details><summary>Još {{ rs|length - 6 }}</summary>{{ rows(rs[6:], show_line) }}</details>{% endif %}
   {% else %}<p class="meta">{{ empty }}</p>{% endif %}
+  {% if show_line %}<p class="label">Glas za, protiv ili uzdržan drugačiji od onoga što je izabrala većina njegove grupe. {{ how("drugacije") }}</p>{% endif %}
 </section>
 {%- endmacro %}
 
@@ -46,7 +47,7 @@
       <blockquote>„{{ t.citat.tekst|latin }}“ <a class="meta" href="{{ t.citat.url }}">stenogram{% if t.citat.date %}, {{ t.citat.date|day }}{% endif %}</a></blockquote></li>
   {% endfor %}
   </ul>
-  <p class="label">Pregled je napisao AI model ({{ profile.model }}) iz {{ profile.read }} najdužih od {{ profile.speeches }} govora poslanika na {{ profile.sittings }} sednica čije stenografske beleške imamo (rasprave o zakonima sa najviše glasova protiv); duži govori čitani su do 700. reči. Navedeno je samo ono što se ponavlja u najmanje dva govora, kao poslanikova tvrdnja: sajt ne ocenjuje da li je tačna i ne preuzima nijedan stav. Citati su provereni reč po reč. Pregled može da sadrži grešku; merodavne su beleške.</p>
+  <p class="label">Pregled je napisao AI model ({{ profile.model }}) iz {{ profile.read }} najdužih od {{ profile.speeches }} govora poslanika na {{ profile.sittings }} sednica čije stenografske beleške imamo (rasprave o zakonima sa najviše glasova protiv); duži govori čitani su do 700. reči. Navedeno je samo ono što se ponavlja u najmanje dva govora, kao poslanikova tvrdnja: sajt ne ocenjuje da li je tačna i ne preuzima nijedan stav. Citati su provereni reč po reč. Pregled može da sadrži grešku; merodavne su beleške. {{ how("iznosi") }}</p>
 </section>
 {% endif %}
 
@@ -59,7 +60,7 @@
     <figcaption><a href="../zakon/{{ x.it.slug }}.html">{{ x.it.law.short }}</a>{% if x.q.side in ["za", "protiv"] %} · glas: {{ x.q.side }}{% endif %}{% if x.day %} · <a href="{{ x.day.url }}">stenogram{% if x.day.listed_date %}, {{ x.day.listed_date|day }}{% endif %}</a>{% endif %}</figcaption>
   </figure>
   {% endfor %}
-  <p class="label">Doslovni citati iz stenografskih beleški, iz pregleda rasprava o zakonima sa najviše glasova protiv. Citate je izabrao AI model, najviše jedan po poslaničkoj grupi za svaki zakon, pa ovo nije sve što je poslanik rekao.</p>
+  <p class="label">Doslovni citati iz stenografskih beleški, iz pregleda rasprava o zakonima sa najviše glasova protiv. Citate je izabrao AI model, najviše jedan po poslaničkoj grupi za svaki zakon, pa ovo nije sve što je poslanik rekao. {{ how("rasprava") }}</p>
 </section>
 {% endif %}
 
@@ -83,7 +84,7 @@
   </table>
   </div>
   {% endfor %}
-  <p class="label">U koliko konačnih glasanja o zakonima je poslanik glasao isto (za, protiv ili uzdržan) kao većina poslaničke grupe, od onih u kojima su glasali i poslanik i ta grupa (najmanje 10 takvih glasanja). Grupe su navedene kako ih Skupština piše u listingu glasanja. Izračunato iz poimeničnih glasanja, istim pravilom za sve; ovo nije ocena rada poslanika.</p>
+  <p class="label">U koliko konačnih glasanja o zakonima je poslanik glasao isto (za, protiv ili uzdržan) kao većina poslaničke grupe, od onih u kojima su glasali i poslanik i ta grupa (najmanje 10 takvih glasanja). Grupe su navedene kako ih Skupština piše u listingu glasanja. Izračunato iz poimeničnih glasanja, istim pravilom za sve; ovo nije ocena rada poslanika. {{ how("slaganje") }}</p>
 </section>
 {% endif %}
 
@@ -100,7 +101,7 @@
     </tbody>
   </table>
   </div>
-  <p class="label">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Brojevi su izračunati iz poimeničnih glasanja; ovo nije ocena rada poslanika.</p>
+  <p class="label">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Brojevi su izračunati iz poimeničnih glasanja; ovo nije ocena rada poslanika. {{ how("vrste") }}</p>
 </section>
 {% endif %}
 

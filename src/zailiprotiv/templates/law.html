@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, tally, quote, plural %}
+{% from "macros.html" import bar, tally, quote, plural, how with context %}
 {% block title %}{{ law.title }} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.title }}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block main %}
@@ -24,7 +24,7 @@
     {% if it.days is not none %}<li>{{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga do usvajanja</li>{% endif %}
     {% if db and db.joint %}<li>rasprava zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}</li>{% endif %}
     {% if db and db.amendments %}<li>{{ db.amendments }} {{ plural(db.amendments, "amandman", "amandmana", "amandmana") }} u raspravi</li>{% endif %}
-    {% if it.rank %}<li>{{ (100 * it.share)|round|int }}% glasova protiv, {{ it.rank }}. u sazivu</li>{% endif %}
+    {% if it.rank %}<li>{{ (100 * it.share)|round|int }}% glasova protiv, {{ it.rank }}. u sazivu ({{ how("protiv") }})</li>{% endif %}
   </ul>
 </section>
 {% else %}
@@ -47,7 +47,7 @@
   {% if sm.promene %}<ul>{% for x in sm.promene %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.razlozi %}<h3>Zašto, prema predlagaču</h3><ul>{% for x in sm.razlozi %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.sredstva %}<p><b>Novac iz budžeta:</b> {{ sm.sredstva|latin }}</p>{% endif %}
-  <p class="label">Sažetak obrazloženja predloga zakona{% if it.summary.depth == "deep" %}, iz celog obrazloženja{% endif %}. Napisao ga je AI model ({{ it.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ law.bill_pdf }}">predlog zakona</a>.</p>
+  <p class="label">Sažetak obrazloženja predloga zakona{% if it.summary.depth == "deep" %}, iz celog obrazloženja{% endif %}. Napisao ga je AI model ({{ it.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ law.bill_pdf }}">predlog zakona</a>. {{ how("sazetak") }}</p>
 </section>
 {% endif %}
 
@@ -55,6 +55,7 @@
 {% if final %}
 <section>
   <h2>Kako su glasale poslaničke grupe</h2>
+  <p class="label">Grupe kako ih Skupština piše u listingu glasanja. {{ how("grupe") }}</p>
   <div class="scroll">
   <table class="groups">
     <thead><tr><th>Grupa</th><th class="vote-cell"></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
@@ -86,7 +87,7 @@
     {% for q in rest %}{{ quote(q, db) }}{% endfor %}
   </details>
   {% endif %}
-  <p class="label">Pregled rasprave napisao je AI model ({{ it.said.model }}) samo iz stenografskih beleški; svaki navod pripisan je onome ko ga je izneo, a sajt ne preuzima nijedan stav. Citati su provereni reč po reč u beleškama. Pregled može da sadrži grešku; merodavne su beleške.</p>
+  <p class="label">Pregled rasprave napisao je AI model ({{ it.said.model }}) samo iz stenografskih beleški; svaki navod pripisan je onome ko ga je izneo, a sajt ne preuzima nijedan stav. Citati su provereni reč po reč u beleškama. Pregled može da sadrži grešku; merodavne su beleške. {{ how("rasprava") }}</p>
   {% endif %}
 </section>
 {% endif %}
@@ -95,7 +96,7 @@
 {% if it.notes and (it.notes.independent or it.notes.media) %}
 <section class="voices">
   <h2>Šta kažu drugi</h2>
-  <p class="label">Mišljenja i analize van Skupštine, sa izvorom i linkom. Ovo su stavovi tih izvora, ne naši; sajt ne preuzima nijedan stav. Beleške je prikupio AI model pretragom weba{% if it.notes.checked %} ({{ it.notes.checked|day }}){% endif %}.</p>
+  <p class="label">Mišljenja i analize van Skupštine, sa izvorom i linkom. Ovo su stavovi tih izvora, ne naši; sajt ne preuzima nijedan stav. Beleške je prikupio AI model pretragom weba{% if it.notes.checked %} ({{ it.notes.checked|day }}){% endif %}. {{ how("drugi") }}</p>
   {% for key, heading in [("independent", "Nezavisna i međunarodna tela"), ("media", "Mediji i civilno društvo")] %}
   {% if it.notes[key] %}
   <h3>{{ heading }}</h3>
