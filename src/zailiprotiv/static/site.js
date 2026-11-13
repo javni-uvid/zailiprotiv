@@ -4,6 +4,17 @@
   var body = document.body, root = body.dataset.root || "", data = null, loading = null;
   document.querySelectorAll(".js-only").forEach(function (el) { el.hidden = false; });
 
+  // MP page: tabs by period (every convocation, or one); without the script the page shows every convocation.
+  document.querySelectorAll(".periods").forEach(function (box) {
+    var buttons = box.querySelectorAll("[data-period]"), panels = box.querySelectorAll("[data-panel]");
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        buttons.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+        panels.forEach(function (p) { p.hidden = p.dataset.panel !== b.dataset.period; });
+      });
+    });
+  });
+
   function load() {
     return loading || (loading = fetch(root + "podaci.json?v=" + (body.dataset.v || "")).then(function (r) { return r.json(); })
       .then(function (d) { data = d; return d; }));

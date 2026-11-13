@@ -42,7 +42,7 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("oblasti", "Po oblasti", areas_table), ("svi", "Svi glasovi", true)] %}
+{% set menu = [("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
 {% if shown or spoke %}
 <section class="activity" id="aktivnost">
@@ -82,9 +82,50 @@
 </section>
 {% endif %}
 
-{{ block("Glasovi protiv", against, "Nijedan glas protiv među konačnim glasanjima o zakonima.", false, "glasovi") }}
-{{ block("Glasovi za", for_, "Nijedan glas za među konačnim glasanjima o zakonima.") }}
-{% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true, "drugacije") }}{% endif %}
+<div class="periods">
+{% if periods|length > 1 %}<nav class="tabs period-tabs js-only" hidden aria-label="Period">{% for p in periods %}<button type="button" data-period="{{ p.key }}"{% if loop.first %} aria-pressed="true"{% else %} aria-pressed="false"{% endif %}>{{ p.label }}</button>{% endfor %}</nav>{% endif %}
+{% for p in periods %}{% set first = loop.first %}
+<div class="period" data-panel="{{ p.key }}"{% if not first %} hidden{% endif %}>
+{% if not first %}<p class="row-meta period-sum"><b class="t-za">{{ p.tally.za or 0 }} za</b> · <b class="t-protiv">{{ p.tally.protiv or 0 }} protiv</b> · {{ p.tally.uzdrzan or 0 }} uzdržan · {{ p.tally.nije_glasao or 0 }} nije glasao · {{ p.tally.nije_prisutan or 0 }} nije prisutan, od {{ p.n }} konačnih glasanja</p>{% endif %}
+{{ block("Glasovi protiv", p.against, "Nijedan glas protiv među konačnim glasanjima o zakonima.", false, "glasovi" if first else "") }}
+{{ block("Glasovi za", p.for_, "Nijedan glas za među konačnim glasanjima o zakonima.") }}
+{% if p.apart %}{{ block("Drugačije od većine svoje grupe", p.apart, "", true, "drugacije" if first else "") }}{% endif %}
+{% if p.areas %}
+<section{% if first %} id="oblasti"{% endif %}>
+  <h2>Po oblasti</h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Oblast</th><th>Glasao</th><th>Njegova grupa</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for g in p.areas %}
+      <tr><td><a href="../oblast/{{ g.label|area_slug }}.html">{{ g.label|latin }}</a>{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}</td><td class="lean">{{ g.word or "—" }}</td><td class="lean meta">{{ g.group_word or "—" }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Oblast je tačka člana 97. Ustava na koju se predlagač poziva u ustavnom osnovu predloga; jedan zakon može imati više oblasti. Prikazane su oblasti sa najmanje pet zakona. „Glasao" i „njegova grupa" opisuju udeo glasova za među glasovima za i protiv (najmanje pet): dosledno (95% i više), uglavnom (75%), češće (60%), mešovito. {{ how("oblasti") }}</p>
+</section>
+{% endif %}
+
+{% if p.kinds %}
+<section>
+  <h2>Po vrsti zakona</h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Vrsta</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for g in p.kinds %}
+      <tr><td>{{ g.label|latin }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Brojevi su izračunati iz poimeničnih glasanja; ovo nije ocena rada poslanika. {{ how("vrste") }}</p>
+</section>
+{% endif %}
+</div>
+{% endfor %}
+</div>
 
 {% if by_conv|selectattr("agree")|list %}
 <section id="slaganje">
@@ -106,39 +147,7 @@
 </section>
 {% endif %}
 
-{% if areas_table %}
-<section id="oblasti">
-  <h2>Po oblasti</h2>
-  <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Oblast</th><th>Glasao</th><th>Njegova grupa</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
-    <tbody>
-    {% for g in areas_table %}
-      <tr><td><a href="../oblast/{{ g.label|area_slug }}.html">{{ g.label|latin }}</a>{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}</td><td class="lean">{{ g.word or "—" }}</td><td class="lean meta">{{ g.group_word or "—" }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  <p class="label">Oblast je tačka člana 97. Ustava na koju se predlagač poziva u ustavnom osnovu predloga; jedan zakon može imati više oblasti. Prikazane su oblasti sa najmanje pet zakona. „Glasao" i „njegova grupa" opisuju udeo glasova za među glasovima za i protiv (najmanje pet): dosledno (95% i više), uglavnom (75%), češće (60%), mešovito. {{ how("oblasti") }}</p>
-</section>
-{% endif %}
 
-{% if kinds_table %}
-<section>
-  <h2>Po vrsti zakona</h2>
-  <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Vrsta</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
-    <tbody>
-    {% for g in kinds_table %}
-      <tr><td>{{ g.label|latin }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  <p class="label">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Brojevi su izračunati iz poimeničnih glasanja; ovo nije ocena rada poslanika. {{ how("vrste") }}</p>
-</section>
-{% endif %}
 
 <section class="more" id="svi">
   <h2>Svi glasovi po sazivima</h2>

@@ -246,3 +246,9 @@ td.lean { white-space: nowrap; }
 .tag { font-size: .8rem; padding: .1rem .5rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); text-decoration: none; }
 .tag:hover { color: inherit; border-color: currentColor; }
 .areas-list li { margin: .35rem 0; }
+.period-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 2rem 0 .5rem; }
+.period-tabs button { font: inherit; font-size: .9rem; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: none; color: inherit; cursor: pointer; }
+.period-tabs button[aria-pressed="true"] { border-color: currentColor; font-weight: 600; }
+.period[hidden] { display: none; }
+.period-sum { margin-top: 1rem; }
+@media (max-width: 640px) { .period-tabs { flex-wrap: nowrap; overflow-x: auto; } .period-tabs button { white-space: nowrap; } }
