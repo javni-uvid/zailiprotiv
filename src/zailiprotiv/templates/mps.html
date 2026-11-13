@@ -4,6 +4,16 @@
 {% block main %}
 <h1>Poslanici</h1>
 {{ tabs(convs, conv, "mps_page") }}
+<div class="finder js-only" hidden data-filter="f-rows">
+  <label class="sr" for="f-q">Pretraži poslanike</label>
+  <input id="f-q" type="search" placeholder="Ime ili prezime, {{ rows|length }} poslanika ovog saziva" autocomplete="off">
+  <div class="chips">
+    <label class="sr" for="f-g">Poslanička grupa</label>
+    <select id="f-g" class="wide"><option value="">Sve poslaničke grupe</option>{% for g, n in groups %}<option value="{{ g }}">{{ g }} ({{ n }})</option>{% endfor %}</select>
+    <label class="sr" for="f-sort">Redosled</label>
+    <select id="f-sort"><option value="">Po prezimenu</option><option value="pr">Najviše glasova protiv</option><option value="za">Najviše glasova za</option><option value="ab">Najviše izostanaka</option></select>
+  </div>
+</div>
 {% if boards %}
 <section class="faces-row" aria-label="Ko se izdvaja u ovom sazivu">
 {% for b in boards %}
@@ -18,16 +28,6 @@
 </section>
 <p class="label">Prvih pet po svakom broju u ovom sazivu, isto pravilo za svakoga; samo konačna glasanja o zakonima. Izostanak: nije prisutan ili nije glasao.</p>
 {% endif %}
-<div class="finder js-only" hidden data-filter="f-rows">
-  <label class="sr" for="f-q">Pretraži poslanike</label>
-  <input id="f-q" type="search" placeholder="Ime ili prezime, {{ rows|length }} poslanika ovog saziva" autocomplete="off">
-  <div class="chips">
-    <label class="sr" for="f-g">Poslanička grupa</label>
-    <select id="f-g" class="wide"><option value="">Sve poslaničke grupe</option>{% for g, n in groups %}<option value="{{ g }}">{{ g }} ({{ n }})</option>{% endfor %}</select>
-    <label class="sr" for="f-sort">Redosled</label>
-    <select id="f-sort"><option value="">Po prezimenu</option><option value="pr">Najviše glasova protiv</option><option value="za">Najviše glasova za</option><option value="ab">Najviše izostanaka</option></select>
-  </div>
-</div>
 <p id="f-n" class="row-meta" aria-live="polite"></p>
 <ol class="rows compact" id="f-rows">
 {% for r in rows %}
