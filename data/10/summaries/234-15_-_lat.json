@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "60bcb62701d0db4fd29856d06df890b02318322374eaf6866cf44759e9f8bb12",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon menja Zakon o biocidnim proizvodima zbog prestanka rada Agencije za hemikalije, tako što prenosi nadležnost na ministarstvo i zamenjuje naknade taksama koje su prihod budžeta Republike Srbije.",
+  "razlozi": [
+   "Agencija za hemikalije prestala je sa radom 29. septembra 2012. godine, a osnovni zakon je i dalje kao nadležan organ navodio tu agenciju.",
+   "Potrebno je usklađivanje sa Zakonom o budžetskom sistemu, koji zahteva reviziju naknada i taksi u posebnim zakonima.",
+   "Dosadašnji zajednički organ inspekcija, prema navodima, nije bio efikasan zbog nepostojanja podele nadležnosti između inspekcija.",
+   "Potreban je kontinuitet u funkcionisanju sistema upravljanja biocidnim proizvodima."
+  ],
+  "promene": [
+   "Brisana je nadležnost Agencije za hemikalije; nadležan za propisivanje vrsta biocidnih proizvoda je ministar nadležan za poslove zaštite životne sredine.",
+   "Brisane su naknade koje su bile prihod Agencije za hemikalije, a umesto njih propisuju se takse koje su prihod budžeta Republike Srbije.",
+   "Precizirana je nadležnost inspekcija za zaštitu životne sredine, sanitarne, veterinarske i tržišne inspekcije u nadzoru nad biocidnim proizvodima.",
+   "Žalbe na rešenja inspektora rešavaju ministri nadležni za životnu sredinu, zdravlje, veterinu i trgovinu, a njihova rešenja su konačna uz mogućnost upravnog spora.",
+   "Uvedene su prelazne odredbe za okončanje započetih postupka i rok od tri meseca za donošenje podzakonskog propisa."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nisu potrebna dodatna finansijska sredstva iz budžeta, jer su sredstva za ove poslove već obezbeđena i preuzeta od Agencije za hemikalije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o biocidnim proizvodima",
+ "depth": "standard"
+}

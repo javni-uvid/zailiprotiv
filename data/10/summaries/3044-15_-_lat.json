@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "5eea7d0064a97ac5aa2f2290bc9e17755c630fcf1621337c2b85331c370aa888",
+ "summary": {
+  "ukratko": "Predlog zakona uređuje sistem sporta u Republici Srbiji. Predlagač navodi da je novi zakon potreban zbog unapređenja stanja u sportu, nakon četiri godine primene važećeg Zakona o sportu iz 2011. godine.",
+  "razlozi": [
+   "Analiza primene važećeg zakona u protekle četiri godine pokazala je da je potrebno doneti novi zakon radi daljeg unapređenja sporta.",
+   "Potreba za usklađivanjem sa evropskim standardima, pravilima međunarodnih sportskih saveza i novodonetim nacionalnim propisima.",
+   "Nepreciznost i neprimenljivost pojedinih rešenja, neregulisana pitanja i nesprovođenje zakona u ključnim segmentima od strane učesnika u sistemu sporta.",
+   "Potreba da se građanima, posebno deci, mladima, ženama i osobama sa invaliditetom, omogući stalno bavljenje sportom, uz podršku vrhunskim sportistima."
+  ],
+  "promene": [
+   "Zadržava se znatan broj odredbi važećeg zakona koje su se potvrdile u primeni.",
+   "Postojeća podzakonska akta primenjuju se do donošenja akata na osnovu novog zakona; u najvećem broju slučajeva biće potrebne samo izmene i dopune.",
+   "Predviđa se donošenje novih pravilnika, među kojima je pravilnik o prepoznavanju zlostavljanja, zloupotrebe, diskriminacije i nasilja nad decom u sportu.",
+   "Predviđaju se novi pravilnici o radu policijskih i vojnih sportskih udruženja, o sadržaju knjige članova sportskog udruženja i o uslovima za obavljanje sportske delatnosti preduzetnika."
+  ],
+  "sredstva": "Predlagač navodi da su za primenu zakona u 2015. godini već obezbeđena sredstva od 3.573.330.000 dinara u okviru Ministarstva omladine i sporta, da dodatna sredstva iz budžeta za 2015. godinu nisu potrebna i da će se primena zakona sprovoditi u granicama budžetskih limita."
+ },
+ "usage": {},
+ "law": "Zakon o sportu",
+ "depth": "standard"
+}

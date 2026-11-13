@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "cdabb4c0397cc4caa2b609e7a623ba1b0e0406d5f5ed1a570cc0c78fdf05f421",
+ "summary": {
+  "ukratko": "Zakon uređuje pravnu formu Akcionarskog fonda i način isplate novčane naknade građanima iz postupka privatizacije. Prema navodu predlagača, Fond nastavlja da posluje kao nejavno akcionarsko društvo, a novčana naknada se isplaćuje direktno nosiocima prava.",
+  "razlozi": [
+   "Predlagač navodi da Fond nije usklađen sa Zakonom o privrednim društvima i da promena pravne forme zahteva izmenu zakona kao osnivačkog akta.",
+   "Predlagač navodi da je prvobitna namera da se akcijama Fonda trguje na berzi izgubila smisao zbog ekonomske krize i stanja na tržištu hartija od vrednosti.",
+   "Predlagač navodi da trgovanje akcijama nije omogućeno zbog zakonskih prepreka u proteklom periodu.",
+   "Predlagač navodi da direktna isplata na tekuće račune pojednostavljuje postupak i izbegava troškove provizija i drugih naknada."
+  ],
+  "promene": [
+   "Fond nastavlja da posluje kao akcionarsko društvo čijim akcijama se ne trguje na organizovanom tržištu hartija od vrednosti.",
+   "Novčana naknada se isplaćuje nosiocima prava direktno na tekuće račune koje Agencija za privatizaciju ima u svojoj evidenciji.",
+   "Brišu se odredbe o uključivanju akcija Fonda na tržište hartija od vrednosti, a kao metod prodaje uvodi se javno prikupljanje ponuda sa javnim nadmetanjem umesto javnog tendera i javne aukcije.",
+   "Troškovi brokerskih usluga za prvu prodaju besplatnih akcija izvršenu do 31. decembra 2016. godine padaju na teret budžeta, a Beogradska berza i Centralni registar ne naplaćuju naknade za tu prodaju.",
+   "Menja se rok za korporativizaciju JP „Elektroprivreda Srbije”, a prestaje da važi Uredba o postupku prodaje akcija metodom javne aukcije."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna dodatna sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o pravu na besplatne akcije i novčanu naknadu koju građani ostvaruju u postupku privatizacije",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "aa0ce3056d6fec0480de96439b5370a9c216106022b87b3bf280fd24228d1222",
+ "summary": {
+  "ukratko": "Zakon o izmenama i dopunama Zakona o zdravstvenoj zaštiti uređuje promet u apotekama, pojam zdravstvenog radnika, trajanje pripravničkog staža i uslove za obnovu licence zdravstvenih radnika. Predlagač navodi da su ta pitanja potrebno urediti zakonom.",
+  "razlozi": [
+   "Ministarstvo zdravlja treba opštim aktom da uredi šta sve može biti predmet prometa u apoteci.",
+   "Pripravnički staž za zdravstvene radnike sa visokom stručnom spremom predviđa se u trajanju od šest meseci, a studijski programi već sadrže praksu na završnoj godini studija.",
+   "Rad pod nadzorom, prema navodima predlagača, nije moguć u pojedinim slučajevima, na primer kod privatnih praksi, u organizacionim delovima zdravstvenih ustanova i u ambulantama u naseljenim mestima.",
+   "Polaganje licencnog ispita, prema navodima predlagača, primenjuje se u zemljama regiona, a ovim zakonom omogućava se obnova licence nakon njegovog položenog."
+  ],
+  "promene": [
+   "Ministar donosi akt kojim se uređuje da apoteke, pored prometa lekova i medicinskih sredstava na malo, mogu prometovati dečju hranu, dijetetske proizvode i druga sredstva za zaštitu zdravlja.",
+   "Određuje se pojam zdravstvenog radnika, tako da obuhvata nastavnike i saradnike fakulteta zdravstvene struke koji izvode nastavu iz kliničkih predmeta u zdravstvenoj ustanovi, kao i one koji pružaju zdravstvene usluge u zdravstvenim ustanovama.",
+   "Sporazum između zdravstvenih ustanova iz Plana mreže, fakulteta zdravstvene struke i Republičkog fonda za zdravstveno osiguranje uređuje međusobna prava i obaveze u pružanju usluga iz obaveznog zdravstvenog osiguranja.",
+   "Pripravnički staž traje šest meseci za zdravstvene radnike sa visokom stručnom spremom, 12 meseci za zdravstvene saradnike sa visokom stručnom spremom, a šest meseci za radnike sa višom ili srednjom stručnom spremom.",
+   "Zdravstveni radnik koji ne ispuni uslove za obnovu licence polaže licencni ispit, a nakon položenog ispita može obnoviti licencu pre isteka njenog važenja; briše se član 198. stav 2."
+  ],
+  "sredstva": "Predlagač navodi da rešenja neće stvoriti dodatne troškove za pacijente, građane ni privredu, jer ti troškovi već postoje u zdravstvenom sistemu, dok obrazloženje ne navodi iznos sredstava iz budžeta."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o zdravstvenoj zaštiti",
+ "depth": "standard"
+}

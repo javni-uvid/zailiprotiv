@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "84e15017f01573bca6401fd6a5a68500622b90b1e4584dcabb6d353449ddf532",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom potvrđuje Konvencija o nadležnosti, merodavnom pravu, priznanju i izvršenju odluka i saradnji u materiji roditeljske odgovornosti i mera za zaštitu dece, koja uređuje međunarodnu nadležnost, merodavno pravo, priznanje i izvršenje odluka i saradnju država ugovornica u tim pitanjima.",
+  "razlozi": [
+   "Konvencija je usvojena 1996. godine pod okriљem Haške konferencije za međunarodno privatno pravo, a stupila je na snagu 2002. godine.",
+   "Konvencija je do sada okupila 41 državu ugovornicu, uključujući sve države Evropske unije, osim Italije.",
+   "Prema Izveštaju Evropske komisije o napretku Republike Srbije za 2014. godinu, Republika Srbija još nije pristupila Konvenciji, pa predlagač navodi da je pristupanje jedan od neophodnih koraka u procesu evrointegracija.",
+   "Konvencija štiti najbolji interes deteta i omogućava jednostavnije priznavanje i izvršavanje odluka o merama za zaštitu dece u državama ugovornicama."
+  ],
+  "promene": [
+   "Potvrđuje se Konvencija o nadležnosti, merodavnom pravu, priznanju i izvršenju odluka i saradnji u materiji roditeljske odgovornosti i mera za zaštitu dece.",
+   "Ministarstvo nadležno za porodičnu zaštitu određuje se kao centralni organ Republike Srbije za izvršavanje obaveza iz Konvencije i za prijem zahteva iz čl. 8, 9. i 33. Konvencije.",
+   "Republika Srbija će obavestiti Stalni biro Haške konferencije za međunarodno privatno pravo o određivanju tog ministarstva, u skladu sa članom 45. stav 1. Konvencije.",
+   "Za pitanja merodavnog prava u ovoj materiji primenjivaće se odredbe Konvencije, a kolizione norme Zakona o rešavanju sukoba zakona sa propisima drugih zemalja prestaju da se primenjuju u tom delu."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Konvencije o nadležnosti, merodavnom pravu, priznanju i izvršenju odluka i saradnji u materiji roditeljske odgovornosti i mera za zaštitu dece",
+ "depth": "standard"
+}

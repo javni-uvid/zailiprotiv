@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "206e56943bc09a727394ffd08b14768a711124ddb061e22ffe76e5523b4a85b3",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom uređuje ugovor o finansiranju poljoprivredne proizvodnje, registrovanje tih ugovora i zaloga na budućim poljoprivrednim proizvodima kojom se obezbeđuje naplata potraživanja po ugovoru o finansiranju.",
+  "razlozi": [
+   "Prema obrazloženju, učešće bruto dodate vrednosti poljoprivrede u bruto domaćem proizvodu iznosilo je 11,3% u prethodnoj deceniji, a poljoprivreda sa prehrambenom industrijom ima pozitivan spoljnotrgovinski bilans od 2005. godine.",
+   "Finansiranje poljoprivredne proizvodnje se dosad uglavnom oslanjalo na budžetska sredstva, a usled globalne finansijske krize mogućnosti budžetskog finansiranja su se smanjile.",
+   "Potrebno je obezbediti kratkoročno finansiranje primarne poljoprivredne proizvodnje u periodu od setve do žetve odnosno berbe, uz uključivanje tržišnih finansijera.",
+   "Prema navodu, banke uglavnom nisu u mogućnosti da finansiraju ovakvu proizvodnju, jer se zaloga na budućem rodu smatra rizičnim sredstvom obezbeđenja."
+  ],
+  "promene": [
+   "Uređuje se Registar ugovora o finansiranju poljoprivredne proizvodnje, koji se osniva pri Agenciji za privredne registre.",
+   "Uvodi se zaloga na budućim poljoprivrednim proizvodima, koja nastaje upisom u Registar zaloge, uz zakonsko založno pravo i vansudsko namirenje iz zaloge.",
+   "Robna obaveza iz ugovora o finansiranju može se sporazumom pretvoriti u novčanu obavezu, pa se i takav ugovor može obezbediti zalogom na budućim proizvodima.",
+   "Dužnik koji je poljoprivredno gazdinstvo, a ne postupi u skladu sa ugovorom, prevodi se u pasivni status i ne može ostvarivati podsticaje u poljoprivredi i ruralnom razvoju.",
+   "Dužnik ne može raskinuti ili izmeniti ugovor zbog promenjenih okolnosti, niti se pozivati na višu silu ili nemogućnost ispunjenja u pogledu vraćanja primljenih sredstava."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nije potrebno obezbediti sredstva iz budžeta Republike Srbije, a da se izrada registra (do 100.000 evra), obuka i promocija finansiraju sredstvima Evropske banke za obnovu i razvoj (EBRD)."
+ },
+ "usage": {},
+ "law": "Zakon o finansiranju i obezbeđenju finansiranja poljoprivredne proizvodnje",
+ "depth": "standard"
+}

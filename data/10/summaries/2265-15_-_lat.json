@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "114a8cdb7fae4cb1ea0bc75b592cd022153154ee12bea697c90b2957a0f21f1e",
+ "summary": {
+  "ukratko": "Предлог закона о изменама и допунама Закона о безбедности и интероперабилности железнице уређује безбедност и интероперабилност железничког система. Према предлагачу, закон усклађује важећи закон са правом Европске уније и уводи прецизнија правила за рад voznog и staničnog osoblja, ovlašćenja Direkcije za železnice, kaznene odredbe i terminologiju.",
+  "razlozi": [
+   "Предлагач наводи потребу за повећањем безбедности у железничком саобраћају и побољшањем интероperabilnosti железничког система.",
+   "Према образложењу, потребно је даље усклађивање са Директивом Савета 2005/47/EZ о радном времену мобилних радника у интероperabilnom прекограничном саобраћају, чиме се испуњава обавеза из Националног програма за усвајање правних тековина Европске уније.",
+   "Предлагач наводи да је потребно додатно појашњење одредаба о организовању и спровођењу рада voznog i staničnog osoblja.",
+   "Према образложењу, казне за физичка лица која крађама угрожавају безбедност на железници су мале, па се пооштравају казнене одредбе."
+  ],
+  "promene": [
+   "Термин „jedinstveni tehnički propisi“ мења се термином „tehničke specifikacije interoperabilnosti“.",
+   "Direkcija za železnice dobija ovlašćenja da obavlja nezavisnu ocenu pravilne primene Zajedničke bezbednosne metode i ocene rizika, proverava da li sertifikovana lica i dalje ispunjavaju uslove i rešenjem ograničava ili oduzima sertifikat.",
+   "Odredbe o ukrštanju železničkih pruga i puteva prebacuju se u Zakon o železnici.",
+   "Pooštravaju se kaznene odredbe za krađe kojima se ugrožava bezbednost na železnici.",
+   "Skraćenice „JTP“ i „JTP/TSI“ zamenjuju se skraćenicom „TSI“, a terminologija se koriguje radi usklađivanja sa drugim zakonima."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o bezbednosti i interoperabilnosti železnice",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "aecec2308aac68961192f1f2e7713780bf8e6ac648280055bd3e28f007d1f035",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon menja Zakon o podsticajima u poljoprivredi i ruralnom razvoju, u delu koji se odnosi na vrste podsticaja, način obračuna i isplate osnovnih podsticaja u biljnoj proizvodnji, regres, premiju za mleko i klasifikaciju pojedinih podsticaja.",
+  "razlozi": [
+   "Predlagač navodi potrebu za unapređenjem osnovnih elemenata poljoprivredne politike i politike ruralnog razvoja usled promena ekonomskog i tržišnog ambijenta nakon globalne ekonomske krize.",
+   "Predlagač navodi smanjenje investicija u sektoru poljoprivrede, netržišno prelivanje dobiti između učesnika u tržišnom lancu i sporiji rast primarne poljoprivredne proizvodnje u odnosu na mogućnosti.",
+   "Predlagač navodi cilj ravnomerne raspodele osnovnih podsticaja u biljnoj proizvodnji i regresa, uz smanjena budžetska izdvajanja za podsticaje u poljoprivredi.",
+   "Predlagač navodi da se usklađuje klasifikacija podsticaja sa programskim budžetom, kao i da se ograničenjem premije za mleko stvara mogućnost da se u narednom periodu uvede premija prema kategorijama kvaliteta mleka, radi usklađivanja sa EU."
+  ],
+  "promene": [
+   "Kreditna podrška se uređuje kao posebna vrsta podsticaja, a ne kao mera direktnih plaćanja.",
+   "Podsticaji se isplaćuju na namenski račun korisnika kod poslovne banke, do iznosa utvrđenog posebnim aktom Vlade, a kod zahteva po redosledu podnošenja.",
+   "Osnovni podsticaji za biljnu proizvodnju i regres za gorivo, đubrivo i/ili seme utvrđuju se do 6.000 dinara po hektaru, a premija za mleko do sedam dinara po litru.",
+   "Regres za premiju osiguranja, podsticaji za savetodavne i stručne poslove prebacuju se u podsticaje za mere ruralnog razvoja; briše se deo koji se odnosi na kreditnu podršku u direktnim plaćanjima.",
+   "Podaci iz Registra uzimaju se na dan 30. oktobra prethodne godine umesto na dan 31. marta tekuće godine, uz izuzetak za biljnu proizvodnju u 2016. godini (podaci na dan 31. decembra 2015. godine)."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije, jer su podsticaji već uspostavljeni kao kategorija prava za koja se svake budžetske godine obezbeđuju sredstva u budžetu."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o podsticajima u poljoprivredi i ruralnom razvoju",
+ "depth": "standard"
+}

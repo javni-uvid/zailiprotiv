@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "6859ec1f35d369ee1428247581aa02a5ef80b22d2314bccc8736325c0b55333d",
+ "summary": {
+  "ukratko": "Zakonom se potvrđuje Protokol o izmenama i dopunama Sporazuma o vazdušnom saobraćaju između Savezne vlade Savezne Republike Jugoslavije i Švajcarskog Federalnog saveta, potpisan 15. aprila 2015. godine. Prema predlagaču, protokol menja i dopunjuje sporazum iz 2002. godine o vazdušnom saobraćaju između dve države.",
+  "razlozi": [
+   "Postojeći pravni okvir se prilagođava preovlađujućem trendu liberalizacije u međunarodnom vazdušnom saobraćaju.",
+   "Potvrđivanjem se ustanovljava dugoročni pravni osnov za dalje unapređenje odnosa između dve države.",
+   "Sporazum se, prema navodima, usklađuje sa savremenim tendencijama u međunarodnom civilnom vazduhoplovstvu i visokim međunarodnim vazduhoplovnim standardima.",
+   "Sporazum otvara šire mogućnosti za avio-prevoziocе i druge subjekte u privrednim kretanjima između Republike Srbije i Švajcarskog Federalnog saveta."
+  ],
+  "promene": [
+   "Vrše se izmene i dopune sporazuma o vazdušnom saobraćaju iz 2002. godine.",
+   "Sporazum se, prema navodima predlagača, u celini uređuje odnose u oblasti vazdušnog saobraćaja između Republike Srbije i Švajcarskog Federalnog saveta."
+  ],
+  "sredstva": "Predlagač navodi da izvršavanjem protokola ne nastaju finansijske obaveze za Republiku Srbiju i da za sprovođenje zakona nije potrebno izdvajanje sredstava iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Protokola o izmenama i dopunama Sporazuma o vazdušnom saobraćaju između Savezne vlade Savezne Republike Jugoslavije i Švajcarskog Federalnog Saveta",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "43c12dcc23b919868e2ecae0ae247aab8b7a1be713a2be5c6aca75cfd6358865",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim zakonom menja i dopunjuje Zakon o podsticajima u poljoprivredi i ruralnom razvoju, radi usmeravanja podsticaja na poljoprivredna gazdinstva do 20 hektara i uvođenja novih mera podrške stočarskoj proizvodnji. Zakon se, prema tekstu, primenjuje od 1. januara 2015. godine.",
+  "razlozi": [
+   "Predlagač navodi potrebu za unapređenjem poljoprivredne politike i politike ruralnog razvoja usled posledica globalne ekonomske krize, smanjenih investicija i sporijeg rasta primarne proizvodnje.",
+   "Predlagač navodi da se zakon usmerava na poljoprivredna gazdinstva koja koriste do 20 hektara zemljišta, kao najbrojniju kategoriju gazdinstava.",
+   "Predlagač navodi potrebu za uštedama na rashodnoj strani budžeta radi mera fiskalne konsolidacije i oporavka privrede.",
+   "Predlagač navodi da se zakon primenjuje od 1. januara 2015. zbog vezanosti mera za obim sredstava iz Zakona o budžetu Republike Srbije za 2015. godinu, i da se ranije stupanje na snagu zasniva na članu 196. stav 4. Ustava Republike Srbije."
+  ],
+  "promene": [
+   "Obim sredstava za podsticaje utvrđuje se u okvirima budžeta ministarstva, pri čemu budžet ministarstva ne može biti manji od 5% budžeta Republike Srbije za određenu godinu.",
+   "Direktna plaćanja za biljnu proizvodnju usmeravaju se na gazdinstva do 20 hektara (ranije do 100 hektara), a zemljište državne svojine uzeto u zakup ili na korišćenje isključuje se iz prava na osnovne podsticaje.",
+   "Uvode se podsticaji za kvalitetne priplodne tovne krave (najmanje 20.000 dinara po grlu) i za tov jaradi (najmanje 1.000 dinara po grlu).",
+   "Podsticaji za mere ruralnog razvoja utvrđuju se u iznosu od najmanje 50%, odnosno 65% u područjima sa otežanim uslovima rada, ukupne vrednosti mere, za korisnike oznake geografskog porekla i sertifikovane organske proizvodnje.",
+   "Godišnji izveštaj o stanju u poljoprivredi (Zelena knjiga) objavljuje se do 30. juna na sajtu ministarstva."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije, jer su podsticaji već uspostavljeni Zakonom o podsticajima u poljoprivredi i ruralnom razvoju."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o podsticajima u poljoprivredi i ruralnom razvoju",
+ "depth": "standard"
+}

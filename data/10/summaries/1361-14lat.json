@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d62555b08208579e6c86eed694e44594a29ecc23a4dea86c5d0d6cc17a1aefc3",
+ "summary": {
+  "ukratko": "Zakon uređuje delokrug, položaj i organizaciju pravobranilaštva koje obavlja poslove pravne zaštite imovinskih prava i interesa Republike Srbije, autonomne pokrajine i jedinice lokalne samouprave. Predlagač navodi da je donošenje novog zakona u ovoj oblasti potrebno.",
+  "razlozi": [
+   "Predlagač navodi da važeći Zakon o javnom pravobranilaštvu („Službeni glasnik RS”, broj 43/91) sadrži 16 članova i ne određuje pojam pravobranilaštva, njegova načela, nadležnost ni način ostvarivanja nadležnosti.",
+   "Predlagač navodi da su nakon donošenja tog zakona nastale promene u ustavnom uređenju, organizaciji državne vlasti, finansiranju javnih potreba i imovinskopravnim odnosima.",
+   "Predlagač navodi da nije jasno da li pravobranilaštvo može da uskrati informacije o predmetima zastupanja, u vezi sa Zakonom o slobodnom pristupu informacijama od javnog značaja.",
+   "Cilj zakona, prema predlagaču, je stvaranje uslova za najkvalitetniju zaštitu imovinskih prava i interesa Republike Srbije, autonomnih pokrajina i jedinica lokalne samouprave."
+  ],
+  "promene": [
+   "Osniva se Državno pravobranilaštvo za zaštitu imovinskih prava i interesa Republike Srbije; poslove za autonomnu pokrajinu i jedinicu lokalne samouprave obavljaju njihova pravobranilaštva, čije se uređenje utvrđuje odlukom tih organa.",
+   "Državno pravobranilaštvo zastupa državne organe, posebne organizacije i javne ustanove čije se finansiranje obezbeđuje iz budžeta Republike Srbije, a na osnovu posebnog punomoćja i druga pravna lica čiji je osnivač Republika Srbija.",
+   "Uvodi se nova nadležnost: zastupanje Republike Srbije pred Evropskim sudom za ljudska prava, koje prema važećim propisima obavlja Ministarstvo pravde; ove poslove obavlja zamenik državnog pravobranioca.",
+   "Državni pravobranilac rukovodi radom Državnog pravobranilaštva i odgovoran je Vladi i Ministarstvu pravde; može izdavati obavezna uputstva i isključivo je nadležan za pokretanje postupka za ocenu ustavnosti i zakonitosti.",
+   "Uređuju se obaveza dostavljanja spisa i podataka Državnom pravobranilaštvu, troškovi zastupanja kao javni prihod Republike Srbije, sporazumno rešavanje spornog odnosa, zaštita poverljivih podataka i nadzor ministarstva nadležnog za pravosuđe."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o pravobranilaštvu",
+ "depth": "standard"
+}

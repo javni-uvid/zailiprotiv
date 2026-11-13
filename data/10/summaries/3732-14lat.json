@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "dbea14219999ce3ffcf70e9ad98ee7ff5a74c6e0ddefc6ca32ac21f60ac1d08a",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum između Vlade Republike Srbije i Vlade Ruske Federacije o statusu srpskih vojnih memorijala na teritoriji Ruske Federacije i ruskih vojnih memorijala na teritoriji Republike Srbije. Predlagač navodi da ova oblast dosad nije bila regulisana međudržavnim sporazumom.",
+  "razlozi": [
+   "Oblast zaštite vojnih memorijala nije regulisana međudržavnim sporazumom između Vlade Republike Srbije i Vlade Ruske Federacije.",
+   "Predlagač navodi zajednički interes da se pitanja iz ove oblasti urede na sveobuhvatan način, radi zaštite vojnih memorijala.",
+   "Vlada je Zaključkom 05 Broj: 018-1700/2013 od 7. marta 2013. godine utvrdila osnovu za vođenje pregovora i zaključivanje sporazuma.",
+   "Zaključkom o izmeni Zaključka 05 Broj: 018-2934/2013 od 5. aprila 2013. godine ovlašćen je član Vlade da u ime Vlade potpiše sporazum."
+  ],
+  "promene": [
+   "Zakonom se potvrđuje Sporazum između Vlade Republike Srbije i Vlade Ruske Federacije o statusu vojnih memorijala.",
+   "Sporazumom se uređuje status srpskih vojnih memorijala na teritoriji Ruske Federacije.",
+   "Sporazumom se uređuje status ruskih vojnih memorijala na teritoriji Republike Srbije."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno angažovati dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Ruske Federacije o statusu srpskih vojnih memorijala na teritoriji Ruske Federacije i ruskih vojnih memorijala na teritoriji Republike Srbije",
+ "depth": "standard"
+}

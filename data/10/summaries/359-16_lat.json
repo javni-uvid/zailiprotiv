@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "258a7de16e87f75bae2c048ceb8b2fbbd02a2193ef1c82288241934bf4e82bfd",
+ "summary": {
+  "ukratko": "Zakon uređuje uslove i način na koje Privredno društvo za proizvodnju i preradu čelika Železara Smederevo d.o.o. stiče pravo svojine na zemljištu, objektima i vodovima, kao i uslove upotrebe troske nastale u proizvodnji. Prema predlagaču, cilj je rešavanje neuređenog statusa objekata i zemljišta tog društva.",
+  "razlozi": [
+   "Vlada je 2014. godine pokrenula privatizaciju društva, a postupak je 2015. godine proglašen neuspešnim.",
+   "Predlagač navodi da je rešavanje višedecenijskog problema statusa objekata i zemljišta bitan preduslov za oporavak društva i uspešniju privatizaciju.",
+   "Predlagač navodi da zakon omogućava državnim organima lakše i brže donošenje odluka o neuređenim nepokretnostima društva i smanjuje birokratski uticaj na poslovanje skraćivanjem rokova.",
+   "Predlagač navodi da zakon stupa na snagu narednog dana od objavljivanja zbog prioritetnih potreba privatizacije i oporavka društva."
+  ],
+  "promene": [
+   "Društvu se priznaje pravo svojine na katastarskim parcelama u svojini Republike Srbije na kojima je upisano kao imalac prava korišćenja ili korisnik, uz utvrđivanje eventualne naknade.",
+   "Javnim preduzećima čiji je osnivač Republika Srbija prestaju upisana prava na parcelama na kojima se nalaze isključivo objekti društva.",
+   "Nadležna jedinica lokalne samouprave dostavlja popis parcela čija je planskim dokumentima promenjena namena u građevinsko zemljište, a upis promene vrste zemljišta ima deklarativan karakter.",
+   "Uvodi se nalaz i zaključak komisije o podobnosti objekta ili voda za upotrebu kao isprava za upis prava svojine; nadzor nad primenom vrši ministarstvo nadležno za privredu.",
+   "Troska nastala u proizvodnji može se koristiti kao građevinski materijal ako ispunjava uslove propisane standardima, a na tu trosku ne primenjuje se zakon kojim se uređuje upravljanje otpadom."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o sticanju prava svojine na zemljištu, objektima i vodovima Privrednog društva za proizvodnju i preradu čelika Železara Smederevo d.o.o. Smederevo",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "3adfcbdc853b9577238c6395831c5d3802fd392e3314ba887292250bbbb1f2ed",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom menjaju i dopunjuju pojedina pravila Zakona o stečaju, radi efikasnijeg sprovođenja stečajnih postupaka i bržeg i transparentnijeg namirenja stečajnih poverilaca.",
+  "razlozi": [
+   "Predlagač navodi da su problemi u praksi nastali zbog neprecizne i nepotpune stečajne regulative.",
+   "Predlagač navodi da se radi sprečavanja zloupotreba i korupcije lica povezana sa dužnikom namiruju u poslednjem isplatnom redu i ne mogu biti birana u odbor poverilaca.",
+   "Predlagač navodi da se objavljivanjem svih podataka o toku stečajnog postupka na internet strani ALSU povećava transparentnost.",
+   "Predlagač navodi da su troškovi i visok predujam razlozi zbog kojih se stečajni postupci retko otvaraju, posebno za mikro i mala preduzeća."
+  ],
+  "promene": [
+   "Briše se stav 3 člana 20, a način izbora stečajnih upravnika uređuje se izmenom podzakonskog akta, tako da algoritam dodeljuje upravnike u svim slučajevima.",
+   "Ukida se obaveza pribavljanja saglasnosti Komisije za zaštitu konkurencije uz plan reorganizacije, osim za srednja i velika pravna lica.",
+   "Založni poverilac nije dužan da podnese prijavu potraživanja, ali je dužan da obavesti sud o postojanju zaloge.",
+   "Ograničava se visina predujma za mikro privredna društva, a briše se rok od tri godine od polaganja stručnog ispita za podnošenje zahteva za licencu stečajnog upravnika.",
+   "Sud u Republici Srbiji nadležan je za strana pravna lica sa središtem glavnih poslovnih interesa u Srbiji i za sporedne stečajne postupke."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o stečaju",
+ "depth": "standard"
+}

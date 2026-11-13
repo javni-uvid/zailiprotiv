@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "c2556b698283253e156e1b9fde36368b5d3c6a7de7396fbc042971515057a80a",
+ "summary": {
+  "ukratko": "Закон мења Закон о високом образовању у делу који се односи на испите и испитне рокове и на финансирање студија из буџета по истеку редовног трајања студија. Предлагач наводи да се изменама жели пронаћи целисходније решење за број и термине испитних рокова и утврдити право на финансирање за одређене генерације студената.",
+  "razlozi": [
+   "Закон о високом образовању из 2005. године је у међувремену мењан и допуњаван у циљу побољшања ефикасности система високог образовања.",
+   "Potrebno je izmeniti deo koji se odnosi na ispitne rokove i finansiranje studija iz budžeta po isteku redovnog trajanja studija.",
+   "Predlaže se hitan postupak kako bi se sprečile štetne posledice po studente, koje bi nastupile ako se izmene ne usvoje do početka školske 2015/2016. godine.",
+   "Usklađivanje opštих аката samostalних високошколских установа са предложеним изменама, а недоношење закона по хитном поступку могло би проузроковати штетне последице по рад органа и организација."
+  ],
+  "promene": [
+   "Član 1: menja se član 90. tako što samostalna visokoškolska ustanova statutom utvrđuje broj i termine održavanja ispitnih rokova.",
+   "Član 2: pravo studenata upisanih u prvu godinu osnovnih studija da se finansiraju iz budžeta najduže godinu dana po isteku redovnog trajanja studija proširuje se i na studente upisane zaključno sa školskom 2012/2013. godinom (dosad do 2010/2011).",
+   "Član 3: utvrđuje se obaveza samostalnih visokoškolskih ustanova da usklade svoje opšte akte sa izmenama zakona u propisanom roku.",
+   "Član 4: sadrži završnu odredbu o stupanju zakona na snagu."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna dodatna sredstva u budžetu Republike Srbije, a da su sredstva obezbeđena u okviru programa 2005, projekta 0001 – Podrška radu visokoškolskih ustanova, Ministarstva prosvete, nauke i tehnološkog razvoja."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o visokom obrazovanju",
+ "depth": "standard"
+}

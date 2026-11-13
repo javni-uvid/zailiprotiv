@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "b9e7907033d3858e69d86ed079c3d53ab6a893620f40d02082f72628a81c1619",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Ugovor o izmenama i dopunama Finansijskog ugovora (Unapređenje objekata pravosudnih organa) između Republike Srbije i Evropske investicione banke, potpisan 28. aprila 2014. godine u Luksemburgu i 15. maja 2014. godine u Beogradu. Prema obrazloženju, ugovor se odnosi na izmene projekta koji se finansira kreditom Evropske investicione banke.",
+  "razlozi": [
+   "Finansijskim ugovorom broj 31.147 iz 2011. godine Evropska investiciona banka odobrila je kredit od EUR 45.000.000 za Projekat.",
+   "Usled izmene mreže sudova po predlogu Radne grupe za reformu pravosuđa, promenjeni su predviđeni objekti, a Ministarstvo pravde odustalo je od izgradnje zgrade javnih tužilaštava u Kneza Miloša 32-36 u Beogradu.",
+   "Krajnji datum raspoloživosti zajma potrebno je produžiti do 31. decembra 2018. godine, kao i period za sprovođenje investicionog programa.",
+   "Broj potprojekata u investicionom programu potrebno je povećati sa 16 na 22."
+  ],
+  "promene": [
+   "Potvrđuje se Ugovor o izmenama i dopunama Finansijskog ugovora (član 1); tekst ugovora na engleskom jeziku i prevod na srpski jezik nalaze se u članu 2.",
+   "Iznos kredita Evropske investicione banke smanjuje se sa EUR 45.000.000 na EUR 41.000.000.",
+   "Za smeštaj pravosudnih organa, deo objekta bivšeg Vojno-tehničkog instituta u Katanićevoj 15 stavlja se na korišćenje Ministarstvu pravde i državne uprave bez naknade, na osnovu Zaključka Vlade 05 Broj: 464-3442/2013 od 23. aprila 2013. godine.",
+   "Produžava se krajnji datum raspoloživosti zajma do 31. decembra 2018. godine i period sprovođenja investicionog programa do 2018. godine.",
+   "Stupanje na snagu zakona uređuje se članom 3."
+  ],
+  "sredstva": "Prema obrazloženju, sredstva neophodna za izmenjeni projekat procenjuju se na EUR 84.150.000, od čega će iz kredita Evropske investicione banke biti odobren iznos od EUR 41.000.000."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o izmenama i dopunama Finansijskog ugovora (Unapređenje objekata pravosudnih organa) između Republike Srbije i Evropske investicione banke",
+ "depth": "standard"
+}

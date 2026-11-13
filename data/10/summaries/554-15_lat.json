@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "7a64651f183d3e8783b28a5f5d51287089aae1d0428447a2e77b8a7af4e8a8d2",
+ "summary": {
+  "ukratko": "Zakon o žičarama za transport lica uređuje žičare, uslove za njihovu izgradnju, rekonstrukciju i održavanje, stavljanje na tržište njihovih podsistema i bezbednosnih komponenti, upravljanje žičarama, nadležne organe i nadzor nad primenom. Prema predlagaču, cilj je bezbedan rad žičara i bezbednost lica koja ih koriste.",
+  "razlozi": [
+   "Predlagač navodi potrebu za jedinstvenim uređenjem ove oblasti, radi većeg stepena zaštite života, zdravlja i bezbednosti lica koja koriste žičare.",
+   "Predlagač navodi da se u Srbiji žičare za transport lica koriste u ski-centrima, da se planira izgradnja novih žičara i da se time povećava kapacitet, što uvećava rizike bezbednosti.",
+   "Predlagač navodi da je važeći Zakon o javnim skijalištima sadrži malo odredaba o žičarama, koje su uopštene, dok Zakon o železnici predviđa posebан zakon o žičarama.",
+   "Predlagač navodi usklađivanje sa Direktivom 2000/9/EZ i strateški cilj Republike Srbije, a to je članstvo u Evropskoj uniji."
+  ],
+  "promene": [
+   "Uvodi jedinstvene termine i definicije, definiše žičaru i njene podsisteme i vrši podelu žičara na uspinjače, viseće žičare, vučnice i specifične vučne instalacije.",
+   "Propisuje zahteve za užad, pogonski uređaj, kontrolne uređaje, komunikaciju na žičari, vozila, vučne uređaje i stanice.",
+   "Propisuje obaveznu sigurnosnu analizu pri projektovanju i izgradnji, odobrenje za rad na osnovu upotrebne dozvole koje se obnavlja nakon godinu dana, i tehnički pregled jednom godišnje.",
+   "Određuje obaveze upravljača, uključujući uputstva za rad, opšte uslove prevoza, vozni red, radno vreme, cenovnik i plan evakuacije i spasavanja.",
+   "Uređuje evidenciju žičara, nadzor republičkih organa uprave i inspekcijskih organa, kao i prekršaje i kazne."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o žičarama za transport lica",
+ "depth": "standard"
+}

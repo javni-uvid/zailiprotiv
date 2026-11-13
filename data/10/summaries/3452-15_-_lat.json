@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e313fc02dea6499dd728e7b26ca8cfafd44263916501029574019a4c9c7ab4f3",
+ "summary": {
+  "ukratko": "Zakon menja i dopunjuje Zakon o pravu na besplatne akcije i novčanu naknadu koju građani ostvaruju u postupku privatizacije. Predlagač navodi da se njime usklađuju odredbe tog zakona sa preuzimanjem poslova Agencije za privatizaciju od strane ministarstva nadležnog za poslove privatizacije.",
+  "razlozi": [
+   "Preuzimanjem poslova stečajnog upravnika sa Agencije za privatizaciju na Agenciju za licenciranje stečajnih upravnika portfelj Agencije za privatizaciju je značajno smanjen.",
+   "Predlagač navodi potrebu racionalizacije državne uprave, fiskalne konsolidacije i povećanja efikasnosti sprovođenja postupka privatizacije.",
+   "Zakonom o privatizaciji predviđeno je da nadležnosti Agencije za privatizaciju preuzme Ministarstvo privrede, a da Zakon o Agenciji za privatizaciju prestane da važi.",
+   "Predlagač navodi da je potrebno u najkraćem roku omogućiti nesmetani nastavak poslova u ime i za račun Akcionarskog fonda."
+  ],
+  "promene": [
+   "Ministarstvo nadležno za poslove privatizacije preuzima poslove u ime i za račun Akcionarskog fonda, uključujući korišćenje prava glasa, vođenje poslovnih knjiga i evidencije akcija i udela, i izradu polugodišnjih izveštaja.",
+   "Brišu se odredbe o odbacivanju prijave za upis u evidenciju nosilaca prava, a odluke donete u skladu sa zakonom postaju konačne uz mogućnost pokretanja upravnog spora.",
+   "Uređuju se nadležnosti Saveta Fonda, a briše se odredba po kojoj Program Fonda donosi Savet na predlog Agencije za privatizaciju.",
+   "Ministarstvo preuzima evidenciju nosilaca prava od Agencije za privatizaciju sa stanjem na dan početka primene zakona, a postupci započeti do tada nastavljaju se po odredbama ovog zakona.",
+   "Podzakonski akti se usklađuju sa zakonom u roku od 30 dana od dana stupanja na snagu. Zakon stupa na snagu narednog dana od objavljivanja, a primenjuje se od 1. februara 2016. godine."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona nisu potrebna dodatna finansijska sredstva ni iz budžeta ni iz drugih izvora, jer ministarstvo preuzima nadležnosti Agencije za privatizaciju."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o pravu na besplatne akcije i novčanu naknadu koju građani ostvaruju u postupku privatizacije",
+ "depth": "standard"
+}

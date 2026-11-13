@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "0fc409fb4a0ae26d699b8a52841cdcb3d73ff8ee1d9250aa99429b632b114f75",
+ "summary": {
+  "ukratko": "Predlagač navodi da se izmenama i dopunom Zakona o rokovima izmirenja novčanih obaveza u komercijalnim transakcijama primena tog zakona proširuje i na plaćanja između subjekata javnog sektora, uz određivanje organa koji vrše nadzor nad njegovom primenom.",
+  "razlozi": [
+   "Iz dosadašnje primene zakona uočena je potreba da se rokovi izmirenja novčanih obaveza urede i između subjekata javnog sektora.",
+   "Preporuka MMF-a iz trogodišnjeg stend baj aranžmana sa Vladom Republike Srbije obuhvata uređenje rokova izmirenja novčanih obaveza između subjekata javnog sektora.",
+   "Nadležni trezori, prema navodima, nemaju kadrovske i materijalne resurse za prikupljanje dokumentacije i vođenje prekršajnih postupaka, pa se predlaže da nadzor nad subjektima javnog sektora vrši Odeljenje za budžetsku inspekciju Ministarstva finansija.",
+   "Poreska uprava je, prema navodima, kadrovski i tehnički osposobljena za neposredni inspekcijski nadzor i pokretanje prekršajnog postupka, pa se predlaže da ona vrši nadzor između privrednih subjekata."
+  ],
+  "promene": [
+   "Predmet uređivanja zakona proširuje se na rokove izmirenja novčanih obaveza između subjekata javnog sektora (čl. 1).",
+   "Ugovorom između subjekata javnog sektora ne može se predvideti rok za izmirenje novčanih obaveza duži od 60 dana (čl. 3).",
+   "Nadzor nad primenom zakona u transakcijama sa subjektima javnog sektora kao dužnicima i između subjekata javnog sektora vrši Odeljenje za budžetsku inspekciju; trezori prikupljaju podatke i dostavljaju izveštaje o neizmirenim obavezama (čl. 4).",
+   "Nadzor nad primenom zakona između privrednih subjekata vrši Poreska uprava (čl. 5).",
+   "Odredbe zakona primenjuju se na ugovore između subjekata javnog sektora zaključene od 1. januara 2016. godine (čl. 7)."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije za 2015. godinu."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopuni Zakona o rokovima izmirenja novčanih obaveza u komercijalnim transakcijama",
+ "depth": "standard"
+}

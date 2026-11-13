@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "930a508391ebd3234a69f8735a23258d7c77ecdbcf8274c63d18f3261c6018ad",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon uređuje uslove i način rada javnih medijskih servisa republičkog i pokrajinskog nivoa, precizira javni interes koji ostvaruju, uređuje izbor organa, finansiranje i kontrolu trošenja sredstava. Osnivaju se dve ustanove: Javna medijska ustanova „Radio-televizija Srbije” u Beogradu i Javna medijska ustanova „Radio-televizija Vojvodine” u Novom Sadu.",
+  "razlozi": [
+   "usklađivanje domaćeg regulatornog okvira sa regulativom Evropske unije i promenama nastalim usled tehnoloških dostignuća u digitalnom prenosu i pristupu sadržajima",
+   "niska naplata RTV pretplate, što prema navodima uzrokuje stalan nedostatak sredstava za rad javnih medijskih servisa; važeće odredbe Zakona o radiodifuziji se navode kao neprimenjive ili nedorečene",
+   "definisanje javnog interesa, uspostavljanje organa javnog medijskog servisa i regulisanje odgovornosti i transparentnosti rada",
+   "stabilno i dovoljno finansiranje uz obezbeđivanje uređivačke nezavisnosti i institucionalne autonomije"
+  ],
+  "promene": [
+   "osnivaju se Javna medijska ustanova „Radio-televizija Srbije” (Beograd) i Javna medijska ustanova „Radio-televizija Vojvodine” (Novi Sad)",
+   "razdvajaju se osnovna delatnost, kojom se ostvaruje javni interes, i komercijalna delatnost, koja ne sme ugroziti osnovnu",
+   "utvrđuju se načela rada, među kojima su istinito, nepristrasno, potpuno i blagovremeno informisanje, nezavisnost uređivačke politike i zabrana cenzure",
+   "garantuju se institucionalna autonomija i uređivačka nezavisnost javnog servisa",
+   "uređuju se učešće javnosti, podnošenje izveštaja o radu Narodnoj skupštini i Savetu regulatora, revizija i kontrola trošenja sredstava"
+  ],
+  "sredstva": "Predlagač navodi da je za sprovođenje zakona u budžetu Republike Srbije za 2015. godinu potrebno obezbediti sredstva za redovno finansiranje osnovne delatnosti javnih medijskih servisa, kao i dodatna sredstva u budžetima za 2014. i 2015. godinu, a za zarade 14 zaposlenih koje preuzima Javno preduzeće Emisiona tehnika i veze navodi da sredstva iz budžeta nisu potrebna."
+ },
+ "usage": {},
+ "law": "Zakon o javnim medijskim servisima",
+ "depth": "standard"
+}

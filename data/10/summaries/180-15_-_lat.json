@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "05b97152fabf2acc5933975f9ff172b49ab9404e75b0747033ac13dacc69b154",
+ "summary": {
+  "ukratko": "Zakon uređuje osiguranje depozita fizičkih lica, preduzetnika, mikro, malih i srednjih pravnih lica kod banaka, radi zaštite tih depozita u slučaju stečaja ili likvidacije banke i očuvanja stabilnosti finansijskog sistema. Predlagač navodi da se njime uspostavlja novi sistem osiguranja depozita, njegovo finansiranje i ograničava upotreba sredstava fonda.",
+  "razlozi": [
+   "Predlagač navodi da su sredstva fonda za osiguranje depozita nakon rešavanja problema Agrobanke i Nove Agrobanke (oktobar 2012. godine) u znatnoj meri potrošena na isplatu osiguranih depozita.",
+   "Predlagač navodi da premija osiguranja nije bila srazmerna riziku koji je trebalo da pokrije, a postojeća sredstva fonda nisu bila dovoljna za pokriće svih troškova sanacije.",
+   "Predlagač navodi da je Republika Srbija zaključila sporazume sa Svetskom bankom (zajam od 200 miliona američkih dolara) i EBRD (kreditna linija do 200 miliona evra uz državnu garanciju) radi podrške fondu, a da je deo sredstava zajma do sada stavljen na raspolaganje Agenciji u iznosu od oko 109 miliona evra.",
+   "Predlagač navodi da je zakon deo reforme koju je Republika Srbija preuzela sporazumima sa međunarodnim finansijskim institucijama."
+  ],
+  "promene": [
+   "Uvodi se početna premija od 0,3% novčanog dela minimalnog osnivačkog kapitala banke, redovna premija do 0,2% ukupnih osiguranih depozita i vanredna premija, čiji zbir u toku jedne kalendarske godine iznosi najviše 0,4%.",
+   "Ograničava se upotreba sredstava fonda na isplatu osiguranih depozita, finansiranje restrukturiranja banaka, pokrivanje operativnih troškova Agencije do iznosa utvrđenog zakonom o Agenciji i povraćaj pozajmljenih sredstava.",
+   "Utvrđuje se cilj da sredstva fonda zaključno sa 1. januarom 2025. godine dostignu najmanje 5% ukupnih osiguranih depozita u bankarskom sistemu.",
+   "Ako nema dovoljno sredstava u fondu za isplatu osiguranih depozita, dopunska sredstva mogu se obezbediti iz budžeta, zaduživanjem uz garanciju Republike Srbije ili na drugi način, a odluku donosi Vlada na zahtev Agencije.",
+   "Banka isplatilac osiguranih depozita određuje se javnim tenderom koji raspisuje Agencija, bez primene zakona o javnim nabavkama; prestaje da važi Zakon o osiguranju depozita iz 2005. godine, a ovaj zakon počinje da se primenjuje 1. aprila 2015. godine."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o osiguranju depozita",
+ "depth": "standard"
+}

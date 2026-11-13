@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "2c44eac046335581dcaa0161ad649dfdec0c14c8651f8fc2317f418eafd6f17d",
+ "summary": {
+  "ukratko": "Према образложењу предлагача, законом се мењају и допуњују одредбе Закона о стočarstvu, укључујући уређење производа рибарства, међународне потврде о улову и усклађивање с прописима Европске уније. Предлагач наводи да се закон доноси ради унапређења стočarske proizvodnje i usklađivanja sa standardima EU.",
+  "razlozi": [
+   "Предлагач наводи пад стočarske proizvodnje od 2007. do 2013. godine: broj goveda smanjen je za 17 %, a priplodnih grla goveda za 25 %, dok je broj svinja smanjen za 20 %, a priplodnih grla svinja za oko 80 %.",
+   "Предлагач наводи да се заустављање пада може обезбедити стalnim unapređenjem genetskog potencijala i proizvodnih karakteristika domaćih životinja.",
+   "Предлагач наводи да се законом испуњавају захтеви у процесу придруживања ЕУ, укључујући контролу нелегалног, непријављеног и нерегулисаног риболова.",
+   "Предлагач наводи да се ранији ступање на снагу предлаже ради спречавања забране извоза производа рибарства и напретка у Преговарачкој групи 13 – Рибарство."
+  ],
+  "promene": [
+   "Проширује се круг правних лица која могу обављати послове у стočarstvu (уписана у Регистар привредних субјеката или други одговарајући регистар).",
+   "Уводи се међународна потврда (сертификат) о улову за производе рибарства у увозу, извозу и транзиту, као и сертификат за реекспорт, а министарство води евиденцију о тим потврдама.",
+   "Мењају се послови основне, регионалне и главне одгајивачке организације у спровођењу одгајивачких програма и уређују се услови за вештачко осемењавање и стручно оспособљавање одгајивача.",
+   "Уређују се услови за farme divljači, akvakulturu i lov ribe u objektima za akvakulturu, kao i vođenje Registra odgajivača autohtonih rasa domaćih životinja.",
+   "Брише се део овлашћења за доношење подзаконских аката, а реч „накнада” замењује се речју „такса”; примарна производња хране за домаће животиње уређује се у складу са законом о безбедности хране."
+  ],
+  "sredstva": "Предлагач наводи да за 2015. godinu nisu potrebna dodatna sredstva iz budžeta, jer su sredstva obezbeđena Zakonom o budžetu, dok su za 2016. godinu obezbeđena 130.000.000 dinara, a za 2017. godinu sredstva će biti opredeljena u okviru limita ministarstva nadležnog za poljoprivredu."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o stočarstvu",
+ "depth": "standard"
+}

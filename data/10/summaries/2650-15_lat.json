@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "90215265bdcb087f58546e946ac11f319bfe8db09954ef160b473921d48d82a6",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon uređuje trgovačko brodarstvo: prevoz i uslove za pristup tržištu u vodnom transportu, pravni status broda i stvarnopravne odnose na brodu, odgovornost i ograničenje odgovornosti, ugovore u plovidbi, zaustavljanje broda, izvršenje i obezbeđenje na brodu.",
+  "razlozi": [
+   "Dosadašnji zakoni o plovidbi (Zakon o pomorskoj i unutrašnjoj plovidbi i Zakon o unutrašnjoj plovidbi) doneti su u vreme bivše SRJ i SRS, a Republika Srbija je nakon raspada države preuzela nadležnosti u oblasti vodnog saobraćaja.",
+   "Predlagač navodi obavezu usklađivanja zakona sa Ustavom Republike Srbije, predviđenu Ustavnim zakonom za sprovođenje Ustava.",
+   "Predlagač navodi usklađivanje sa pravom Evropske unije: zakonom se u domaće zakonodavstvo unose odredbe 16 direktiva i uredbi EU.",
+   "Predlagač navodi da su rešenja zasnovana na konvencijama UNECE i međunarodnim pomorskim konvencijama, a da je materija podeljena na unutrašnju i pomorsku plovidbu, kao i na javnopravni i privatnopravni deo."
+  ],
+  "promene": [
+   "Uređuju se uslovi za javni prevoz (linijska i slobodna plovidba), prevoz za sopstvene potrebe i kabotažna plovidba.",
+   "Uređuju se uslovi za pristup tržištu za vozare u unutrašnjoj plovidbi, plovidbeno-agencijsku delatnost i poslove pomorske kompanije.",
+   "Brod se uređuje kao pokretna stvar, uz knjižni režim evidencije upisom u upisnike brodova; uređuju se sticanje svojine i ugovor o kupoprodaji broda.",
+   "Uvodi se Fond unutrašnje plovidbe kao vanbudžetski fond, radi otklanjanja ozbiljnog poremećaja na tržištu unutrašnje plovidbe.",
+   "Uređuju se pravila zaštite konkurencije i posebne zaštitne mere za domaće pomorske kompanije na međunarodnom tržištu."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna finansijska sredstva."
+ },
+ "usage": {},
+ "law": "Zakon o trgovačkom brodarstvu",
+ "depth": "standard"
+}

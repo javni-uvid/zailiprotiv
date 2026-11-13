@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "bad71d8da556ad650a59fdc54179cc400a13076a9b32830d2f72e6894a1051c4",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon uređuje uzbunjivanje, postupak uzbunjivanja, prava uzbunjivača, obaveze državnih organa, drugih organizacija i pravnih i fizičkih lica u vezi sa uzbunjivanjem, kao i zaštitu uzbunjivača. Cilj je sveobuhvatna zaštita lica koja prijavljuju sumnju na korupciju i drugo nezakonito postupanje.",
+  "razlozi": [
+   "Predlagač navodi da Nacionalnom strategijom za borbu protiv korupcije za period od 2013. do 2018. godine i pratećim Akcionim planom predviđeno uspostavljanje efikasne zaštite uzbunjivača i donošenje ovog zakona.",
+   "Predlagač navodi da postojeći propisi štite samo pojedine kategorije uzbunjivača, a da adekvatni mehanizmi zaštite nisu uspostavljeni.",
+   "Predlagač navodi da se obaveza zakonskog uređenja zaštite uzbunjivača proizlazi iz međunarodnih ugovora, uključujući Konvenciju Ujedinjenih nacija protiv korupcije (član 33) i Građanskopravnu konvenciju Saveta Evrope protiv korupcije (član 9), kao i iz preporuka GREKO.",
+   "Predlagač navodi da, prema izveštaju Agencije za borbu protiv korupcije za 2013. godinu, od 103 zahteva za status uzbunjivača status je priznat u 73 slučaja, a u 26 nije priznat zbog neispunjenih uslova iz Pravilnika."
+  ],
+  "promene": [
+   "Uzbunjivanje se definiše kao otkrivanje informacije o kršenju propisa, kršenju ljudskih prava, vršenju javnih ovlašćenja suprotno svrsi, opasnosti po život, javno zdravlje, bezbednost i životnu sredinu, kao i radi sprečavanja štete velikih razmera.",
+   "Zaštita se proširuje na lica koja rade na osnovu radnog odnosa, rada van radnog odnosa, volontiranja, vršenja funkcije ili drugog faktičkog rada, a ne samo na državne službenike i zaposlene u organima javne vlasti.",
+   "Zaštitu uživaju i povezana lica, lica za koja se pogrešno smatra da su uzbunjivači, službena lica i lica koja traže informacije u vezi sa uzbunjivanjem.",
+   "Uvode se tri vrste uzbunjivanja: unutrašnje (poslodavcu), spoljašnje (ovlašćenom organu) i uzbunjivanje javnosti, koje je supsidijarno u odnosu na prve dve.",
+   "Poslodavac je dužan da zaštiti uzbunjivača od štetne radnje, svim radno angažovanim licima dostavi pisano obaveštenje o pravima i odredi lice ovlašćeno za prijem informacija. Predlagač navodi i da nepoštovanje odredbe o zaštiti podataka o ličnosti uzbunjivača treba propisati kao krivično delo u Krivičnom zakoniku."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o zaštiti uzbunjivača",
+ "depth": "standard"
+}

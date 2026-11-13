@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "edd2106b95e0e254b714f10f239bba992086208a05bea84862044b1bea0c5603",
+ "summary": {
+  "ukratko": "Zakon privremeno uređuje osnovicu za obračun i isplatu plata, odnosno zarada i drugih stalnih primanja kod korisnika javnih sredstava, od isplate za mesec novembar 2014. godine zaključno sa isplatom za mesec decembar 2017. godine. Prema obrazloženju, cilj je fiskalna konsolidacija, odnosno održivo finansiranje deficita i smanjenje javnog duga.",
+  "razlozi": [
+   "Predlagač navodi da je potrebno obezbediti stabilnost javnih finansija i održivo finansiranje deficita i duga opšte države.",
+   "Predlagač navodi da plate zaposlenih, posle penzija, predstavljaju najveći izdatak u rashodima opšte države, sa učešćem od oko 13%.",
+   "Predlagač navodi da zakon isključuje zaposlene čija plata, odnosno zarada, nije veća od 25.000 dinara.",
+   "Predlagač navodi da je mera vremenski ograničena i primenjuje se zaključno sa isplatom za mesec decembar 2017. godine."
+  ],
+  "promene": [
+   "Uvodi privremeno umanjenje osnovice za obračun plata, odnosno zarada, a prema analizi efekata smanjenje iznosi do 10%, zavisno od visine primanja.",
+   "Garantuje da osnovna neto plata zaposlenog ne može pasti ispod 25.000 dinara.",
+   "Propisuje ništavost odredaba akata kojima se, za vreme primene zakona, povećava osnovica, koeficijent ili drugi element plate.",
+   "Predviđa obavezu da određeni korisnici javnih sredstava u roku od tri dana od konačne isplate plata uplate razliku između obračunatih iznosa plata pre i posle umanjenja.",
+   "Prestaje da važi Zakon o umanjenju neto prihoda lica u javnom sektoru („Službeni glasnik RS”, broj 108/13) danom početka primene ovog zakona."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije, te da njegova primena treba da dovede do ušteda u srednjoročnom periodu."
+ },
+ "usage": {},
+ "law": "Zakon o privremenom uređivanju osnovica za obračun i isplatu plata, odnosno zarada i drugih stalnih primanja kod korisnika javnih sredstava",
+ "depth": "standard"
+}

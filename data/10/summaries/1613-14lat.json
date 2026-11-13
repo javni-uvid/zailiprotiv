@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "df376cbaf09ea9e8fd0fee8c2ebf00e426a747017425607de440190119538382",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovим zakonом potvrđuje Ugovor o zajmu između Vlade Republike Srbije i Fonda za razvoj Abu Dabija za finansiranje prve faze Razvoja sistema za navodnjavanje, zaključen 6. марта 2014. године у Абу Дабију.",
+  "razlozi": [
+   "Predlagač navodi da Narodna skupština odlučuje o zaduživanju Republike Srbije (Zakon o javnom dugu) i potvrđuje ugovore kojima se stvaraju finansijske obaveze za Republiku Srbiju (Zakon o zaključivanju i izvršavanju međunarodnih ugovora).",
+   "Prema navodima predlagača, Sporazumom o saradnji sa Vladom Ujedinjenih Arapskih Emirata iz 2013. godine predviđena je saradnja u oblasti poljoprivrede, uključujući navodnjavanje zemljišta.",
+   "Projekat u prvoj fazi obuhvata 11 poljoprivrednih lokacija u AP Vojvodini i tri u Centralnoj Srbiji, ukupne površine oko 31.000 ha, a Zakonom o budžetu za 2014. godinu odobreno je zaduživanje do 275.000.000 USD za podršku projektima u poljoprivredi.",
+   "Za hitan postupak predlagač navodi da su uslov za dodelu ugovora za radove i nadzor, početak radova i povlačenje sredstava stupanje na snagu ovog zakona, a da član 9. Ugovora o zajmu omogućava zajmodavcu raskid ako ugovor ne stupi na snagu u roku od 120 dana od potpisivanja."
+  ],
+  "promene": [
+   "Članom 1. potvrđuje se Ugovor o zajmu za finansiranje Razvoja sistema za navodnjavanje - I faza.",
+   "Članom 2. Ugovor se unosi u tekst zakona: na engleskom i arapskom jeziku, u prevodu na srpski.",
+   "Članom 3. uređuje se stupanje na snagu zakona.",
+   "Prema Ugovoru, iznos zajma je 356.281.000 dirhama, što je ekvivalentno 97.000.000 USD, uz fiksnu kamatnu stopu od 2,5% godišnje, a korisnik sredstava je Ministarstvo poljoprivrede i zaštite životne sredine.",
+   "Prema Ugovoru, period raspoloživosti zajma je do 31. decembra 2017. godine ili do drugog datuma koji se dogovore zajmoprimac i Fond, a period dospeća je 20 godina, uključujući period počeka od 5 godina."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje ovog zakona obezbeđivati u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o zajmu između Vlade Republike Srbije i Fonda za razvoj Abu Dabija za finansiranje Razvoja sistema za navodnjavanje - I faza",
+ "depth": "standard"
+}

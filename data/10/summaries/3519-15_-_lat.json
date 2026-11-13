@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "ca8af51bc0fa88b7f9ac2b515d09b5b573269218cbb3e4b16934d40020703a6b",
+ "summary": {
+  "ukratko": "Zakon uређује давање гаранције Републике Србије компанији Societe Generale Banka Srbija a.d. Beograd за измиривање обавеза Јавног предузећа „Srbijagas” Нови Сад по основу уговора о дугорочном кредиту у износу од 20.000.000 евра, за изградњу развodnog гасовода Aleksandrovac – Brus – Kopaonik – Raška – Novi Pazar – Tutin. Према образложењу, гаранција се даје законом јер то захтева Закон о јавном дугу.",
+  "razlozi": [
+   "Članom 16. stav 4. Zakona o javnom dugu propisano je da se garancija Republike Srbije daje u formi zakona.",
+   "Ugovorom o kreditu povlačenje sredstava uslovljeno je stupanjem na snagu ovog zakona.",
+   "Izdavanje garancije u iznosu od 20.000.000 evra predviđeno je članom 3. Zakona o budžetu Republike Srbije za 2015. godinu.",
+   "Predlagač navodi da je potrebno što kraće povući sredstva kredita kako bi se izgradnja gasovoda započela što pre, zbog čega se zakon predlaže za stupanje na snagu pre osmog dana od objavljivanja."
+  ],
+  "promene": [
+   "Članom 1. i 2. uređuje se preuzimanje obaveze Garanta da izmiri obaveze Zajmoprimca po zaduženju kod Zajmodavca, u iznosu od 20.000.000 evra u dinarskoj protivvrednosti, i davanje garancije Zajmodavcu na ime obaveze iz Ugovora.",
+   "Članom 3. uређују се обавезе које Zajmoprimac ima у вези са овим зајмом.",
+   "Članom 4. uvodi se regresno pravo Garanta ako po osnovu izdate garancije izvrši obavezu umesto Zajmoprimca.",
+   "Članom 5. predviđa se otvaranje namenskog računa kod Narodne banke Srbije za plaćanje obaveza Zajmoprimca, uz saglasnost ministra nadležnog za poslove finansija.",
+   "Članom 6. predviđa se stupanje na snagu ovog zakona."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje ovog zakona obezbeđivati u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o davanju garancije Republike Srbije u korist Societe Generale Banka Srbija a.d. Beograd, za izmirivanje obaveza Javnog preduzeća „Srbijagas” Novi Sad po osnovu ugovora o dugoročnom kreditu za izgradnju razvodnog gasovoda Aleksandrovac – Brus – Kopaonik – Raška – Novi Pazar – Tutin",
+ "depth": "standard"
+}

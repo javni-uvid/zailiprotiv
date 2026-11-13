@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "10c07e32bd19252ee14fc8e5ef54bfb67ec183d0a146c8d054b6c735ff19b963",
+ "summary": {
+  "ukratko": "Prema predlagaču, zakon uređuje uslove za izvoz i uvoz naoružanja i vojne opreme, pružanje brokerskih usluga i tehničke pomoći, transport i tranzit, kao i postupke izdavanja dozvola i ovlašћenja nadležnih organa.",
+  "razlozi": [
+   "Usklађivanje sa novim pravilima i procedurama Evropske unije i primena Zajedničke pozicije EU.",
+   "Primena međunarodnih sporazuma i režima (Vasenarski aranžman, Grupa nuklearnih snabdevača, Australijska grupa, Zanger komitet, Režim kontrole raketne tehnologije), uз uslov za status u tim režimima.",
+   "Zaštita odbrambenih, bezbednosnih i spoljnopolitičkih interesa Republike Srbije i poštovanje međunarodnih obaveza, uključujući rešenja iz Ugovora o trgovini oružjem UN (ATT).",
+   "Zakon o spoljnoj trgovini naoružanjem, vojnom opremom i robom dvostruke namene iz 2005. godine je, prema predlagaču, u velikoj meri prevaziđen."
+  ],
+  "promene": [
+   "Izvoz i uvoz naoružanja i vojne opreme uređuje se posebnim zakonom, odvojeno od robe dvostruke namene.",
+   "Izvoz, uvoz, brokerske usluge i tehnička pomoć vrše se na osnovu dozvole Ministarstva.",
+   "Vlada utvrđuje Nacionalnu kontrolnu listu naoružanja i vojne opreme, usklađenu sa listom EU.",
+   "Uvodi se Registar lica ovlašćenih za obavljanje poslova, uz obavezu obaveštavanja o promenama u roku od 15 dana.",
+   "Zabranjuje se tehnička pomoć koja je namenjena oružju za masovno uništavanje ili državama pod embargom, a uvodi se i obaveza potvrde krajnjeg korisnika (End User Certificate)."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izvozu i uvozu naoružanja i vojne opreme",
+ "depth": "standard"
+}

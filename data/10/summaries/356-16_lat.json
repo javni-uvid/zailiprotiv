@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "91c3084b7035c43707a71e0b58738d6049d327f4cab7e38827c96cd39acc8248",
+ "summary": {
+  "ukratko": "Zakon uređuje oblasti delovanja javnog zdravlja, nadležnosti, planiranje i sprovođenje aktivnosti za očuvanje i unapređenje zdravlja stanovništva, kao i obezbeđivanje potrebnih finansijskih sredstava. Predlagač navodi da je cilj ostvarivanje javnog interesa stvaranjem uslova za očuvanje i unapređenje zdravlja stanovništva putem sveobuhvatnih aktivnosti društva.",
+  "razlozi": [
+   "Predlagač navodi da je važeći Zakon o javnom zdravlju iz 2009. godine zasnovan na tadašnjem znanju i iskustvu, a da su od tada nastale izmene i usvojeni novi javnozdravstveni dokumenti u Evropi i svetu.",
+   "Predlagač navodi da su propisi o javnom zdravlju, kojih ima preko 170, raspršeni i da je njihovo sprovođenje u nadležnosti više ministarstava, zbog čega se zapažaju problemi u efikasnoj primeni i preklapanja nadležnosti.",
+   "Predlagač navodi da je potrebno uskladiti zakon sa 10 ključnih oblasti delovanja javnog zdravlja, u skladu sa preporukama Regionalne kancelarije Svetske zdravstvene organizacije za Evropu.",
+   "Predlagač navodi da važeći zakon nije predvideo da se javno zdravlje sprovodi u svim politikama, dok se novim zakonom uvodi pristup „zdravlje u svim politikama“."
+  ],
+  "promene": [
+   "Uvodi se Nacionalni savet za javno zdravlje, koji obrazuje Vlada, radi koordinacije ministarstava i nezavisnih stručnjaka.",
+   "Uređuje se društvena briga za javno zdravlje na nivou Republike Srbije, autonomne pokrajine i jedinice lokalne samouprave, a predlagač navodi da je to novina u odnosu na važeći zakon.",
+   "Uređuju se poslovi saveta za zdravlje koji se obrazuju u jedinicama lokalne samouprave.",
+   "Utvrđuju se uslovi za rad instituta/zavoda za javno zdravlje kao nosilaca aktivnosti, izvori finansiranja, obrazovanje kadrova, izveštavanje i saradnja, uz ovlašćenje jedinicama lokalne samouprave da finansiraju programe javnog zdravlja.",
+   "Nadzor vrši ministarstvo nadležno za poslove zdravlja i inspekcijski organi, a propisana je prekršajna odgovornost instituta/zavoda, pravnih lica, preduzetnika, fizičkih lica i odgovornih lica."
+  ],
+  "sredstva": "Predlagač navodi da su za sprovođenje zakona obezbeđena sredstva Zakonom o budžetu Republike Srbije za 2016. godinu (143.700.000 dinara i 685.000.000 dinara za programske aktivnosti javnog zdravlja) i Finansijskim planom Republičkog fonda za zdravstveno osiguranje za 2016. godinu (2.650.000.000 dinara), te da nisu uočeni novi troškovi, već samo preraspodela u budžetima jedinica lokalne samouprave."
+ },
+ "usage": {},
+ "law": "Zakon o javnom zdravlju",
+ "depth": "standard"
+}

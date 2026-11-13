@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "6a692c1f5a59ad29e2df3972d9f2144c18846e20b7f4664155a2213cc38e0995",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон уређује набавку, држање, ношење, промет и чување оружја и municije у Републици Србији и замењује Закон о оружју и municiji из 1992. године.",
+  "razlozi": [
+   "Предлагач наводи да важећи закон из 1992. године није усклађен са прописима и начелима Европске уније и не одражава садашње потребе контроле civilnog поседовања оружја.",
+   "Према образложењу, количина ilegalnog оружја у Србији процењује се на између 200.000 и 900.000 комада.",
+   "Предлагач наводи вишеструко убиство у месту Јабуковац, у којем је 9 особа изгубило живот, а троје је рањено, које је извршилац починио легално поседујући оружје упркос душевној болести; важећи закон то није изричито навео као разлог за одузимање оружја.",
+   "Предлагач наводи усклађивање са директивама 477/91 и 51/2008, Шенгенским уговором и обавезама из Протокола УН о ватреном оружју."
+  ],
+  "promene": [
+   "Уводе се зdravstvena sposobnost i opravdan razlog kao uslovi za posedovanje oružja; policija može po diskrecionoj oceni zabraniti posedovanje.",
+   "Uvodi se oružni list kao biometrijski dokument, uz obavezne evidencije oružja, municije i radnika.",
+   "Predviđene su strožije prekršajne kazne i zaštitna mera oduzimanja oružja i municije; davanje oružja na poslugu moguće je samo uz prisustvo vlasnika.",
+   "Sportskim strelcima i kolekcionarima olakšava se posedovanje: uvodi se kolekcionarska dozvola, oslobađanje od obuke, spravljanje municije za članove streljačkih i lovačkih organizacija i ukida ograničenje količine municije.",
+   "Uvodi se klasa „onesposobljeno” oružje i omogućava ministru unutrašnjih poslova da raspiše legalizaciju oružja, uz rok od tri meseca za legalizaciju kategorija B i C."
+  ],
+  "sredstva": "Предлагач наводи да су средства за спровођење закона predviđena u okviru budžetskih sredstava koja se redovno odobravaju za potrebe Ministarstva unutrašnjih poslova i u okviru limita utvrđenog fiskalnom strategijom."
+ },
+ "usage": {},
+ "law": "Zakon o oružju i municiji",
+ "depth": "standard"
+}

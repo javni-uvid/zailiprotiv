@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "5dae5f429325ae1756c1cc753e0f0a8ed23294017c9076d348a90aaf9b2d07f2",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom potvrđuje Ugovor o izmenama i dopunama Finansijskog ugovora između Republike Srbije i Evropske investicione banke za Projekat Klinički centri/B, kojim se produžavaju rokovi za povlačenje sredstava kredita i za fizički završetak zgrada.",
+  "razlozi": [
+   "Predlagač navodi da je zbog promene dinamike realizacije projekta potrebno pomeriti rok za povlačenje poslednje tranše kredita.",
+   "Prema obrazloženju, izrada idejnih projekata i rešavanje imovinsko-pravnih odnosa na objektima i zemljištu potrajali su duže nego što se očekivalo.",
+   "Ministarstvo finansija je Evropskoj investicionoj banci uputilo zahtev za produženje roka 25. novembra 2014. godine.",
+   "Predlagač navodi da se povlačenje sredstava uslovljava stupanjem na snagu ovog zakona, zbog čega se zakon predlaže po hitnom postupku."
+  ],
+  "promene": [
+   "Rok za povlačenje poslednje tranše kredita produžava se do 31. decembra 2018. godine.",
+   "Rok za fizički završetak novih i rekonstruisanih zgrada produžava se do 31. decembra 2019. godine.",
+   "Ugovor je potpisan 25. marta 2015. godine u Luksemburgu i 1. aprila 2015. godine u Beogradu.",
+   "Članom 2. zakona sadrži se tekst Ugovora na engleskom jeziku i u prevodu na srpski jezik."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o izmenama i dopunama Finansijskog ugovora između Republike Srbije i Evropske investicione banke za Projekat Klinički centri/B",
+ "depth": "standard"
+}

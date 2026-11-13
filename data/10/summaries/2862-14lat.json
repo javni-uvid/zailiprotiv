@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "3276df8d34c5acfccf55f24aef3aefe8fbd79731248c9d2dee073fbd75da41ec",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom potvrđuje Konvencija Međunarodne organizacije rada broj 94 o radnim klauzulama javnih ugovora. Konvencija se odnosi na ugovore u kojima je jedna strana javni organ, a radovi se finansiraju iz budžetskih sredstava ili javnih fondova.",
+  "razlozi": [
+   "Predlagač navodi da potvrđivanje doprinosi rešavanju trenutnog stanja putarskih preduzeća i poboljšanju uslova rada, uz redovne isplate zarada, uključujући dodatke na zaradu.",
+   "Predlagač navodi da se u Republici Srbiji realizuju velike investicije: poboljšanje putne infrastrukture (oko 2 milijarde evra), modernizacija železničke infrastrukture (oko 1 milijarde evra) i finansiranje nadzornog organa.",
+   "Predlagač navodi da se investicije finansiraju iz sredstava međunarodnih finansijskih institucija i budžeta Republike Srbije.",
+   "Predlagač navodi da se zakon predlaže po hitnom postupku kako bi investicije bile uspešno realizovane u predviđenim rokovima."
+  ],
+  "promene": [
+   "Uvodi se obaveza da ugovori sa javnim organima sadrže klauzule o zaradama, dodacima na zaradu, radnom vremenu i drugim uslovima rada koji nisu manje povoljni od onih za isti rad u istoj grani trgovine ili industrije.",
+   "Klauzule obuhvataju i bezbednost i zdravlje na radu.",
+   "Odredbe se primenjuju i na podizvođače i na one na koje se ugovor prenosi.",
+   "Ako se klauzule ne poštuju, Konvencija predviđa sankcije, uključujući obustavljanje primene ugovora, ili druge mere.",
+   "Omogućava se formiranje Međuresorne radne grupe koja bi sačinila spisak preduzeća („crna” i „bela” lista) prema kriterijumima: angažovanje neprijavljenih radnika, izmirenje poreskih i drugih obaveza prema državi i radnicima, primena Zakona o bezbednosti i zdravlju na radu, kvalitet izvedenih radova i zloupotrebe ili nelegalne aktivnosti."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Konvencije Međunarodne organizacije rada broj 94 o radnim klauzulama javnih ugovora",
+ "depth": "standard"
+}

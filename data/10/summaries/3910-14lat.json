@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "6a168a9eb93bc3c0068d027fd2237131a057a576515567f925ada3ae77c0c3f7",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон мења Закон о промету непокретности тако што омогућава да се уговори о промету непокретности, поред јавнобележничког записа, сачине и у писменом облику, уз обавезан поступак солемнизације пред јавним бележником.",
+  "razlozi": [
+   "Новим Законом о промету непокретности („Службени гласник РС”, број 93/14), који се примењује од 1. септембра 2014. године, било је предвиђено да се уговори закључују искључиво у облику јавнобележничког записа.",
+   "Према образложењу, анализа досадашње примене закона показала је потребу за изменама како би се омогућила и писмена форма уговора уз солемнизацију.",
+   "Предлагач наводи да предложене измене неће нарушити степен правне сигурности у области промета непокретности.",
+   "За ступање на снагу narednog dana од дана објављивања предлагач наводи нарочито оправдане разлоге: спречавање штете за остваривање права грађана и правних лица, односно могућег успорења промета непокретности. Предлаже се и доношење по хитном поступку, јер би њено непроношење могло проузроковати штетне последице по рад државних и других органа и остваривање права грађана."
+  ],
+  "promene": [
+   "Članom 1. menja se član 4. Zakona o prometu nepokretnosti tako što se predviđa da se ugovori o prometu nepokretnosti mogu sačinjavati i u pismenom obliku, koji sami ugovorni stranе сачињавају.",
+   "Za takav ugovor neophodno je da se pred javnim beležnikom sprovede postupak solemnizacije, čime ugovor dobija snagu javne isprave.",
+   "U postupku solemnizacije javni beležnik potvrđuje da sadržina ugovora odgovara volji ugovornih strana i da su strane svojeručno potpisale ugovor.",
+   "Članovima 2. do 5. usklađuju se članovi 13. do 16. Zakona o prometu nepokretnosti sa članom 1. ovog zakona.",
+   "Članom 6. predviđeno je da zakon stupa na snagu narednog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона нису потребна средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o prometu nepokretnosti",
+ "depth": "standard"
+}

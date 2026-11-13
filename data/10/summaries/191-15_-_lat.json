@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "8272c4266cd17723ea69ee6ac22fa562752254c5d87ed552baf748fe1dcca153",
+ "summary": {
+  "ukratko": "Zakon potvrđuje amandmane na Statut Svetske turističke organizacije (UNWTO): A/RES/422(XIV), A/RES/511(XVI) i A/RES/512(XVI). Predlagač navodi da se potvrđivanjem podržava stupanje na snagu odluka Generalne skupštine UNWTO i unapređuje politika turizma.",
+  "razlozi": [
+   "Republika Srbija je punopravni član UNWTO od 2001. godine, a član Izvršnog saveta od 2009. godine.",
+   "Amandmani A/RES/422(XIV), A/RES/511(XVI) i A/RES/512(XVI) nisu ratifikovani, a odnose se na finansijska pravila, članstvo i način izbora generalnog sekretara.",
+   "Prema Bečkoj konvenciji o ugovornom pravu, ugovor se menja na način na koji je zaključen, pa se i Statut, kao ratifikovan ugovor, menja samo ratifikovanim amandmanima.",
+   "Potvrđivanje je, prema obrazloženju, neophodno radi podrške stupanju na snagu odluka Generalne skupštine i pravnom statusu UNWTO kao specijalizovane agencije Ujedinjenih nacija."
+  ],
+  "promene": [
+   "Potvrđuje se amandman A/RES/422(XIV), usvojen 2001. godine, kojim se budžet UNWTO izražava u evrima, a članarina može da se prihvata i u drugim valutama.",
+   "Potvrđuje se amandman A/RES/511(XVI), usvojen 2005. godine, koji se odnosi na članstvo u UNWTO.",
+   "Potvrđuje se amandman A/RES/512(XVI), usvojen 2005. godine, koji se odnosi na način izbora generalnog sekretara UNWTO."
+  ],
+  "sredstva": "Predlagač navodi da izvršavanjem ovih amandmana ne nastaju finansijske obaveze za Republiku Srbiju, pa nisu potrebna sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju amandmana na Statut Svetske turističke organizacije A/RES/422(XIV), A/RES/511(XVI) i A/RES/512(XVI)",
+ "depth": "standard"
+}

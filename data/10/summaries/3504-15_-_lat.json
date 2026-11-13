@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "479cbbd3088d56ed464782edf1bc7e13121de623542981b726eff43c779d357c",
+ "summary": {
+  "ukratko": "Zakon uređuje osnivanje zadruga, sticanje i prestanak statusa zadrugara, upravljanje, imovinu, poslovanje, fondove, raspodelu dobiti, zadružne saveze, registraciju i reviziju zadruga. Prema predlagaču, zadruga je pravno lice sui generis koje posluje na zadružnim načelima.",
+  "razlozi": [
+   "Predlagač navodi da zadrugarstvo u Srbiji dugo nije dobijalo odgovarajući značaj, a zakoni koji ga uređuju nisu menjani niti usklađivani s drugim propisima i potrebama prakse.",
+   "Predlagač navodi da je adekvatno pravno uređenje prvi korak u oživljavanju zadrugarstva, radi pravne sigurnosti i predvidljivosti poslovanja.",
+   "Predlagač navodi da je jedno od najvažnijih pitanja koje treba rešiti nerešen status društvene svojine u zadrugama.",
+   "Predlagač navodi da je pri pripremi zakona korišćeno iskustvo zemalja Evropske unije i preporuke Međunarodnog zadružnog saveza, te da je usvojen koncept jednog zakona opšteg karaktera za sve vrste zadruga."
+  ],
+  "promene": [
+   "Uvodi jedinstven zakon koji se odnosi na sve vrste zadruga, uključujući zemljoradničke i socijalne zadruge.",
+   "Određuje da zadruga ne može biti organizovana kao privredno društvo, niti se pripojiti, spojiti ili promeniti oblik u privredno društvo ili drugo pravno lice koje nije zadruga.",
+   "Utvrđuje zadružne vrednosti i međunarodne zadružne principe kojima se zadruga rukovodi u upravljanju i poslovanju.",
+   "Propisuje da pravo na korišćenje reči „zadruga” u poslovnom imenu imaju samo subjekti registrovani i poslovanje po ovom zakonu.",
+   "Omogućava zadruzi da bude osnivač ili član drugog pravnog lica i da obrazuje ogranke bez statusa pravnog lica."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o zadrugama",
+ "depth": "standard"
+}

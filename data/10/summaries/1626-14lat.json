@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "ceda1744d9ff65fcdbd96fa5ba0bdef8f314f09f9a9bb58e276054055c609469",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Finansijski ugovor „Apeks zajam za mala i srednja preduzeća i druge prioritete III/A” između Republike Srbije, Evropske investicione banke i Narodne banke Srbije, u iznosu od 150.000.000 evra. Krediti se prema predlagaču odobravaju krajnjim korisnicima preko poslovnih banaka.",
+  "razlozi": [
+   "Predlagač navodi pravni osnov u članu 5. stav 2. Zakona o javnom dugu i članu 14. stav 1. Zakona o zaključivanju i izvršavanju međunarodnih ugovora.",
+   "Predlagač navodi da su Zakonom o budžetu Republike Srbije za 2013. i Zakonom o budžetu Republike Srbije za 2014. godinu odobrena zaduživanja kod Evropske investicione banke do 500.000.000 evra za Apeks 5 kreditnu liniju.",
+   "Predlagač navodi da Strategija razvoja konkurentnih i inovativnih malih i srednjih preduzeća za period od 2008. do 2013. godine predviđa finansiranje malih i srednjih preduzeća i povoljnije uslove za taj sektor.",
+   "Predlagač navodi da se zakon donosi po hitnom postupku jer je povlačenje sredstava uslovljeno stupanjem na snagu zakona, a periodi korišćenja i alokacije kredita računaju se od datuma potpisivanja ugovora."
+  ],
+  "promene": [
+   "Potvrđuje se Finansijski ugovor, potpisan 30. decembra 2013. godine u Luksemburgu i Beogradu, u originalu na engleskom jeziku (član 1).",
+   "Tekst Finansijskog ugovora sadrži se u originalu na engleskom jeziku i u prevodu na srpski jezik (član 2).",
+   "Iznos kredita je 150.000.000 evra; zajmodavac je Evropska investiciona banka, zajmoprimac Republika Srbija koju predstavlja ministar finansija, a agent Narodna banka Srbije.",
+   "Krediti se odobravaju krajnjim korisnicima posredstvom poslovnih banaka, a Narodna banka Srbije zaključuje ugovore o posredovanju sa tim bankama.",
+   "Stupanje na snagu zakona uređuje se članom 3."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje ovog zakona obezbeđivati u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Finansijskog ugovora „Apeks zajam za mala i srednja preduzeća i druge prioritete III/A” između Republike Srbije i Evropske investicione banke i Narodne banke Srbije",
+ "depth": "standard"
+}

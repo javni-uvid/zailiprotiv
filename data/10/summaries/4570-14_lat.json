@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "0a58b27d52086ed755f9fb97a7269069a66358fd22cf134bb8e1679e1604e8b5",
+ "summary": {
+  "ukratko": "Predlog zakona menja i dopunjuje Zakon o odbrani. Prema obrazloženju predlagača, cilj je otklanjanje uočenih problema i nedostataka u primeni propisa o sistemu odbrane i usklađivanje sa promenama u pravnom sistemu nakon poslednjih izmena zakona iz 2009. godine.",
+  "razlozi": [
+   "Predlagač navodi da su uočeni problemi i nedostaci u primeni propisa i akata kojima se uređuje sistem odbrane.",
+   "Predlagač navodi potrebu usklađivanja sa promenama u pravnom sistemu Republike Srbije nakon izmena zakona iz 2009. godine („Službeni glasnik RS”, broj 88/09).",
+   "Predlagač navodi da je cilj otklanjanje višestrukog uređivanja istih ili sličnih nadležnosti u više zakona i nejasno ili neprecizno uređenih nadležnosti.",
+   "Predlagač navodi da se predlog po hitnom postupku zasniva na potrebi usaglašavanja planova odbrane sa Planom odbrane Republike Srbije koji je Vlada usvojila 27. decembra 2013. godine."
+  ],
+  "promene": [
+   "Briše se stav 5 člana 2, a definicija subjekata sistema odbrane prenosi se u član 4, koji se menja i dopunjuje radi preciznijeg uređenja pojmova.",
+   "Menja se član 7, kojim se preciznije propisuju osnovna dokumenta u odbrani prema njihovim funkcijama u planiranju.",
+   "Menjaju se nadležnosti predsednika Republike iz člana 11 (proširuje se davanje saglasnosti na nacrte osnovnih dokumenata planiranja, a brišu se tačke 5, 9 i 12).",
+   "Menjaju se nadležnosti Vlade iz člana 12 (uvodi se usvajanje Procene izazova, rizika i pretnji, akcioni planovi i Srednjoročni plan i program razvoja sistema odbrane, a brišu se ovlašćenja uređena drugim zakonima).",
+   "Uvode se nova ili preciznije uređena pitanja: znak i obeležja Ministarstva odbrane (član 14a), inspekcijski nadzor (čl. 16–18 i novi član 17a), upravljanje saobraćajem na unutrašnjim plovnim putevima (novi član 21a) i evidencija o nestalim pripadnicima oružanih snaga (novi član 23a)."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije, jer se njime ne stvaraju dodatne obaveze za budžet."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o odbrani",
+ "depth": "standard"
+}

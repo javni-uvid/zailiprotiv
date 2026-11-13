@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "79819c448e0c3870556595f5b90d859c03fd15a229ccdfc0e1013a6eed14808e",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Ugovor između Republike Srbije i Kraljevine Norveške o izbegavanju dvostrukog oporezivanja i sprečavanju poreske evazije u odnosu na poreze na dohodak, potpisan 17. juna 2015. godine u Oslu. Према предлагачу, Ugovor уређује заједничке критеријуме за одређивање права опорезивања поједињих категорија дохотка.",
+  "razlozi": [
+   "Према предлагачу, Ugovor otklanja problem dvostrukog oporezivanja fizičkih i pravnih lica koji su rezidenti dve države.",
+   "Предлагач наводи да Ugovor doprinosi unapređenju bilateralne privredne i finansijske saradnje.",
+   "Према образложењу, Ugovor stimuliše ulaganje kapitala rezidenata Republike Srbije u Kraljevini Norveškoj i rezidenata Kraljevine Norveške u Republici Srbiji.",
+   "Предлагач наводи da Ugovor predstavlja preduslov za buduća ulaganja norveških investitora u privredu Republike Srbije, uključujući učešće u procesu privatizacije."
+  ],
+  "promene": [
+   "Članom 1. potvrđuje se Ugovor potpisan 17. juna 2015. godine u Oslu.",
+   "Članom 2. utvrđuje se tekst Ugovora, u originalu na srpskom jeziku.",
+   "Članom 3. uređuje se stupanje na snagu ovog zakona.",
+   "Kada Ugovor počne da se primenjuje, prestaje da se primenjuje Sporazum između SFR Jugoslavije i Kraljevine Norveške o izbegavanju dvostrukog oporezivanja u odnosu na poreze na dohodak i na imovinu, sa Protokolom („Službeni list SFRJ – Međunarodni ugovori”, broj 9/85)."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna finansijska sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora između Republike Srbije i Kraljevine Norveške o izbegavanju dvostrukog oporezivanja i sprečavanju poreske evazije u odnosu na poreze na dohodak",
+ "depth": "standard"
+}

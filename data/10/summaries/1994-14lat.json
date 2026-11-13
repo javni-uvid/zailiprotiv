@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "b3a6ce128d2aab9c631279f3078b765272224c8f2dd01246a3062063190141be",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum o zajmu između Republike Srbije i Evropske banke za obnovu i razvoj za Projekat rehabilitacije puteva i unapređenja bezbednosti saobraćaja. Prema predlagaču, projekat treba da doprinese povećanju bezbednosti na putevima u Republici Srbiji.",
+  "razlozi": [
+   "Drumski prevoz je, prema navodima predlagača, dominantan vid transporta: 80% ukupnog prevoza robe i oko 74% ukupnog prevoza putnika.",
+   "Predlagač navodi da je Srbija prema Izveštaju o globalnoj konkurentnosti (GCR) za 2012–2013. godinu rangirana na 122. mestu od 144 zemlje po kvalitetu puteva.",
+   "Trenutni nivo finansiranja održavanja puteva, prema navodima predlagača, nije dovoljan za godišnje finansijske potrebe.",
+   "Broj smrtnih slučajeva u saobraćajnim nezgodama je u 2010. godini iznosio 656, a prema podacima Svetske zdravstvene organizacije iz 2009. godine, na 100.000 stanovnika bilo ih je 9."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum o zajmu (Projekat rehabilitacije puteva i unapređenja bezbednosti saobraćaja), potpisan 27. novembra 2013. godine u Beogradu.",
+   "Zakon sadrži tekst Sporazuma na engleskom jeziku (original) i u prevodu na srpski jezik.",
+   "Zaduženje iznosi do 100.000.000 evra, na period od 15 godina, uz grejs period od 3 godine.",
+   "Kamatna stopa je varijabilna: šestomesečni EURIBOR uvećan za maržu od 1%; otplata se vrši u 24 jednake polugodišnje rate.",
+   "Poslednji datum raspoloživosti sredstava je 30. jun 2018. godine. Zakon uređuje i stupanje na snagu."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje zakona obezbeđivati u budžetu Republike Srbije, a zaduženje do 100 miliona evra predviđeno je članom 3. Zakona o budžetu Republike Srbije za 2014. godinu."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o zajmu (Projekat rehabilitacije puteva i unapređenja bezbednosti saobraćaja) između Republike Srbije i Evropske banke za obnovu i razvoj",
+ "depth": "standard"
+}

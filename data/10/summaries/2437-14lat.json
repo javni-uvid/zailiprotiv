@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "a167bfb79eb610c4c0370782162c79e7bf2add0b0a98d8010c24584292496055",
+ "summary": {
+  "ukratko": "Према предлагачу, закон потврђује Originalnu konvenciju (1975) o osnivanju Evropskog centra za srednjoročne prognoze vremena i protokole o privilegijama i imunitetima, чиме Република Србија постаје пуноправна чланица тог центра.",
+  "razlozi": [
+   "Предлагач наводи да Србија стиче право одлучивања о стратешки важним питањима развоја Центра.",
+   "Предлагач наводи да пуноправно чланство омогућава приступ и коришћење компјутерских ресурса Центра, што ће, према његовом навођењу, побољшати израду временских прогноза и упozorenja.",
+   "Предлагач наводи да се доношењем закона обезбеђује дугорочни правни оквир сарадње између Центра и Србије.",
+   "Предлагач наводи интерес Србије у оперативној изради средњорочних и сезонских прогноза и у развоју метеоролошке и хидролошке науке, као и извршавање функција Подрегионалног центра за климатске промене за Југоисточну Европу."
+  ],
+  "promene": [
+   "Потврђују се Originalna konvencija (1975) i Originalni protokol o privilegijama i imunitetima (član 1).",
+   "Потврђују се Protokol o izmenama Konvencije i Protokola o privilegijama i imunitetima, usvojen u Redingu 22. aprila 2005. godine, i Amendirana konvencija i Protokol o privilegijama i imunitetima, koji su stupili na snagu 6. juna 2010. godine (član 1).",
+   "Текст конвенција и протокола, на српском и енглеском језику у оригиналу, дат је у члану 2.",
+   "Надлежан за спровођење је Републички хидрометеоролошки завод (član 3).",
+   "Ставља севан снаге Закон о ратификацији Конвенције о оснивању Европског центра за средњорочне прогнозе времена из 1974. године („Службени лист СФРЈ”, број 66/74) (član 4). Закон ступа на снагу осмог дана од дана објављивања (član 5)."
+  ],
+  "sredstva": "Предлагач наводи да би Србија у првих пет година плаћала годишњу и једнократну додатну контрибуцију, процењену на 16.970.227,14 RSD у 2014. до 18.592.987,92 RSD у 2018. години, а од 2019. године висина контрибуција била би 14.357.307,24 RSD, при чему су за 2014. годину средства предвиђена Законом о буџету Републике Србије на разделу 36, економској класификацији 4621 за Републички хидрометеоролошки завод."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Originalne konvencije (1975) o osnivanju Evropskog centra za srednjoročne prognoze vremena, Originalnog protokola o privilegijama i imunitetima Evropskog centra za srednjoročne prognoze vremena, Protokola o izmenama Konvencije o osnivanju Evropskog centra za srednjoročne prognoze vremena i Protokola o privilegijama i imunitetima Evropskog centra za srednjoročne prognoze vremena i Konvencije o osnivanju Evropskog centra za srednjoročne prognoze vremena i Protokola o privilegijama i imunitetima Evropskog centra za srednjoročne prognoze vremena",
+ "depth": "standard"
+}

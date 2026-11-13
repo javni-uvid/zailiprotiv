@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "fe6163f76f3b296f50728947af8f37a71db20f643ed2f64f068dfc5cf36d01bd",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom menja i dopunjuje Zakon o državnim službenicima, u vezi sa izborom kandidata, oglašavanjem javnih konkursa, stručnim usavršavanjem, ocenjivanjem državnih službenika i uslovima za rad na položajima.",
+  "razlozi": [
+   "Predlagač navodi potrebu za jedinstvom sistema u radu organa javnog sektora i ujednačavanjem radnopravnog položaja zaposlenih, radi smanjenja javnih rashoda.",
+   "Predlagač navodi potrebu da se unapredi službenički sistem, posebno postupak odabira kandidata, skrati izborni postupak i pojednostavi ocenjivanje državnih službenika.",
+   "Predlagač navodi usklađivanje sa Zakonom o visokom obrazovanju, Zakonom o državnoj upravi i Zakonom o ministarstvima, kao i uspostavljanje sistema stručnog usavršavanja prema Strategiji stručnog usavršavanja državnih službenika.",
+   "Predlagač navodi da se po hitnom postupku predlaže radi otklanjanja okolnosti koje mogu prouzrokovati štetne posledice po rad organa i organizacija, uspostavljanja okvira za Strategiju i projekat IPA 2012, i pripreme programa stručnog usavršavanja za 2015. godinu."
+  ],
+  "promene": [
+   "Javni konkursi za popunjavanje radnih mesta u organima državne uprave oglašavaju se na internet prezentaciji državnog organa, portalu e-uprave, oglasnoj tabli, internet adresi i u periodičnom izdanju Nacionalne službe za zapošljavanje.",
+   "Uvodi se obaveza stručnog usavršavanja državnih službenika; program opšteg stručnog usavršavanja donosi ministar nadležan za poslove uprave, a usavršavanje organizuje Služba za upravljanje kadrovima, uz izuzetak za oblast Evropske unije.",
+   "Uvodi se stažiranje i upućivanje na stručno usavršavanje u okviru sporazuma o međunarodnoj saradnji, a prava i obaveze državnog službenika na stažiranju uređuju se ugovorom.",
+   "Usklađuju se uslovi za zvanja i položaje sa Zakonom o visokom obrazovanju; načelnik upravnog okruga prevodi se iz statusa državnog službenika na položaju u status funkcionera; uvodi se institut vršioca dužnosti.",
+   "Među uslove za razrešenje sa položaja dodaju se objektivni uslovi koji se vezuju za ozbiljan poremećaj u radu državnog organa ili narušavanje poverenja javnosti; brišu se članovi 101. stav 2. i 179. Zakona, a uvodi se jedinstven način osposobljavanja pripravnika."
+  ],
+  "sredstva": "Predlagač navodi da se sredstva za stručno usavršavanje obezbeđuju u budžetu Republike Srbije i da se predloženim izmenama precizira iznos za program opšteg stručnog usavršavanja, dok konkretan iznos u образложењу nije naveden."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o državnim službenicima",
+ "depth": "standard"
+}

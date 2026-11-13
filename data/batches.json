@@ -63,6 +63,15 @@
     "replies": 5
    }
   },
+  "summaries-10": {
+   "claude-haiku-5-5": {
+    "cache_read": 185082,
+    "cache_written": 566,
+    "input": 1751148,
+    "output": 610179,
+    "replies": 328
+   }
+  },
   "summaries-12": {
    "claude-haiku-5-5": {
     "cache_read": 566,

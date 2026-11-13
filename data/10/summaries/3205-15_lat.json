@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "76cc06cf5efb1b38704b9fdfd75e1dc93b3518aaedc5940a6a8c1981eb549f7f",
+ "summary": {
+  "ukratko": "Према образложењу предлагача, закон мења Закон о акцизама у делу који се односи на оporезивање алкохолних и niskoalkoholnih pića и derivata nafte, uz usklađivanje sa Zakonom o jakim alkoholnim pićima i utvrđivanje novih iznosa akciza.",
+  "razlozi": [
+   "Предлагач наводи usklađivanje predmeta oporezivanja akcizom alkoholnih pića sa Zakonom o jakim alkoholnim pićima („Službeni glasnik RS”, broj 92/15), čija primena počinje 1. januara 2016. godine.",
+   "Предлагач наводи proširenje oporezivanja akcizom na niskoalkoholna pića koja sadrže više od 1,2% v/v, а najviše 5% v/v етанола, uz kontinuirani trend rasta potrošnje tih pића.",
+   "Предлагач наводи nastavak fiskalne konsolidacije i obezbeđivanje dodatnih prihoda od povećanja akciza na derivate nafte.",
+   "Предлагач наводи da se donošenjem zakona stvaraju uslovi za realizaciju postignutog sporazuma o fiskalnoj konsolidaciji, који је основ за спровођење споразума са Међународним монетарним фондом."
+  ],
+  "promene": [
+   "Повећавају се акцизе на бездоловни бензин за 2,50 дин/лит, на гасна уља за 4,00 дин/лит и на течни нафтни гас за 1,00 дин/кг.",
+   "Повећавају се износи акциза на алкохолна пића за око 2%.",
+   "Уводи се опорезивање акцизом niskoalkoholnih pića која садрже више од 1,2% в/в, а највише 5% в/в етанола.",
+   "Укида се право на рефакцију плаћене акцизе на гасна уља која се користе за погон бродова за превоз терета у унутрашњем речном саобраћају.",
+   "Продужава се до 31. децембра 2016. године ослобађање од обрачунавања и плаћања акцизе на поједине деривате нафте који се користе као сировина и енергенти у процесима фракционе дестилације, полимеризације, парног крекovanja и ekstrakcije butadiena."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити посебна средства у републичком буџету."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o akcizama",
+ "depth": "standard"
+}

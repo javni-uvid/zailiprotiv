@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "740e8b8331bf0f2ee52d7163b0b624f1be77474eb9bef8c0483917293de81bef",
+ "summary": {
+  "ukratko": "Zakon uređuje postupak prinudnog izvršenja potraživanja na osnovu izvršnih i verodostojnih isprava, postupak obezbeđenja potraživanja i položaj izvršitelja. Predlagač navodi da novi zakon treba da obuhvati sve tri grupe odredaba: procesne, materijalnopravne i one o statusu izvршitelja.",
+  "razlozi": [
+   "Predlagač navodi da važeći zakon nedovoljno precizno uređuje procesna ovlašćenja izvršitelja, njihov odnos prema sudu i pravna sredstva protiv njihovih akata.",
+   "Prema obrazloženju, protiv zaključaka izvršitelja nije dozvoljen prigovor, a sudska kontrola njihovog rada ne postoji.",
+   "Predlagač navodi da su pravnosnažne odluke u izvršnom postupku i postupku obezbeđenja završavale na prvostepenim sudovima, što omogućava različitu sudsku praksu istih sudova.",
+   "Predlagač navodi da su pojedini instituti uklonjeni ili skraćeni radi ubrzanja postupka, što je, prema obrazloženju, dovelo do nesigurnosti u primeni."
+  ],
+  "promene": [
+   "Uvodi se pravo na prigovor, o kome odlučuje sud, protiv najvažnijih akata izvršitelja, čime se, prema predlagaču, ujednačava praksa izvršitelja sa područja istog osnovnog ili privrednog suda.",
+   "Preciznije se uređuju procesni položaj izvršitelja, njegov odnos prema sudu i strankama i njegova ovlašćenja u izvršnom postupku i postupku obezbeđenja.",
+   "Proširuje se nadležnost izvršitelja, uz navedeni cilj zadržavanja ili povećanja brzine izvršnog postupka.",
+   "Uređuje se odnos vansudskog i sudskog namirenja prodajom hipotekovane nepokretnosti, uključujući izbor postupka i redosled namirenja.",
+   "Opšti deo izvršnog postupka preuređuje se tako da bude pregledniji i sistematičniji, a odredbe se redigују kazuistički radi veće pravne sigurnosti."
+  ],
+  "sredstva": ""
+ },
+ "usage": {},
+ "law": "Zakon o izvršenju i obezbeđenju",
+ "depth": "standard"
+}

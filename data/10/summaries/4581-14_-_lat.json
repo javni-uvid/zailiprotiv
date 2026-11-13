@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "6293e6eb7d69243f28924361bf2161cf2a4c8091a8228f753ebd4b194c15dfe4",
+ "summary": {
+  "ukratko": "Zakon uređuje preuzimanje obaveza privrednog društva Air Serbia a.d. Beograd prema pravnim i fizičkim licima po osnovu izvršenih usluga i isporučenih roba i pretvaranje tih obaveza u javni dug Republike Srbije. Prema predlagaču, zakon sprovodi preuzimanje obaveza predviđeno Okvirnim ugovorom o transakciji.",
+  "razlozi": [
+   "Predlagač navodi da je Vlada Republike Srbije, prema Okvirnom ugovoru o transakciji, preuzela obaveze Air Serbia a.d. Beograd prema poveriocima čija potraživanja datiraju od ranije.",
+   "Predlagač navodi da je cilj da Air Serbia a.d. Beograd posluje samostalno i postane međunarodno konkurentan nacionalni avioprevoznik, koji ostaje u većinskom državnom vlasništvu.",
+   "Predlagač navodi da je rukovodstvo Air Serbia a.d. Beograd izmirilo deo obaveza pre izmirenja od strane Republike Srbije, pa će Republika refundirati te isplate.",
+   "Predlagač navodi da je potrebno u što hitnijem roku isplatiti zaostale obaveze, kako bi Air Serbia a.d. Beograd izvršila finansijsku konsolidaciju."
+  ],
+  "promene": [
+   "Republika Srbija preuzima u javni dug obaveze prema pravnim i fizičkim licima po osnovu izvršenih usluga i isporučenih roba (član 1. stav 1).",
+   "Republika Srbija preuzima i obaveze koje je Air Serbia a.d. Beograd već izmirila prema tim licima i refundira te isplate tom društvu (član 1. stav 2).",
+   "Utvrđuje se iznos preuzetih obaveza; prema predlagaču, ukupno je 19.302.535.814,12 dinara prema kursnoj listi Narodne banke Srbije na dan 30. septembar 2014. godine (član 2).",
+   "Predviđen je način i dinamika izmirenja obaveza, uključujući direktna plaćanja navedenim poveriocima i izmirenje ostalih obaveza od strane Air Serbia a.d. Beograd nakon prenosa sredstava iz budžeta (čl. 4. i 5).",
+   "Zakon stupa na snagu pre osmog dana od dana objavljivanja, prema obrazloženju zbog potrebe za hitnim izmirenjem zaostalih obaveza (član 6)."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje zakona obezbeđivati u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o preuzimanju obaveza privrednog društva Air Serbia a.d. Beograd prema pravnim i fizičkim licima po osnovu izvršenih usluga i isporučenih roba i pretvaranju tih obaveza u javni dug Republike Srbije",
+ "depth": "standard"
+}

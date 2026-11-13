@@ -1,0 +1,20 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "cc5d7b5a353fe460452adbfce895a5a870d40af34fb106755eb132048bee467b",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum o vazdušnom saobraćaju između Vlade Republike Srbije i Vlade Ujedinjenih Arapskih Emirata, koji su 14. marta 2014. godine potpisali ministri spoljnih poslova dveju država. Prema predlagaču, sporazum uređuje odnose u oblasti vazdušnog saobraćaja između dve države.",
+  "razlozi": [
+   "Predlagač navodi da sporazum predstavlja dugoročni pravni osnov za dalje unapređenje odnosa između Republike Srbije i Ujedinjenih Arapskih Emirata.",
+   "Predlagač navodi da je sporazum usklađen sa savremenim tendencijama u međunarodnom civilnom vazduhoplovstvu.",
+   "Predlagač navodi da sporazum promoviše i ispunjava visoke međunarodne vazduhoplovne standarde.",
+   "Predlagač navodi da sporazum otvara šire mogućnosti za avio-prevoziocе, druge vazduhoplovne subjekte i ukupna privredna kretanja između dve države."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum o vazdušnom saobraćaju između Vlade Republike Srbije i Vlade Ujedinjenih Arapskih Emirata."
+  ],
+  "sredstva": "Predlagač navodi da izvršavanjem zakona, odnosno međunarodnog ugovora, ne nastaju finansijske obaveze za Republiku Srbiju i da za sprovođenje zakona nije potrebno izdvajanje sredstava iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o vazdušnom saobraćaju između Vlade Republike Srbije i Vlade Ujedinjenih Arapskih Emirata",
+ "depth": "standard"
+}

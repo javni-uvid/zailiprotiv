@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "137ba94f8e5c58864382d9c43fd365030e2c952d3973c20141d7be879190f9d3",
+ "summary": {
+  "ukratko": "Zakon uređuje uslove i način sporazumnog finansijskog restrukturiranja privrednih društava i preduzetnika u Republici Srbiji, kao dobrovoljnog, vansudskog postupka uz posredovanje Privredne komore Srbije. Prema образложењу, cilj je blagovremeno rešavanje finansijskih teškoća dužnika i rešavanje problematičnih kredita.",
+  "razlozi": [
+   "Predlagač navodi rast udela problematičnih kredita u ukupno odobrenim kreditima banaka: 18,6% na kraju decembra 2012, 21,4% na kraju decembra 2013. i 23,0% na kraju septembra 2014. godine.",
+   "Predlagač navodi da postupak iz Zakona o sporazumnom finansijskom restrukturiranju iz 2011. godine nije široko korišćen: u prove dve godine primene pokrenuto je 18 postupaka, a osam je uspešno okončano.",
+   "Predlagač navodi da analiza Privredne komore Srbije i Evropske banke za obnovu i razvoj ukazuje na potrebu izmene pravnog okvira.",
+   "Predlagač navodi da su dužnici uglavnom mala i srednja preduzeća, te da je potrebno postupak prilagoditi njihovim potrebama."
+  ],
+  "promene": [
+   "Stečajni dužnik i privredno društvo za koje je pokrenut prethodni stečajni postupak po unapred pripremljenom planu reorganizacije ne mogu biti dužnici u ovom postupku.",
+   "Preduzetnici mogu biti dužnici u postupku sporazumnog finansijskog restrukturiranja.",
+   "Mirovanje dugova je mogućnost u okviru postupka, a ne obavezan korak; ugovor o mirovanju zaključuje se u pismenoj formi.",
+   "Obaveza dostave ugovora o finansijskom restrukturiranju registru privrednih subjekata radi zabeležbe se ne propisuje.",
+   "Postupak se ne primenjuje na banke, društva za osiguranje, društva koja pružaju finansijske usluge i druga lica iz finansijskog sektora, a zakon utvrđuje načela postupka."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nisu potrebna finansijska sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o sporazumnom finansijskom restrukturiranju",
+ "depth": "standard"
+}

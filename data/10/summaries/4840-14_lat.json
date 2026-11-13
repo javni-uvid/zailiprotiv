@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e4b626024aa381da260e092eef2080ff38f0a02d60382606be505a6e1502a9a4",
+ "summary": {
+  "ukratko": "Предлог закона мења Закон о Фонду за развој Републике Србије. Према образложењу предлагача, измене усклађују тај закон са Законом о буџету Републике Србије за 2015. годину и омогућавају Фонду да послује по програму који није ограничен на једну годину.",
+  "razlozi": [
+   "Предлагач наводи да је један од циљева Закона о буџету за 2015. годину фискална консолидација, односно смањење дефицита и зауставаљење раста јавног дуга.",
+   "Предлагач наводи да се програм Фонда доноси за сваку годину, због чега корисници кредита нису сигурни у услове кредитирања у наредном периоду.",
+   "Предлагач наводи да измене требају да повећају транспарентност и доступност средстава Фонда привреди Републике Србије.",
+   "Предлагач предлаже доношење закона по хитном поступку, ради усклађивања норми са Законом о буџету за 2015. годину, и ступање на снагу наредног дана од дана објављивања."
+  ],
+  "promene": [
+   "Redefiniše se način na koji Fond odgovara za svoje obaveze, u skladu sa odredbama Zakona o budžetu za 2015. godinu, koji ne predviđa garancije u korist Fonda.",
+   "Menjaju se članovi 10. i 16. tako što Fond posluje u skladu sa programom na koji saglasnost daje Vlada, a koji nije ograničen rokom od jedne godine.",
+   "Zakon stupa na snagu narednog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона нису потребна средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o Fondu za razvoj Republike Srbije",
+ "depth": "standard"
+}

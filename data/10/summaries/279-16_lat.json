@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "601aa9644cba50d93a0f7efa11d67416d0d039bf2c8b39505251e323befe8edd",
+ "summary": {
+  "ukratko": "Према предлагачу, закон уређује метрологију: мерне јединице, overavanje merila, ovlašćivanje i imenovanje tela, nacionalne etalone i poslove Direkcije za mere i dragocene metale. Циљ је јединствено мерење и поверење у резултате мерења, усклађеност са Међународним системом јединица и сарадња са међународним захтевима.",
+  "razlozi": [
+   "Предлагач наводи да је важећи закон из 2010. године у пракси од пет година показао потребу за новим решењима ради ефикаснијег обављања послова у области метрологије.",
+   "Предлагач наводи потребу за даљим усклађивањем са праксом Европске уније, посебно након скрининга за Поглавље 1 одржаних 2014. године и документа OIML D1:2012.",
+   "Предлагач наводи потребу за новим разграничењем послова између Министарства privrede и Direkcije za mere i dragocene metale, уз образложење да Direkcija raspolaže stručnim kadrom za pojedine vrste merila.",
+   "Предлагач наводи да при изради закона узима у обзир елементе докумената Међународне организације за законску метрологију (OIML D1, D2, D9 и D16), ради испуњавања услова за чланство Републике Србије у СТО и ЕУ."
+  ],
+  "promene": [
+   "Послове ovlašćivanja privrednih subjekata i drugih pravnih lica za overavanje merila obavlja Direkcija umesto Ministarstva, a nadzor nad radom imenovanih tela vrši Ministarstvo.",
+   "Saglasnost na cenovnik ovlašćenog tela daje Ministarstvo, umesto Vlade, na osnovu kriterijuma koje bliže uređuje ministar.",
+   "Direkcija obavlja i poslove overavanja merila za koje nije propisano da ih obavljaju ovlašćena tela, odnosno za koja nema ovlašćenih tela.",
+   "Uvodi se polaganje stručnog ispita za lica koja vrše overavanje merila i za metrološke inspektore.",
+   "Uvodi se imenovani nosilac nacionalnih etalona, koji može biti drugi organ državne uprave ili drugo pravno lice; Direkcija dobija nove poslove, među kojima su priprema strategije i propisa, obuka i izdavačka delatnost."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење закона нису потребна средства из буџета Републике Србије, јер су она већ опредељена Законом о буџету Републике Србије за 2016. годину, на Разделу 20, Глави 20.1, Програму 1503, Функцији 130, Програмској активности/Пројекту 0004, у износу од 182.093.000 динара."
+ },
+ "usage": {},
+ "law": "Zakon o metrologiji",
+ "depth": "standard"
+}

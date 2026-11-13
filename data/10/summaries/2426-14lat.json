@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "2821bb1580d807739d768e3727d2a16f0c7be305bc79e0e272d08ce7b262ec15",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom potvrđuje Sporazum između Vlade Republike Srbije i Vlade Savezne Republike Nemačke o prevozu putnika i stvari u međunarodnom drumskom saobraćaju, kojim se uređuju bilateralni i tranzitni prevoz putnika i stvari, kao i prevoz stvari iz i za treće zemlje.",
+  "razlozi": [
+   "Predlagač navodi da važeći sporazum sa Saveznom Republikom Nemačkom iz 1964. godine sadrži rešenja koja nisu u skladu sa savremenom evropskom regulativom u oblasti drumskog saobraćaja i regulativom Međunarodnog transportnog foruma.",
+   "Predlagač navodi da je Sporazum potpisan u Lajpcigu 23. maja 2013. godine, a da je nemačka strana 29. avgusta 2013. godine završila postupak potvrđivanja.",
+   "Predlagač navodi da Sporazum stvara pravni okvir za unapređenje bilateralnih trgovinskih i ekonomskih odnosa.",
+   "Predlagač navodi da se predlaže hitan postupak zbog ispunjenja međunarodnih obaveza Republike Srbije u oblasti drumskog saobraćaja, kao i zato što je ovo prvi bilateralni sporazum sa Saveznom Republikom Nemačkom posle dužeg niza godina."
+  ],
+  "promene": [
+   "Uređuje prevoz putnika (linijski, naizmenični i povremeni), dozvole za prevoz putnika i zabranu kabotaže.",
+   "Uređuje prevoz stvari uz dozvolu i bez dozvole, izdavanje i dodelu dozvola, kao i kontingente dozvola.",
+   "Uređuje carinske dažbine koje se naplaćuju pri prevozu i vožnjama praznih vozila, kontrolu vozila, masu, dimenzije i osovinsko opterećenje, kao i korišćenje vozila koja odgovaraju standardima zaštite životne sredine.",
+   "Uređuje obaveze prevoznika i prekršaje, zaštitu podataka o ličnosti, obrazovanje i rad mešovite komisije i nadležne organe za sprovođenje sporazuma.",
+   "Uređuje odnos sa drugim međunarodnim sporazumima, stupanje na snagu, važenje i registraciju sporazuma."
+  ],
+  "sredstva": "Predlagač navodi da za izvršavanje Sporazuma nije potrebno obezbediti dodatna sredstva u budžetu Republike Srbije, jer su Rešenjem o upotrebi sredstava tekuće budžetske rezerve predviđena sredstva za štampanje preliminarnog kontingenta dozvola za 2015. godinu."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Savezne Republike Nemačke o prevozu putnika i stvari u međunarodnom drumskom saobraćaju",
+ "depth": "standard"
+}

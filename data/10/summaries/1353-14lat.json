@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "8a17d43d34961785ad6c4954700ff38b901fa17de1aa3fb14cd9101dd92bb42c",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон мења Законик о кривичном поступку у вези са мерама према окривљеном, раслодом средстава пребављених одлагањем кривичног гоњења, прибављањем података о електронској комуникацији и роком за закључење споразума о признању кривице.",
+  "razlozi": [
+   "Нови Законик о кривичном поступку, за разлику од законика из 2001. године, не садржи меру забране посећивања одређених места.",
+   "Предлагач наводи да је ова мера потребна за лица окривљена за кривично дело насилничко понашање на спортској приредби или јавном скупу (члан 344а Кривичног законика), јер та лица често понављају исто кривично дело.",
+   "Предлагач наводи да се споразум о признању кривице може закључити до завршетка главног претреса, што је, према његовом навођењу, последица захтева судске праксе.",
+   "Према образложењу, закон уређује расподелу средстава прибављених од окривљеног при примени одлагања кривичног гоњења."
+  ],
+  "promene": [
+   "Među merama prema okrivljenom uvodi se mera zabrane posećivanja određenih mesta (član 188).",
+   "Sredstva pribavljena odlaganjem krivičnog gonjenja raspodeljuju se po javnom konkursu koji sprovodi komisija koju obrazuje ministar nadležan za pravosuđe, a odluku donosi Vlada (član 283).",
+   "Novac dobijen prodajom stvari podložne kvaru, pronađene pri pretresu, predaje se u depozit javnog tužilaštva (član 154).",
+   "Podaci o ostvarenoj elektronskoj komunikaciji mogu se pribaviti samo po nalogu suda, a ne po nalogu javnog tužioca (član 286).",
+   "Sporazum o priznanju krivice može se zaključiti do završetka glavnog pretresa, umesto do izjašnjenja optuženog o optužbi (član 313)."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити додатна финансијска средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakonika o krivičnom postupku",
+ "depth": "standard"
+}

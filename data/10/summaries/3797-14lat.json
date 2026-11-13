@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "1b4038d61ebcd499d71ad6a052bda38ed23aa04108d6b241418d0c65caf841ff",
+ "summary": {
+  "ukratko": "Према образложењу предлагача, закон мења и допуњује Закон о Централном регистру обавезног социјалног осигурања, ради усклађивања са Законом о министарствима и са чланом 42. Устава Републике Србије.",
+  "razlozi": [
+   "усклађивање са Законом о министарствима, према којем Министарство финансија врши надзор над радом Централног регистра",
+   "усклађивање са чланом 42. став 2. Устава, према којем се прикупљање, држање, обрада и коришћење података о личности уређују законом",
+   "несметано функционисање Централног регистра и извршавање расхода и издатака, укључујући финансирање преузетих обавеза и плата (наведено као разлог за раније ступање на снагу)"
+  ],
+  "promene": [
+   "usklađuje se odredba o poziciji u budžetu na kojoj se obezbeđuju sredstva za rad Centralnog registra (član 1)",
+   "uređuju se opšti podaci o osiguraniku i osiguranom licu u Jedinstvenoj bazi, kao i podaci o osiguranju i obvezniku plaćanja doprinosa (član 2)",
+   "uvodi se novi član kojim se uređuje vršenje nadzora nad sprovođenjem zakona i nad radom Centralnog registra, jer su prestale da važe odredbe člana 30. ranijeg zakona o nadzoru (član 2)",
+   "oprema i sredstva za rad Centralnog registra, koja su u državnoj svojini, evidentiraju se u poslovnim knjigama Ministarstva finansija (član 3)",
+   "Ministarstvo za rad, zapošljavanje, boračka i socijalna pitanja isknjižava opremu i sredstva za rad u roku od 30 dana od stupanja na snagu zakona (član 3)"
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити додатна средства у буџету Републике Србије за 2014. годину."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o Centralnom registru obaveznog socijalnog osiguranja",
+ "depth": "standard"
+}

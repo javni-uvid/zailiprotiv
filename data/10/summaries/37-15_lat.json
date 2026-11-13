@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "118e81303bc0bad3c7a5508fc28866e932b60ab153049937a5fac16e275f64bf",
+ "summary": {
+  "ukratko": "Predlog zakona potvrđuje Ugovor o zajmu za kredit za povlašćenog kupca za drugu fazu Paket projekta KOSTOLAC-B POWER PLANT PROJECT, zaključen 17. decembra 2014. godine između Vlade Republike Srbije, koju predstavlja Ministarstvo finansija, kao zajmoprimca i kineske Export-Import banke kao zajmodavca. Prema predlagaču, ugovorom se uređuju uslovi zajma za finansiranje druge faze projekta u TE-KO Kostolac.",
+  "razlozi": [
+   "Predlagač navodi da se potvrđivanje zasniva na članu 5. stav 2. Zakona o javnom dugu, prema kome Narodna skupština odlučuje o zaduživanju Republike Srbije.",
+   "Predlagač navodi da je zaduživanje kod kineske Export-Import banke za drugu fazu projekta predviđeno Zakonom o budžetu Republike Srbije za 2014. i 2015. godinu, u iznosu do 608.260.000 USD, što je 85% ugovorene vrednosti te faze.",
+   "Druga faza obuhvata izgradnju novog bloka B3 od 350 MW i povećanje kapaciteta površinskog kopa Drmno sa devet na dvanaest miliona tona uglja godišnje.",
+   "Predlagač navodi da je druga faza predviđena u Strategiji razvoja energetike Republike Srbije do 2025. godine, sa projekcijama do 2030. godine."
+  ],
+  "promene": [
+   "Potvrđuje se Ugovor o zajmu zaključen 17. decembra 2014. godine (član 1. predloga zakona).",
+   "Tekst ugovora, na engleskom jeziku i u prevodu na srpski jezik, sadržan je u članu 2. predloga zakona.",
+   "Predviđeni uslovi zajma: iznos 608.260.000 USD, fiksna kamatna stopa 2,5% godišnje, rok otplate 20 godina uključujući period počeka od 7 godina, i polugodišnja otplata.",
+   "Predviđeni troškovi: naknada za upravljanje od 0,25% jednokratno i provizija od 0,25% godišnje na nepovučeni deo kredita; rok raspoloživosti kredita je 7 godina.",
+   "Stupanje na snagu zakona uređuje se članom 3. predloga zakona."
+  ],
+  "sredstva": "Predlagač navodi da će se sredstva za sprovođenje ovog zakona obezbeđivati u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o zajmu za kredit za povlašćenog kupca za drugu fazu Paket projekta KOSTOLAC-B POWER PLANT PROJECT između Vlade Republike Srbije, koju predstavlja Ministarstvo finansija, kao Zajmoprimca i kineske Export-Import banke kao Zajmodavca",
+ "depth": "standard"
+}

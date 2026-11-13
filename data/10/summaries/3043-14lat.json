@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "915bfd6beeca832f4a320ace0466bb91d4fc6c24ff315fedf554d41a23114974",
+ "summary": {
+  "ukratko": "Predlog zakona uređuje sprečavanje dopinga u sportu. Prema predlagaču, zakon je potreban radi usklađivanja sa međunarodnim dokumentima i sa Zakonom o sportu iz 2011. godine, i zamenjuje Zakon o sprečavanju dopinga u sportu iz 2005. godine.",
+  "razlozi": [
+   "Predlagač navodi da je Zakon iz 2005. godine donet na osnovu Evropske konvencije o sprečavanju dopinga u sportu i Svetskog antidoping kodeksa iz 2003. godine, a da su od tada nastale promene u međunarodnom pravnom uređenju.",
+   "Predlagač navodi da Međunarodna konvencija protiv dopinga u sportu, koju je Republika Srbija ratifikovala 2009. godine, i izmene Svetskog antidoping kodeksa iz 2009. godine i one koje se primenjuju od 2015. godine zahtevaju usklađivanje, a da neusklađenost preti da ugrozi rad Antidoping agencije Republike Srbije.",
+   "Prema podacima Antidoping agencije Republike Srbije, većina nacionalnih sportskih asocijacija nije redovno ispunjavala obaveze iz člana 10. važećeg zakona, a za deo tih obaveza nema podataka o sprovođenju.",
+   "Predlagač navodi i nepreciznosti i nedostatke uočene u primeni važećeg zakona."
+  ],
+  "promene": [
+   "Definiše povredu antidoping pravila na način utvrđen Svetskim antidoping kodeksom.",
+   "Određuje da sankcije sportistima i drugim licima izriču ovlašćene antidoping organizacije u skladu sa Svetskim antidoping kodeksom i sportskim pravilima međunarodnih sportskih saveza.",
+   "Jasnije utvrđuje obaveze organizacija u oblasti sporta u vezi sa sprečavanjem dopinga i precizira nadležnosti i ovlašćenja Antidoping agencije Republike Srbije i sportskih inspektora.",
+   "Uređuje obradu ličnih podataka sportista i drugih lica koju vrše ovlašćene antidoping organizacije, uključujući uslove za prenos i objavljivanje tih podataka.",
+   "Usklađuje krivičnopravnu politiku sa uporednopravnim rešenjima i Krivičnim zakonikom, a prekršajne kazne sa Zakonom o sportu."
+  ],
+  "sredstva": ""
+ },
+ "usage": {},
+ "law": "Zakon o sprečavanju dopinga u sportu",
+ "depth": "standard"
+}

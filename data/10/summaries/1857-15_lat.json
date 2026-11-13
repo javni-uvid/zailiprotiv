@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "90253279d144992d3d2dd96491b23dc8a091fa164128717db874fcd564a3a8d9",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Protokol o izmenama i dopunama Sporazuma o slobodnoj trgovini između država EFTA i Republike Srbije, potpisan 20. maja 2015. godine u Beogradu. Prema obrazloženju predlagača, Protokol dodaje odredbe o poštovanju obaveza iz konvencija o zaštiti životne sredine i standarda vezanih za rad.",
+  "razlozi": [
+   "Potpisnice Sporazuma žele da se dodaju odredbe o poštovanju obaveza iz konvencija o zaštiti životne sredine i standarda vezanih za rad, kako se na osnovu njihovog ugrožavanja ne bi stvarala konkurentska prednost u privlačenju stranih investitora.",
+   "Navedene oblasti su predmet Smernica OECD-a o međunarodnim investicijama i multinacionalnim preduzećima, a Republika Srbija je u načelu prihvatila te smernice.",
+   "Sporazum o slobodnoj trgovini sa državama EFTA potpisan je 17. decembra 2009. godine, a na snazi je od 1. oktobra 2011. godine, s ciljem uspostavljanja zone slobodne trgovine.",
+   "Republika Srbija je u novembru 2012. godine postala potpisnica Pan-Euro-Med konvencije, koja omogućava dijagonalnu kumulaciju porekla u trgovini između Srbije, EU, EFTA, CEFTA i Turske."
+  ],
+  "promene": [
+   "Sporazum se dopunjuje novom Glavom.",
+   "Nova Glava sadrži odredbe vezane za poštovanje obaveza iz odgovarajućih konvencija o zaštiti životne sredine.",
+   "Nova Glava sadrži odredbe vezane za poštovanje standarda u oblasti rada.",
+   "Odredbe se odnose na način poslovanja kompanija prilikom investiranja."
+  ],
+  "sredstva": "Predlagač navodi da za izvršavanje ovog međunarodnog ugovora nisu potrebna sredstva iz budžeta Republike Srbije, pa se procena potrebnih sredstava ne vrši."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Protokola o izmenama i dopunama Sporazuma o slobodnoj trgovini između država EFTA i Republike Srbije",
+ "depth": "standard"
+}

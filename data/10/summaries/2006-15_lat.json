@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d9dec2944889b05d8d054571606491792da266a21daf34f7534229aa5909a3e9",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum o međunarodnom kombinovanom transportu između Vlade Republike Srbije i Vlade Slovačke Republike, koji je potpisan 1. decembra 2014. godine u Bratislavi. Prema образложењу, sporazum уређује saradnju dve države u oblasti kombinovanog transporta.",
+  "razlozi": [
+   "Obe države, u skladu sa preporukama Evropske komisije, nastoje da unaprede robnu razmenu korišćenjem ekološki prihvatljivog vida transporta.",
+   "Sporazum doprinosi produbljivanju saradnje Republike Srbije i Slovačke Republike u oblasti transporta, posebno kombinovanog.",
+   "Sporazum doprinosi podizanju nivoa infrastrukture za kombinovani transport, železničkih linija i terminala.",
+   "Obe države ulažu zajedničke napore da stimulišu kombinovani transport."
+  ],
+  "promene": [
+   "Drumska vozila sa pratnjom vozača pri kombinovanom transportu od/do terminala za kombinovani transport na teritoriji države bivaju oslobođena posedovanja dozvole za međunarodni drumski prevoz.",
+   "Ta vozila su, prema образложењу, oslobođena i naknade za puteve na toj razdaljini."
+  ],
+  "sredstva": "Prema образложењу, izvršavanjem sporazuma ne stvaraju se finansijske obaveze za Republiku Srbiju, a za sprovođenje zakona nije potrebno izdvajanje sredstava iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o međunarodnim kombinovanom transportu između Vlade Republike Srbije i Vlade Slovačke Republike",
+ "depth": "standard"
+}

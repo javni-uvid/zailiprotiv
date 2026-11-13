@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "04bc72502688e5fb2ed95ed436b278ae77830f5201d83d58f7c61d67d256fe53",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон продужава рок за подношење захтева за упис права јавне својине на непокретностима за аутономну покрајину, јединице локалне самоуправе, јавна предузећа, друштва капитала и њихова зависна друштва, са три на пет година.",
+  "razlozi": [
+   "Рокови из члана 77. став 1. и члана 82. став 3. Закона истичу 6. октобра 2014. године.",
+   "Велики број наведених субјеката није поднео захтеве за упис права својине у јавну евиденцију о непокретностима и правима на њима.",
+   "Предлагач предлаже да закон ступи на снагу наредног дана од дана објављивања, како би субјекти могли да поднесу захтеве до истека рока, уз наведене нарочито оправдане разлоге из члана 196. став 4. Устава.",
+   "Предлагач предлаже доношење закона по хитном поступку, у складу са чланом 167. Пословника Народне скупштине, јер рок истиче 6. октобра 2014. године."
+  ],
+  "promene": [
+   "Članom 1. u članu 77. stav 1. Zakona rok za podnošenje zahteva za upis prava javne svojine za autonomnu pokrajinu i jedinice lokalne samouprave produžava se sa tri na pet godina od dana stupanja na snagu Zakona o javnoj svojini.",
+   "Članom 2. u članu 82. stav 3. Zakona rok za podnošenje zahteva za upis prava svojine na nepokretnostima za javna preduzeća, društva kapitala i njihova zavisna društva produžava se sa tri na pet godina od dana stupanja na snagu Zakona o javnoj svojini."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити посебна средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o javnoj svojini",
+ "depth": "standard"
+}

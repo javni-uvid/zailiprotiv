@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "6f6826d33db3ae639bcf056d8d540f16ce6f7995694bd46defb34f9ad7678471",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim izmenama i dopunama Zakona o šumama iz 2010. godine dopunjuju odredbe, otklanjaju nedostaci uočeni u primeni i usklađuju odredbe sa Zakonom o javnim preduzećima i Odlukom Ustavnog suda broj IUz-353/2009.",
+  "razlozi": [
+   "Usklađivanje sa Odlukom Ustavnog suda broj IUz-353/2009 i sa Zakonom o javnim preduzećima.",
+   "Posle stupanja na snagu Zakona o javnoj svojini, desetine hiljada hektara državnih šuma ostale su bez korisnika, a postupak prenosa prava korišćenja nije bio uređen.",
+   "Ukinuto ovlašćenje republičkoj šumarskoj inspekciji da kontroliše promet drveta, što se navodi kao uzrok povećanog obima bespravnih seča.",
+   "Postojeća pravila ne omogućavaju adekvatno reagovanje u slučaju prirodnih nepogoda, a elementarna nepogoda često nije proglašavana."
+  ],
+  "promene": [
+   "Vlada određuje korisnika državnih šuma bez korisnika, na predlog ministarstva nadležnog za šumarstvo, a do tada čuvanje i zaštitu vrši pravno lice koje odredi ministarstvo.",
+   "Uvodi se pojam prirodne nepogode i sanacioni plan, a sopstvenici i korisnici šuma se oslobađaju plaćanja naknade za korišćenje šuma i naknade za posečeno drvo na površinama sanacije.",
+   "Uvodi se obavezna propratnica za drvo iz šuma sopstvenika, odnosno otpremnica za drvo iz državnih šuma, uz žig na posečenom drvetu, i šumarskoj inspekciji se daje ovlašćenje za kontrolu prometa drveta.",
+   "Ustanovljavaju se šumske oblasti kao najveće prostorno-planske celine, umesto šumskih područja, a za njih se donosi plan razvoja gazdovanja šumama; ukida se saglasnost pokrajinskog organa za promenu namene šumskog zemljišta.",
+   "Dozvoljava se čista seča radi izgradnje cevovoda, PTT i elektro vodova, proširuje se zakup šuma i šumskog zemljišta, menja se osnovica za naknadu na ukupan godišnji prihod od korišćenja šuma, a JP „Srbijašume” ima rok od šest meseci za usaglašavanje sa Zakonom o javnim preduzećima."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje zakona u 2015. godini budžetska sredstva nisu potrebna, a za osnivanje i početak rada Komore inženjera šumarstva jednokratno 3.000.000,00 dinara u okviru bilansnih mogućnosti razdela Uprave za šume."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o šumama",
+ "depth": "standard"
+}

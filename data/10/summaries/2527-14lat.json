@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "26941a3c1963fc7eeb4a20bd0a1addd9144d33b01f21efc1d2c448c8988cf138",
+ "summary": {
+  "ukratko": "Zakonom se potvrđuje Sporazum između Vlade Republike Srbije i Vlade Republike Azerbejdžan o saradnji u oblasti veterinarstva. Према предлагачу, сporazum uređuje pitanja od značaja za saradnju u oblasti veterinarstva između dve zemlje.",
+  "razlozi": [
+   "Sporazum je potpisan 2013. godine, a predlog zakona je bio u skupštinskoj proceduri od 19. jula 2013. godine, ali je povučen zbog formiranja nove Vlade i raspuštanja Narodne skupštine, pa se postupak obnavlja.",
+   "Azerbejdžanska strana je sporazum ratifikovala 19. aprila 2013. godine.",
+   "Cilj je doprinos razvoju ukupnih ekonomskih odnosa dve zemlje, pravni okvir za saradnju u oblasti veterine i stvaranje uslova za saradnju veterinarskih organa i razvoj naučnih i tehnoloških veza.",
+   "Cilj je i povećanje obima razmene poljoprivredno-prehrambenih proizvoda i stvaranje uslova za povećanje izvoza."
+  ],
+  "promene": [
+   "Uređuje promet životinja i proizvoda životinjskog porekla između dve zemlje.",
+   "Uređuje razmenu obrazaca (sertifikata) za uvoz i provoz proizvoda životinjskog porekla i razmenu izveštaja o pojavi, stanju i kretanju zaraznih bolesti životinja.",
+   "Uređuje mere za sprečavanje, suzbijanje i iskorenjivanje zaraznih bolesti životinja, načine saradnje i međusobno obaveštavanje kada pošiljka ne ispunjava veterinarsko-sanitarne uslove iz uverenja.",
+   "Uređuje uslove za ograničenje ili zabranu uvoza i provoza pošiljaka životinja, rešavanje spornih pitanja i nadležne organe za sprovođenje sporazuma.",
+   "Uređuje primenu, važenje i postupak izmene i dopune sporazuma."
+  ],
+  "sredstva": "Predlagač navodi da se sporazumom ne stvaraju finansijske obaveze za Republiku Srbiju, a da su sredstva za njegovu realizaciju obezbeđena u okviru Ministarstva poljoprivrede i životne sredine prema Zakonu o budžetu za 2014. godinu (glava 24.2 – Uprava za veterinu, ekonomska klasifikacija 422) u iznosu od 11.373.000,00 dinara, dok će se u narednim godinama obezbeđivati u okviru limita utvrđenog fiskalnom strategijom."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Azerbejdžan o saradnji u oblasti veterinarstva",
+ "depth": "standard"
+}

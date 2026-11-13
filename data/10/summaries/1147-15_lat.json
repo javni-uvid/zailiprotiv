@@ -1,0 +1,20 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "c4760b539227530c8deb390fb02f994d9925bd7c3747982898f389ba6ed4e3d5",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Ugovor između Republike Srbije i Republike Turske o uzajamnoj pravnoj pomoći u krivičnim stvarima. Predlagač navodi da se time uređuje pravna pomoć između dve države u krivičnim stvarima.",
+  "razlozi": [
+   "Pravna pomoć u krivičnim stvarima između Srbije i Turske se do sada regulisala Konvencijom o sudskoj pravnoj pomoći u krivičnim stvarima iz 1973. godine, koju je zaključila SFRJ.",
+   "Novim bilateralnim ugovorom stvoriće se uslovi za obimniju, raznovrsniju i efikasniju saradnju nadležnih organa dve države.",
+   "Saradnja se, prema navodima predlagača, odnosi na suzbijanje kriminala, posebno njegovih najtežih vidova, kao što je organizovani kriminal."
+  ],
+  "promene": [
+   "Zakonom se potvrđuje Ugovor između Republike Srbije i Republike Turske o uzajamnoj pravnoj pomoći u krivičnim stvarima.",
+   "Ugovor predstavlja novi bilateralni pravni okvir za pravnu pomoć u krivičnim stvarima između dve države."
+  ],
+  "sredstva": "Predlagač navodi da za primenu ovog zakona nije potrebno obezbediti dodatna finansijska sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora između Republike Srbije i Republike Turske o uzajamnoj pravnoj pomoći u krivičnim stvarima",
+ "depth": "standard"
+}

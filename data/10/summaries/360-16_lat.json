@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e2e8c32cedf4ccdecfb46d026f5b592f1ceb974596c22bd627125c583f3dca3f",
+ "summary": {
+  "ukratko": "Zakon menja Zakon o poreskom postupku i poreskoj administraciji. Prema predlagaču, uređuje odlaganje plaćanja dugovanog poreza na rate, otpis kamate, naplatu poreza predajom stvari i pojedina pitanja objavljivanja podataka o poreskim dužnicima, dodele i oduzimanja PIB-a.",
+  "razlozi": [
+   "Predlagač navodi normalizaciju poslovanja poreskih obveznika nakon poteškoća u prethodnom periodu.",
+   "Cilj je omogućiti blagovremeno izmirivanje poreskih obaveza u narednom periodu.",
+   "Predlagač navodi pravnotehničko usaglašavanje pojedinih odredaba zakona radi primene sa manje tumačenja i bržeg poreskog postupka.",
+   "Predlagač navodi pravnu sigurnost i transparentnost u vođenju poreske politike."
+  ],
+  "promene": [
+   "Odlaganje plaćanja dugovanog poreza na rate može se odobriti najduže do 60 meseci, umesto dosadašnjih 24.",
+   "Sredstvo obezbeđenja se neće zahtevati za dugovani porez do 1.500.000 dinara za pravna lica i preduzetnike, odnosno do 200.000 dinara za fizička lica.",
+   "Predviđen je otpis dela kamate za poreske obveznike koji redovno izmiruju rate i tekuće obaveze, a prelaznim odredbama i za dugove dospele do dana stupanja na snagu zakona do 2.000.000 dinara.",
+   "Poreska uprava objavljuje podatke o poreskim dužnicima dva puta godišnje, umesto kvartalno, i može naplatiti porez predajom stvari na osnovu akta Vlade.",
+   "Zastarelost prava Poreske uprave na utvrđivanje i naplatu poreza ne teče za vreme dok je plaćanje odloženo, a PIB se može oduzeti i kada je zabrana raspolaganja novčanim sredstvima trajala duže od godinu dana."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o poreskom postupku i poreskoj administraciji",
+ "depth": "standard"
+}

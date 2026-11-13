@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "bb93d29ffad4918951261569b33214d7a1a78d972512cbe54e939de3b51ae89e",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum o vazdušnom saobraćaju između Vlade Republike Srbije i Vlade Sjedinjenih Američkih Država, kojim se, prema predlagaču, uređuju odnosi u oblasti vazdušnog saobraćaja između te dve države.",
+  "razlozi": [
+   "Predlagač navodi da sporazum predstavlja dugoročni pravni osnov za dalje unapređenje odnosa između Republike Srbije i Sjedinjenih Američkih Država.",
+   "Predlagač navodi da je sporazum usklađen sa savremenim tendencijama u međunarodnom civilnom vazduhoplovstvu.",
+   "Predlagač navodi da se sporazumom promovišu i ispunjavaju visoki međunarodni vazduhoplovni standardi.",
+   "Predlagač navodi da sporazum otvara šire mogućnosti za avio-prevoznike, druge vazduhoplovne subjekte i ostale subjekte u privrednoj saradnji dve države."
+  ],
+  "promene": [
+   "Zakonom se potvrđuje Sporazum o vazdušnom saobraćaju između Vlade Republike Srbije i Vlade Sjedinjenih Američkih Država.",
+   "Sporazum su 29. maja 2015. godine potpisali u ime Vlade Republike Srbije ministar građevinarstva, saobraćaja i infrastrukture i potpredsednik Vlade, a u ime Vlade Sjedinjenih Američkih Država ambasador Sjedinjenih Američkih Država u Republici Srbiji."
+  ],
+  "sredstva": "Predlagač navodi da izvršavanjem sporazuma ne nastaju finansijske obaveze za Republiku Srbiju i da za sprovođenje zakona nije potrebno izdvajanje sredstava iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o vazdušnom saobraćaju između Vlade Republike Srbije i Vlade Sjedinjenih Američkih Država",
+ "depth": "standard"
+}

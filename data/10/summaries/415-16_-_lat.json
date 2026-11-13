@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "f3f65c36bf4f1bcd486e6b31fca56554b2faaa139554c7305c66744ded760ab3",
+ "summary": {
+  "ukratko": "Zakon uređuje sistem plata zaposlenih u javnom sektoru kao okvirni zakon. Prema obrazloženju, obuhvata državne organe, organe autonomne pokrajine i jedinica lokalne samouprave, javne službe, javne agencije i organizacije obaveznog socijalnog osiguranja.",
+  "razlozi": [
+   "Plate u javnom sektoru uređene su velikim brojem zakona, podzakonskih akata i opštih akata poslodavca, što, prema predlagaču, dovodi do neujednačenosti u pravima zaposlenih.",
+   "Predlagač navodi da u sistemu postoji preko 10 različitih osnovica za obračun zarada, a odnos između najniže i najviše je 1:19.",
+   "Predlagač navodi da su nedostaci dosadašnjeg sistema neupravljivost, nemogućnost efektivne kontrole, netransparentnost i nepravičnost.",
+   "Predlagač navodi da je donošenje zakona neophodno radi efikasnog sprovođenja reforme javne uprave i uspostavljanja jedinstvenog sistema plata za sve zaposlene u javnom sektoru."
+  ],
+  "promene": [
+   "Za ceo javni sektor utvrđuje se jedinstvena osnovica za obračun plata, koju zakonom o budžetu utvrđuje za svaku budžetsku godinu, uz prethodno mišljenje Socijalno-ekonomskog saveta Republike Srbije.",
+   "Plata se sastoji od osnovne plate i uvećane plate; osnovna plata se određuje množenjem osnovice i koeficijenta.",
+   "Dosadašnji nazivi „plata” i „zarada” zamenjuju se jedinstvenim nazivom „plata”.",
+   "Plata za tekući mesec isplaćuje se najkasnije do kraja narednog meseca, a pravo na platu počinje danom stupanja na rad, ako zakonom nije drugačije određeno.",
+   "Zakon se ne primenjuje na zaposlene u javnim preduzećima, privrednim društvima, Narodnoj banci Srbije i javnim medijskim servisima. Platne grupe, platni razredi, korektivni koeficijent, posebna uvećanja i pravila napredovanja uređuju se posebnim zakonima."
+  ],
+  "sredstva": "Predlagač navodi da donošenje zakona neće povećati troškove plata zaposlenih u javnom sektoru u 2016. godini, ali je za plate pet novozaposlenih u Ministarstvu državne uprave i lokalne samouprave potrebno obezbediti dodatna sredstva u budžetu Republike za 2016. godinu."
+ },
+ "usage": {},
+ "law": "Zakon o sistemu plata zaposlenih u javnom sektoru",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "1727dba434ce9b44d638af48d45ba831b89bb6185919e5a506b32fc867d03010",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон мења поједине рокове и одредбе Закона о враћању одузете имовине и обештећењу, у вези са обештећењем, обвезницама и акontацијом. Циљ је да се рокови ускладе са временом потребним за утврђивање укупне основице обештећења.",
+  "razlozi": [
+   "Предлагач наводи да постоје проблеми у утврђивању основице обештећења по појединачним предметима и укупног збира основице.",
+   "Према образложењу, укупна основица може се утврдити тек након доношења већег броја решења о праву на обештећење, па се рок за њено утврђивање продужава.",
+   "Предлагач наводи да се, због сложености поступка, мора померити и рок за емитовање обвезница којима се регулише јавни дуг по основу обештећења.",
+   "Предлагач наводи да се предлаже ступање на снагу narednog dana od dana objavljivanja i hitan postupak kako bi se izbegle štetne posledice po rad državnih organa i ostvarivanje prava građana."
+  ],
+  "promene": [
+   "Članom 1. menja se član 30. u pogledu početka roka za obračun kamata.",
+   "Članom 2. menja se član 31. tako što se rok od tri godine za utvrđivanje koeficijenta za obeštećenje produžava na pet godina.",
+   "Članom 3. menja se član 35. tako što se akt Vlade o iznosu emisije i uslovima distribucije i naplate obveznica odlaže za 30. jun 2017. godine, a rok dospeća obveznica skraćuje sa 15 na 12 godina.",
+   "Članom 4. menja se član 37. u delu roka za isplatu akontacije obeštećenja.",
+   "Članom 5. menja se član 50. stav 2. radi usklađivanja sa predloženim izmenama, a zakon stupa na snagu narednog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o vraćanju oduzete imovine i obeštećenju",
+ "depth": "standard"
+}

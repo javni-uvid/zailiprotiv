@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "8476e819fceea6972133ee7fd6c42ed95e6499c0ffb866aa3afcf57a5fc4db4c",
+ "summary": {
+  "ukratko": "Према предлагачу, закон уређује оснивање, пословање, органе и надзор над радом јавних предузећа и других облика организовања који обављају делатност од општег интереса.",
+  "razlozi": [
+   "Предлагач наводи да су при контроли и надзору над радом јавних предузећа уочене потешкоће и неправилности у примени важећег закона.",
+   "Предлагач наводи да постојећа правна регулатива није довољна за решавање уочених проблема, а да су измене превазилазиле више од половине чланова, због чега је израђен нацрт новог закона.",
+   "Предлагач наводи да су циљ закона ефикасnија контрола, повећање финансијских performansi, ефикаснije планирање, унапређење корпоративног управљања, поштовање рокова и већа транспарентност.",
+   "Предлагач наводи да се закон доноси ради професионализације рада и повећања ефикасности управљања, а укидање извршног одбора образложује могућношћу злоупотребе надлежности."
+  ],
+  "promene": [
+   "Поверавање обављања делатности од општег интереса друштву капитала и предузетнику врши се у складу са законом о јавно-приватном партнерству и концесијама.",
+   "Privredna društva u kojima Republika Srbija ima najmanje 25% osnovnog kapitala utvrđuju se kao društva od strateškog značaja, a Vlada u roku od šest meseci utvrđuje njihov spisak.",
+   "Osnivač ne može osnovati drugo javno preduzeće za obavljanje iste delatnosti od opšteg interesa, osim u slučajevima projekata javno-privatnog partnerstva.",
+   "Uvodi se jednodomno upravljanje (nadzorni odbor i direktor), ukida se izvršni odbor, a direktor bira izvršne direktore.",
+   "Pooštravaju se uslovi za članove nadzornog odbora i direktora, proširuju se razlozi za razrešenje i uvode se kaznene odredbe i prekršaji, a vršilac dužnosti direktora može biti postavljen najduže godinu dana."
+  ],
+  "sredstva": "Предлагач наводи да за реализацију овог закона није потребно обезбедити финансијска средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o javnim preduzećima",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "2865f8e36661489d4ab20b70e75ca2e806cb172ec73f53f5547fc0c46237cec7",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim zakonom menjaju i dopunjuju odredbe Zakona o turizmu, u delu pojmova, nadležnosti turističkih organizacija, nadzora nad primenom zakona, stručnih ispita i usklađivanja sa propisima Evropske unije. Cilj je, prema predlagaču, smanjenje sive ekonomije i veća zaštita korisnika turističkih usluga.",
+  "razlozi": [
+   "Smanjenje sive ekonomije u svim delatnostima koje zakon uređuje, što predlagač navodi kao prioritetan zadatak.",
+   "Usklađivanje sa Direktivom o organizovanim putovanjima i Direktivom o uslugama, kao i sa Zakonom o zaštiti potrošača.",
+   "Veća zaštita korisnika turističkih usluga kroz preciznije odredbe.",
+   "Stvaranje pravnog okvira za upravljanje razvojem turizma i veću efikasnost subjekata u ovoj oblasti."
+  ],
+  "promene": [
+   "Deo nadzora nad primenom zakona poverava se lokalnoj samoupravi, odnosno ovlašćenim inspekcijskim organima lokalne samouprave.",
+   "Uvodi se mogućnost da inspektor izda prekršajni nalog, a za određene prekršaje propisuju se novčane kazne u fiksnom iznosu.",
+   "Preciziraju se i uvode pojmovi, među ostalima: turistička delatnost, turističko putovanje, predstavnik na turističkoj destinaciji, destinacijska menadžment organizacija, turistički klaster i seosko turističko domaćinstvo.",
+   "Strategija razvoja turizma sadrži akcioni plan, a donosi se na najmanje pet godina; upravljanje turističkim prostorom može se poveriti i destinacijskoj menadžment organizaciji.",
+   "Ponovo se uvodi obaveza da kandidati za stručni ispit za turističke vodiče i pratioce snose sve troškove polaganja teorijskog i praktičnog dela ispita."
+  ],
+  "sredstva": "Predlagač navodi da su za naknadu članovima komisije za ispite za turističke vodiče i pratioce potrebna sredstva iz budžeta Republike Srbije, da će iznos koji kandidati uplate znatno premašiti stvarne troškove iz budžeta, te da će pozitivni efekti na budžet daleko premašiti troškove primene zakona."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o turizmu",
+ "depth": "standard"
+}

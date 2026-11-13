@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d9076dee4315b50a116c81bb93c8225527ad8d094eb60217d8963fa55b6f163d",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim zakonom menja Zakon o sudskim taksama, u delu koji se odnosi na način plaćanja i naplate sudskih taksi, povraćaj preplaćenih taksi i prodaju taksenih maraka.",
+  "razlozi": [
+   "Predlagač navodi da su u izvršnom postupku sudovi i izvršitelji paralelno ili mešovito nadležni, te da se predlaže da izvršenje sprovode isključivo izvršitelji, a sud samo u pojedinim slučajevima.",
+   "Predlagač navodi da se između podnošenja predloga za izvršenje i odluke suda praktično ne preduzimaju sudske radnje koje bi opravdale plaćanje takse za sudsku odluku, pa se ta taksa ukida.",
+   "Predlagač navodi da postojeći način prinudne naplate taksi od fizičkih lica nije efikasan.",
+   "Predlagač navodi da je postupak povraćaja sudske takse spor i relativno dug, a da je uloga suda u njemu samo savetodavna."
+  ],
+  "promene": [
+   "Taksa do 5.000 dinara plaća se, po pravilu, u sudskim taksenim markama, a taksa preko 5.000 dinara plaća se u gotovom novcu (dosad je granica bila 1.000 dinara); apoeni taksenih maraka su 10, 20, 50, 100, 200, 500, 1000, 2000 i 5000 dinara.",
+   "Stranka u vanparničnom postupku oslobođena je plaćanja takse za radnje koje je sud poverio javnom beležniku, a plaća javnom beležniku naknadu troškova i nagradu.",
+   "Ako fizičko lice ne plati taksu u roku, sud donosi rešenje kojim ga obavezuje da plati taksu i kaznenu taksu od 50% u roku od pet dana; izvršenje sprovodi izvršitelj, koji za sebe zadržava 10% naplaćenog iznosa.",
+   "O zahtevu za povraćaj takse odlučuje sud koji je rešavao u prvom stepenu, a briše se član 45. koji je propisivao odlučivanje Poreske uprave.",
+   "Ovlašćenje za prodaju taksenih maraka daje Vlada na predlog ministra pravde (dosad ministar finansija), a ministar pravde donosi propis o izgledu, izradi, distribuciji i raspolaganju markama; menja se i tarifni broj 1 u delu koji se odnosi na takse za akte u izvršnom postupku."
+  ],
+  "sredstva": "Predlagač navodi da će se budžetska sredstva potrebna za primenu zakona planirati u okviru limita koje za svakog budžetskog korisnika utvrđuje Ministarstvo finansija pri donošenju godišnjeg zakona o budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o sudskim taksama",
+ "depth": "standard"
+}

@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "bfcdd1672e9d9125b6dedb7d9c09d273d956498f04d6b0339ef9f4be3409fd0e",
+ "summary": {
+  "ukratko": "Prema predlagaču, zakon uređuje usklађivanje Zakona o pomorskoj plovidbi sa Konvencijom Међународне организације рада о раду поморaca, уводи пomorske identifikacione karte i menja uslove za rad pomoraca. Predlagač navodi i usklađivanje sa Zakonom o prekršajima.",
+  "razlozi": [
+   "Predlagač navodi usklađivanje domaćeg zakonodavstva sa Konvencijom MOR o radu pomoraca, koja je stupila na snagu juna 2012. godine.",
+   "Predlagač navodi da srpski državljani koji rade kao pomorci imaju poteškoće zbog zabrane privremenog izlaska na kopno i zabrane tranzita bez vize, jer nemaju identifikacionu kartu pomorca u skladu sa Konvencijom.",
+   "Predlagač navodi usklađivanje sa Zakonom o putnim ispravama, prema kojem pomorska knjižica ne može da se koristi kao putna isprava.",
+   "Predlagač navodi usklađivanje sa Zakonom o prekršajima, koji je stupio na snagu 1. marta 2014. godine."
+  ],
+  "promene": [
+   "Pomorska knjižica se definiše kao javna isprava kojom se dokazuje osposobljenost, zdravstveno stanje, svojstvo člana posade i trajanje zaposlenja; više ne služi kao dokaz o državljanstvu ni kao putna isprava.",
+   "Uvode se pomorske identifikacione karte sa biometrijskim podatkom zasnovanim na otisku prsta, kao javne isprave kojima se dokazuju identitet i srpsko državljanstvo.",
+   "Uvodi se obaveza poslodavca da ugovor o radu pomorca registruje kod nadležnog organa prema sedištu poslodavca i da zaključi polisu osiguranja ili drugo finansijsko jemstvo za slučaj smrti ili povrede na radu pomorca.",
+   "Propisuje se da lice mlađe od 18 godina ne sme da bude zaposleno na brodu ako bi obavljanje poslova ugrozilo njegovo zdravlje ili bezbednost, i da poslodavac o svom trošku omogućava zdravstvene preglede pomoraca.",
+   "預viđa se prenošenje nadležnosti za donošenje dela podzakonskih akata sa ministarstva na Vladu."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o pomorskoj plovidbi",
+ "depth": "standard"
+}

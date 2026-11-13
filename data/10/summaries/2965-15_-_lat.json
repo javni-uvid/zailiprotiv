@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "342d21fc811f6e14c3b7ea51bbdd317c4abde733a0c5933a568e119c409b8f25",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom uređuje radno vreme posada vozila u drumskom prevozu i korišćenje tahografa, odnosno vreme upravljanja i odmora vozača, pauze i uslovi za tahografe. Zakon uređuje oblast koja je dosad bila u više akata i usklađuje je sa propisima Evropske unije i međunarodnim obavezama Republike Srbije.",
+  "razlozi": [
+   "Republika Srbija je potpisnica AETR sporazuma i bila je obavezna da do 16. juna 2010. godine uspostavi sistem digitalnih tahografa.",
+   "Propisi koji uređuju oblast u međunarodnom i unutrašnjem saobraćaju nisu usaglašeni, pa je potrebno njihovo usklađivanje sa zakonodavstvom Evropske unije i međunarodnim obavezama.",
+   "Radi unapređenja bezbednosti saobraćaja i zaštite bezbednosti i zdravlja posade, potrebno je propisati koja vremena čine radno vreme, obezbediti minimalne dnevne i nedeljne odmore, pauze i ograničiti prosečan broj časova rada nedeljno.",
+   "Predlog se donosi po hitnom postupku radi usklađivanja propisa o prevozu tereta u drumskom saobraćaju i ispunjenja međunarodnih obaveza, u vezi sa pripremom za otvaranje Poglavlja 14 pregovora sa Evropskom unijom."
+  ],
+  "promene": [
+   "Uređuje vreme upravljanja vozilom, pauze, odmore u toku dnevnog rada, dnevni i nedeljni odmor (čl. 4–12).",
+   "Uređuje odobrenje tipa tahografa, korišćenje tahografa, tahografske kartice, radionice za tahografe, tehničare i licencu tehničara (čl. 13–41).",
+   "Uređuje nadzor nad radom radionica za tahografe i nad izdavanjem kartica, kao i procenu rizika (čl. 42–51).",
+   "Propisuje prekršaje podeljene na veoma ozbiljne, ozbiljne i manje; za manje prekršaje uvodi prekršajni nalog, a teži se prosleđuju sudu. U aktima o prekršajnim sankcijama moraju se navesti i odredbe AETR sporazuma čija se povreda sankcioniše (čl. 52–68).",
+   "Sadrži prelazne i završne odredbe, uključujući dozvole izdate do stupanja na snagu zakona, rokove za donošenje podzakonskih propisa, odloženu primenu i stupanje na snagu (čl. 69–79)."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti dodatna finansijska sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o radnom vremenu posade vozila u drumskom prevozu i tahografima",
+ "depth": "standard"
+}

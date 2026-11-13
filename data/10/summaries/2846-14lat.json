@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "07915e0d38dafc428cca1b068077d4136116540b543865d18496cd250becaf3a",
+ "summary": {
+  "ukratko": "Predlog zakona o izmenama i dopunama Zakona o investicionim fondovima, prema predlagaču, dodatno precizira uslove osnivanja, poslovanja i izveštavanja društava za upravljanje, način i ograničenja ulaganja imovine investicionih fondova, politiku upravljanja rizicima i usluge kastodi banaka. Cilj je zaštita investitora, olakšavanje uslova poslovanja i usklađivanje sa Direktivom 2009/65/ES.",
+  "razlozi": [
+   "Drugi talas finansijske krize, prema predlagaču, pogoršao je položaj društava za upravljanje i smanjio imovinu fondova.",
+   "Broj društava za upravljanje smanjen je sa 15 (2008. godina) na 4 (2013. godina), a promet na Beogradskoj berzi tokom prošle godine dostigao je jednu trećinu prometa iz 2008. godine.",
+   "Pojedini zakoni koji uređuju tržište kapitala međusobno su neusklađeni, pa je potrebno uskladiti pojmove sa Zakonom o tržištu kapitala.",
+   "Predlagač navodi potrebu daljeg usklađivanja sa Direktivom 2009/65/ES, u okviru procesa pridruživanja Evropskoj uniji."
+  ],
+  "promene": [
+   "Novčani deo osnovnog kapitala pri osnivanju društva za upravljanje i adekvatnost kapitala smanjuju se sa 200.000 na 125.000 evra, u dinarskoj protivvrednosti po srednjem kursu Narodne banke Srbije.",
+   "Kvartalno izveštavanje društava za upravljanje Komisiji za hartije od vrednosti zamenjuje se polugodišnjim izveštavanjem, uz zadržavanje godišnjeg.",
+   "Uvodi se lista revizora koje sastavlja Komisija, a koji mogu vršiti reviziju društava za upravljanje i investicionih fondova.",
+   "Granica ukupnog zaduživanja društva za upravljanje u ime fonda smanjuje se sa 20% na 10% vrednosti imovine fonda, a imovina fonda ne sme se koristiti za davanje ili garantovanje zajmova trećim licima.",
+   "Period neobavljanja delatnosti za oduzimanje dozvole za rad skraćuje se sa više od dve godine na 12 meseci, a troškovi spajanja fondova ne mogu pasti na teret članova fonda."
+  ],
+  "sredstva": "Predlagač navodi da za sprovođenje ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o investicionim fondovima",
+ "depth": "standard"
+}

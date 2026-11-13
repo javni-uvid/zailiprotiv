@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "dfe978e7714b0e00baeb1dd33d3dbf915199868d27a4748edd9fcae1586503f8",
+ "summary": {
+  "ukratko": "Zakon o izmenama i dopunama Zakona o zdravstvenoj zaštiti uređuje preuzimanje osnivačkih prava nad kliničko-bolničkim centrima od strane Republike i na nov način uređuje dopunski rad zdravstvenih radnika, zdravstvenih saradnika i drugih zaposlenih u zdravstvu. Prema predlagaču, deo odredbi o specijalizaciji stranih državljana, licenciranju i dopunskom radu se briše.",
+  "razlozi": [
+   "Kliničko-bolnički centar obavlja sekundarnu i tercijarnu zdravstvenu zaštitu i visoko specijalizovanu delatnost, a predlagač navodi da je od posebnog značaja za Republiku.",
+   "Predlagač navodi da osnivačka prava nad kliničko-bolničkim centrima treba da vrši Republika, jer je to, prema njegovom mišljenju, usklađeno s ostalim odredbama Zakona.",
+   "Predlagač navodi da se dopunski rad uređuje na nov način, radi praćenja i kontrole njegove primene u zdravstvu.",
+   "Predlagač navodi da je celishodnije da specijalizaciju stranih državljana odobrava ministarstvo zdravlja one države u kojoj stranac obavlja zdravstvenu delatnost, a da se upis vrši na fakultetima u Republici Srbiji prema međusobnom sporazumu."
+  ],
+  "promene": [
+   "Osnivač kliničko-bolničkog centra postaje Republika.",
+   "Direktora, zamenika direktora i članove upravnog i nadzornog odbora kliničko-bolničkog centra imenuje i razrešava Vlada, a Vlada daje saglasnost na statut klinike, kliničkog centra, instituta i Zavoda za zdravstvenu zaštitu radnika Ministarstva unutrašnjih poslova čiji je osnivač Republika.",
+   "Briše se stav 2 člana 185, kojim je bila uređena specijalizacija stranih državljana.",
+   "Briše se članova 198a i 198b; prema obrazloženju, zdravstveni saradnici se licenciraju u nadležnim komorama odnosno udruženjima. Briše se i čl. 200. i 201.",
+   "Dopunski rad se uređuje na nov način: zdravstveni radnik, zdravstveni saradnik i drugo zaposleno lice koji radi puno radno vreme može kod drugog poslodavca obavljati poslove iz svoje struke van redovnog radnog vremena, na osnovu ugovora u ukupnom trajanju do jedne trećine punog radnog vremena. O ugovoru se obaveštava direktor ustanove, a primerak se u roku od 15 dana dostavlja zdravstvenoj inspekciji."
+  ],
+  "sredstva": "Predlagač navodi da je za preuzimanje osnivačkih prava nad kliničko-bolničkim centrima i za kapitalna ulaganja potrebno obezbediti 150.000.000 dinara iz budžeta Republike Srbije, koja su opredeljena za 2016. godinu, jer ta odredba stupa na snagu 1. januara 2016. godine."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o zdravstvenoj zaštiti",
+ "depth": "standard"
+}

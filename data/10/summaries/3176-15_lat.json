@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "9e60be8f07b9f003a0aedbdde653c863808f7a6c246c3c5a6e9012e77944c74b",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон потврђује Уговор о гаранцији између Републике Србије и Европске банке за обнову и развој, којим Република Србија гарантује обавезе Јавног предузећа „Електропривреда Србије” по зајму од 200 милиона евра за финансијско рестуктурирање тог предузећа.",
+  "razlozi": [
+   "Европска банка за обнову и развој спремна је да одобри зајам од 200 милиона евра за Пројекат финансијског рестуктурирања ЕПС-а, под условом да Република Србија гарантује за обавезе ЈП „Електропривреда Србије”.",
+   "Пројекат је први корак сveobuhvatnog програма реформе ЈП „Електропривреда Србије” и електроенергетског сектора, а први корак је рестуктурирање биланса стања предузећа у светлу кризе изазване поплавама 2014. године.",
+   "Давање гаранције је услов за закључивање и спровођење уговора о кредиту између Банке и ЈП „Електропривреда Србије”.",
+   "Као разлог за доношење по хитном поступку предлагач наводи да је давање гаранције услов за повлачење средстава зајма и за испуњење међународних обавеза Републике Србије."
+  ],
+  "promene": [
+   "Članom 1. potvrđuje se Ugovor o garanciji (Projekat restrukturiranja EPS-a), potpisan 30. oktobra 2015. godine u Beogradu.",
+   "Članom 2. sadrži se tekst Ugovora na engleskom jeziku i u prevodu na srpski jezik.",
+   "Republika Srbija se ugovorom obavezuje da bezuslovno garantuje, kao primarni dužnik, plaćanje iznosa po Ugovoru o zajmu i da nadoknadi iznose koji dospevaju po osnovu kredita, ako ih JP „Elektroprivreda Srbije” ne izmiri blagovremeno ili u potpunosti.",
+   "Ugovorom o zajmu predviđeni su: period trajanja 15 godina, grejs period 18 meseci, varijabilna kamatna stopa (šestomesečni EURIBOR + 1% fiksna marža), otplata u 27 jednakih polugodišnjih rata i poslednji datum otplate 15. jun 2030. godine.",
+   "Članom 3. uređuje se stupanje na snagu ovog zakona."
+  ],
+  "sredstva": "Predlagač navodi da će se za sprovođenje zakona sredstva obezbeđivati u budžetu Republike Srbije, a da je Zakonom o budžetu Republike Srbije za 2015. godinu opredeljen iznos od 24.000.000.000,00 dinara, odnosno do 200.000.000,00 evra, za davanje garancije Evropskoj banci za obnovu i razvoj."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Ugovora o garanciji (Projekat restrukturiranja EPS-a) između Republike Srbije i Evropske banke za obnovu i razvoj",
+ "depth": "standard"
+}

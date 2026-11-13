@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "7834ddb0bb50d9eaab9571c8b2aa4ad18165957cb1860471b8c913ca92571589",
+ "summary": {
+  "ukratko": "Законом се уређује заштита и одрживо коришћење рибљег фонда, односно управљање ресурсима у риболовним водама, укључујући улов и промет риба. Предлагач наводи да се њиме прецизније дефинишу права, обавезе и овлашћења свих субјеката који учествују у тим пословима.",
+  "razlozi": [
+   "Важећи закон („Службени гласник РС”, бр. 36/09 и 32/13 – УС) у примени је показао одређене проблеме и недостатке у законским решењима.",
+   "Рибљи фонд се наводи као значајан природни ресурс који треба максимално чувати и штитити, а интерес заштите треба да буде приоритетан при коришћењу риболовних вода.",
+   "Предлагач наводи да се предлогом испуњавају захтеви Европске уније и обавезе из ратификованих међународних уговора у области заштите биодиверзитета.",
+   "Među uočenim nedostacima su neujednačen prostorni raspored riboloynih voda, nedovoljan stručni kapacitet korisnika ribarskih područja, sukobi među korisnicima i nedovoljna transparentnost korišćenja sredstava od dozvola."
+  ],
+  "promene": [
+   "Ribarska područja ustupaju se na korišćenje javnim konkursom na deset godina, a korisnik mora ispunjavati propisane uslove.",
+   "Uvodi se katastar riboloynih voda, koji vodi ministarstvo, u obliku baze podataka.",
+   "Naknada za korišćenje ribarskog područja iznosi 15% od novčanog iznosa dozvole za privredni ribolov i 10% od dozvole za rekreativni ribolov, i prihod je budžeta Republike Srbije.",
+   "Propisuju se uslovi za ribočuvare, stručni ispit, licenca i ovlašćenja ribočuvara, a ministar može oduzeti ribarsko područje u navedenim slučajevima.",
+   "Предлагач наводи да се предлогом пооштрава казнена политика."
+  ],
+  "sredstva": ""
+ },
+ "usage": {},
+ "law": "Zakon o zaštiti i održivom korišćenju ribljeg fonda",
+ "depth": "standard"
+}

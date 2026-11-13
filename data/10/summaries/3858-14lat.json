@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "2d4de1731053cc2be388da96953e3e1c4381e30b7839533f6e4ab21970318081",
+ "summary": {
+  "ukratko": "Закон мења састав Управног и Надзорног одбора Републичког фонда за здравствено осигурање. Предлагач наводи да се тим променама смањује број чланова ових органа.",
+  "razlozi": [
+   "Предлагач наводи racionalizaciju i efikasnost rada Управног и Надзорног одбора Републичког фонда.",
+   "Предлагач наводи uštedu sredstava Републичког фонда.",
+   "Предлагач наводи da se zadržava zastupljenost najbrojnijih kategorija osiguranika, kao u drugim organizacijama socijalnog osiguranja.",
+   "Предлагач наводи zastupljenost predstavnika ministarstva nadležnog za zdravlje radi sprovođenja zdravstvene politike i kontrole namenskog raspolaganja sredstvima budžeta."
+  ],
+  "promene": [
+   "Управни одбор има 7 чланова umesto 21; četiri člana imenuje Vlada na predlog ministra nadležnog za zdravlje.",
+   "Управни одбор има по једног представника osiguranika zaposlenih (на предлог репрезентативних синдиката), osiguranika penzionera (на предлог удружења penzionera са више од 50.000 регистрованих чланова) i osiguranika zemljoradnika (на предлог удружења пољопривредника са више од 50.000 регистрованих чланова).",
+   "Надзорни одбор има 5 чланова umesto 7; три члана imenuje Vlada na predlog ministra nadležnog za zdravlje, а по једног представника osiguranika zaposlenih i osiguranika penzionera.",
+   "Vlada imenuje predsednika Nadzornog odbora iz reda članova Nadzornog odbora.",
+   "Zakon stupa na snagu osmog dana od dana objavljivanja u „Službenom glasniku Republike Srbije”."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити додатна средства у буџету Републике за 2014. годину, јер се законом остварују уштеде у Финансијском плану Републичког фонда за здравствено осигурање."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama Zakona o zdravstvenom osiguranju",
+ "depth": "standard"
+}

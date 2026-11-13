@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "0b042dbe56ca7c9ba7f7e48bf2952fc179cd63c7924f77bf32eca71512239458",
+ "summary": {
+  "ukratko": "Predlagač navodi da se zakonom menja Zakon o zaštiti korisnika finansijskih usluga, radi usklađivanja s novim Zakonom o platnim uslugama, unapređenja prava korisnika finansijskih usluga i rešavanja praktičnih problema u primeni. Predlagač predlaže da se zakon donese po hitnom postupku, iz istih razloga kao Zakon o platnim uslugama.",
+  "razlozi": [
+   "Usklađivanje sa novim Zakonom o platnim uslugama, kojim se uređuju prava i obaveze pružalaca i korisnika platnih usluga.",
+   "Unapređenje načina ostvarivanja prava i interesa korisnika finansijskih usluga i dodatna zaštita tih korisnika.",
+   "Rešavanje praktičnih problema i nedoumica koji su se pojavljivali u primeni Zakona.",
+   "Prema podacima Narodne banke Srbije, u 2013. godini korisnici su toj banci uputili 1.510 obaveštenja s prigovorima na rad finansijskih institucija, a zakazano je 105 postupaka posredovanja."
+  ],
+  "promene": [
+   "Iz definicije bankarske usluge brišu se poslovi koji su predmet Zakona o platnim uslugama, a zadržava se izdavanje i korišćenje kreditne kartice.",
+   "Uvodi se pravo korisnika na prigovor davaocu finansijskih usluga, uz rok od 15 dana za odgovor i mogućnost podnošenja pritužbe Narodnoj banci Srbije.",
+   "Davalac finansijskih usluga dužan je da na dnevnom nivou objavljuje obaveštenje o vrednosti promenljivih elemenata ugovora u poslovnim prostorijama i na internet stranici.",
+   "Plan otplate kredita i pregled obaveznih elemenata kredita više nisu sastavni delovi ugovora, a banka dostavlja kopiju ugovora licu koje je dalo sredstvo obezbeđenja.",
+   "Narodna banka Srbije propisuje strane valute u kojima se korisniku kredit, lizing ili kreditna kartica mogu ponuditi i odobriti na njegov zahtev."
+  ],
+  "sredstva": "Predlagač navodi da u budžetu Republike Srbije nije potrebno obezbediti dodatna finansijska sredstva za sprovođenje ovog zakona."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o zaštiti korisnika finansijskih usluga",
+ "depth": "standard"
+}

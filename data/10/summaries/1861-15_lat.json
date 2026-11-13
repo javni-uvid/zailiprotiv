@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "bf5f1eb4d33dbf45cd076a2be158ae7c1681a07b97052d25622dc6e6df408e0e",
+ "summary": {
+  "ukratko": "Predlog zakona uređuje istraživanje nesreća i nezgoda u vazdušnom, železničkom i vodnom saobraćaju. Prema образложењу, predviđa osnivanje jednog Centra za istraživanje nesreća u vazdušnom, železničkom i vodnom saobraćaju, koji bi bio nezavisan od nadležnih organa i učesnika u saobraćaju.",
+  "razlozi": [
+   "Predlagač navodi usklađivanje sa propisima Evropske unije i standardima Međunarodne organizacije civilnog vazduhoplovstva (ICAO) i Međunarodne pomorske organizacije (IMO).",
+   "Predlagač navodi da u oblasti železničkog i vodnog saobraćaja nije obrazovano telo za istraživanje nesreća, dok u vazdušnom saobraćaju takvo telo postoji od 2010. godine.",
+   "Predlagač navodi da je projekat Twinning Light preporučio izradu jedinstvenog zakona i osnivanje jednog tela za istrage u sva tri vida saobraćaja.",
+   "Predlagač navodi da je cilj unapređenje bezbednosti kroz pouzdane, nepristrasne i nezavisne istrage, odvojene od sudskih i internih istraga."
+  ],
+  "promene": [
+   "Uvodi se Centar za istraživanje nesreća u vazdušnom, železničkom i vodnom saobraćaju, sa svojstvom pravnog lica i sedištem u Beogradu.",
+   "Centar sprovodi tehničke istrage i daje bezbednosne preporuke, koje se donose naredbom i upućuju nadležnim stranama i organima.",
+   "Utvrđuju se istražni postupci posebno za vazdušni, železnički, pomorski i unutrašnji vodni saobraćaj, uključujući rokove za pokretanje bezbednosne istrage u pomorskoj i unutrašnjoj plovidbi.",
+   "Propisuje se obaveza obaveštavanja ministarstva nadležnog za saobraćaj i nadležnih međunarodnih organizacija o početku istrage u roku od sedam dana.",
+   "Propisuju se službene legitimacije za glavnog istražitelja i zaposlene koji rade na istragama, kao i obaveza čuvanja poverljivosti podataka i dokaza."
+  ],
+  "sredstva": "Predlagač navodi da su za sprovođenje zakona u 2016. godini potrebna okvirna sredstva od 37.971.000 dinara, namenjena zapošljavanju šest novih zaposlenih i pokrivanju tekućih rashoda, uz obezbeđenje sredstava u budžetu Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o istraživanju nesreća u vazdušnom, železničkom i vodnom saobraćaju",
+ "depth": "standard"
+}

@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "7f82d6a53866e402a49216efdba26b27995a46c796f0181fbbe3a1324b7a12c6",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон мења Закон о спречавању прања новца и финансирања терorизма, ради усклађивања са новим Законом о платним услугама. Циљ је, према образложењу, омогућити његову несметану примену у пракси и смањити ризике везане за прање новца и финансирање терористичких делатности.",
+  "razlozi": [
+   "Предлагач наводи да је потребно усагласити важећи закон са Законом о платним услугама, како би се омогућила његова несметана примена у пракси.",
+   "Према образложењу, Законом о платним услугама уводе се платне институције и институције електронског новца, па се њихова могућа укљученост у домаће и стране токове плаћања наводи као разлог за проширење круга обвезника.",
+   "Предлагач наводи да се уводи електронски новац као пripејд инструмент, па је, према образложењу, потребно institucije електронског новца изузети од обавезе познавања и праћења странке у одређеним случајевима.",
+   "Према образложењу, Народна банка Србије надзире платне институције и институције електронског новца према Закону о платним услугама, па је потребно утврдити да она врши надзор и над применом овог закона код тих институција."
+  ],
+  "promene": [
+   "Članom 1. menja se član 4. stav 1, tako da se lista obveznika dopunjuje institucijama elektronskog novca i platnim institucijama.",
+   "Članom 2. menja se član 12. stav 1, tako da se institucije elektronskog novca svrstavaju među finansijske institucije na koje se odnosi izuzetak od radnji i mera poznavanja i praćenja stranke kod određenih usluga, pod uslovima navedenim u tekstu zakona: iznos ne može da se dopunjava i ne može preći 150 evra, ili se može dopunjavati, ali ne može preći 2.500 evra u kalendarskoj godini, osim ako stranka u istoj godini unovči najmanje 1.000 evra u dinarskoj protivvrednosti po zvaničnom srednjem kursu.",
+   "Članom 3. menja se član 84. stav 1, čime se Narodnoj banci Srbije omogućava vršenje nadzora nad primenom zakona kod institucija elektronskog novca i platnih institucija.",
+   "Članom 4. uređuje se stupanje na snagu ovog zakona."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o sprečavanju pranja novca i finansiranja terorizma",
+ "depth": "standard"
+}
