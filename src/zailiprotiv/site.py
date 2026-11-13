@@ -354,8 +354,6 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
     aliases = json.loads((root / "aliases.json").read_text(encoding="utf-8")) if (root / "aliases.json").exists() else {}
-    # Pages about an MP on other sites, keyed by the MP's slug (data/elsewhere.json): links only, entered by hand.
-    elsewhere = json.loads((root / "elsewhere.json").read_text(encoding="utf-8")) if (root / "elsewhere.json").exists() else {}
     items_by_conv, taken = {}, Counter()
     for conv, _ in convs:
         laws_store, votes, bills = loaded[conv]
@@ -550,7 +548,6 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table, areas_table=areas_table, periods=periods,
             against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
             apart=[r for r in record if r["differs"]],
-            elsewhere=elsewhere.get(mp.slug, {}),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
