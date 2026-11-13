@@ -1,0 +1,50 @@
+# Publishes the counter of visitors' votes and the clock (worker/) to Cloudflare whenever worker/ changes, or by
+# hand. Needs the repository secrets CLOUDFLARE_API_TOKEN (Workers and D1, edit), CLOUDFLARE_ACCOUNT_ID and
+# DISPATCH_TOKEN (a GitHub token that may run this repository's Actions; the worker uses it to start the workflows).
+name: worker
+
+on:
+  push:
+    branches: [main]
+    paths: ["worker/**", ".github/workflows/worker.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the secrets
+        id: ready
+        env:
+          CF: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CF" ]; then echo "::notice::CLOUDFLARE_API_TOKEN is not set: nothing published."; echo "go=no" >> "$GITHUB_OUTPUT"
+          else echo "go=yes" >> "$GITHUB_OUTPUT"; fi
+      - name: Make the table (once; does nothing when it exists)
+        if: steps.ready.outputs.go == 'yes'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute zailiprotiv-glasovi --remote --file schema.sql
+      - name: Publish
+        if: steps.ready.outputs.go == 'yes'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: deploy
+          secrets: |
+            DISPATCH_TOKEN
+        env:
+          DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}

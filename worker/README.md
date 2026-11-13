@@ -1,14 +1,18 @@
-# Counter of visitors' votes ("Glasaj i ti")
+# Counter of visitors' votes ("Glasaj i ti") and the clock
 
 A Cloudflare Worker with a D1 table of three numbers per law. It stores no cookies, addresses or times. The site
-shows the totals only when `data/settings.json` names the worker's address; until then the page works as before.
+shows the totals only when `data/settings.json` names the worker's address.
 
-## Set-up (once, by the maintainer; a free Cloudflare account is enough)
+It is also the project's clock: GitHub's own schedule didn't start the workflows (13 Nov 2026), so the worker starts
+the **votes** workflow every hour of the working day and **summaries** every six hours (`[triggers]` in
+`wrangler.toml`), through GitHub's API with the secret `DISPATCH_TOKEN`.
 
-1. `npm install -g wrangler` and `wrangler login`
-2. `cd worker && wrangler d1 create zailiprotiv-glasovi` — paste the `database_id` it prints into `wrangler.toml`
-3. `wrangler d1 execute zailiprotiv-glasovi --remote --file schema.sql`
-4. `wrangler deploy` — it prints the address, e.g. `https://zailiprotiv-glasovi.<account>.workers.dev`
-5. Put that address in `data/settings.json`: `{"votes_api": "https://…workers.dev"}` and push.
+## Publishing
 
-To reset the count: `wrangler d1 execute zailiprotiv-glasovi --remote --command "DELETE FROM votes"`.
+The **worker** workflow publishes it whenever `worker/` changes. Repository secrets it needs:
+
+- `CLOUDFLARE_API_TOKEN`: a Cloudflare API token from the template "Edit Cloudflare Workers", plus Account → D1 → Edit;
+- `CLOUDFLARE_ACCOUNT_ID`;
+- `DISPATCH_TOKEN`: a fine-grained GitHub token for javni-uvid/zailiprotiv only, with Actions: Read and write.
+
+To reset the count: in Cloudflare, D1 → `zailiprotiv-glasovi` → Console: `DELETE FROM votes`.

@@ -14,6 +14,10 @@ on:
         type: choice
         options: ["14", "13", "12", "11"]
         default: "14"
+      scheduled:
+        description: "Started by the clock (the counter's worker): when nothing new is found, the chain stops"
+        type: boolean
+        default: false
       again:
         description: "Read every roll call again, not only new ones"
         type: boolean
@@ -62,7 +66,7 @@ jobs:
           # Next in the chain: the notes of the debates, then the model's writing, which publishes the site.
           if ! git diff --cached -I'"fetched": "[^"]*"' | grep -q '^@@'; then
             # Nothing new but the time of reading: no commit. An hourly run stops here; one by hand goes on.
-            [ "${{ github.event_name }}" = "schedule" ] && exit 0
+            [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.scheduled }}" = "true" ] && exit 0
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
           fi
           git commit -m "Roll calls read from the Assembly's site (convocation ${{ inputs.convocation || '14' }})"

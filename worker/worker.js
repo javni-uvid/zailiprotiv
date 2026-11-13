@@ -31,7 +31,26 @@ function reply(body, status, origin) {
     "access-control-allow-headers": "content-type", "vary": "origin" } });
 }
 
+// The clock: start a workflow of the repository through GitHub's API. Needs the secret DISPATCH_TOKEN (a GitHub
+// token allowed to run this repository's Actions, nothing else).
+const REPO = "javni-uvid/zailiprotiv";
+async function dispatch(env, workflow, inputs) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/${workflow}/dispatches`, {
+    method: "POST",
+    headers: { "authorization": `Bearer ${env.DISPATCH_TOKEN}`, "accept": "application/vnd.github+json",
+               "user-agent": "zailiprotiv-glasovi", "content-type": "application/json" },
+    body: JSON.stringify({ ref: "main", inputs }),
+  });
+  if (!r.ok) throw new Error(`${workflow}: GitHub answered ${r.status} ${await r.text()}`);
+}
+
 export default {
+  async scheduled(event, env) {
+    if (!env.DISPATCH_TOKEN) return;
+    if (event.cron === "53 */6 * * *") await dispatch(env, "summaries.yml", {});
+    else await dispatch(env, "votes.yml", { convocation: "14", scheduled: "true" });
+  },
+
   async fetch(request, env) {
     const from = request.headers.get("origin") || "";
     const origin = from === SITE || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(from) ? from : SITE;
