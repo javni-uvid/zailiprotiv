@@ -561,8 +561,23 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         lines_of[(finals[key]["conv"], g)].append((key, how))
     group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and slug(g)}
     # Replies and the chair's measures, from the notes read; an MP's exchanges go on the MP's page, a law's on its page.
+    # Portraits from the Assembly's list of MPs (data/photos/, the `photos` command), by the MP's key.
+    photos_index = root / "photos" / "index.json"
+    photo_of = {}
+    if photos_index.exists():
+        shutil.copytree(root / "photos", out / "foto", ignore=shutil.ignore_patterns("*.json"))
+        photo_of = {k: v["file"] for k, v in json.loads(photos_index.read_text(encoding="utf-8")).items()}
+        # The Assembly's list sometimes gives a name more fully than the roll calls (a second surname, an initial):
+        # a portrait whose name holds all the words of exactly one MP's name, or the other way round, is that MP's.
+        words = {k: {w for w in k.split() if len(w) > 1} for k in photo_of}
+        for key_ in people:
+            if key_ not in photo_of:
+                mine = set(key_.split())
+                close = [k for k, w in words.items() if k not in people and len(mine & w) >= 2 and (mine <= w or w <= mine)]
+                if len(close) == 1:
+                    photo_of[key_] = photo_of[close[0]]
     from zailiprotiv import pages_floor
-    exchanges_of, floor_of = pages_floor.render(env=env, common=common, out=out, debates=debates, people=people,
+    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, env=env, common=common, out=out, debates=debates, people=people,
                                                 convs=convs, items_by_conv=items_by_conv)
     from zailiprotiv import card
     import os
@@ -605,21 +620,6 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             spoke_days[k] = Counter(sp["date"] for sp in own if sp["date"])
             for sp in own:
                 speech_url[(k, sp["date"])] = sp["url"]
-    # Portraits from the Assembly's list of MPs (data/photos/, the `photos` command), by the MP's key.
-    photos_index = root / "photos" / "index.json"
-    photo_of = {}
-    if photos_index.exists():
-        shutil.copytree(root / "photos", out / "foto", ignore=shutil.ignore_patterns("*.json"))
-        photo_of = {k: v["file"] for k, v in json.loads(photos_index.read_text(encoding="utf-8")).items()}
-        # The Assembly's list sometimes gives a name more fully than the roll calls (a second surname, an initial):
-        # a portrait whose name holds all the words of exactly one MP's name, or the other way round, is that MP's.
-        words = {k: {w for w in k.split() if len(w) > 1} for k in photo_of}
-        for key_ in people:
-            if key_ not in photo_of:
-                mine = set(key_.split())
-                close = [k for k, w in words.items() if k not in people and len(mine & w) >= 2 and (mine <= w or w <= mine)]
-                if len(close) == 1:
-                    photo_of[key_] = photo_of[close[0]]
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -709,10 +709,19 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:
-        rows = [{"mp": r["mp"], "in": r["by_conv"][conv]} for r in rows_mp if conv in r["by_conv"]]
+        rows = [{"mp": r["mp"], "in": r["by_conv"][conv], "photo": r["photo"]} for r in rows_mp if conv in r["by_conv"]]
+        # Who stands out in the convocation, by the same count for everyone: the first five of each.
+        def first(n, label, unit):
+            top = sorted((r for r in rows if n(r)), key=lambda r: (-n(r), collate(r["mp"].name)))[:5]
+            return {"label": label, "unit": unit, "rows": [{"mp": r["mp"], "photo": r["photo"], "n": n(r),
+                                                           "group": (r["in"]["groups"] or [""])[0]} for r in top]}
+        boards = [first(lambda r: r["in"]["tally"].get("protiv", 0), "Najviše glasova protiv", "protiv"),
+                  first(lambda r: sum(1 for x in r["in"]["record"] if x["differs"]), "Najčešće drugačije od svoje grupe", "puta"),
+                  first(lambda r: r["in"]["tally"].get("nije_prisutan", 0) + r["in"]["tally"].get("nije_glasao", 0),
+                        "Najviše izostanaka sa glasanja", "glasanja")]
         groups = Counter(g for r in rows for g in r["in"]["groups"][:1])
         (out / mps_page(conv, current)).write_text(env.get_template("mps.html").render(
-            **common, rows=rows, conv=conv, conv_name=ORDINAL_NAME.get(conv, conv), root="",
+            **common, rows=rows, boards=[b for b in boards if b["rows"]], conv=conv, conv_name=ORDINAL_NAME.get(conv, conv), root="",
             groups=sorted(groups.items(), key=lambda kv: (-kv[1], collate(kv[0])))), encoding="utf-8")
 
     from zailiprotiv import pages_groups

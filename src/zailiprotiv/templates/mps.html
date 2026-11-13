@@ -4,6 +4,20 @@
 {% block main %}
 <h1>Poslanici</h1>
 {{ tabs(convs, conv, "mps_page") }}
+{% if boards %}
+<section class="faces-row" aria-label="Ko se izdvaja u ovom sazivu">
+{% for b in boards %}
+  <div class="faces-col">
+    <h2>{{ b.label }}</h2>
+    <ol class="faces">
+    {% for r in b.rows %}<li>{% if r.photo %}<img src="foto/{{ r.photo }}" alt="" width="42" height="56" loading="lazy">{% else %}<span class="face-none" aria-hidden="true"></span>{% endif %}<span class="face-who"><a href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a><span class="row-meta">{{ r.group }}</span></span><b>{{ r.n }}</b></li>
+    {% endfor %}
+    </ol>
+  </div>
+{% endfor %}
+</section>
+<p class="label">Prvih pet po svakom broju u ovom sazivu, isto pravilo za svakoga; samo konačna glasanja o zakonima. Izostanak: nije prisutan ili nije glasao.</p>
+{% endif %}
 <div class="finder js-only" hidden data-filter="f-rows">
   <label class="sr" for="f-q">Pretraži poslanike</label>
   <input id="f-q" type="search" placeholder="Ime ili prezime, {{ rows|length }} poslanika ovog saziva" autocomplete="off">

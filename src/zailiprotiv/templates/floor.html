@@ -7,24 +7,24 @@
 {% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
 <h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
-<p class="meta">Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali. Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
 <nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
 <nav class="page-menu" aria-label="Deo"><a href="{{ c.page }}"{% if part == "mere" %} aria-current="page"{% endif %}>Po sednicama i mere predsedavajućeg ({{ c.measures|length }})</a><a href="{{ c.page_exchanges }}"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika ({{ c.exchanges|length }})</a><a href="{{ c.page_who }}"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
 
 {% if part == "mere" %}
-<section id="sednice">
-  <h2>Po sednicama <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
-  <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Sednica</th><th class="num">Dana</th><th class="num">Mere predsedavajućeg</th><th class="num">Razmene replika</th><th class="num">Ukazivanja na Poslovnik</th><th class="num">Pauze i prekidi</th></tr></thead>
-    <tbody>
-    {% for x in c.table %}<tr><td>{{ x.title }} <span class="meta nowrap">{{ x.date|day }}</span></td><td class="num">{{ x.days }}</td><td class="num">{{ x.measures or "" }}</td><td class="num">{{ x.exchanges or "" }}</td><td class="num">{{ x.points or "" }}</td><td class="num">{{ x.pauses or "" }}</td></tr>{% endfor %}
-    </tbody>
-  </table>
+<section class="faces-row" aria-label="Ko najviše u ovom sazivu">
+{% for key, label, unit in [("speeches", "Najviše govora", "govora"), ("exchanges", "Najviše razmena replika", "razmena"), ("measures", "Najviše mera predsedavajućeg", "mera"), ("harsh", "Najviše teških reči", "reči")] %}
+  {% if c.top[key] %}
+  <div class="faces-col">
+    <h2>{{ label }}</h2>
+    <ol class="faces">
+    {% for r in c.top[key][:3] %}<li>{% if r.who.photo %}<img src="foto/{{ r.who.photo }}" alt="" width="42" height="56" loading="lazy">{% else %}<span class="face-none" aria-hidden="true"></span>{% endif %}<span class="face-who">{{ person(r.who) }}</span><b>{{ r[key]|length if key == "harsh" else r[key] }}</b></li>
+    {% endfor %}
+    </ol>
   </div>
-  <p class="label">Ukazivanje na Poslovnik: govor poslanika koji na početku pominje povredu Poslovnika ili njegov član. Pauze i prekidi: mesta gde predsedavajući određuje pauzu ili prekida sednicu. Broj ne govori ko je za šta odgovoran: mere izriče predsedavajući.</p>
+  {% endif %}
+{% endfor %}
 </section>
-
+<p class="label">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} ovog saziva. <a href="{{ c.page_who }}">Svih 25 po svakom broju, i svaka teška reč u rečenici</a></p>
 {% if c.measures %}
 <section id="mere">
   <h2>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h2>
@@ -40,12 +40,26 @@
   <p class="label">Ime uz meru stoji samo kad predsedavajući u toj rečenici oslovi govornika prezimenom i kad to prezime na sednici nosi jedan govornik; inače su tu samo njegove reči.</p>
 </section>
 {% endif %}
+<section id="sednice">
+  <h2>Po sednicama <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
+  <div class="scroll">
+  <table class="groups">
+    <thead><tr><th>Sednica</th><th class="num">Dana</th><th class="num">Mere predsedavajućeg</th><th class="num">Razmene replika</th><th class="num">Ukazivanja na Poslovnik</th><th class="num">Pauze i prekidi</th></tr></thead>
+    <tbody>
+    {% for x in c.table %}<tr><td>{{ x.title }} <span class="meta nowrap">{{ x.date|day }}</span></td><td class="num">{{ x.days }}</td><td class="num">{{ x.measures or "" }}</td><td class="num">{{ x.exchanges or "" }}</td><td class="num">{{ x.points or "" }}</td><td class="num">{{ x.pauses or "" }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="label">Ukazivanje na Poslovnik: govor poslanika koji na početku pominje povredu Poslovnika ili njegov član. Pauze i prekidi: mesta gde predsedavajući određuje pauzu ili prekida sednicu. Broj ne govori ko je za šta odgovoran: mere izriče predsedavajući.</p>
+</section>
+
 {% endif %}
 {% if part == "razmene" %}
 <section id="razmene">
   <h2>Razmene replika <span class="count">{{ c.exchanges|length }}</span></h2>
+  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
   <ul class="floor">
-  {% for e in c.exchanges %}
+  {% for e in shown %}
     <li id="{{ e.id }}">
       <p class="floor-head"><b>{{ person(e.a) }} i {{ person(e.b) }}</b> · {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ where(e) }}</p>
       <details><summary>Cela razmena, od reči do reči</summary>
@@ -58,6 +72,7 @@
   {% endfor %}
   </ul>
   {% if not c.exchanges %}<p class="meta">U pročitanim beleškama ovog saziva nema razmene od četiri ili više naizmeničnih govora.</p>{% endif %}
+  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
 </section>
 {% endif %}
 <p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština.</p>
@@ -95,4 +110,7 @@
   {% else %}<p class="meta">Nema ih u pročitanim beleškama ovog saziva.</p>{% endif %}
 </section>
 {% endif %}
+<details class="method"><summary>Kako je ovo nastalo</summary>
+<p>Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali. Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
+</details>
 {% endblock %}

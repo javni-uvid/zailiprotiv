@@ -533,3 +533,17 @@ td.lean { white-space: nowrap; }
 .q-next { position: relative; padding-top: .9rem; }
 .q-auto { position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--fg); }
 .q-auto.run { width: 100%; transition: width 4s linear; }
+
+/* Who stands out: short boards with faces, on "Poslanici" and "Varnice". */
+.faces-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.6rem 2.6rem; margin: 1.4rem 0 .6rem; }
+.faces-col h2 { font-size: 1.15rem; margin: 0 0 .5rem; padding-bottom: .45rem; border-bottom: 2px solid var(--fg); }
+.faces { list-style: none; margin: 0; padding: 0; }
+.faces li { display: flex; align-items: center; gap: .7rem; padding: .4rem 0; border-bottom: 1px solid var(--line); }
+.faces img, .face-none { width: 2.6rem; height: 3.4rem; object-fit: cover; flex-shrink: 0; background: var(--card); }
+.face-who { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+.face-who a { font-weight: 600; }
+.faces b { font-family: var(--serif); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+/* How a page was made: at its foot, closed, so the page opens with what it found. */
+.method { margin: 2.4rem 0 0; padding-top: .8rem; border-top: 1px solid var(--line); font-size: .9rem; color: var(--muted); }
+.method summary { cursor: pointer; font-weight: 600; color: var(--fg); }
+.method p { max-width: 46rem; }

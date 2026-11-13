@@ -77,6 +77,7 @@ _NOT = {"лопов": "(?!лу|ск)", "нељуд": "(?!ск)", "стоко": "
 _HARSH = re.compile(r"(?<!\w)(?:(?:" + "|".join(w + _NOT.get(w, "") for w in HARSH) + r")\w*|\w*јеб\w*)", re.I)
 _SENTENCE = re.compile(r"[^.!?\n]*[.!?]*")
 TOP = 25
+PER_PAGE = 30
 
 
 def harsh(text: str) -> list[tuple[str, str]]:
@@ -133,12 +134,13 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
     return None
 
 
-def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict) -> tuple[dict, dict]:
+def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None) -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
 
     def who(name: str) -> dict:
         key = loose.get(debates_.loose(mps.key(name)))
-        return {"name": people[key].name if key else latin(name).title(), "slug": people[key].slug if key else ""}
+        return {"name": people[key].name if key else latin(name).title(), "slug": people[key].slug if key else "",
+                "photo": (photo_of or {}).get(key, "") if key else ""}
 
     # The law debated under an agenda item of a sitting, where the notes tell.
     law_at = {(it["final"]["sitting"], str(it["debate"]["item"])): it for its in items_by_conv.values() for it in its
@@ -246,11 +248,21 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         c["page_exchanges"] = "razmene.html" if i == 0 else f"razmene-{c['n']}.html"
         c["page_who"] = "ko-najvise.html" if i == 0 else f"ko-najvise-{c['n']}.html"
     for c in by_conv:
-        for e in c["events"]:
-            e["page"] = c["page"] if e["type"] == "mera" else c["page_exchanges"]
-        for part, name in (("mere", c["page"]), ("razmene", c["page_exchanges"]), ("ko", c["page_who"])):
+        # The exchanges, word for word, run to megabytes in a convocation with many notes read: PER_PAGE to a page.
+        chunks = [c["exchanges"][k:k + PER_PAGE] for k in range(0, len(c["exchanges"]), PER_PAGE)] or [[]]
+        names = [c["page_exchanges"] if k == 0 else c["page_exchanges"].replace(".html", f"-s{k + 1}.html")
+                 for k in range(len(chunks))]
+        for chunk, name in zip(chunks, names):
+            for e in chunk:
+                e["page"] = name
+        for e in c["measures"]:
+            e["page"] = c["page"]
+        for part, name in (("mere", c["page"]), ("ko", c["page_who"])):
             (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
                                     encoding="utf-8")
+        for k, (chunk, name) in enumerate(zip(chunks, names)):
+            (out / name).write_text(env.get_template("floor.html").render(
+                **common, c=c, by_conv=by_conv, part="razmene", shown=chunk, pages=names, page_now=k, root=""), encoding="utf-8")
     # For the home page: the first of each count in each convocation.
     render.by_sitting = {x["url"]: {**x, "page": c["page"], "page_exchanges": c["page_exchanges"]}
                          for c in by_conv for x in c["table"]}
