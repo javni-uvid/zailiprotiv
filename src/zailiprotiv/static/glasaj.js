@@ -150,25 +150,52 @@
     });
   }
 
+  // After a vote the law's result is shown, and a few seconds later the quiz moves on by itself (the maintainer,
+  // 13 Nov 2026); "Sledeći zakon" moves on at once. Anything the visitor does with the result (opening "Više",
+  // following a link, changing the vote, moving the pointer over it) stops the clock, and so does a setting for
+  // reduced motion: then only the button moves on.
+  var AUTO = 4000, timer = null, still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function stay() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    list.querySelectorAll(".q-auto.run").forEach(function (b) { b.classList.remove("run"); });
+  }
+  function advance(i) {
+    stay(); send();
+    go(i + 1 < items.length ? i + 1 : "kraj");
+    window.scrollTo({ top: strip.getBoundingClientRect().top + window.scrollY - 12 });
+  }
+  function soon(item, i) {
+    stay();
+    if (still) return;
+    var bar = item.querySelector(".q-auto");
+    if (bar) { void bar.offsetWidth; bar.classList.add("run"); }
+    timer = setTimeout(function () { if (at === i) advance(i); }, AUTO);
+  }
   list.classList.add("q-live");
   items.forEach(function (item, i) {
     reveal(item, i, false);
+    var next = item.querySelector(".q-go"), bar = el("span", "q-auto");
+    bar.setAttribute("aria-hidden", "true");
+    next.parentNode.insertBefore(bar, next);
     item.querySelectorAll("[data-a]").forEach(function (b) {
       b.addEventListener("click", function () {
         answers[i] = b.dataset.a;
         keep();
         reveal(item, i, true); go(i); showCrowd();
-        item.querySelector(".q-go").focus({ preventScroll: true });
+        next.focus({ preventScroll: true });
+        soon(item, i);
       });
     });
-    item.querySelector(".q-go").addEventListener("click", function () {
-      send();
-      go(i + 1 < items.length ? i + 1 : "kraj");
-      window.scrollTo({ top: strip.getBoundingClientRect().top + window.scrollY - 12 });
+    next.addEventListener("click", function () { advance(i); });
+    var box = item.querySelector(".q-reveal");
+    ["pointerdown", "keydown", "mouseenter", "touchstart"].forEach(function (ev) {
+      box.addEventListener(ev, function (e) { if (e.target !== next) stay(); }, { passive: true });
     });
+    var more = item.querySelector(".q-more");
+    if (more) more.addEventListener("toggle", stay);
   });
   marks.forEach(function (m) {
-    m.addEventListener("click", function () { send(); go(m.dataset.go === "kraj" ? "kraj" : +m.dataset.go); });
+    m.addEventListener("click", function () { stay(); send(); go(m.dataset.go === "kraj" ? "kraj" : +m.dataset.go); });
   });
 
   // The picture to share, drawn here in the browser: the visitor's ballot, what would have happened had it been
@@ -364,5 +391,5 @@
 
   var first = answers.indexOf("");
   go(cameWith >= 0 ? cameWith : (first < 0 ? "kraj" : first));
-  if (cameWith >= 0) showCrowd();
+  if (cameWith >= 0) { showCrowd(); soon(items[cameWith], cameWith); }
 })();
