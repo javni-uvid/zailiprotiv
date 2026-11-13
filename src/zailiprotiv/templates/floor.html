@@ -51,15 +51,15 @@
     <li id="{{ e.id }}">
       <details>
         <summary>
-          <img class="row-face" src="{{ "foto/" ~ e.to.photo if e.to and e.to.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
+          {% set w = e.to or e.likely %}<img class="row-face" src="{{ "foto/" ~ w.photo if w and w.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
           <span class="measure-main">
-            <span class="measure-head"><b>{{ e.label }}</b>{% if e.to %}: {{ e.to.name }}{% endif %}</span>
+            <span class="measure-head"><b>{{ e.label }}</b>{% if e.to %}: {{ e.to.name }}{% elif e.likely %}: {{ e.likely.name }} <span class="likely">po kontekstu</span>{% endif %}</span>
             <span class="measure-said">„{{ (e.sentence or e.chair.text)|latin|truncate(260, killwords=False, end=" …") }}“</span>
-            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
+            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if e.likely %} · ime nije izgovoreno; {{ e.why }}{% elif not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
           </span>
         </summary>
         <div class="measure-more">
-          <p class="meta">{{ where(e) }}{% if e.to and e.to.slug %} · <a href="poslanik/{{ e.to.slug }}.html#mere">sve mere: {{ e.to.name }}</a>{% endif %}</p>
+          <p class="meta">{{ where(e) }}{% if w and w.slug %} · <a href="poslanik/{{ w.slug }}.html#mere">sve mere: {{ w.name }}</a>{% endif %}</p>
           {% if e.before %}<p class="turn-who">Govor pre toga: {{ person(e.before_who) }}</p><blockquote class="said"><p>{{ e.before.text|latin }}</p></blockquote>{% endif %}
           <p class="turn-who">Sve reči predsedavajućeg</p>
           <blockquote class="said"><p>{{ e.chair.text|latin }}</p>{% if e.notes %}<footer><a href="{{ e.notes }}">Stenografske beleške tog dana</a></footer>{% endif %}</blockquote>
@@ -68,7 +68,7 @@
     </li>
   {% endfor %}
   </ul>
-  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji samo kad u toj rečenici oslovi govornika prezimenom koje na sednici nosi jedan govornik. Kad ime ne navede, pišemo posle čijeg govora je mera izrečena: to je najčešće, ali ne uvek, onaj kome je upućena (mera može da ide i nekome ko dobacuje iz klupe). Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
+  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji samo kad u toj rečenici oslovi govornika prezimenom koje na sednici nosi jedan govornik. Kad ime ne izgovori, a beleške pokazuju kome se obraća (jedan poslanik dobacuje u zagradama, ili je mera izrečena odmah posle nečijeg govora), ime stoji sa oznakom „po kontekstu“ i razlogom: to je vrlo verovatno, ne sigurno, i broji se odvojeno. Zvanična evidencija izrečenih mera postoji u Skupštini (Poslovnik, član 108), ali nije objavljena. Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
 </section>
 {% endif %}
 <section id="sednice">

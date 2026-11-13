@@ -42,6 +42,7 @@ def measures(speeches: list[dict]) -> list[dict]:
             before = next((p for p in reversed(speeches[max(0, i - 6):i]) if not p.get("chair")), None)
             m = next(pattern for k, label, pattern in MEASURES if k == hit[0]).search(s["text"])
             out.append({"kind": hit[0], "label": hit[1], "chair": s, "before": before,
+                        "adjacent": i > 0 and not speeches[i - 1].get("chair"), "at": m.start(),
                         "sentence": sentence(s["text"], m.start(), m.end())})  # the sentence that pronounces the measure
     return out
 
@@ -109,6 +110,25 @@ def marked(sentence: str) -> list[tuple[str, bool]]:
 _PAUSE = re.compile(r"одређујем паузу|прекидам седницу|прекидам рад", re.I)
 
 
+_HECKLE = re.compile(r"\(((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){2,4}):")
+
+
+def by_context(measure: dict) -> tuple[str, str] | None:
+    """Whom a measure without a name is most likely for, with the reason, from the notes themselves:
+    - the one person whose interjections the notes record in brackets in the chair's words up to the measure;
+    - or, with no interjections, the speaker of the speech right before, when the chair pronounces the measure in
+      the first two sentences after it.
+    Likely, not certain: shown as such, with the reason, and counted apart."""
+    chair = measure["chair"]["text"]
+    upto = chair[:measure["at"] + len(measure["sentence"])]
+    heckles = [n.strip() for n in _HECKLE.findall(upto)]
+    if len({mps.key(n) for n in heckles}) == 1:
+        return heckles[-1], "u beleškama je zapisano da dobacuje dok predsedavajući govori, neposredno pre mere"
+    if not heckles and measure["before"] and measure["adjacent"] and len(_END.findall(chair[:measure["at"]])) <= 1:
+        return measure["before"]["speaker"], "mera je izrečena na samom početku obraćanja predsedavajućeg, odmah posle ovog govora"
+    return None
+
+
 def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
     """The speaker a measure went to, when the chair's own sentence names them: a speaker of the sitting whose
     surname stands in the sentence that pronounces the measure ("Господине Живковићу, … изричем вам опомену",
@@ -158,7 +178,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     per_mp = defaultdict(list)
     for c, _ in convs:
         events, sittings = [], []
-        tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0, "harsh": []})
+        tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
+                                     "measures_likely": 0, "harsh": []})
         pair_of = {}
         for url, notes in debates.get(c, {}).items():
             speeches = [{**notes["speeches"][k], "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
@@ -181,7 +202,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             found = []
             for m in measures(speeches):
                 to = to_whom(m, surnames)
+                ctx = None if to else by_context(m)
                 found.append({"type": "mera", **m, **meta(m["chair"]), "to": who(to) if to else None, "to_raw": to,
+                              "likely": who(ctx[0]) if ctx else None, "likely_raw": ctx[0] if ctx else None,
+                              "why": ctx[1] if ctx else "",
                               "before_who": who(m["before"]["speaker"]) if m["before"] else None})
             for run in exchanges(speeches):
                 pair = [s for s in run if not s.get("chair")]
@@ -206,6 +230,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                         tally[s_]["exchanges"] += 1
                 elif e.get("to_raw"):
                     tally[e["to_raw"]]["measures"] += 1
+                elif e.get("likely_raw"):
+                    tally[e["likely_raw"]]["measures_likely"] += 1
             events += found
             dates = sorted(e["date"] for e in found if e["date"]) or sorted(
                 d.get("listed_date") or "" for d in notes["days"] if d.get("listed_date"))
@@ -229,8 +255,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for raw, t in tally.items():
             w = who(raw)
             r = rows.setdefault(w["slug"] or w["name"], {"who": w, "speeches": 0, "words": 0, "points": 0, "exchanges": 0,
-                                                         "measures": 0, "harsh": []})
-            for k in ("speeches", "words", "points", "exchanges", "measures"):
+                                                         "measures": 0, "measures_likely": 0, "harsh": []})
+            for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
                 r[k] += t[k]
             r["harsh"] += t["harsh"]
         for r in rows.values():
@@ -246,9 +272,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
                 per_mp[r["who"]["slug"]].append({"conv": c, "name": ORDINAL_NAME.get(c, c), "exchanges": r["exchanges"],
                                                  "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
+                                                 "measures_likely": r["measures_likely"],
                                                  "said": r["said"], "harsh_place": place,
-                                                 "measure_events": [e for e in events if e["type"] == "mera" and e.get("to")
-                                                                    and e["to"]["slug"] == r["who"]["slug"]]})
+                                                 "measure_events": [e for e in events if e["type"] == "mera" and (
+                                                     (e.get("to") or e.get("likely") or {}).get("slug") == r["who"]["slug"])]})
         if events:
             by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "years": years_of.get(c, ""), "events": events, "table": sittings, "top": top, "speakers": len(rows),
                             "people": sorted(rows.values(), key=lambda r: r["who"]["name"]),

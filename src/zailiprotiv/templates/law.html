@@ -56,7 +56,7 @@
   <ul class="floor-list">
   {% for e in fm %}
     <li>
-      <p class="floor-head">{% if e.to %}{{ face(e.to) }}{% endif %}<span><b>{{ e.label }}</b>{% if e.to %}: {{ person(e.to) }}{% endif %}{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %}</span></p>
+      <p class="floor-head">{% set w = e.to or e.likely %}{% if w %}{{ face(w) }}{% endif %}<span><b>{{ e.label }}</b>{% if w %}: {{ person(w) }}{% endif %}{% if e.likely and not e.to %} <span class="likely">po kontekstu</span>{% endif %}{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %}</span></p>
       <blockquote class="said"><p>{{ (e.sentence or e.chair.text)|latin }}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a></footer></blockquote>
     </li>
   {% endfor %}

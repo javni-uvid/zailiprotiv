@@ -72,7 +72,7 @@
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
   {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
-  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.exchanges %}{% set _ = parts.append('<a href="#replike"><b>%d</b> %s</a>' % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures %}{% set _ = parts.append('<a href="#mere"><b>%d</b> %s predsedavajućeg</a>' % (x.measures, plural(x.measures, "mera", "mere", "mera"))) %}{% endif %}{% if x.harsh %}{% set _ = parts.append('<a href="#reci"><b>%d</b> %s</a>' % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.harsh_place and x.page %} (<a href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. po teškim rečima u sazivu</a>){% endif %}</li>{% endfor %}
+  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.exchanges %}{% set _ = parts.append('<a href="#replike"><b>%d</b> %s</a>' % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures or x.measures_likely %}{% set _ = parts.append('<a href="#mere"><b>%d</b> %s predsedavajućeg</a>%s' % (x.measures, plural(x.measures, "mera", "mere", "mera"), (" i još %d po kontekstu" % x.measures_likely) if x.measures_likely else "")) %}{% endif %}{% if x.harsh %}{% set _ = parts.append('<a href="#reci"><b>%d</b> %s</a>' % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.harsh_place and x.page %} (<a href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. po teškim rečima u sazivu</a>){% endif %}</li>{% endfor %}
   </ul>
   {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
   {% if timeline %}
@@ -103,11 +103,11 @@
   <h2>Mere predsedavajućeg</h2>
   <ul class="floor-list">
   {% for x in mine %}{% for e in x.measure_events %}
-    <li><p class="floor-head"><span><b>{{ e.label }}</b>{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %} <span class="meta">· {{ e.sitting }}</span></span></p>
-    <blockquote class="said"><p>{{ (e.sentence or e.chair.text)|latin }}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a></footer></blockquote></li>
+    <li><p class="floor-head"><span><b>{{ e.label }}</b>{% if not e.to %} <span class="likely">po kontekstu</span>{% endif %}{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %} <span class="meta">· {{ e.sitting }}</span></span></p>
+    <blockquote class="said"><p>{{ (e.sentence or e.chair.text)|latin }}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a>{% if not e.to %} · ime nije izgovoreno; {{ e.why }}{% endif %}</footer></blockquote></li>
   {% endfor %}{% endfor %}
   </ul>
-  <p class="label">Samo mere u kojima predsedavajući oslovi govornika prezimenom koje na sednici nosi jedan govornik. Mere izriče predsedavajući, po svojoj oceni. {{ how("replike") }}</p>
+  <p class="label">Mere u kojima predsedavajući oslovi govornika prezimenom, i mere „po kontekstu“: ime nije izgovoreno, ali beleške pokazuju kome se predsedavajući obraća (vrlo verovatno, ne sigurno). Mere izriče predsedavajući, po svojoj oceni. {{ how("replike") }}</p>
 </section>
 {% endif %}
 {% set words_ = floor|selectattr("said")|list %}

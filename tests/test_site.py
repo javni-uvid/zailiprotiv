@@ -272,3 +272,17 @@ def test_portraits_are_read_from_the_list_of_mps():
     found = photos.parse(html)
     assert list(found) == ["1435"] and found["1435"]["src"].endswith("288-Nenad_Abramovic_150x0.jpg")
     assert photos.key(found["1435"]["name"]) == mps.key("АБРАМОВИЋ НЕНАД")
+
+
+def test_a_measure_without_a_name_is_placed_by_context_only_when_the_notes_show_whom():
+    from zailiprotiv import pages_floor as f
+    said = {"speaker": "ПЕТАР ПЕТРОВИЋ", "text": "Ово је срамота.", "day": 1}
+    heckle = {"chair": True, "speaker": "ПРЕДСЕДНИК", "day": 1,
+              "text": "Молим за мир.\n(Радомир Лазовић: Јавите се за реч!)\nЈел можете да не вичете?\nДакле, изричем вам опомену."}
+    m = f.measures([said, heckle])[0]
+    assert f.by_context(m)[0] == "Радомир Лазовић"  # the one who interjects, not the speaker before
+    at_once = {"chair": True, "speaker": "ПРЕДСЕДНИК", "day": 1, "text": "Хвала. Изричем вам опомену. Настављамо даље."}
+    assert f.by_context(f.measures([said, at_once])[0])[0] == "ПЕТАР ПЕТРОВИЋ"
+    later = {"chair": True, "speaker": "ПРЕДСЕДНИК", "day": 1,
+             "text": "Хвала. Реч има министар. Не, чекајте. Молим за мир у сали. Изричем вам опомену."}
+    assert f.by_context(f.measures([said, later])[0]) is None  # too far from the speech to say

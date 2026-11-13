@@ -633,3 +633,4 @@ td.lean { white-space: nowrap; }
 .subtabs { scroll-margin-top: 1rem; }
 .faces-row { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.6rem 2rem; }
 .floor.measures details > summary { text-decoration: none; font-weight: 400; }
+.likely { font-size: .78rem; font-weight: 600; padding: .05rem .4rem; border: 1px solid var(--muted); color: var(--muted); white-space: nowrap; }
