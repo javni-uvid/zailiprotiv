@@ -91,23 +91,13 @@ def test_bills_in_procedure_are_summarised_too(tmp_path, monkeypatch):
     assert [p.name for p in (tmp_path / "s").iterdir()] == ["p.json"]
 
 
-def test_a_federated_client_mints_a_new_token_before_the_old_one_runs_out(monkeypatch):
-    import time as time_
-
+def test_a_federated_client_signs_in_with_the_rules_ids(monkeypatch):
     from zailiprotiv import federated
-    minted = []
-
-    def mint():
-        minted.append(1)
-        return f"t{len(minted)}", 3600
-    now = [1000.0]
-    monkeypatch.setattr(time_, "time", lambda: now[0])
-    client = federated.Client(mint)
-    first = client.messages
-    assert client.messages is first and len(minted) == 1
-    now[0] += 3600 - federated.MARGIN  # close to the end: a new token
-    assert client.messages is not first and len(minted) == 2
-    assert client._client.auth_token == "t2"
+    for k, v in federated.SETTINGS.items():
+        monkeypatch.setenv(v, k + "-x")
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    client = federated.client()
+    assert client.api_key is None and client.credentials is not None  # no key: the repository's identity
 
 
 def test_federated_sign_in_is_used_only_when_set_up(monkeypatch):

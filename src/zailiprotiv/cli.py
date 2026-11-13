@@ -625,7 +625,7 @@ def _batch_client(args):
         import anthropic
         return anthropic.Anthropic(), state
     if federated.available():
-        return federated.Client(), state
+        return federated.client(), state
     print("No ANTHROPIC_API_KEY and no federated sign-in: nothing sent")
     return None, None
 
