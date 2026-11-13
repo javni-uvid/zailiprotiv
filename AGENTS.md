@@ -86,6 +86,10 @@ These are the project's promises to its readers. Never change them without the m
      under a law as soon as the visitor has voted on it (the maintainer, 13 Nov 2026; fewer than ten votes are marked
      as few), and in a table at the end beside the chamber's result. The page says it is not a poll. The address is in `data/settings.json`
      (`votes_api`); empty, the page sends nothing.
+   - **"Glasaj i ti" is the one page whose laws an editor picks** (the maintainer, 13 Nov 2026): `data/quiz.json`
+     names the laws and gives each a short plain description written from its summary (what the law does, no
+     verdict). The page says so. After a vote it shows one verbatim quote from an MP who voted for and one who
+     voted against, and with the result a verbatim quote of the closest MP. Without the file the old rule holds.
    - **A second exception, the maintainer's (13 Nov 2026): counting visits.** Every page loads Cloudflare Web
      Analytics' script (no cookies, no following of a person; totals per page) when `data/settings.json` has
      `analytics_token`; without it nothing is loaded. The footer and "O projektu" say so. `publish.check` lets this

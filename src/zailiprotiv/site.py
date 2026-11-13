@@ -686,7 +686,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         former=former, group_slug=group_slug, items_by_conv=items_by_conv, key_finals=key_finals,
         lines_of=lines_of, out=out, rows_mp=rows_mp, seat=seat)
     from zailiprotiv import pages_quiz
-    active = pages_quiz.render(by_key_all=by_key_all, common=common, convs=convs, current=current, env=env,
+    active = pages_quiz.render(by_key_all=by_key_all, common=common, profiles=profiles, convs=convs, current=current, env=env,
         group_rows=group_rows, items_by_conv=items_by_conv, key_votes=key_votes, line=line, out=out, root=root,
         rows_mp=rows_mp)
     from zailiprotiv import pages_procedure

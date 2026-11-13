@@ -73,6 +73,17 @@
     card.who = who; card.score = top.length ? top[0].m.same + " od " + top[0].m.both : "";
     document.getElementById("q-fact").textContent = card.fact.replace("Da se ja pitam", "Da se ti pitaš") +
       " Skupština je usvojila svih " + answers.length + ".";
+    // Something the closest MP said (the shortest verbatim quote of the overview of their speeches), when one of
+    // those level at the top has one; which of them is taken the same way as the three below.
+    var tq = document.getElementById("q-top-quote"), withQuote = top.filter(function (x) { return x.p.q; });
+    tq.hidden = !withQuote.length;
+    if (withQuote.length) {
+      var qs = 0; answers.join("").split("").forEach(function (ch, k) { qs = (qs * 31 + ch.charCodeAt(0) + k) % 9973; });
+      var pick = withQuote[qs % withQuote.length], foot = tq.querySelector("footer"), link = el("a", "", pick.p.n);
+      tq.querySelector("p").textContent = "„" + pick.p.q + "“";
+      link.href = "poslanik/" + pick.p.s + ".html"; foot.textContent = "";
+      foot.appendChild(link); foot.appendChild(document.createTextNode(", u raspravi u Skupštini"));
+    }
     redraw();
     // Three MPs. When more are level, which three is not ours to choose: they are taken from the level ones starting
     // at a place that depends on the answers, and the page says how many more there are.

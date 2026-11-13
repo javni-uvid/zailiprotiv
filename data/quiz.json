@@ -1,0 +1,16 @@
+{
+ "convocation": "14",
+ "note": "The laws of 'Glasaj i ti', chosen by the maintainer (13 Nov 2026), and a short plain description of each, written from the law's summary. Without this file, or for another convocation, the page falls back to the rule (laws known by a public name, then most votes against).",
+ "laws": [
+  {"bill_file": "14_saziv_2148-25._-_lat..json", "opis": "Poseban zakon za gradnju na mestu zgrade Generalštaba u Beogradu: dozvole se izdaju po hitnom postupku, a rušenje postojećih zgrada može da se odobri za osam dana, bez prava žalbe."},
+  {"bill_file": "14_saziv_1618-24_-_lat..json", "opis": "Taksa za RTS i RTV, koja se plaća uz račun za struju, raste sa 299 na 349 dinara mesečno. Javni servisi se do kraja 2025. i dalje delom finansiraju iz budžeta."},
+  {"bill_file": "14_saziv_1399-25_-_lat.json", "opis": "Udžbenike za srpski jezik, istoriju, geografiju i još nekoliko predmeta u osnovnoj školi ubuduće izdaje jedan javni izdavač. Uvodi se i najviša dozvoljena cena udžbenika."},
+  {"bill_file": "14_saziv_2044-26_-_lat..json", "opis": "Novi zakon o oružju: oružje za ličnu bezbednost može da se nabavi sa 21 godinom umesto sa 18, za municiju treba odobrenje, a oružni list više nema rok važenja."},
+  {"bill_file": "14_saziv_2595-26_lat..json", "opis": "Rok u kome može da se traži eksproprijacija (prinudni otkup) nekretnina za projekat „Beograd na vodi“ produžava se na deset godina."},
+  {"bill_file": "14_saziv_2731-25_-_lat..json", "opis": "O prigovorima tužilaca na uputstva nadređenih više ne odlučuje komisija Visokog saveta tužilaštva, već neposredno viši tužilac. Glavni javni tužioci mogu ponovo da budu izabrani u istom tužilaštvu."},
+  {"bill_file": "14_saziv_1623-24_-_lat..json", "opis": "Država se zadužuje 42 milijarde dinara kod Poštanske štedionice za izgradnju nacionalnog stadiona i saobraćajnica do njega. Kredit se otplaćuje 11 godina."},
+  {"bill_file": "14_saziv_2147-25_-_lat..json", "opis": "Osniva se stalna komisija koja proverava tačnost biračkog spiska. Broj birača i promene u spisku objavljuju se javno, a posmatrači i izborne liste dobijaju uvid u spisak."},
+  {"bill_file": "14_saziv_923-25_-_lat..json", "opis": "Mladi koji uz državnu garanciju kupuju prvu nekretninu mogu kredit da iskoriste i za kuću, za gradnju kuće ili za montažnu kuću. Banka može da prihvati i jemstvo trećih lica."},
+  {"bill_file": "14_saziv_2172-25_-lat..json", "opis": "Deo plate na koji se ne plaća porez raste sa 28.423 na 34.221 dinar mesečno. Poslodavcima se do kraja 2026. produžava povraćaj dela poreza za novozaposlene."}
+ ]
+}

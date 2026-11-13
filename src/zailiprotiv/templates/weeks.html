@@ -13,7 +13,7 @@
 <section>
   <h2>{{ year }}.</h2>
   <ul class="plain sittings-list">
-  {% for w in group|reverse %}<li><a href="nedelja/{{ w.key }}.html">{{ w.span }}</a> <span class="meta">{% if w.n %}· {{ w.n }} {{ plural(w.n, "zakon", "zakona", "zakona") }}{% if w.opposed %} · <span class="t-protiv">{{ w.opposed }} sa glasovima protiv</span>{% endif %}{% endif %}{% if w.bills %} · {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }}{% endif %}</span></li>{% endfor %}
+  {% for w in group %}<li><a href="nedelja/{{ w.key }}.html">{{ w.span }}</a> <span class="meta">{% if w.n %}· {{ w.n }} {{ plural(w.n, "zakon", "zakona", "zakona") }}{% if w.opposed %} · <span class="t-protiv">{{ w.opposed }} sa glasovima protiv</span>{% endif %}{% endif %}{% if w.bills %} · {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }}{% endif %}</span></li>{% endfor %}
   </ul>
 </section>
 {% endfor %}
