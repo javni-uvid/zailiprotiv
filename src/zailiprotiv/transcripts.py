@@ -21,6 +21,8 @@ from html import unescape
 from zailiprotiv import skupstina
 
 PATH = "/stenografske_beleske/"
+# … and until 2016 under a folder with a misspelt name ("stenobeske"), as .doc or .docx, one link per day.
+PATHS = (PATH, "/stenobeske/")
 CHAIR = {"ПРЕДСЕДНИК", "ПРЕДСЕДНИЦА", "ПРЕДСЕДАВАЈУЋИ", "ПРЕДСЕДАВАЈУЋА", "ПРЕДСЕДАВАЈУЋ"}
 CAPS = "А-ЯЂЈЉЊЋЏШЖЧ"
 # "МИЛЕНКО ЈОВАНОВ: …", "Др УГЉЕША МРДИЋ: …", "ИЛИЋ-СТОШИЋ БИЉАНА: …"; at most six words before the colon.
@@ -32,10 +34,10 @@ def days(html: str, base: str) -> list[dict]:
     """The sitting page's stenographic notes, in page order: day number, link text, address."""
     out, seen = [], set()
     for url, text in skupstina.links(html, base):
-        if PATH in url and url not in seen:
+        if any(p in url for p in PATHS) and url not in seen:
             seen.add(url)
             m = DAY.search(text)
-            out.append({"day": int(m.group(1)) if m else 1, "title": text, "url": url,
+            out.append({"day": int(m.group(1)) if m else len(out) + 1, "title": text, "url": url,
                         "listed_date": iso_date(text) or iso_date(url.rsplit("/", 1)[-1])})
     return out
 
