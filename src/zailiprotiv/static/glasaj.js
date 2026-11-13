@@ -1,5 +1,5 @@
 // "Glasaj i ti": one law at a time, the chamber's result after each vote, then who voted as the visitor did.
-// The answers stay in the browser unless the visitor sends them to the counter.
+// Each vote goes to the project's own counter once (law and for/against/abstained, nothing else).
 (function () {
   "use strict";
   var data = JSON.parse(document.getElementById("quiz-data").textContent);
@@ -99,12 +99,13 @@
       });
     });
     item.querySelector(".q-go").addEventListener("click", function () {
+      send();
       go(i + 1 < items.length ? i + 1 : "kraj");
       window.scrollTo({ top: strip.getBoundingClientRect().top + window.scrollY - 12 });
     });
   });
   marks.forEach(function (m) {
-    m.addEventListener("click", function () { go(m.dataset.go === "kraj" ? "kraj" : +m.dataset.go); });
+    m.addEventListener("click", function () { send(); go(m.dataset.go === "kraj" ? "kraj" : +m.dataset.go); });
   });
 
   // Sharing: the device's own share sheet, or the clipboard. Nothing is sent anywhere by us.
@@ -134,24 +135,26 @@
         "% protiv (" + n + " " + plural(n, "glas", "glasa", "glasova") + ")";
     });
   }
-  if (api) {
-    fetch(api).then(function (r) { return r.json(); }).then(function (d) { crowd = d; showCrowd(); }).catch(function () {});
-    var submit = document.getElementById("q-submit"), sent = document.getElementById("q-sent"), already = false;
-    try { already = !!localStorage.getItem(SENT); } catch (e) {}
-    if (already) { submit.disabled = true; sent.textContent = "Već si poslao glasove. Hvala!"; }
-    submit.addEventListener("click", function () {
-      var v = {};
-      answers.forEach(function (a, i) { if (a) v[data.laws[i].s] = a; });
-      submit.disabled = true; sent.textContent = "Šaljem…";
-      fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ v: v }) })
-        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(function (d) {
-          crowd = d; showCrowd(); sent.textContent = "Poslato. Hvala!";
-          try { localStorage.setItem(SENT, "1"); } catch (e) {}
-        })
-        .catch(function () { submit.disabled = false; sent.textContent = "Nije uspelo, pokušaj ponovo kasnije."; });
-    });
+  // Each law's vote is sent once, when the visitor moves on from it (the page says so before the first vote).
+  var sentLaws = {};
+  try { sentLaws = JSON.parse(localStorage.getItem(SENT) || "{}"); } catch (e) {}
+  if (!sentLaws || typeof sentLaws !== "object") sentLaws = {};
+  function send() {
+    if (!api) return;
+    var v = {}, any = false;
+    answers.forEach(function (a, i) { var law = data.laws[i].s; if (a && !sentLaws[law]) { v[law] = a; any = true; } });
+    if (!any) return;
+    Object.keys(v).forEach(function (law) { sentLaws[law] = 1; });  // marked first, so a second click can't send twice
+    try { localStorage.setItem(SENT, JSON.stringify(sentLaws)); } catch (e) {}
+    fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ v: v }), keepalive: true })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) { crowd = d; showCrowd(); })
+      .catch(function () {
+        Object.keys(v).forEach(function (law) { delete sentLaws[law]; });  // not counted: try again with the next law
+        try { localStorage.setItem(SENT, JSON.stringify(sentLaws)); } catch (e) {}
+      });
   }
+  if (api) fetch(api).then(function (r) { return r.json(); }).then(function (d) { crowd = d; showCrowd(); }).catch(function () {});
 
   var first = answers.indexOf("");
   go(first < 0 ? "kraj" : first);

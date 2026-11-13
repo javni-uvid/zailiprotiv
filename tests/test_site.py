@@ -175,9 +175,9 @@ def test_visitors_votes_are_sent_only_when_an_address_is_set(tmp_path):
     root = data(tmp_path)
     site.build(root, out, "zailiprotiv.rs")
     page = (out / "glasaj.html").read_text()
-    assert "Pošalji moje glasove" not in page and 'data-api=""' in page and "nikuda se ne šalju" in page
+    assert "ulaze u zbir" not in page and 'data-api=""' in page and "nikuda se ne šalju" in page
     assert json.loads((out / "glasaj.json").read_text()) == {"laws": ["zakon-o-oruzju"]}
     (root / "settings.json").write_text(json.dumps({"votes_api": "https://glasovi.example/"}))
     site.build(root, out, "zailiprotiv.rs")
     page = (out / "glasaj.html").read_text()
-    assert "Pošalji moje glasove" in page and 'data-api="https://glasovi.example/"' in page and "nije istraživanje" in page
+    assert "ulaze u zbir" in page and 'data-api="https://glasovi.example/"' in page and "nije istraživanje" in page

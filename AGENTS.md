@@ -59,11 +59,13 @@ These are the project's promises to its readers. Never change them without the m
    site shows each MP's name, club, party and every recorded vote. Only what they do in office: nothing about
    their private lives, and no other person's personal data (staff, citizens named in debates).
 5. **Nothing from third parties on the pages:** no analytics scripts, cookies, external fonts or scripts.
-   - **One exception, the maintainer's (13 Nov 2026): visitors' votes in "Glasaj i ti".** Only when the visitor
-     clicks "Pošalji moje glasove", the page sends their choices (law → for, against, abstained) to the project's own
-     counter (`worker/`, a Cloudflare Worker with a D1 table of three numbers per law; no cookies, addresses or
-     times kept). The totals are shown as "Posetioci sajta", apart from MPs' votes, with ten votes or more, and the
-     page says it is not a poll. The address is in `data/settings.json` (`votes_api`); empty, the page sends nothing.
+   - **One exception, the maintainer's (13 Nov 2026): visitors' votes in "Glasaj i ti".** The page sends each
+     choice (law → for, against, abstained) to the project's own counter (`worker/`, a Cloudflare Worker with a D1
+     table of three numbers per law; no cookies, addresses or times kept), once per law and browser, when the visitor
+     moves on from that law. First built with a "send" button; the maintainer chose automatic sending the same day,
+     so the page says it before the first vote. The totals are shown as "Posetioci sajta", apart from MPs' votes,
+     with ten votes or more, and the page says it is not a poll. The address is in `data/settings.json`
+     (`votes_api`); empty, the page sends nothing.
 
 ## Architecture decisions
 

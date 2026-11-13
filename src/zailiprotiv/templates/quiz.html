@@ -5,6 +5,7 @@
 {% block main %}
 <h1 class="q-h1">Kako bi ti glasao?</h1>
 <p class="standfirst q-lead">Glasaj o {{ laws|length }} {{ plural(laws|length, "zakonu", "zakona", "zakona") }}, pa vidi ko je u sali glasao kao ti.</p>
+{% if votes_api %}<p class="meta q-notice">Tvoji glasovi ulaze u zbir svih posetilaca. Šalje se samo „za“, „protiv“ ili „uzdržan“ za svaki zakon: bez imena i kolačića, a adresu i vreme ne čuvamo.</p>{% endif %}
 <noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
 <nav class="q-strip js-only" hidden id="q-strip" aria-label="Tvoj listić">{% for it in laws %}<button type="button" data-go="{{ loop.index0 }}" aria-label="Zakon {{ loop.index }}"><span>{{ loop.index }}</span></button>{% endfor %}<button type="button" data-go="kraj" class="q-strip-end" aria-label="Rezultat" disabled>Rezultat</button></nav>
 <ol class="quiz" id="quiz">
@@ -13,7 +14,7 @@
   {% set c = it.final.counts %}
   <li class="q-item" data-i="{{ loop.index0 }}" data-za="{{ c.za }}" data-protiv="{{ c.protiv }}" data-ostali="{{ c.uzdrzan + c.nije_glasao + c.nije_prisutan }}">
     <p class="q-n">Zakon {{ loop.index }} od {{ laws|length }}{% if it.urgent %}, po hitnom postupku{% endif %}</p>
-    <h2>{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</h2>
+    <h2><a href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a></h2>
     <p class="q-gist">{{ it.gist|latin }}</p>
     {% if sd and (sd.podrska or sd.predlagac) and sd.zamerke %}
     <details class="q-more"><summary>Šta kažu oni koji su za, a šta oni koji su protiv</summary>
@@ -49,15 +50,8 @@
   <h3>Poslaničke grupe</h3>
   <div class="scroll"><table class="groups"><thead><tr><th>Grupa</th><th class="vote-cell"></th><th class="num">Isti glas kao većina grupe</th></tr></thead><tbody id="q-groups"></tbody></table></div>
   <p class="label">Poredimo samo zakone o kojima ste oboje glasali. Ovo je poređenje glasova o nekoliko zakona, ne preporuka za koga da glasaš.</p>
-  {% if votes_api %}
-  <div class="q-send" id="q-send">
-    <h3>Dodaj svoje glasove u zbir</h3>
-    <p>Pošalji svoje glasove da uđu u zbir svih posetilaca. Šalje se samo „za“, „protiv“ ili „uzdržan“ za svaki zakon: bez imena, bez kolačića, i ne čuvamo ni adresu ni vreme.</p>
-    <p><button type="button" class="button" id="q-submit">Pošalji moje glasove</button> <span id="q-sent" class="meta" aria-live="polite"></span></p>
-  </div>
-  {% endif %}
 </section>
-<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. {% if votes_api %}Tvoji odgovori ostaju u tvom pregledaču dok sam ne klikneš „Pošalji moje glasove“. „Posetioci sajta“ je zbir tako poslatih glasova: to nije istraživanje javnog mnjenja, glasaju samo oni koji dođu na sajt, a isti čovek može da pošalje više puta.{% else %}Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju.{% endif %} {{ how("glasaj") }}</p>
+<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. {% if votes_api %}Kad glasaš o zakonu i pređeš na sledeći, tvoj glas o tom zakonu se šalje našem brojaču, jednom po zakonu. „Posetioci sajta“ je zbir tih glasova: to nije istraživanje javnog mnjenja, glasaju samo oni koji dođu na sajt, a isti čovek može da glasa sa više uređaja.{% else %}Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju.{% endif %} {{ how("glasaj") }}</p>
 <div id="q-api" data-api="{{ votes_api }}" hidden></div>
 <script type="application/json" id="quiz-data">{{ quiz|safe }}</script>
 <script src="glasaj.js?v={{ css }}" defer></script>

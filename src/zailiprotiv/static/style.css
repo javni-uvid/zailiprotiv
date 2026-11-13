@@ -289,7 +289,9 @@ td.lean { white-space: nowrap; }
 
 /* Glasaj i ti: one law at a time, as a ballot. The strip on top is the visitor's own ballot paper. */
 .q-h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.05; margin: 1.6rem 0 .5rem; }
-.q-lead { font-size: 1.25rem; max-width: 34em; margin-bottom: 1.4rem; }
+.q-lead { font-size: 1.25rem; max-width: 34em; margin-bottom: .5rem; }
+.q-notice { max-width: 46rem; margin: 0 0 1.3rem; }
+.q-item h2 a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .q-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 1.6rem; max-width: 46rem; }
 .q-strip button { flex: 1 1 0; min-width: 2.1rem; height: 2.6rem; padding: 0; border: 2px solid var(--line); background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; cursor: pointer; }
 .q-strip button.a-z { background: var(--za); border-color: var(--za); color: #fff; }
