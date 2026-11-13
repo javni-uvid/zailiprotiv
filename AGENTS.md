@@ -66,7 +66,10 @@ These are the project's promises to its readers. Never change them without the m
    is good or bad (the maintainer's decision, 12 Nov 2026).
 4. **MPs are public officials: their names and votes are public** (the maintainer's decision, 12 Nov 2026). The
    site shows each MP's name, club, party and every recorded vote. Only what they do in office: nothing about
-   their private lives, and no other person's personal data (staff, citizens named in debates).
+   their private lives beyond what is said in the Assembly.
+   - **Speeches and quotes are not redacted at all** (the maintainer, 13 Nov 2026): every name an MP says in a
+     speech stays as said, in quotes and in the overviews of what MPs say, public figure or not. This replaces the
+     earlier rule that ordinary citizens are named by role only. The site still adds nothing of its own about anyone.
 5. **Nothing from third parties on the pages:** no analytics scripts, cookies, external fonts or scripts.
    - **One exception, the maintainer's (13 Nov 2026): visitors' votes in "Glasaj i ti".** The page sends each
      choice (law → for, against, abstained) to the project's own counter (`worker/`, a Cloudflare Worker with a D1
@@ -196,7 +199,9 @@ These are the project's promises to its readers. Never change them without the m
   `data/profiles/RULES.md`: only what recurs in two or more speeches, as the MP's claim ("Navodi da …"), content not
   tone, no labels or assessments, charged terms quoted; what the MP says about persons is given like anything else
   (the maintainer, 12 Nov 2026: such points are not left out), public figures by name (office holders, party leaders, judges and prosecutors, media
-  owners, businesspeople: "we don't censor what MPs said", the maintainer, 13 Nov 2026), ordinary citizens by role only; one verbatim quote per point checked word for word.
+  owners, businesspeople: "we don't censor what MPs said", the maintainer, 13 Nov 2026), and since later that day every
+  person the MP names, as named (speeches and quotes are not redacted at all; overviews written before keep roles for
+  ordinary citizens until they are written again); one verbatim quote per point checked word for word.
   The page says how many speeches were read and that the site doesn't judge the claims. Labels for MPs ("populist",
   "pro-European") were considered and rejected as judgements. Speakers who spoke mostly as members of the Government
   are left out (by hand so far: a rule is needed before this is widened). The MP page also shows the quotes chosen

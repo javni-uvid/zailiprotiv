@@ -13,10 +13,9 @@ Pravila:
 - Svaka tačka je jedna rečenica u trećem licu, pripisana poslaniku glagolom navođenja: „Navodi da …“, „Zamera što …“,
   „Brani …“, „Traži da …“. Ne tvrdi da je ono što kaže tačno ili netačno.
 - Ne cenzurišemo šta je poslanik rekao. Tačke o osobama se navode kao i sve druge, ako se ponavljaju: šta poslanik
-  tvrdi ili zamera nekome. Javne ličnosti navedi imenom (i funkcijom ili ulogom kad je govori navode ili je opštepoznata):
-  poslanike, ministre, predsednika, funkcionere, lidere stranaka, sudije i tužioce, vlasnike medija, privrednike i
-  druge ljude iz javnog života. Samo obične građane (zaposlene, žrtve, decu, članove porodice koji nisu u javnom
-  životu) navedi ulogom, bez imena.
+  tvrdi ili zamera nekome. Svaku osobu koju poslanik imenuje navedi imenom, kako je rečeno u govoru (i funkcijom ili
+  ulogom kad je govori navode ili je opštepoznata), bez obzira na to da li je javna ličnost. Ništa iz govora i citata
+  se ne izostavlja niti zamenjuje opisom zato što se odnosi na osobu.
 - Svaki deo rečenice mora da stoji u najmanje 2 navedena govora, ne samo njen prvi deo.
 - Uvredljive ili nabijene izraze ne preuzimaj svojim rečima; ako su suština tačke, stavi ih pod navodnike kao
   govornikove.
