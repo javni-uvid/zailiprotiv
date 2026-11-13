@@ -29,6 +29,9 @@ CONVOCATIONS = {
     "10": {"from": "2014-04-16", "to": "2016-06-03", "ordinal": "deset",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-16-aprila-2014/zasedanja.3458.html",
            "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-16-аprila-2014.3411.html"},
+    "9": {"from": "2012-05-31", "to": "2014-04-16", "ordinal": "devet",
+          "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-31-maja-2012/zasedanja.2269.html",
+          "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-31-maja-2012.2194.html"},
 }
 CURRENT = "14"
-ORDINALS = ("deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
+ORDINALS = ("devet", "deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
