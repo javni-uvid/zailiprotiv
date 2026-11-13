@@ -25,6 +25,10 @@ CONVOCATIONS = {
     "11": {"from": "2016-06-03", "to": "2020-08-03", "ordinal": "jedanaest",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-3-juna-2016/zasedanja.4184.html",
            "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-juna-2016.4242.html"},
+    # The address of this page of laws has a Cyrillic "а" in "аprila": as the Assembly links it.
+    "10": {"from": "2014-04-16", "to": "2016-06-03", "ordinal": "deset",
+           "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-16-aprila-2014/zasedanja.3458.html",
+           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-16-аprila-2014.3411.html"},
 }
 CURRENT = "14"
 ORDINALS = ("deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
