@@ -34,5 +34,16 @@
    ]
   }
  },
- "refused": {}
+ "refused": {},
+ "usage": {
+  "sample-13": {
+   "claude-haiku-5-5": {
+    "cache_read": 3312,
+    "cache_written": 828,
+    "input": 167065,
+    "output": 17257,
+    "replies": 5
+   }
+  }
+ }
 }
