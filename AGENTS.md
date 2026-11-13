@@ -90,10 +90,11 @@ These are the project's promises to its readers. Never change them without the m
      names the laws and gives each a short plain description written from its summary (what the law does, no
      verdict). The page says so. After a vote it shows one verbatim quote from an MP who voted for and one who
      voted against, and with the result a verbatim quote of the closest MP. Without the file the old rule holds.
-   - **The home page (the maintainer's choice of design, 13 Nov 2026):** the lead is the law of the last year with
-     the largest share against, drawn as the chamber (`site.hemicycle`: a picture of the count, not of seats);
-     then "Glasaj i ti" as a full-width band, "Varnice" and a pair of quotes, the newest sitting's laws (most
-     votes against first). The mark is the chamber as one arc (`favicon.svg`, `.brand-mark`).
+   - **The home page (the maintainer's choice of design, 13 Nov 2026):** the lead's left column has the search
+     and "Varnice" (four firsts with portraits); its right column is one card for the law of the last year with the
+     largest share against: the chamber (`site.hemicycle`: a picture of the count, not of seats), what the law is,
+     and a quote from each side of its debate. Then "Glasaj i ti" as a full-width band, and the newest sitting's
+     laws (most votes against first). The mark is the chamber as one arc (`favicon.svg`, `.brand-mark`).
    - **Two things of others' making, both served from the site itself (the maintainer, 13 Nov 2026):** the
      full-text search (Pagefind, built in the `pages` workflow from the Latin pages into `pagefind/`; `pretraga.html`),
      and MPs' portraits from the Assembly's list of MPs (`photos.py`, `data/photos/`, shown on the MP's page, in

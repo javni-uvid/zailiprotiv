@@ -634,3 +634,34 @@ td.lean { white-space: nowrap; }
 .faces-row { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.6rem 2rem; }
 .floor.measures details > summary { text-decoration: none; font-weight: 400; }
 .likely { font-size: .78rem; font-weight: 600; padding: .05rem .4rem; border: 1px solid var(--muted); color: var(--muted); white-space: nowrap; }
+
+/* Home: the lead law as one card (the chamber, what the law is, what was said), and Varnice as four faces. */
+.home-hero { align-items: flex-start; }
+.hero-text { padding-top: 2.2rem; }
+.hero-card { flex: 0 1 26rem; min-width: 0; border: 2px solid var(--fg); padding: 1.3rem 1.4rem 1.1rem; }
+.hero-card .hero-vote { flex: none; }
+.hero-card .chamber { max-width: 300px; margin: 0 auto; }
+.hero-gist { margin: .7rem 0 0; font-size: .98rem; line-height: 1.45; }
+.hero-said { margin: 1rem 0 0; padding-top: .9rem; border-top: 1px solid var(--line); }
+.hero-said .hero-kicker { margin: 0 0 .6rem; }
+.hero-said .q { margin: 0 0 .9rem; padding-left: .8rem; border-left: 4px solid var(--line); }
+.hero-said .q-za, .hero-said .q-vlada { border-left-color: var(--za); } .hero-said .q-protiv { border-left-color: var(--protiv); }
+.hero-said .q blockquote { font-size: 1rem; line-height: 1.4; margin: 0 0 .3rem; }
+.hero-said .q figcaption { font-size: .82rem; }
+.hero-more { margin: .2rem 0 0; font-weight: 600; }
+.home-floor { padding: 2rem 0 1.4rem; border-bottom: 1px solid var(--line); }
+.home-floor-head { display: flex; flex-wrap: wrap; gap: .2rem 1.4rem; align-items: baseline; }
+.home-floor-head h2 { margin: 0; } .home-floor-head h2 a { color: inherit; } .home-floor-head p { margin: 0; }
+.floor-firsts { list-style: none; margin: 1.1rem 0 1rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.2rem 2rem; }
+.floor-firsts a { display: flex; gap: .9rem; align-items: center; text-decoration: none; color: inherit; }
+.floor-firsts img { width: 3.75rem; height: 5rem; object-fit: cover; flex-shrink: 0; background: var(--card); }
+.floor-firsts a > span { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.floor-firsts b { font-family: var(--serif); font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.ff-what { font-size: .9rem; color: var(--muted); }
+.ff-who { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; margin-top: .15rem; }
+.home-floor .hook-more .label { font-weight: 400; margin-left: .6rem; }
+/* Varnice sits in the lead's left column, under the search. */
+.hero-text .home-floor { padding: 1.6rem 0 0; margin-top: 1.8rem; border-top: 1px solid var(--line); border-bottom: 0; }
+.hero-text .floor-firsts { grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 1.1rem 1.6rem; }
+.hero-text .home-floor h2 { font-size: 1.5rem; }
+.hero-text { flex: 1.3 1 26rem; }

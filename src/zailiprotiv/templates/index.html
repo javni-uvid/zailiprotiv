@@ -11,15 +11,47 @@
       <ul id="hits" class="hits" hidden></ul>
     </div>
     <p class="masthead">{{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} od {{ convs[-1].years[:4] }}. godine · {{ stats.all_mps }} poslanika · <a href="pretraga.html">pretraga celog teksta</a> · <a href="zakoni.html">svi zakoni</a> · <a href="poslanici.html">svi poslanici</a></p>
+{% if floor_top %}
+<section class="home-floor" aria-labelledby="hf">
+  <div class="home-floor-head">
+    <h2 id="hf"><a href="replike.html">Varnice u sali</a></h2>
+    <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
+  </div>
+  <ol class="floor-firsts">
+    {% for key, label, at in [("speeches", "govora, najviše u sazivu", "aktivnost"), ("points", "ukazivanja na Poslovnik", "aktivnost"), ("measures", "mera predsedavajućeg", "mere"), ("harsh", "teških reči", "reci")] %}
+    {% set r = floor_top[key] %}
+    {% if r %}
+    <li><a href="{% if r.who.slug %}poslanik/{{ r.who.slug }}.html#{{ at }}{% else %}{{ floor_top.page }}{% endif %}">
+      <img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="60" height="80" loading="lazy">
+      <span><b>{{ r.harsh|length if key == "harsh" else r[key] }}</b><span class="ff-what">{{ label }}</span><span class="ff-who">{{ r.who.name }}</span></span>
+    </a></li>
+    {% endif %}
+    {% endfor %}
+  </ol>
+  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a> <span class="label">Brojano u pročitanim beleškama, ne u svim sednicama.</span></p>
+</section>
+{% endif %}
   </div>
   {% if divisive %}
   {% set c = divisive.final.counts %}
-  <a class="hero-vote" href="zakon/{{ divisive.slug }}.html">
-    <span class="hero-kicker">Zakon koji je najviše podelio salu u poslednjih godinu dana</span>
-    {{ chamber(c) }}
-    <span class="hero-law">{% if divisive.aka %}{{ divisive.aka[0][:1]|upper }}{{ divisive.aka[0][1:] }}: {% endif %}{{ divisive.law.short }}</span>
-    <span class="hero-meta">{{ divisive.law.passed|day }}{% if divisive.urgent %} · hitan postupak{% endif %}{% if divisive.against %} · protiv: {% for g, n in divisive.against[:3] %}{{ g }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span>
-  </a>
+  <div class="hero-card">
+    <a class="hero-vote" href="zakon/{{ divisive.slug }}.html">
+      <span class="hero-kicker">Zakon koji je najviše podelio salu u poslednjih godinu dana</span>
+      {{ chamber(c) }}
+      <span class="hero-law">{% if divisive.aka %}{{ divisive.aka[0][:1]|upper }}{{ divisive.aka[0][1:] }}{% else %}{{ divisive.law.short }}{% endif %}</span>
+      <span class="hero-meta">{{ divisive.law.passed|day }}{% if divisive.urgent %} · hitan postupak{% endif %}{% if divisive.against %} · protiv: {% for g, n in divisive.against[:3] %}{{ g }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span>
+    </a>
+    {% if divisive.gist %}<p class="hero-gist">{{ divisive.gist|latin|truncate(170, killwords=False, end="…") }}</p>{% endif %}
+    {% if divisive.pair|length == 2 %}
+    <div class="hero-said">
+      <p class="hero-kicker">Rečeno u raspravi</p>
+      {% for q in divisive.pair %}
+      <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <p class="hero-more"><a href="zakon/{{ divisive.slug }}.html">Ceo zakon, glasanje i rasprava</a></p>
+  </div>
   {% endif %}
 </section>
 {% if of_conv %}<p class="note">Novi saziv još nije usvojio zakone. Dok ih ne usvoji, ovde su zakoni prethodnog, {{ of_conv|lower }}g saziva.</p>{% endif %}
@@ -34,36 +66,6 @@
   {% if it.final %}<div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div>{% endif %}
 </li>
 {%- endmacro %}
-
-{% if floor_top or featured %}
-<div class="home-hooks">
-{% if featured %}
-<section>
-  <h2>Rečeno u raspravi{% if divisive and featured.slug == divisive.slug %} o ovom zakonu{% endif %}</h2>
-  {% if not (divisive and featured.slug == divisive.slug) %}<p><a href="zakon/{{ featured.slug }}.html">{{ featured.law.short }}</a></p>{% endif %}
-  {% for q in featured.pair %}
-  <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
-  {% endfor %}
-  <p class="hook-more"><a href="zakon/{{ featured.slug }}.html">Cela rasprava: {% if featured.aka %}{{ featured.aka[0][:1]|upper }}{{ featured.aka[0][1:] }}{% else %}{{ featured.law.short }}{% endif %}</a></p>
-</section>
-{% endif %}
-{% if floor_top %}
-<section>
-  <h2><a href="replike.html">Varnice u sali</a></h2>
-  <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
-  <dl class="hook-nums">
-    {% macro who(r, at) %}{% if r.who.slug %}<a href="poslanik/{{ r.who.slug }}.html#{{ at }}">{{ r.who.name }}</a>{% else %}{{ r.who.name }}{% endif %}{% endmacro %}
-    {% if floor_top.speeches %}<dt>{{ floor_top.speeches.speeches }}</dt><dd>{{ plural(floor_top.speeches.speeches, "govor", "govora", "govora") }}: {{ who(floor_top.speeches, "aktivnost") }}, najviše u sazivu</dd>{% endif %}
-    {% if floor_top.points %}<dt>{{ floor_top.points.points }}</dt><dd>{{ plural(floor_top.points.points, "ukazivanje", "ukazivanja", "ukazivanja") }} na Poslovnik: {{ who(floor_top.points, "aktivnost") }}</dd>{% endif %}
-    {% if floor_top.measures %}<dt>{{ floor_top.measures.measures }}</dt><dd>{{ plural(floor_top.measures.measures, "mera", "mere", "mera") }} predsedavajućeg: {{ who(floor_top.measures, "mere") }}</dd>{% endif %}
-    {% if floor_top.harsh %}<dt>{{ floor_top.harsh.harsh|length }}</dt><dd>{{ plural(floor_top.harsh.harsh|length, "teška reč", "teške reči", "teških reči") }}: {{ who(floor_top.harsh, "reci") }}</dd>{% endif %}
-  </dl>
-  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a></p>
-  <p class="label">Brojano u pročitanim beleškama, ne u svim sednicama.</p>
-</section>
-{% endif %}
-</div>
-{% endif %}
 
 {% if quiz_laws %}
 {% set q = (quiz_laws|rejectattr("slug", "equalto", divisive.slug if divisive else "")|list or quiz_laws)[0] %}
