@@ -1,3 +1,36 @@
+// Cyrillic typed into a search box finds Latin text, and the other way round: everything is compared in Latin.
+var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "е": "e", "ж": "ž", "з": "z", "и": "i", "ј": "j",
+  "к": "k", "л": "l", "љ": "lj", "м": "m", "н": "n", "њ": "nj", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "ћ": "ć",
+  "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "č", "џ": "dž", "ш": "š" };
+// The Cyrillic edition (cir/): what the scripts write into the page is written in Cyrillic too.
+(function () {
+  "use strict";
+  if (document.documentElement.lang !== "sr-Cyrl") return;
+  var LAT = {}, KEEP = /https?:\/\/\S+|[\w.-]+\.(?:rs|com|org|html|json|csv|xml|pdf)\b\S*|\b(?:PDF|RSS|CSV|JSON|AI|API|EXPO|UniCredit|NLB|[IVX]{2,})\b/g;
+  Object.keys(CYR).forEach(function (c) { if (CYR[c].length === 1) { LAT[CYR[c]] = c; LAT[CYR[c].toUpperCase()] = c.toUpperCase(); } });
+  function plain(t) {
+    return t.replace(/lj/g, "љ").replace(/L[jJ]/g, "Љ").replace(/nj/g, "њ").replace(/N[jJ]/g, "Њ").replace(/dž/g, "џ").replace(/D[žŽ]/g, "Џ")
+      .replace(/[A-Za-zČĆŽŠĐčćžšđ]/g, function (c) { return LAT[c] || c; });
+  }
+  function cyr(t) {
+    var out = "", last = 0, m; KEEP.lastIndex = 0;
+    while ((m = KEEP.exec(t))) { out += plain(t.slice(last, m.index)) + m[0]; last = m.index + m[0].length; }
+    return out + plain(t.slice(last));
+  }
+  function walk(node) {
+    if (node.nodeType === 3) { var t = cyr(node.nodeValue); if (t !== node.nodeValue) node.nodeValue = t; return; }
+    if (node.nodeType !== 1 || /^(SCRIPT|STYLE|CODE|INPUT|TEXTAREA)$/.test(node.tagName)) return;
+    ["placeholder", "aria-label", "title", "alt"].forEach(function (a) { if (node.hasAttribute(a)) node.setAttribute(a, cyr(node.getAttribute(a))); });
+    for (var c = node.firstChild; c; c = c.nextSibling) walk(c);
+  }
+  new MutationObserver(function (changes) {
+    changes.forEach(function (ch) {
+      if (ch.type === "characterData") { var t = cyr(ch.target.nodeValue); if (t !== ch.target.nodeValue) ch.target.nodeValue = t; }
+      else ch.addedNodes.forEach(walk);
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+})();
+
 // Za ili Protiv: search and filters. The site's only script, served from the site itself; pages work without it.
 (function () {
   "use strict";
@@ -37,12 +70,12 @@
   }
 
   function load() {
-    return loading || (loading = fetch(root + "podaci.json?v=" + (body.dataset.v || "")).then(function (r) { return r.json(); })
+    return loading || (loading = fetch((body.dataset.data || root) + "podaci.json?v=" + (body.dataset.v || "")).then(function (r) { return r.json(); })
       .then(function (d) { data = d; return d; }));
   }
   // "Đorđe", "Djordje" and "dorde" all match.
   function norm(s) {
-    return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
+    return s.toLowerCase().replace(/[\u0400-\u045f]/g, function (c) { return CYR[c] || c; }).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
   }
   // Case endings off, so "budžetu" finds "budžet" and "Vučiću" finds "Vučić". Short words stay whole.
   function stem(w) {
@@ -170,7 +203,7 @@
   var area = document.getElementById("f-a"), year = document.getElementById("f-y");
   var count = document.getElementById("f-n"), chips = box.querySelectorAll(".chip[data-k]"), kind = "";
   function norm(s) {
-    return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
+    return s.toLowerCase().replace(/[\u0400-\u045f]/g, function (c) { return CYR[c] || c; }).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
   }
   // Case endings off, so "budžetu" finds "budžet" and "Vučiću" finds "Vučić". Short words stay whole.
   function stem(w) {

@@ -206,3 +206,21 @@ def test_the_week_in_the_assembly_and_its_feed(tmp_path):
     feed = (out / "nedelje.xml").read_text()
     assert '<content type="html">' in feed and "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in feed
     assert "nedelja/2026-28.html" in (out / "nedelje.html").read_text()
+
+
+def test_the_cyrillic_edition(tmp_path):
+    from zailiprotiv import cyrillic
+    assert cyrillic.cyr("Injekcija, konjunktura, Tanjug; njega, Ljubljana, džak") == "Инјекција, конјунктура, Танјуг; њега, Љубљана, џак"
+    assert cyrillic.cyr("PDF na zailiprotiv.rs/glasaj, model claude-sonnet-5-5, XIV saziv") == \
+        "PDF на zailiprotiv.rs/glasaj, модел claude-sonnet-5-5, XIV сазив"
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs", clean=True, cyrillic=True)
+    law, twin = (out / "zakon" / "zakon-o-oruzju.html").read_text(), (out / "cir" / "zakon" / "zakon-o-oruzju.html").read_text()
+    assert 'href="../cir/zakon/zakon-o-oruzju"' in law and 'href="../../zakon/zakon-o-oruzju"' in twin
+    assert 'lang="sr-Cyrl"' in twin and "Абрамовић Ненад" in twin and 'href="../poslanik/abramovic-nenad"' in twin
+    assert 'href="../../style.css' in twin and 'src="../../site.js' in twin and 'href="../../zakon/zakon-o-oruzju.csv"' in twin
+    assert '<link rel="canonical" href="https://zailiprotiv.rs/cir/zakon/zakon-o-oruzju">' in twin
+    text = re.sub(r"<script.*?</script>|<style.*?</style>|<[^>]+>", " ", twin, flags=re.S)
+    assert "Закон о оружју" in text and "гласа" in text and not re.search(r"\b(Zakon|glasao|protiv|poslanik)\b", text)
+    assert "cir/zakon/zakon-o-oruzju</loc>" in (out / "sitemap.xml").read_text()
+    assert site.check(out) == []

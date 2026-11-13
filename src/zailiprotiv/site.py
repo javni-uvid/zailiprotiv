@@ -334,7 +334,7 @@ def write_feed(path: Path, title: str, self_url: str, page_url: str, entries: li
                     f"<id>{x(page_url or self_url)}</id><updated>{updated}</updated>\n{body}</feed>\n", encoding="utf-8")
 
 
-def build(root: Path, out: Path, domain: str | None = None, clean: bool = False) -> dict:
+def build(root: Path, out: Path, domain: str | None = None, clean: bool = False, cyrillic: bool = False) -> dict:
     convs = convocations(root)
     current = convs[0][0]
     mps.load_aliases(root / "mp_aliases.json")
@@ -371,7 +371,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     common = {"css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
-              "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else ""}
+              "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
@@ -722,6 +722,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False)
     feeds.write(area_slug=area_slug, by_area=by_area, domain=domain, feeds_mp=feeds_mp,
         items_by_conv=items_by_conv, out=out, waiting=waiting)
     (out / ".nojekyll").write_text("", encoding="utf-8")
+    if cyrillic:  # every page again under cir/, in Cyrillic
+        from zailiprotiv import cyrillic as cyrillic_
+        cyrillic_.edition(out)
     if clean:
         clean_urls(out)
     return stats

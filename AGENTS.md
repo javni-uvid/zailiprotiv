@@ -229,7 +229,7 @@ These are the project's promises to its readers. Never change them without the m
 - **Static pages in Latin script** (`site.py`, Jinja2 templates): home, laws by kind, a page per law (facts,
   documents, an excerpt of the proposer's memorandum labelled as such, the final vote by group and by MP, the other
   votes on the act), MPs, a page per MP (their final votes on laws). Cyrillic from the Assembly's documents is
-  transliterated; a test checks no Cyrillic is left. A Cyrillic edition can follow, as in the election site.
+  transliterated; a test checks no Cyrillic is left. The Cyrillic edition is made from these pages (`cir/`, see 6k).
 - **Nothing from other servers.** Colours mean kinds of vote (for, against, …), never a group.
 - **Home page:** "Najviše glasova protiv" first (the maintainer's request, 12 Nov 2026): the laws whose final
   vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
@@ -366,6 +366,14 @@ These are the project's promises to its readers. Never change them without the m
      (`nedelje.xml`, twelve weeks), made by rule with no editor's choice. The newsletter is that feed sent by a
      mailing service ("RSS to e-mail"); the site keeps no addresses. `newsletter_url` in `data/settings.json`
      (the service's sign-up page) shows a link "Primaj e-poštom"; empty until the maintainer picks a service.
+  6k. **the Cyrillic edition** (13 Nov 2026, `cyrillic.py`): after the build, every page is written again under
+     `cir/` with its text in Cyrillic and `lang="sr-Cyrl"`; pages link to their twins ("Ћирилица" / "Latinica" in
+     the menu). Letter by letter back from Latin, except what is Latin by nature (addresses, file and model names,
+     `KEEP`: PDF, RSS, Roman numerals …) and words where nj, lj, dž are two sounds (`_APART`: injekcija, Tanjug,
+     nadživeti; add to it when one is found). Styles, scripts, pictures, downloads and feeds are not copied: Cyrillic
+     pages point to the one copy. What the scripts write is put in Cyrillic by an observer in `site.js`; search
+     compares everything in Latin, so either script finds either. The typeface's Cyrillic subset is in
+     `static/fonts`. The share pictures and the feeds stay Latin. `zailiprotiv site --latin-only` skips it.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

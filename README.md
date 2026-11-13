@@ -47,7 +47,8 @@ uv run pytest
 Laws (by convocation, area and sitting), a page per law (final vote by group and MP, summary of the memorandum, the
 debate, a picture for sharing), a page per MP (key votes, activity, votes by area and period), a page per
 parliamentary group, "Skupština u brojkama", "Glasaj i ti" (vote on the key laws and compare with groups and MPs, in
-the browser), feeds (new laws, per area, per MP) and downloads (CSV, JSON).
+the browser), the week in the Assembly (pages and a feed a newsletter can be sent from), feeds (new laws, per area,
+per MP) and downloads (CSV, JSON). Every page also in Cyrillic, under `cir/`.
 
 ## Workflows
 
