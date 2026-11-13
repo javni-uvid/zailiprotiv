@@ -33,17 +33,21 @@
 {%- endmacro %}
 
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
+<div class="mp-hero">
 {% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% endif %}
+<div class="mp-head">
 <h1>{{ mp.name }}</h1>
+<p class="mp-groups">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 {% if profile %}{% set ns = namespace(q=none) %}{% for t in profile.points %}{% if t.citat and t.citat.tekst.split()|length <= 45 and (ns.q is none or t.citat.tekst|length < ns.q.tekst|length) %}{% set ns.q = t.citat %}{% endif %}{% endfor %}
 {% if ns.q %}<blockquote class="mp-line"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
-<p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
-<p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+</div>
+</div>
 
 <section class="outcome mp-outcome">
   <div class="big"><div class="t-za"><b>{{ tally.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ tally.protiv or 0 }}</b><span>protiv</span></div></div>
   {{ bar({"za": tally.za or 0, "protiv": tally.protiv or 0, "uzdrzan": tally.uzdrzan or 0, "nije_glasao": tally.nije_glasao or 0, "nije_prisutan": tally.nije_prisutan or 0}) }}
   <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
+  <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}

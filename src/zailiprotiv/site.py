@@ -620,6 +620,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             spoke_days[k] = Counter(sp["date"] for sp in own if sp["date"])
             for sp in own:
                 speech_url[(k, sp["date"])] = sp["url"]
+    env.globals["photo_for"] = lambda mp: photo_of.get(mp.key, "")
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []

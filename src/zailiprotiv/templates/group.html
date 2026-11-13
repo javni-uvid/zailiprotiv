@@ -71,7 +71,7 @@
   <h2>Članovi <span class="count">{{ members|length }}</span></h2>
   <ul class="rows compact">
   {% for m in members %}
-    <li class="row"><div class="row-main"><a class="row-title" href="../poslanik/{{ m.mp.slug }}.html">{{ m.mp.name }}</a></div>
+    <li class="row">{% set f = photo_for(m.mp) %}{% if f %}<img class="row-face" src="../foto/{{ f }}" alt="" width="42" height="56" loading="lazy">{% endif %}<div class="row-main"><a class="row-title" href="../poslanik/{{ m.mp.slug }}.html">{{ m.mp.name }}</a></div>
     <div class="row-vote">{{ bar({"za": m.tally.za or 0, "protiv": m.tally.protiv or 0, "uzdrzan": m.tally.uzdrzan or 0, "nije_glasao": m.tally.nije_glasao or 0, "nije_prisutan": m.tally.nije_prisutan or 0}) }}<span class="row-score"><span class="t-za">{{ m.tally.za or 0 }}</span> : <span class="t-protiv">{{ m.tally.protiv or 0 }}</span></span></div></li>
   {% endfor %}
   </ul>

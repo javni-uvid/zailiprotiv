@@ -567,3 +567,12 @@ td.lean { white-space: nowrap; }
 .week-lead .lead-nums { margin-top: 0; }
 .week-lead .lead-nums > span { display: flex; flex-direction: column; gap: .15rem; }
 .law-head .lead-nums { margin-bottom: .8rem; }
+
+/* An MP's page: the portrait beside the name, the groups and a line of their own. */
+.mp-hero { display: flex; gap: 1.6rem; align-items: flex-start; margin: 0 0 1rem; }
+.mp-hero .mp-photo { float: none; margin: .3rem 0 0; width: 8.5rem; flex-shrink: 0; }
+.mp-head { flex: 1 1 0; min-width: 0; }
+.mp-head h1 { margin-bottom: .3rem; }
+.mp-groups { margin: 0 0 1rem; color: var(--muted); font-size: .95rem; }
+@media (max-width: 600px) { .mp-hero { gap: 1rem; } .mp-hero .mp-photo { width: 5.5rem; } }
+@media (max-width: 600px) { .mp-line p { font-size: 1.1rem; } .mp-head h1 { font-size: 1.6rem; } }
