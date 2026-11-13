@@ -86,7 +86,7 @@ def sentence(text: str, start: int, end: int) -> str:
     after = _END.search(text, end)
     return text[before[-1] if before else 0:after.end() if after else len(text)].strip()
 TOP = 25
-PER_PAGE = 30
+PER_PAGE = 20
 
 
 def harsh(text: str) -> list[tuple[str, str]]:

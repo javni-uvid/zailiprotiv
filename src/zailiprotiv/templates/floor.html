@@ -8,9 +8,6 @@
 <h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 <nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}</nav>
-<nav class="subtabs" aria-label="Deo strane"><a href="{{ c.page }}"{% if part == "mere" %} aria-current="page"{% endif %}>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></a><a href="{{ c.page_exchanges }}"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika <span class="count">{{ c.exchanges|length }}</span></a><a href="{{ c.page_who }}"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
-
-{% if part == "mere" %}
 <div class="finder js-only floor-finder" hidden data-filter="floor-rows" data-quiet>
   <label class="sr" for="f-q">Nađi govornika</label>
   <input id="f-q" type="search" placeholder="Nađi poslanika: govori, replike, mere i teške reči, npr. Jovanov" autocomplete="off">
@@ -42,6 +39,9 @@
 {% endfor %}
 </section>
 <p class="label">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} ovog saziva. <a href="{{ c.page_who }}">Svih 25 po svakom broju, i svaka teška reč u rečenici</a></p>
+<nav class="subtabs" id="deo" aria-label="Deo strane"><a href="{{ c.page }}#deo"{% if part == "mere" %} aria-current="page"{% endif %}>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></a><a href="{{ c.page_exchanges }}#deo"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika <span class="count">{{ c.exchanges|length }}</span></a><a href="{{ c.page_who }}#deo"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
+
+{% if part == "mere" %}
 {% if c.measures %}
 <section id="mere">
   <h2>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h2>
@@ -88,7 +88,7 @@
 {% if part == "razmene" %}
 <section id="razmene">
   <h2>Razmene replika <span class="count">{{ c.exchanges|length }}</span></h2>
-  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
+  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}#deo"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
   <ul class="floor">
   {% for e in shown %}
     <li id="{{ e.id }}">
@@ -103,7 +103,7 @@
   {% endfor %}
   </ul>
   {% if not c.exchanges %}<p class="meta">U pročitanim beleškama ovog saziva nema razmene od četiri ili više naizmeničnih govora.</p>{% endif %}
-  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
+  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}#deo"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
 </section>
 {% endif %}
 <p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština.</p>
