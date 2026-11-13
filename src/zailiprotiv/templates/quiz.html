@@ -5,7 +5,7 @@
 {% block main %}
 <h1>Glasaj i ti</h1>
 <p class="standfirst">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} iz ovog saziva. Glasaj kao da sediš u sali, pa vidi sa kim se tvoji glasovi poklapaju.</p>
-<p class="meta">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najvećim udelom glasova protiv. Opis je sažetak predlagačevog obrazloženja (piše ga AI model), dakle strana onoga ko zakon predlaže; razloge protiv naći ćeš u raspravi na strani zakona. Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju. {{ how("glasaj") }}</p>
+<p class="meta">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najvećim udelom glasova protiv. Uz svaki zakon je kratak AI rezime: šta zakon uređuje prema predlagačevom obrazloženju i, gde imamo stenografske beleške, po jedna tačka onih koji su ga u raspravi podržali i onih koji su mu se protivili. To su njihove tvrdnje, ne naše; rezime može da sadrži grešku. Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju. {{ how("glasaj") }}</p>
 <noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
 <ol class="quiz" id="quiz">
 {% for it in laws %}
@@ -14,6 +14,14 @@
     <h2><a href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a></h2>
     {% if it.aka %}<p class="card-official">{{ it.law.short }}</p>{% endif %}
     <p class="card-gist">{{ it.gist|latin }}</p>
+    {% set sd = it.said.debate if it.said else none %}
+    {% if sd and (sd.podrska or sd.predlagac) and sd.zamerke %}
+    <dl class="q-sides">
+      <div><dt class="t-za">Za, u raspravi</dt><dd>{{ ((sd.podrska or sd.predlagac)[0])|latin|truncate(300, killwords=False, end=" …") }}</dd></div>
+      <div><dt class="t-protiv">Protiv, u raspravi</dt><dd>{{ sd.zamerke[0]|latin|truncate(300, killwords=False, end=" …") }}</dd></div>
+    </dl>
+    <p class="row-meta">Iz AI pregleda stenografskih beleški; <a href="zakon/{{ it.slug }}.html">ceo pregled i citati</a>.</p>
+    {% endif %}
     <div class="chips q-answers" role="group" aria-label="Tvoj glas">
       <button type="button" class="chip" data-a="z" aria-pressed="false">Za</button>
       <button type="button" class="chip" data-a="p" aria-pressed="false">Protiv</button>

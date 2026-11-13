@@ -292,3 +292,6 @@ td.lean { white-space: nowrap; }
 .coming li { margin: .25rem 0; }
 .conv-links { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0 0; }
 .proc .row-title { font-size: 1.02rem; line-height: 1.35; }
+.q-sides { margin: .2rem 0 .5rem; display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); font-size: .9rem; line-height: 1.45; }
+.q-sides dt { font-weight: 700; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
+.q-sides dd { margin: .15rem 0 0; }
