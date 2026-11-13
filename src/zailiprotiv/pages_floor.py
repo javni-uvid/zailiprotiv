@@ -144,6 +144,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     law_at = {(it["final"]["sitting"], str(it["debate"]["item"])): it for its in items_by_conv.values() for it in its
               if it.get("final") and it.get("debate") and it["debate"].get("item")}
     by_conv, by_mp, by_law = [], defaultdict(list), defaultdict(list)
+    per_mp = defaultdict(list)
     for c, _ in convs:
         events, sittings = [], []
         tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0, "harsh": []})
@@ -229,6 +230,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             n = lambda r: len(r[key]) if key == "harsh" else r[key]
             return [r for r in sorted(rows.values(), key=lambda r: (-n(r), r["who"]["name"])) if n(r)][:TOP]
         top = {k: first(k) for k in ("speeches", "exchanges", "points", "measures", "harsh")}
+        for key_, r in rows.items():  # each MP's own counts in this convocation, for the MP's page
+            if r["who"]["slug"]:
+                per_mp[r["who"]["slug"]].append({"conv": c, "name": ORDINAL_NAME.get(c, c), "exchanges": r["exchanges"],
+                                                 "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"])})
         if events:
             by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events, "table": sittings, "top": top, "speakers": len(rows),
                             "measures": [e for e in events if e["type"] == "mera"],
@@ -247,5 +252,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
                                     encoding="utf-8")
     # For the home page: the first of each count in each convocation.
+    pages = {c["n"]: c["page_who"] for c in by_conv}
+    render.per_mp = {slug_: [{**x, "page": pages.get(x["conv"], "")} for x in xs] for slug_, xs in per_mp.items()}
     render.top = {c["n"]: {k: (v[0] if v else None) for k, v in c["top"].items()} | {"page": c["page_who"]} for c in by_conv}
     return by_mp, by_law

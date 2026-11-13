@@ -695,6 +695,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             timeline=timeline, key_votes=keys_, group_slug=group_slug, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             photo=photo_of.get(mp.key, ""),
+            floor=[x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, [])
+                   if x["exchanges"] or x["points"] or x["measures"] or x["harsh"]],
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:

@@ -35,6 +35,8 @@
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 {% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% endif %}
 <h1>{{ mp.name }}</h1>
+{% if profile %}{% set ns = namespace(q=none) %}{% for t in profile.points %}{% if t.citat and t.citat.tekst.split()|length <= 45 and (ns.q is none or t.citat.tekst|length < ns.q.tekst|length) %}{% set ns.q = t.citat %}{% endif %}{% endfor %}
+{% if ns.q %}<blockquote class="mp-line"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
 <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 <p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 
@@ -66,6 +68,7 @@
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
   {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
+  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.exchanges %}{% set _ = parts.append("<b>%d</b> %s" % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures %}{% set _ = parts.append("<b>%d</b> %s predsedavajućeg" % (x.measures, plural(x.measures, "mera", "mere", "mera"))) %}{% endif %}{% if x.harsh %}{% set _ = parts.append("<b>%d</b> %s" % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.page %} (<a href="../{{ x.page }}">Ko najviše</a>){% endif %}</li>{% endfor %}
   </ul>
   {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
   {% if timeline %}

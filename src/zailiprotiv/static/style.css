@@ -512,3 +512,7 @@ td.lean { white-space: nowrap; }
 /* Areas and filters as words, not pills. */
 .tag { border: 0; padding: 0; border-radius: 0; font-size: .85rem; text-decoration: underline; text-underline-offset: 2px; }
 .tags { gap: .2rem .8rem; }
+.mp-line { margin: .2rem 0 1.2rem; max-width: 40rem; }
+.mp-line p { margin: 0 0 .3rem; font-family: var(--serif); font-size: 1.35rem; line-height: 1.35; }
+.mp-line footer { font-size: .88rem; color: var(--muted); border: 0; padding: 0; margin: 0; }
+.mp-line { border: 0; padding: 0; }
