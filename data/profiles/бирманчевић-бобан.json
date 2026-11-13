@@ -1,0 +1,59 @@
+{
+ "mp": "бирманчевић бобан",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Navodi da su zakoni koje predlaže Vlada reformski i da su u ovom trenutku najbolji mogući.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Поновићу, ово је заиста реформски закон, који је написан, направљене су измене свега онога што је могло да се поправи и у овом тренутку је најбољи могући.",
+    "date": "2014-07-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su lokalni mediji pod uticajem lokalnih vlasti i da prodaja medija treba da spreči zloupotrebu budžeta u lokalnim samoupravama.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Желим да појасним да грађани буду свесни и да знају да је једино ова влада и једино СНС спремна да управо продајом медија спречи злоупотребе које су биле присутне у ранијим периодима, односиле су се на локалне самоуправе и на злоупотребу управљања медијима на локалним и регионалним нивоима.",
+    "date": "2015-06-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jun 2015.docx"
+   }
+  },
+  {
+   "tekst": "Zamera kritičarima što unapred osporavaju primenu zakona i odluka Vlade bez realnih razloga.",
+   "govora": 3,
+   "sazivi": [
+    "10",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Критичари ребаланса немају никакве реалне разлоге, нити имају било какве прихватљиве предлоге за бољи буџет и за боље одлуке које би унапредиле државу и које би унапредиле нашу економију.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su vlada i ministri dobro reagovali u kriznim situacijama, kao što su poplave i epidemija.",
+   "govora": 3,
+   "sazivi": [
+    "10",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Сви министри, председник Владе, председник Републике Србије су били на поплављеним подручјима, пружили су сву своју помоћ и све што је у том тренутку било расположиво је дато на употребу штабовима",
+    "date": "2014-07-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/16. jul 2014.docx"
+   }
+  }
+ ]
+}

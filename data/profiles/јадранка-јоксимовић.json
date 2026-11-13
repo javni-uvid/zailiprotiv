@@ -1,0 +1,57 @@
+{
+ "mp": "јадранка јоксимовић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Navodi da je u prethodnom režimu šef kabineta predsednika imao značajnu ulogu u radu službi bezbednosti.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Значајну улогу у досадашњем раду, досадашњем раду којим је управљао бивши режим, ова два тела, имао је само шеф његовог кабинета",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da lobi grupe utiču na kašnjenje važnih zakona i da država mora da se bori protiv lobija koji nanose štetu.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Због тога желим да кажем да та врста лобија о којој се прича и која јесте на неки начин допринела пролонгирању доношења овако важног закона, јесте спрега и бизниса и делова полиције и криминалаца током последњих 10 или 12 година.",
+    "date": "2013-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/8. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Predlaže da se proveri koji poslanici dolaze na sednicu pod dejstvom alkohola ili drugih opijata i navodi da takvi ne treba da budu članovi parlamenta.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Нико од наших посланика који не прође тај дневни тест пристојности, да макар не долази под опијатима или у алкохолисаном стању, не треба да буде члан овог парламента.",
+    "date": "2013-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. avgust 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da su posledice dugogodišnje vladavine DS i prethodnog režima i dalje vidljive u stanju stvari u državi.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "којима је због последица дугогодишње владавине ДС остало да попију литар млека, ако могу, и један килограм хлеба?",
+    "date": "2013-03-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
+   }
+  }
+ ]
+}

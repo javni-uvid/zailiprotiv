@@ -1,0 +1,59 @@
+{
+ "mp": "биљана илић стошић",
+ "model": "claude-haiku-5-5",
+ "read": 16,
+ "speeches": 16,
+ "sittings": 14,
+ "points": [
+  {
+   "tekst": "Navodi da država pomaže građanima novčanim merama, kao što su stanovi i pokloni za mlade, pomoć pri rođenju dece i paketi pomoći tokom krize.",
+   "govora": 3,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Признаћете, велика је ствар за некога ко нема свој кров над главом да га држава помогне са поклоном од 20 хиљада евра.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da je država jaka i stabilna i da zato može da finansira te mere, uz tvrdnju da su javne finansije sigurne.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, само јака и стабилна држава може да изнесе овакве програме, а таква је наша држава.",
+    "date": "2025-03-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Privremene stenografske beleske Prve sednica Prvog redovnog zasedanja NSRS, odrzane 4. marta 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da opozicija širi strah i paniku među građanima, na primer oko mleka i rebalansa budžeta.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Страх и панику шири садашња опозиција, а бивша власт, која откако су је грађани најурили из власти не може довољно да им се освети.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da treba štititi najranjivije kategorije građana, kao što su trudnice, porodilje, deca i najugroženiji članovi društva.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "14"
+   ],
+   "citat": {
+    "tekst": "На том задатку пре свега треба заштитити најрањивије категорије, а то су свакако труднице, породиље и деца, мада, истини за вољу, нису једини.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  }
+ ]
+}

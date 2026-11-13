@@ -1,0 +1,59 @@
+{
+ "mp": "косанић ђорђе",
+ "model": "claude-haiku-5-5",
+ "read": 12,
+ "speeches": 12,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Navodi da su krediti za koje je glasao povoljni, sa niskom kamatom i dugim rokom otplate.",
+   "govora": 4,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Господо, када добијете кредит за који је фиксна каматна стопа 3%, када је рок отплате 18 година и са грејс-периодом од четири године, свакако можемо рећи да је то веома, веома повољан кредит.",
+    "date": "2013-03-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da su važni infrastrukturni projekti, kao što su pruge i auto-putevi, važni za razvoj zemlje.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "С једне стране, свакако, то је важно због убрзања возова на Коридору 10. Вероватно ће и овај кредит од осамсто милиона долара значити за реконструкцију пруга, а подсетићу да је просечна брзина на нашим пругама у овом тренутку само 42 километра.",
+    "date": "2013-03-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da je saradnja sa Kinom važna za Srbiju i da se Kinezima isplati ulaganje u Srbiju.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "морам рећи да се и Кинезима, што је мало можда и чудно, веома исплати да улажу у Србију из више разлога.",
+    "date": "2013-07-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. jul 2013.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da Srbija ispunjava obaveze i uslove na putu ka EU, što potvrđuju zakoni o kojima se glasa.",
+   "govora": 2,
+   "sazivi": [
+    "12",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Исто тако, овим сетом закона испуњава се обавеза за Поглавље 23, на путу Србије ка ЕУ.",
+    "date": "2023-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prvo vanredno zasedanje NSRS, u Trinaestom sazivu, cetvrti dan rada, 8. februar 2023. godine.docx"
+   }
+  }
+ ]
+}

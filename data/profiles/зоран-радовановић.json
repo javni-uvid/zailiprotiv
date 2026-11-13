@@ -1,0 +1,69 @@
+{
+ "mp": "зоран радовановић",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 19,
+ "sittings": 1,
+ "points": [
+  {
+   "tekst": "Navodi da zakoni o zdravstvu, preko centralizovanih javnih nabavki lekova, donose uštede od 20 do 40%.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "обезбеђују уштеде при јавним набавкама од 20 до 40% везано за набавне цене лекова, јер што је већа количина набавке, то је и боља цена.",
+    "date": "2012-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da se rok plaćanja zdravstvenim ustanovama smanjuje sa 250 dana u 2012. na 150, 120 i 90 dana u 2013, 2014. i 2015. godini.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Дуг, односно време плаћања је било 2012. године 250 дана, 2013. године биће 150 дана, 2014. године биће 120 дана и 2015. године 90 дана",
+    "date": "2012-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da u Kliničkom centru u Nišu nedostaju lekovi i potrošni materijal, i da bi državna nabavka skinula listu čekanja od 1.500 ljudi za operaciju katarakte.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Уколико би се набавка средстава вршила преко државе, ова листа од 1.500 људи би била скинута у две сале за два до два и по месеца",
+    "date": "2012-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da je Vlada preuzela dug zdravstvenih ustanova i da zakonima stvara uslove da država preuzme taj dug na sebe.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Влада Републике Србије, Министарство здравља, сетом закона су преузели дуг, односно стварају услове да дуг преузму на себе",
+    "date": "2012-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Traži da se zakoni o zdravstvu podrže, ističući da su dobri i da protivnici nisu iznosili konkretne zamerke na njih.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Нико од вас није тражио да гласате за овај закон. Од вас је тражено само да, ако је нешто добро, а ништа лоше нисте рекли већ сте причали о хапшењима, да тај закон подржите.",
+    "date": "2012-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+   }
+  }
+ ]
+}

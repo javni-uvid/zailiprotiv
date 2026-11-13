@@ -1,0 +1,69 @@
+{
+ "mp": "драган шутановац",
+ "model": "claude-haiku-5-5",
+ "read": 16,
+ "speeches": 21,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Наводи да се у последње две године страна улагања смањују, те да је Србија у 2014. години имала само мали део инвестиција из ранијих година.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Забрињавајуће је то што се ослањате на стране инвеститоре, а за две године имате практично нешто мало више од милијарду евра инвестиција.",
+    "date": "2014-05-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. maj 2014.docx"
+   }
+  },
+  {
+   "tekst": "Zamera vladi što je za dve godine napravila dug od skoro sedam milijardi evra.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Влада у којој ви седите, и претходне две владе, које су биле практично исте, али реконструисане, направила је дуг у ове непуне две године од готово седам милијарди евра.",
+    "date": "2014-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su od 2012. do 2014. godine porezi povećani, uključujući porez na dobit i PDV.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Такође, шта се десило у Србији од 2012. до 2014. године – то је да никада веће порезе нисмо имали.",
+    "date": "2014-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Traži da se u Zakonu o energetici navede množina umesto jednine, jer zakon ograničava rad više javnih preduzeća za energetske delatnosti.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Не видим због чега би Влада себи свезала руке, а упошљавала парламент да опет у неким недељама, као данас, заседамо не би ли променили један члан закона који вас онемогућава да имате могућност више предузећа.",
+    "date": "2014-12-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. decembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da u zakonu treba odrediti da li dobit ulazi u ukupan prihod građana.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Србија је земља, вероватно једна од ретких, у којој добит не улази у укупан приход грађана.",
+    "date": "2014-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jul 2014.docx"
+   }
+  }
+ ]
+}

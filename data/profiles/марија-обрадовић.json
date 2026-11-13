@@ -1,0 +1,70 @@
+{
+ "mp": "марија обрадовић",
+ "model": "claude-haiku-5-5",
+ "read": 18,
+ "speeches": 20,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da je borba za ravnopravnost polova uglavnom ženska, ali da odluka da budu ravnopravni mora biti i muška.",
+   "govora": 2,
+   "sazivi": [
+    "10",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Често се спомиње у дискусијама које се тичу равноправности полова да борба за равноправност полова јесте углавном женска, али да одлука да будемо равноправни мора бити мушка.",
+    "date": "2014-05-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2014.docx"
+   }
+  },
+  {
+   "tekst": "Podržava predlog Gordane Čomić kojim se povećava broj žena na izbornim listama, tako što najmanje dva od pet kandidata budu iz manje zastupljenog pola.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Дакле, ми смо за то, и постало је саставни део Предлога закона Гордане Чомић, да две у пет кандидата, у сваких пет, буду мање заступљен пол, а то су жене.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Upozorava da male stranke i koalicije mogu da ne istaknu ženu na listi, jer su žene na lokalnom nivou manje vidljive onima koji sastavljaju listu.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ми морамо да омогућимо да у свакој странци жена може да уђе. То је суштина наше приче.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da novi medijski zakon ne znači gašenje lokalnih i regionalnih medija, već finansiranje kroz projekte i propisane procedure.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "да заиста не треба плашити ни запослене у медијима, ни уреднике редакција, нити људе који су на било који начин сада финансирани из државног буџета да ће по усвајању овог закона апсолутно остати без посла",
+    "date": "2014-08-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su konsultacije sa ministrom i radnom grupom doprinele da se mnogi amandmani povuku pre rasprave, i da opozicija i pozicija zajedno rade na predlogu zakona o policiji.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Јучерашње консултације које смо имали, а и данашњи одбор, допринели су томе да многи амандмани који су поднети буду повучени пре расправе",
+    "date": "2015-07-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. jul 2015.docx"
+   }
+  }
+ ]
+}

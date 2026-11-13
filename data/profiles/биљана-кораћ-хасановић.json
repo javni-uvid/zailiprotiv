@@ -1,0 +1,57 @@
+{
+ "mp": "биљана кораћ хасановић",
+ "model": "claude-haiku-5-5",
+ "read": 38,
+ "speeches": 40,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Zamera što se zakoni stavljaju u hitan postupak, uz kratak rok za proučavanje i za podnošenje amandmana.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Али, зашто се дошло уопште у ситуацију да ми морамо дан пре ступања на снагу, односно пре почетка примене Закона о јавном бележништву да усвајамо ове законе и да за мање од 24 сата они морају да ступе на снагу?",
+    "date": "2014-08-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da amandmani na Zakon o radu treba da štite zaposlene, na primer tako što ograničavaju rad na određeno vreme i pробни rad.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Предложеном изменом таксативно наводимо случајеве у којима је могуће засновати радни однос на одређено време, будући да овакав вид радног односа треба да буде изузетак у односу на правило да се радни однос заснива на неодређено време, јер не пружа толики степен сигурности и извесности у животу појединаца и запослених.",
+    "date": "2014-07-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/17. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Zamera Vladi što odbija amandmane kratkim i nejasnim obrazloženjima, koja po njenom mišljenju ne objašnjavaju razloge odbijanja.",
+   "govora": 4,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Ако пажљиво прочитате ово образложење Владе, онда произилази да је Влада у ствари прихватила наш амандман, јер сама каже да упис капитала до 5% обезбеђује медијски плурализам и обезбеђује транспарентност власништва.",
+    "date": "2014-08-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Traži veću transparentnost u privatizaciji i u vlasništvu nad medijima, kroz jasnije propisane podatke i pravila.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "На овај начин се истовремено постиже и већи степен транспарентности у поступку приватизације, а уједно се и уједначавају поступци приватизације, без обзира на то који субјект приватизације је у питању.",
+    "date": "2014-07-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. jul 2014.docx"
+   }
+  }
+ ]
+}

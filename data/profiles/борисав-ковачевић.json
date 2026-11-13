@@ -1,0 +1,48 @@
+{
+ "mp": "борисав ковачевић",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 13,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да је безбедносни систем потребно преиспитати и реорганизовати, укључујући полицију и службе безбедности.",
+   "govora": 2,
+   "sazivi": [
+    "10",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Предлажем да се ми лепо и у Скупштини овде договоримо да кренемо веома студиозно, дубиозно и широко у преиспитивање целокупног нашег безбедносног система.",
+    "date": "2021-12-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, treci dan rada, 23. decembar 2021..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да закони доприносе заштити људских права и слобода.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "12"
+   ],
+   "citat": {
+    "tekst": "У остваривању и довођењу до највишег нивоа остваривања људских права чини ми се да је овај закон, односно допуне Закона о забрани дискриминације најбољи корак који је направљен.",
+    "date": "2021-05-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvanaesta sednica Prvog redovnog zasedanja NSRS, 18. maj 2021..docx"
+   }
+  },
+  {
+   "tekst": "Замера на начин вођења расправе у Скупштини.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Колико знам, ми смо завршили расправу у начелу. Госпођо председавајућа, ви упорно, ево, сат времена, пуштате да већина досадашњих учесника у расправи наставља расправу у начелу.",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  }
+ ]
+}

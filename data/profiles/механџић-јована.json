@@ -1,0 +1,57 @@
+{
+ "mp": "механџић јована",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 12,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Zamera ministru poljoprivrede i Vladi što nisu na vreme reagovali na afl atoksin u kukuruzu i mleku.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Зашто нисте благовремено реаговали јесенас и зашто нисте предузели адекватне мере да 37% кукуруза зараженог афлатоксином, односно гљивицама, третирате и снизите ниво ове канцерогене материје?",
+    "date": "2013-03-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Zamera ministru finansija Dinkiću što je u budžetu za 2013. godinu pogrešno planirao prihode za 10,57%.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Данас смо у ситуацији, пошто тада нисте реаговали, да примања у буџету смањујете за 92,3 милијарде динара.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Zamera što se u rebalansu budžeta smanjuju sredstva za nauku i obrazovanje i navodi da se time ugrožava budućnost zemlje.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ви сте то свели на минимум и ви доводите науку и образовање на ивицу опстанка.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Traži da se tri ministarstva odreknu dela sredstava i da ta sredstva lokalnim samoupravama budu vraćena za završetak započetih projekata.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ако већ постоје локалне самоуправе и постоје градови и општине у Србији, онда не видим зашто им не бисмо ставили на располагање средства којима могу да заврше своје пројекте и да те пројекте односно резултате пројеката ставе на располагање грађанима Србије?",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
+   }
+  }
+ ]
+}

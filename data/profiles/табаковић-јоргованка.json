@@ -1,0 +1,57 @@
+{
+ "mp": "табаковић јоргованка",
+ "model": "claude-haiku-5-5",
+ "read": 12,
+ "speeches": 15,
+ "sittings": 1,
+ "points": [
+  {
+   "tekst": "Navodi da se odgovornost Vlade proširuje na imaoce javnih ovlašćenja na nivou Republike, jer ta tela do sada nisu bila pod njenom kontrolom.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Тако је, поред те контроле која је установљена већ постојећим законима, где Влада има надлежност над прописима и одлукама које доносе органи управе, проширено има те имаоце јавних овлашћења, али на нивоу Републике.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  },
+  {
+   "tekst": "Zamera što agencije i druga tela naplaćuju građanima razne dozvole, potvrde i naknade, a to opterećuje privredu i državni budžet.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "јер се доносе прописи који отежавају рад привреди, не само у смислу разноврсних папира које треба прибавити, него зато што то кошта",
+    "date": "2012-07-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/STENO - Trece vanredno zasedanje 26. jul 2012, drugi dan rada cir.doc"
+   }
+  },
+  {
+   "tekst": "Odbacuje tvrdnje da će zakon dovesti do otpuštanja u državnoj upravi i navodi da radni odnos zaposlenih ne prestaje.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Али да износите на оваквом месту да ће доћи до сече кадрова, до отпуштања људи, једноставно не одговара истини.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  },
+  {
+   "tekst": "Zamera prethodnoj vladi što je zapošljavala partijske kadrove i povećavala broj zaposlenih u državnoj upravi.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "ти који су завршили тако тежак и уважен факултет са десетком, не понижавајући пољопривредни факултет, у сврху партијске промоције нађоше посао",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  }
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "mp": "божанић бојана",
+ "model": "claude-haiku-5-5",
+ "read": 41,
+ "speeches": 59,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da su lokalnim samoupravama preneta obaveza i nadležnost, ali ne i sredstva, i traži fiskalnu decentralizaciju.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Оно што смо добијали у претходном периоду и што се, чини ми се, и сада дешава, то је да имамо децентрализацију, али само у смислу надлежности, у смислу обавеза, али никако и у смислу средстава.",
+    "date": "2012-11-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. dan VIII sednica II redovnog zasedanja u 2012. 30.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da je izgradnja auto-puta prema zapadnoj Srbiji važna za taj kraj.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "изградња путне инфраструктуре за Србију је од немерљивог значаја и због недостатка ауто-путева у претходном периоду сви важни правци из централне и западне Европе, просто нас заобилазе и самим тим прети нам опасност свакако од замирања привреде.",
+    "date": "2013-11-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Traži da se zadrže sudske jedinice u Čajetini i Novoj Varoši, jer bi njihovo ukidanje otežalo pristup sudu građanima tih krajeva.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Испред посланичког клуба ДСС поднела сам амандман да се задржи судска јединица у Новој Вароши, за подручје Основног суда у Пријепољу и да се задржи судска јединица у Чајетини, за подручје Основног суда у Ужицу.",
+    "date": "2013-11-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što su povećani PDV, akcize i porez na dobit.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Стварно би било срамота да више повећавамо порезе, јер повећали смо и ПДВ и акцизе, порез на добит, порез на капиталну добит, доприносе за ПИО фонд итд.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  }
+ ]
+}

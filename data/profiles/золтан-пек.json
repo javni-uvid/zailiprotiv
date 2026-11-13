@@ -1,0 +1,59 @@
+{
+ "mp": "золтан пек",
+ "model": "claude-haiku-5-5",
+ "read": 12,
+ "speeches": 12,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Upozorava da poreske promene mogu da opterete građane i lokalne samouprave.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Хоћу да кажем, као што смо рекли, ако ће општина повећати порез на имовину, сама локална самоуправа ће носити терет ове имовине.",
+    "date": "2013-05-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/27. maj 2013.doc"
+   }
+  },
+  {
+   "tekst": "Upozorava na veliko zaduživanje države i na to da se troši više nego što se zarađuje.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Толико кредита имамо, нажалост, до данашњег дана да наредних двадесет, можда и више, година треба да плаћамо рате по кредитима, ако не узмемо још неки кредит.",
+    "date": "2012-11-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što se gubici javnih preduzeća i dalje plaćaju iz budžeta.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Као што смо чули од господина министра, сваке године губимо из буџета око осамсто милиона долара, колико улажемо у ова предузећа, и крајње је време да смањимо овај трошак.",
+    "date": "2014-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Pozdravlja poreske olakšice za poslodavce koji zapošljavaju nove radnike.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Послодавац и предузетник има такву врсту олакшица да у ствари има повраћај дела уплаћеног пореза на зараду новог запосленог.",
+    "date": "2014-05-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. maj 2014.docx"
+   }
+  }
+ ]
+}

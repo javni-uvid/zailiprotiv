@@ -1,0 +1,57 @@
+{
+ "mp": "марковић предраг",
+ "model": "claude-haiku-5-5",
+ "read": 30,
+ "speeches": 42,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da su izmene Zakona o ministarstvima posledica promena ministara prema koalicionom sporazumu i da stvaraju zakonski preduslov za personalne promene.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Будући да, као што је и министар констатовао, за потребе персоналних промена, ствара се законски предуслов оваквим изменама и допунама Закона",
+    "date": "2013-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što su veliki gradovi smanjili izdvajanja za kulturu, a navodi da treba očuvati ono što se ima u kulturi.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Знате ли колико је смањио само град Београд, Нови Сад, Крагујевац, Ниш, говорим о градовима који су моћни, јер су велики?",
+    "date": "2013-05-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da izmene zakona o autorskim pravima ukidaju muzički dinar za zanatlije i smanjuju ga za ugostiteljske objekte, i da se na ostale zahteve treba kasnije vratiti.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Највише се говори о томе када се укида такозвани музички динар за занатлије и смањује за власнике угоститељских објеката.",
+    "date": "2012-12-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. dan VIII sednica II redovno zasedanje u 2012. 05.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da Ustav predviđa da sedmina od 7% budžeta ide Vojvodini i zamera što nije bilo jasno zašto se taj procenat navodi i kako se deli.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Мени није било јасно не због чега се наводи 7%, што је једна реченица која није баш типична за уставе, него што се додатно у том истом ставу дефинише колико седмина тих 7% ће на шта ићи.",
+    "date": "2012-11-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
+   }
+  }
+ ]
+}

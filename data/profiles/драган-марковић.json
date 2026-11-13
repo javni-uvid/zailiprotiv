@@ -1,0 +1,60 @@
+{
+ "mp": "драган марковић",
+ "model": "claude-haiku-5-5",
+ "read": 14,
+ "speeches": 16,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да пољопривредном произвођачу треба сигуран купац и да му се производ на време исплати.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Пољопривредном произвођачу не треба социјална помоћ, само му треба оно што се зове сигуран купац, загарантована цена и да на време се исплати производ који он преда својим купцима.",
+    "date": "2022-12-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 5. dan rada, 9. decembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Traži da se uvoz poljoprivrednih proizvoda ograniči i da se zaštite domaći proizvodi.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Да ли ћемо ми заштитити пољопривредне производе у Србији да се не увози у количини, у мери колико се увозило последњих година и да ту правимо директну штету пољопривредним произвођачима?",
+    "date": "2013-10-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. oktobar 2013. (Četvrta sednica Drugog redovnog zasedanja).doc"
+   }
+  },
+  {
+   "tekst": "Navodi da stabilnost i sigurnost privlače strane investitore u Srbiju.",
+   "govora": 2,
+   "sazivi": [
+    "11",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Стабилност динара је веома битна ствар и за долазак инвеститора, за производњу, а када долазе инвеститори од тога користи имају и локалне самоуправе и државни буџет.",
+    "date": "2017-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/7. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera Živkoviću što iznosi tvrdnje o pomoći građanima i o Jagodini i podseća ga na njegovu prošlost u Nišu.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Господине Живковићу, нећу рећи да лажете, али изрекли сте истину. Хајде донесите и покажите папир где пише да Јагодина добија сваког месеца по двадесет милиона.",
+    "date": "2017-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/7. decembar 2017..pdf"
+   }
+  }
+ ]
+}

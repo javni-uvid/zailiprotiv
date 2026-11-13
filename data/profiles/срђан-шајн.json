@@ -1,0 +1,69 @@
+{
+ "mp": "срђан шајн",
+ "model": "claude-haiku-5-5",
+ "read": 35,
+ "speeches": 42,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Navodi da Kancelarija za ljudska i manjinska prava nije dovoljno stručna i da je u njoj potrebna promena.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Није одговорност ни ове скупштине, ни министра за финансије, него је одговорност те канцеларије и неспособних људи који тамо још увек седе.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Zalaže se za osnivanje zadruga i zapošljavanje socijalno ugroženih, uključujući Rome, u izgradnji stambenih jedinica koje bi ti ljudi sami otplaćivali.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "да ти људи дугорочно отплаћују те своје стамбене јединице, раде и на тај начин доприносе земљи из које долазе.",
+    "date": "2012-11-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. dan VIII sednica II redovnog zasedanja u 2012. 30.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Podržava legalizaciju objekata izgrađenih bez građevinske dozvole i navodi da se time sprečava rušenje kuća socijalno ugroženih.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "На овај начин стварамо корак даље, одузимамо могућност за самовољу некаквих градоначелника који су се осионо понашали у не тако далекој прошлости, који су зарад интереса крупног капитала рушили куће социјално угрожених категорија",
+    "date": "2013-03-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da se 7% budžeta Vojvodine ne koristi za ustanovu „Тем“ i zahteva da se Ustav i odluke Skupštine Vojvodine poštuju.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Не реализује се 7% за те сврхе, јер у том листу излази чланак који критикује секретара Извршног већа за информисање, и одмах се следеће недеље прекида",
+    "date": "2012-11-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Traži da prava u vezi sa planiranjem porodice, trudnoćom i roditeljstvom važe za oba supružnika, a ne samo za trudnicu.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Један део решења је да се у времену, односно у периоду који је везан за планирање породице, у току трудноће где смо бенефит остваривали само за жене и у току родитељства, да се изједначе права оба супружника у том периоду.",
+    "date": "2012-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+   }
+  }
+ ]
+}

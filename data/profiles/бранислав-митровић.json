@@ -1,0 +1,45 @@
+{
+ "mp": "бранислав митровић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 14,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Navodi da treba rasteretiti privredu, posebno preduzetnike i mala i srednja preduzeća, i ukloniti administrativne prepreke u poslovanju.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Друга чињеница, друга значајна ставка самог овог пореског сета јесте помоћ и растерећење привреде, а посебно предузетника и малих и средњих предузећа.",
+    "date": "2013-05-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/24. maj 2013.docx"
+   }
+  },
+  {
+   "tekst": "Zamera javnim preduzećima što imaju propuste i gubitke u radu, a da na kraju troškove snose građani.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Управо ми долазимо до кључног проблема и долазимо до истине да све неуспехе, све губитке јавна предузећа у овој држави на крају сваљују на леђа грађана.",
+    "date": "2013-05-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/27. maj 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da svet i dalje prolazi kroz veliku ekonomsku krizu i da je oporavak privrede preduslov za oporavak države.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Међутим, до озбиљног опоравка државе доћи ће тек оног тренутка када опоравимо нашу привреду и када привредну активност подигнемо на много виши ниво.",
+    "date": "2013-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. jul 2013..doc"
+   }
+  }
+ ]
+}

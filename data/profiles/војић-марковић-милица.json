@@ -1,0 +1,57 @@
+{
+ "mp": "војић марковић милица",
+ "model": "claude-haiku-5-5",
+ "read": 39,
+ "speeches": 47,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Navodi da Srbija mora da reprogramira dugove jer ih neće moći servisirati ni ove ni narednih godina.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Оно што је такође јасно јесте да морамо репрограмирати своје дугове јер нећемо моћи да их сервисирамо, ни ове године ни у наредним годинама.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što je ukinut Fond za zaštitu životne sredine i što je zaštita životne sredine u državnom sistemu postavljena na drugačiji način.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ова влада је формирала три министарства која се баве једном облашћу, а требало би и било би природно и рационално да једно министарство води рачуна о области заштите животне средине.",
+    "date": "2013-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
+   }
+  },
+  {
+   "tekst": "Traži da odgovara onaj ko je činio korupciju, a ne da se posledice solidarno pokrivaju iz sredstava zdravstvenog sistema.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "ДСС се залаже не за то да ми не радимо солидарно и да солидарно лечимо људе, него за то да онај ко је правио ово што је правио, силне коруптивне захвате, радње и слично, одговара за то.",
+    "date": "2012-12-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. dan VIII sednica II redovnog zasedanja u 2012. 13.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Traži da se sredstva iz Trezora koriste po jasno utvrđenim i poznatim kriterijumima.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ми сматрамо да је врло важно да се каже да ће се та средства користити према јасно утврђеним и познатим критеријумима.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
+   }
+  }
+ ]
+}

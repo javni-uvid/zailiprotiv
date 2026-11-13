@@ -1,0 +1,46 @@
+{
+ "mp": "кркобабић милан",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 10,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Наводи да у Србији нема вишка запослених, него мањка посла, и да треба покренути привредну активност.",
+   "govora": 4,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Ми из ПУПС-а смо били веома јасни и стојимо на том ставу – нема, господо, драги моји пријатељи, вишка људи, има мањка посла.",
+    "date": "2012-11-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Тражи од министра одговор о исплати наредних рата тринаесте пензије.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Господине Динкићу, молим вас да одговорите на питање, не мени, него пола милиона људи сада чека одговор на питање – да ли ће септембра и децембра идуће године моћи да рачунају два пута на по 4.000 динара?",
+    "date": "2012-11-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Тражи да се измире дугови и обавезе, а посебно дуговања партије према Пословном простору града Београда.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Замолио бих вас, ако није проблем, да ваша дуговања као партија измирите Пословном простору града Београда.",
+    "date": "2012-11-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+   }
+  }
+ ]
+}

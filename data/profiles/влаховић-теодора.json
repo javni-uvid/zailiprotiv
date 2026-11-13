@@ -1,0 +1,57 @@
+{
+ "mp": "влаховић теодора",
+ "model": "claude-haiku-5-5",
+ "read": 20,
+ "speeches": 23,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da je zakonska izmena kojom je smanjena osnovica za budžet Autonomne Pokrajine Vojvodine neustavna, jer krši ustavnu odredbu o pravu Vojvodine na deo budžeta Republike Srbije.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ми сада имамо да се минимум једном месечно донесе закон којим се директно крши једна од одредаба Устава Републике Србије.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što su sredstva za Vojvodinu uglavnom transferna i što budžet Pokrajine nije jasno prikazan, jer se deo sredstava iz republičkog budžeta накнадно приказује као budžet Pokrajine.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Имате средстава која су трансферна, имате средства која су у процентима, и на крају има средства која ће, ако Република нешто уложи на територији АП Војводине, накнадно то приказати као да су то средства намењена за буџет АП Војводине.",
+    "date": "2012-12-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. dan VIII sednica II redovnog zasedanja u 2012. 11.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što predlozi zakona centralizuju oblast energetske efikasnosti i ne daju Pokrajini i lokalnim samoupravama dovoljno nadležnosti, a brani svoje amandmane kao ustavne i u skladu s pravnim sistemom.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Практично, ради енергетске ефикасности, Министарство, односно министар је решио, одлучио или проценио да треба централизовати област.",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Upozorava da su предвиђене kazne za lokalne samouprave, koje obustavljaju izvršenje budžeta, preoštre i da mogu dovesti do finansijskog kolapsa opština koje nemaju dovoljno sopstvenih prihoda.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Сматрам да су сувише строге казне предвиђене у члану 55. овог закона, зато што је ту предвиђено да се обуставља комплетно извршење буџета према локалним самоуправама, граду Београду и Покрајини.",
+    "date": "2012-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/12. dan VIII sednica II redovnog zasedanja u 2012. 12.12.2012..doc"
+   }
+  }
+ ]
+}

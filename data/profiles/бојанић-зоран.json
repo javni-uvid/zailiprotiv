@@ -1,0 +1,73 @@
+{
+ "mp": "бојанић зоран",
+ "model": "claude-haiku-5-5",
+ "read": 16,
+ "speeches": 20,
+ "sittings": 13,
+ "points": [
+  {
+   "tekst": "Navodi da je prethodna vlast ostavila lošu situaciju u državi i privredi.",
+   "govora": 3,
+   "sazivi": [
+    "9",
+    "10",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Оно што причињава велику тешкоћу у изради буџета и у сагледавању свих проблема око њега је наслеђено стање, урушени систем вредности у вишегодишњем периоду, протраћене паре од успелих и неуспелих приватизација, уништена индустрија која би требало да пуни тај буџет, без јасне стратегије и воље да се ишта промени у претходном периоду.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Podržava Predlog zakona o otklanjanju posledica poplava i navodi da mu je cilj brža normalizacija života u poplavljenim područjima.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Основни мотив за доношење овог закона је што хитнија нормализација живота у поплављеним подручјима и подручјима која су угрожена клизиштима.",
+    "date": "2014-07-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/16. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Zamera što je privatizacija u prethodnom periodu loše sprovedena.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Претходна приватизација, макар на примеру града Краљева, говори колико је лоше и несавесно изведена. Рећи ћу да од предузећа за која ја знам да су приватизована већина више и не постоји.",
+    "date": "2014-07-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Podržava predložene zakone Vlade i navodi da vode ka napretku Srbije.",
+   "govora": 3,
+   "sazivi": [
+    "9",
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Овај сет закона нам говори да је Србија на правом путу, и да са овим сетом закона пратимо онај правац који је зацртан 2014. године, Србија 2025.",
+    "date": "2021-12-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 22. decembar 2021. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Brani Telekom Srbija i navodi da su pokušaji da se ona oslabi, od strane SBB-a i Junajted medija grupe, bili neuspešni.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Покушавали су разноразним махинацијама и спречавањем да опстане само један монополиста, а то је био СББ, тада, да не причам о Јунајтед медија групи, да обесмисле телекомуникационог гиганта и нису успели у томе и хвала Богу да нису успели.",
+    "date": "2021-12-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 22. decembar 2021. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

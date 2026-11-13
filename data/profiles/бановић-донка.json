@@ -1,0 +1,69 @@
+{
+ "mp": "бановић донка",
+ "model": "claude-haiku-5-5",
+ "read": 30,
+ "speeches": 39,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Zamera što su za zaštitu životne sredine u budžetu za 2013. godinu predviđena malo sredstva, oko 0,4%, i traži da se stavke budžeta jasnije definišu.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "О томе сам говорила када је био на дневном реду предлог буџета, да је издвојено свега 0,4% средстава за следећу годину када је у питању заштита животне средине.",
+    "date": "2012-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/12. dan VIII sednica II redovnog zasedanja u 2012. 12.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da budžet i rad Fonda za razvoj nisu dovoljno transparentni, jer se iz dokumenata ne vidi za šta su sredstva namenjena i zašto je neki projekat dobio novac.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Дакле, на самом сајту се не може добро видети због чега је неки пројекат добио новац, а због чега неки није.",
+    "date": "2012-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/12. dan VIII sednica II redovnog zasedanja u 2012. 12.12.2012..doc"
+   }
+  },
+  {
+   "tekst": "Traži brisanje člana 10. zakona o budžetu, koji ograničava na 20% broj državnih službenika koji mogu da napreduju u platni razred, jer to demotiviše zaposlene.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Да би они што боље радили, мора да постоји и тај принцип мотивације и да онај ко добро обавља свој посао може да напредује и пређе у следећи платни разред.",
+    "date": "2012-11-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. dan VIII sednica II redovnog zasedanja u 2012. 30.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Traži da se u Zakonu o privatnom obezbeđenju dozvoli upotreba električnih omamljivača, uz posebne propise, jer takva sredstva već postoje na tržištu.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ми знамо да у овом тренутку не постоји правни оквир за ово, али сматрамо да је веома значајно да приватно обезбеђење, осим употребе пиштоља и полуаутоматског оружја, може да употреби и електричне омамљиваче.",
+    "date": "2013-11-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/21. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što zakon omogućava upis prava svojine na objektima izgrađenim bez građevinske dozvole, uključujući stambeno-poslovne objekte, i navodi da to nagrađuje one koji nisu poštovali zakon.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Они који су поштовали закон и заиста платили све надокнаде и трошкове некако осећају да их ми јавно исмевамо.",
+    "date": "2013-03-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/8. mart 2013.doc"
+   }
+  }
+ ]
+}

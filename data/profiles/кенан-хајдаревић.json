@@ -1,0 +1,57 @@
+{
+ "mp": "кенан хајдаревић",
+ "model": "claude-haiku-5-5",
+ "read": 12,
+ "speeches": 13,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Navodi da zakon o javnim preduzećima otvara put partijskoj državi, jer od volje Vučića, Dačića i Dinkića zavisi ko će biti na funkciji u javnom preduzeću.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Основна порука овог закона јесте да од воље Вучића, Дачића, Динкића зависи функција свакога човека који се од сутра пробуди и крене на посао у јавно предузеће.",
+    "date": "2012-12-03",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/7. dan VIII sednica II redovnog zasedanja u 2012. 3.12.2012.doc"
+   }
+  },
+  {
+   "tekst": "Zamera što Vlada nije uskladila osnivačka akta javnih preduzeća sa Zakonom o javnim preduzećima do roka od 27. februara, a odluku za Puteve Srbije donela tek tri meseca kasnije.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Зашто Влада Србије није усагласила акта о оснивању јавних предузећа са Законом о јавним предузећима до 27. фебруара?",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da javna preduzeća koja primaju subvencije nisu objavila program trošenja tih sredstava i plan racionalizacije, kako zakon nalaže.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Које је јавно предузеће које је у надлежности вашег министарства, а користи на директан или индиректан начин буџетска средства, то урадило?",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da ministri ne odgovaraju na pitanja poslanika, pa poslanici ponavljaju ista pitanja bez konkretnih odgovora.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ми не понављамо ова питања зато што можда ви нисте чули и остало, него зато што не добијамо конкретне одговоре.",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  }
+ ]
+}

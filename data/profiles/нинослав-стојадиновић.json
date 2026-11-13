@@ -1,0 +1,57 @@
+{
+ "mp": "нинослав стојадиновић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 15,
+ "sittings": 2,
+ "points": [
+  {
+   "tekst": "Navodi da uvođenje мастер струковних студија stvara zabunu kod poslodavaca i inspektora pri priznavanju diploma.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Како инспектори третирају дипломе? Третирају дипломе само на основу бодова илити кредита, што је за нашу јавност јасније.",
+    "date": "2014-09-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. septembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da Komisija za akreditaciju treba da bude nezavisnija, u finansiranju i u odlučivanju, i da njena odluka bude konačna.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "наша идеја је била да се уведе двостепеност, да се у случају поништења одлуке врати материјал Комисији на поновно одлучивање, при чему би одлука Комисије била коначна.",
+    "date": "2014-09-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Zamera Vladi što odbija amandmane obrazloženjima koja smatra netačnim ili nejasnim.",
+   "govora": 4,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Образложење Владе за одбијање амандмана, јер није у складу са европском праксом у образовању, јесте страшно.",
+    "date": "2014-09-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Traži da se rok za donošenje podzakonskih akata skrati na šest meseci.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Најављује се да ће следеће године бити готов нов закон, тако да је предлог био да се рок скрати на шест месеци.",
+    "date": "2014-09-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
+   }
+  }
+ ]
+}

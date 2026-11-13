@@ -1,0 +1,57 @@
+{
+ "mp": "александар пејчић",
+ "model": "claude-haiku-5-5",
+ "read": 19,
+ "speeches": 26,
+ "sittings": 5,
+ "points": [
+  {
+   "tekst": "Zalaže se za ulaganje u osnovne sportove, poput atletike i gimnastike, i traži da se sredstva usmere na te sportove.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Наша намера је пре свега била да овим амандманом помогнемо једном базичном спорту, а то је атлетика, пошто је атлетика у успону, а то се видело на претходним олимпијским играма.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Zamera Vladi što štedi na zdravstvu, školstvu i poljoprivredi, a ne na prevelikoj državnoj administraciji.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Међутим, оно што је битно, Влада није решила да штеди на прегломазној администрацији, која је и те како предимензионирана и, сложићете се, за наше услове и те како велика.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Traži da se u Vlasotincu osnuje osnovni sud, jer su u tom mestu veliki broj predmeta i mali broj sudija za njih.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Тражимо од вас господине да судску јединицу у Власотинцу именујете за основни суд у Власотинцу. Постоје многи разлози, навешћу један од разлога.",
+    "date": "2013-11-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Traži da se sasluša lokalna samouprava i građani Predejana, i da se trasa Koridora 10, koja zaobilazi tu varošicu, promeni.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Више пута сам овде говорио о грађанима варошице Предејане који су протестовали због трасе Коридора 10, која заобилази ту варошицу.",
+    "date": "2013-11-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. novembar 2013..doc"
+   }
+  }
+ ]
+}

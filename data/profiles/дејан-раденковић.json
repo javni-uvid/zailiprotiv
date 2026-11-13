@@ -1,0 +1,59 @@
+{
+ "mp": "дејан раденковић",
+ "model": "claude-haiku-5-5",
+ "read": 33,
+ "speeches": 42,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Брани буџетске предлоге владе, наводећи да су пројекције реалне и да је већи дефицит у кризним годинама оправдан.",
+   "govora": 4,
+   "sazivi": [
+    "9",
+    "11",
+    "13"
+   ],
+   "citat": {
+    "tekst": "Мања је цена то што нам дефицит неће бити 3% БДП, него ће бити нешто већи од стопе раста БДП у овој години.",
+    "date": "2022-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 7. novembar 2022. godine.docx"
+   }
+  },
+  {
+   "tekst": "Замера што је укинута Служба друштвеног књиговодства, за коју наводи да је имала контролни механизам, и што је после тога остало мање контроле.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Тада смо оставили да једноставно и отварање фирме и поступци стечаја буду без икакве контроле. То је само резултирало да данас имамо 500.000 људи ван својих радних места.",
+    "date": "2013-07-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2013..doc"
+   }
+  },
+  {
+   "tekst": "Замера прethodnim vlastima što su privatizacije bile „пљачкашке“ i što su radnici ostali bez posla.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Против смо пљачкашких приватизација које су убиле ову земљу, разориле и отерале 500 хиљада радника на улице.",
+    "date": "2013-07-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. jul 2013..doc"
+   }
+  },
+  {
+   "tekst": "Тражи да се расprava vrati na dnevni red i da se prestane sa ličnim prepucavanjima o prošlosti.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Дајте да престанемо више с тиме и да престану они ТВ дуели и неке личне ствари да се износе.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  }
+ ]
+}

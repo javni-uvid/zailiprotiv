@@ -1,0 +1,57 @@
+{
+ "mp": "обрадовић радојко",
+ "model": "claude-haiku-5-5",
+ "read": 29,
+ "speeches": 40,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Zalaže se za ukidanje Zakona o ministarstvima, jer smatra da je uređenje vlade unutrašnja stvar vlade, a važniji su rezultati njenog rada.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ја се лично залажем да такав закон не постоји. Нека влада уређује односе како год хоће.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  },
+  {
+   "tekst": "Upozorava da broj zaposlenih ostaje prevelik i da bez njihovog smanjenja smanjenje broja ministarstava ne donosi uštede.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ефикасност се не постиже само бројем министарстава. Ако ће број запослених да остане исти, ако ће се само преселити из једне канцеларије у другу или ако ће само променити таблу, то ништа не значи.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  },
+  {
+   "tekst": "Traži da se prvo donese zakon o finansiranju nadležnosti Pokrajine, pa zakon o budžetskom sistemu, kako se ne bi o svakom budžetu ponovo raspravljalo o 7% budžeta Vojvodine.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "То је редослед који смо заговарали стално и то мора под хитно да се уради, да не бисмо у свакој следећој расправи о буџету расправљали о 7% буџета Војводине.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Tvrdi da zakon o preuzimanju obaveza zdravstvenih ustanova rešava dug samo privremeno, dok dug Republičkog zavoda od 17 milijardi dinara ostaje i kašnjenja mogu da se nastave.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ово ће само тренутно да реши проблем, али ће овакав поступак да створи услове да се и у будућности доцња настави.",
+    "date": "2012-12-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. dan VIII sednica II redovnog zasedanja u 2012. 13.12.2012..doc"
+   }
+  }
+ ]
+}

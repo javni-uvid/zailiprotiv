@@ -1,0 +1,69 @@
+{
+ "mp": "божидар ђелић",
+ "model": "claude-haiku-5-5",
+ "read": 47,
+ "speeches": 48,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Navodi da je spoljni dug Srbije od formiranja ove vlade porastao za oko 4 milijarde evra.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Од момента формирања ове владе па до данас спољни дуг, суверени дуг укупно је порастао за 4 милијарде евра.",
+    "date": "2013-07-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. jul 2013. (Osmo vanredno zasedanje).docx"
+   }
+  },
+  {
+   "tekst": "Tvrdi da je budžet za 2013. godinu nerealan i da su prihodi bili precenjeni, pa je rebalans potreban.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Шест месеци после почетка примене овог буџета имамо највећи ребаланс у свету. Највећи промашај у приходима у свету.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Zamera što se nezaposlenost ne smanjuje i što vlada u budžetu nema nove mere za zapošljavanje.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Незапосленост и даље расте. Шта предлажете у буџету за 2013. годину да ту ситуација буде боља? Не видим ништа ново.",
+    "date": "2012-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/3. dan VIII sednica II redovnog zasedanja u 2013. 26.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Smatra da bi amandman kojim bi se obustavljali transferi Vojvodini bio protivustavan i da bi kažnjavao građane zbog političkog izbora.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "По овој логици, сваки пут када је неко именован од стране неког политичара у некој државној фирми и дође до проблема, онда би требало да се казне сви грађани те општине или покрајине.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Predlaže da se formira ministarstvo za visoko obrazovanje, nauku i tehnološki razvoj, kao što su tražili naučnici.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Говорићу о оном делу који се тиче нашег предлога да се у структури министарстава појави министарство високог образовања, науке и технолошког развоја.",
+    "date": "2013-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
+   }
+  }
+ ]
+}

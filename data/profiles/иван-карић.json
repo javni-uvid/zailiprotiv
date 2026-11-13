@@ -1,0 +1,69 @@
+{
+ "mp": "иван карић",
+ "model": "claude-haiku-5-5",
+ "read": 31,
+ "speeches": 37,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Navodi da je neoliberalni kapitalizam već mrtav i zalaže se za zelenu i cirkularnu ekonomiju i za drugačiju politiku javnih nabavki.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Морамо да размишљамо како да мењамо нашу економску политику, тако и политику јавних набавки, а то ћемо учинити само ако будемо гледали даље од неолибералног капитализма.",
+    "date": "2015-02-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. februar 2015.docx"
+   }
+  },
+  {
+   "tekst": "Zamera što su zaštita životne sredine i energetika spojene u jedno ministarstvo i traži osnivanje posebnog ministarstva za zaštitu životne sredine.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Због тога још једном апелујемо да се министарство за заштиту животне средине и природне ресурсе што пре оформи.",
+    "date": "2013-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. avgust 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da nedostaje državni program obnove posle poplava i traži da nacrt ili predlog programa bude predstavljen u Skupštini.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Што се тиче амандмана на члан 37, још једном закључујемо да недостаје државни програм обнове и било би од помоћи да је нацрт или предлог програма био у Скупштини, онда бисмо можда лакше и боље предавали ове амандмане.",
+    "date": "2014-07-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su Obrenovac i Kostolac među najzagađenijim područjima i da su zbog toga ugrožena okolna sela.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Врло често тај пепео представља такозвани сунђер за тешке метале, за радиоактивне метале, за још неке веома опасне супстанце.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Zalaže se da lokalne samouprave same mogu da odluče o osnivanju lokalnih medija i javnih servisa.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Свака локална самоуправа уз подршку грађана може да процени да ли јој је потребан локални медиј или није, а та потреба ни на који начин не гуши слободу јавног информисања.",
+    "date": "2015-06-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. jun 2015.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "mp": "душица морчев",
+ "model": "claude-haiku-5-5",
+ "read": 13,
+ "speeches": 21,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Навodi da su prihodi od akciza u budžetu nerealno planirani i da povećanje akciza ne donosi uvek veći prihod u budžet.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Демократска странка Србије је упозоравала када се усвајао буџет да су нереално постављени приходи од акциза и да свако повећање акциза не доноси увек и повећање прихода у буџет",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Тражи да се рок здравствене заштите породиље која је родила мртворођено дете продужи са три на шест месеци.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Једноставно сматрамо да је три месеца кратак рок, да имају право на здравствену заштиту после губитка детета, поготово што је сврха овог закона да заштитимо децу, труднице и породиље.",
+    "date": "2013-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Замера што нема одговорности за лоше извештаје и злоупотребе и тражи да се одговорност утврди.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Да ли је неко одговарао за то? Да ли је иједан овлашћени ревизор с лиценцом одговарао за оно што је поднео у извештају?",
+    "date": "2013-07-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. jul 2013..doc"
+   }
+  }
+ ]
+}

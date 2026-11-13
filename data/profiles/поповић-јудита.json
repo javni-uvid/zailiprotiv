@@ -1,0 +1,57 @@
+{
+ "mp": "поповић јудита",
+ "model": "claude-haiku-5-5",
+ "read": 37,
+ "speeches": 93,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Наводи да Србија, уз Устав, krši Устав kad smanjuje transfere Vojvodini, a da vlada Ustav primenjuje selektivno.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "без обзира на то што се ова влада према Војводини односи на тај начин што јој смањују трансфере и тиме директно крши Устав, ова влада селективно поштује уставне одредбе",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Замера што порески закони смањују приходе локалних самоуправа и грађана, а повећавају приход републичког буџета.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ево, са вашим изменама тог закона о порезу на доходак грађана Београд ће, рецимо, бити ускраћен за 6 милијарди и 226 милиона",
+    "date": "2013-05-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/27. maj 2013.doc"
+   }
+  },
+  {
+   "tekst": "Предлаже да надзор над радом Републичке дирекције за имовину врши Министарство правде, а не Министарство финансија.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Из тог разлога, предложила сам да Министарство правде и државне управе преузме ингеренцију и над овом дирекцијом јер је то просто природније",
+    "date": "2012-07-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/STENO - Trece vanredno zasedanje 26. jul 2012, drugi dan rada cir.doc"
+   }
+  },
+  {
+   "tekst": "Тврди да закон о упису права на објектима без грађевинске дозволе легализује бесправну градњу и уводи правну несигурност.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Уколико ми на овако дивергентан начин будемо тумачили све постојеће прописе, у том случају улазимо у једну општу правну несигурност.",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  }
+ ]
+}

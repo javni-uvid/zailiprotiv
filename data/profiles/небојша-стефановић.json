@@ -1,0 +1,57 @@
+{
+ "mp": "небојша стефановић",
+ "model": "claude-haiku-5-5",
+ "read": 29,
+ "speeches": 34,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Navodi da zakon omogućava deci, trudnicama i porodiljama pravo na zdravstvenu zaštitu bez obzira na to da li su im zdravstvene knjižice overene.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "овим законом се омогућава свој деци, свим особама до осамнаесте године старости, свим трудницама и породиљама, и до годину дана после порођаја, да им се обезбеди пружање здравствених услуга, без обзира да ли су им оверене исправе о здравственом осигурању или нису.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da deca, trudnice i porodilje ne mogu da ostvare prava na zdravstveno osiguranje zato što poslodavci nisu uplaćivali doprinose.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Концентрисао сам се на решавање проблема оне деце, трудница и породиља који своја права не могу да остваре управо зато што послодавци нису могли или нису уплаћивали доприносе.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da su sredstva za primenu zakona obezbeđena, da Fond za zdravstveno osiguranje izdvaja između 450 i 500 miliona dinara i da zbog toga neće biti umanjena druga sredstva.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Средства су опредељена и ту су. Дакле, неће бити бојазни да ће бити недовољно средстава да се овај закон реализује.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da je zakon lex specialis, doneto dok se ne uradi šira kodifikacija propisa o zdravstvenom osiguranju i zdravstvenoj zaštiti.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Зато је била само намера да овим законом који јесте лекс специјалис, док не будемо урадили једну опсежнију кодификацију законодавства из области здравственог осигурања здравствене заштите, да ово буде закон којим ћемо помоћи да ствар буде решена.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  }
+ ]
+}

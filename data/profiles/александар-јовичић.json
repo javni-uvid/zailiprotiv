@@ -1,0 +1,57 @@
+{
+ "mp": "александар јовичић",
+ "model": "claude-haiku-5-5",
+ "read": 22,
+ "speeches": 32,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Navodi da zakoni o porezu i radu štite prava radnika i daju olakšice poslodavcima.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Ниједан закон не може бити по вољи свима, али овај закон је тако избалансиран да поштује права и даје одређене олакшице привредницима са једне стране, а са друге стране поштује права радника.",
+    "date": "2014-07-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su prethodne vlasti, uključujući DS, upropastile privredu neuspelim i korumpiranim privatizacijama, pominjući 644 propale privatizacije.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "то су 644 приватизације које су пропале у Србији и пљачкање српске привреде.",
+    "date": "2014-07-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/17. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Zamera opoziciji što podnosi veliki broj amandmana, za koje tvrdi da koče rad parlamenta.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Заиста, подносити на десетине амандмана само да бисте узимали време и кочили рад овог парламента јесте скандалозно.",
+    "date": "2014-07-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/17. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da je korupcija bila raširena u vreme prethodne vlasti, a da SNS nema veze s tajkunima.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Ја бих то избегао да изговарам, из простог разлога што знамо и зато овај амандман не можемо прихватити, ни све оно што нуди та странка, јер у њихово време само је корупција царовала и напредовала у нашој земљи.",
+    "date": "2015-07-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2015.docx"
+   }
+  }
+ ]
+}

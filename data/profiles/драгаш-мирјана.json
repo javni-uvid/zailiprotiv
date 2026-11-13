@@ -1,0 +1,59 @@
+{
+ "mp": "драгаш мирјана",
+ "model": "claude-haiku-5-5",
+ "read": 12,
+ "speeches": 12,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Navodi da zdravstvenu zaštitu treba obezbediti svima, bar u minimalnom obimu, i da bude jednako dostupna.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Желим да верујем у ону државу и да је тако циљано сви изграђујемо која ће обезбедити адекватну здравствену заштиту свима којима је потребна и на сваком месту.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da poreske olakšice i izmene zakona treba da olakšaju zapošljavanje, posebno mladih.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Данашње промене закона о којима говоримо треба да омогуће, дакле само да омогуће, лакше запошљавање, посебно младих, али и оних старијих којима треба свега неколико година до пензије.",
+    "date": "2014-07-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da stanje državnih finansija treba gledati realno, bez obećanja većih od mogućnosti države.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Наш је проблем што никад када говоримо сами о себи не говоримо о оном стању у каквом јесмо, о нашим објективним могућностима и о томе шта можемо објективно да постигнемо.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Ističe Dositeja Obradovića kao važnu ličnost čije poruke o obrazovanju i danas važe.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Тај велики Доситеј дошавши пре 200 година у Србију која као држава у то време није постојала је између осталог рекао – Школе, изнад свега школе и образовање.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  }
+ ]
+}
