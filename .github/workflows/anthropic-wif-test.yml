@@ -1,7 +1,10 @@
 # A test of signing in to the Anthropic API with GitHub's identity (workload identity federation) instead of an
 # API key. By hand only; it prints the exchange's answer with the token itself hidden.
 name: anthropic-wif-test
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    paths: [".github/workflows/anthropic-wif-test.yml"]
 permissions:
   id-token: write
   contents: read
@@ -16,6 +19,9 @@ jobs:
             const token = await core.getIDToken('https://api.anthropic.com');
             core.setSecret(token);
             core.exportVariable('JWT', token);
+      - name: Show what GitHub says about this run (the token's claims, not the token)
+        run: |
+          echo "$JWT" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null | jq '{iss, aud, sub, repository, repository_owner, ref, event_name, workflow_ref, job_workflow_ref, environment, repository_visibility}' || true
       - name: Exchange for an Anthropic access token
         run: |
           curl -sS https://api.anthropic.com/v1/oauth/token \
