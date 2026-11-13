@@ -66,8 +66,15 @@
     name.textContent = who || "—";
     score.textContent = top.length ? "Isti glas kao ti na " + top[0].m.same + " od " + top[0].m.both + " " +
       plural(top[0].m.both, "zakona", "zakona", "zakona") + " o kojima ste oboje glasali." : "Nijedan poslanik nije glasao o dovoljno istih zakona.";
-    shareText = top.length ? "Glasao sam o " + n + " " + plural(n, "zakonu", "zakona", "zakona") + " kao da sedim u Skupštini. Najviše istih glasova: " +
-      who + " (" + top[0].m.same + " od " + top[0].m.both + "). A ti?" : "Glasaj o zakonima kao poslanik i vidi ko je glasao kao ti.";
+    var against = answers.filter(function (a) { return a === "p"; }).length;
+    card.fact = against === 0 ? "Da se ja pitam, prošlo bi svih " + n + " " + plural(n, "zakon", "zakona", "zakona") + "." :
+      against === n ? "Da se ja pitam, ne bi prošao nijedan od " + n + " " + plural(n, "zakona", "zakona", "zakona") + "." :
+      "Da se ja pitam, palo bi " + against + " od " + n + " " + plural(n, "zakona", "zakona", "zakona") + ".";
+    card.who = who; card.score = top.length ? top[0].m.same + " od " + top[0].m.both : "";
+    document.getElementById("q-fact").textContent = card.fact.replace("Da se ja pitam", "Da se ti pitaš") +
+      " Skupština je usvojila svih " + answers.length + ".";
+    shareText = card.fact + (who ? " Najviše glasova kao ja: " + who + " (" + card.score + ")." : "") + " A ti?";
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
     var ms = document.getElementById("q-mps"), shown = Math.min(Math.max(8, top.length), 40); ms.textContent = "";
     mps.slice(0, shown).forEach(function (x) {
       var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
@@ -108,13 +115,84 @@
     m.addEventListener("click", function () { send(); go(m.dataset.go === "kraj" ? "kraj" : +m.dataset.go); });
   });
 
-  // Sharing: the device's own share sheet, or the clipboard. Nothing is sent anywhere by us.
+  // The picture to share, drawn here in the browser: the visitor's ballot, what would have happened had it been
+  // up to them, and who voted most like them. Nothing is uploaded; sharing uses the device's own share sheet.
+  var COLORS = { z: "#1f5fa8", p: "#c2410c", u: "#8a8f99", "": "#e8e8e8" }, cardBlob = null;
+  function wrapText(ctx, text, width, lines) {
+    var out = [], line = "";
+    text.split(" ").forEach(function (w) {
+      var t = line ? line + " " + w : w;
+      if (ctx.measureText(t).width <= width) line = t; else { out.push(line); line = w; }
+    });
+    out.push(line);
+    if (out.length > lines) { out = out.slice(0, lines); out[lines - 1] += " …"; }
+    return out;
+  }
+  function drawCard() {
+    var c = document.createElement("canvas"), W = 1080, H = 1350, P = 84, ctx = c.getContext("2d"), y;
+    var serif = '"Source Serif 4", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    c.width = W; c.height = H;
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
+    ctx.textBaseline = "alphabetic";
+    ctx.font = "700 52px " + serif;
+    var x = P; [["Za", COLORS.z], [" ili ", "#111"], ["Protiv", COLORS.p]].forEach(function (p) {
+      ctx.fillStyle = p[1]; ctx.fillText(p[0], x, 130); x += ctx.measureText(p[0]).width;
+    });
+    ctx.fillStyle = "#111"; ctx.fillRect(P, 160, W - 2 * P, 6);
+    ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Kako bih ja glasao u Skupštini", P, 236);
+    ctx.fillStyle = "#111"; ctx.font = "700 96px " + serif; y = 370;
+    wrapText(ctx, card.fact, W - 2 * P, 3).forEach(function (l) { ctx.fillText(l, P, y); y += 108; });
+    // the ballot: one square per law
+    var n = answers.length, gap = 14, size = Math.min(96, (W - 2 * P - gap * (n - 1)) / n); y += 10;
+    answers.forEach(function (a, i) {
+      ctx.fillStyle = COLORS[a]; ctx.fillRect(P + i * (size + gap), y, size, size);
+      ctx.fillStyle = a ? "#fff" : "#888"; ctx.font = "700 " + Math.round(size * .42) + "px " + sans; ctx.textAlign = "center";
+      ctx.fillText(String(i + 1), P + i * (size + gap) + size / 2, y + size * .65); ctx.textAlign = "left";
+    });
+    y += size + 48;
+    ctx.font = "400 30px " + sans; x = P;
+    [["za", COLORS.z], ["protiv", COLORS.p], ["uzdržan", COLORS.u]].forEach(function (k) {
+      ctx.fillStyle = k[1]; ctx.fillRect(x, y - 24, 26, 26); ctx.fillStyle = "#555"; ctx.fillText(k[0], x + 38, y);
+      x += 38 + ctx.measureText(k[0]).width + 40;
+    });
+    if (card.who) {
+      y += 120; ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Najviše glasova kao ja", P, y);
+      ctx.fillStyle = "#111"; ctx.font = "700 60px " + serif; y += 74;
+      wrapText(ctx, card.who, W - 2 * P, 3).forEach(function (l) { ctx.fillText(l, P, y); y += 70; });
+      ctx.fillStyle = "#555"; ctx.font = "400 36px " + sans; ctx.fillText("isti glas na " + card.score + " zakona", P, y - 8);
+    }
+    ctx.fillStyle = "#111"; ctx.fillRect(P, H - 150, W - 2 * P, 3);
+    ctx.font = "700 44px " + serif; ctx.fillText("A ti?", P, H - 78);
+    ctx.font = "400 38px " + sans; ctx.fillStyle = "#555"; ctx.textAlign = "right";
+    ctx.fillText(location.host ? location.host + "/glasaj.html" : "zailiprotiv.rs/glasaj.html", W - P, H - 78); ctx.textAlign = "left";
+    var img = document.getElementById("q-card");
+    img.alt = card.fact + " " + (card.who ? "Najviše glasova kao ja: " + card.who + " (" + card.score + ")." : "");
+    c.toBlob(function (blob) {
+      cardBlob = blob;
+      var url = URL.createObjectURL(blob);
+      img.src = url; document.getElementById("q-save").href = url;
+    }, "image/png");
+  }
+  var card = { fact: "", who: "", score: "" };
+  function note(text) { document.getElementById("q-shared").textContent = text; }
+  function shareUrl() { return location.protocol === "file:" ? "https://zailiprotiv.rs/glasaj.html" : location.href.split("#")[0]; }
+  function copyText() {
+    var text = shareText + " " + shareUrl();
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+      .then(function () { note("Kopirano. Nalepi u poruku ili objavu."); })
+      .catch(function () { note(text); });
+  }
+  document.getElementById("q-copy").addEventListener("click", copyText);
   document.getElementById("q-share").addEventListener("click", function () {
-    var url = location.href.split("#")[0], note = document.getElementById("q-shared");
-    if (navigator.share) { navigator.share({ text: shareText, url: url }).catch(function () {}); return; }
-    (navigator.clipboard ? navigator.clipboard.writeText(shareText + " " + url) : Promise.reject())
-      .then(function () { note.textContent = "Kopirano, nalepi gde želiš."; })
-      .catch(function () { note.textContent = shareText + " " + url; });
+    var file = cardBlob && window.File ? new File([cardBlob], "kako-bih-ja-glasao.png", { type: "image/png" }) : null;
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], text: shareText + " " + shareUrl() }).catch(function () {});
+    } else if (navigator.share) {
+      navigator.share({ text: shareText, url: shareUrl() }).catch(function () {});
+    } else {  // a computer without a share sheet: the picture is saved, the text copied
+      document.getElementById("q-save").click(); copyText();
+      note("Slika je sačuvana, a tekst sa linkom kopiran. Dodaj ih u poruku ili objavu.");
+    }
   });
   document.getElementById("q-reset").addEventListener("click", function () {
     answers = answers.map(function () { return ""; });
