@@ -26,7 +26,7 @@ class _Portraits(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "a" and (m := _MP_PAGE.search(urllib.parse.unquote(a.get("href") or ""))):
-            self.last = (m.group(1).replace("_", " "), m.group(2), a["href"])
+            self.last = (" ".join(re.split(r"[_+\s]+", m.group(1))).strip(), m.group(2), a["href"])
         elif tag == "img" and self.last and "/poslanici/" in (a.get("src") or ""):
             name, number, page = self.last
             self.found.setdefault(number, {"name": name, "src": urllib.parse.urljoin(BASE, a["src"]),

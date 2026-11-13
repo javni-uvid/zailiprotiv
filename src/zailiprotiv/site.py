@@ -611,6 +611,15 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     if photos_index.exists():
         shutil.copytree(root / "photos", out / "foto", ignore=shutil.ignore_patterns("*.json"))
         photo_of = {k: v["file"] for k, v in json.loads(photos_index.read_text(encoding="utf-8")).items()}
+        # The Assembly's list sometimes gives a name more fully than the roll calls (a second surname, an initial):
+        # a portrait whose name holds all the words of exactly one MP's name, or the other way round, is that MP's.
+        words = {k: {w for w in k.split() if len(w) > 1} for k in photo_of}
+        for key_ in people:
+            if key_ not in photo_of:
+                mine = set(key_.split())
+                close = [k for k, w in words.items() if k not in people and len(mine & w) >= 2 and (mine <= w or w <= mine)]
+                if len(close) == 1:
+                    photo_of[key_] = photo_of[close[0]]
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
