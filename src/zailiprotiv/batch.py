@@ -20,13 +20,15 @@ ROOM = 16000
 
 
 class State:
-    """data/batches.json: {"pending": {kind: {"id", "names"}}, "refused": {kind: {name: {"tries", "reply", "errors"}}}}."""
+    """data/batches.json: {"pending": {kind: {"id", "names"}}, "refused": {kind: {name: {"tries", "reply", "errors"}}},
+    "usage": {kind: {model: {"replies", "input", "cache_written", "cache_read", "output"}}}}."""
 
     def __init__(self, path: Path):
         self.path = path
         self.data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
         self.data.setdefault("pending", {})
         self.data.setdefault("refused", {})
+        self.data.setdefault("usage", {})
 
     def save(self) -> None:
         self.path.write_text(json.dumps(self.data, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
@@ -40,6 +42,16 @@ class State:
     def gave_up(self, kind: str, name: str) -> bool:
         r = self.refused(kind, name)
         return bool(r and r["tries"] >= TRIES)
+
+    def spent(self, kind: str, message) -> None:
+        """Add one reply's tokens to the count of its kind and model (what the writing has cost so far)."""
+        u = getattr(message, "usage", None)
+        if u is None:
+            return
+        row = self.data["usage"].setdefault(kind, {}).setdefault(getattr(message, "model", "") or "?", {})
+        for key, field in (("replies", None), ("input", "input_tokens"), ("cache_written", "cache_creation_input_tokens"),
+                           ("cache_read", "cache_read_input_tokens"), ("output", "output_tokens")):
+            row[key] = row.get(key, 0) + (1 if field is None else getattr(u, field, 0) or 0)
 
     def refuse(self, kind: str, name: str, reply: str, errors: list[str]) -> None:
         r = self.data["refused"].setdefault(kind, {}).setdefault(name, {"tries": 0})
@@ -97,6 +109,8 @@ def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes
     out = {}
     for entry in client.messages.batches.results(pending["id"]):
         name = pending["names"][int(entry.custom_id[1:])]
+        if entry.result.type == "succeeded":
+            state.spent(kind, entry.result.message)
         if entry.result.type == "succeeded" and getattr(entry.result.message, "stop_reason", "") == "max_tokens":
             print(f"  {name}: cut off at the limit, sent again next run")  # our limit's fault: not a refused reply
         elif entry.result.type == "succeeded":

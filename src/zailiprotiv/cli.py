@@ -758,6 +758,10 @@ def status(args) -> int:
         print(f"batch u toku: {kind} {p['id']} ({len(p['names'])})")
     for kind, names in state.data["refused"].items():
         print(f"odbijeno: {kind}: " + ", ".join(f"{n} ({r['tries']}x)" for n, r in sorted(names.items())))
+    for kind, models in sorted(state.data["usage"].items()):
+        for model, u in sorted(models.items()):
+            print(f"potrošeno: {kind} {model}: {u['replies']} odgovora, ulaz {u['input']:,} (+ keš upis "
+                  f"{u['cache_written']:,}, keš čitanje {u['cache_read']:,}), izlaz {u['output']:,} tokena")
     return 0
 
 

@@ -123,3 +123,20 @@ def test_a_reply_cut_off_at_the_limit_is_not_a_reply(tmp_path, monkeypatch):
     client.results = cut
     assert batch.run(client, state, "k", {"n": {"messages": []}}, wait_minutes=1) == {}
     assert not state.pending("k") and not state.refused("k", "n")
+
+
+def test_tokens_are_counted_by_kind_and_model(tmp_path, monkeypatch):
+    monkeypatch.setattr(batch, "POLL", 0)
+    client, state = Batches(lambda p: "ok"), batch.State(tmp_path / "batches.json")
+    whole = client.results
+
+    def metered(id):
+        for e in whole(id):
+            e.result.message.model = "m"
+            e.result.message.usage = SimpleNamespace(input_tokens=10, output_tokens=3, cache_read_input_tokens=7,
+                                                     cache_creation_input_tokens=None)
+            yield e
+    client.results = metered
+    batch.run(client, state, "k", {"a": {}, "b": {}}, wait_minutes=1)
+    assert batch.State(tmp_path / "batches.json").data["usage"]["k"]["m"] == {
+        "replies": 2, "input": 20, "cache_written": 0, "cache_read": 14, "output": 6}
