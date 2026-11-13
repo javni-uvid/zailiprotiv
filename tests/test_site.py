@@ -168,3 +168,16 @@ def test_groups_numbers_quiz_and_share_picture(tmp_path):
     assert quiz["laws"] == [{"s": "zakon-o-oruzju"}] and {m["v"] for m in quiz["mps"]} == {"z", "p", "-"}
     area = next((out / "oblast").glob("*.xml")).read_text()
     assert "<feed" in area and "zakon-o-oruzju.html" in area
+
+
+def test_visitors_votes_are_sent_only_when_an_address_is_set(tmp_path):
+    out = tmp_path / "_site"
+    root = data(tmp_path)
+    site.build(root, out, "zailiprotiv.rs")
+    page = (out / "glasaj.html").read_text()
+    assert "Pošalji moje glasove" not in page and 'data-api=""' in page and "nikuda se ne šalju" in page
+    assert json.loads((out / "glasaj.json").read_text()) == {"laws": ["zakon-o-oruzju"]}
+    (root / "settings.json").write_text(json.dumps({"votes_api": "https://glasovi.example/"}))
+    site.build(root, out, "zailiprotiv.rs")
+    page = (out / "glasaj.html").read_text()
+    assert "Pošalji moje glasove" in page and 'data-api="https://glasovi.example/"' in page and "nije istraživanje" in page

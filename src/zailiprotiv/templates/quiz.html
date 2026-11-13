@@ -26,6 +26,7 @@
       <button type="button" class="q-btn q-protiv" data-a="p" aria-pressed="false">Protiv</button>
       <button type="button" class="q-btn" data-a="u" aria-pressed="false">Uzdržan</button>
     </div>
+    <p class="q-crowd" hidden></p>
     <p class="q-real" hidden>U Skupštini: <b class="t-za">{{ it.final.counts.za }} za</b>, <b class="t-protiv">{{ it.final.counts.protiv }} protiv</b>. <a href="zakon/{{ it.slug }}.html">Više o zakonu</a></p>
   </li>
 {% endfor %}
@@ -38,9 +39,17 @@
   <h3>Poslanici sa najviše istih glasova</h3>
   <ul class="rows compact" id="q-mps"></ul>
   <p class="label">Poredimo samo zakone o kojima ste oboje glasali. Ovo je poređenje glasova o nekoliko zakona, ne preporuka za koga da glasaš.</p>
+  {% if votes_api %}
+  <div class="q-send" id="q-send">
+    <h3>Dodaj svoje glasove u zbir</h3>
+    <p>Ako želiš, pošalji svoje glasove da uđu u zbir svih posetilaca. Šalje se samo „za“, „protiv“ ili „uzdržan“ za svaki zakon: bez imena, bez kolačića, i ne čuvamo ni adresu ni vreme.</p>
+    <p><button type="button" class="q-btn" id="q-submit">Pošalji moje glasove</button> <span id="q-sent" class="meta" aria-live="polite"></span></p>
+  </div>
+  {% endif %}
   <p><button type="button" class="link" id="q-reset">Obriši odgovore</button></p>
 </section>
-<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju. {{ how("glasaj") }}</p>
+<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. {% if votes_api %}Tvoji odgovori ostaju u tvom pregledaču dok sam ne klikneš „Pošalji moje glasove“. „Posetioci sajta“ je zbir tako poslatih glasova: to nije istraživanje javnog mnjenja, glasaju samo oni koji dođu na sajt, a isti čovek može da pošalje više puta.{% else %}Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju.{% endif %} {{ how("glasaj") }}</p>
+<div id="q-api" data-api="{{ votes_api }}" hidden></div>
 <script type="application/json" id="quiz-data">{{ quiz|safe }}</script>
 <script src="glasaj.js?v={{ css }}" defer></script>
 {% endblock %}

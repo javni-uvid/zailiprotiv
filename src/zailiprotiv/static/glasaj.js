@@ -58,6 +58,39 @@
       });
     });
   });
+  // Visitors' votes: shown under a law once the visitor has answered it; sent only when the visitor asks.
+  var api = (document.getElementById("q-api") || {}).dataset ? document.getElementById("q-api").dataset.api : "";
+  var crowd = null, SENT = KEY + ":poslato";
+  function showCrowd() {
+    items.forEach(function (item, i) {
+      var p = item.querySelector(".q-crowd"), c = crowd && crowd[data.laws[i].s];
+      var n = c ? c.z + c.p + c.u : 0;
+      p.hidden = !(answers[i] && n >= 10);  // a handful of votes says nothing
+      if (!p.hidden) p.textContent = "Posetioci sajta: " + Math.round(100 * c.z / n) + "% za, " + Math.round(100 * c.p / n) +
+        "% protiv (" + n + " glasova)";
+    });
+  }
+  if (api) {
+    fetch(api).then(function (r) { return r.json(); }).then(function (d) { crowd = d; showCrowd(); }).catch(function () {});
+    var submit = document.getElementById("q-submit"), sent = document.getElementById("q-sent");
+    var already = false;
+    try { already = !!localStorage.getItem(SENT); } catch (e) {}
+    if (already) { submit.disabled = true; sent.textContent = "Već si poslao glasove. Hvala!"; }
+    submit.addEventListener("click", function () {
+      var v = {};
+      answers.forEach(function (a, i) { if (a) v[data.laws[i].s] = a; });
+      submit.disabled = true; sent.textContent = "Šaljem…";
+      fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ v: v }) })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (d) {
+          crowd = d; showCrowd(); sent.textContent = "Poslato. Hvala!";
+          try { localStorage.setItem(SENT, "1"); } catch (e) {}
+        })
+        .catch(function () { submit.disabled = false; sent.textContent = "Nije uspelo, pokušaj ponovo kasnije."; });
+    });
+    items.forEach(function (item) { item.addEventListener("click", function () { setTimeout(showCrowd, 0); }); });
+  }
+
   document.getElementById("q-reset").addEventListener("click", function () {
     answers = answers.map(function () { return ""; });
     try { sessionStorage.removeItem(KEY); } catch (e) {}

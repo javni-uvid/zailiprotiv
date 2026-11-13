@@ -317,3 +317,8 @@ td.lean { white-space: nowrap; }
 .q-result { max-width: 46rem; font-size: 1.05rem; }
 .q-result h2 { font-size: 1.7rem; }
 @media (max-width: 600px) { .quiz .card h2 { font-size: 1.4rem; } .q-btn { flex: 1; min-width: 0; padding: .8rem .6rem; } }
+.q-crowd { margin: 1rem 0 0; font-size: 1.05rem; font-weight: 600; }
+.q-crowd + .q-real { margin-top: .3rem; }
+.q-send { margin: 1.6rem 0; padding: 1.2rem 1.4rem; border: 1px solid var(--line); border-radius: 6px; }
+.q-send h3 { margin: 0 0 .4rem; }
+.q-btn:disabled { opacity: .5; cursor: default; }

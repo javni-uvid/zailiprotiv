@@ -713,9 +713,12 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": (r["by_conv"][current]["groups"] or [""])[0],
                      "v": "".join(letter.get(r["mp"].votes.get(it["law"]["final_vote"]), "-") for it in quiz_laws)}
                     for r in rows_mp if current in r["by_conv"]]}
+    settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
+    # The laws visitors' votes are counted for: the counter (worker/) accepts no others.
+    (out / "glasaj.json").write_text(json.dumps({"laws": [it["slug"] for it in quiz_laws]}), encoding="utf-8")
     shutil.copy(HERE / "static" / "glasaj.js", out / "glasaj.js")
     (out / "glasaj.html").write_text(env.get_template("quiz.html").render(
-        **common, laws=quiz_laws, quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+        **common, laws=quiz_laws, votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         root=""), encoding="utf-8")
 
     # Bills in procedure (the current convocation): what waits now, what is no longer listed, and the sittings
