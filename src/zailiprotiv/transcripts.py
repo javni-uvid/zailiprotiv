@@ -83,9 +83,59 @@ def to_docx(body: bytes) -> bytes:
         return out.read_bytes()
 
 
+LATIN_CAPS = re.compile(r"^((?:(?:Dr|Prof|Mr|Doc|Prim)\.?\s+)*[A-ZČĆŽŠĐ][A-ZČĆŽŠĐ\-]+(?:\s+[A-ZČĆŽŠĐ][A-ZČĆŽŠĐ\-.]*){0,5}):")
+
+
+def to_cyrillic(text: str) -> str:
+    """Notes typed in Latin script, read as Cyrillic so the same patterns find speakers and the chair's words."""
+    pairs = [("Lj", "Љ"), ("LJ", "Љ"), ("lj", "љ"), ("Nj", "Њ"), ("NJ", "Њ"), ("nj", "њ"), ("Dž", "Џ"), ("DŽ", "Џ"),
+             ("dž", "џ")]
+    for a, b in pairs:
+        text = text.replace(a, b)
+    table = str.maketrans("ABVGDĐEŽZIJKLMNOPRSTĆUFHCČŠabvgdđežzijklmnoprstćufhcčš",
+                          "АБВГДЂЕЖЗИЈКЛМНОПРСТЋУФХЦЧШабвгдђежзијклмнопрстћуфхцчш")
+    return text.translate(table)
+
+
+def pdf_paragraphs(pdf: bytes) -> list[str]:
+    """The older notes (2016–2017) are PDFs: lines from pdftotext, joined into paragraphs. A paragraph ends at an
+    empty line, and a new one starts at a speaker's name, an agenda item or the agenda's heading."""
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "n.pdf").write_bytes(pdf)
+        run = subprocess.run(["pdftotext", "-enc", "UTF-8", f"{tmp}/n.pdf", "-"], capture_output=True, timeout=300)
+        if run.returncode:
+            raise Unreadable(f"pdftotext failed: {run.stderr[-300:]!r}")
+        text = run.stdout.decode("utf-8", "replace")
+    cyr = sum(1 for c in text if "\u0400" <= c <= "\u04ff")
+    lat = sum(1 for c in text if c.isascii() and c.isalpha())
+    if lat > cyr:
+        text = to_cyrillic(text)
+    out, cur = [], []
+
+    def flush():
+        if cur:
+            joined = re.sub(r"(\w)-\s+(\w)", r"\1\2", " ".join(cur))
+            out.append(re.sub(r"\s+", " ", joined).strip())
+            cur.clear()
+    for line in text.replace("\f", "\n").splitlines():
+        line = line.strip()
+        if not line:
+            flush()
+            continue
+        if re.fullmatch(r"\d{1,4}", line) or MARK.match(line):
+            continue
+        if SPEAKER.match(line) or AGENDA_HEAD.search(line) or (cur and AGENDA_ITEM.match(line)):
+            flush()
+        cur.append(line)
+    flush()
+    return [p for p in out if p]
+
+
 def paragraphs(docx: bytes) -> list[str]:
     """The Word file's paragraphs as plain text, empty ones left out. The older notes are in Word's old format
     (.doc), turned into the new one with LibreOffice first."""
+    if docx.startswith(b"%PDF"):
+        return pdf_paragraphs(docx)
     if not docx.startswith(b"PK"):
         docx = to_docx(docx)
     xml = zipfile.ZipFile(io.BytesIO(docx)).read("word/document.xml").decode("utf-8")
