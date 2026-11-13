@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Sednice — Za ili Protiv{% endblock %}
+{% block description %}Sednice Narodne skupštine na kojima su usvajani zakoni, po datumu.{% endblock %}
+{% block main %}
+<h1>Sednice</h1>
+<p class="meta">Sednice na kojima su usvajani zakoni, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv.</p>
+<ul class="plain sittings-list">
+{% for s in sittings %}<li><span class="meta">{{ s.day|day }}</span> <a href="sednica/{{ s.slug }}.html">{{ s.title|latin }}</a> <span class="meta">· {{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span></span></li>{% endfor %}
+</ul>
+{% endblock %}

@@ -4,6 +4,13 @@
   var body = document.body, root = body.dataset.root || "", data = null, loading = null;
   document.querySelectorAll(".js-only").forEach(function (el) { el.hidden = false; });
 
+  // A link to a folded list opens it.
+  window.addEventListener("hashchange", openTarget); openTarget();
+  function openTarget() {
+    var t = location.hash && document.getElementById(location.hash.slice(1));
+    if (t && t.tagName === "DETAILS") t.open = true;
+  }
+
   // MP page: tabs by period (every convocation, or one); without the script the page shows every convocation.
   document.querySelectorAll(".periods").forEach(function (box) {
     var buttons = box.querySelectorAll("[data-period]"), panels = box.querySelectorAll("[data-panel]");
@@ -141,6 +148,7 @@
   if (!box) return;
   var list = document.getElementById(box.dataset.filter), rows = Array.prototype.slice.call(list.children);
   var q = document.getElementById("f-q"), sort = document.getElementById("f-sort"), group = document.getElementById("f-g");
+  var area = document.getElementById("f-a"), year = document.getElementById("f-y");
   var count = document.getElementById("f-n"), chips = box.querySelectorAll(".chip[data-k]"), kind = "";
   function norm(s) {
     return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/dj/g, "d");
@@ -151,7 +159,9 @@
     rows.forEach(function (r) {
       var ok = words.every(function (w) { return r._t.indexOf(w) >= 0; })
         && (!kind || (" " + r.dataset.k + " ").indexOf(" " + kind + " ") >= 0)
-        && (!group || !group.value || r.dataset.g === group.value);
+        && (!group || !group.value || r.dataset.g === group.value)
+        && (!area || !area.value || (" " + (r.dataset.a || "")).indexOf(" " + area.value + " ") >= 0)
+        && (!year || !year.value || (r.dataset.d || "").slice(0, 4) === year.value);
       r.hidden = !ok;
       if (ok) shown++;
     });
@@ -168,6 +178,8 @@
   }
   q.addEventListener("input", apply);
   if (group) group.addEventListener("change", apply);
+  if (area) area.addEventListener("change", apply);
+  if (year) year.addEventListener("change", apply);
   if (sort) sort.addEventListener("change", order);
   chips.forEach(function (chip) {
     chip.setAttribute("aria-pressed", chip.classList.contains("on") ? "true" : "false");

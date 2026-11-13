@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "macros.html" import how with context %}
+{% block title %}Podaci — Za ili Protiv{% endblock %}
+{% block description %}Preuzmite zakone i glasove poslanika u CSV i JSON formatu.{% endblock %}
+{% block main %}
+<h1>Podaci</h1>
+<p class="gist">Sve što sajt prikazuje možete preuzeti i koristiti slobodno, uz navođenje izvora: „Za ili Protiv (zailiprotiv.rs), prema podacima Narodne skupštine".</p>
+<ul class="plain">
+  <li><a href="podaci/zakoni.csv">Svi zakoni</a> <span class="meta">(CSV): saziv, datum, naziv, vrsta, oblast, rezultat konačnog glasanja, linkovi</span></li>
+  {% for d in downloads %}<li><a href="podaci/glasovi-{{ d.conv }}.csv">Glasovi poslanika, {{ d.name }} saziv</a> <span class="meta">(CSV, {{ d.rows }} redova): svaki glas na konačnim glasanjima o {{ d.laws }} zakona</span></li>{% endfor %}
+  <li><span class="meta">Na strani svakog zakona: poimenično glasanje u CSV i JSON formatu.</span></li>
+  <li><a href="zakoni.xml">Novi zakoni (RSS)</a> <span class="meta">i RSS za svakog poslanika na njegovoj strani</span></li>
+  <li><a href="https://github.com/javni-uvid/zailiprotiv">Kod i sirovi podaci na GitHubu</a> <span class="meta">(stenogrami, sažeci, pregledi, sa modelom koji ih je napisao)</span></li>
+</ul>
+<p class="label">Glasovi su prepisani iz PDF-ova poimeničnih glasanja koje objavljuje Skupština; nazivi grupa kako ih Skupština piše. {{ how("glasanje") }}</p>
+{% endblock %}

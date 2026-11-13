@@ -1,72 +1,70 @@
 {
  "mp": "милошевић јелена",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 36,
  "speeches": 39,
  "sittings": 12,
  "points": [
   {
-   "tekst": "Наводи да је више од половине неразвијених општина на југу Србије и замера што се за њих из буџета издваја премало новца.",
-   "govora": 4,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Ово су, господо, неразвијене општине на југу Србије. Од 44 укупно 23 су на југу. За ове општине је преко Министарства за развој неразвијених општина опредељено 290 милиона ефективног буџета, кад се одбију трошкови.",
-    "date": "2025-11-28",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да се југ Србије празни и да људи одатле одлазе јер немају посао и основне услове за живот.",
+   "tekst": "Наводи да југ Србије има највише неразвијених општина и тражи више новца и посебно тело за њихов развој.",
    "govora": 5,
    "sazivi": [
     "13",
     "14"
    ],
    "citat": {
-    "tekst": "Знате ли да смо у само четири града на југу Србије изгубили 40.000 становника, Лесковац, Пирот, Врање и Прокупље, имају заједно 40. 000 становника мање. Изгубили смо цело једно Прокупље за 10 година.",
-    "date": "2022-11-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+    "tekst": "Током целог мандата, понављаћу упорно да је југ Србије рекордер по броју неразвијених општина, да се југ Србије празни, да нам узалуд путеви и болнице и остало када неће имати ко да користи те путеве, неће имати ко да нас лечи, а неће имати ни кога да лече.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да градови и општине добијају неколико пута мање ненаменских трансфера од 1,7% БДП-а колико закон прописује, и да зато делови Ниша немају канализацију.",
+   "tekst": "Наводи да градови и општине добијају вишеструко мање ненаменских трансфера од 1,7% БДП-а колико прописује закон, што приписује министру финансија Синиши Малом, и да зато Ниш нема атмосферску канализацију.",
    "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "По закону, из Републичког буџета би сваке године требало да се издваја 1,7% БДП за локалне самоуправе, односно за све градове и општине.",
-    "date": "2026-08-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Тражи да се новац намењен националном стадиону и ЕКСПО-у преусмери на југ Србије и на основну инфраструктуру, као што су вода и канализација.",
-   "govora": 4,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Зато предлажем да се новац од ЕКСПО-а скине и да се преусмери на изградњу канализације. Давимо се у фекалијама.",
+    "tekst": "Уместо да се градовима и општинама пребаци 1,7% од БДП, како закон каже, Мали процени да је то много и да је сасвим у реду да тај износ умањи пет пута и тако уместо 165,7 милијарде локалним самоуправама иде једва преко 33.",
     "date": "2025-11-27",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да возови често исклизну из шина и да пруга која пролази кроз Ниш угрожава безбедност грађана.",
+   "tekst": "Наводи да се на југу Србије затварају фабрике и да је више хиљада људи остало без посла, а да нових фабрика и инвестиција нема.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Смо у 2025. години затворено је пет фабрика, а преко 4.000 људи остало је без посла.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је пруга кроз Ниш опасна, да возови често искачу из шина и тражи да се пруга измести из Ниша.",
    "govora": 4,
    "sazivi": [
     "13",
     "14"
    ],
    "citat": {
-    "tekst": "Јако ми је жао што нећемо имати вероватно времена да разговарамо о Закону о железници, а сматрам да је јако, јако важан, посебно у последње време, када смо сведоци све чешћих акцидената на пругама у Србији.",
+    "tekst": "Где сте у Европској унији видели да пруга пресеца центар града, а да рампе нису спуштене?",
     "date": "2023-07-25",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 25.07.2023. dan 4.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт пред локалне изборе, као у Зајечару, дели пакете, белу технику и субвенције, и да уз помоћ људи које назива „криминалцима“ застрашује бираче.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "А, онда да се људи не би сетили ваших неиспуњених обећања, делите фрижидере, фрезе, пакете, асфалтирате сокака, дајете субвенције, делите наше паре.",
+    "date": "2025-11-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
    }
   }
  ]

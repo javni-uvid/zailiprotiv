@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "macros.html" import bar, plural, how with context %}
+{% block title %}{{ title|latin }} — Za ili Protiv{% endblock %}
+{% block description %}Zakoni usvojeni na sednici „{{ title|latin }}" i kako su glasali poslanici.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="../sednice.html">Sednice</a> › {{ conv_name }} saziv</p>
+<h1>{{ title|latin }}</h1>
+<p class="meta">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} usvojen{{ "" if laws|length == 1 else "o" }} {% if first == last %}{{ first|day }}{% else %}od {{ first|day }} do {{ last|day }}{% endif %} · <a href="{{ url }}">Sednica na sajtu Skupštine</a></p>
+<ul class="rows">
+{% for it in laws %}
+<li class="row">
+  <div class="row-main">
+    <a class="row-title" href="../zakon/{{ it.slug }}.html">{{ it.law.short }}</a>
+    <p class="row-meta">{{ it.final.when[:10]|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.areas %} · <a class="tag" href="../oblast/{{ it.areas[0]|area_slug }}.html">{{ it.areas[0]|latin }}</a>{% endif %}</p>
+  </div>
+  <div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div>
+</li>
+{% endfor %}
+</ul>
+<p class="label">Samo konačna glasanja o zakonima; ostale tačke dnevnog reda (izbori, odluke, amandmani) nisu ovde. {{ how("glasanje") }}</p>
+{% endblock %}

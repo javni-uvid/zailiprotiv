@@ -1,12 +1,63 @@
 {
  "mp": "булатовић дејан",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 32,
  "speeches": 53,
  "sittings": 10,
  "points": [
   {
-   "tekst": "Замера председавајућем што не опомиње посланике већине који добацују и вређају, а посланицима опозиције изриче опомене.",
+   "tekst": "У говорима из 2022. наводи да је пољопривреда у Србији уништена и да се села гасе, а у говорима из 2023. и 2025. да Влада у пољопривреду улаже више него икада.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Јасно је да је уништена потпуно пољопривреда у Србији. Грађани Републике Србије данас страхују од глади, са правом, јер када мало уђете у села широм Републике Србије видећете да тамо више нема крава, оваца, нема онога свега што је некада красило Србију и чинило је богатом.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тврди да му је Драган Ђилас „украо“ странку, слао му извршитеље на кућу и тукао пса у његовом дворишту.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Оно што Драган Ђилас уме и зна јесте да ми је послао извршитеље на кућу, да ми је узео камату и да се тако бори против мене.",
+    "date": "2024-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Prvog vanrednog zasedanja NSRS, odrzane 24. jula 2024. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера Мариники Тепић што је, како наводи, износила неистините афере, међу њима да се у Моровићу гаји марихуана, и што је у Скупштини потписала декларацију о геноциду у Сребреници.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сад замислите, замислите ту трагедију у политици – Мариника Тепић каже ви лажете. Жена која је износила толике афере, толике лажи износила, ни једна афера се није показала истинитом.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је садашња опозиција бивша власт и да су њени амандмани бесмислени.",
+   "govora": 4,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Узгред, та опозиција је бивша власт и баш ми смета када неко каже – знате, опозиција има некакве нове програме, има некакве нове идеје, а заправо то је она опозиција која је изгубила подршку грађана Републике Србије.",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "У говорима из 2022. и 2023. тражи од председника Скупштине да спречи добацивање и да опомиње и посланике владајуће већине, а не само опозицију.",
    "govora": 4,
    "sazivi": [
     "13"
@@ -15,56 +66,6 @@
     "tekst": "Ја вас молим, господине председниче, да не уводите двоструке аршине када кажњавате и опомињете посланике и не изричете опомене само посланицима из опозиције.",
     "date": "2022-10-21",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да се села у Србији гасе и да су штале и свињци празни.",
-   "govora": 3,
-   "sazivi": [
-    "13"
-   ],
-   "citat": {
-    "tekst": "Ја вам кажем српски сељак гладује. Верујте ми, гладује. Српско село је на измаку, гасе се српска села.",
-    "date": "2022-12-07",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 7. decembar 2022. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Тражи да се из буџета више издвоји за пољопривреду, јер сматра да повећање није довољно.",
-   "govora": 3,
-   "sazivi": [
-    "13"
-   ],
-   "citat": {
-    "tekst": "Моја забринутост је само у том правцу да ли је то што сте повећали довољно. Ја мислим да није.",
-    "date": "2022-11-09",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 9. novembar 2022. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "У каснијим говорима наводи да се у пољопривреду улаже више него икада раније.",
-   "govora": 2,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Дакле, ви морате да знате да је у пољопривреду уложено више него икада, више него икада. Да у пољопривреди данас воде рачуна заиста људи из струке.",
-    "date": "2025-11-27",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да је опозиција заправо бивша власт и замера јој што критикује предлоге закона иако је и сама била на власти.",
-   "govora": 2,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Морам грађанима Србије да кажем да та опозиција је заправо бивша власт, а бивша власт су зато што нису добро радили, нису били добра власт и они су сада бивша власт, дакле опозиција.",
-    "date": "2023-07-24",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
    }
   }
  ]

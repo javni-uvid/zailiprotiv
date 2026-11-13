@@ -12,6 +12,10 @@
     <button type="button" class="chip on" data-k="">Svi</button>
     {% if urgent %}<button type="button" class="chip" data-k="u">Hitan postupak <span>{{ urgent }}</span></button>{% endif %}
     {% for k, label, n in kind_counts %}<button type="button" class="chip" data-k="{{ k }}">{{ label|latin }} <span>{{ n }}</span></button>{% endfor %}
+    <label class="sr" for="f-a">Oblast</label>
+    <select id="f-a"><option value="">Sve oblasti</option>{% for a in area_options %}<option value="{{ a|area_slug }}">{{ a|latin }}</option>{% endfor %}</select>
+    <label class="sr" for="f-y">Godina</label>
+    <select id="f-y"><option value="">Sve godine</option>{% for y in year_options %}<option value="{{ y }}">{{ y }}</option>{% endfor %}</select>
     <label class="sr" for="f-sort">Redosled</label>
     <select id="f-sort"><option value="d">Najnoviji prvo</option><option value="sh">Najviše glasova protiv</option></select>
   </div>
@@ -19,7 +23,7 @@
 <p id="f-n" class="row-meta" aria-live="polite"></p>
 <ol class="rows" id="f-rows">
 {% for it in items %}
-  <li class="row" data-k="{{ it.law.kind or "other" }}{% if it.urgent %} u{% endif %}" data-d="{{ it.law.passed }}" data-sh="{{ it.share or 0 }}">
+  <li class="row" data-k="{{ it.law.kind or "other" }}{% if it.urgent %} u{% endif %}" data-d="{{ it.law.passed }}" data-sh="{{ it.share or 0 }}" data-a="{% for a in it.areas or [] %}{{ a|area_slug }} {% endfor %}">
     <div class="row-main">
       <a class="row-title" href="zakon/{{ it.slug }}.html">{{ it.law.short }}</a>
       <p class="row-meta">{{ it.law.passed|day }} · {{ it.kind|latin }}{% if it.urgent %} · hitan postupak{% endif %}</p>

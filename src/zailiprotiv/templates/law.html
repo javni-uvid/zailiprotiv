@@ -121,13 +121,14 @@
     <div><dt>Oblast</dt><dd>{% if it.areas %}{% for a in it.areas %}<a href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{% if not loop.last %}; {% endif %}{% endfor %}{% else %}—{% endif %}</dd></div>
     <div><dt>Predlog podnet</dt><dd>{{ law.submitted|day or "—" }}</dd></div>
     <div><dt>Hitan postupak</dt><dd>{% if it.urgent %}predložen, uz obrazloženje{% elif law.bill_file %}nije predložen{% else %}—{% endif %}</dd></div>
-    {% if final %}<div><dt>Sednica</dt><dd>{{ final.sitting_title|latin }}</dd></div>
+    {% if final %}<div><dt>Sednica</dt><dd><a href="../sednica/{{ sitting_slug }}.html">{{ final.sitting_title|latin }}</a></dd></div>
     <div><dt>Konačno glasanje</dt><dd>{{ final.when[:10]|day }} u {{ final.when[11:16] }}</dd></div>{% endif %}
   </dl>
   <p class="docs">
     <a href="{{ law.pdf }}">Tekst zakona (PDF)</a>
     {% if law.bill_pdf %}<a href="{{ law.bill_pdf }}">Predlog zakona sa obrazloženjem (PDF)</a>{% endif %}
     {% if final %}<a href="{{ final.key.split('#')[0] }}">Poimenično glasanje (PDF)</a>{% endif %}
+    {% if final %}<a href="{{ it.slug }}.csv">Glasanje (CSV)</a> <a href="{{ it.slug }}.json">Glasanje (JSON)</a>{% endif %}
     {% if db %}{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% else %}, {{ d.day }}. dan{% endif %}</a>{% endfor %}{% endif %}
   </p>
   {% if db and db.provisional %}<p class="meta">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane.</p>{% endif %}

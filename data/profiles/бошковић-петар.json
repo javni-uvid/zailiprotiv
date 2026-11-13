@@ -1,61 +1,61 @@
 {
  "mp": "бошковић петар",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 29,
  "speeches": 50,
  "sittings": 4,
  "points": [
   {
-   "tekst": "Наводи да је Генералштаб споменик културе и део комплекса зграда од историјског значаја.",
+   "tekst": "Наводи да зграда Генералштаба има статус споменика културе и противи се закону о пројекту на локацији на којој се она налази.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Још један интересантан детаљ, а то је, да не би било забуне, стари Савски мост и хотел „Југославија“, који сте такође бахато срушили, није културно добро и у томе је велика разлика. Авалски торањ и Генералштаб, господо, јесте.",
-    "date": "2025-11-05",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 5. novembra 2025. godine, drugi dan rada.docx"
+    "tekst": "Прво смо пробали то културолошки, да вам објаснимо, шта значи споменик културе и када се он једном донесе, свеједно је да ли је био здрав или је био порушен, то се јако тешко мења.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да се изменама Закона о војсци Генералштаб своди на преносиоца одлука председника Републике, а да се кадрови у војсци бирају по политичкој подобности.",
-   "govora": 3,
+   "tekst": "Наводи да измене Закона о Војсци Србије одузимају овлашћења Генералштабу и стављају Војску под контролу председника државе и министра одбране.",
+   "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Оно што ви из власти радите, нису никакве реформске измене, већ класично јачање политичке контроле над војском.",
+    "tekst": "Командовање и руковођење оличено у Генералштабу и чији је то синоним, постаје, људи, курирска служба председника државе и министра одбране.",
     "date": "2025-11-26",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да накнаде за трошкове становања у војсци нису повећане од 2012. године и тражи да се ускладе са инфлацијом.",
+   "tekst": "Замера што се официри, како наводи, постављају и унапређују по политичкој и страначкој подобности.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Овде је реч о војним пензионерима без стана. Значи, није усклађена са растом трошкова од 2012. године. У том периоду кумулативна инфлација до данас је 91%.",
-    "date": "2025-11-27",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
+    "tekst": "Господо, 13 година, 13 година, да не кажем 14, ви кадрујете Војском и ви вршите селекцију. То су генерације и генерације које излазе подобне по вашем шпановању СНС-а.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
    }
   },
   {
-   "tekst": "Замера што предлог закона о оружју као безбедносну сметњу наводи „понашање, навике и склоности“ и наводи да то полицијском службенику даје дискреционо право без образложења.",
+   "tekst": "Пита зашто Министарство одбране премешта официре на нижа места, међу њима генерала Милосава Симовића.",
    "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Молим вас, када је реч о навикама, склоностима и понашању, значи, реч је о психолошким, а не о правним категоријама. Ми само желимо да ове три речи ставите у правне категорије.",
-    "date": "2026-07-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+    "tekst": "Да ли је тачно да сте га после смене преместили за Београд на измишљено место, можете мислити, генерала копнене војске постављате за саветника у команди за обуку, уз контролисане, напомињем, и ограничене услове кретања.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
    }
   },
   {
-   "tekst": "Тражи да оружје не може прећи у власништво Републике Србије без правоснажне судске одлуке и позива се на уставну заштиту својине.",
-   "govora": 3,
+   "tekst": "Тражи да оружје грађана не може да пређе у власништво државе без правоснажне судске одлуке.",
+   "govora": 2,
    "sazivi": [
     "14"
    ],

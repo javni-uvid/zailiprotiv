@@ -1,68 +1,68 @@
 {
  "mp": "анна орег",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 34,
  "speeches": 40,
  "sittings": 8,
  "points": [
   {
-   "tekst": "Наводи да је БИА њу и опозицију тајно пратила и прислушкивала и тражи да јој се саопшти разлог тих мера.",
+   "tekst": "Наводи да је БИА више од годину дана тајно пратила и снимала њу као народну посланицу, да је тај материјал завршио у медијима и пита који је разлог њеног праћења.",
    "govora": 5,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Дакле, овим амандманом сам предложила да се смање средстава ка Безбедносно-информативној агенцији, с обзиром да смо сазнали да БИА користи јавни новац за то да прислушкује опозицију, да то после тога, тај видео и аудио материјал који је набавио нелегално доставља таблоидним телевизијама.",
+    "tekst": "Ја вас поново питам - ако сам ја такав терориста као што ви тврдите и као што закон налаже да само неко ко угрожава националну безбедност ове земље може да буде под таквим опсежним мерама, колега, и то више од годину дана, зашто нисам ухапшена?",
     "date": "2025-11-27",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да измене правосудних закона служе томе да се власт „обрачуна“ са тужилаштвом.",
-   "govora": 3,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Наиме, скраћивањем мандата тужиоцима који се налазе на предметима унутар ТОК-а, ви ћете практично да обуставите све истражне радње које се тичу тих случајева.",
-    "date": "2026-01-21",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 21. januara 2026. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да је Србија централизована и тражи да се формира министарство за регионални развој.",
-   "govora": 3,
-   "sazivi": [
-    "13"
-   ],
-   "citat": {
-    "tekst": "Нама не треба Министарство за бригу о селу. Нама треба министарство које ће да брине о равномерном регионалном развоју Србије.",
-    "date": "2022-10-19",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Замера што се закони примењују селективно и тражи да важе једнако за све.",
-   "govora": 2,
-   "sazivi": [
-    "13"
-   ],
-   "citat": {
-    "tekst": "Оно на чему ми из Покрета слободних грађана инсистирамо је да се закони морају поштовати, да је примена закона обавезујућа и једнака за све.",
-    "date": "2023-07-20",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS, 20. jul 2023. godine, drugi dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да је чланство у Европској унији пут за Србију и замера власти што земљу не води у том правцу.",
+   "tekst": "Наводи да власт изменама правосудних закона хоће да се обрачуна са тужиоцима који јој не одговарају.",
    "govora": 4,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Покрет слободних грађана сматра да држава треба да служи свим грађанима ове земље, такође сматра да су независне политички независне институције врло важне, а демократско напредовање Србије види унутар граница ЕУ.",
-    "date": "2026-08-25",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
+    "tekst": "Јасна је и та намера, јер у потпуности хоћете да укинете заправо све контролне институције на тај начин и да тужилаштво ставите под пуну контролу вама послушних људи.",
+    "date": "2026-01-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Sestog vanrednog zasedanja NSRS, 22. januar 2026. godine, 4. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера централизацији због које се празне села и тражи да се уместо Министарства за бригу о селу оснује министарство за регионални развој.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Хоћу још нешто да кажем, проблем централизације није проблем само у томе што нам се села празне, проблем је и градова.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је у центру Новог Сада дозвољена дивља градња подземних гаража којом је оштећена зграда Скупштине Војводине и да градска власт ради у корист инвеститора.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дозволивши изградњу подземних гаража код зграде Бановине без грађевинске дозволе и то на тај начин да те градње оштете статику зграде Скупштине Војводине, која је иначе под заштитом државе.",
+    "date": "2023-07-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Cetvrtog vanrednog zasedanja NSRS 24.07.2023. dan 3.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да власт Србију не води ка ЕУ, осим на папиру, а она сматра да је место Србије у ЕУ.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Такође вас молим да се ви сви коначно одредите у ком правцу водите нашу земљу, јер нам је свима јасно да то правац ЕУ није.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
    }
   }
  ]

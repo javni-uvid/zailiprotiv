@@ -10,6 +10,7 @@ import datetime as dt
 import hashlib
 import json
 import re
+import urllib.parse
 import shutil
 import unicodedata
 from collections import Counter, defaultdict
@@ -283,6 +284,12 @@ def mps_page(conv: str, current: str) -> str:
     return "poslanici.html" if conv == current else f"poslanici-{conv}.html"
 
 
+def sitting_page(url: str, title: str) -> str:
+    """A sitting's page name: its title and the number the Assembly's site gives it."""
+    m = re.search(r"\.(\d+)\.\d+\.html$", urllib.parse.unquote(url or ""))
+    return slug(latin(title))[:70] + ("-" + m.group(1) if m else "")
+
+
 def leaning(za: int, protiv: int) -> str:
     """A vote record in words, as TheyWorkForYou puts it: from "dosledno za" to "dosledno protiv"; five votes or more."""
     n = za + protiv
@@ -387,7 +394,8 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                 roll = sorted(({"mp": people[k], "vote": r[2], "group": latin(r[3])} for k, r in listed.items()),
                               key=lambda x: collate(x["mp"].name))
             page = env.get_template("law.html").render(
-                **common, it=it, law=law, final=final, groups=by_group(final) if final else [], roll=roll,
+                **common, it=it, law=law, final=final,
+                sitting_slug=sitting_page(final["sitting"], final["sitting_title"]) if final else "", groups=by_group(final) if final else [], roll=roll,
                 others=others, reasons=excerpt(sections.get("reasons", ""), 1200),
                 funds=excerpt(sections.get("funds", ""), 500), effects=excerpt(sections.get("effects", ""), 600),
                 report=bool(final and final["counts"]["nije_prisutan"]), root="../")
@@ -399,6 +407,8 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         (out / laws_page(conv, current)).write_text(env.get_template("laws.html").render(
             **common, items=items, kind_counts=[(k, kinds.KINDS[k], len(by_kind[k])) for k in kind_order],
             urgent=sum(1 for it in items if it["urgent"]), total=len(items), conv=conv,
+            area_options=sorted({a for it in items for a in it.get("areas") or []}, key=lambda a: collate(latin(a))),
+            year_options=sorted({(it["law"].get("passed") or "")[:4] for it in items if it["law"].get("passed")}, reverse=True),
             conv_name=ORDINAL_NAME.get(conv, conv), root=""), encoding="utf-8")
 
     # MPs: their final votes on laws, in every convocation.
@@ -512,9 +522,14 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             for a, ars in sorted(by_area.items(), key=lambda kv: (-len(kv[1]), collate(kv[0]))):
                 if len(ars) >= 5:
                     c = Counter(r["vote"] for r in ars)
-                    g = Counter(r["line"] for r in ars if r["line"])
+                    # International treaties are informative, as TheyWorkForYou treats votes that decide nothing
+                    # of the Assembly's own: counted in the table, left out of the words.
+                    scoring = [r for r in ars if r["it"]["law"].get("kind") != "treaty"]
+                    cs = Counter(r["vote"] for r in scoring)
+                    g = Counter(r["line"] for r in scoring if r["line"])
                     areas_table.append({"label": a, "total": len(ars), **{v: c.get(v, 0) for v in VOTES},
-                                        "word": leaning(c["za"], c["protiv"]), "group_word": leaning(g["za"], g["protiv"]),
+                                        "treaties": len(ars) - len(scoring),
+                                        "word": leaning(cs["za"], cs["protiv"]), "group_word": leaning(g["za"], g["protiv"]),
                                         "against": [r for r in ars if r["vote"] == "protiv"]})
             return {"tally": Counter(r["vote"] for r in rs), "n": len(rs), "kinds": kinds_table, "areas": areas_table[:15],
                     "against": [r for r in rs if r["vote"] == "protiv"], "for_": [r for r in rs if r["vote"] == "za"],
@@ -580,6 +595,76 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     (out / "oblasti.html").write_text(env.get_template("areas.html").render(
         **common, areas=[{"name": a, "slug": area_slug(a), "n": len(by_area[a])}
                          for a in sorted(by_area, key=lambda a: (-len(by_area[a]), collate(a)))], root=""), encoding="utf-8")
+    # A page per sitting: its laws and their final votes, the way the Assembly's own sitting page groups them.
+    by_sitting: dict[str, list] = defaultdict(list)
+    for its in items_by_conv.values():
+        for it in its:
+            if it.get("final"):
+                by_sitting[it["final"]["sitting"]].append(it)
+    sitting_slug = {}
+    (out / "sednica").mkdir(exist_ok=True)
+    for url, its in by_sitting.items():
+        its.sort(key=lambda it: it["final"]["when"])
+        first = its[0]
+        name = sitting_page(url, first["final"]["sitting_title"])
+        sitting_slug[url] = name
+        (out / "sednica" / f"{name}.html").write_text(env.get_template("sitting.html").render(
+            **common, title=first["final"]["sitting_title"], url=url, laws=its, conv_name=first["conv_name"],
+            first=its[0]["final"]["when"][:10], last=its[-1]["final"]["when"][:10], root="../"), encoding="utf-8")
+    sittings_list = sorted(({"slug": sitting_slug[u], "title": its[0]["final"]["sitting_title"], "n": len(its),
+                             "day": its[0]["final"]["when"][:10], "conv": its[0]["conv"], "conv_name": its[0]["conv_name"],
+                             "against": sum((it["final"]["counts"]["protiv"] or 0) for it in its)}
+                            for u, its in by_sitting.items()), key=lambda x: x["day"], reverse=True)
+    (out / "sednice.html").write_text(env.get_template("sittings.html").render(**common, sittings=sittings_list, root=""),
+                                      encoding="utf-8")
+
+    # Downloads: every law with its final vote, and every MP's final votes by convocation (CSV), and the roll call
+    # of each law beside its page (CSV and JSON).
+    import csv, io
+    site_url = f"https://{domain}/" if domain else ""
+
+    def display_name(name):
+        mp = people.get(mps.key(name))
+        return mp.name if mp else name
+    (out / "podaci").mkdir(exist_ok=True)
+    def write_csv(path, header, rows):
+        buf = io.StringIO()
+        w = csv.writer(buf)
+        w.writerow(header)
+        w.writerows(rows)
+        path.write_text(buf.getvalue(), encoding="utf-8")
+    write_csv(out / "podaci" / "zakoni.csv",
+              ["saziv", "usvojen", "kratak_naziv", "zvanican_naziv", "vrsta", "oblast", "za", "protiv", "uzdrzan",
+               "nije_glasao", "nije_prisutan", "strana", "glasanje_pdf", "zakon_pdf", "predlog_pdf"],
+              [[it["conv"], it["law"].get("passed"), it["law"]["short"], latin(it["law"]["title"]), latin(it["kind"]),
+                "; ".join(latin(a) for a in it.get("areas") or []),
+                *[(it["final"] or {}).get("counts", {}).get(v, "") if it.get("final") else "" for v in VOTES],
+                f"{site_url}zakon/{it['slug']}.html", (it.get("final") or {}).get("key", "").split("#")[0],
+                it["law"].get("pdf", ""), it["law"].get("bill_pdf", "")]
+               for its in items_by_conv.values() for it in its])
+    downloads = []
+    for conv, its in items_by_conv.items():
+        rows = []
+        for it in its:
+            f = it.get("final")
+            if not f:
+                continue
+            for _, name, how, group in f["rows"]:
+                rows.append([it["law"].get("passed"), it["law"]["short"], display_name(name), latin(group), how])
+        write_csv(out / "podaci" / f"glasovi-{conv}.csv", ["usvojen", "zakon", "poslanik", "grupa", "glas"], rows)
+        downloads.append({"conv": conv, "name": ORDINAL_NAME.get(conv, conv), "rows": len(rows), "laws": len(its)})
+        for it in its:
+            f = it.get("final")
+            if f:
+                roll = [[display_name(n), latin(g), how] for _, n, how, g in f["rows"]]
+                write_csv(out / "zakon" / f"{it['slug']}.csv", ["poslanik", "grupa", "glas"], roll)
+                (out / "zakon" / f"{it['slug']}.json").write_text(json.dumps(
+                    {"zakon": it["law"]["short"], "zvanican_naziv": latin(it["law"]["title"]), "usvojen": it["law"].get("passed"),
+                     "glasanje": f["when"], "pdf": f["key"].split("#")[0], "rezultat": f["counts"],
+                     "glasovi": [{"poslanik": a, "grupa": b, "glas": c} for a, b, c in roll]},
+                    ensure_ascii=False, indent=1), encoding="utf-8")
+    (out / "podaci.html").write_text(env.get_template("data.html").render(**common, downloads=downloads, root=""),
+                                     encoding="utf-8")
     (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(**common, root=""), encoding="utf-8")
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")

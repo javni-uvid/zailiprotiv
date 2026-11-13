@@ -1,37 +1,25 @@
 {
  "mp": "петровић слободан",
- "model": "claude-fable-5-2",
+ "model": "claude-opus-5-5",
  "read": 46,
  "speeches": 63,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Наводи да се фабрике у Врању затварају, да власт износи нетачне податке о запошљавању отпуштених радника, и тражи да министри приме раднике и одговоре им.",
-   "govora": 7,
+   "tekst": "Наводи да су Ана Брнабић, председница Скупштине, и Миленко Јованов „лагали“ да су сви бивши радници затворене фабрике „Кентаур“ у Врању добили други посао, и тражи да се извине тим радницима.",
+   "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Госпођа, државна секретарка каже – према евиденцији Националне службе за запошљавање до сада је запослено 37 бивших радника „Кентаура“ док је 167 лица на евиденцији Националне службе за запошљавање.",
-    "date": "2025-11-28",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
+    "tekst": "Јуче смо слушали лажи Ане Брнабић и Миленка Јованова о томе како су сви, понављам, сви бивши радници затворене фабрике „Кентаур“ у Врању добили други посао.",
+    "date": "2025-11-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да обећања власти општинама на југу Србије о инвеститорима, путевима, школама и другим објектима годинама остају неиспуњена.",
-   "govora": 6,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Од најаве је прошли више од три године, а реконструкције школе у Рајчиловцима није урађена, нити је било шта такнуто да се ради.",
-    "date": "2026-08-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Предлаже амандманима да се новац намењен пројекту ЕКСПО и Националном стадиону преусмери на социјалне и комуналне потребе општина на југу Србије.",
-   "govora": 6,
+   "tekst": "Предлаже амандмане на буџет којима би се део новца за ЕКСПО и Национални стадион преусмерио на потребе грађана у Врању и другим местима на југу Србије.",
+   "govora": 5,
    "sazivi": [
     "14"
    ],
@@ -42,27 +30,39 @@
    }
   },
   {
-   "tekst": "Наводи да предложене измене правосудних закона слабе самосталност јавног тужилаштва и да им је циљ да власт стави тужилаштво под своју контролу.",
-   "govora": 4,
+   "tekst": "Наводи да председник Александар Вучић није испунио обећања дата Врању и југу Србије, као што су нови инвеститор и фабрика, и да је „слагао“.",
+   "govora": 5,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Забрана поновног избора главног јавног тужиоца у истом јавном тужилаштву представља важну гаранцију самосталности, спречавање персоналне концентрације моћи и очување професионалне независности јавног тужилаштва.",
-    "date": "2026-01-27",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+    "tekst": "Прошле године сам упућивао питања за овог немачког инвеститора што је Александар Вучић слагао још пре две године исто тамо неког јануара да ће доћи у Врање и запослити 1.500 људи.",
+    "date": "2025-11-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 28. novembra 2025. godine, cetvrti dan rada.docx"
    }
   },
   {
-   "tekst": "Замера што министри не одговарају на посланичка питања и тражи да на њих одговоре.",
-   "govora": 4,
+   "tekst": "Тврди да предлози правосудних закона које је поднео Угљеша Мрдић служе томе да функционери власти избегну хапшење и одговорност.",
+   "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Нису они овде да постављају питања, него да на њих одговарају. Ми народни посланици смо ти који постављају питања. Грађани преко нас постављају питања министрима шта је са обећањима која су им дата.",
-    "date": "2026-08-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+    "tekst": "Без обзира на све наведено, једно је ипак јасно, а то је да овим сетом закона, иако су написани овако како су написани, хоћете да дисциплинујете и комплетно ставите под своје тужилаштво и правосуђе како би предупредили хапшења и у случају Генералштаба, за почетак министра Селаковића, патриоту на батерије и то литијумске, али и других министара, па и самог Вучића.",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Пита народног посланика Угљешу Мрдића где је завршио прве две године Правног факултета.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Господине Мрдићу, ваше ове прве две године правног факултета су као онај снежни човек Јети. Сви овде причамо о њима, а нико их није видео.",
+    "date": "2026-01-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Sestog vanrednog zasedanja NSRS, 22. januar 2026. godine, 4. dan rada.docx"
    }
   }
  ]

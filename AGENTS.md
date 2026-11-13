@@ -279,6 +279,12 @@ These are the project's promises to its readers. Never change them without the m
      and the MP's table, from abgeordnetenwatch's topic tags. Tabs by period on the MP page (done 13 Nov 2026): "Svi sazivi"
      and one per convocation over the votes for and against, "Drugačije", "Po oblasti" and "Po vrsti", each panel
      built on the server (`view` in `site.build`), switched by the page's script; without it, every convocation shows.
+  6c. from HowTheyVote, Parlametar, Datan and abgeordnetenwatch (done 13 Nov 2026): a page per sitting
+     (`sednica/<title>-<Assembly number>.html`, `sednice.html`); downloads (`podaci.html`: `podaci/zakoni.csv`,
+     `podaci/glasovi-<N>.csv`, and each law's roll call as `zakon/<slug>.csv` and `.json`; free use with credit); a
+     "Prijavi grešku" link on every page, a prefilled GitHub issue (no script); filters by area and year on the laws
+     list; treaties counted but left out of the words in "Po oblasti" (TheyWorkForYou's informative votes). MP page
+     lists show six rows and link to the full table at the bottom, to keep pages light (tabs had made them 2 MB).
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 
