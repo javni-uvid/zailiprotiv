@@ -1,0 +1,20 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2639-14Lat.pdf",
+ "sha256": "b9a1b51adf563bc3942caa222925dec7b23ddcc295a2b56827459db803d35682",
+ "reader": 2,
+ "sections": {
+  "basis": "USTAVNI OSNOV ZA DONOŠENjE ZAKONA\nUstavni osnov za donošenje ovog zakona sadržan je u odredbi člana 97. stav\n1. tačka 8) Ustava Republike Srbije kojom je utvrđeno da Republika Srbija uređuje i\nobezbeđuje sistem u oblasti radnih odnosa.",
+  "reasons": "RAZLOZI ZA DONOŠENjE ZAKONA\nRazlozi za donošenje ovog zakona sadržani su u potrebi da se pojedina\npitanja koja se tiču radnih odnosa urede na isti način prema svim zaposlenima i na\ntaj način se usaglase i sa Zakonom o radu u pitanjima koja se tiču minulog rada i\nZakona o državnim službenicima u pogledu propisivanja roka u kom\nneraspoređenom državnom službeniku prestaje radni odnos.",
+  "explained": "OBJAŠNjENjE ODREDABA ZAKONA\nČlan 1. Predloženim rešenjem propisano je da državnom službeniku pripada\npravo na dodatak na osnovnu platu od 0,4% osnovne plate za svaku navršenu\ngodinu rada ostvarenu kod poslodavca, bez obzira o kom državnom organu se radi,\nodnosno pravo na minuli rad.\nČlan 2. Izmenom ovog člana vrši se usklađivanje sa odredbom\nčlana 138. stav 3. Zakona o državnim službenicima u pogledu roka u kom\nneraspoređenom državnom službeniku prestaje radni odnos.",
+  "urgency": "RAZLOZI ZA DONOŠENJE ZAKONA PO HITNOM POSTUPKU\nDonošenje ovog zakona po hitnom postupku predlaže se kako bi se\notklonile okolnosti koje mogu da prouzrokuju štetne posledice po rad organa i\norganizacija, a koje se mogu pojaviti u vezi sa primenom opšteg i posebnog zakona\nkojim se uređuju rad i radni odnosi, a naročito u vezi sa ujednačavanjem položaja u\nostvarivanju prava zaposlenih kod različitih poslodavaca."
+ },
+ "articles": [
+  {
+   "article": 97,
+   "paragraph": 1,
+   "points": [
+    8
+   ]
+  }
+ ]
+}

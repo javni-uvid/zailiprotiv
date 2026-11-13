@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2929-14Lat.pdf",
+ "sha256": "89af0f490873f9bde1b29398e0bb25442a8473e016ef2041eb290a032a1da2fa",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje ovog zakona je član 99. stav 1. tačka 4. Ustava\nRepublike Srbije, prema kome Narodna skupština potvrđuje međunarodne ugovore kad je\nzakonom predviđena obaveza njihovog potvrđivanja.",
+  "reasons": "Razlozi za potvrđivanje međunarodnog ugovora\nOvim zakonom se omogućava sprovođenje dvostranog međunarodnog Sporazuma\nizmeđu Vlade Republike Srbije i Vlade Republike Moldavije o saradnji i uzajamnoj pomoći u\ncarinskim pitanjima u cilju predupređivanja i suzbijanja povreda carinskih propisa, suzbijanja\nkrijumčarenja, olakšanja i ubrzanja robnog i putničkog prometa između dve zemlje i razmene\niskustava u radu carinskih organa.\nOsim toga, potvrđivanjem ovog sporazuma obezbeđuje se pravilna primena carinskih\npropisa kroz razmenu informacija između dve zemlje kako bi se tačno utvrdile carinske\ndažbine, porezi i druge naknade u vezi sa uvozom ili izvozom, kako bi se tačno utvrdilo\ntarifno svrstavanje robe, carinska vrednost i poreklo robe, kao i u cilju pravilne primene\nodredaba koje se odnose na zabrane, ograničenja i kontrolu.",
+  "funds": "Finansijske obaveze za izvršavanje međunarodnog ugovora\nIzvršavanjem Sporazuma između Vlade Republike Srbije i Vlade Republike Moldavije\no saradnji i uzajamnoj pomoći u carinskim pitanjima ne stvaraju se finansijske obaveze za\nRepubliku Srbiju.\nFinansijska sredstva potrebna za izvršavanje međunarodnog ugovora\nZa izvršavanje Sporazuma između Vlade Republike Srbije i Vlade Republike\nMoldavije o saradnji i uzajamnoj pomoći u carinskim pitanjima nije potrebno obezbediti\nsredstva iz budžeta Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}

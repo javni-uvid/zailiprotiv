@@ -1,0 +1,19 @@
+{
+ "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/3831-14Lat.pdf",
+ "sha256": "ab96c81b8c322731a66dbd901ddc2d389812c45ea63970b178705fa56aea99bf",
+ "reader": 2,
+ "sections": {
+  "basis": "Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Ugovora između\nRepublike Srbije i Bosne i Hercegovine o izručenju sadržan je u članu 99. stav 1.\ntačka 4. Ustava Republike Srbije prema kome je u nadležnosti Narodne skupštine da\npotvrđuje međunarodne ugovore kada je zakonom predviđena obaveza njihovog\npotvrđivanja.",
+  "reasons": "Razlozi za donošenje Zakona\nIzmeđu Republike Srbije i Bosne i Hercegovine pitanje izručenja okrivljenih i\nosuđenih lica nije regulisano bilateralnim ugovorom.\nZaključenjem Ugovora o izručenju, stvoriće se uslovi za efikasnije odvijanje\nnavedenog vida međunarodne pravne pomoći između dve države. Ovo se pre svega\nodnosi na regulisanje mogućnosti izručenja sopstvenih državljana zbog krivičnih dela\norganizovanog kriminala, korupcije i pranja novca, kao i za određena druga teška\nkrivična dela, s tim što se odredbe Ugovora ne primenjuju na krivična dela genocida,\nzločina protiv čovečnosti i ratnih zločina.",
+  "funds": "Ocena potrebe finansijskih sredstava za sprovođenje Zakona\nZa primenu ovog zakona nije potrebno obezbediti dodatna finansijska\nsredstva iz budžeta Republike Srbije."
+ },
+ "articles": [
+  {
+   "article": 99,
+   "paragraph": 1,
+   "points": [
+    4
+   ]
+  }
+ ]
+}
