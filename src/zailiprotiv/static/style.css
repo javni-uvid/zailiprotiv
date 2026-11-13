@@ -601,3 +601,4 @@ td.lean { white-space: nowrap; }
 .chamber .s-prazno { fill: none; stroke: var(--line); stroke-width: 1; }
 .chamber-who { margin: .3rem 0 0; font-size: .9rem; min-height: 2.7em; line-height: 1.35; color: var(--muted); }
 .chamber-who.on { color: var(--fg); font-weight: 600; }
+.q-reveal > .q-next { margin: .2rem 0 1.5rem; }

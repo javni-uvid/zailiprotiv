@@ -39,6 +39,7 @@
       <button type="button" class="q-btn q-uzd" data-a="u" aria-pressed="false">Uzdržan</button>
     </div>
     <div class="q-reveal" hidden>
+      <p class="q-next"><button type="button" class="button q-go">{% if loop.last %}Vidi rezultat{% else %}Sledeći zakon{% endif %}</button> <a href="zakon/{{ it.slug }}.html">Više o ovom zakonu</a></p>
       <p class="q-verdict"></p>
       <div class="q-hall" role="img" aria-label="Skupština: {{ c.za }} za, {{ c.protiv }} protiv"><span class="v-za"></span><span class="v-protiv"></span><span class="v-ostali"></span></div>
       <p class="q-hall-key"><b class="t-za">{{ c.za }} za</b><b class="t-protiv">{{ c.protiv }} protiv</b></p>
@@ -55,7 +56,6 @@
         {% endfor %}
       </div>
       {% endif %}
-      <p class="q-next"><button type="button" class="button q-go">{% if loop.last %}Vidi rezultat{% else %}Sledeći zakon{% endif %}</button> <a href="zakon/{{ it.slug }}.html">Više o ovom zakonu</a></p>
     </div>
   </li>
 {% endfor %}
