@@ -1,0 +1,71 @@
+{
+ "mp": "лукић мирка шаркановић",
+ "model": "claude-sonnet-5-5",
+ "read": 12,
+ "speeches": 12,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Предлаже да држава помогне младим лекарима и медицинским сестрама у решавању стамбеног питања, као што је то омогућено војсци и полицији, да не би одлазили из земље.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Посланичка група Ивица Дачић – СПС је у више наврата предлагала да и за медицинске раднике држава омогући куповину стана под повлашћеним условима, како је то омогућено снагама безбедности, јер здравље становништва је такође одбрамбена снага државе, односно здраво становништво.",
+    "date": "2024-09-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Drugog vanrednog zasedanja u XIV sazivu, odrzane 25. septembra 2024. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да становништво Србије стари, да је просечна старост око 44 године и да због тога расте број болести везаних за старење.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, са старењем расте и број болести које су везане за старење, то су тзв. дегенеративне болести, али и напредују, прогредирају болести које су већ постојале.",
+    "date": "2025-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog redovnog zasedanja NSRS, 13. mart 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је потреба за палијативном негом оболелих од неизлечивих болести велика и залаже се да се за њу користе додатни капацитети.",
+   "govora": 2,
+   "sazivi": [
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Да ли постоји могућност да се за палијативну негу определе додатни капацитети, имајући у виду да су изграђени и граде се нови клинички центри и болнице?",
+    "date": "2025-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog redovnog zasedanja NSRS, 13. mart 2025. godine, sesti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је трговина људима, међу осталим и децом, један од великих проблема данашњице, који обухвата и узимање органа жртава.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ово је један од великих проблема данашњице и представља један од драстичних облика дехуманизације данашњег друштва.",
+    "date": "2025-03-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Privremene stenografske beleske Prve sednica Prvog redovnog zasedanja NSRS, odrzane 4. marta 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је процес трансплантације органа сложен и да у њему учествује велики број стручњака.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Кажем процес трансплантације органа уопште није једноставан процес. Он подразумева доказивање мождане смрти, одржавање донора, разговор са породицом донора, екплантација органа, трансплантацију органа, чак више органа од једног донора, дакле више пацијената се трансплантира у исти час, потом трансплантацијска нега и лечење пацијента.",
+    "date": "2026-06-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Vandrednog zasedanja NSRS, 24. jun 2026. godine, cetvrti dan rada.docx"
+   }
+  }
+ ]
+}

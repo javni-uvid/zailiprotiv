@@ -1,0 +1,57 @@
+{
+ "mp": "костов ристо",
+ "model": "claude-sonnet-5-5",
+ "read": 16,
+ "speeches": 18,
+ "sittings": 13,
+ "points": [
+  {
+   "tekst": "Traži да се уведе 13. пензија за пензионере са најнижим примањима и социјална гарантована пензија за старије од 65 година који немају пензију.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Надамо се и верујемо да ће у буџету за 2027. годину бити планирана средства и за 13. пензију за пензионере са најнижим примањима, за шта се ПУПС залаже годинама.",
+    "date": "2025-11-25",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 25. novembra 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Навoди да је Министарство за бригу о селу доделило хиљаде празних сеоских кућа у којима сада живе млади људи.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Затим је Министарство за бригу о селу, први пут у историји Србије основано 2019. године, доделило до сада близу четири хиљаде празних сеоских кућа, свака вредности до 1,2 милиона динара у којима сада живи више од 20 хиљада жена, мушкараца и неколико хиљада деце.",
+    "date": "2025-10-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 15. oktobra 2025. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Навoди да је дијалог, уместо „паралелних монолога“, најбољи начин за решавање неспоразума, и у Скупштини и у раду на изборном процесу.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У ПУПС-у годинама истичемо да је дијалог, дијалог и само дијалог, уместо паралелних монолога, једини и најбољи метод за решавање неспоразума и криза у друштву.",
+    "date": "2026-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/F Treca sednica Prvog redovnog zasedanja NSRS 12.05.2026..docx"
+   }
+  },
+  {
+   "tekst": "Навoди да је Србија у изборним законима уградила препоруке ОДИХР-а, а да ОДИХР није упутио ниједну препоруку о заштити права Срба на Косову и Метохији.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "На суморну и оптерећујућу чињеницу да до сада није стигла ниједна, али баш ниједна ОДИХР-ова препорука о заштити основних људских права Срба у нашој јужној покрајини Косово и Метохији, иако се она свакодневно крше на најгрубљи могући начин.",
+    "date": "2026-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/F Treca sednica Prvog redovnog zasedanja NSRS 12.05.2026..docx"
+   }
+  }
+ ]
+}

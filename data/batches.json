@@ -45,6 +45,13 @@
     "input": 2014161,
     "output": 390414,
     "replies": 75
+   },
+   "claude-sonnet-5-5": {
+    "cache_read": 6030,
+    "cache_written": 1206,
+    "input": 177629,
+    "output": 27571,
+    "replies": 6
    }
   },
   "sample-13": {
@@ -66,10 +73,10 @@
    },
    "claude-sonnet-5-5": {
     "cache_read": 566,
-    "cache_written": 566,
-    "input": 22879,
-    "output": 3249,
-    "replies": 2
+    "cache_written": 1132,
+    "input": 34402,
+    "output": 4903,
+    "replies": 3
    }
   },
   "summaries-14": {
