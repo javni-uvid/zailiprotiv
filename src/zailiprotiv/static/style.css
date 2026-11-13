@@ -602,3 +602,14 @@ td.lean { white-space: nowrap; }
 .chamber-who { margin: .3rem 0 0; font-size: .9rem; min-height: 2.7em; line-height: 1.35; color: var(--muted); }
 .chamber-who.on { color: var(--fg); font-weight: 600; }
 .q-reveal > .q-next { margin: .2rem 0 1.5rem; }
+/* Varnice: find a speaker; the list shows only what is typed for. */
+.floor-finder { margin: 1.2rem 0 .4rem; }
+.floor-finder .rows { margin: 0; }
+.floor-finder > .meta { margin: .4rem 0 0; }
+
+/* The parts of "Varnice": three plain buttons side by side, the open one filled. */
+.subtabs { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 1.4rem; }
+.subtabs a { flex: 1 1 12rem; text-align: center; padding: .8rem 1rem; border: 2px solid var(--fg); color: var(--fg); text-decoration: none; font-weight: 600; line-height: 1.25; }
+.subtabs a:hover { background: var(--card); }
+.subtabs a[aria-current="page"] { background: var(--fg); color: var(--bg); }
+.subtabs .count { color: inherit; opacity: .7; }

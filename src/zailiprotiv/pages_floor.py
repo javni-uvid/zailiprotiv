@@ -251,6 +251,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                                                     and e["to"]["slug"] == r["who"]["slug"]]})
         if events:
             by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "years": years_of.get(c, ""), "events": events, "table": sittings, "top": top, "speakers": len(rows),
+                            "people": sorted(rows.values(), key=lambda r: r["who"]["name"]),
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
                             "sittings": len(debates.get(c, {}))})

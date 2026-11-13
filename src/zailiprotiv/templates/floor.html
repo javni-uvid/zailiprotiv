@@ -8,9 +8,26 @@
 <h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 <nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}</nav>
-<nav class="page-menu" aria-label="Deo"><a href="{{ c.page }}"{% if part == "mere" %} aria-current="page"{% endif %}>Po sednicama i mere predsedavajućeg ({{ c.measures|length }})</a><a href="{{ c.page_exchanges }}"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika ({{ c.exchanges|length }})</a><a href="{{ c.page_who }}"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
+<nav class="subtabs" aria-label="Deo strane"><a href="{{ c.page }}"{% if part == "mere" %} aria-current="page"{% endif %}>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></a><a href="{{ c.page_exchanges }}"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika <span class="count">{{ c.exchanges|length }}</span></a><a href="{{ c.page_who }}"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
 
 {% if part == "mere" %}
+<div class="finder js-only floor-finder" hidden data-filter="floor-rows" data-quiet>
+  <label class="sr" for="f-q">Nađi govornika</label>
+  <input id="f-q" type="search" placeholder="Nađi poslanika: govori, replike, mere i teške reči, npr. Jovanov" autocomplete="off">
+  <p id="f-n" class="row-meta" aria-live="polite"></p>
+  <ol class="rows compact" id="floor-rows">
+  {% for r in c.people %}
+    <li class="row" hidden data-i="{{ loop.index }}">
+      <img class="row-face" src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
+      <div class="row-main">
+        {% if r.who.slug %}<a class="row-title" href="poslanik/{{ r.who.slug }}.html#aktivnost">{{ r.who.name }}</a>{% else %}<span class="row-title">{{ r.who.name }}</span>{% endif %}
+        <p class="row-meta">{{ r.speeches }} {{ plural(r.speeches, "govor", "govora", "govora") }}{% if r.exchanges %} · {% if r.who.slug %}<a href="poslanik/{{ r.who.slug }}.html#replike">{{ r.exchanges }} {{ plural(r.exchanges, "razmena replika", "razmene replika", "razmena replika") }}</a>{% else %}{{ r.exchanges }} {{ plural(r.exchanges, "razmena replika", "razmene replika", "razmena replika") }}{% endif %}{% endif %}{% if r.points %} · {{ r.points }} na Poslovnik{% endif %}{% if r.measures %} · {% if r.who.slug %}<a href="poslanik/{{ r.who.slug }}.html#mere">{{ r.measures }} {{ plural(r.measures, "mera", "mere", "mera") }}</a>{% else %}{{ r.measures }} {{ plural(r.measures, "mera", "mere", "mera") }}{% endif %}{% endif %}{% if r.harsh %} · {% if r.who.slug %}<a href="poslanik/{{ r.who.slug }}.html#reci">{{ r.harsh|length }} {{ plural(r.harsh|length, "teška reč", "teške reči", "teških reči") }}</a>{% else %}{{ r.harsh|length }} {{ plural(r.harsh|length, "teška reč", "teške reči", "teških reči") }}{% endif %}{% endif %}</p>
+      </div>
+    </li>
+  {% endfor %}
+  </ol>
+  <p class="meta">{{ c.people|length }} govornika u pročitanim beleškama ovog saziva. Za reči i rečenice: <a href="pretraga.html">pretraga celog teksta</a>.</p>
+</div>
 <section class="faces-row" aria-label="Ko najviše u ovom sazivu">
 {% for key, label, unit in [("speeches", "Najviše govora", "govora"), ("exchanges", "Najviše razmena replika", "razmena"), ("measures", "Najviše mera predsedavajućeg", "mera"), ("harsh", "Najviše teških reči", "reči")] %}
   {% if c.top[key] %}

@@ -270,16 +270,17 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
   rows.forEach(function (r) { r._t = norm(r.querySelector(".row-main").textContent); });
   function apply() {
     var words = norm(q.value.trim()).split(/\s+/).filter(Boolean).map(stem), shown = 0;
+    var quiet = box.hasAttribute("data-quiet") && !words.length;  // a list that shows nothing until something is typed
     rows.forEach(function (r) {
       var ok = words.every(function (w) { return r._t.indexOf(w) >= 0; })
         && (!kind || (" " + r.dataset.k + " ").indexOf(" " + kind + " ") >= 0)
         && (!group || !group.value || r.dataset.g === group.value)
         && (!area || !area.value || (" " + (r.dataset.a || "")).indexOf(" " + area.value + " ") >= 0)
         && (!year || !year.value || (r.dataset.d || "").slice(0, 4) === year.value);
-      r.hidden = !ok;
+      r.hidden = !ok || quiet;
       if (ok) shown++;
     });
-    count.textContent = shown === rows.length ? "" : "Prikazano " + shown + " od " + rows.length;
+    count.textContent = quiet || shown === rows.length ? "" : (shown ? "Prikazano " + shown + " od " + rows.length : "Niko pod tim imenom među govornicima ovog saziva.");
   }
   function order() {
     var key = sort ? sort.value : "";
