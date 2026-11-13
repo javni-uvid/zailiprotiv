@@ -330,7 +330,15 @@ td.lean { white-space: nowrap; }
 .q-hall-small { height: 1.5rem; }
 .q-hall-small .v-uzdrzan { background: var(--uzdrzan); }
 .q-crowd-key { margin: .35rem 0 0; font-size: 1.05rem; }
-.q-others td:first-child { min-width: 12rem; }
+.q-others { list-style: none; padding: 0; margin: .6rem 0; }
+.qo-law { padding: .9rem 0; border-bottom: 1px solid var(--line); }
+.qo-title { margin: 0 0 .5rem; font-family: var(--serif); font-weight: 700; font-size: 1.15rem; line-height: 1.3; }
+.qo-you { font: 700 .9rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; white-space: nowrap; margin-left: .3rem; }
+.qo-line { display: grid; grid-template-columns: 6rem 1fr 10.5rem; gap: .8rem; align-items: center; margin: .3rem 0; font-size: .95rem; }
+.qo-line .bar { height: 1rem; }
+.qo-nums { text-align: right; white-space: nowrap; }
+@media (max-width: 600px) { .qo-line { grid-template-columns: 5.2rem 1fr; } .qo-nums { grid-column: 2; text-align: left; } }
+.q-fact + .q-fact { margin-top: -1rem; }
 .q-next { margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; align-items: center; }
 .q-next .button, .q-share .button { font-size: 1.1rem; padding: .85rem 1.5rem; border: 2px solid var(--fg); cursor: pointer; font-family: inherit; margin: 0; }
 .q-share .button.ghost { background: transparent; color: var(--fg); }

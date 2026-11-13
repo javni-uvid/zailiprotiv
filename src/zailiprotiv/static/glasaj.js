@@ -73,17 +73,21 @@
     card.who = who; card.score = top.length ? top[0].m.same + " od " + top[0].m.both : "";
     document.getElementById("q-fact").textContent = card.fact.replace("Da se ja pitam", "Da se ti pitaš") +
       " Skupština je usvojila svih " + answers.length + ".";
-    shareText = card.fact + (who ? " Najviše glasova kao ja: " + who + " (" + card.score + ")." : "") + " A ti?";
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
-    var ms = document.getElementById("q-mps"), shown = Math.min(Math.max(8, top.length), 40); ms.textContent = "";
-    mps.slice(0, shown).forEach(function (x) {
+    redraw();
+    // Three MPs. When more are level, which three is not ours to choose: they are taken from the level ones starting
+    // at a place that depends on the answers, and the page says how many more there are.
+    var ms = document.getElementById("q-mps"), three = [], seed = 0; ms.textContent = "";
+    answers.join("").split("").forEach(function (ch, k) { seed = (seed * 31 + ch.charCodeAt(0) + k) % 9973; });
+    for (var k = 0; k < Math.min(3, top.length); k++) three.push(top[(seed + k) % top.length]);
+    mps.slice(top.length).slice(0, 3 - three.length).forEach(function (x) { three.push(x); });
+    three.forEach(function (x) {
       var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
       a.href = "poslanik/" + x.p.s + ".html"; main.appendChild(a);
       if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
       li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
     });
-    document.getElementById("q-mps-note").textContent = top.length > shown ? "Prikazano prvih " + shown + " od " + top.length +
-      " poslanika sa istim brojem, po azbučnom redu." : "";
+    document.getElementById("q-mps-note").textContent = top.length > 3 ? "Još " + (top.length - 3) + " " +
+      plural(top.length - 3, "poslanik ima", "poslanika imaju", "poslanika ima") + " isti broj istih glasova; ova tri su izabrana nasumično." : "";
     var gs = document.getElementById("q-groups"); gs.textContent = "";
     groups.forEach(function (x) {
       var tr = el("tr"), td = el("td"), a = el("a", null, x.g.n), cell = el("td", "vote-cell"), bar = el("div", "bar"), s = el("span", "v-za");
@@ -156,10 +160,15 @@
       x += 38 + ctx.measureText(k[0]).width + 40;
     });
     if (card.who) {
-      y += 120; ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Najviše glasova kao ja", P, y);
+      y += 104; ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Najviše glasova kao ja", P, y);
       ctx.fillStyle = "#111"; ctx.font = "700 60px " + serif; y += 74;
-      wrapText(ctx, card.who, W - 2 * P, 3).forEach(function (l) { ctx.fillText(l, P, y); y += 70; });
+      wrapText(ctx, card.who, W - 2 * P, 2).forEach(function (l) { ctx.fillText(l, P, y); y += 70; });
       ctx.fillStyle = "#555"; ctx.font = "400 36px " + sans; ctx.fillText("isti glas na " + card.score + " zakona", P, y - 8);
+    }
+    if (card.crowd) {
+      y += 92; ctx.fillStyle = "#555"; ctx.font = "400 38px " + sans; ctx.fillText("Kao većina posetilaca sajta", P, y);
+      ctx.fillStyle = "#111"; ctx.font = "700 60px " + serif; y += 72;
+      ctx.fillText("na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona"), P, y);
     }
     ctx.fillStyle = "#111"; ctx.fillRect(P, H - 150, W - 2 * P, 3);
     ctx.font = "700 44px " + serif; ctx.fillText("A ti?", P, H - 78);
@@ -173,7 +182,27 @@
       img.src = url; document.getElementById("q-save").href = url;
     }, "image/png");
   }
-  var card = { fact: "", who: "", score: "" };
+  var card = { fact: "", who: "", score: "", crowd: null };
+  // On how many laws the visitor voted as most visitors did, among the laws five or more visitors voted on.
+  function crowdFact() {
+    var same = 0, of = 0;
+    answers.forEach(function (a, i) {
+      var c = crowdOf(i);
+      if (!a || c.n < 5) return;
+      of++; if (c[a] >= Math.max(c.z, c.p, c.u)) same++;
+    });
+    return of ? { same: same, of: of } : null;
+  }
+  function redraw() {
+    card.crowd = api ? crowdFact() : null;
+    var line = document.getElementById("q-crowd-fact");
+    line.hidden = !card.crowd;
+    if (card.crowd) line.textContent = "Na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona") +
+      " glasao si kao većina posetilaca sajta.";
+    shareText = card.fact + (card.who ? " Najviše glasova kao ja: " + card.who + " (" + card.score + ")." : "") +
+      (card.crowd ? " Kao većina posetilaca sajta na " + card.crowd.same + " od " + card.crowd.of + "." : "") + " A ti?";
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
+  }
   function note(text) { document.getElementById("q-shared").textContent = text; }
   function shareUrl() { return location.protocol === "file:" ? "https://zailiprotiv.rs/glasaj.html" : location.href.split("#")[0]; }
   function copyText() {
@@ -226,26 +255,39 @@
       box.querySelector(".q-crowd-key").textContent = c.z + " za, " + c.p + " protiv" + (c.u ? ", " + c.u + " uzdržano" : "") +
         (c.n < 10 ? " (za sada samo " + c.n + " " + plural(c.n, "glas", "glasa", "glasova") + ")" : "");
     });
-    if (at === "kraj") others();
+    if (at === "kraj") { others(); redraw(); }
   }
   // At the end: every law, the chamber beside the visitors.
   function others() {
-    var body = document.getElementById("q-others"), any = false;
-    if (!body) return;
-    body.textContent = "";
-    items.forEach(function (item, i) {
-      var c = crowdOf(i), tr = el("tr"), td = el("td"), a = el("a", null, item.querySelector("h2").textContent);
-      if (c.n) any = true;
-      a.href = item.querySelector("h2 a").getAttribute("href"); td.appendChild(a); tr.appendChild(td);
-      tr.appendChild(el("td", "num" + (answers[i] ? " v-text-" + { z: "za", p: "protiv", u: "uzdrzan" }[answers[i]] : ""), answers[i] ? WORD[answers[i]] : "—"));
-      tr.appendChild(el("td", "num", item.dataset.za + " : " + item.dataset.protiv));
-      var cell = el("td", "vote-cell"), bar = el("div", "bar");
-      [["v-za", c.z], ["v-protiv", c.p], ["v-uzdrzan", c.u]].forEach(function (p) {
-        if (c.n && p[1]) { var sp = el("span", p[0]); sp.style.width = (100 * p[1] / c.n) + "%"; bar.appendChild(sp); }
+    var box = document.getElementById("q-others"), any = false;
+    if (!box) return;
+    box.textContent = "";
+    function line(label, za, protiv, uzd) {
+      var n = za + protiv + uzd, row = el("div", "qo-line"), bar = el("div", "bar");
+      row.appendChild(el("span", "qo-who", label));
+      [["v-za", za], ["v-protiv", protiv], ["v-uzdrzan", uzd]].forEach(function (p) {
+        if (n && p[1]) { var sp = el("span", p[0]); sp.style.width = (100 * p[1] / n) + "%"; bar.appendChild(sp); }
       });
-      cell.appendChild(bar); tr.appendChild(cell);
-      tr.appendChild(el("td", "num", c.n ? c.z + " : " + c.p : "—"));
-      body.appendChild(tr);
+      row.appendChild(bar);
+      var nums = el("span", "qo-nums");
+      nums.appendChild(el("b", "t-za", za + " za")); nums.appendChild(document.createTextNode(" · "));
+      nums.appendChild(el("b", "t-protiv", protiv + " protiv"));
+      row.appendChild(nums);
+      return row;
+    }
+    items.forEach(function (item, i) {
+      var c = crowdOf(i), li = el("li", "qo-law"), head = el("p", "qo-title"), a = el("a", null, item.querySelector("h2").textContent);
+      if (!c.n) return;
+      any = true;
+      a.href = item.querySelector("h2 a").getAttribute("href"); head.appendChild(a);
+      if (answers[i]) {
+        head.appendChild(document.createTextNode(" "));
+        head.appendChild(el("span", "qo-you v-text-" + { z: "za", p: "protiv", u: "uzdrzan" }[answers[i]], "ti: " + WORD[answers[i]]));
+      }
+      li.appendChild(head);
+      li.appendChild(line("Skupština", +item.dataset.za, +item.dataset.protiv, 0));
+      li.appendChild(line("Posetioci", c.z, c.p, c.u));
+      box.appendChild(li);
     });
     document.getElementById("q-others-box").hidden = !any;
   }
