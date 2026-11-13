@@ -283,6 +283,19 @@ def mps_page(conv: str, current: str) -> str:
     return "poslanici.html" if conv == current else f"poslanici-{conv}.html"
 
 
+def leaning(za: int, protiv: int) -> str:
+    """A vote record in words, as TheyWorkForYou puts it: from "dosledno za" to "dosledno protiv"; five votes or more."""
+    n = za + protiv
+    if n < 5:
+        return ""
+    share = za / n
+    for at, word in ((0.95, "dosledno za"), (0.75, "uglavnom za"), (0.6, "češće za"), (0.4, "mešovito"),
+                     (0.25, "češće protiv"), (0.05, "uglavnom protiv")):
+        if share >= at:
+            return word
+    return "dosledno protiv"
+
+
 def write_feed(path: Path, title: str, self_url: str, page_url: str, entries: list[dict]) -> None:
     from xml.sax.saxutils import escape as x
     updated = max((e["updated"] for e in entries), default="2000-01-01T00:00:00Z")
@@ -496,7 +509,9 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         for a, rs in sorted(by_area.items(), key=lambda kv: (-len(kv[1]), collate(kv[0]))):
             if len(rs) >= 5:
                 c = Counter(r["vote"] for r in rs)
+                g = Counter(r["line"] for r in rs if r["line"])
                 areas_table.append({"label": a, "total": len(rs), **{v: c.get(v, 0) for v in VOTES},
+                                    "word": leaning(c["za"], c["protiv"]), "group_word": leaning(g["za"], g["protiv"]),
                                     "against": [r for r in rs if r["vote"] == "protiv"]})
         rows_mp.append({"mp": mp, "tally": tally, "n": len(record), "by_conv": {c["conv"]: c for c in by_conv},
                         "convs": sorted({r["it"]["conv"] for r in record}, key=int, reverse=True)})

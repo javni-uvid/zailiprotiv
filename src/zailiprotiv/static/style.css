@@ -236,3 +236,9 @@ table.agree tr.own td:first-child { font-weight: 600; }
 #glasanje, section[id] { scroll-margin-top: 1rem; }
 details.inline { margin-top: .2rem; font-size: .9rem; }
 details.inline summary { color: var(--muted); cursor: pointer; }
+.page-menu { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 1rem 0 1.5rem; padding: .6rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: .95rem; }
+.page-menu a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
+.page-menu a:hover { border-bottom-color: currentColor; }
+section[id] { scroll-margin-top: 1rem; }
+td.lean { white-space: nowrap; }
+@media (max-width: 640px) { .page-menu { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; } }

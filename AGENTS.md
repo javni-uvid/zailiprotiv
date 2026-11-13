@@ -272,6 +272,10 @@ These are the project's promises to its readers. Never change them without the m
      says absence can be justified, or a walkout in protest. Amendments by MP still to do;
   5. the words an MP uses most, against all MPs (done 13 Nov 2026, from Parlameter; no model): `profiles.distinctive`,
      a smoothed log-odds ratio over seven-letter stems, a stop list, twelve words used in five speeches or more;
+  6b. design taken from TheyWorkForYou (done 13 Nov 2026): records in words, not only numbers ("dosledno za",
+     "uglavnom", "češće", "mešovito", `site.leaning`; "skoro uvek isto" … in "Sa kim glasa isto"), the MP's group's
+     record beside theirs in "Po oblasti", a menu of the page's sections, the date of the last vote. Still to do:
+     tabs by period on the MP page; topic tags on the home page with a page per area;
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

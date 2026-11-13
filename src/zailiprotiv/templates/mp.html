@@ -19,8 +19,8 @@
 </ul>
 {%- endmacro %}
 
-{% macro block(title, rs, empty, show_line=false) -%}
-<section>
+{% macro block(title, rs, empty, show_line=false, id="") -%}
+<section{% if id %} id="{{ id }}"{% endif %}>
   <h2>{{ title }} <span class="count">{{ rs|length }}</span></h2>
   {% if rs %}
   {{ rows(rs[:6], show_line) }}
@@ -32,7 +32,7 @@
 
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 <h1>{{ mp.name }}</h1>
-<p class="meta follow"><a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
+<p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 <p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {{ c.groups|join(", ") or "—" }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 
 <section class="outcome mp-outcome">
@@ -42,8 +42,10 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
+{% set menu = [("aktivnost", "Aktivnost", shown or spoke), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("oblasti", "Po oblasti", areas_table), ("svi", "Svi glasovi", true)] %}
+<nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
 {% if shown or spoke %}
-<section class="activity">
+<section class="activity" id="aktivnost">
   <h2>Aktivnost</h2>
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
@@ -55,7 +57,7 @@
 {% endif %}
 
 {% if profile %}
-<section class="profile">
+<section class="profile" id="iznosi">
   <h2>Šta najčešće iznosi u raspravama</h2>
   <ul class="points">
   {% for t in profile.points %}
@@ -68,7 +70,7 @@
 {% endif %}
 
 {% if said %}
-<section>
+<section id="rasprave">
   <h2>Iz rasprava <span class="count">{{ said|length }}</span></h2>
   {% for x in said %}
   <figure class="q q-{{ x.q.side }} q-mp">
@@ -80,21 +82,21 @@
 </section>
 {% endif %}
 
-{{ block("Glasovi protiv", against, "Nijedan glas protiv među konačnim glasanjima o zakonima.") }}
+{{ block("Glasovi protiv", against, "Nijedan glas protiv među konačnim glasanjima o zakonima.", false, "glasovi") }}
 {{ block("Glasovi za", for_, "Nijedan glas za među konačnim glasanjima o zakonima.") }}
-{% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true) }}{% endif %}
+{% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true, "drugacije") }}{% endif %}
 
 {% if by_conv|selectattr("agree")|list %}
-<section>
+<section id="slaganje">
   <h2>Sa kim glasa isto</h2>
   {% for c in by_conv if c.agree %}
   {% if by_conv|length > 1 %}<h3>{{ c.name }} saziv</h3>{% endif %}
   <div class="scroll">
   <table class="groups agree">
-    <thead><tr><th>Poslanička grupa</th><th class="vote-cell"></th><th class="num">Isto</th><th class="num">Od</th><th class="num">%</th></tr></thead>
+    <thead><tr><th>Poslanička grupa</th><th>Glasa</th><th class="vote-cell"></th><th class="num">Isto</th><th class="num">Od</th><th class="num">%</th></tr></thead>
     <tbody>
     {% for a in c.agree %}
-      <tr{% if a.own %} class="own"{% endif %}><td>{{ a.group }}{% if a.own %} <span class="meta">(svoja grupa)</span>{% endif %}</td><td class="vote-cell"><span class="meter"><span style="width: {{ (100 * a.share)|round(1) }}%"></span></span></td><td class="num">{{ a.same }}</td><td class="num">{{ a.both }}</td><td class="num">{{ (100 * a.share)|round|int }}</td></tr>
+      <tr{% if a.own %} class="own"{% endif %}><td>{{ a.group }}{% if a.own %} <span class="meta">(svoja grupa)</span>{% endif %}</td><td class="lean">{% if a.share >= 0.95 %}skoro uvek isto{% elif a.share >= 0.75 %}uglavnom isto{% elif a.share > 0.25 %}mešovito{% elif a.share > 0.05 %}uglavnom drugačije{% else %}skoro uvek drugačije{% endif %}</td><td class="vote-cell"><span class="meter"><span style="width: {{ (100 * a.share)|round(1) }}%"></span></span></td><td class="num">{{ a.same }}</td><td class="num">{{ a.both }}</td><td class="num">{{ (100 * a.share)|round|int }}</td></tr>
     {% endfor %}
     </tbody>
   </table>
@@ -105,19 +107,19 @@
 {% endif %}
 
 {% if areas_table %}
-<section>
+<section id="oblasti">
   <h2>Po oblasti</h2>
   <div class="scroll">
   <table class="groups">
-    <thead><tr><th>Oblast</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <thead><tr><th>Oblast</th><th>Glasao</th><th>Njegova grupa</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
     <tbody>
     {% for g in areas_table %}
-      <tr><td>{{ g.label|latin }}{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+      <tr><td>{{ g.label|latin }}{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}</td><td class="lean">{{ g.word or "—" }}</td><td class="lean meta">{{ g.group_word or "—" }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table>
   </div>
-  <p class="label">Oblast je tačka člana 97. Ustava na koju se predlagač poziva u ustavnom osnovu predloga; jedan zakon može imati više oblasti. Prikazane su oblasti sa najmanje pet zakona. {{ how("vrste") }}</p>
+  <p class="label">Oblast je tačka člana 97. Ustava na koju se predlagač poziva u ustavnom osnovu predloga; jedan zakon može imati više oblasti. Prikazane su oblasti sa najmanje pet zakona. „Glasao" i „njegova grupa" opisuju udeo glasova za među glasovima za i protiv (najmanje pet): dosledno (95% i više), uglavnom (75%), češće (60%), mešovito. {{ how("oblasti") }}</p>
 </section>
 {% endif %}
 
@@ -138,7 +140,7 @@
 </section>
 {% endif %}
 
-<section class="more">
+<section class="more" id="svi">
   <h2>Svi glasovi po sazivima</h2>
   {% for c in by_conv %}
   <details{% if loop.first and by_conv|length == 1 %} open{% endif %}>
