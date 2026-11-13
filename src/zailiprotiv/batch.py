@@ -48,6 +48,12 @@ class State:
             self.data["refused"].pop(kind, None)
 
 
+def cached(system: str) -> list[dict]:
+    """The rules, marked for the prompt cache: every request of a batch sends the same rules, and the cache's
+    discount adds to the batch's (best effort, as requests run side by side)."""
+    return [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]
+
+
 def messages(kind: str, name: str, user: str, state: State) -> list[dict]:
     """The conversation for one request: the material, and after a refused reply, that reply and what was wrong."""
     msgs = [{"role": "user", "content": user}]

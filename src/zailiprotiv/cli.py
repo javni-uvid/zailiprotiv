@@ -276,7 +276,7 @@ def summaries_cmd(args) -> int:
             if name not in todo:
                 law = next(l for l in everything if l.get("bill_file") == name)
                 todo[name] = (law, json.loads((Path(args.bills) / name).read_text(encoding="utf-8")), out_dir / name)
-        requests = {name: {"model": summaries.MODEL, "max_tokens": 1500, "system": summaries.SYSTEM,
+        requests = {name: {"model": summaries.MODEL, "max_tokens": 1500, "system": batch.cached(summaries.SYSTEM),
                            "messages": [{"role": "user", "content": summaries.material(law, memo)}]}
                     for name, (law, memo, _) in todo.items()}
         replies = batch.run(client, state, kind, requests, args.wait)
@@ -654,7 +654,7 @@ def profiles_batch(args) -> int:
                 key = name.removesuffix(".json").replace("-", " ")
                 own = profiles.speeches(ROOT).get(key, [])
                 materials[name] = {"mp": key, "total_speeches": len(own), "speeches": profiles.selection(own)}
-    requests = {n: {"model": summaries.MODEL, "max_tokens": 4000, "system": system,
+    requests = {n: {"model": summaries.MODEL, "max_tokens": 4000, "system": batch.cached(system),
                     "messages": batch.messages(kind, n, json.dumps(m, ensure_ascii=False), state)}
                 for n, m in materials.items()}
     replies = batch.run(client, state, kind, requests, args.wait)
@@ -703,7 +703,7 @@ def debates_batch(args) -> int:
             debates.fingerprint(text)
         if name in wanted or (i < args.top and not done and not state.gave_up(kind, name)):
             chosen[name] = (law, n, final, text)
-    requests = {name: {"model": summaries.MODEL, "max_tokens": 3000, "system": debates.SYSTEM,
+    requests = {name: {"model": summaries.MODEL, "max_tokens": 3000, "system": batch.cached(debates.SYSTEM),
                        "messages": batch.messages(kind, name, text, state)}
                 for name, (law, n, final, text) in chosen.items()}
     replies = batch.run(client, state, kind, requests, args.wait)
