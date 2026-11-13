@@ -4,43 +4,43 @@
 {% block description %}Glasaj o {{ laws|length }} zakona iz ovog saziva i vidi sa kojim poslaničkim grupama i poslanicima se tvoji glasovi poklapaju.{% endblock %}
 {% block main %}
 <h1>Glasaj i ti</h1>
-<p class="standfirst">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} iz ovog saziva. Glasaj kao da sediš u sali, pa vidi sa kim se tvoji glasovi poklapaju.</p>
-<p class="meta">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najvećim udelom glasova protiv. Uz svaki zakon je kratak AI rezime: šta zakon uređuje prema predlagačevom obrazloženju i, gde imamo stenografske beleške, po jedna tačka onih koji su ga u raspravi podržali i onih koji su mu se protivili. To su njihove tvrdnje, ne naše; rezime može da sadrži grešku. Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju. {{ how("glasaj") }}</p>
+<p class="standfirst q-lead">Kako bi ti glasao? Izaberi za svaki zakon, pa vidi ko je u Skupštini glasao kao ti.</p>
 <noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
 <ol class="quiz" id="quiz">
 {% for it in laws %}
+  {% set sd = it.said.debate if it.said else none %}
   <li class="card q-item" data-i="{{ loop.index0 }}">
-    <p class="kicker muted">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}</p>
-    <h2><a href="zakon/{{ it.slug }}.html">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</a></h2>
-    {% if it.aka %}<p class="card-official">{{ it.law.short }}</p>{% endif %}
-    <p class="card-gist">{{ it.gist|latin }}</p>
-    {% set sd = it.said.debate if it.said else none %}
+    <p class="q-n">{{ loop.index }} od {{ laws|length }}</p>
+    <h2>{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</h2>
+    <p class="q-gist">{{ it.gist|latin }}</p>
     {% if sd and (sd.podrska or sd.predlagac) and sd.zamerke %}
+    <details class="q-more"><summary>Šta kažu oni koji su za, a šta oni koji su protiv</summary>
     <dl class="q-sides">
-      <div><dt class="t-za">Za, u raspravi</dt><dd>{{ ((sd.podrska or sd.predlagac)[0])|latin|truncate(300, killwords=False, end=" …") }}</dd></div>
-      <div><dt class="t-protiv">Protiv, u raspravi</dt><dd>{{ sd.zamerke[0]|latin|truncate(300, killwords=False, end=" …") }}</dd></div>
+      <div><dt class="t-za">Za</dt><dd>{{ ((sd.podrska or sd.predlagac)[0])|latin|truncate(300, killwords=False, end=" …") }}</dd></div>
+      <div><dt class="t-protiv">Protiv</dt><dd>{{ sd.zamerke[0]|latin|truncate(300, killwords=False, end=" …") }}</dd></div>
     </dl>
-    <p class="row-meta">Iz AI pregleda stenografskih beleški; <a href="zakon/{{ it.slug }}.html">ceo pregled i citati</a>.</p>
+    </details>
     {% endif %}
-    <div class="chips q-answers" role="group" aria-label="Tvoj glas">
-      <button type="button" class="chip" data-a="z" aria-pressed="false">Za</button>
-      <button type="button" class="chip" data-a="p" aria-pressed="false">Protiv</button>
-      <button type="button" class="chip" data-a="u" aria-pressed="false">Uzdržan</button>
+    <div class="q-answers" role="group" aria-label="Tvoj glas">
+      <button type="button" class="q-btn q-za" data-a="z" aria-pressed="false">Za</button>
+      <button type="button" class="q-btn q-protiv" data-a="p" aria-pressed="false">Protiv</button>
+      <button type="button" class="q-btn" data-a="u" aria-pressed="false">Uzdržan</button>
     </div>
-    <p class="row-meta q-real" hidden>Skupština: <span class="t-za">{{ it.final.counts.za }} za</span>, <span class="t-protiv">{{ it.final.counts.protiv }} protiv</span></p>
+    <p class="q-real" hidden>U Skupštini: <b class="t-za">{{ it.final.counts.za }} za</b>, <b class="t-protiv">{{ it.final.counts.protiv }} protiv</b>. <a href="zakon/{{ it.slug }}.html">Više o zakonu</a></p>
   </li>
 {% endfor %}
 </ol>
 <section id="rezultat" class="q-result" hidden aria-live="polite">
-  <h2>Sa kim se poklapaš</h2>
+  <h2>Ko je glasao kao ti</h2>
   <p class="meta" id="q-count"></p>
   <h3>Poslaničke grupe</h3>
   <div class="scroll"><table class="groups"><thead><tr><th>Grupa</th><th class="vote-cell"></th><th class="num">Isti glas</th></tr></thead><tbody id="q-groups"></tbody></table></div>
   <h3>Poslanici sa najviše istih glasova</h3>
   <ul class="rows compact" id="q-mps"></ul>
-  <p class="label">Poredi se tvoj glas sa glasom većine grupe, odnosno sa glasom poslanika, samo na zakonima o kojima ste oboje glasali za, protiv ili uzdržano. Nekoliko zakona ne opisuje ni tebe ni njih: ovo je poređenje glasova, ne preporuka.</p>
+  <p class="label">Poredimo samo zakone o kojima ste oboje glasali. Ovo je poređenje glasova o nekoliko zakona, ne preporuka za koga da glasaš.</p>
   <p><button type="button" class="link" id="q-reset">Obriši odgovore</button></p>
 </section>
+<p class="meta foot-note">Zakone bira pravilo, ne urednik: oni koje javnost zna pod drugim imenom i oni sa najviše glasova protiv. Opise je napisao AI model iz predlagačevog obrazloženja i stenografskih beleški; to su tvrdnje predlagača i poslanika, ne naše, i mogu da sadrže grešku. Tvoji odgovori ostaju u tvom pregledaču i nikuda se ne šalju. {{ how("glasaj") }}</p>
 <script type="application/json" id="quiz-data">{{ quiz|safe }}</script>
 <script src="glasaj.js?v={{ css }}" defer></script>
 {% endblock %}
