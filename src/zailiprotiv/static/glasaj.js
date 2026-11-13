@@ -4,25 +4,51 @@
   "use strict";
   var data = JSON.parse(document.getElementById("quiz-data").textContent);
   var list = document.getElementById("quiz"), items = Array.prototype.slice.call(list.querySelectorAll(".q-item"));
-  var strip = document.getElementById("q-strip"), marks = strip.querySelectorAll("[data-go]");
-  var result = document.getElementById("rezultat"), answers = items.map(function () { return ""; });
-  var KEY = "glasaj:" + data.laws.map(function (l) { return l.s; }).join("|"), at = 0;
   var WORD = { z: "za", p: "protiv", u: "uzdržan" };
-  try { var saved = JSON.parse(sessionStorage.getItem(KEY) || "null"); if (saved && saved.length === answers.length) answers = saved; } catch (e) {}
-  // A vote cast on the home page's band comes in the address (?z=<law>&g=z|p|u): it is taken as cast here, and the
-  // page opens on that law with its result. The address is then cleaned, so a reload does not cast it again.
-  var cameWith = -1;
+  var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
+  // What is kept for the tab: the answers by law (so the order of the laws may change), and the law to show first.
+  var KEY = "glasaj:" + slugs().sort().join("|"), FIRST = "glasaj:prvi", at = 0;
+  // A vote cast on the home page's band comes in the address (?z=<law>&g=z|p|u): it is taken as cast here, that law
+  // becomes the first of the quiz, and the page opens on it with its result. The address is then cleaned, so a
+  // reload does not cast the vote again.
+  var came = null;
   try {
     var qp = new URLSearchParams(location.search), qz = qp.get("z"), qg = qp.get("g");
-    if (qz && WORD[qg]) {
-      cameWith = data.laws.map(function (l) { return l.s; }).indexOf(qz);
-      if (cameWith >= 0) {
-        answers[cameWith] = qg;
-        try { sessionStorage.setItem(KEY, JSON.stringify(answers)); } catch (e) {}
-      }
-      history.replaceState(null, "", location.pathname);
+    if (qz && WORD[qg] && slugs().indexOf(qz) >= 0) {
+      came = { law: qz, vote: qg };
+      try { sessionStorage.setItem(FIRST, qz); } catch (e) {}
     }
+    if (qz) history.replaceState(null, "", location.pathname);
   } catch (e) {}
+  var lead = null;
+  try { lead = sessionStorage.getItem(FIRST); } catch (e) {}
+  var from = slugs().indexOf(lead);
+  if (from > 0) {  // that law first: in the data (every group's and MP's votes are a letter per law) and on the page
+    var move = function (xs) { xs.unshift(xs.splice(from, 1)[0]); return xs; };
+    move(data.laws);
+    data.groups.concat(data.mps).forEach(function (x) { x.v = move(x.v.split("")).join(""); });
+    list.insertBefore(items[from], items[0]);
+    move(items);
+    items.forEach(function (item, k) {
+      var n = item.querySelector(".q-n"), go_ = item.querySelector(".q-go");
+      item.dataset.i = k;
+      n.textContent = n.textContent.replace(/^Zakon \d+ od/, "Zakon " + (k + 1) + " od");
+      go_.textContent = k === items.length - 1 ? "Vidi rezultat" : "Sledeći zakon";
+    });
+  }
+  var strip = document.getElementById("q-strip"), marks = strip.querySelectorAll("[data-go]");
+  var result = document.getElementById("rezultat"), answers = items.map(function () { return ""; });
+  function keep() {
+    var m = {};
+    data.laws.forEach(function (l, k) { if (answers[k]) m[l.s] = answers[k]; });
+    try { sessionStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {}
+  }
+  try {
+    var saved = JSON.parse(sessionStorage.getItem(KEY) || "null");
+    if (saved && !Array.isArray(saved)) answers = data.laws.map(function (l) { return WORD[saved[l.s]] ? saved[l.s] : ""; });
+  } catch (e) {}
+  var cameWith = came ? slugs().indexOf(came.law) : -1;
+  if (cameWith >= 0) { answers[cameWith] = came.vote; keep(); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function plural(n, one, few, many) { return n % 10 === 1 && n % 100 !== 11 ? one : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many); }
   function match(v) {
@@ -130,7 +156,7 @@
     item.querySelectorAll("[data-a]").forEach(function (b) {
       b.addEventListener("click", function () {
         answers[i] = b.dataset.a;
-        try { sessionStorage.setItem(KEY, JSON.stringify(answers)); } catch (e) {}
+        keep();
         reveal(item, i, true); go(i); showCrowd();
         item.querySelector(".q-go").focus({ preventScroll: true });
       });
