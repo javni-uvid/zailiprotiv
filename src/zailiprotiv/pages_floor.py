@@ -7,7 +7,7 @@ before them, and every speech of an exchange. The site doesn't say who was right
 from __future__ import annotations
 
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from zailiprotiv import debates as debates_, mps
@@ -65,6 +65,39 @@ def exchanges(speeches: list[dict]) -> list[list[dict]]:
 _ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођице|колега|колегинице|посланиче|посланице|посланику|посланици)\s+"
                         r"((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){1,3})")
 _POINT = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
+# Harsh words: a fixed list, the same for everyone, of words that are abuse in nearly every use (words with an
+# everyday meaning too, like "ђубре", "свиња", "криминал", "фашиста", are left out: they would count talk about waste,
+# farming, crime and history). What is counted is that the word was spoken: not at whom, and not whether the
+# speaker was quoting someone. Each one is shown in its sentence.
+HARSH = ("олош", "стоко", "лопуж", "лопов", "битанг", "гамад", "шљам", "кретен", "имбецил", "идиот", "дебил", "морон",
+         "будал", "нељуд", "лажов", "џукел", "фукар", "пробисвет", "ништак", "говнар", "вуцибатин", "издајни[кц]",
+         "курв", "говн", "пичк", "шупак", "шупк", "дупе")
+# … as names for people: not "лоповлук" and "лоповски" (theft), "нељудски", or "стоком" (cattle; only the vocative).
+_NOT = {"лопов": "(?!лу|ск)", "нељуд": "(?!ск)", "стоко": "(?!\\w)"}
+_HARSH = re.compile(r"(?<!\w)(?:(?:" + "|".join(w + _NOT.get(w, "") for w in HARSH) + r")\w*|\w*јеб\w*)", re.I)
+_SENTENCE = re.compile(r"[^.!?\n]*[.!?]*")
+TOP = 25
+
+
+def harsh(text: str) -> list[tuple[str, str]]:
+    """(word, its sentence) for each harsh word in a speech."""
+    out = []
+    for m in _HARSH.finditer(text):
+        start = max(text.rfind(c, 0, m.start()) for c in ".!?\n") + 1
+        end = _SENTENCE.match(text, m.end()).end()
+        out.append((m.group(0).lower(), text[start:end].strip()))
+    return out
+
+
+def marked(sentence: str) -> list[tuple[str, bool]]:
+    """A sentence in pieces, the harsh words apart, for the page to set them in bold."""
+    out, at = [], 0
+    for m in _HARSH.finditer(sentence):
+        out += [(sentence[at:m.start()], False), (m.group(0), True)]
+        at = m.end()
+    return out + [(sentence[at:], False)]
+
+
 _PAUSE = re.compile(r"одређујем паузу|прекидам седницу|прекидам рад", re.I)
 
 
@@ -113,6 +146,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     by_conv, by_mp, by_law = [], defaultdict(list), defaultdict(list)
     for c, _ in convs:
         events, sittings = [], []
+        tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0, "harsh": []})
+        pair_of = {}
         for url, notes in debates.get(c, {}).items():
             speeches = [{**notes["speeches"][k], "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
             days = {d["day"]: d for d in notes["days"]}
@@ -134,7 +169,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             found = []
             for m in measures(speeches):
                 to = to_whom(m, surnames)
-                found.append({"type": "mera", **m, **meta(m["chair"]), "to": who(to) if to else None,
+                found.append({"type": "mera", **m, **meta(m["chair"]), "to": who(to) if to else None, "to_raw": to,
                               "before_who": who(m["before"]["speaker"]) if m["before"] else None})
             for run in exchanges(speeches):
                 pair = [s for s in run if not s.get("chair")]
@@ -143,6 +178,22 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                               "speeches": [{"who": who(s["speaker"]) if not s.get("chair") else None, "text": s["text"],
                                             "side": "chair" if s.get("chair") else ("a" if s["speaker"] == pair[0]["speaker"] else "b")}
                                            for s in run]})
+                pair_of[id(found[-1])] = pair[:2]
+            for s_ in speeches:  # who takes part: speeches, words, points of order, harsh words
+                if s_.get("chair"):
+                    continue
+                t = tally[s_["speaker"]]
+                t["speeches"] += 1
+                t["words"] += len(s_["text"].split())
+                t["points"] += bool(_POINT.search(s_["text"][:300]))
+                for word, sentence in harsh(s_["text"]):
+                    t["harsh"].append({"word": word, "text": sentence, "parts": marked(sentence), **meta(s_)})
+            for e in found:
+                if e["type"] == "razmena":
+                    for s_ in {x["speaker"] for x in pair_of[id(e)]}:
+                        tally[s_]["exchanges"] += 1
+                elif e.get("to_raw"):
+                    tally[e["to_raw"]]["measures"] += 1
             events += found
             dates = sorted(e["date"] for e in found if e["date"]) or sorted(
                 d.get("listed_date") or "" for d in notes["days"] if d.get("listed_date"))
@@ -161,8 +212,25 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                         by_mp[p_["slug"]].append(e)
             if e["on"] and e["on"]["law"]:
                 by_law[e["on"]["law"]["key"]].append(e)
+        # One row per person (two spellings of one MP are one), and the first TOP by each count.
+        rows = {}
+        for raw, t in tally.items():
+            w = who(raw)
+            r = rows.setdefault(w["slug"] or w["name"], {"who": w, "speeches": 0, "words": 0, "points": 0, "exchanges": 0,
+                                                         "measures": 0, "harsh": []})
+            for k in ("speeches", "words", "points", "exchanges", "measures"):
+                r[k] += t[k]
+            r["harsh"] += t["harsh"]
+        for r in rows.values():
+            r["harsh"].sort(key=lambda h: h["date"], reverse=True)
+            r["said"] = list({(h["date"], h["text"]): h for h in r["harsh"]}.values())  # a sentence once, however many words
+            r["harsh_words"] = [w for w, _ in Counter(latin(h["word"]) for h in r["harsh"]).most_common(4)]
+        def first(key):
+            n = lambda r: len(r[key]) if key == "harsh" else r[key]
+            return [r for r in sorted(rows.values(), key=lambda r: (-n(r), r["who"]["name"])) if n(r)][:TOP]
+        top = {k: first(k) for k in ("speeches", "exchanges", "points", "measures", "harsh")}
         if events:
-            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events, "table": sittings,
+            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events, "table": sittings, "top": top, "speakers": len(rows),
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
                             "sittings": len(debates.get(c, {}))})
@@ -171,10 +239,11 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     for i, c in enumerate(by_conv):
         c["page"] = "replike.html" if i == 0 else f"replike-{c['n']}.html"
         c["page_exchanges"] = "razmene.html" if i == 0 else f"razmene-{c['n']}.html"
+        c["page_who"] = "ko-najvise.html" if i == 0 else f"ko-najvise-{c['n']}.html"
     for c in by_conv:
         for e in c["events"]:
             e["page"] = c["page"] if e["type"] == "mera" else c["page_exchanges"]
-        for part, name in (("mere", c["page"]), ("razmene", c["page_exchanges"])):
+        for part, name in (("mere", c["page"]), ("razmene", c["page_exchanges"]), ("ko", c["page_who"])):
             (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
                                     encoding="utf-8")
     return by_mp, by_law

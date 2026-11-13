@@ -435,3 +435,12 @@ td.lean { white-space: nowrap; }
 .q-quote-protiv { border-left-color: var(--protiv); }
 .q-top-quote { margin: 1rem 0 1.4rem; }
 .q-top-quote p { font-size: 1.3rem; }
+.board { list-style: none; margin: .6rem 0; padding: 0; columns: 2 18rem; column-gap: 2rem; counter-reset: board; }
+.board > li { counter-increment: board; break-inside: avoid; padding: .3rem 0; border-bottom: 1px solid var(--line); }
+.board > li::before { content: counter(board) "."; display: inline-block; min-width: 1.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.board-n { font-variant-numeric: tabular-nums; margin-left: .3rem; }
+.board-open { columns: 1; }
+.board-open details { display: inline; }
+.board-open summary { display: inline; cursor: pointer; }
+.board-open summary .board-who { text-decoration: underline; text-underline-offset: 2px; }
+.harsh li { margin: .5rem 0 .5rem 1.9rem; line-height: 1.45; }

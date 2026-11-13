@@ -251,3 +251,11 @@ def test_the_visit_counter_is_the_only_script_from_elsewhere(tmp_path):
     (tmp_path / "a.html").write_text(publish.ANALYTICS + " data-cf-beacon='{}'></script>")
     (tmp_path / "b.html").write_text('<script src="https://example.com/x.js"></script>')
     assert [b.split(":")[0] for b in publish.check(tmp_path)] == ["b.html"]
+
+
+def test_harsh_words_are_counted_in_their_sentence_and_everyday_words_are_not():
+    from zailiprotiv import pages_floor
+    text = "Град је затрпан ђубретом, тргују стоком, то је лоповлук. Ви сте олош и лопови! Говорим о свињарству, а не о идиотским примедбама."
+    found = pages_floor.harsh(text)
+    assert [w for w, _ in found] == ["олош", "лопови", "идиотским"]
+    assert found[0][1] == "Ви сте олош и лопови!"
