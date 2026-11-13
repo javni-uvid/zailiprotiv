@@ -1,24 +1,24 @@
 {
  "model": "claude-haiku-5-5",
- "fingerprint": "ed9ca2f32e366c96fb9e75df3da8f26436a4702fdaae3b9ff10ac42bfb727d1b",
+ "fingerprint": "b40734964b6d3844f12c3b83da7c6a2b602554ac6685ffc428e823c9c2714208",
  "summary": {
-  "ukratko": "Predlog zakona menja i dopunjuje Zakon o privrednim društvima, koji uređuje osnivanje, upravljanje, statusne promene, prestanak privrednih društava i pravni položaj preduzetnika. Prema obrazloženju, izmene se odnose na zaštitu manjinskih članova društva, poslove u kojima postoji lični interes, transparentnost naknada direktora i članova nadzornog odbora, identifikaciju akcionara i adrese sedišta društava.",
+  "ukratko": "Према образложењу, предлог мења Закон о привредним друштвима, у делу који се односи на послове у којима постоји лични интерес, накнаде директора и чланова надзорног одбора, идентификацију акционара и адресу седишта друштва. Наслов предлога гласи Закон о изменама Закона о интегрисаном спречавању и контроли загађивања животне средине, али достављени текст образложења се односи на Закон о привредним друштвима.",
   "razlozi": [
-   "Unapređenje zaštite prava manjinskih članova društva, u skladu sa merama iz Akcionog plana za poboljšanje pozicije Republike Srbije na rang listi Svetske banke Doing Business za period 2020–2023.",
-   "Usklађivanje sa Direktivom (EU) 2017/828 o podsticanju dugoročnog angažovanja akcionara, u okviru Pregovaračke pozicije za Poglavlje 6 „Pravo privrednih društava”.",
-   "Predstavke građana da su njihove adrese stanovanja, bez znanja i saglasnosti, registrovane kao sedišta privrednih društava i preduzetnika, a registrator prema navodima ne ispituje osnov korišćenja prostora.",
-   "Ukazivanje Poreske uprave na zloupotrebu sedišta, uz primer fiktivnih adresa na kojima je registrovano više desetina ili stotina privrednih društava."
+   "Усклађивање са мерама из Акционог плана Програма за унапређење позиције Републике Србије на листи Светске банке Doing Business 2020–2023, ради унапређења заштите права мањинских акционара.",
+   "Усклађивање са Директивом (ЕУ) 2017/828 о подстицању дугорочног ангажовања акционара.",
+   "Акције листираних друштава често се држе преко сложених ланаца посредника, па друштва не могу да утврде ко су њихови акционари.",
+   "Потреба за транспарентношћу накнада директора и чланова надзорног одбора и за заштитним мерама при трансакцијама са повезаним лицима."
   ],
   "promene": [
-   "Preciziraju se pravila o poslovima u kojima postoji lični interes: sadržina obaveštenja, podaci u godišnjim finansijskim izveštajima i pravo na tužbu za poništaj ako posao nije zaključen po fer vrednosti.",
-   "Fer vrednost se utvrđuje prema međunarodnom standardu finansijskog izveštavanja 13; izveštaj o proceni i obaveštenje postaju sastavni deo odluke o odobrenju posla, a društvo mora javno objaviti nameru zaključenja tog posla.",
-   "Adresa sedišta mora biti na teritoriji Republike Srbije i mora sadržati grad, opštinu, naseljeno mesto, ulicu, kućni broj, sprat i broj stana; zainteresovano lice može tužbom tražiti brisanje adrese ako vlasnik prostora nije dozvolio njeno korišćenje.",
-   "Uvodi se novi razlog za prinudnu likvidaciju ako društvo u roku od 30 dana od pravnosnažnosti presude o brisanju adrese ne registruje novu adresu sedišta.",
-   "Pol se uvodi kao obavezan podatak o licu koje se registruje; kupoprodajna cena stečajnog dužnika kupljenog kao pravno lice smatra se nenovčanim ulogom; dostava se usklađuje sa Zakonom o elektronskoj upravi."
+   "Прецизирају се садржина обавештења о пословима у којима постоји лични интерес, подаци у godišnjim finansijskim izveštajima и право на тужбу за поништај posla koji nije zaključen po fer vrednosti.",
+   "Уводи се обавеза објављивања намере закључења таквог посла на интернет страници друштва или Регистра привредних субјеката, а извештај о фер вредности и обавештење постају саставни део одлуке о одобрењу посла.",
+   "Адреса седишта мора бити на територији Републике Србије; заинтересовано лице може тужбом тражити брисање адресе ако власник простора није дозволио њено коришћење, а уводи се нови разлог за принудну ликвидацију ако се нова адреса не региструје у року од 30 дана.",
+   "Уводе се обавеза друштва да акционару учини доступним податке о износу и структури накнада директора и чланова надзорног одбора (ако је управљање дводомно) и обавеза посредника да на захтев друштва доставе податке о идентитету акционара.",
+   "Остале измене: пол као обавезан податак о лицу које се региструје, усклађивање са Законом о електронској управи, брисање става 3. у члану 31, третман плаћене цене при продаји стечајног дужника као неновчаног улога и исправка техничке грешке у члану 27."
   ],
-  "sredstva": "Predlagač navodi da za primenu ovog zakona nije potrebno obezbediti sredstva u budžetu Republike Srbije."
+  "sredstva": "Предлагач наводи да за примену овог закона није потребно обезбедити средства у буџету Републике Србије."
  },
  "usage": {},
- "law": "Zakon o izmenama i dopunama Zakona o privrednim društvima",
+ "law": "Zakon o izmenama Zakona o integrisanom sprečavanju i kontroli zagađivanja životne sredine",
  "depth": "standard"
 }

@@ -1,0 +1,57 @@
+{
+ "mp": "гојковић маја",
+ "model": "claude-haiku-5-5",
+ "read": 42,
+ "speeches": 52,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Zamera opoziciji što se poslanici javljaju za povredu Poslovnika da bi replicirali drugima i traži da predsedavajući to zaustavi.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Молим вас, пошто је, по члану 103, очигледна злоупотреба повреде Пословника јер се посланици јављају да би реплицирали другим посланицима, да би вређали Посланичку групу СНС и остале, употребите и одузмите им две минуте од њиховог укупног времена за дискусију",
+    "date": "2017-10-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
+   }
+  },
+  {
+   "tekst": "Traži da se amandmani razmatraju samo po svojoj sadržini, da govornici govore o svojim amandmanima i da se ne vodi opšta politička rasprava.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ако посланици знају, да говоре о својим амандманима; ако не знају да говоре, прекините. Ваша је дужност да водите седницу у складу са Пословником и да пређете на следећи амандман.",
+    "date": "2017-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/28. avgust 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Tvrdi da ministri ne moraju biti stručnjaci iz oblasti kojom rukovode, jer je Vlada politička, a ministre biraju političke stranke.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Министри су политичке личности, бирају их партије и мени невероватно смета, не невероватно, потпуно вероватно смета демагогија коју смо принуђени ми и грађани Србије да слушамо данима о томе како министри треба да буду људи из струке",
+    "date": "2017-10-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Brani uvođenje vanrednog stanja 2020. kao urađeno u skladu sa Ustavom i zakonima i navodi da o tome može da odluči Ustavni sud.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Све је урађено у складу са Пословником, у складу са Уставом и у складу са Законом о Народној Скупштини Републике Србије.",
+    "date": "2020-04-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica NSRS za vreme vanrednog stanja odrzana 29. aprila 2020. godine drugi dan rada.docx"
+   }
+  }
+ ]
+}

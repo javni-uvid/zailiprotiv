@@ -1,0 +1,57 @@
+{
+ "mp": "живковић ирена",
+ "model": "claude-haiku-5-5",
+ "read": 14,
+ "speeches": 15,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да је Александар Вучић пред локалне изборе 2022. године обећао нову болницу у Бору до краја 2022. године, али да она није изграђена.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "У овом буџету поново нема нове болнице у Бору коју је Вучић обећао у изборној кампањи претпрошле локалне изборе и обећао је да ће бити готова са изградњом до краја 2022. године.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је олово у крви радника у Бору превисоко и да највише утиче на децу.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "а ова концентрација олова у крви радника је нешто што, поред тога што тешки метали су директни узрочни канцера, највише узнемирава због здравственог стања деце у Бору.",
+    "date": "2025-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS 26.11. 2025. 2 dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера директорки Центра за социјални рад у Бору Јелени Ристић што решења за социјалну помоћ чекају и по 15 месеци, тврди да се она држи на положају због гласова и тражи да Министарство реагује.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Знам да је разлог због кога се она држи на том месту то што на изборни дан она уцењује управо ове најугроженије групације људи и доноси изборне гласове",
+    "date": "2026-01-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS u Cetranaestom sazivu, 15. januar 2026. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су пред локалне изборе у Бору вођене кампање против опозиционих кандидата и волонтера, укључујући кампању од врата до врата и нападе на друштвеним мрежама.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Кад изузмемо друштвене мреже, десила се једна ствар која није виђена у Бору, не знам да ли се у другим градовима то неком дешавало, а то је да се за мене лично као носиоца једне од листа водила кампања „door-to-door“.",
+    "date": "2026-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/F Treca sednica Prvog redovnog zasedanja NSRS 12.05.2026..docx"
+   }
+  }
+ ]
+}

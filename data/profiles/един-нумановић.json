@@ -1,0 +1,57 @@
+{
+ "mp": "един нумановић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 14,
+ "sittings": 8,
+ "points": [
+  {
+   "tekst": "Наводи да су магистрални путеви кроз Нови Пазар неуређени и тражи обилазнице и брзе саобраћајнице.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Чак шта више, у самом центу у чаршији Новог Пазара се тај магистрални пут сужава на једну коловозну траку, где се саобраћај одвија наизменично.",
+    "date": "2025-03-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog redovnog zasedanja NSRS 18.03.2025. sedmi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи заштиту изворишта воде и планине Рогозне од геолошких истраживања и рударења.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Други амандман јесте предложен са циљем да општи принцип из овог претходног амандмана, применимо на конкретан пример планине Рогозне, која представља један од кључних изворишта водоснабдевања за део становника Новог Пазара, и околине",
+    "date": "2026-04-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 22. aprila 2026. godine, 5. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Захтева право мањина на информисање на матерњем језику.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Право на информисање на матерњи језик, поред права на образовање, на развој и очување културе, као и на службену употребу језика и писма јесте једно од кључних мањинских права, сагласно са законом.",
+    "date": "2025-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Критикује локалну власт у Новом Пазару због немара и урбанистичког хаоса.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Због седамнаестогодишњег немара локалних власти у Новом Пазару овај град је пред урбанистичким колапсом који се огледа у трајно нарушеном саобраћају, нарушеној екологији",
+    "date": "2025-10-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 8. oktobar 2025. godine, drugi dan rada.docx"
+   }
+  }
+ ]
+}

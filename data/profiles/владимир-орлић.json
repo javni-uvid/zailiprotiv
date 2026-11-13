@@ -1,0 +1,69 @@
+{
+ "mp": "владимир орлић",
+ "model": "claude-haiku-5-5",
+ "read": 38,
+ "speeches": 174,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Navodi da je dug Beograda iz vremena Dragana Đilasa iznosio milijardu i dvesta miliona evra i da je kasnije prepolovljen.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "милијарду и двеста милиона евра дуга оставили су ти велики стручњаци опште праксе, у које спада и сам; тај дуг је преполовљен.",
+    "date": "2017-12-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/7. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da zakon o poljoprivrednom zemljištu ispunjava međunarodnu obavezu Srbije iz Sporazuma o stabilizaciji i pridruživanju i da štiti domaće građane i poljoprivredne proizvođače.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Подржавамо предлог зато што овим предлогом на заиста одличан начин постижемо две добре ствари истовремено.",
+    "date": "2017-08-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. avgust 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da Srbija napreduje u evropskim integracijama i da otvorena poglavlja pod vladom Aleksandra Vučića pokazuju to, dok kritičari EU politike to ne priznaju.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Колико је отворених поглавља за мандата ове владе, и претходне владе, коју води Александар Вучић? Осам отворених. Колико затворених? Два затворена.",
+    "date": "2017-05-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/15. maj 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da su grupe ispred Narodne skupštine fizički napadale narodne poslanike i da za to krivi Bošku Obradovića, Savez za Srbiju i Dragana Đilasa.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Није било довољно да се само човеку цепа одећа, да се пљује и омаловажава, да се шутира, да се обара на под",
+    "date": "2020-05-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Prvog redovnog zasedanja NSRS 08.05.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da je predlog o smanjenju izbornog cenzusa sa 5% na 3% dobar i da neki u opoziciji reaguju odbijanjem samo zato što je predlog Aleksandra Vučića.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Постоји известан број оних који су буквално рефлексно реаговали истог секунда са – не, то не ваља ништа, не, то не долази у обзир.",
+    "date": "2020-02-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvadeset drugo vanredno zasedanje NSRS 06.02.2020..docx"
+   }
+  }
+ ]
+}
