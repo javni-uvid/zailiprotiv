@@ -31,6 +31,8 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
             if it.get("final"):
                 by_sitting[it["final"]["sitting"]].append(it)
     sitting_slug = {}
+    from zailiprotiv import pages_floor
+    floor_by_sitting = getattr(pages_floor.render, "by_sitting", {})
     (out / "sednica").mkdir(exist_ok=True)
     for url, its in by_sitting.items():
         its.sort(key=lambda it: it["final"]["when"])
@@ -39,6 +41,7 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
         sitting_slug[url] = name
         (out / "sednica" / f"{name}.html").write_text(env.get_template("sitting.html").render(
             **common, title=first["final"]["sitting_title"], url=url, laws=its, conv_name=first["conv_name"],
+            lead=max(its, key=lambda it: (it["final"]["counts"]["protiv"] or 0)), floor=floor_by_sitting.get(url),
             first=its[0]["final"]["when"][:10], last=its[-1]["final"]["when"][:10], root="../"), encoding="utf-8")
     sittings_list = sorted(({"slug": sitting_slug[u], "title": its[0]["final"]["sitting_title"], "n": len(its),
                              "day": its[0]["final"]["when"][:10], "conv": its[0]["conv"], "conv_name": its[0]["conv_name"],

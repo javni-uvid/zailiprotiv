@@ -273,7 +273,7 @@ These are the project's promises to its readers. Never change them without the m
   vote had the largest share against among votes for and against, ties to more votes against, then newer. Named
   for what it measures; "controversial" would be a judgement. Then the newest laws.
 - **Design** (the maintainer chose it from three mock-ups, 12 Nov 2026): a newspaper look — white page, serif
-  headlines (Source Serif 4, served from the site, OFL), a black rule under the header, colour only for "za" (blue)
+  headlines (Literata since 13 Nov 2026, the maintainer's choice; served from the site, OFL), a black rule under the header, colour only for "za" (blue)
   and "protiv" (orange). The wordmark is "Za ili Protiv", "Za" and "Protiv" in their colours. Little text: one line
   of facts per law.
   - home: the law with most votes against as the lead (short name, the proposer's gist, the count, groups against);

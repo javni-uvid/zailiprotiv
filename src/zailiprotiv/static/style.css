@@ -1,18 +1,18 @@
 /* Za ili Protiv. Colours mean kinds of vote, never a party or group. */
-@font-face { font-family: "Source Serif 4"; font-style: normal; font-display: swap; font-weight: 200 900;
-  src: url(fonts/source-serif-4-latin-ext-wght-normal.woff2) format("woff2");
+@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
+  src: url(fonts/literata-latin-ext-wght-normal.woff2) format("woff2");
   unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Source Serif 4"; font-style: normal; font-display: swap; font-weight: 200 900;
-  src: url(fonts/source-serif-4-cyrillic-wght-normal.woff2) format("woff2");
+@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
+  src: url(fonts/literata-cyrillic-wght-normal.woff2) format("woff2");
   unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
-@font-face { font-family: "Source Serif 4"; font-style: normal; font-display: swap; font-weight: 200 900;
-  src: url(fonts/source-serif-4-latin-wght-normal.woff2) format("woff2");
+@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
+  src: url(fonts/literata-latin-wght-normal.woff2) format("woff2");
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 :root {
   --bg: #ffffff; --fg: #111111; --muted: #555555; --line: #d9d9d9; --card: #f3f3f1; --accent: #111111;
   --za: #1f5fa8; --protiv: #c2410c; --protiv-bar: #e0782f; --uzdrzan: #8a8f99; --nije_glasao: #c9ccd3; --nije_prisutan: #e8e8e8;
   --za-soft: #e6f0f6; --protiv-soft: #f8ece1; --warn: #9a5b00; --warn-soft: #fbf0dc;
-  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --serif: "Literata", Georgia, "Times New Roman", serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -516,3 +516,15 @@ td.lean { white-space: nowrap; }
 .mp-line p { margin: 0 0 .3rem; font-family: var(--serif); font-size: 1.35rem; line-height: 1.35; }
 .mp-line footer { font-size: .88rem; color: var(--muted); border: 0; padding: 0; margin: 0; }
 .mp-line { border: 0; padding: 0; }
+
+/* A sitting's page: its most opposed law as the chamber, and what happened on the floor. */
+.sitting-lead { text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: .2rem; }
+.sitting-lead-law { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; line-height: 1.25; text-decoration: underline; text-underline-offset: 3px; }
+.sitting-floor { margin: .6rem 0 0; }
+/* Filters as words with a line under the chosen one, not pills. */
+.chips { gap: .1rem 1.5rem; }
+.chip, .period-tabs button { border: 0; border-bottom: 3px solid transparent; border-radius: 0; padding: 0 .1rem; background: none; font-size: .95rem; }
+.chip.on, .period-tabs button[aria-pressed="true"], .period-tabs button.on { background: none; color: var(--fg); border-bottom-color: var(--fg); font-weight: 700; }
+.chip:hover { border-bottom-color: var(--muted); }
+.toc a { border: 0; background: none; border-radius: 0; padding: .25rem 0; margin-right: 1rem; text-decoration: underline; text-underline-offset: 3px; }
+.note { border-radius: 0; border-width: 0 0 0 4px; border-color: var(--fg); }

@@ -14,7 +14,9 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # A build takes several minutes (the search index); with pushes minutes apart a cancelled build meant nothing was
+  # published for half an hour. A running build finishes, and only the newest of those waiting runs after it.
+  cancel-in-progress: false
 
 jobs:
   build:

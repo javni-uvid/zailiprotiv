@@ -198,7 +198,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             events += found
             dates = sorted(e["date"] for e in found if e["date"]) or sorted(
                 d.get("listed_date") or "" for d in notes["days"] if d.get("listed_date"))
-            sittings.append({"title": title, "date": dates[0] if dates else "", "days": len(notes["days"]),
+            sittings.append({"url": url, "title": title, "date": dates[0] if dates else "", "days": len(notes["days"]),
                              "measures": sum(1 for e in found if e["type"] == "mera"),
                              "exchanges": sum(1 for e in found if e["type"] == "razmena"),
                              "points": sum(1 for s in speeches if not s.get("chair") and _POINT.search(s["text"][:300])),
@@ -252,6 +252,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
                                     encoding="utf-8")
     # For the home page: the first of each count in each convocation.
+    render.by_sitting = {x["url"]: {**x, "page": c["page"], "page_exchanges": c["page_exchanges"]}
+                         for c in by_conv for x in c["table"]}
     pages = {c["n"]: c["page_who"] for c in by_conv}
     render.per_mp = {slug_: [{**x, "page": pages.get(x["conv"], "")} for x in xs] for slug_, xs in per_mp.items()}
     render.top = {c["n"]: {k: (v[0] if v else None) for k, v in c["top"].items()} | {"page": c["page_who"]} for c in by_conv}

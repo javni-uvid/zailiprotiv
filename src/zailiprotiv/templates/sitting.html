@@ -1,11 +1,17 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, how with context %}
+{% from "macros.html" import bar, chamber, plural, how with context %}
 {% block title %}{{ title|latin }} — Za ili Protiv{% endblock %}
 {% block description %}Zakoni usvojeni na sednici „{{ title|latin }}" i kako su glasali poslanici.{% endblock %}
 {% block main %}
 <p class="crumbs"><a href="../sednice.html">Sednice</a> › {{ conv_name }} saziv</p>
+<div class="law-hero">
+<div class="law-head">
 <h1>{{ title|latin }}</h1>
 <p class="meta">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} usvojen{{ "" if laws|length == 1 else "o" }} {% if first == last %}{{ first|day }}{% else %}od {{ first|day }} do {{ last|day }}{% endif %} · <a href="{{ url }}">Sednica na sajtu Skupštine</a></p>
+{% if floor and (floor.measures or floor.exchanges or floor.points) %}<p class="sitting-floor">U sali: {% if floor.exchanges %}<a href="../{{ floor.page_exchanges }}"><b>{{ floor.exchanges }}</b> {{ plural(floor.exchanges, "razmena replika", "razmene replika", "razmena replika") }}</a>{% endif %}{% if floor.measures %}{% if floor.exchanges %}, {% endif %}<a href="../{{ floor.page }}#mere"><b>{{ floor.measures }}</b> {{ plural(floor.measures, "mera", "mere", "mera") }} predsedavajućeg</a>{% endif %}{% if floor.points %}{% if floor.exchanges or floor.measures %}, {% endif %}<b>{{ floor.points }}</b> {{ plural(floor.points, "ukazivanje", "ukazivanja", "ukazivanja") }} na Poslovnik{% endif %}</p>{% endif %}
+</div>
+{% if lead and lead.final.counts.protiv %}<a class="law-chamber sitting-lead" href="../zakon/{{ lead.slug }}.html">{{ chamber(lead.final.counts) }}<span class="hero-meta">Najviše glasova protiv na ovoj sednici:</span> <span class="sitting-lead-law">{{ lead.law.short }}</span></a>{% endif %}
+</div>
 <ul class="rows">
 {% for it in laws %}
 <li class="row">

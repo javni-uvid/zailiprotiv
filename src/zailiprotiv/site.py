@@ -580,7 +580,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         if it["final"]:  # the picture shown when the page is shared
             name = it["aka"][0][:1].upper() + it["aka"][0][1:] if it["aka"] else it["law"]["short"]
             picture(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
-                    "hitan postupak" if it["urgent"] else "")
+                    "hitan postupak" if it["urgent"] else "", tuple(hemicycle(it["final"]["counts"])))
         (out / "zakon" / f"{args['it']['slug']}.html").write_text(
             env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now,
                                                 floor=floor_of.get(it["key"], [])), encoding="utf-8")

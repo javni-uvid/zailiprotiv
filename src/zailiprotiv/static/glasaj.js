@@ -146,7 +146,7 @@
   }
   function drawCard() {
     var c = document.createElement("canvas"), W = 1080, H = 1350, P = 84, ctx = c.getContext("2d"), y;
-    var serif = '"Source Serif 4", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    var serif = '"Literata", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
     c.width = W; c.height = H;
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
     ctx.textBaseline = "alphabetic";
