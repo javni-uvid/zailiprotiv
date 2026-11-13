@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "macros.html" import plural, how with context %}
-{% block title %}{% if part == "mere" %}Replike i opomene{% elif part == "ko" %}Ko najviše govori, replicira i dobija opomene{% else %}Razmene replika{% endif %}, {{ c.name|lower }} saziv — Za ili Protiv{% endblock %}
+{% block title %}{% if part == "mere" %}Varnice u sali: replike i opomene{% elif part == "ko" %}Ko najviše govori, replicira i dobija opomene{% else %}Razmene replika{% endif %}, {{ c.name|lower }} saziv — Za ili Protiv{% endblock %}
 {% block description %}Razmene replika između poslanika i mere koje je izrekao predsedavajući (opomena, oduzimanje reči, udaljenje sa sednice), doslovno iz stenografskih beleški Narodne skupštine.{% endblock %}
 {% block main %}
 {% macro person(p) %}{% if p.slug %}<a href="poslanik/{{ p.slug }}.html">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% endmacro %}
 {% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
-<h1>Replike i opomene</h1>
+<h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 <p class="meta">Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali. Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
 <nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
