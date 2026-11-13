@@ -13,7 +13,7 @@ import json
 import os
 import re
 
-MODEL = os.environ.get("ZAILIPROTIV_MODEL", "claude-sonnet-5-5")
+MODEL = os.environ.get("ZAILIPROTIV_MODEL", "claude-haiku-5-5")
 # How much of each section the model reads: the reasons and effects matter most; the explanation of each article
 # can be very long.
 LIMITS = {"reasons": 12000, "explained": 8000, "funds": 3000, "effects": 12000, "urgency": 2000}

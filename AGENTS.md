@@ -155,7 +155,7 @@ These are the project's promises to its readers. Never change them without the m
 - **A law's summary is Claude's summary of the proposer's memorandum** (reasons, analysis of effects, funds
   needed), labelled as such and linked to the bill (the maintainer's decision, 12 Nov 2026).
   - Written through the Anthropic API (the maintainer's decision, 12 Nov 2026) by `summaries.py` with
-    `claude-sonnet-5-5` (override: `ZAILIPROTIV_MODEL`), from the memorandum's sections, each cut to a limit.
+    `claude-haiku-5-5` (override: `ZAILIPROTIV_MODEL`), from the memorandum's sections, each cut to a limit.
   - The system prompt holds the rules: only what the memorandum says, attributed to the proposer, no judgement,
     no parties or persons, Cyrillic, plain words; empty where the memorandum says nothing. The reply is a JSON
     object (ukratko, razlozi, promene, sredstva); anything else in it is dropped.
