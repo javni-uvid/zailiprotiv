@@ -166,12 +166,15 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
                             "sittings": len(debates.get(c, {}))})
-    # A page per convocation (the words in full make a long page); the newest is replike.html.
+    # Two pages per convocation, as the words in full make long pages: the table by sitting with the chair's
+    # measures (replike.html for the newest), and the exchanges (razmene.html).
     for i, c in enumerate(by_conv):
         c["page"] = "replike.html" if i == 0 else f"replike-{c['n']}.html"
+        c["page_exchanges"] = "razmene.html" if i == 0 else f"razmene-{c['n']}.html"
     for c in by_conv:
         for e in c["events"]:
-            e["page"] = c["page"]
-        (out / c["page"]).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, root=""),
-                                     encoding="utf-8")
+            e["page"] = c["page"] if e["type"] == "mera" else c["page_exchanges"]
+        for part, name in (("mere", c["page"]), ("razmene", c["page_exchanges"])):
+            (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
+                                    encoding="utf-8")
     return by_mp, by_law

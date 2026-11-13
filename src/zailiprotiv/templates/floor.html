@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "macros.html" import plural, how with context %}
-{% block title %}Replike i opomene, {{ c.name|lower }} saziv — Za ili Protiv{% endblock %}
+{% block title %}{% if part == "mere" %}Replike i opomene{% else %}Razmene replika{% endif %}, {{ c.name|lower }} saziv — Za ili Protiv{% endblock %}
 {% block description %}Razmene replika između poslanika i mere koje je izrekao predsedavajući (opomena, oduzimanje reči, udaljenje sa sednice), doslovno iz stenografskih beleški Narodne skupštine.{% endblock %}
 {% block main %}
 {% macro person(p) %}{% if p.slug %}<a href="poslanik/{{ p.slug }}.html">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% endmacro %}
@@ -8,9 +8,10 @@
 <h1>Replike i opomene</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 <p class="meta">Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali. Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
-<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
-<nav class="page-menu" aria-label="Na ovoj strani"><a href="#sednice">Po sednicama</a>{% if c.measures %}<a href="#mere">Mere predsedavajućeg ({{ c.measures|length }})</a>{% endif %}{% if c.exchanges %}<a href="#razmene">Razmene replika ({{ c.exchanges|length }})</a>{% endif %}</nav>
+<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else x.page_exchanges }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.name }} saziv</a>{% endfor %}</nav>
+<nav class="page-menu" aria-label="Deo"><a href="{{ c.page }}"{% if part == "mere" %} aria-current="page"{% endif %}>Po sednicama i mere predsedavajućeg ({{ c.measures|length }})</a><a href="{{ c.page_exchanges }}"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika ({{ c.exchanges|length }})</a></nav>
 
+{% if part == "mere" %}
 <section id="sednice">
   <h2>Po sednicama <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
   <div class="scroll">
@@ -39,7 +40,8 @@
   <p class="label">Ime uz meru stoji samo kad predsedavajući u toj rečenici oslovi govornika prezimenom i kad to prezime na sednici nosi jedan govornik; inače su tu samo njegove reči.</p>
 </section>
 {% endif %}
-{% if c.exchanges %}
+{% endif %}
+{% if part == "razmene" %}
 <section id="razmene">
   <h2>Razmene replika <span class="count">{{ c.exchanges|length }}</span></h2>
   <ul class="floor">
@@ -55,6 +57,7 @@
     </li>
   {% endfor %}
   </ul>
+  {% if not c.exchanges %}<p class="meta">U pročitanim beleškama ovog saziva nema razmene od četiri ili više naizmeničnih govora.</p>{% endif %}
 </section>
 {% endif %}
 <p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština.</p>

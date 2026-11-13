@@ -84,7 +84,7 @@
   <ul class="plain sittings-list">
   {% for e in exchanges[:8] %}<li><span class="meta">{{ e.date|day }}</span> <a href="../{{ e.page }}#{{ e.id }}">sa: {{ e.b.name if e.a.slug == mp.slug else e.a.name }}</a> <span class="meta">· {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ e.sitting }}</span></li>{% endfor %}
   </ul>
-  <p class="label">Kad dvoje govornika četiri ili više puta zaredom govore naizmenično, u beleškama koje smo pročitali. Cela razmena je od reči do reči na strani <a href="../replike.html">Replike i opomene</a>. {{ how("replike") }}</p>
+  <p class="label">Kad dvoje govornika četiri ili više puta zaredom govore naizmenično, u beleškama koje smo pročitali. Cela razmena je od reči do reči na strani <a href="../razmene.html">Razmene replika</a>. {{ how("replike") }}</p>
 </section>
 {% endif %}
 {% endif %}
