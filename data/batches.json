@@ -1,151 +1,70 @@
 {
  "pending": {
-  "debates-12": {
-   "id": "msgbatch_01U1mFL7kWRMAMWSWVz7oB9i",
+  "debates-11": {
+   "id": "msgbatch_017XgahaBW6TothDUzcZRWQb",
    "names": [
-    "2020_1688-20.json",
-    "2020_1711-20_-lat..json",
-    "2020_1861-20_f.json",
-    "2020_1934-20_-_lat..json",
-    "2021_1227-21-l.json",
-    "2021_2003-21_-_lat..json",
-    "2021_2214-21_-_lat..json",
-    "2021_741-21_-_lat..json",
-    "2021_742-21_-_lat..json"
+    "1052-17.json",
+    "2020_146-20.json",
+    "2020_531-20_lat.json",
+    "2020_566-20_-_lat..json",
+    "2314-17_lat.json",
+    "2584-17_-_lat.json",
+    "2585-17_-_lat.json",
+    "2586-17_-_lat.json",
+    "2861-17_-_lat.json",
+    "2862-17_lat.json",
+    "2958-16_-_lat.json",
+    "3191-16_lat.json",
+    "3196-16_lat.json",
+    "3197-16_lat.json",
+    "3198-16_lat.json",
+    "3250-16_-_lat..json",
+    "353-17_-lat..json",
+    "3760-17_lat.json",
+    "3761-17.json",
+    "3780-17_lat.json"
    ]
   },
-  "debates-13": {
-   "id": "msgbatch_01MCQjScZj5BRxCdVAcehfjm",
+  "summaries-12": {
+   "id": "msgbatch_01H1dM3JDixJowX6PzDTKcsm",
    "names": [
-    "13_saziv_1082-23_-_lat..json",
-    "13_saziv_2098-22_-_lat..json",
-    "13_saziv_2504-22_-_lat..json",
-    "13_saziv_2505-22_-_lat..json",
-    "13_saziv_2506-22_-_lat..json",
-    "13_saziv_2508-22_-_lat..json",
-    "13_saziv_2510-22_-_lat..json",
-    "13_saziv_2511-22_-_lat..json",
-    "13_saziv_2512-22_-_lat..json",
-    "13_saziv_2515-22_-_lat..json",
-    "13_saziv_2519-22_-_lat..json",
-    "13_saziv_2522-22_-_lat..json",
-    "13_saziv_70-23_-_lat..json",
-    "13_saziv_71-23_-_lat..json",
-    "13_saziv_72-23_-_lat..json",
-    "13_saziv_73-23_-_lat..json",
-    "13_saziv_894-23_-_lat.json",
-    "13_saziv_budzet_2023..json",
-    "13_saziv_rebalans_2022..json",
-    "13_saziv_zavrsni_racun_2021._spojeno.json"
-   ]
-  },
-  "debates-14": {
-   "id": "msgbatch_01QHiYhKBKEs1ggv3icA3asM",
-   "names": [
-    "14_saziv_1399-25_-_lat.json",
-    "14_saziv_2044-26_-_lat..json",
-    "14_saziv_2147-25_-_lat..json",
-    "14_saziv_2148-25._-_lat..json",
-    "14_saziv_2209-25.json",
-    "14_saziv_2442-26_lat.json",
-    "14_saziv_2444-26_lat.json",
-    "14_saziv_2445-26_lat.json",
-    "14_saziv_2589-26_-_lat..json",
-    "14_saziv_2595-26_lat..json",
-    "14_saziv_2625-25_-_lat..json",
-    "14_saziv_2730-25_-_lat..json",
-    "14_saziv_2731-25_-_lat..json",
-    "14_saziv_2732-25_-_lat..json",
-    "14_saziv_2733-25_-_lat..json",
-    "14_saziv_2734-25_-_lat..json",
-    "14_saziv_400-2691_26.json",
-    "14_saziv_932-25_-_lat..json",
-    "14_saziv_933-25_-_lat.json",
-    "14_saziv_rebalans_2024.json"
-   ]
-  },
-  "profiles": {
-   "id": "msgbatch_016xQDkTbgGpMgc43c9Eu9ik",
-   "names": [
-    "александар-мартиновић.json",
-    "александар-шешељ.json",
-    "александра-јерков.json",
-    "ана-крстић.json",
-    "ана-стевановић.json",
-    "балша-божовић.json",
-    "баришић-драгана.json",
-    "блажа-кнежевић.json",
-    "братић-дуња-симоновић.json",
-    "верољуб-матић.json",
-    "весић-горан.json",
-    "весовић-драган.json",
-    "виденовић-маја.json",
-    "владимир-маринковић.json",
-    "владимир-орлић.json",
-    "владимир-ђурић.json",
-    "војислав-шешељ.json",
-    "вукадиновић-ђорђе.json",
-    "вукојичић-миланка-јевтовић.json",
-    "вјерица-радета.json",
-    "горан-ковачевић.json",
-    "горан-николић.json",
-    "горан-ћирић.json",
-    "гордана-чомић.json",
-    "гојковић-маја.json",
-    "дарко-лакетић.json",
-    "драган-јовановић.json",
-    "драган-јонић.json",
-    "дубравка-филиповски.json",
-    "душан-милисављевић.json",
-    "един-нумановић.json",
-    "жарко-мићин.json",
-    "живковић-зоран.json",
-    "живковић-ирена.json",
-    "зоран-красић.json",
-    "иван-костић.json",
-    "константиновић-ненад.json",
-    "костов-ристо.json",
-    "крсто-јањушевић.json",
-    "лазић-нада.json",
-    "лапчевић-милан.json",
-    "лукић-мирка-шаркановић.json",
-    "малушић-љиљана.json",
-    "марија-јањушевић.json",
-    "марко-ђуришић.json",
-    "мацура-нада.json",
-    "мацура-татјана.json",
-    "миладин-шеварлић.json",
-    "милена-турк.json",
-    "милорад-мирчић.json",
-    "милорад-мијатовић.json",
-    "милојичић-ненад.json",
-    "михаило-јокић.json",
-    "наташа-сп-јовановић.json",
-    "немања-шаровић.json",
-    "неђо-јовановић.json",
-    "ного-срђан.json",
-    "олена-папуга.json",
-    "оливера-пешић.json",
-    "оља-петровић.json",
-    "павловић-соња.json",
-    "перић-срето.json",
-    "радуловић-саша.json",
-    "србислав-филиповић.json",
-    "стојмировић-љубиша.json",
-    "јањић-јован.json"
-   ]
-  },
-  "summaries-14": {
-   "id": "msgbatch_01WBavb3G7tnGLuD3pBFDzxv",
-   "names": [
-    "14_saziv_1261-26_-_lat..json",
-    "14_saziv_1859-25_-_lat.json",
-    "14_saziv_2249-25_-_lat..json",
-    "14_saziv_2790-26_-_lat..json",
-    "14_saziv_2796-26_-_lat..json",
-    "14_saziv_2797-26_-_lat..json"
+    "2020_1701-20_-_lat..json",
+    "2021_1800-21_-_lat..json"
    ]
   }
  },
- "refused": {}
+ "refused": {
+  "debates-12": {
+   "2021_2214-21_-_lat..json": {
+    "errors": [
+     "empty"
+    ],
+    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
+    "tries": 1
+   }
+  },
+  "debates-13": {
+   "13_saziv_2505-22_-_lat..json": {
+    "errors": [
+     "empty"
+    ],
+    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
+    "tries": 1
+   },
+   "13_saziv_2508-22_-_lat..json": {
+    "errors": [
+     "empty"
+    ],
+    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
+    "tries": 1
+   },
+   "13_saziv_2512-22_-_lat..json": {
+    "errors": [
+     "empty"
+    ],
+    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
+    "tries": 1
+   }
+  }
+ }
 }

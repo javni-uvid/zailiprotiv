@@ -1,0 +1,57 @@
+{
+ "mp": "весић горан",
+ "model": "claude-sonnet-5-5",
+ "read": 17,
+ "speeches": 20,
+ "sittings": 3,
+ "points": [
+  {
+   "tekst": "Navodi da je država izgradnjom kanalizacije, postrojenja za preradu otpadnih voda, auto-puteva i pruga uradila ono što niko ranije nije, i nabraja konkretne projekte i gradove.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Није канализација постојала до 2013. године, па нестала, него је никад није било. Када смо господин Мали и ја дошли 2014. године, нисмо затекли ниједан пројекат за фабрике за прераду отпадних вода, ниједан једини пројекат.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da pojedini poslanici u raspravi ne govore o konkretnim projektima iz budžeta i da iznose tvrdnje koje po njemu nisu tačne.",
+   "govora": 5,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Никога не интересује да ли ћемо завршити Моравски коридор. Никога не интересује када ће се урадити Фрушкогорски коридор. Никога не интересује када ће бити завршен пут до Пожеге.",
+    "date": "2022-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, 6. decembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Brani uklanjanje Starog savskog mosta i izgradnju novog, navodeći da je to planirano decenijama u urbanističkim planovima i saobraćajnim analizama Beograda.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Дакле, када се планирају неки инфраструктурни пројекти, они се планирају деценијама унапред. Сличну ситуацију смо имали са измештањем железничке станице.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Tvrdi da je poslanik Veselinović radio za HDZ, da je dobio stan od hrvatske države i da je učestvovao u uništavanju „Tesla banke“.",
+   "govora": 3,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Учествовали сте у уништавању „Тесла банке“. Радили сте за ХДЗ и то је јасно као дан.",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}

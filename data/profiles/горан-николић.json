@@ -1,0 +1,69 @@
+{
+ "mp": "горан николић",
+ "model": "claude-sonnet-5-5",
+ "read": 13,
+ "speeches": 15,
+ "sittings": 9,
+ "points": [
+  {
+   "tekst": "Тврди да је посланик Слободан Петровић из Врања био запослен у јавном комуналном предузећу „Водовод“, да је из њега отпуштен и да му је једино искуство читање водомера.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ради се о човеку који од искуства има једино читање водомера у тој фирми, у том јавном предузећу о коме је рекао господин Мирковић, а из тог предузећа је најурен са тужбом и ево нека потврди да ли морао и да ли је уплатио 1.200.000 или 1.300.000 динара, колико је оштетио јавно предузеће „Водовод“.",
+    "date": "2025-10-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 20. oktobra 2025. godine, sedmi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да СНС и њени коалициони партнери имају велико поверење грађана у Врању и Пчињском округу и износи изборне резултате као доказ.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Морам да кажем зарад истине, грађани да чују, од 376 чланова савета месне заједнице, СНС је освојила 375, а један је члан из групе грађана.",
+    "date": "2025-06-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, odrzane 16. juna 2025. godine, cetvrti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су захваљујући политици Владе и државе у Врање и Пчињски округ стизала велика улагања и капитални пројекти, као што су фабрика, путеви и станоградња.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Напоменуо бих да захваљујући успешној политици и одговорној политици, многи капитални пројекти су реализовани у граду Врању, а ово је само наставак те успешне сарадње са локалним руководством и са Владом Републике Србије.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Замера опозицији и ранијој власти, које назива „блокадерима“, што су, како тврди, за њихове владавине фабрике биле затваране и правосуђе уништено.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Говоримо о периоду после 2000. године, када је највећи број фабрика био затворен и највећи број, преко пола милиона људи, остало без посла, а то је све господо било за време владавине вас или ваших блокадера.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да економски показатељи показују напредак Србије у односу на 2012. годину, поводом девизних резерви, инфлације и јавног дуга.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Господине Петровићу, то значи да је јавни дуг смањен. То значи да држава Србија иде у добром правцу и да је далеко, далеко испод мастрихта.",
+    "date": "2025-10-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 20. oktobra 2025. godine, sedmi dan rada.docx"
+   }
+  }
+ ]
+}

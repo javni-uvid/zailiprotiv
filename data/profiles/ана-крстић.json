@@ -1,0 +1,69 @@
+{
+ "mp": "ана крстић",
+ "model": "claude-sonnet-5-5",
+ "read": 12,
+ "speeches": 13,
+ "sittings": 7,
+ "points": [
+  {
+   "tekst": "Navodi da se институт аутентичног тумачења користи као замена за измене закона, иако служи само да разјасни норму која је нејасна у примени.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "То није институт којим се закон поправља, то није институт којим се дописује оно што је законодавац заборавио и свакако није институт којим се премошћавају политичке шкакљиве ситуације.",
+    "date": "2026-07-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 08.07.2026. 3. dan.docx"
+   }
+  },
+  {
+   "tekst": "Navodi да препоруке ОДИХР-а не треба преносити у законе механички, већ критички и у контексту домаћег система.",
+   "govora": 5,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Зато је важно да не мењамо законе механички, само да бисмо испунили нечију препоруку, већ да водимо рачуна о последицама које та решења производе у пракси.",
+    "date": "2026-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/F Treca sednica Prvog redovnog zasedanja NSRS 12.05.2026..docx"
+   }
+  },
+  {
+   "tekst": "Zamera što би обавезна обука чланова бирачких одбора ставила групе грађана у неравноправан положај, па предлаже да РИК организује инструктивни семинар у року од 48 сати од проглашења листе.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Дакле, као што знамо, групе грађана се најчешће формирају непосредно пред изборе и немају сталну организациону инфраструктуру, ни логистику, те ово решење о увођењу обавезне обуке директно нарушава право грађана на самоорганизовање и равноправно учешће у изборима.",
+    "date": "2026-05-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Prvog redovnog zasedanja NSRS 19.05.2026. 4 dan.docx"
+   }
+  },
+  {
+   "tekst": "Traži да се група грађана националне мањине дефинише прецизније, тако што би сви кандидати на њеној листи дали писану изјаву да припадају тој мањини.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Наш предлог јесте да се кандидати на листи групе грађана обавежу да дају писану изјаву да припадају националној мањини чије интересе изборна листа заступа.",
+    "date": "2026-05-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Prvog redovnog zasedanja NSRS 20.05.2026. 5. dan.docx"
+   }
+  },
+  {
+   "tekst": "Zamera što предлог измена Закона о извршењу и обезбеђењу ограничава заштиту дома на непокретност до 60 квадрата и не оставља суду простор да процењује сваки случај, па предлаже основицу од 40 квадрата уз 15 по члану домаћинства.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Суд само може формално да констатује да ли је један услов испуњен или није, те тако он нема опцију да стан од 61 квадрат изузме од извршења.",
+    "date": "2025-10-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 15. oktobra 2025. godine, peti dan rada.docx"
+   }
+  }
+ ]
+}
