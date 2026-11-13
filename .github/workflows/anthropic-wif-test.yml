@@ -1,0 +1,32 @@
+# A test of signing in to the Anthropic API with GitHub's identity (workload identity federation) instead of an
+# API key. By hand only; it prints the exchange's answer with the token itself hidden.
+name: anthropic-wif-test
+on: workflow_dispatch
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  call-claude:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch GitHub OIDC token
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://api.anthropic.com');
+            core.setSecret(token);
+            core.exportVariable('JWT', token);
+      - name: Exchange for an Anthropic access token
+        run: |
+          curl -sS https://api.anthropic.com/v1/oauth/token \
+            -H "content-type: application/json" \
+            --data @- <<JSON | jq 'with_entries(if (.key | test("token$")) then .value = "<redacted>" else . end)'
+          {
+            "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+            "assertion": "$JWT",
+            "federation_rule_id": "fdrl_01NCmgWJsGrXFudbCfhmGqvD",
+            "organization_id": "7dd19a6e-f6b2-4240-a238-fa1268701199",
+            "service_account_id": "svac_01B894Uyt46AtSiNR9igxMvJ",
+            "workspace_id": "wrkspc_01NNmkqCRfENePvimjwqYJtD"
+          }
+          JSON
