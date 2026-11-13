@@ -315,7 +315,8 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
     people = registry(all_votes)
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
                       trim_blocks=True, lstrip_blocks=True)
-    env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v))
+    area_slug = lambda a: slug(latin(a))[:80]
+    env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     if out.exists():
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
@@ -555,6 +556,20 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
+    # A page per area (the point of Article 97), every convocation, newest first.
+    by_area = defaultdict(list)
+    for its in items_by_conv.values():
+        for it in its:
+            for a in it.get("areas") or []:
+                by_area[a].append(it)
+    (out / "oblast").mkdir(exist_ok=True)
+    for a, its in by_area.items():
+        its.sort(key=lambda it: it["law"].get("passed") or "", reverse=True)
+        (out / "oblast" / f"{area_slug(a)}.html").write_text(env.get_template("area.html").render(
+            **common, area=a, laws=its, root="../"), encoding="utf-8")
+    (out / "oblasti.html").write_text(env.get_template("areas.html").render(
+        **common, areas=[{"name": a, "slug": area_slug(a), "n": len(by_area[a])}
+                         for a in sorted(by_area, key=lambda a: (-len(by_area[a]), collate(a)))], root=""), encoding="utf-8")
     (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(**common, root=""), encoding="utf-8")
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")

@@ -8,7 +8,7 @@
   {% if n %}<span class="row-n">{{ n }}</span>{% endif %}
   <div class="row-main">
     <a class="row-title" href="zakon/{{ it.slug }}.html">{{ it.law.short }}</a>
-    <p class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.debate and it.debate.amendments %} · {{ it.debate.amendments }} {{ plural(it.debate.amendments, "amandman", "amandmana", "amandmana") }}{% endif %}</p>
+    <p class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}{% if it.debate and it.debate.amendments %} · {{ it.debate.amendments }} {{ plural(it.debate.amendments, "amandman", "amandmana", "amandmana") }}{% endif %}{% if it.areas %} · <a class="tag" href="oblast/{{ it.areas[0]|area_slug }}.html">{{ it.areas[0]|latin }}</a>{% endif %}</p>
   </div>
   {% if it.final %}<div class="row-vote">{{ bar(it.final.counts) }}<span class="row-score"><span class="t-za">{{ it.final.counts.za }}</span> : <span class="t-protiv">{{ it.final.counts.protiv }}</span></span></div>{% endif %}
 </li>

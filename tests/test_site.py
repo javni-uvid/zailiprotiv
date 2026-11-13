@@ -72,6 +72,7 @@ def test_site_builds_every_page(tmp_path):
     import xml.dom.minidom as dom
     assert dom.parse(str(out / "zakoni.xml")).getElementsByTagName("entry")
     assert list((out / "poslanik").glob("*.xml")) and all(dom.parse(str(f)) for f in (out / "poslanik").glob("*.xml"))
+    assert (out / "oblasti.html").exists()
     assert "Iz rasprava" in mp and "„Ovaj zakon ne valja jer ukida dozvole za lovce.“" in mp
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
     assert "Allow: /" in (out / "robots.txt").read_text()

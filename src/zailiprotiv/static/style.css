@@ -242,3 +242,7 @@ details.inline summary { color: var(--muted); cursor: pointer; }
 section[id] { scroll-margin-top: 1rem; }
 td.lean { white-space: nowrap; }
 @media (max-width: 640px) { .page-menu { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; } }
+.tags { margin: .4rem 0 0; display: flex; flex-wrap: wrap; gap: .35rem; }
+.tag { font-size: .8rem; padding: .1rem .5rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); text-decoration: none; }
+.tag:hover { color: inherit; border-color: currentColor; }
+.areas-list li { margin: .35rem 0; }

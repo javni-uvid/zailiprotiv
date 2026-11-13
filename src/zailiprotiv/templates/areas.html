@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, how with context %}
+{% block title %}Oblasti — Za ili Protiv{% endblock %}
+{% block main %}
+<h1>Oblasti</h1>
+<p class="meta">Zakoni po oblasti nadležnosti Republike iz člana 97. Ustava, na koju se predlagač poziva u ustavnom osnovu predloga. Jedan zakon može imati više oblasti. {{ how("vrste") }}</p>
+<ul class="plain areas-list">
+{% for a in areas %}<li><a href="oblast/{{ a.slug }}.html">{{ a.name|latin }}</a> <span class="meta">{{ a.n }}</span></li>{% endfor %}
+</ul>
+{% endblock %}
