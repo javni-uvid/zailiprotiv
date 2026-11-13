@@ -33,8 +33,7 @@ def test_quotes_checked_word_for_word():
     out, dropped = debates.parse(reply, NOTES)
     assert [q["govornik"] for q in out["citati"]] == ["ЈОВАН ЧОЛАКОВИЋ"]
     assert len(dropped) == 2  # words not said, and words said by someone else
-    with pytest.raises(ValueError):
-        debates.parse({"predlagac": [], "podrska": [], "zamerke": [], "citati": []}, NOTES)
+    assert debates.silent(debates.parse({"predlagac": [], "podrska": [], "zamerke": [], "citati": []}, NOTES)[0])
 
 
 def test_roles_from_the_chair():

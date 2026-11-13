@@ -88,6 +88,9 @@ def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes
     if pending is None:
         if not requests:
             return {}
+        if state.data.get("paused"):  # "paused": true in data/batches.json: finish what was sent, send nothing new
+            print(f"{kind}: paused, {len(requests)} requests not sent")
+            return {}
         names = sorted(requests)
         batch = client.messages.batches.create(requests=[{"custom_id": f"r{i}", "params": requests[n]}
                                                          for i, n in enumerate(names)])

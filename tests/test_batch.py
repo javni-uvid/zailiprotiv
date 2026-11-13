@@ -140,3 +140,9 @@ def test_tokens_are_counted_by_kind_and_model(tmp_path, monkeypatch):
     batch.run(client, state, "k", {"a": {}, "b": {}}, wait_minutes=1)
     assert batch.State(tmp_path / "batches.json").data["usage"]["k"]["m"] == {
         "replies": 2, "input": 20, "cache_written": 0, "cache_read": 14, "output": 6}
+
+
+def test_nothing_new_is_sent_while_paused(tmp_path):
+    client, state = Batches(lambda p: "ok"), batch.State(tmp_path / "batches.json")
+    state.data["paused"] = True
+    assert batch.run(client, state, "k", {"a": {}}, wait_minutes=0) == {} and not client.sent

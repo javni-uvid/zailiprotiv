@@ -1,4 +1,5 @@
 {
+ "paused": true,
  "pending": {
   "debates-11": {
    "id": "msgbatch_017XgahaBW6TothDUzcZRWQb",
@@ -33,38 +34,5 @@
    ]
   }
  },
- "refused": {
-  "debates-12": {
-   "2021_2214-21_-_lat..json": {
-    "errors": [
-     "empty"
-    ],
-    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
-    "tries": 1
-   }
-  },
-  "debates-13": {
-   "13_saziv_2505-22_-_lat..json": {
-    "errors": [
-     "empty"
-    ],
-    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
-    "tries": 1
-   },
-   "13_saziv_2508-22_-_lat..json": {
-    "errors": [
-     "empty"
-    ],
-    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
-    "tries": 1
-   },
-   "13_saziv_2512-22_-_lat..json": {
-    "errors": [
-     "empty"
-    ],
-    "reply": "{\"predlagac\": [], \"podrska\": [], \"zamerke\": [], \"citati\": []}",
-    "tries": 1
-   }
-  }
- }
+ "refused": {}
 }

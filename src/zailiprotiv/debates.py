@@ -228,9 +228,13 @@ def parse(reply: str | dict, notes: dict, groups: dict[str, str] | None = None) 
         group = (groups or {}).get(mps.key(who)) or str(q.get("grupa", "")).strip()
         quotes.append({"govornik": who, "grupa": group, "dan": found, "tekst": text})
     out["citati"] = quotes  # one per group at most already; a cut here could leave one side out
-    if not (out["predlagac"] or out["podrska"] or out["zamerke"]):
-        raise ValueError("empty")
     return out, dropped
+
+
+def silent(debate: dict) -> bool:
+    """Nothing was said about the law itself (a joint debate on many items that passed it by): kept on record so it
+    is not asked again, and not shown."""
+    return not (debate["predlagac"] or debate["podrska"] or debate["zamerke"])
 
 
 def record(law: dict, text: str, debate: dict, model: str, dropped: list[str]) -> dict:

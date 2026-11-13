@@ -666,15 +666,15 @@ def profiles_batch(args) -> int:
         try:
             reply = profiles.reply_json(text)
             bad = profiles.check(reply, material)
-        except (ValueError, KeyError, TypeError) as e:
-            reply, bad = None, [f"nečitljivo: {e}"]
+            result = None if bad else profiles.record(reply, material, summaries.MODEL)
+        except (ValueError, KeyError, TypeError, AttributeError) as e:
+            bad = [f"nečitljivo: {type(e).__name__}: {e}"]
         if bad:
             state.refuse(kind, name, text, bad)
             refused += 1
             print(f"  refused {name}: " + "; ".join(bad)[:300])
             continue
-        (ROOT / "profiles" / name).write_text(json.dumps(profiles.record(reply, material, summaries.MODEL),
-                                                         ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        (ROOT / "profiles" / name).write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         state.accept(kind, name)
         saved += 1
     state.save()

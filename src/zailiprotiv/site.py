@@ -111,7 +111,10 @@ def load(data: Path) -> tuple[dict, dict, dict]:
     for path in sorted((data / "notes").glob("*.json")) if (data / "notes").exists() else []:
         bills.setdefault(path.name, {})["notes"] = json.loads(path.read_text(encoding="utf-8"))
     for path in sorted((data / "debates").glob("*.json")) if (data / "debates").exists() else []:
-        bills.setdefault(path.name, {})["debate"] = json.loads(path.read_text(encoding="utf-8"))
+        record = json.loads(path.read_text(encoding="utf-8"))
+        d = record["debate"]
+        if d["predlagac"] or d["podrska"] or d["zamerke"]:  # an empty one: the debate passed the law by
+            bills.setdefault(path.name, {})["debate"] = record
     # Short names for lists (data/<N>/short_titles.json, {the law's key in laws.json: short name}); the law keeps
     # its official title, shown on its page.
     short = data / "short_titles.json"
