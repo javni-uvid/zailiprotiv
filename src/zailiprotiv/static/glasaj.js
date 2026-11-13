@@ -56,15 +56,27 @@
     document.getElementById("q-count").textContent = "Glasao si o " + n + " od " + answers.length + " zakona";
     var groups = data.groups.map(function (g) { return { g: g, m: match(g.v) }; }).filter(function (x) { return x.m.both >= need; })
       .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || b.g.m - a.g.m; });
-    var top = groups.filter(function (x) { return groups.length && x.m.share === groups[0].m.share && x.m.both === groups[0].m.both; });
+    var mps = data.mps.map(function (p) { return { p: p, m: match(p.v) }; }).filter(function (x) { return x.m.both >= need; })
+      .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || a.p.n.localeCompare(b.p.n, "sr"); });
+    // MPs first. Many can tie on a few laws: up to three by name, more as a number, and the list below shows them all.
+    var top = mps.filter(function (x) { return x.m.share === mps[0].m.share && x.m.both === mps[0].m.both; });
     var name = document.getElementById("q-top-name"), score = document.getElementById("q-top-score");
-    // Several groups can vote alike on these laws: three by name, the rest counted, none left unsaid.
-    name.textContent = !top.length ? "—" : top.length <= 3 ? names(top.map(function (x) { return x.g.n; })) :
-      top.slice(0, 3).map(function (x) { return x.g.n; }).join(", ") + " i još " + (top.length - 3);
-    score.textContent = top.length ? top[0].m.same + " od " + top[0].m.both + " " + plural(top[0].m.both, "zakona", "zakona", "zakona") +
-      ": isti glas kao većina te grupe" : "Nema grupe koja je glasala o dovoljno istih zakona.";
-    shareText = top.length ? "Glasao sam o " + n + " zakona kao poslanik. Najviše istih glasova: " + name.textContent + " (" +
-      top[0].m.same + " od " + top[0].m.both + "). A ti?" : "Glasaj o zakonima kao poslanik i vidi ko je glasao kao ti.";
+    var who = !top.length ? "" : top.length <= 3 ? names(top.map(function (x) { return x.p.n; })) :
+      top.length + " " + plural(top.length, "poslanik", "poslanika", "poslanika");
+    name.textContent = who || "—";
+    score.textContent = top.length ? "Isti glas kao ti na " + top[0].m.same + " od " + top[0].m.both + " " +
+      plural(top[0].m.both, "zakona", "zakona", "zakona") + " o kojima ste oboje glasali." : "Nijedan poslanik nije glasao o dovoljno istih zakona.";
+    shareText = top.length ? "Glasao sam o " + n + " " + plural(n, "zakonu", "zakona", "zakona") + " kao da sedim u Skupštini. Najviše istih glasova: " +
+      who + " (" + top[0].m.same + " od " + top[0].m.both + "). A ti?" : "Glasaj o zakonima kao poslanik i vidi ko je glasao kao ti.";
+    var ms = document.getElementById("q-mps"), shown = Math.min(Math.max(8, top.length), 40); ms.textContent = "";
+    mps.slice(0, shown).forEach(function (x) {
+      var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
+      a.href = "poslanik/" + x.p.s + ".html"; main.appendChild(a);
+      if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
+      li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
+    });
+    document.getElementById("q-mps-note").textContent = top.length > shown ? "Prikazano prvih " + shown + " od " + top.length +
+      " poslanika sa istim brojem, po azbučnom redu." : "";
     var gs = document.getElementById("q-groups"); gs.textContent = "";
     groups.forEach(function (x) {
       var tr = el("tr"), td = el("td"), a = el("a", null, x.g.n), cell = el("td", "vote-cell"), bar = el("div", "bar"), s = el("span", "v-za");
@@ -73,15 +85,6 @@
       tr.appendChild(el("td", "num", x.m.same + " od " + x.m.both));
       gs.appendChild(tr);
     });
-    var ms = document.getElementById("q-mps"); ms.textContent = "";
-    data.mps.map(function (p) { return { p: p, m: match(p.v) }; }).filter(function (x) { return x.m.both >= need; })
-      .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || a.p.n.localeCompare(b.p.n, "sr"); })
-      .slice(0, 8).forEach(function (x) {
-        var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
-        a.href = "poslanik/" + x.p.s + ".html"; main.appendChild(a);
-        if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
-        li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
-      });
   }
 
   list.classList.add("q-live");

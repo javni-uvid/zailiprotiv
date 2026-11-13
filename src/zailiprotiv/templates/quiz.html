@@ -43,10 +43,11 @@
   <h2 class="q-top"><span class="q-top-lead">Najviše glasova kao ti</span> <span id="q-top-name"></span></h2>
   <p class="q-top-score" id="q-top-score"></p>
   <p class="q-share js-only"><button type="button" class="button" id="q-share">Podeli rezultat</button> <button type="button" class="button ghost" id="q-reset">Glasaj ponovo</button> <span id="q-shared" class="meta" aria-live="polite"></span></p>
-  <h3>Sve poslaničke grupe</h3>
-  <div class="scroll"><table class="groups"><thead><tr><th>Grupa</th><th class="vote-cell"></th><th class="num">Isti glas</th></tr></thead><tbody id="q-groups"></tbody></table></div>
   <h3>Poslanici koji su glasali kao ti</h3>
   <ul class="rows compact" id="q-mps"></ul>
+  <p class="meta" id="q-mps-note"></p>
+  <h3>Poslaničke grupe</h3>
+  <div class="scroll"><table class="groups"><thead><tr><th>Grupa</th><th class="vote-cell"></th><th class="num">Isti glas kao većina grupe</th></tr></thead><tbody id="q-groups"></tbody></table></div>
   <p class="label">Poredimo samo zakone o kojima ste oboje glasali. Ovo je poređenje glasova o nekoliko zakona, ne preporuka za koga da glasaš.</p>
   {% if votes_api %}
   <div class="q-send" id="q-send">
