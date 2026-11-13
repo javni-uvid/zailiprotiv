@@ -48,7 +48,7 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
                        for g in group_rows.get(active, [])],
             "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": (r["by_conv"][active]["groups"] or [""])[0],
                      "v": "".join(letter.get(r["mp"].votes.get(it["law"]["final_vote"]), "-") for it in quiz_laws),
-                     **({"q": q} if (q := quote(r["mp"])) else {})}
+                     **({"q": q} if (q := quote(r["mp"])) else {}), **({"f": r["photo"]} if r.get("photo") else {})}
                     for r in rows_mp if active in r["by_conv"]]}
     settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
     # The laws visitors' votes are counted for: the counter (worker/) accepts no others.

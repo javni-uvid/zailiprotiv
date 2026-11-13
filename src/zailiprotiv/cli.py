@@ -77,6 +77,36 @@ def in_procedure(args) -> int:
     return 0
 
 
+def photos_cmd(args) -> int:
+    """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
+    import time
+    from zailiprotiv import config, photos
+    found = photos.parse(skupstina.fetch(photos.PAGE).decode("utf-8", "replace"))
+    folder = ROOT / "photos"
+    folder.mkdir(parents=True, exist_ok=True)
+    index_file = folder / "index.json"
+    index = json.loads(index_file.read_text(encoding="utf-8")) if index_file.exists() else {}
+    new = 0
+    for number, mp in sorted(found.items()):
+        k, name = photos.key(mp["name"]), f"{number}.jpg"
+        if index.get(k, {}).get("source") == mp["src"] and (folder / name).exists():
+            continue
+        try:
+            data = skupstina.fetch(mp["src"])
+        except skupstina.FetchError as e:
+            print(f"  {mp['name']}: {e}")
+            continue
+        if data[:2] != b"\xff\xd8":  # not a JPEG: a placeholder or an error page
+            continue
+        (folder / name).write_bytes(data)
+        index[k] = {"file": name, "source": mp["src"], "page": mp["page"]}
+        new += 1
+        time.sleep(config.DELAY)
+    index_file.write_text(json.dumps(index, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"portraits listed: {len(found)}, new: {new}, kept: {len(index)}")
+    return 0
+
+
 def adopted(args) -> int:
     """The laws the current convocation passed, from the Assembly's page of adopted laws, into data/laws.json."""
     source = CONVOCATIONS[CONVOCATION]["laws"]
@@ -875,6 +905,8 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("procedure", help="the bills in procedure now → data/<N>/procedure.json")
     p.add_argument("--out", default=str(DATA / "procedure.json"))
     p.set_defaults(run=in_procedure)
+    p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
+    p.set_defaults(run=photos_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")
     p.add_argument("--min", type=int, default=10)
     p.set_defaults(run=status)

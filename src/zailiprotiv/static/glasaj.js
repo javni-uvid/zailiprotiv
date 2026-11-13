@@ -93,6 +93,7 @@
     mps.slice(top.length).slice(0, 3 - three.length).forEach(function (x) { three.push(x); });
     three.forEach(function (x) {
       var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
+      if (x.p.f) { var im = el("img", "q-face"); im.src = "foto/" + x.p.f; im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
       a.href = "poslanik/" + x.p.s + ".html"; main.appendChild(a);
       if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
       li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Pretraga — Za ili Protiv{% endblock %}
+{% block description %}Pretraga kroz ceo tekst sajta: zakone, sažetke, rasprave, replike i strane poslanika.{% endblock %}
+{% block main %}
+<h1>Pretraga</h1>
+<p class="standfirst">Kroz ceo tekst sajta: zakone i njihove sažetke, rasprave, replike i strane poslanika.</p>
+<div id="search" data-pagefind-ignore></div>
+<noscript><p class="note">Za pretragu treba JavaScript. Bez njega: <a href="zakoni.html">svi zakoni</a> i <a href="poslanici.html">svi poslanici</a>.</p></noscript>
+<p class="meta" data-pagefind-ignore>Pretraga radi u tvom pregledaču, nad indeksom koji je deo sajta: upit se nikome ne šalje. Piši sa našim slovima (š, đ, č, ć, ž): „generalštab“, ne „generalstab“. Za tačan izraz stavi ga pod navodnike. Pretraga po nazivu zakona i imenu poslanika, koja razume i padeže i pisanje bez kvačica, je na <a href="index.html">naslovnoj</a>.</p>
+<link rel="stylesheet" href="{{ root }}pagefind/pagefind-ui.css">
+<script src="{{ root }}pagefind/pagefind-ui.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  if (!window.PagefindUI) return;
+  var ui = new PagefindUI({ element: "#search", showSubResults: false, showImages: false, resetStyles: false, autofocus: true,
+    translations: { placeholder: "Reč, zakon ili ime", clear_search: "Obriši", load_more: "Još rezultata", search_label: "Pretraga sajta",
+      zero_results: "Nema rezultata za [SEARCH_TERM]", many_results: "[COUNT] rezultata za [SEARCH_TERM]", one_result: "[COUNT] rezultat za [SEARCH_TERM]",
+      searching: "Tražim [SEARCH_TERM]…" } });
+  var q = new URLSearchParams(location.search).get("q");
+  if (q) ui.triggerSearch(q);
+});
+</script>
+{% endblock %}

@@ -26,6 +26,7 @@
     <a href="{{ root }}glasaj.html">Glasaj i ti</a>
     <details class="nav-more"><summary>Više</summary>
       <div>
+        <a href="{{ root }}pretraga.html">Pretraga</a>
         <a href="{{ root }}nedelje.html">Nedelja u Skupštini</a>
         <a href="{{ root }}grupe.html">Poslaničke grupe</a>
         <a href="{{ root }}oblasti.html">Oblasti</a>
@@ -39,7 +40,7 @@
     {% if cyrillic %}<a class="script-switch" href="#pismo" hreflang="sr-Cyrl">Ћирилица</a>{% endif %}
   </nav>
 </header>
-<main>
+<main data-pagefind-body>
 {% block main %}{% endblock %}
 </main>
 <footer>

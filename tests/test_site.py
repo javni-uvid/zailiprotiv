@@ -259,3 +259,13 @@ def test_harsh_words_are_counted_in_their_sentence_and_everyday_words_are_not():
     found = pages_floor.harsh(text)
     assert [w for w, _ in found] == ["олош", "лопови", "идиотским"]
     assert found[0][1] == "Ви сте олош и лопови!"
+
+
+def test_portraits_are_read_from_the_list_of_mps():
+    from zailiprotiv import mps, photos
+    html = ('<a href="https://www.parlament.gov.rs/NENAD_ABRAMOVI%C4%86.1435.891.html"><a name="x"></a></a>'
+            '<img src="/upload/thumbs/images/archive/photo/poslanici/14_saziv/288-Nenad_Abramovic_150x0.jpg">'
+            '<a href="/NENAD_ABRAMOVIĆ.1435.891.html">ABRAMOVIĆ NENAD</a><img src="/images/logo.png">')
+    found = photos.parse(html)
+    assert list(found) == ["1435"] and found["1435"]["src"].endswith("288-Nenad_Abramovic_150x0.jpg")
+    assert photos.key(found["1435"]["name"]) == mps.key("АБРАМОВИЋ НЕНАД")

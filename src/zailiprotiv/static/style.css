@@ -487,3 +487,9 @@ td.lean { white-space: nowrap; }
 .home-hooks .q blockquote { font-size: 1.1rem; margin-bottom: .4rem; }
 .side-box b { font-size: 1.5rem; }
 @media (max-width: 600px) { .home-quiz { padding: 1.4rem 1.1rem; margin-left: -1rem; margin-right: -1rem; } }
+
+/* Portraits from the Assembly's list of MPs. */
+.mp-photo { float: right; width: 7.5rem; height: auto; aspect-ratio: 3 / 4; object-fit: cover; margin: 0 0 1rem 1.5rem; background: var(--card); }
+.q-face { width: 3.5rem; height: 4.6rem; object-fit: cover; flex-shrink: 0; background: var(--card); }
+.row-face { width: 2.6rem; height: 3.4rem; object-fit: cover; flex-shrink: 0; background: var(--card); }
+@media (max-width: 600px) { .mp-photo { width: 5.5rem; margin-left: 1rem; } }

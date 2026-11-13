@@ -604,6 +604,12 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             spoke_days[k] = Counter(sp["date"] for sp in own if sp["date"])
             for sp in own:
                 speech_url[(k, sp["date"])] = sp["url"]
+    # Portraits from the Assembly's list of MPs (data/photos/, the `photos` command), by the MP's key.
+    photos_index = root / "photos" / "index.json"
+    photo_of = {}
+    if photos_index.exists():
+        shutil.copytree(root / "photos", out / "foto", ignore=shutil.ignore_patterns("*.json"))
+        photo_of = {k: v["file"] for k, v in json.loads(photos_index.read_text(encoding="utf-8")).items()}
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -676,6 +682,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             periods += [{"key": c["conv"], "label": f"{c['name']} saziv", **view(c["record"])} for c in by_conv]
         kinds_table, areas_table = periods[0]["kinds"], periods[0]["areas"]
         rows_mp.append({"mp": mp, "tally": tally, "n": len(record), "by_conv": {c["conv"]: c for c in by_conv},
+                        "photo": photo_of.get(mp.key, ""),
                         "convs": sorted({r["it"]["conv"] for r in record}, key=int, reverse=True)})
         if tally:  # the picture shown when the MP's page is shared: the name and the final votes
             picture(out / "poslanik" / f"{mp.slug}.png", mp.name, "Konačna glasanja o zakonima",
@@ -686,6 +693,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             apart=[r for r in record if r["differs"]],
             timeline=timeline, key_votes=keys_, group_slug=group_slug, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
+            photo=photo_of.get(mp.key, ""),
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:

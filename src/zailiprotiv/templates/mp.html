@@ -33,6 +33,7 @@
 {%- endmacro %}
 
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
+{% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% endif %}
 <h1>{{ mp.name }}</h1>
 <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 <p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>

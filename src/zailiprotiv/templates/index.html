@@ -10,7 +10,7 @@
       <input id="q" type="search" placeholder="Zakon ili poslanik, npr. budžet ili Jovanov" autocomplete="off">
       <ul id="hits" class="hits" hidden></ul>
     </div>
-    <p class="masthead">{{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} od {{ convs[-1].years[:4] }}. godine · {{ stats.all_mps }} poslanika · <a href="zakoni.html">svi zakoni</a> · <a href="poslanici.html">svi poslanici</a></p>
+    <p class="masthead">{{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} od {{ convs[-1].years[:4] }}. godine · {{ stats.all_mps }} poslanika · <a href="pretraga.html">pretraga celog teksta</a> · <a href="zakoni.html">svi zakoni</a> · <a href="poslanici.html">svi poslanici</a></p>
   </div>
   {% if divisive %}
   {% set c = divisive.final.counts %}

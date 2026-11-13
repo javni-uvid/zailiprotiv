@@ -57,6 +57,7 @@ def write(*, common, domain, env, items_by_conv, out, people):
                     ensure_ascii=False, indent=1), encoding="utf-8")
     (out / "podaci.html").write_text(env.get_template("data.html").render(**common, downloads=downloads, root=""),
                                      encoding="utf-8")
+    (out / "pretraga.html").write_text(env.get_template("search.html").render(**common, root=""), encoding="utf-8")
     (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(
         **common, harsh_list=", ".join(latin(w.replace("[кц]", "к")) for w in __import__("zailiprotiv.pages_floor", fromlist=["HARSH"]).HARSH), root=""), encoding="utf-8")
     if domain:

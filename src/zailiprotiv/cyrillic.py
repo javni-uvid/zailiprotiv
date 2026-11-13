@@ -68,6 +68,7 @@ def page(html: str, rel: str) -> str:
             return m.group(0)  # a page: its Cyrillic twin has the same relative address
         return f'{attr}="{up}{posixpath.normpath(posixpath.join(here, path))}{rest}"'
 
+    html = html.replace("<main data-pagefind-body>", "<main>")  # the search index is made of the Latin pages only
     out, skip = [], None
     for part in _TAG.split(html):
         if part.startswith("<"):

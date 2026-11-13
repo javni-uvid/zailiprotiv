@@ -33,6 +33,8 @@ jobs:
         run: |
           pip install uv && uv sync --frozen
           uv run zailiprotiv site --out _site --domain zailiprotiv.rs
+          # The search index of the whole text (Pagefind; made of the pages, served from the site itself).
+          npx -y pagefind@1.3.0 --site _site | tail -8
           du -sh --apparent-size _site; find _site -type f | wc -l
       - uses: actions/upload-pages-artifact@v3
         with:

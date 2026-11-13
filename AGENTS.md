@@ -94,6 +94,10 @@ These are the project's promises to its readers. Never change them without the m
      the largest share against, drawn as the chamber (`site.hemicycle`: a picture of the count, not of seats);
      then "Glasaj i ti" as a full-width band, "Varnice" and a pair of quotes, the newest sitting's laws (most
      votes against first). The mark is the chamber as one arc (`favicon.svg`, `.brand-mark`).
+   - **Two things of others' making, both served from the site itself (the maintainer, 13 Nov 2026):** the
+     full-text search (Pagefind, built in the `pages` workflow from the Latin pages into `pagefind/`; `pretraga.html`),
+     and MPs' portraits from the Assembly's list of MPs (`photos.py`, `data/photos/`, shown on the MP's page, in
+     the list and in the quiz's result). Nothing is loaded from another server for either.
    - **A second exception, the maintainer's (13 Nov 2026): counting visits.** Every page loads Cloudflare Web
      Analytics' script (no cookies, no following of a person; totals per page) when `data/settings.json` has
      `analytics_token`; without it nothing is loaded. The footer and "O projektu" say so. `publish.check` lets this

@@ -19,6 +19,7 @@
 {% for r in rows %}
   {% set t = r.in.tally %}
   <li class="row" data-g="{{ r.in.groups[0] if r.in.groups else "" }}" data-pr="{{ t.protiv or 0 }}" data-za="{{ t.za or 0 }}" data-ab="{{ (t.nije_prisutan or 0) + (t.nije_glasao or 0) }}" data-i="{{ loop.index }}">
+    {% if r.photo %}<img class="row-face" src="foto/{{ r.photo }}" alt="" width="42" height="56" loading="lazy">{% endif %}
     <div class="row-main">
       <a class="row-title" href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a>
       <p class="row-meta">{{ r.in.groups|join(", ") or "—" }}</p>

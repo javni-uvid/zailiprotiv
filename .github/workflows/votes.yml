@@ -52,7 +52,7 @@ jobs:
           uv run zailiprotiv $c index
           uv run zailiprotiv $c laws
           # The bills in procedure are the current convocation's only.
-          if [ "${{ inputs.convocation || '14' }}" = "$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')" ]; then uv run zailiprotiv $c procedure; fi
+          if [ "${{ inputs.convocation || '14' }}" = "$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
           uv run zailiprotiv $c votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
