@@ -189,7 +189,8 @@ These are the project's promises to its readers. Never change them without the m
   `data/<N>/links.json`, `{law title: {"vote", "why", "item"}}`, applied only to a law left without a final vote
   and only to a vote of the day it passed; marked `"matched": "manual"`. Six in the Twelfth convocation.
 - Eleventh convocation (2016–2020, read 13 Nov 2026): 617 of 617 (594 exact, 17 close, 6 by hand), 983 roll calls, none with a
-  problem; the absent are not listed. No summaries, short names or debates yet.
+  problem; the absent are not listed. Summaries (560 laws with a bill) and short names (617) written in a session
+  by claude-opus-5-5 (13 Nov 2026); the 2016–2017 notes are PDFs, read with pdftotext.
 - Thirteenth convocation: 197 of 197. Twelfth: 255 of 257; the Hilandar law and the anti-corruption amendments
   (both passed 23 Sept 2021) have no roll call among the PDFs indexed for that day.
 - Fourteenth convocation (12 Nov 2026): 394 of 395 laws have their final vote (388 exact, 6 close). The Venezuela
@@ -285,6 +286,8 @@ These are the project's promises to its readers. Never change them without the m
      "Prijavi grešku" link on every page, a prefilled GitHub issue (no script); filters by area and year on the laws
      list; treaties counted but left out of the words in "Po oblasti" (TheyWorkForYou's informative votes). MP page
      lists show six rows and link to the full table at the bottom, to keep pages light (tabs had made them 2 MB).
+  6d. names the public uses for a law (`data/aliases.json`, key → names and a press link; 23 laws, each checked in
+     the press by a model, 13 Nov 2026): searched, and shown on the law page as "U javnosti i: …" with the link.
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
      rules out for the pages as they are — to be decided with the maintainer before building.
 

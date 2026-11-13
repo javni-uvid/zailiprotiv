@@ -352,6 +352,8 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
               "VOTES": VOTES, "convs": conv_list, "current": current}
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
+    # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
+    aliases = json.loads((root / "aliases.json").read_text(encoding="utf-8")) if (root / "aliases.json").exists() else {}
     items_by_conv, taken = {}, Counter()
     for conv, _ in convs:
         laws_store, votes, bills = loaded[conv]
@@ -363,6 +365,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             s = s if taken[s] == 1 else f"{s}-{taken[s]}"
             bill = bills.get(law.get("bill_file", ""), {})
             items.append({"key": key, "slug": s, "law": law, "final": votes.get(law.get("final_vote") or ""),
+                          "aka": aliases.get(key, {}).get("names", []), "aka_source": aliases.get(key, {}).get("source", ""),
                           "summary": bill.get("summary"), "notes": bill.get("notes"),
                           "said": bill.get("debate"), "wrong_bill": bill.get("wrong"), "conv": conv,
                           "conv_name": ORDINAL_NAME.get(conv, conv), "conv_page": laws_page(conv, current),
@@ -556,7 +559,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             groups=sorted(groups.items(), key=lambda kv: (-kv[1], collate(kv[0])))), encoding="utf-8")
 
     # What the page's own script searches and filters: every law and MP, in one file fetched on first use.
-    index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"], "s": it["slug"], "d": it["law"].get("passed") or "",
+    index = {"laws": [{"t": it["law"]["short"], "f": it["law"]["title"] + " " + " ".join(it.get("aka") or []), "s": it["slug"], "d": it["law"].get("passed") or "",
                        "za": it["final"]["counts"]["za"] if it["final"] else None,
                        "pr": it["final"]["counts"]["protiv"] if it["final"] else None,
                        "n": sum(it["final"]["counts"].values()) if it["final"] else None,

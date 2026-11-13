@@ -9,6 +9,7 @@
 <p class="crumbs"><a href="../{{ it.conv_page }}">Zakoni — {{ it.conv_name }} saziv</a> › <a href="../{{ it.conv_page }}#{{ law.kind }}">{{ it.kind|latin }}</a></p>
 <h1>{{ law.short }}</h1>
 {% if law.short != law.title %}<p class="official">{{ law.title }}</p>{% endif %}
+{% if it.aka %}<p class="meta aka">U javnosti i: {% for a in it.aka %}„{{ a }}“{% if not loop.last %}, {% endif %}{% endfor %}{% if it.aka_source %} (<a href="{{ it.aka_source }}" rel="nofollow">primer</a>){% endif %}</p>{% endif %}
 {% if it.areas %}<p class="tags">{% for a in it.areas %}<a class="tag" href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{% endfor %}</p>{% endif %}
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
 

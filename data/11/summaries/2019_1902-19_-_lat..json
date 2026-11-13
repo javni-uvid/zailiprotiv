@@ -1,0 +1,20 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "7bd35f27f427af4b93f7234eba94317cc43f9d84def38a40535c73119b177ade",
+ "summary": {
+  "ukratko": "Закон потврђује Меморандум о сарадњи у борби против корупције у оквиру Антикорупцијске иницијативе Југоисточне Европе, заједно са Протоколом који га мења.",
+  "razlozi": [
+   "Предлагач наводи да је Меморандум важио ограничено, до 2013. године, а да Протокол продужава његово важење на неодређено време.",
+   "Према образложењу, Србија тиме изражава вољу за активно учешће у регионалној борби против корупције.",
+   "Предлагач наводи да ће потврђивање учврстити положај Србије у региону и у процесу придруживања Европској унији."
+  ],
+  "promene": [
+   "Меморандум се продужава на неодређено време.",
+   "Србија плаћа годишњу чланарину (контрибуцију) иницијативи."
+  ],
+  "sredstva": "Према образложењу, потребно је сваке године издвојити 24.000 евра за годишњу контрибуцију; за 2019. средства су обезбеђена у буџету Министарства правде, а касније у оквиру његових лимита."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Memoranduma o razumevanju o saradnji u borbi protiv korupcije u okviru Antikorupcijske inicijative Jugoistočne Evrope sa Protokolom o izmenama i dopunama Memoranduma o razumevanju o saradnji u borbi protiv korupcije u okviru Antikorupcijske inicijative Jugoistočne Evrope",
+ "depth": "standard"
+}

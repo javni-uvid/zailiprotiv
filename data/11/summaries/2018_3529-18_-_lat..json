@@ -1,0 +1,22 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "502829ae7231ca60ecaa9d5a300e1db12d2403a903802cdb0cc1ec2766b56ee2",
+ "summary": {
+  "ukratko": "Закон даје гаранцију Републике Србије пет банака за кредит ЈП „Србијагас“ до 70.000.000 евра за изградњу гасовода од границе са Бугарском до границе са Мађарском, према предлагачу.",
+  "razlozi": [
+   "Предлагач наводи да се према Закону о јавном дугу гаранција Републике даје у форми закона.",
+   "Према образложењу, повлачење кредита условљено је гаранцијом Републике, а гаранција је предвиђена Законом о буџету за 2018. годину.",
+   "Предлагач наводи да су понуде ових банака изабране као најповољније у поступку набавке финансијских услуга.",
+   "Хитан поступак и раније ступање на снагу предлагач образлаже потребом да се средства што пре повуку и почне изградња гасовода."
+  ],
+  "promene": [
+   "Република неопозиво, безусловно и на први позив гарантује отплату кредита до 70.000.000 евра у динарској противвредности.",
+   "Према образложењу, кредит траје шест година са почеком од две године, отплата је тромесечна, а камата од 1,37 до 1,50% годишње и 0,5% за повлачење средстава.",
+   "Република има право регреса ако плати уместо „Србијагаса“, а отвара се наменски рачун код Народне банке Србије."
+  ],
+  "sredstva": "Предлагач наводи да ће се средства за спровођење закона обезбеђивати у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o davanju garancije Republike Srbije u korist Societe General Banke Srbije a.d. Beograd, Komercijalne banke a.d. Beograd, Banke Poštanska štedionica a.d. Beograd, OTP banke Srbija a.d. Novi Sad i Vojvođanske banke a.d. Novi Sad po zaduženju Javnog preduzeća „Srbijagas“ Novi Sad, po osnovu ugovora o kreditu za izgradnju gasovoda na teritoriji Republike Srbije od granice sa Republikom Bugarskom do granice sa Mađarskom i drugim susednim zemljama sa Republikom Srbijom",
+ "depth": "standard"
+}

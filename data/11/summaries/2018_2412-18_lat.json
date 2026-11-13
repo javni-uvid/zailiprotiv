@@ -1,0 +1,22 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "090c90fa1eb14cbc6d7c361e64aa37907a2831be375a69cdc6744667bead9b72",
+ "summary": {
+  "ukratko": "Закон потврђује Додатни протокол 5 уз Споразум CEFTA 2006 о олакшању трговине и Одлуку Заједничког комитета CEFTA бр. 3/2015 о правилима о пореклу робе.",
+  "razlozi": [
+   "Предлагач наводи да су стране CEFTA олакшање трговине одредиле као један од главних приоритета до 2020. године, ради мањих трошкова трговине, веће конкурентности и привлачења улагања.",
+   "Према образложењу, Одлука 3/2015 садржи одредбе о укидању забране поврата или ослобођења од царине, па је за њену примену потребна потврда Народне скупштине.",
+   "Предлагач наводи да ће, према мишљењу Министарства спољних послова, уз инструмент потврђивања бити достављена и Декларација о ставу Србије у вези са прихватањем и спровођењем Протокола од стране UNMIK/Косово."
+  ],
+  "promene": [
+   "Поједностављују се царинске контроле и формалности и уређује размена података између царинских служби.",
+   "Предвиђа се међусобно признавање статуса овлашћених привредних субјеката међу странама CEFTA.",
+   "Уводи се пуна кумулација порекла робе у оквиру CEFTA, тако да се територије свих страна сматрају једном зоном при утврђивању порекла.",
+   "Укида се забрана поврата или ослобођења од плаћања царине за материјале без порекла који се користе у производњи робе за извоз."
+  ],
+  "sredstva": "Предлагач наводи да се не стварају нове финансијске обавезе и да нису потребна додатна средства."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Dodatnog protokola 5 uz Sporazum o izmeni i pristupanju Sporazumu o slobodnoj trgovini u Centralnoj Evropi i Odluke Zajedničkog komiteta Sporazuma o slobodnoj trgovini u Centralnoj Evropi broj 3/2015 usvojene 26. novembra 2015. o izmeni Odluke Zajedničkog komiteta Sporazuma o slobodnoj trgovini u Centralnoj Evropi broj 3/2013, u vezi sa Aneksom 4 Sporazuma o slobodnoj trgovini u Centralnoj Evropi (CEFTA 2006), Protokol o definiciji pojma „proizvodi sa poreklom” i metode administrativne saradnje iz člana 14. st. 1. i 3, usvojene 20. novembra 2013. godine",
+ "depth": "standard"
+}

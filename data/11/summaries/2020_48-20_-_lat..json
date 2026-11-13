@@ -1,0 +1,18 @@
+{
+ "model": "claude-opus-5-5",
+ "fingerprint": "7bdc5159c967d0d9d01043015e0be8bffcd0965fc2c6ab735ef1cb4292e02996",
+ "summary": {
+  "ukratko": "Закон потврђује измену споразума Србије и Северне Македоније о узајамном признавању возачких дозвола, закључену разменом вербалних нота.",
+  "razlozi": [
+   "Према предлагачу, у Северној Македонији је измењен закон о безбедности саобраћаја, па лекарско уверење при замени стране возачке дозволе више није обавеза већ могућност",
+   "Македонска страна је, како наводи образложење, вербалном нотом 2019. године предложила измену споразума"
+  ],
+  "promene": [
+   "Мења се члан 4. став 2. споразума из 2014. године, који се односи на лекарско уверење при замени возачке дозволе"
+  ],
+  "sredstva": "Предлагач наводи да за спровођење закона нису потребна средства из буџета."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Severne Makedonije o izmeni Sporazuma između Vlade Republike Srbije i Vlade Republike Makedonije o uzajamnom priznanju vozačkih dozvola",
+ "depth": "standard"
+}
