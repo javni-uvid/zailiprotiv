@@ -40,7 +40,9 @@ def measures(speeches: list[dict]) -> list[dict]:
         hit = next(((k, label) for k, label, pattern in MEASURES if pattern.search(s["text"])), None)
         if hit:
             before = next((p for p in reversed(speeches[max(0, i - 6):i]) if not p.get("chair")), None)
-            out.append({"kind": hit[0], "label": hit[1], "chair": s, "before": before})
+            m = next(pattern for k, label, pattern in MEASURES if k == hit[0]).search(s["text"])
+            out.append({"kind": hit[0], "label": hit[1], "chair": s, "before": before,
+                        "sentence": sentence(s["text"], m.start(), m.end())})  # the sentence that pronounces the measure
     return out
 
 
@@ -75,7 +77,14 @@ HARSH = ("олош", "стоко", "лопуж", "лопов", "битанг", "
 # … as names for people: not "лоповлук" and "лоповски" (theft), "нељудски", or "стоком" (cattle; only the vocative).
 _NOT = {"лопов": "(?!лу|ск)", "нељуд": "(?!ск)", "стоко": "(?!\\w)"}
 _HARSH = re.compile(r"(?<!\w)(?:(?:" + "|".join(w + _NOT.get(w, "") for w in HARSH) + r")\w*|\w*јеб\w*)", re.I)
-_SENTENCE = re.compile(r"[^.!?\n]*[.!?]*")
+_END = re.compile(r"[.!?]+(?=[\s\"“”)]*(?:\n|$|\s+[A-ZА-ЯЈЉЊЂЋЏŠĐČĆŽ(„]))|\n")  # not the point in "300.000" or "чл. 106"
+
+
+def sentence(text: str, start: int, end: int) -> str:
+    """The sentence around text[start:end], word for word."""
+    before = [m.end() for m in _END.finditer(text, 0, start)]
+    after = _END.search(text, end)
+    return text[before[-1] if before else 0:after.end() if after else len(text)].strip()
 TOP = 25
 PER_PAGE = 30
 
@@ -84,9 +93,7 @@ def harsh(text: str) -> list[tuple[str, str]]:
     """(word, its sentence) for each harsh word in a speech."""
     out = []
     for m in _HARSH.finditer(text):
-        start = max(text.rfind(c, 0, m.start()) for c in ".!?\n") + 1
-        end = _SENTENCE.match(text, m.end()).end()
-        out.append((m.group(0).lower(), text[start:end].strip()))
+        out.append((m.group(0).lower(), sentence(text, m.start(), m.end())))
     return out
 
 
@@ -234,8 +241,12 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         top = {k: first(k) for k in ("speeches", "exchanges", "points", "measures", "harsh")}
         for key_, r in rows.items():  # each MP's own counts in this convocation, for the MP's page
             if r["who"]["slug"]:
+                place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
                 per_mp[r["who"]["slug"]].append({"conv": c, "name": ORDINAL_NAME.get(c, c), "exchanges": r["exchanges"],
-                                                 "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"])})
+                                                 "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
+                                                 "said": r["said"], "harsh_place": place,
+                                                 "measure_events": [e for e in events if e["type"] == "mera" and e.get("to")
+                                                                    and e["to"]["slug"] == r["who"]["slug"]]})
         if events:
             by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "events": events, "table": sittings, "top": top, "speakers": len(rows),
                             "measures": [e for e in events if e["type"] == "mera"],

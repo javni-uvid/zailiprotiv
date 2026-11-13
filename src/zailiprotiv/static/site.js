@@ -55,6 +55,63 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
     });
   });
 
+  // A link to a row that is closed (an MP's harsh words on "Ko najviše") opens it.
+  (function () {
+    var open = function () {
+      var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      var d = t && t.querySelector("details");
+      if (d) d.open = true;
+    };
+    open(); window.addEventListener("hashchange", open);
+  })();
+
+  // Law page: each seat of the chamber becomes an MP, from the roll call on the page: for from the left, against
+  // from the right, and between them those who abstained, did not vote or were absent, each group's MPs together.
+  // The order is by vote, not by where anyone sits. Without this script the chamber shows the count only.
+  (function () {
+    var svg = document.querySelector("#sala .chamber"), table = document.getElementById("roll");
+    if (!svg || !table) return;
+    var NS = "http://www.w3.org/2000/svg", WORD = { za: "za", protiv: "protiv", uzdrzan: "uzdržan", nije_glasao: "nije glasao", nije_prisutan: "nije prisutan" };
+    var by = { za: [], protiv: [], uzdrzan: [], nije_glasao: [], nije_prisutan: [] };
+    Array.prototype.forEach.call(table.tBodies[0].rows, function (tr) {
+      var a = tr.querySelector("a"), v = tr.dataset.v;
+      if (a && by[v]) by[v].push({ name: a.textContent, href: a.getAttribute("href"), group: tr.dataset.g || "", vote: v });
+    });
+    Object.keys(by).forEach(function (k) { by[k].sort(function (x, y) { return x.group.localeCompare(y.group, "sr") || x.name.localeCompare(y.name, "sr"); }); });
+    var seats = Array.prototype.slice.call(svg.querySelectorAll("circle"));
+    var left = by.za.concat(by.uzdrzan, by.nije_glasao, by.nije_prisutan), right = by.protiv.slice().reverse();
+    function seat(c, mp) {
+      var a = document.createElementNS(NS, "a"), t = document.createElementNS(NS, "title");
+      a.setAttribute("href", mp.href);
+      t.textContent = mp.name + (mp.group ? ", " + mp.group : "") + ": " + WORD[mp.vote];
+      c.setAttribute("class", "s-" + mp.vote);
+      c.parentNode.insertBefore(a, c); a.appendChild(t); a.appendChild(c);
+    }
+    if (left.length + right.length > seats.length) return;  // more names than seats: leave the picture of the count
+    left.forEach(function (mp, i) { seat(seats[i], mp); });
+    right.forEach(function (mp, i) { seat(seats[seats.length - 1 - i], mp); });
+    seats.slice(left.length, seats.length - right.length).forEach(function (c) { c.setAttribute("class", "s-prazno"); });
+    svg.classList.add("seated");
+    var key = document.querySelector("#sala .chamber-key");
+    if (key) {
+      // The name under the pointer (or the focused seat) is written out at once, above the key.
+      var who = document.createElement("p"), rest = "Svako sedište je jedan poslanik: pređi mišem ili dodirni.";
+      who.className = "chamber-who"; who.setAttribute("aria-live", "polite"); who.textContent = rest;
+      key.parentNode.insertBefore(who, key);
+      var show = function (e) {
+        var a = e.target.closest ? e.target.closest("a") : null;
+        who.textContent = a ? a.querySelector("title").textContent : rest;
+        who.classList.toggle("on", !!a);
+      };
+      svg.addEventListener("mouseover", show); svg.addEventListener("focusin", show);
+      svg.addEventListener("mouseleave", function () { who.textContent = rest; who.classList.remove("on"); });
+      key.hidden = false;
+      key.innerHTML = ['uzdrzan', 'nije_glasao', 'nije_prisutan'].filter(function (k) { return by[k].length; }).map(function (k) {
+          return '<span class="key-dot s-' + k + '"></span>' + WORD[k] + ' ' + by[k].length; }).join(' · ') +
+        '<br>Raspored je po glasu, ne po mestu u sali.';
+    }
+  })();
+
   // Law page: the roll call filtered by group and by vote.
   var roll = document.getElementById("roll"), rg = document.getElementById("r-g"), rv = document.getElementById("r-v");
   if (roll && rg && rv) {

@@ -10,7 +10,7 @@
   <div class="faces-col">
     <h2>{{ b.label }}</h2>
     <ol class="faces">
-    {% for r in b.rows %}<li>{% if r.photo %}<img src="foto/{{ r.photo }}" alt="" width="42" height="56" loading="lazy">{% else %}<span class="face-none" aria-hidden="true"></span>{% endif %}<span class="face-who"><a href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a><span class="row-meta">{{ r.group }}</span></span><b>{{ r.n }}</b></li>
+    {% for r in b.rows %}<li><img src="{{ "foto/" ~ r.photo if r.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy"><span class="face-who"><a href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a><span class="row-meta">{{ r.group }}</span></span><b>{{ r.n }}</b></li>
     {% endfor %}
     </ol>
   </div>
@@ -33,7 +33,7 @@
 {% for r in rows %}
   {% set t = r.in.tally %}
   <li class="row" data-g="{{ r.in.groups[0] if r.in.groups else "" }}" data-pr="{{ t.protiv or 0 }}" data-za="{{ t.za or 0 }}" data-ab="{{ (t.nije_prisutan or 0) + (t.nije_glasao or 0) }}" data-i="{{ loop.index }}">
-    {% if r.photo %}<img class="row-face" src="foto/{{ r.photo }}" alt="" width="42" height="56" loading="lazy">{% endif %}
+    <img class="row-face" src="{{ "foto/" ~ r.photo if r.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
     <div class="row-main">
       <a class="row-title" href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a>
       <p class="row-meta">{{ r.in.groups|join(", ") or "—" }}</p>

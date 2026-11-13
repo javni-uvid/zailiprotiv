@@ -17,7 +17,7 @@
   <div class="faces-col">
     <h2>{{ label }}</h2>
     <ol class="faces">
-    {% for r in c.top[key][:3] %}<li>{% if r.who.photo %}<img src="foto/{{ r.who.photo }}" alt="" width="42" height="56" loading="lazy">{% else %}<span class="face-none" aria-hidden="true"></span>{% endif %}<span class="face-who">{{ person(r.who) }}</span><b>{{ r[key]|length if key == "harsh" else r[key] }}</b></li>
+    {% for r in c.top[key][:3] %}<li><img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy"><span class="face-who">{{ person(r.who) }}</span><b>{{ r[key]|length if key == "harsh" else r[key] }}</b></li>
     {% endfor %}
     </ol>
   </div>
@@ -101,7 +101,7 @@
   {% if c.top.harsh %}
   <ol class="board board-open">
   {% for r in c.top.harsh %}
-    <li><details><summary><span class="board-who">{{ r.who.name }}</span> <b class="board-n">{{ r.harsh|length }}</b> <span class="meta">· {{ r.harsh_words|join(", ") }}</span></summary>
+    <li{% if r.who.slug %} id="reci-{{ r.who.slug }}"{% endif %}><details><summary><span class="board-who">{{ r.who.name }}</span> <b class="board-n">{{ r.harsh|length }}</b> <span class="meta">· {{ r.harsh_words|join(", ") }}</span></summary>
       {% if r.who.slug %}<p class="meta"><a href="poslanik/{{ r.who.slug }}.html">Strana poslanika</a></p>{% endif %}
       <ul class="plain harsh">{% for h in r.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.notes %}<a href="{{ h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
     </details></li>

@@ -576,3 +576,28 @@ td.lean { white-space: nowrap; }
 .mp-groups { margin: 0 0 1rem; color: var(--muted); font-size: .95rem; }
 @media (max-width: 600px) { .mp-hero { gap: 1rem; } .mp-hero .mp-photo { width: 5.5rem; } }
 @media (max-width: 600px) { .mp-line p { font-size: 1.1rem; } .mp-head h1 { font-size: 1.6rem; } }
+
+/* A law's page: the sparks in its debate, right under the outcome. */
+.law-floor { margin: 1.6rem 0 2rem; }
+.law-floor h2 { margin-bottom: 0; }
+.law-floor .lead-nums { margin-top: .7rem; border-top-color: var(--protiv); }
+.floor-list { list-style: none; margin: 0 0 1rem; padding: 0; }
+.floor-list > li { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.floor-list .floor-head { display: flex; align-items: center; gap: .7rem; margin: 0 0 .4rem; }
+.floor-pairs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 0 2.6rem; }
+.floor-pair { display: flex; align-items: center; gap: .5rem; text-decoration: none; color: inherit; }
+.floor-pair > span { display: flex; flex-direction: column; margin-left: .3rem; line-height: 1.3; }
+.floor-pair b { text-decoration: underline; text-underline-offset: 3px; }
+.law-floor-note { margin: 1rem 0 1.6rem; padding: .7rem 0 .7rem 1rem; border-left: 4px solid var(--protiv); max-width: 46rem; }
+
+/* The chamber with a seat for each MP (the law's page, with the page's script). */
+.chamber .s-uzdrzan { fill: var(--uzdrzan); } .chamber .s-nije_glasao { fill: var(--nije_glasao); } .chamber .s-nije_prisutan { fill: var(--nije_prisutan); stroke: var(--nije_glasao); stroke-width: .8; }
+.chamber.seated a { cursor: pointer; }
+.chamber.seated a:hover circle, .chamber.seated a:focus circle { stroke: var(--fg); stroke-width: 2.2; r: 5.5px; }
+.chamber.seated a:focus { outline: none; }
+.chamber-key { margin: .3rem 0 0; font-size: .8rem; line-height: 1.5; color: var(--muted); }
+.key-dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; margin: 0 .25rem 0 0; vertical-align: baseline; }
+.key-dot.s-uzdrzan { background: var(--uzdrzan); } .key-dot.s-nije_glasao { background: var(--nije_glasao); } .key-dot.s-nije_prisutan { background: var(--nije_prisutan); border: 1px solid var(--nije_glasao); }
+.chamber .s-prazno { fill: none; stroke: var(--line); stroke-width: 1; }
+.chamber-who { margin: .3rem 0 0; font-size: .9rem; min-height: 2.7em; line-height: 1.35; color: var(--muted); }
+.chamber-who.on { color: var(--fg); font-weight: 600; }

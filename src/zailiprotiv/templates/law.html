@@ -18,7 +18,7 @@
 {% if it.aka %}<p class="meta aka">U javnosti i: {% for a in it.aka %}„{{ a }}“{% if not loop.last %}, {% endif %}{% endfor %}{% if it.aka_source %} (<a href="{{ it.aka_source }}" rel="nofollow">primer</a>){% endif %}</p>{% endif %}
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
 </div>
-{% if final %}<div class="law-chamber">{{ chamber(final.counts) }}</div>{% endif %}
+{% if final %}<div class="law-chamber" id="sala">{{ chamber(final.counts) }}<p class="chamber-key js-only" hidden></p></div>{% endif %}
 </div>
 
 {# 1. The outcome. #}
@@ -39,6 +39,40 @@
 </section>
 {% else %}
 <p class="meta">Usvojen {{ law.passed|day }}. Poimenično glasanje nije pronađeno među dokumentima Skupštine.</p>
+{% endif %}
+
+{# 1b. Sparks: the chair's measures and the exchanges of replies in the debate on this law. #}
+{% set fm = floor|selectattr("type", "equalto", "mera")|list %}{% set fr = floor|selectattr("type", "equalto", "razmena")|list %}
+{% macro face(w) %}<img class="row-face" src="{{ "../foto/" ~ w.photo if w.photo else "../bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">{% endmacro %}
+{% macro person(w) %}{% if w.slug %}<a href="../poslanik/{{ w.slug }}.html">{{ w.name }}</a>{% else %}{{ w.name }}{% endif %}{% endmacro %}
+{% if fm or fr %}
+<section class="law-floor" id="varnice" aria-labelledby="varnice-h">
+  <h2 id="varnice-h">Varnice u raspravi o ovom zakonu</h2>
+  <div class="lead-nums">
+    {% if fm %}<p><b>{{ fm|length }}</b><span>{{ plural(fm|length, "mera", "mere", "mera") }} predsedavajućeg: opomena, oduzimanje reči ili udaljenje</span></p>{% endif %}
+    {% if fr %}<p><b>{{ fr|length }}</b><span>{{ plural(fr|length, "razmena replika", "razmene replika", "razmena replika") }} između dvoje govornika</span></p>{% endif %}
+  </div>
+  {% if fm %}
+  <ul class="floor-list">
+  {% for e in fm %}
+    <li>
+      <p class="floor-head">{% if e.to %}{{ face(e.to) }}{% endif %}<span><b>{{ e.label }}</b>{% if e.to %}: {{ person(e.to) }}{% endif %}{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %}</span></p>
+      <blockquote class="said"><p>{{ (e.sentence or e.chair.text)|latin }}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a></footer></blockquote>
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  {% if fr %}
+  <ul class="floor-list floor-pairs">
+  {% for e in fr %}
+    <li><a class="floor-pair" href="../{{ e.page }}#{{ e.id }}">{{ face(e.a) }}{{ face(e.b) }}<span><b>{{ e.a.name }} i {{ e.b.name }}</b><span class="meta">{{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično{% if e.date %} · {{ e.date|day }}{% endif %} · cela razmena, od reči do reči</span></span></a></li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  <p class="label">Iz stenografskih beleški, pravilom, bez AI modela; samo ono što je izrečeno u raspravi o ovoj tački. Ne navodimo ko je bio u pravu. {{ how("replike") }}</p>
+</section>
+{% elif sitting_floor and db and db.joint and (sitting_floor.measures or sitting_floor.exchanges) %}
+<p class="law-floor-note">O ovom zakonu se raspravljalo zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}. Na toj sednici: {% if sitting_floor.measures %}<a href="../{{ sitting_floor.page }}#mere"><b>{{ sitting_floor.measures }}</b> {{ plural(sitting_floor.measures, "mera", "mere", "mera") }} predsedavajućeg</a>{% endif %}{% if sitting_floor.measures and sitting_floor.exchanges %} i {% endif %}{% if sitting_floor.exchanges %}<a href="../{{ sitting_floor.page_exchanges }}"><b>{{ sitting_floor.exchanges }}</b> {{ plural(sitting_floor.exchanges, "razmena replika", "razmene replika", "razmena replika") }}</a>{% endif %}.</p>
 {% endif %}
 
 {# 2. One voice from each side. #}
@@ -86,10 +120,6 @@
   <h2>Rasprava u Skupštini</h2>
   {% set n = db.joint|length %}
   <p>{% if db.n_days %}O zakonu se raspravljalo {{ db.n_days }} {{ plural(db.n_days, "dan", "dana", "dana") }}{% if db.first %}, {% if db.first == db.last %}{{ db.first|day_of }}{% else %}od {{ db.first|day_of }} do {{ db.last|day_of }}{% endif %}{% endif %}. {% endif %}{% if db.joint %}U načelu zajedno sa još {{ n }} {{ plural(n, "tačkom", "tačke", "tačaka") }} dnevnog reda{% else %}U načelu posebno{% endif %}{% if db.amendments %}, a zatim o {{ db.amendments }} {{ plural(db.amendments, "amandmanu", "amandmana", "amandmana") }} na ovaj zakon{% elif db.detail %}, a zatim o pojedinostima{% else %}; rasprave o amandmanima nije bilo{% endif %}.</p>
-  {% if floor %}
-  {% set fm = floor|selectattr("type", "equalto", "mera")|list %}{% set fr = floor|selectattr("type", "equalto", "razmena")|list %}
-  <p class="floor-line">U raspravi o ovoj tački:{% if fm %} {{ fm|length }} {{ plural(fm|length, "mera", "mere", "mera") }} predsedavajućeg ({% for e in fm %}<a href="../{{ e.page }}#{{ e.id }}">{{ e.label|lower }}{% if e.to %}, {{ e.to.name }}{% endif %}</a>{% if not loop.last %}; {% endif %}{% endfor %}){% endif %}{% if fm and fr %} i{% endif %}{% if fr %} {{ fr|length }} {{ plural(fr|length, "razmena", "razmene", "razmena") }} replika ({% for e in fr %}<a href="../{{ e.page }}#{{ e.id }}">{{ e.a.name }} i {{ e.b.name }}</a>{% if not loop.last %}; {% endif %}{% endfor %}){% endif %}. {{ how("replike") }}</p>
-  {% endif %}
   {% if sd %}
   {% for key, heading in [("predlagac", "Predlagač i Vlada"), ("podrska", "Za zakon"), ("zamerke", "Protiv zakona")] %}
   {% if sd[key] %}<h3>{{ heading }}</h3><ul>{% for x in sd[key] %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}

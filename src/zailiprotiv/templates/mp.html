@@ -34,7 +34,7 @@
 
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 <div class="mp-hero">
-{% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% endif %}
+{% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% else %}<img class="mp-photo" src="../bez-slike.svg" alt="" width="150" height="200">{% endif %}
 <div class="mp-head">
 <h1>{{ mp.name }}</h1>
 <p class="mp-groups">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
@@ -51,7 +51,7 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke), ("replike", "Replike", exchanges), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
+{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
 {% if key_votes %}
 <section id="kljucna">
@@ -72,7 +72,7 @@
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
   {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
-  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.exchanges %}{% set _ = parts.append("<b>%d</b> %s" % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures %}{% set _ = parts.append("<b>%d</b> %s predsedavajućeg" % (x.measures, plural(x.measures, "mera", "mere", "mera"))) %}{% endif %}{% if x.harsh %}{% set _ = parts.append("<b>%d</b> %s" % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.page %} (<a href="../{{ x.page }}">Ko najviše</a>){% endif %}</li>{% endfor %}
+  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.exchanges %}{% set _ = parts.append('<a href="#replike"><b>%d</b> %s</a>' % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures %}{% set _ = parts.append('<a href="#mere"><b>%d</b> %s predsedavajućeg</a>' % (x.measures, plural(x.measures, "mera", "mere", "mera"))) %}{% endif %}{% if x.harsh %}{% set _ = parts.append('<a href="#reci"><b>%d</b> %s</a>' % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.harsh_place and x.page %} (<a href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. po teškim rečima u sazivu</a>){% endif %}</li>{% endfor %}
   </ul>
   {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
   {% if timeline %}
@@ -95,6 +95,32 @@
   <p class="label">Kad dvoje govornika četiri ili više puta zaredom govore naizmenično, u beleškama koje smo pročitali. Cela razmena je od reči do reči na strani <a href="../razmene.html">Razmene replika</a>. {{ how("replike") }}</p>
 </section>
 {% endif %}
+{% endif %}
+
+{% set mine = floor|selectattr("measure_events")|list %}
+{% if mine %}
+<section id="mere">
+  <h2>Mere predsedavajućeg</h2>
+  <ul class="floor-list">
+  {% for x in mine %}{% for e in x.measure_events %}
+    <li><p class="floor-head"><span><b>{{ e.label }}</b>{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %} <span class="meta">· {{ e.sitting }}</span></span></p>
+    <blockquote class="said"><p>{{ (e.sentence or e.chair.text)|latin }}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a></footer></blockquote></li>
+  {% endfor %}{% endfor %}
+  </ul>
+  <p class="label">Samo mere u kojima predsedavajući oslovi govornika prezimenom koje na sednici nosi jedan govornik. Mere izriče predsedavajući, po svojoj oceni. {{ how("replike") }}</p>
+</section>
+{% endif %}
+{% set words_ = floor|selectattr("said")|list %}
+{% if words_ %}
+<section id="reci">
+  <h2>Teške reči</h2>
+  {% for x in words_ %}
+  <details{% if loop.first %} open{% endif %}><summary>{{ x.name }} saziv: {{ x.harsh }} {{ plural(x.harsh, "reč", "reči", "reči") }} u {{ x.said|length }} {{ plural(x.said|length, "rečenici", "rečenice", "rečenica") }}</summary>
+  <ul class="plain harsh">{% for h in x.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.notes %}<a href="{{ h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
+  </details>
+  {% endfor %}
+  <p class="label">Reči sa utvrđenog spiska pogrdnih reči i psovki, u pročitanim beleškama. Brojimo da je reč izgovorena: ne kome je upućena, ni da li je govornik nekoga citirao ili je reč odbijao; zato je tu svaka rečenica, doslovno. {{ how("replike") }}</p>
+</section>
 {% endif %}
 
 {% if profile %}

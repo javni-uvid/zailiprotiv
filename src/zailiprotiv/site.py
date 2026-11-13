@@ -368,7 +368,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
-    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js"):
+    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg"):
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     # The stylesheet's and script's address changes with their content, so a browser or cache never pairs new pages
@@ -598,7 +598,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                     "hitan postupak" if it["urgent"] else "", tuple(hemicycle(it["final"]["counts"])))
         (out / "zakon" / f"{args['it']['slug']}.html").write_text(
             env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now,
-                                                floor=floor_of.get(it["key"], [])), encoding="utf-8")
+                                                floor=floor_of.get(it["key"], []),
+                                                sitting_floor=getattr(pages_floor.render, "by_sitting", {}).get(
+                                                    (it["final"] or {}).get("sitting"))), encoding="utf-8")
     # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
     # four with the largest share of votes against. Shown on MP pages, group pages and in "Glasaj i ti".
     key_votes: dict[str, list] = {}
