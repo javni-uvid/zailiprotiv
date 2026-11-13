@@ -450,7 +450,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             by_kind[it["law"].get("kind", "other")].append(it)
         kind_order = [k for k in kinds.KINDS if k in by_kind]
         (out / laws_page(conv, current)).write_text(env.get_template("laws.html").render(
-            **common, items=items, kind_counts=[(k, kinds.KINDS[k], len(by_kind[k])) for k in kind_order],
+            **common, items=items, lead=most_against(items, 3), kind_counts=[(k, kinds.KINDS[k], len(by_kind[k])) for k in kind_order],
             urgent=sum(1 for it in items if it["urgent"]), total=len(items), conv=conv,
             area_options=sorted({a for it in items for a in it.get("areas") or []}, key=lambda a: collate(latin(a))),
             year_options=sorted({(it["law"].get("passed") or "")[:4] for it in items if it["law"].get("passed")}, reverse=True),

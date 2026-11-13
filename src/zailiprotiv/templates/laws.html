@@ -1,10 +1,19 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, tabs %}
+{% from "macros.html" import bar, chamber, plural, tabs %}
 {% block title %}Zakoni, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block main %}
 <h1>Zakoni</h1>
 <p class="meta follow"><a href="saziv-{{ conv }}.html">O {{ conv_name|lower }}m sazivu: brojke, grupe, sednice</a> · <a href="u-proceduri.html">Predlozi u proceduri</a> · <a href="{{ root }}zakoni.xml">Prati nove zakone (RSS)</a></p>
 {{ tabs(convs, conv, "page") }}
+{% if lead %}
+<section class="lead-laws" aria-label="Najviše podeljeni u ovom sazivu">
+  <h2>Zakoni koji su najviše podelili ovaj saziv</h2>
+  <ol>
+  {% for it in lead %}<li><a href="zakon/{{ it.slug }}.html">{{ chamber(it.final.counts) }}<span class="lead-law">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</span></a><span class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}</span></li>
+  {% endfor %}
+  </ol>
+</section>
+{% endif %}
 <div class="finder js-only" hidden data-filter="f-rows">
   <label class="sr" for="f-q">Pretraži zakone</label>
   <input id="f-q" type="search" placeholder="Pretraži {{ total }} {{ plural(total, "zakon", "zakona", "zakona") }} ovog saziva" autocomplete="off">

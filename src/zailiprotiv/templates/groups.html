@@ -4,7 +4,16 @@
 {% block description %}Poslaničke grupe Narodne skupštine Srbije po sazivima: članovi, kako glasaju i koliko jedinstveno.{% endblock %}
 {% block main %}
 <h1>Poslaničke grupe</h1>
-<p class="meta">Grupe kako ih Skupština piše u listingu glasanja, poređane po broju članova. Iste brojke za svaku grupu. {{ how("grupa") }}</p>
+{% if by_conv and by_conv[0][1] %}
+{% set now = by_conv[0][1] %}
+{% set biggest = (now|sort(attribute="members", reverse=true))[0] %}
+{% set against = (now|selectattr("lines.protiv")|sort(attribute="lines.protiv", reverse=true)|list)[:1] %}
+<div class="lead-nums">
+  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "grupa", "grupe", "grupa") }} u {{ by_conv[0][0].name|lower }}m sazivu</span></p>
+  <p><b>{{ biggest.members }}</b><span>{{ plural(biggest.members, "član", "člana", "članova") }} ima najveća: <a href="grupa/{{ biggest.slug }}.html">{{ biggest.name }}</a></span></p>
+  {% if against %}<p><b>{{ against[0].lines.protiv }}</b><span>puta je većinom glasala protiv zakona: <a href="grupa/{{ against[0].slug }}.html">{{ against[0].name }}</a>, najviše od svih</span></p>{% endif %}
+</div>
+{% endif %}
 {% for cv, groups in by_conv %}
 <section>
   <h2>{{ cv.name }} saziv <span class="count">{{ cv.years }}</span></h2>
@@ -19,4 +28,7 @@
 </section>
 {% endfor %}
 <p class="meta foot-note">Za i protiv: broj konačnih glasanja o zakonima na kojima je većina grupe tako glasala. Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025). Grupe sa većinom na manje od pet glasanja nemaju stranu.</p>
+<details class="method"><summary>Kako je ovo nastalo</summary>
+<p>Grupe kako ih Skupština piše u listingu glasanja, poređane po broju članova. Iste brojke za svaku grupu. {{ how("grupa") }}</p>
+</details>
 {% endblock %}

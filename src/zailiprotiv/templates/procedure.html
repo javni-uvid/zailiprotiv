@@ -6,8 +6,13 @@
 <link rel="alternate" type="application/atom+xml" title="Novi predlozi zakona" href="u-proceduri.xml">{% endblock %}
 {% block main %}
 <h1>U proceduri</h1>
-<p class="standfirst">{{ waiting|length }} {{ plural(waiting|length, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u Skupštini{% if oldest %}, najstariji od {{ oldest|day_of }}{% endif %}.</p>
-<p class="meta">Sa strane „Zakoni u proceduri“ na sajtu Skupštine{% if checked %}, provereno {{ checked|day_of }}{% endif %}. Predlog je u proceduri od podnošenja do usvajanja, povlačenja ili kraja saziva. {{ how("procedura") }} · <a href="u-proceduri.xml">Prati nove predloge (RSS)</a></p>
+{% set longest = (waiting|selectattr("days")|sort(attribute="days", reverse=true)|list)[:1] %}
+<div class="lead-nums">
+  <p><b>{{ waiting|length }}</b><span>{{ plural(waiting|length, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u Skupštini</span></p>
+  {% for k, label, n in who_counts if n %}<p><b>{{ n }}</b><span>{{ "od Vlade" if k == "vlada" else ("od poslanika" if k == "poslanici" else label|lower) }}</span></p>{% endfor %}
+  {% if longest %}<p><b>{{ longest[0].days }}</b><span>{{ plural(longest[0].days, "dan", "dana", "dana") }} čeka najstariji: <a href="{{ longest[0].pdf }}">{{ longest[0].title|latin|truncate(70, killwords=False, end="…") }}</a></span></p>{% endif %}
+</div>
+<p class="meta"><a href="u-proceduri.xml">Prati nove predloge (RSS)</a></p>
 
 {% if coming %}
 <section id="sednice">
@@ -71,4 +76,7 @@
   <p class="label">Predlozi koje smo videli na spisku, a više ih tamo nema: usvojeni (sa vezom ka zakonu), povučeni, ili im je postupak prestao sa krajem saziva. Skupština ne navodi razlog, pa ga ne navodimo ni mi. Pratimo od 13. novembra 2026.</p>
 </section>
 {% endif %}
+<details class="method"><summary>Kako je ovo nastalo</summary>
+<p>Sa strane „Zakoni u proceduri“ na sajtu Skupštine{% if checked %}, provereno {{ checked|day_of }}{% endif %}. Predlog je u proceduri od podnošenja do usvajanja, povlačenja ili kraja saziva. {{ how("procedura") }}</p>
+</details>
 {% endblock %}
