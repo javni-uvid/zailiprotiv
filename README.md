@@ -18,6 +18,8 @@ every MP's votes, and Claude's summary of each law's memorandum, labelled as suc
    effects, with a link. The site doesn't judge laws.
 4. **MPs are public officials:** their names and votes are shown. Nothing about their private lives.
 5. **Nothing from third parties** on the pages: no analytics, cookies, fonts or scripts from other servers.
+6. **What MPs say is not censored and not shaped:** quotes word for word, every name as spoken, nothing left out
+   for being harsh or personal, and no label or verdict of the site's own.
 
 ## Source
 

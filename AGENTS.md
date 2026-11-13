@@ -66,10 +66,7 @@ These are the project's promises to its readers. Never change them without the m
    is good or bad (the maintainer's decision, 12 Nov 2026).
 4. **MPs are public officials: their names and votes are public** (the maintainer's decision, 12 Nov 2026). The
    site shows each MP's name, club, party and every recorded vote. Only what they do in office: nothing about
-   their private lives beyond what is said in the Assembly.
-   - **Speeches and quotes are not redacted at all** (the maintainer, 13 Nov 2026): every name an MP says in a
-     speech stays as said, in quotes and in the overviews of what MPs say, public figure or not. This replaces the
-     earlier rule that ordinary citizens are named by role only. The site still adds nothing of its own about anyone.
+   their private lives of the site's own finding (what is said in the Assembly is covered by principle 6).
 5. **Nothing from third parties on the pages:** no analytics scripts, cookies, external fonts or scripts.
    - **One exception, the maintainer's (13 Nov 2026): visitors' votes in "Glasaj i ti".** The page sends each
      choice (law → for, against, abstained) to the project's own counter (`worker/`, a Cloudflare Worker with a D1
@@ -79,6 +76,16 @@ These are the project's promises to its readers. Never change them without the m
      under a law as soon as the visitor has voted on it (the maintainer, 13 Nov 2026; fewer than ten votes are marked
      as few), and in a table at the end beside the chamber's result. The page says it is not a poll. The address is in `data/settings.json`
      (`votes_api`); empty, the page sends nothing.
+6. **What MPs say is not censored and not shaped** (the maintainer, 13 Nov 2026). Speeches and quotes are given as
+   spoken, from the Assembly's stenographic notes:
+   - quotes are word for word, checked against the notes, and never cut inside, softened or cleaned up;
+   - every name an MP says stays as said, public figure or not (this replaces the earlier rule that ordinary
+     citizens are named by role only);
+   - nothing is left out because it is harsh, personal, insulting or uncomfortable for anyone: a summary is shorter
+     than the speech, but what it keeps is chosen by rules that don't look at whom it favours (what recurs, what
+     is about the law), and charged words appear in quotation marks as the speaker's own;
+   - the site adds no label, tone or verdict of its own to what was said, and says so on the page.
+   Overviews and debate summaries written before this keep their older form until they are written again.
 
 ## Architecture decisions
 
