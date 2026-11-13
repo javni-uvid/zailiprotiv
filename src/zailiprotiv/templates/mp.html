@@ -2,6 +2,8 @@
 {% from "macros.html" import bar, plural, how with context %}
 {% block title %}{{ mp.name }} — Za ili Protiv{% endblock %}
 {% block description %}Kako je glasao poslanik {{ mp.name }}: zakoni za i protiv, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
+{% block feeds %}
+<link rel="alternate" type="application/atom+xml" title="Glasovi: {{ mp.name }}" href="{{ mp.slug }}.xml">{% endblock %}
 {% block main %}
 {% macro rows(rs, show_line=false) -%}
 <ul class="rows compact">
@@ -30,6 +32,7 @@
 
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 <h1>{{ mp.name }}</h1>
+<p class="meta follow"><a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 <p class="meta">{% for c in by_conv %}{{ c.name }} saziv: {{ c.groups|join(", ") or "—" }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 
 <section class="outcome mp-outcome">

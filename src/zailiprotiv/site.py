@@ -283,6 +283,16 @@ def mps_page(conv: str, current: str) -> str:
     return "poslanici.html" if conv == current else f"poslanici-{conv}.html"
 
 
+def write_feed(path: Path, title: str, self_url: str, page_url: str, entries: list[dict]) -> None:
+    from xml.sax.saxutils import escape as x
+    updated = max((e["updated"] for e in entries), default="2000-01-01T00:00:00Z")
+    body = "".join(f"<entry><title>{x(e['title'])}</title><link href=\"{x(e['link'])}\"/><id>{x(e['id'])}</id>"
+                   f"<updated>{e['updated']}</updated><summary>{x(e['summary'])}</summary></entry>\n" for e in entries)
+    path.write_text('<?xml version="1.0" encoding="utf-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom">\n'
+                    f"<title>{x(title)}</title><link rel=\"self\" href=\"{x(self_url)}\"/><link href=\"{x(page_url)}\"/>"
+                    f"<id>{x(page_url or self_url)}</id><updated>{updated}</updated>\n{body}</feed>\n", encoding="utf-8")
+
+
 def build(root: Path, out: Path, domain: str | None = None) -> dict:
     convs = convocations(root)
     current = convs[0][0]
@@ -416,6 +426,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             for t in p["points"]:  # when the points come from several convocations, each says which
                 t["when"] = ", ".join(years(c) for c in t.get("sazivi", [])) if len(spans) > 1 else ""
             profiles[k] = p
+    feeds_mp: dict[str, tuple] = {}
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -426,6 +437,7 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
                 record.append({"it": finals[k], "vote": how, "group": g, "line": own,
                                "differs": bool(own and how in ("za", "protiv", "uzdrzan") and how != own)})
         record.sort(key=lambda r: r["it"]["final"]["when"], reverse=True)
+        feeds_mp[mp.slug] = (mp.name, record[:40])
         tally = Counter(r["vote"] for r in record)
         by_conv = []
         for c in sorted({r["it"]["conv"] for r in record}, key=int, reverse=True):
@@ -498,5 +510,25 @@ def build(root: Path, out: Path, domain: str | None = None) -> dict:
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             + "".join(f"<url><loc>{base}{p}</loc></url>\n" for p in pages) + "</urlset>\n", encoding="utf-8")
         (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {base}sitemap.xml\n", encoding="utf-8")
+    # Atom feeds: the newest laws, and each MP's newest final votes (static files, nothing from other servers).
+    site = f"https://{domain}/" if domain else ""
+    newest = sorted((it for its in items_by_conv.values() for it in its), key=lambda it: it["law"].get("passed") or "",
+                    reverse=True)[:50]
+    word = {"za": "za", "protiv": "protiv", "uzdrzan": "uzdržan", "nije_glasao": "nije glasao", "nije_prisutan": "nije prisutan"}
+
+    def entry(it, title, summary):
+        c = (it.get("final") or {}).get("counts") or {}
+        tally = f"{c.get('za', 0)} za, {c.get('protiv', 0)} protiv. " if c else ""
+        return {"title": title, "link": f"{site}zakon/{it['slug']}.html", "id": f"{site}zakon/{it['slug']}.html",
+                "updated": (it["law"].get("passed") or "2000-01-01") + "T00:00:00Z", "summary": tally + summary}
+
+    write_feed(out / "zakoni.xml", "Za ili Protiv: novi zakoni", f"{site}zakoni.xml", f"{site}index.html",
+               [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in newest])
+    (out / "poslanik").mkdir(exist_ok=True)
+    for mp_slug, (name, record) in feeds_mp.items():
+        write_feed(out / "poslanik" / f"{mp_slug}.xml", f"Za ili Protiv: {name}", f"{site}poslanik/{mp_slug}.xml",
+                   f"{site}poslanik/{mp_slug}.html",
+                   [entry(r["it"], f"{word.get(r['vote'], r['vote'])}: {r['it']['law']['short']}",
+                          "Drugačije od većine svoje grupe. " if r["differs"] else "") for r in record])
     (out / ".nojekyll").write_text("", encoding="utf-8")
     return stats

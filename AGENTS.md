@@ -264,7 +264,8 @@ These are the project's promises to its readers. Never change them without the m
   2. a short note of method on every page that shows a figure, linked to one page "Kako računamo" (done 13 Nov
      2026: `kako-racunamo.html`, a section per figure, linked from each label and the footer; keep it in step with
      any change to how a figure is computed);
-  3. following an MP or the laws: RSS feeds (static, nothing from third parties); e-mail needs a sending service;
+  3. following an MP or the laws: RSS feeds (done 13 Nov 2026: Atom, `zakoni.xml` with the 50 newest laws and
+     `poslanik/<slug>.xml` with an MP's 40 newest final votes, linked from the pages); e-mail needs a sending service;
   4. an MP's activity: presence at final votes where the absent are listed, speeches and amendments in the notes read;
   5. the words an MP uses most, against all MPs (no model);
   6. some interaction for readers (questions to MPs, or comments): needs a server or a third party, which principle 5
