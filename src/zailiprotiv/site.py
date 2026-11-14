@@ -774,7 +774,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_ballot
     pages_ballot.render(common=common, convs=convs, current=current, env=env, floor_of=floor_of,
         gone=getattr(pages_procedure.render, "gone", []), items_by_conv=items_by_conv, out=out,
-        quiz_laws=getattr(pages_quiz.render, "laws", []), rows_mp=rows_mp, waiting=waiting)
+        quiz_laws=getattr(pages_quiz.render, "laws", []), rows_mp=rows_mp, waiting=waiting,
+        by_hand=getattr(pages_quiz.render, "by_hand", False))
     from zailiprotiv import digest
     digest.render(env=env, common=common, out=out, root=root, current=current, items_by_conv=items_by_conv,
                   site_url=f"https://{domain}/" if domain else "")

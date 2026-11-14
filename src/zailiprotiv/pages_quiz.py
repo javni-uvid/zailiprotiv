@@ -60,4 +60,5 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
         **common, laws=quiz_laws, chosen_by_hand=chosen_by_hand, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         root="../"), encoding="utf-8")
     render.laws = quiz_laws  # for the home page's band
+    render.by_hand = chosen_by_hand  # the quiz's name on "Glasaj i ti" says how its laws were picked
     return active

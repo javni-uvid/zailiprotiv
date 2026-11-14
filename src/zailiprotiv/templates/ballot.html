@@ -32,7 +32,7 @@
   {% if quiz_laws %}
   <div class="f-quiz" id="lb-quiz" data-laws="{{ quiz_laws|map(attribute="slug")|join(" ") }}">
     <small class="k" id="lb-quiz-k">Kviz · {{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }} · oko 5 minuta</small>
-    <h2>{{ quiz_laws|length }} zakona koji su podelili salu</h2>
+    <h2>{{ quiz_laws|length }} zakona {{ "o kojima se najviše govorilo" if by_hand else "koji su podelili salu" }}</h2>
     <div class="bar" aria-hidden="true"><i></i><i></i></div>
     <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koji poslanik je glasao kao ti.</p>
     <a class="lb-btn" id="lb-quiz-go" href="kviz/podelili-salu.html">Počni kviz</a>

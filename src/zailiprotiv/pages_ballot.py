@@ -21,7 +21,7 @@ def below(values: list[float]) -> dict[float, float]:
     return {v: round(first[v] / max(1, len(ordered) - 1), 2) for v in first}
 
 
-def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, quiz_laws, rows_mp, waiting):
+def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, quiz_laws, rows_mp, waiting, by_hand=False):
     folder = out / "listic"
     folder.mkdir(exist_ok=True)
     where = {}
@@ -62,4 +62,4 @@ def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, q
     bill = next((b for b in waiting if b.get("gist") and b.get("kind_key") != "treaty"),
                 next((b for b in waiting if b.get("gist")), waiting[0] if waiting else None))
     (out / "glasaj.html").write_text(env.get_template("ballot.html").render(
-        **common, quiz_laws=quiz_laws, bill=bill, waiting=len(waiting), root=""), encoding="utf-8")
+        **common, quiz_laws=quiz_laws, by_hand=by_hand, bill=bill, waiting=len(waiting), root=""), encoding="utf-8")
