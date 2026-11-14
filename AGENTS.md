@@ -104,6 +104,12 @@ These are the project's promises to its readers. Never change them without the m
      for the site's host (GitHub Pages allows 1 GB; the site is about 740 MB). `notes_site.py` builds them
      (`notes-site`), `notes-upload` sends only what changed (`data/notes_manifest.json`), the `notes` workflow runs
      both after each transcripts run. The site links to them when `data/settings.json` has `notes_url`.
+     Since 14 Nov 2026 the notes of **every** sitting from 2012 are read (`transcripts --all`, 352 sittings, 194,344
+     speeches; ten have no notes at the Assembly). As read they are about 560 MB, too much for the repository: they
+     are kept whole in the same bucket under `sirovo/` (gzipped), the repository keeps those of the contested laws
+     (all the model writes from), and the `pages` and `notes` builds bring the rest first (`notes-raw --pull`, on
+     when `data/settings.json` has `notes_all`). The `trial` workflow builds everything with all of them and
+     publishes nothing.
    - **Downloads and share pictures in a bucket of their own** (the maintainer, 14 Nov 2026): every law's roll call
      (CSV, JSON) and picture, the MPs' pictures and `podaci/` are no pages, yet were two files in three of the
      site (over 20,000 with the search index, the limit of the hosts we may move to). When `data/settings.json`
