@@ -687,14 +687,14 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 /* ============ Phones (640px and under). Nothing below touches the wider layout. ============ */
 .more-btn, .mp-tiles { display: none; }
 @media (max-width: 640px) {
-  /* The head: the name scrolls away, the menu stays, one row to swipe. */
+  /* The head: the name scrolls away and the menu stays: one row that fits, nothing to swipe. */
   .top { position: sticky; top: -3rem; z-index: 30; background: var(--bg); margin: 0; padding: 0 16px; display: block; border-bottom-width: 2px; }
   .top .brand { height: 3rem; font-size: 1.35rem; }
   .top .brand-mark { width: 1.9rem; }
-  .top nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 0 1.15rem; overflow-x: auto; white-space: nowrap; margin: 0 -16px; padding: 0 16px; height: 2.75rem; scrollbar-width: none; position: static; }
-  .top nav::-webkit-scrollbar { display: none; }
-  .top nav > a, .top nav .nav-more > summary { padding: .5rem 0; flex: 0 0 auto; }
-  .top nav .script-switch { margin-left: 0; }
+  .top nav { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 0 .4rem; white-space: nowrap; height: 2.75rem; position: static; font-size: clamp(.7rem, 3.9vw, 1rem); }
+  html[lang="sr-Cyrl"] .top nav { font-size: clamp(.68rem, 3.4vw, .95rem); }
+  .top nav > a, .top nav .nav-more > summary { padding: .5rem 0; flex: 0 0 auto; margin: 0; font-size: inherit; }
+  .top nav .script-switch { position: absolute; right: 16px; top: .6rem; margin: 0; padding: .2rem .55rem; }
   .nav-more { position: static; }
   .nav-more > div { left: 0; right: 0; top: 100%; min-width: 0; border-width: 0 0 2px; padding: .2rem 16px .5rem; max-height: 70vh; overflow-y: auto; white-space: normal; }
   [id], .subtabs { scroll-margin-top: 3.4rem; }
@@ -740,4 +740,7 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .pages a, .pages span { min-width: 2.6rem; min-height: 2.6rem; display: inline-flex; align-items: center; justify-content: center; }
   .method > summary, details.inline > summary { padding: .5rem 0; }
   .subtabs a { flex: 1 1 100%; }
+  .subtabs.law-kinds a { flex: 1 1 0; }
 }
+.subtabs.law-kinds { max-width: 26rem; margin: .2rem 0 1.2rem; }
+.subtabs.law-kinds a { flex: 1 1 0; padding: .55rem 1rem; }

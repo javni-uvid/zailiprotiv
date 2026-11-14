@@ -5,7 +5,8 @@
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Novi predlozi zakona" href="u-proceduri.xml">{% endblock %}
 {% block main %}
-<h1>U proceduri</h1>
+<h1>Zakoni</h1>
+<nav class="subtabs law-kinds" aria-label="Usvojeni ili u proceduri"><a href="zakoni.html">Usvojeni</a><a href="u-proceduri.html" aria-current="page">U proceduri</a></nav>
 {% set longest = (waiting|selectattr("days")|sort(attribute="days", reverse=true)|list)[:1] %}
 <div class="lead-nums">
   <p><b>{{ waiting|length }}</b><span>{{ plural(waiting|length, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u Skupštini</span></p>
