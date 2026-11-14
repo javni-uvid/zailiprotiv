@@ -35,3 +35,13 @@ jobs:
           for o in https://zailiprotiv.rs https://example.org; do
             curl -sS -o /dev/null -D - -H "Origin: $o" https://beleske.zailiprotiv.rs/pagefind/pagefind-entry.json | tr -d '\r' | grep -iE "^HTTP|^access-control-allow-origin|^cf-cache-status|^vary" | tr '\n' ' '; echo " <- as $o"
           done
+          echo "== Varnice, every convocation together: what the published page says"
+          curl -sS https://zailiprotiv.rs/varnice-svi | python3 -c "
+          import re, sys, html
+          t = sys.stdin.read()
+          strip = lambda s: re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', s))).strip()
+          m = re.search(r'<section id=\"sazivi\">(.*?)</section>', t, flags=re.S)
+          print(strip(m.group(1))[:1400] if m else 'no table of convocations')
+          for li in re.findall(r'<li class=\"face\".*?</li>|<li>\s*<a class=\"face.*?</li>', t, flags=re.S)[:12]: print(' ', strip(li)[:90])
+          print(strip(' '.join(re.findall(r'<p class=\"meta\">Brojano.*?</p>', t, flags=re.S)))[:300])
+          "
