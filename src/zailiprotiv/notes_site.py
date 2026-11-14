@@ -165,7 +165,7 @@ def _speech(k: str, s: dict, who: dict | None, w: dict, script: str) -> str:
         name = html.escape(name)
     paras = "".join(f"<p>{html.escape(show(p))}</p>" for p in _MARK.sub("", s["text"]).split("\n") if p.strip())
     return (f'<article class="turn{" turn-chair" if s.get("chair") else ""}" id="g{k}">'
-            f'<h2><a class="anchor" href="#g{k}">{name}</a></h2>{paras}</article>')
+            f'<h2 id="s{k}"><a class="anchor" href="#g{k}">{name}</a></h2>{paras}</article>')
 
 
 def build(root: Path, out: Path) -> dict[str, int]:
@@ -206,6 +206,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
                     show = latin if script == "lat" else (lambda t: t)
                     head = f"{show(title)}, {first['day']}. {w['day']}" + (f", {part.group(1)}. {w['part']}" if part else "")
                     body = [f'<p class="crumbs"><a href="../../{"index.html"}">{w["notes"]}</a> › {site.ORDINAL_NAME.get(conv, conv) if script == "lat" else conv + "."} {w["conv"]}</p>',
+                            "<div data-pagefind-body>",  # what the search reads: the heading and the speeches
                             f"<h1>{html.escape(head)}</h1>",
                             f'<p class="meta">{html.escape(day.get("listed_date") or day.get("date") or "")}'
                             + (f' · {w["prov"]}' if day.get("provisional") else "")
@@ -215,13 +216,14 @@ def build(root: Path, out: Path) -> dict[str, int]:
                         nav.append(f'<a href="{names[i - 1].rsplit("/", 1)[-1]}">← {w["prev"]}</a>')
                     if i + 1 < len(names):
                         nav.append(f'<a href="{names[i + 1].rsplit("/", 1)[-1]}">{w["next"]} →</a>')
-                    pager = f'<nav class="page-menu">{"".join(nav)}</nav>' if nav else ""
+                    pager = f'<nav class="page-menu" data-pagefind-ignore>{"".join(nav)}</nav>' if nav else ""
                     body.append(pager)
                     for k in keys:
                         s = notes["speeches"][k]
                         key = None if s.get("chair") else loose.get(debates_.loose(mps.key(s["speaker"])))
                         body.append(_speech(k, s, {"slug": people[key].slug, "name": people[key].name} if key else None, w, script))
                     body.append(pager)
+                    body.append("</div>")
                     target = out / ("" if script == "lat" else "cir") / page
                     target.parent.mkdir(parents=True, exist_ok=True)
                     twin = ("../../cir/" if script == "lat" else "../../../") + page

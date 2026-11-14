@@ -157,6 +157,20 @@ def notes_upload_cmd(args) -> int:
     return 1 if failed else 0
 
 
+def notes_cors_cmd(args) -> int:
+    """Let the site read the notes' search index from the bucket's address (the search page merges it with its own):
+    a rule on the bucket that answers the site's origins. A key that may not set it says so; then it is set by hand."""
+    from zailiprotiv import files_site
+    rule = {"CORSRules": [{"AllowedOrigins": ["https://zailiprotiv.rs", "https://www.zailiprotiv.rs"],
+                           "AllowedMethods": ["GET", "HEAD"], "AllowedHeaders": ["*"], "MaxAgeSeconds": 86400}]}
+    try:
+        files_site.client().put_bucket_cors(Bucket=args.bucket, CORSConfiguration=rule)
+        print(f"notes: the bucket {args.bucket} answers the site's origins")
+    except Exception as e:
+        print(f"notes: the rule was not set ({type(e).__name__}: {e}); set it by hand in the bucket's settings")
+    return 0
+
+
 def notes_check_cmd(args) -> int:
     """Do the notes' pages answer at their public address? The front page, the style and a few pages picked across
     data/notes_manifest.json, each asked for and read: 200, the right kind, and for a page the speeches in it."""
@@ -1082,6 +1096,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("names", nargs="+")
     p.add_argument("--url", default="https://podaci.zailiprotiv.rs/")
     p.set_defaults(run=files_purge_cmd)
+    p = commands.add_parser("notes-cors", help="let the site read the notes' search index from the bucket")
+    p.add_argument("--bucket", default="zailiprotiv-beleske")
+    p.set_defaults(run=notes_cors_cmd)
     p = commands.add_parser("notes-check", help="do the notes' pages answer at their public address?")
     p.add_argument("--url", default="https://beleske.zailiprotiv.rs/")
     p.set_defaults(run=notes_check_cmd)

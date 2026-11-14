@@ -390,6 +390,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     settings_file = root / "settings.json"
     settings = json.loads(settings_file.read_text(encoding="utf-8")) if settings_file.exists() else {}
+    env.globals["notes_url"] = settings.get("notes_url", "")  # where the notes' pages (and their search index) are
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
 

@@ -79,7 +79,7 @@
             <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if e.likely %} · ime nije izgovoreno; {{ e.why }}{% elif not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
           </span>
         </summary>
-        <div class="measure-more">
+        <div class="measure-more" data-pagefind-ignore>
           <p class="meta">{{ where(e) }}{% if w and w.slug %} · <a href="poslanik/{{ w.slug }}.html#mere">sve mere: {{ w.name }}</a>{% endif %}</p>
           {% if e.before %}<p class="turn-who">Govor pre toga: {{ person(e.before_who) }}</p><blockquote class="said"><p>{{ e.before.text|latin }}</p></blockquote>{% endif %}
           <p class="turn-who">Sve reči predsedavajućeg</p>
@@ -114,7 +114,7 @@
   {% for e in shown %}
     <li id="{{ e.id }}">
       <p class="floor-head"><b>{{ person(e.a) }} i {{ person(e.b) }}</b> · {{ e.n }} {{ plural(e.n, "govor", "govora", "govora") }} naizmenično · {{ where(e) }}</p>
-      <details><summary>Cela razmena, od reči do reči</summary>
+      <details data-pagefind-ignore><summary>Cela razmena, od reči do reči</summary>
       <div class="talk">
       {% for s in e.speeches %}<div class="turn turn-{{ s.side }}"><p class="turn-who">{% if s.who %}{{ person(s.who) }}{% else %}Predsedavajući{% endif %}</p><p class="turn-text">{{ s.text|latin }}</p></div>{% endfor %}
       </div>

@@ -668,11 +668,12 @@ td.lean { white-space: nowrap; }
 
 /* The pages of stenographic notes (kept apart from the site, on beleske.zailiprotiv.rs). */
 .notes .turn { padding: 1rem 0; border-bottom: 1px solid var(--line); max-width: 46rem; scroll-margin-top: 1rem; }
+.notes .turn h2 { scroll-margin-top: 1.5rem; }
 .notes .turn h2 { font-family: system-ui, sans-serif; font-size: 1rem; margin: 0 0 .4rem; letter-spacing: 0; }
 .notes .turn h2 .anchor { text-decoration: none; color: inherit; } .notes .turn h2 a[href^="https"] { text-decoration: underline; }
 .notes .turn p { margin: 0 0 .6rem; line-height: 1.55; }
 .notes .turn-chair { color: var(--muted); }
-.notes .turn:target { background: var(--za-soft); box-shadow: -1rem 0 0 var(--za-soft), 1rem 0 0 var(--za-soft); }
+.notes .turn:target, .notes .turn:has(h2:target) { background: var(--za-soft); box-shadow: -1rem 0 0 var(--za-soft), 1rem 0 0 var(--za-soft); }
 .notes .turn { border-width: 0 0 1px; background: none; }
 /* Varnice, all convocations together: one row to a convocation. */
 .floor-convs { min-width: 760px; }
@@ -744,3 +745,19 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 }
 .subtabs.law-kinds { max-width: 26rem; margin: .2rem 0 1.2rem; }
 .subtabs.law-kinds a { flex: 1 1 0; padding: .55rem 1rem; }
+
+/* The search page: Pagefind's interface in the site's own colours, light and dark. */
+#search { --pagefind-ui-primary: var(--fg); --pagefind-ui-text: var(--fg); --pagefind-ui-background: var(--bg); --pagefind-ui-border: var(--line);
+  --pagefind-ui-tag: var(--card); --pagefind-ui-border-width: 2px; --pagefind-ui-border-radius: 0; --pagefind-ui-font: inherit; --pagefind-ui-scale: .9; }
+#search .pagefind-ui__search-input { border-color: var(--fg); background: var(--bg); color: var(--fg); font-weight: 500; }
+#search .pagefind-ui__search-clear { background: var(--bg); color: var(--muted); }
+#search .pagefind-ui__message { color: var(--muted); font-weight: 500; }
+#search .pagefind-ui__result { border-top: 1px solid var(--line); padding: 1.1rem 0; }
+#search .pagefind-ui__result-title { font-family: var(--serif); font-size: 1.15rem; line-height: 1.3; }
+#search .pagefind-ui__result-link { color: var(--fg); }
+#search .pagefind-ui__result-excerpt { color: var(--fg); font-size: .98rem; line-height: 1.5; min-width: 0; }
+#search .pagefind-ui__result-nested { padding-left: 1rem; border-left: 3px solid var(--line); margin-top: .7rem; }
+#search .pagefind-ui__result-nested .pagefind-ui__result-link { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 1rem; font-weight: 700; }
+#search .pagefind-ui__result-nested .pagefind-ui__result-link::before { content: none; }
+#search mark { background: #ffe066; color: #111111; padding: 0 .1em; }
+#search .pagefind-ui__button { background: var(--bg); color: var(--fg); border: 2px solid var(--fg); font-weight: 600; }

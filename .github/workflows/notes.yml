@@ -41,6 +41,9 @@ jobs:
         run: |
           pip install uv && uv sync --frozen
           uv run zailiprotiv notes-site --out _beleske
+          # The search index of the notes, speech by speech (the Latin pages; the site's search page merges it with its own).
+          npx -y pagefind@1.3.0 --site _beleske --glob "[0-9]*/**/*.html"
+          uv run zailiprotiv notes-cors
           du -sh --apparent-size _beleske; find _beleske -type f | wc -l
           uv run zailiprotiv notes-upload --dir _beleske ${{ inputs.dry && '--dry' || '' }}
       - name: Commit what is in the bucket
