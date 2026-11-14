@@ -62,3 +62,19 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      # The site stands behind Cloudflare, which may keep its pages (a cache rule, the maintainer's): told after each
+      # publishing to forget them, so the new ones are served at once. Without the token or the zone's id: skipped.
+      - name: Tell the cache the site changed
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ZONE: ${{ vars.CLOUDFLARE_ZONE_ID || secrets.CLOUDFLARE_ZONE_ID }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$ZONE" ]; then echo "::notice::cache not purged: no token or zone id"; exit 0; fi
+          for i in 1 2 3; do
+            got=$(curl -sS --max-time 30 -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE/purge_cache" \
+              -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              --data '{"hosts":["zailiprotiv.rs","www.zailiprotiv.rs"]}' | head -c 300) || true
+            case "$got" in *'"success":true'*) echo "cache purged: zailiprotiv.rs"; exit 0;; esac
+            sleep 10
+          done
+          echo "::warning::cache not purged: $got"; exit 1
