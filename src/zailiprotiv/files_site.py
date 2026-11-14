@@ -89,11 +89,12 @@ def purge(url: str, names: list[str]) -> str:
     import json
     import urllib.parse
     import urllib.request
-    token, zone = os.environ.get("CLOUDFLARE_API_TOKEN"), os.environ.get("CLOUDFLARE_ZONE_ID")
+    token, zone = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip(), os.environ.get("CLOUDFLARE_ZONE_ID", "").strip()
     if not names:
         return "nothing to purge"
     if not (token and zone):
-        return f"cache not purged ({len(names)} changed): no CLOUDFLARE_ZONE_ID or token"
+        lacks = " and ".join(n for n, v in (("CLOUDFLARE_API_TOKEN", token), ("CLOUDFLARE_ZONE_ID", zone)) if not v)
+        return f"cache not purged ({len(names)} changed): no {lacks}"
     url = url.rstrip("/") + "/"
     host = urllib.parse.urlsplit(url).netloc
     bodies = [{"hosts": [host]}] if len(names) > 300 else \
