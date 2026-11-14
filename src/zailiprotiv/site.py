@@ -710,7 +710,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             photo=photo_of.get(mp.key, ""),
             floor=[x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, [])
-                   if x["exchanges"] or x["points"] or x["measures"] or x["measures_likely"] or x["harsh"]],
+                   if x["speeches"] or x["exchanges"] or x["points"] or x["measures"] or x["measures_likely"] or x["harsh"]],
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
     for conv, _ in convs:

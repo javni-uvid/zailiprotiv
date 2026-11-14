@@ -51,7 +51,7 @@
 </section>
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
+{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke or floor), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
 {% if key_votes %}
 <section id="kljucna">
@@ -66,13 +66,13 @@
   <p class="label">Zakoni koje javnost zna pod drugim imenom i zakoni sa najvećim udelom glasova protiv u sazivu, najnoviji prvo, najviše šest. Bira ih isto pravilo za svakog poslanika. {{ how("izdvojena") }}</p>
 </section>
 {% endif %}
-{% if shown or spoke %}
+{% if shown or spoke or floor %}
 <section class="activity" id="aktivnost">
   <h2>Aktivnost</h2>
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
-  {% if spoke %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
-  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.exchanges %}{% set _ = parts.append('<a href="#replike"><b>%d</b> %s</a>' % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures or x.measures_likely %}{% set _ = parts.append('<a href="#mere"><b>%d</b> %s predsedavajućeg</a>%s' % (x.measures, plural(x.measures, "mera", "mere", "mera"), (" i još %d po kontekstu" % x.measures_likely) if x.measures_likely else "")) %}{% endif %}{% if x.harsh %}{% set _ = parts.append('<a href="#reci"><b>%d</b> %s</a>' % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.harsh_place and x.page %} (<a href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. po teškim rečima u sazivu</a>){% endif %}</li>{% endfor %}
+  {% if spoke and not floor %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
+  {% for x in floor %}<li>{{ x.name }} saziv, u sali: {% set parts = [] %}{% if x.speeches %}{% set _ = parts.append("<b>%d</b> %s (%s reči)" % (x.speeches, plural(x.speeches, "govor", "govora", "govora"), "{:,}".format(x.words).replace(",", "."))) %}{% endif %}{% if x.exchanges %}{% set _ = parts.append('<a href="#replike"><b>%d</b> %s</a>' % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures or x.measures_likely %}{% set _ = parts.append('<a href="#mere"><b>%d</b> %s predsedavajućeg</a>%s' % (x.measures, plural(x.measures, "mera", "mere", "mera"), (" i još %d po kontekstu" % x.measures_likely) if x.measures_likely else "")) %}{% endif %}{% if x.harsh %}{% set _ = parts.append('<a href="#reci"><b>%d</b> %s</a>' % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.harsh_place and x.page %} (<a href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. po teškim rečima u sazivu</a>){% endif %}</li>{% endfor %}
   </ul>
   {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
   {% if timeline %}
@@ -86,6 +86,7 @@
   {% endif %}
   <p class="label">Prisustvo samo za glasanja na kojima Skupština navodi i odsutne (od jeseni 2025), najmanje 20. Govori i reči samo iz stenograma koje imamo. {{ how("aktivnost") }} (<a class="how" href="../kako-racunamo.html#reci">i za reči</a>)</p>
 </section>
+{% endif %}
 {% if exchanges %}
 <section id="replike">
   <h2>Razmene replika <span class="count">{{ exchanges|length }}</span></h2>
@@ -94,7 +95,6 @@
   </ul>
   <p class="label">Kad dvoje govornika četiri ili više puta zaredom govore naizmenično, u beleškama koje smo pročitali. Cela razmena je od reči do reči na strani <a href="../razmene.html">Razmene replika</a>. {{ how("replike") }}</p>
 </section>
-{% endif %}
 {% endif %}
 
 {% set mine = floor|selectattr("measure_events")|list %}

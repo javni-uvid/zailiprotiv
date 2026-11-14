@@ -317,6 +317,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             if r["who"]["slug"]:
                 place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
                 per_mp[r["who"]["slug"]].append({"conv": c, "name": ORDINAL_NAME.get(c, c), "exchanges": r["exchanges"],
+                                                 "speeches": r["speeches"], "words": r["words"],
                                                  "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
                                                  "measures_likely": r["measures_likely"],
                                                  "said": r["said"], "harsh_place": place,
