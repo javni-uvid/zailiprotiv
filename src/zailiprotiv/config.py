@@ -32,10 +32,9 @@ CONVOCATIONS = {
     "9": {"from": "2012-05-31", "to": "2014-04-16", "ordinal": "devet",
           "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-31-maja-2012/zasedanja.2269.html",
           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-31-maja-2012.2194.html"},
-    # "osm": the stem the ordinal is declined from ("u Osmom sazivu").
-    "8": {"from": "2008-06-11", "to": "2012-05-31", "ordinal": "osm",
-          "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-11-juna-2008/zasedanja.1546.html",
-          "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-11-juna-2008.1526.html"},
+    # The Eighth (11 June 2008 – 31 May 2012) was tried on 14 Nov 2026 and left out: its 90 sittings' pages
+    # (archive …/saziv-od-11-juna-2008/zasedanja.1546.html, laws …/u-sazivu-od-11-juna-2008.1526.html) carry a written
+    # account of each sitting and no roll call and no stenographic notes, so there is nothing to say how an MP voted.
 }
 CURRENT = "14"
 ORDINALS = ("osm", "devet", "deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
