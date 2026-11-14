@@ -172,7 +172,7 @@
     {% if law.bill_pdf %}<a href="{{ law.bill_pdf }}">Predlog zakona sa obrazloženjem (PDF)</a>{% endif %}
     {% if final %}<a href="{{ final.key.split('#')[0] }}">Poimenično glasanje (PDF)</a>{% endif %}
     {% if final %}<a href="{{ it.slug }}.csv">Glasanje (CSV)</a> <a href="{{ it.slug }}.json">Glasanje (JSON)</a>{% endif %}
-    {% if db %}{% for d in db.all_days %}<a href="{{ d.url }}">Stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% else %}, {{ d.day }}. dan{% endif %}</a>{% endfor %}{% endif %}
+    {% if db %}{% for d in db.all_days %}<a href="{{ d.ours or d.url }}">Stenografske beleške{% if d.listed_date %}, {{ d.listed_date|day }}{% else %}, {{ d.day }}. dan{% endif %}</a>{% endfor %}{% endif %}
   </p>
   {% if db and db.provisional %}<p class="meta">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane.</p>{% endif %}
 

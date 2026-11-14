@@ -370,3 +370,18 @@ def test_talk_about_measures_is_not_a_measure_and_what_was_said_before_one_is_sh
     assert a["asides"] == [("Бошко Обрадовић", "Не директно.")]
     assert "".join(t for t, _ in a["last"]).endswith("Искључите ме поново.") and a["last_who"] == "БОШКО ОБРАДОВИЋ"
     assert f.around(m, "НЕКО ДРУГИ")["last"] == []  # the speech before was not that person's
+
+
+def test_a_quote_is_found_among_our_notes_pages(tmp_path):
+    import json
+    from zailiprotiv import notes_site
+    d = tmp_path / "14" / "transcripts"; d.mkdir(parents=True)
+    notes = {"sitting": "https://www.parlament.gov.rs/x.123.43.html", "days": [{"day": 1, "url": "https://p/a.docx"}],
+             "speeches": {"00001": {"day": 1, "speaker": "ПРЕДСЕДНИК", "chair": True, "text": "Реч има Ђорђе Станковић."},
+                          "00002": {"day": 1, "speaker": "ЂОРЂЕ СТАНКОВИЋ", "text": "Хвала. Како министар очекује да преживе мале фирме? Питам."}}}
+    (d / "s.json").write_text(json.dumps(notes))
+    spot = notes_site.Finder(tmp_path, "https://beleske.zailiprotiv.rs")
+    assert spot("https://p/a.docx", "Станковић Ђорђе", "Како министар очекује да преживе мале фирме") == "https://beleske.zailiprotiv.rs/14/123/dan-1.html#g00002"
+    assert spot("https://p/a.docx", "Неко Други", "речи којих нема") == "https://beleske.zailiprotiv.rs/14/123/dan-1.html"
+    assert spot("https://p/other.docx", "Станковић Ђорђе", "Како") == "" and spot.day("https://p/a.docx", "Ђорђе Станковић").endswith("#g00002")
+    assert notes_site.Finder(tmp_path, "https://beleske.zailiprotiv.rs", set())("https://p/a.docx", "Станковић Ђорђе", "Како министар") == ""

@@ -49,6 +49,75 @@ def layout(conv: str, notes: dict) -> dict[str, tuple[str, str]]:
     return out
 
 
+class Finder:
+    """Where among our notes' pages a quoted sentence was said: the address of the very speech, for the links under
+    quotes (which used to lead to the Assembly's file, a download). A quote is known by the day's file it came from,
+    its speaker and its words; the speech is the speaker's on that day that holds the words, and failing that anyone's
+    that day, and failing that the day's page. Only pages in the bucket (`pages`) are given."""
+
+    def __init__(self, root: Path, url: str, pages: set | None = None):
+        import json
+        self.url, self.pages, self._json = url.rstrip("/") + "/" if url else "", pages, json
+        self.by_day: dict[str, tuple[Path, str, int]] = {}  # the day's file at the Assembly → (our notes, convocation, day)
+        self._kept: dict = {}
+        if not self.url:
+            return
+        for f in sorted(root.glob("*/transcripts/*.json")):
+            notes = json.loads(f.read_text(encoding="utf-8"))
+            for i, d in enumerate(notes.get("days", []), 1):
+                if d.get("url"):
+                    self.by_day[d["url"]] = (f, f.parent.parent.name, d.get("day") or i)
+
+    @staticmethod
+    def _plain(text: str) -> str:
+        return re.sub(r"[^0-9a-zа-яђјљњћџžšđčć]+", " ", text.lower()).strip()
+
+    def _notes(self, f: Path, conv: str):
+        """The notes of one sitting, kept for the next question (the last 48 asked for): where each speech is, and
+        each day's speeches as [key, speaker's words sorted, text, the text made plain when first needed]."""
+        if f not in self._kept:
+            notes = self._json.loads(f.read_text(encoding="utf-8"))
+            by_day: dict[int, list] = {}
+            for k in sorted(notes["speeches"]):
+                sp = notes["speeches"][k]
+                by_day.setdefault(sp["day"], []).append([k, " ".join(sorted(self._plain(sp["speaker"]).split())), sp["text"], None])
+            if len(self._kept) >= 48:
+                self._kept.pop(next(iter(self._kept)))
+            self._kept[f] = (layout(conv, notes), by_day)
+        return self._kept[f]
+
+    def __call__(self, day_url: str | None, speaker: str, text: str) -> str:
+        at = self.by_day.get(day_url or "")
+        if not at:
+            return ""
+        where, by_day = self._notes(at[0], at[1])
+        said, who, want = by_day.get(at[2], []), " ".join(sorted(self._plain(speaker).split())), self._plain(text)
+        ok = lambda k: self.pages is None or where[k][0] in self.pages
+        for own in (True, False):
+            for row in said:
+                if (row[1] == who) != own or not want or not ok(row[0]):
+                    continue
+                if row[3] is None:
+                    row[3] = self._plain(row[2])
+                if want in row[3]:
+                    return f"{self.url}{where[row[0]][0]}#{where[row[0]][1]}"
+        return next((self.url + where[row[0]][0] for row in said if ok(row[0])), "")
+
+    def day(self, day_url: str | None, speaker: str = "") -> str:
+        """The day's page among ours; with a speaker, at that speaker's first speech of the day."""
+        at = self.by_day.get(day_url or "")
+        if not at:
+            return ""
+        where, by_day = self._notes(at[0], at[1])
+        said, who = by_day.get(at[2], []), " ".join(sorted(self._plain(speaker).split()))
+        ok = lambda k: self.pages is None or where[k][0] in self.pages
+        if who:
+            for k, name, _, _ in said:
+                if name == who and ok(k):
+                    return f"{self.url}{where[k][0]}#{where[k][1]}"
+        return next((self.url + where[row[0]][0] for row in said if ok(row[0])), "")
+
+
 PAGE = """<!doctype html>
 <html lang="{lang}">
 <head>

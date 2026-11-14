@@ -39,7 +39,7 @@
 <h1>{{ mp.name }}</h1>
 <p class="mp-groups">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 {% if profile %}{% set ns = namespace(q=none) %}{% for t in profile.points %}{% if t.citat and t.citat.tekst.split()|length <= 45 and (ns.q is none or t.citat.tekst|length < ns.q.tekst|length) %}{% set ns.q = t.citat %}{% endif %}{% endfor %}
-{% if ns.q %}<blockquote class="mp-line"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
+{% if ns.q %}<blockquote class="mp-line"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.ours or ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
 </div>
 </div>
 
@@ -139,7 +139,7 @@
   <ul class="points">
   {% for t in profile.points %}
     <li><p>{{ t.tekst|latin }} <span class="meta">({{ t.govora }} {{ plural(t.govora, "govor", "govora", "govora") }}{% if t.when %}, {{ t.when }}{% endif %})</span></p>
-      <blockquote>„{{ t.citat.tekst|latin }}“ <a class="meta" href="{{ t.citat.url }}">stenogram{% if t.citat.date %}, {{ t.citat.date|day }}{% endif %}</a></blockquote></li>
+      <blockquote>„{{ t.citat.tekst|latin }}“ <a class="meta" href="{{ t.citat.ours or t.citat.url }}">stenogram{% if t.citat.date %}, {{ t.citat.date|day }}{% endif %}</a></blockquote></li>
   {% endfor %}
   </ul>
   <p class="label">Pregled je napisao AI model ({{ profile.model }}) iz {{ profile.read }} najdužih od {{ profile.speeches }} govora poslanika na {{ profile.sittings }} sednica čije stenografske beleške imamo (rasprave o zakonima sa najviše glasova protiv); duži govori čitani su do 700. reči. Navedeno je samo ono što se ponavlja u najmanje dva govora, kao poslanikova tvrdnja: sajt ne ocenjuje da li je tačna i ne preuzima nijedan stav. Citati su provereni reč po reč. Pregled može da sadrži grešku; merodavne su beleške. {{ how("iznosi") }}</p>
@@ -152,7 +152,7 @@
   {% for x in said %}
   <figure class="q q-{{ x.q.side }} q-mp">
     <blockquote>„{{ x.q.tekst|latin }}“</blockquote>
-    <figcaption><a href="../zakon/{{ x.it.slug }}.html">{{ x.it.law.short }}</a>{% if x.q.side in ["za", "protiv"] %} · glas: {{ x.q.side }}{% endif %}{% if x.day %} · <a href="{{ x.day.url }}">stenogram{% if x.day.listed_date %}, {{ x.day.listed_date|day }}{% endif %}</a>{% endif %}</figcaption>
+    <figcaption><a href="../zakon/{{ x.it.slug }}.html">{{ x.it.law.short }}</a>{% if x.q.side in ["za", "protiv"] %} · glas: {{ x.q.side }}{% endif %}{% if x.day %} · <a href="{{ x.q.ours or x.day.url }}">stenogram{% if x.day.listed_date %}, {{ x.day.listed_date|day }}{% endif %}</a>{% endif %}</figcaption>
   </figure>
   {% endfor %}
   <p class="label">Doslovni citati iz stenografskih beleški, iz pregleda rasprava o zakonima sa najviše glasova protiv. Citate je izabrao AI model, najviše jedan po poslaničkoj grupi za svaki zakon, pa ovo nije sve što je poslanik rekao. {{ how("rasprava") }}</p>

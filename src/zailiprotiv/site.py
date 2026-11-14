@@ -508,6 +508,19 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     groups_in: dict[str, list] = defaultdict(list)
     for (key, g) in line:
         groups_in[key].append(g)
+    # Under a quote, the link leads to the very speech among our notes' pages, not to the Assembly's file to download.
+    from zailiprotiv import notes_site
+    _sent = root / "notes_manifest.json"
+    spot = notes_site.Finder(root, settings.get("notes_url", ""),
+                             set(json.loads(_sent.read_text(encoding="utf-8"))) if _sent.exists() else set())
+    for its in items_by_conv.values():
+        for it in its:
+            days_ = (it["debate"] or {}).get("all_days") or []
+            for d in days_:
+                d["ours"] = spot.day(d.get("url"))
+            for q in it["quotes"]:
+                d = days_[q["dan"] - 1] if 0 < q.get("dan", 0) <= len(days_) else None
+                q["ours"] = spot(d["url"], q["govornik"], q["tekst"]) if d else ""
     # What each MP is quoted saying in the debates summarised (the laws with most votes against).
     from zailiprotiv import debates as debates_
     loose_keys = {debates_.loose(k): k for k in people}
@@ -527,6 +540,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             spans = {c for t in p["points"] for c in t.get("sazivi", [])}
             for t in p["points"]:  # when the points come from several convocations, each says which
                 t["when"] = ", ".join(years(c) for c in t.get("sazivi", [])) if len(spans) > 1 else ""
+                if t.get("citat"):
+                    t["citat"]["ours"] = spot(t["citat"].get("url"), p["mp"], t["citat"]["tekst"])
             profiles[k] = p
     feeds_mp: dict[str, tuple] = {}
     # Presence at final votes, only where the Assembly lists the absent (the report layout), by convocation;
@@ -689,7 +704,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         for r in record:
             days_[r["it"]["final"]["when"][:10]]["votes"][r["vote"]] += 1
         for d, n in spoke_days.get(mp.key, {}).items():
-            days_[d].update(speeches=n, url=speech_url.get((mp.key, d), ""))
+            u = speech_url.get((mp.key, d), "")
+            days_[d].update(speeches=n, url=spot.day(u, mp.name) or u)
         timeline = [{"day": d, **v} for d, v in sorted(days_.items(), reverse=True)[:10]]
         keys_ = sorted((r for r in record if r["it"]["law"]["final_vote"] in key_finals),
                        key=lambda r: r["it"]["final"]["when"], reverse=True)[:6]
