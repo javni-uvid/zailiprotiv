@@ -4,8 +4,42 @@
 window.addEventListener("DOMContentLoaded", function () {
   if (!window.PagefindUI) return;
   var box = document.getElementById("search"), notes = box.dataset.notes || "";
+  // Latin without its marks finds the words with them, and the other way round: Pagefind (from 1.5) takes c for č
+  // and ć, s for š, z for ž. It does not take "dj" for "đ", so that is done here: for each word typed with "dj" or
+  // "đ" both spellings are counted, and the search runs with the one that finds more. Counting is asked of the same
+  // index and takes a moment, so the first search runs as typed and is run again when the count says otherwise.
+  var better = {}, asked = {}, ui = null, engine = null;
+  function spellings(word) {
+    var low = word.toLowerCase(), out = [];
+    if (low.indexOf("dj") >= 0) out.push(word.replace(/dj/g, "đ").replace(/Dj|DJ/g, "Đ"));
+    if (/đ/i.test(word)) out.push(word.replace(/đ/g, "dj").replace(/Đ/g, "Dj"));
+    return out;
+  }
+  function term(text) {
+    return text.split(/(\s+)/).map(function (w) { return better[w] || w; }).join("");
+  }
+  function count(text) {
+    text.split(/\s+/).forEach(function (w) {
+      var others = spellings(w.replace(/["“”„]/g, ""));
+      if (!others.length || asked[w]) return;
+      asked[w] = 1;
+      (engine = engine || import(new URL("pagefind/pagefind.js", document.baseURI).href)).then(function (pf) {
+        return Promise.all([w].concat(others).map(function (x) { return pf.search(x.replace(/["“”„]/g, "")).then(function (r) { return [x, r.results.length]; }); }));
+      }).then(function (found) {
+        var best = found.slice().sort(function (a, b) { return b[1] - a[1]; })[0];
+        if (best[0] !== w && best[1] > found[0][1]) {
+          better[w] = best[0];
+          var input = document.querySelector("#search .pagefind-ui__search-input");
+          if (ui && input && input.value.split(/\s+/).indexOf(w) >= 0) {
+            // The same words again would not be searched again, so a space is added (or taken away) to ask anew.
+            ui.triggerSearch(/ $/.test(input.value) ? input.value.replace(/ +$/, "") : input.value + " ");
+          }
+        }
+      }).catch(function () {});
+    });
+  }
   function start(merge) {
-    var ui = new PagefindUI({ element: "#search", showSubResults: true, showImages: false, resetStyles: false, autofocus: true,
+    ui = new PagefindUI({ processTerm: function (t) { count(t); return term(t); }, element: "#search", showSubResults: true, showImages: false, resetStyles: false, autofocus: true,
       mergeIndex: merge ? [{ bundlePath: notes + "pagefind/", baseUrl: notes }] : [],
       // A result from the notes is a whole day's page. Its heading becomes the speaker of the speech with the most
       // hits and leads to that speech, not to the top of the day; the other speeches of the day follow beneath. Every
