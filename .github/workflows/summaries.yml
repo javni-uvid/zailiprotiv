@@ -24,7 +24,7 @@ on:
         description: "Model for this run (empty: the default in summaries.py)"
         default: ""
       replace:
-        description: "Write again what this model wrote (e.g. claude-haiku-5-5), with the model of this run; debates only for now"
+        description: "Write again what this model wrote (e.g. claude-haiku-5-5), with the model of this run; debates and MP overviews"
         default: ""
       kinds:
         description: "Which writing to do: summaries debates profiles (empty: all)"

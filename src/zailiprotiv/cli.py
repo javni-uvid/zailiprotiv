@@ -841,10 +841,14 @@ def profiles_batch(args) -> int:
         return 0
     kind, system = "profiles", profiles.system(ROOT)
     materials = {}
+    model = (state.pending(kind) or {}).get("model") or summaries.MODEL
+    replace = set(filter(None, os.environ.get("ZAILIPROTIV_REPLACE", "").split(",")))  # see debates_batch
     for key, own in sorted(profiles.speeches(ROOT).items()):
         long = [s for s in own if len(s["text"].split()) >= profiles.LONG]
         name = key.replace(" ", "-") + ".json"
-        if len(long) < args.min or ((ROOT / "profiles" / name).exists() and not args.again) or state.gave_up(kind, name):
+        there = ROOT / "profiles" / name
+        again = args.again or (replace and there.exists() and json.loads(there.read_text(encoding="utf-8")).get("model") in replace)
+        if len(long) < args.min or (there.exists() and not again) or state.gave_up(kind, name):
             continue
         materials[name] = {"mp": key, "total_speeches": len(own), "speeches": profiles.selection(own)}
         if args.limit and len(materials) >= args.limit:
@@ -856,7 +860,7 @@ def profiles_batch(args) -> int:
                 key = name.removesuffix(".json").replace("-", " ")
                 own = profiles.speeches(ROOT).get(key, [])
                 materials[name] = {"mp": key, "total_speeches": len(own), "speeches": profiles.selection(own)}
-    requests = {n: {"model": summaries.MODEL, "max_tokens": batch.ROOM, "system": batch.cached(system),
+    requests = {n: {"model": model, "max_tokens": batch.ROOM, "system": batch.cached(system),
                     "messages": batch.messages(kind, n, json.dumps(m, ensure_ascii=False), state)}
                 for n, m in materials.items()}
     replies = batch.run(client, state, kind, requests, args.wait)
@@ -868,7 +872,7 @@ def profiles_batch(args) -> int:
         try:
             reply = profiles.reply_json(text)
             bad = profiles.check(reply, material)
-            result = None if bad else profiles.record(reply, material, summaries.MODEL)
+            result = None if bad else profiles.record(reply, material, model)
         except (ValueError, KeyError, TypeError, AttributeError) as e:
             bad = [f"nečitljivo: {type(e).__name__}: {e}"]
         if bad:
