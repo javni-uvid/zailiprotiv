@@ -72,7 +72,10 @@
           {% set w = e.to or e.likely %}<img class="row-face" src="{{ "foto/" ~ w.photo if w and w.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
           <span class="measure-main">
             <span class="measure-head"><b>{{ e.label }}</b>{% if e.to %}: {{ e.to.name }}{% elif e.likely %}: {{ e.likely.name }} <span class="likely">po kontekstu</span>{% endif %}</span>
-            <span class="measure-said">„{{ (e.sentence or e.chair.text)|latin|truncate(260, killwords=False, end=" …") }}“</span>
+            {% set ar = e.around %}
+            {% if ar.last %}<span class="measure-pre"><span class="meta">Pre mere, {{ ar.last_who.name }}:</span> „{% for t, hit in ar.last %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“</span>{% endif %}
+            {% for n, t in ar.asides %}<span class="measure-pre"><span class="meta">Dobacuje, {{ n }}:</span> „{{ t|latin }}“</span>{% endfor %}
+            <span class="measure-said"><span class="meta">Predsedavajući:</span> „{% if ar.lead %}{{ ar.lead|latin }} {% endif %}<b>{{ (e.sentence or e.chair.text)|latin|truncate(260, killwords=False, end=" …") }}</b>{% if ar.after %} {{ ar.after|latin }}{% endif %}“</span>
             <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if e.likely %} · ime nije izgovoreno; {{ e.why }}{% elif not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
           </span>
         </summary>

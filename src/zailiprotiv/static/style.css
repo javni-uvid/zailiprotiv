@@ -678,3 +678,8 @@ td.lean { white-space: nowrap; }
 .floor-convs { min-width: 760px; }
 .floor-convs td, .floor-convs th { vertical-align: top; }
 .floor-convs td .meta { white-space: nowrap; }
+/* A measure: what was said before it (the speaker's last words, or what was called out), then the chair's words. */
+.measure-pre { font-family: var(--serif); font-size: 1rem; line-height: 1.4; color: var(--ink); }
+.measure-pre .meta, .measure-said .meta { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .82rem; }
+.measure-said b { font-weight: 700; }
+p.measure-pre { margin: .2rem 0 .3rem; }

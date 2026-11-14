@@ -33,19 +33,83 @@ def spoken(text: str) -> str:
     return _MARK.sub("", text).strip()
 
 
+# Talk about measures is not a measure: "нећу да изричем опомене, нисмо деца", "шта очекујете - да изричем опомене?",
+# "могу да почнем да опомињем, изричем опомене, али …". A denial right before the verb, or reprimands in the plural
+# with no number ("две опомене"), is talk.
+_DENIED = re.compile(r"(?:\bне|\bнећу да|\bнећемо да|\bне желим да|\bнисам хте\w+ да)\s+$", re.I)
+_PLURAL = re.compile(r"изричем(?! (?:вам |му |јој |им )?(?:две|три|четири|\d))[^.!?]{0,30}\bопомене\b", re.I)
+
+
+def pronounced(text: str, pattern) -> re.Match | None:
+    """The place where a measure is pronounced in the chair's words, or None when the words only talk of measures."""
+    for m in pattern.finditer(text):
+        if _DENIED.search(text[max(0, m.start() - 30):m.start()]) or _PLURAL.match(text, m.start()):
+            continue
+        return m
+    return None
+
+
 def measures(speeches: list[dict]) -> list[dict]:
     out = []
     for i, s in enumerate(speeches):
         if not s.get("chair"):
             continue
-        hit = next(((k, label) for k, label, pattern in MEASURES if pattern.search(s["text"])), None)
-        if hit:
+        found = next(((k, label, m) for k, label, pattern in MEASURES if (m := pronounced(s["text"], pattern))), None)
+        if found:
+            hit, m = found[:2], found[2]
             before = next((p for p in reversed(speeches[max(0, i - 6):i]) if not p.get("chair")), None)
-            m = next(pattern for k, label, pattern in MEASURES if k == hit[0]).search(s["text"])
             out.append({"kind": hit[0], "label": hit[1], "chair": s, "before": before,
                         "adjacent": i > 0 and not speeches[i - 1].get("chair"), "at": m.start(),
-                        "sentence": sentence(s["text"], m.start(), m.end())})  # the sentence that pronounces the measure
+                        "sentence": sentence(s["text"], m.start(), m.end()).lstrip(')"“” ')})  # the sentence that pronounces the measure
     return out
+
+
+_ASIDE = re.compile(r"\(([^():]{3,60}):\s*([^()]{1,400})\)")   # "(Бошко Обрадовић: Не директно.)": words from the floor
+_BRACKET = re.compile(r"\s*\([^()]*\)")
+_REASON = re.compile(r"^\s*(?:Зато|Због|Јер)\b|\bзато што\b|\bзбог\b", re.I)
+
+
+def _sentences(text: str) -> list[str]:
+    out, last = [], 0
+    for m in _END.finditer(text):
+        out.append(text[last:m.end()].strip())
+        last = m.end()
+    return [x for x in out + [text[last:].strip()] if x]
+
+
+def around(measure: dict, to: str | None) -> dict:
+    """What the notes hold right around a measure, word for word, for the reader to see what it was about without
+    anyone saying so for them:
+    - "lead": the chair's own words up to the measure (two sentences at most) and, when the next sentence gives the
+      reason ("Зато што …"), that one too;
+    - "asides": what the person the measure went to called out from their seat, as the notes record it in brackets
+      in the speech before and in the chair's words up to the measure;
+    - "last": the end of the speech before, when it was that person's and the measure came right after it.
+    Nothing here says why the measure was pronounced: it shows what was said before it."""
+    chair, at = measure["chair"]["text"], measure["at"]
+    end = chair.find(measure["sentence"], max(0, at - len(measure["sentence"])))
+    end = (end if end >= 0 else at) + len(measure["sentence"])
+    start = end - len(measure["sentence"])
+    upto = chair[:start] + (")" if chair[:start].count("(") > chair[:start].count(")") else "")  # a bracket cut by the sentence
+    lead = _sentences(_BRACKET.sub("", upto))[-2:]
+    while lead and sum(len(x) for x in lead) > 420:
+        lead = lead[1:]
+    after = _sentences(_BRACKET.sub("", chair[end:]))[:1]
+    after = after if after and _REASON.search(after[0]) and len(after[0]) < 420 else []
+    surname = to.split()[-1].lower() if to and to.split() else None
+    mine = lambda name: surname is None or name.strip().split()[-1].lower() == surname
+    before = measure["before"]
+    near = (before["text"][-700:] if before and measure["adjacent"] else "") + "\n" + upto
+    asides = [(n.strip(), t.strip()) for n, t in _ASIDE.findall(near) if mine(n)][-3:]
+    last = []
+    if before and measure["adjacent"] and (surname is None or before["speaker"].split()[-1].lower() == surname):
+        last = _sentences(_BRACKET.sub("", before["text"][-900:]))[-2:]
+        if len(before["text"]) > 900:
+            last = last[-2:] if len(_sentences(before["text"][-900:])) > 2 else last[-1:]
+        while len(last) > 1 and sum(len(x) for x in last) > 420:
+            last = last[1:]
+    return {"lead": " ".join(lead), "after": " ".join(after), "asides": asides,
+            "last": marked(" ".join(last)) if last else [], "last_who": before["speaker"] if last else ""}
 
 
 def exchanges(speeches: list[dict]) -> list[list[dict]]:
@@ -257,6 +321,9 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 found.append({"type": "mera", **m, **meta(m["chair"]), "to": who(to) if to else None, "to_raw": to,
                               "likely": who(ctx[0]) if ctx else None, "likely_raw": ctx[0] if ctx else None,
                               "why": ctx[1] if ctx else "",
+                              "around": {**(ar := around(m, to or (ctx[0] if ctx else None))),
+                                         "last_who": who(ar["last_who"]) if ar["last_who"] else None,
+                                         "asides": [(who(n)["name"], t) for n, t in ar["asides"]]},
                               "before_who": who(m["before"]["speaker"]) if m["before"] else None})
             for run in exchanges(speeches):
                 pair = [s for s in run if not s.get("chair")]

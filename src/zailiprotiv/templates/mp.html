@@ -104,7 +104,9 @@
   <ul class="floor-list">
   {% for x in mine %}{% for e in x.measure_events %}
     <li><p class="floor-head"><span><b>{{ e.label }}</b>{% if not e.to %} <span class="likely">po kontekstu</span>{% endif %}{% if e.date %} <span class="meta">· {{ e.date|day }}</span>{% endif %} <span class="meta">· {{ e.sitting }}</span></span></p>
-    <blockquote class="said"><p>{{ (e.sentence or e.chair.text)|latin }}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a>{% if not e.to %} · ime nije izgovoreno; {{ e.why }}{% endif %}</footer></blockquote></li>
+    {% set ar = e.around %}{% if ar.last and ar.last_who.slug == mp.slug %}<p class="measure-pre"><span class="meta">Pre mere:</span> „{% for t, hit in ar.last %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“</p>{% endif %}
+    {% for n, t in ar.asides %}<p class="measure-pre"><span class="meta">Dobacuje:</span> „{{ t|latin }}“</p>{% endfor %}
+    <blockquote class="said"><p>{% if ar.lead %}{{ ar.lead|latin }} {% endif %}<b>{{ (e.sentence or e.chair.text)|latin }}</b>{% if ar.after %} {{ ar.after|latin }}{% endif %}</p><footer>Predsedavajući · <a href="../{{ e.page }}#{{ e.id }}">sve njegove reči i govor pre toga</a>{% if not e.to %} · ime nije izgovoreno; {{ e.why }}{% endif %}</footer></blockquote></li>
   {% endfor %}{% endfor %}
   </ul>
   <p class="label">Mere u kojima predsedavajući oslovi govornika prezimenom, i mere „po kontekstu“: ime nije izgovoreno, ali beleške pokazuju kome se predsedavajući obraća (vrlo verovatno, ne sigurno). Mere izriče predsedavajući, po svojoj oceni. {{ how("replike") }}</p>

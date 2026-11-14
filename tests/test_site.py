@@ -353,3 +353,20 @@ def test_the_cache_is_not_asked_without_a_zone_or_for_nothing(monkeypatch):
     monkeypatch.delenv("CLOUDFLARE_ZONE_ID", raising=False)
     assert files_site.purge("https://podaci.zailiprotiv.rs/", []) == "nothing to purge"
     assert "not purged" in files_site.purge("https://podaci.zailiprotiv.rs/", ["podaci/zakoni.csv"])
+
+
+def test_talk_about_measures_is_not_a_measure_and_what_was_said_before_one_is_shown():
+    from zailiprotiv import pages_floor as f
+    chair = lambda t: {"chair": True, "speaker": "ПРЕДСЕДНИК", "day": 1, "text": t}
+    for talk in ("Ја нећу да изричем опомене, нисмо деца.", "Шта очекујете од мене - да изричем опомене?",
+                 "Ја сам толерантна и не изричем вам опомену, него тражим да поштујете Пословник."):
+        assert f.measures([chair(talk)]) == []
+    said = {"chair": False, "speaker": "БОШКО ОБРАДОВИЋ", "day": 1, "text": "Први став. СПС 25 година пљачка ову државу. Искључите ме поново."}
+    c = chair("Опет говорите да неко пљачка државу. (Бошко Обрадовић: Не директно.) Изричем вам опомену, господине "
+              "Обрадовићу, због таквог говора. Зато што сам вас најпре упозорио. Идемо даље.")
+    m = f.measures([said, c])[0]
+    a = f.around(m, "БОШКО ОБРАДОВИЋ")
+    assert a["lead"] == "Опет говорите да неко пљачка државу." and a["after"] == "Зато што сам вас најпре упозорио."
+    assert a["asides"] == [("Бошко Обрадовић", "Не директно.")]
+    assert "".join(t for t, _ in a["last"]).endswith("Искључите ме поново.") and a["last_who"] == "БОШКО ОБРАДОВИЋ"
+    assert f.around(m, "НЕКО ДРУГИ")["last"] == []  # the speech before was not that person's
