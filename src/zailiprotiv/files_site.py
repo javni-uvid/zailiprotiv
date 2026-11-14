@@ -109,7 +109,17 @@ def purge(url: str, names: list[str]) -> str:
                     return "cache not purged: Cloudflare said no"
     except urllib.error.HTTPError as e:  # Cloudflare's own words say whether it is the token or the zone
         said = "; ".join(f"{x.get('code')} {x.get('message')}" for x in (json.loads(e.read() or b"{}").get("errors") or []))
-        return f"cache not purged: {e.code} {said} (zone id of {len(zone)} characters)"
+        hint = ""
+        if zone == os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip():
+            hint = "; CLOUDFLARE_ZONE_ID holds the account's id, not the zone's"
+        else:
+            try:  # is the token itself alive? then it is its permissions or the zone's id
+                check = urllib.request.Request("https://api.cloudflare.com/client/v4/user/tokens/verify", headers={"Authorization": f"Bearer {token}"})
+                with urllib.request.urlopen(check, timeout=30) as r:
+                    hint = f"; the token is {json.load(r).get('result', {}).get('status')}: it lacks Cache Purge for this zone, or the zone's id is wrong"
+            except Exception as e2:
+                hint = f"; the token does not verify ({e2})"
+        return f"cache not purged: {e.code} {said}{hint}"
     except Exception as e:
         return f"cache not purged: {e}"
     return f"cache purged: {'all of ' + host if 'hosts' in bodies[0] else str(len(names)) + ' files'}"
