@@ -90,6 +90,13 @@
     "input": 1089268,
     "output": 151280,
     "replies": 19
+   },
+   "claude-sonnet-5-5": {
+    "cache_read": 14904,
+    "cache_written": 828,
+    "input": 1089268,
+    "output": 128143,
+    "replies": 19
    }
   },
   "debates-9": {
