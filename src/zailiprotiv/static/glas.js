@@ -66,7 +66,8 @@
     mine = b.dataset.v; votes[item] = mine; write("zip.glasovi", votes);
     try { document.dispatchEvent(new CustomEvent("zip:glas")); } catch (e) {}
     show(null);
-    post("/z", { d: device(), item: item, v: mine }).then(show).catch(function () {
+    var sent = item;
+    post("/z", { d: device(), item: item, v: mine }).then(function (t) { if (sent === item) show(t); }).catch(function () {
       box.querySelector(".yv-nu").textContent = "Zbir posetilaca trenutno nije dostupan; tvoj glas je zapamćen u ovom pregledaču.";
     });
   });
@@ -87,6 +88,17 @@
       post("/c", { d: device(), item: item, q: q.dataset.q, on: on }).then(function (t) { if (mine) show(t); }).catch(function () {});
     });
   });
-  show(null);
-  if (mine) fetch(api + "/z/" + encodeURIComponent(item)).then(function (r) { return r.ok ? r.json() : null; }).then(function (t) { if (t) show(t); }).catch(function () {});
+  function open() {
+    var asked = item;
+    box.querySelector(".yv-nz").textContent = box.querySelector(".yv-np").textContent = "…"; box.querySelector(".yv-nu").textContent = "";
+    bar(box.querySelector(".yv-bar-b"), 0, 0, 0);
+    show(null);
+    if (mine) fetch(api + "/z/" + encodeURIComponent(item)).then(function (r) { return r.ok ? r.json() : null; }).then(function (t) { if (t && asked === item) show(t); }).catch(function () {});
+  }
+  open();
+  // "Glasaj i ti" puts another bill into the same box (listic.js): the box then starts again with that one.
+  document.addEventListener("zip:predlog", function () {
+    item = box.dataset.item; votes = read("zip.glasovi", {}); mine = votes[item] || "";
+    open();
+  });
 })();

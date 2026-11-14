@@ -61,5 +61,11 @@ def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, q
     # A treaty's ratification gives way to a law, as few visitors have a view on one.
     bill = next((b for b in waiting if b.get("gist") and b.get("kind_key") != "treaty"),
                 next((b for b in waiting if b.get("gist")), waiting[0] if waiting else None))
+    def short(text, n):
+        text = latin(text or "")
+        return text if len(text) <= n else text[:n].rsplit(" ", 1)[0] + "…"
+    order = sorted(waiting, key=lambda b: (not b.get("gist"), b.get("kind_key") == "treaty"))  # stable: newest first within each
+    bills_json = json.dumps([{"s": b["slug"], "t": short(b["title"], 120), "d": b["submitted"] or "", "g": short(b.get("gist"), 260)}
+                             for b in order], ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     (out / "glasaj.html").write_text(env.get_template("ballot.html").render(
-        **common, quiz_laws=quiz_laws, by_hand=by_hand, bill=bill, waiting=len(waiting), root=""), encoding="utf-8")
+        **common, quiz_laws=quiz_laws, by_hand=by_hand, bill=bill, bills_json=bills_json, waiting=len(waiting), root=""), encoding="utf-8")

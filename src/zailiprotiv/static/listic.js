@@ -299,6 +299,38 @@
     try { localStorage.removeItem("zip.glasovi"); localStorage.removeItem("zip.citati"); Object.keys(localStorage).forEach(function (k) { if (k.indexOf("glasaj:") === 0) localStorage.removeItem(k); }); sessionStorage.clear(); } catch (e) {}
     location.reload();
   });
-  document.addEventListener("zip:glas", start);
+  // The bill's card: after a vote (or instead of one) the next bill not voted on yet takes its place in the same box.
+  var billBox = $("glasaj"), billList = [], seen = {};
+  try { billList = JSON.parse($("lb-bills").textContent); } catch (e) {}
+  function unvoted() {
+    var votes = read("zip.glasovi", {}), now = billBox.dataset.item;
+    var left = billList.filter(function (b) { return !votes["p." + b.s] && "p." + b.s !== now; });
+    var fresh = left.filter(function (b) { return !seen[b.s]; });  // those passed over come round again only at the end
+    if (!fresh.length) seen = {};
+    return fresh.length ? fresh.concat(left.filter(function (b) { return seen[b.s]; })) : left;
+  }
+  function nextBill() {
+    if (!billBox) return;
+    var votes = read("zip.glasovi", {}), left = unvoted(), voted = !!votes[billBox.dataset.item], b = $("lb-bill-next");
+    b.hidden = !left.length;
+    b.className = voted ? "lb-btn" : "linklike";
+    b.textContent = voted ? "Sledeći predlog" : "Preskoči: sledeći predlog";
+    $("lb-bill-n").textContent = left.length ? "još " + left.length + " u proceduri o " + plural(left.length, "kom", "kojima", "kojima") + " nisi glasao" : (voted ? "Glasao si o svim predlozima u proceduri." : "");
+  }
+  function putBill(b) {
+    seen[billBox.dataset.item.slice(2)] = 1;
+    billBox.dataset.item = "p." + b.s;
+    $("lb-bill-k").textContent = "U proceduri · podnet " + day(b.d);
+    $("lb-bill-t").textContent = b.t; $("lb-bill-t").href = $("lb-bill-more").href = root + "predlog/" + b.s + ".html";
+    $("lb-bill-g").textContent = b.g;
+    document.dispatchEvent(new CustomEvent("zip:predlog"));
+    nextBill();
+  }
+  if (billBox && billList.length) {
+    $("lb-bill-next").addEventListener("click", function () { var left = unvoted(); if (left.length) putBill(left[0]); });
+    // Someone who has voted on the bill shown first finds the next one waiting.
+    if (read("zip.glasovi", {})[billBox.dataset.item] && unvoted().length) putBill(unvoted()[0]); else nextBill();
+  }
+  document.addEventListener("zip:glas", function () { start(); nextBill(); });
   start();
 })();

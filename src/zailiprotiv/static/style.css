@@ -925,3 +925,5 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 }
 .lb-share[hidden], #lb-more[hidden], .lb-pick[hidden] { display: none; }
 .f-bill .yv { align-items: stretch; }
+.lb-next { margin: .9rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; }
+.lb-next:empty { display: none; }

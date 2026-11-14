@@ -41,10 +41,13 @@
   {% if bill and votes_api %}
   <div class="f-bill">
   {% call votebox("p." ~ bill.slug) %}
-    <small class="k">Najnovije u proceduri · podnet {{ bill.submitted|day }}</small>
-    <h2><a href="predlog/{{ bill.slug }}.html">{{ bill.title|latin|truncate(120, killwords=False, end="…") }}</a></h2>
-    <p>{% if bill.gist %}{{ bill.gist|latin|truncate(260, killwords=False, end="…") }} {% endif %}Poslanici još nisu glasali: glasaj pre njih. <a href="predlog/{{ bill.slug }}.html">Šta predlog menja</a> · <a href="u-proceduri.html">Svi predlozi u proceduri ({{ waiting }})</a></p>
+    <small class="k" id="lb-bill-k">Najnovije u proceduri · podnet {{ bill.submitted|day }}</small>
+    <h2><a id="lb-bill-t" href="predlog/{{ bill.slug }}.html">{{ bill.title|latin|truncate(120, killwords=False, end="…") }}</a></h2>
+    <p><span id="lb-bill-g">{% if bill.gist %}{{ bill.gist|latin|truncate(260, killwords=False, end="…") }}{% endif %}</span> Poslanici još nisu glasali: glasaj pre njih. <a id="lb-bill-more" href="predlog/{{ bill.slug }}.html">Šta predlog menja</a> · <a href="u-proceduri.html">Svi predlozi u proceduri ({{ waiting }})</a></p>
   {% endcall %}
+  {# The bills to go on to, one after another in the same box: those with a summary first, treaties last. #}
+  <p class="lb-next"><button type="button" id="lb-bill-next" hidden>Sledeći predlog</button> <span class="meta" id="lb-bill-n"></span></p>
+  <script type="application/json" id="lb-bills">{{ bills_json|safe }}</script>
   </div>
   {% endif %}
 </div>
