@@ -6,5 +6,17 @@
   "Александра Павловић": {"is": "Александра Павловић Марковић", "why": "12. saziv: jedno glasanje bez drugog prezimena"},
   "Драган Д. Марковић": {"is": "Драган Д. Марковић Палма", "why": "12. saziv: nadimak dodat u listing od februara 2021."},
   "Снежана Богосављевић-": {"is": "Снежана Богосављевић- Бошковић", "why": "11. saziv: prezime prelomljeno u listingu"},
-  "Маја Мачужић": {"is": "Маја Мачужић Пузић", "why": "11. saziv: promena prezimena, nikad na istom glasanju"}
+  "Маја Мачужић": {"is": "Маја Мачужић Пузић", "why": "11. saziv: promena prezimena, nikad na istom glasanju"},
+  "Биљана Илић Стошић": {"is": "Биљана Илић-Стошић", "why": "9, 10, 13, 14. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "САВОВИЋ-ПЕТКОВИЋ ВЕСНА": {"is": "Весна Савовић Петковић", "why": "13, 14. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "Сања Јефић-Бранковић": {"is": "Сања Јефић Бранковић", "why": "9, 12, 13, 14. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "ЛУКИЋ ШАРКАНОВИЋ проф. др МИРКА": {"is": "проф. др Мирка Лукић-Шаркановић", "why": "13, 14. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "проф. др Славица Ђукић Дејановић": {"is": "проф. др Славица Ђукић-Дејановић", "why": "9, 10, 14. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "Санда Рашковић Ивић": {"is": "Санда Рашковић-Ивић", "why": "9, 10, 11, 13. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "Миланка Јевтовић-Вукојичић": {"is": "Миланка Јевтовић Вукојичић", "why": "9, 10, 11, 12. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "др Љубица Мрдаковић-Тодоровић": {"is": "др Љубица Мрдаковић Тодоровић", "why": "9, 10, 11. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "др Снежана Богосављевић Бошковић": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "9, 10, 11. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "проф. др Снежана Богосављевић-": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "10, 11. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "Биљана Хасановић Кораћ": {"is": "Биљана Хасановић-Кораћ", "why": "9, 10. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
+  "проф. др Снежана Богосављевић- Бошковић": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "11. saziv: listing je prelomio prezime posle crtice"}
 }
