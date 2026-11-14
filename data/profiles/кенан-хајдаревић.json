@@ -1,56 +1,56 @@
 {
  "mp": "кенан хајдаревић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 12,
  "speeches": 13,
  "sittings": 5,
  "points": [
   {
-   "tekst": "Navodi da zakon o javnim preduzećima otvara put partijskoj državi, jer od volje Vučića, Dačića i Dinkića zavisi ko će biti na funkciji u javnom preduzeću.",
-   "govora": 3,
+   "tekst": "Замера што Влада Србије не спроводи Закон о јавним предузећима и пита која јавна предузећа су усагласила оснивачка акта и урадила програм трошења субвенција.",
+   "govora": 5,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Основна порука овог закона јесте да од воље Вучића, Дачића, Динкића зависи функција свакога човека који се од сутра пробуди и крене на посао у јавно предузеће.",
+    "tekst": "Ако Влада Србије не поштује законе које усвоји ова Народна скупштина, како онда можете очекивати или тражити да било ко поштује одредбе овог предлога закона?",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Тврди да закон о јавним предузећима не доноси департизацију и да функција сваког човека у јавном предузећу зависи од воље Динкића, Дачића и Вучића.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Основна порука овог закона, како ми видимо из ЛДП, јесте да функција сваког човека у јавном предузећу, који се сутра пробуди, зависи од воље Динкића, Дачића и Вучића, у политичком смислу, јер и даље постоји та партијска држава.",
     "date": "2012-12-03",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/7. dan VIII sednica II redovnog zasedanja u 2012. 3.12.2012.doc"
    }
   },
   {
-   "tekst": "Zamera što Vlada nije uskladila osnivačka akta javnih preduzeća sa Zakonom o javnim preduzećima do roka od 27. februara, a odluku za Puteve Srbije donela tek tri meseca kasnije.",
-   "govora": 3,
+   "tekst": "Замера што министри не одговарају на питања народних посланика и тражи одговоре на питања која је поставио.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Зашто Влада Србије није усагласила акта о оснивању јавних предузећа са Законом о јавним предузећима до 27. фебруара?",
+    "tekst": "Госпођо министарка, ипак смо ми овде парламентарна демократија и министри треба да одговарају на питања народних посланика, а не обрнуто, да министри дођу, а постављају питања народни посланици.",
     "date": "2013-03-13",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
    }
   },
   {
-   "tekst": "Navodi da javna preduzeća koja primaju subvencije nisu objavila program trošenja tih sredstava i plan racionalizacije, kako zakon nalaže.",
-   "govora": 3,
+   "tekst": "Навodi да називање посланика ЛДП-а људима који крше Устав враћа поделу на „патриоте и издајнике“ из деведесетих година.",
+   "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Које је јавно предузеће које је у надлежности вашег министарства, а користи на директан или индиректан начин буџетска средства, то урадило?",
-    "date": "2013-03-13",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
-   }
-  },
-  {
-   "tekst": "Navodi da ministri ne odgovaraju na pitanja poslanika, pa poslanici ponavljaju ista pitanja bez konkretnih odgovora.",
-   "govora": 3,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Ми не понављамо ова питања зато што можда ви нисте чули и остало, него зато што не добијамо конкретне одговоре.",
-    "date": "2013-03-13",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+    "tekst": "То је опасно за политички систем, опасно за друштво, јер долазимо поново у ситуацију за коју смо мислили да је постојала деведесетих година – да постоје патриоте и издајници.",
+    "date": "2012-11-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
    }
   }
  ]

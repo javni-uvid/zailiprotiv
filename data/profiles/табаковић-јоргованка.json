@@ -1,36 +1,36 @@
 {
  "mp": "табаковић јоргованка",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 12,
  "speeches": 15,
  "sittings": 1,
  "points": [
   {
-   "tekst": "Navodi da se odgovornost Vlade proširuje na imaoce javnih ovlašćenja na nivou Republike, jer ta tela do sada nisu bila pod njenom kontrolom.",
-   "govora": 3,
+   "tekst": "Објашњава да закон ставља под контролу Владе имаоце јавних овлашћења на нивоу Републике, а да се то не односи на Народну банку и Заштитника грађана.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Тако је, поред те контроле која је установљена већ постојећим законима, где Влада има надлежност над прописима и одлукама које доносе органи управе, проширено има те имаоце јавних овлашћења, али на нивоу Републике.",
+    "tekst": "Директно су подређени само Народној скупштини и ви би као правник морали да правите ту разлику и ја сам вам рекла - навели смо имаоце јавних овлашћења на републичком ниво.",
     "date": null,
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
    }
   },
   {
-   "tekst": "Zamera što agencije i druga tela naplaćuju građanima razne dozvole, potvrde i naknade, a to opterećuje privredu i državni budžet.",
-   "govora": 2,
+   "tekst": "Тврди да постоји превелик број агенција и сличних органа који троше новац грађана и наплаћују им накнаде, и да тај број треба свести на меру уз контролу Владе.",
+   "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "јер се доносе прописи који отежавају рад привреди, не само у смислу разноврсних папира које треба прибавити, него зато што то кошта",
+    "tekst": "Најзанимљивије је питање због чега се оволико упињете да информишете грађане како ми нешто што сматрамо укидањем сувишног броја агенција, у ствари потајно и привидно претварамо у потпуну етатизацију свих установа у овој држави?",
     "date": "2012-07-26",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/STENO - Trece vanredno zasedanje 26. jul 2012, drugi dan rada cir.doc"
    }
   },
   {
-   "tekst": "Odbacuje tvrdnje da će zakon dovesti do otpuštanja u državnoj upravi i navodi da radni odnos zaposlenih ne prestaje.",
+   "tekst": "Тврди да неће доћи до отпуштања запослених у државној управи и да запослени остају на својим пословима, а да одговарају само службеници на положају који не извршавају задатке.",
    "govora": 3,
    "sazivi": [
     "9"
@@ -42,15 +42,27 @@
    }
   },
   {
-   "tekst": "Zamera prethodnoj vladi što je zapošljavala partijske kadrove i povećavala broj zaposlenih u državnoj upravi.",
+   "tekst": "Замера претходној влади и њеним министрима начин на који су запошљавали и отпуштали људе у државној управи.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "ти који су завршили тако тежак и уважен факултет са десетком, не понижавајући пољопривредни факултет, у сврху партијске промоције нађоше посао",
+    "tekst": "Упутила бих колегу Милисављевића, кога изузетно уважавам, да пита колегу који је био министар пољопривреде – како је он успео да запосли две хиљаде људи у Министарству за пољопривреду од времена када се најавише избори, који су били саветници, а њима је то било прво радно место?",
     "date": null,
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
+   }
+  },
+  {
+   "tekst": "Наводи да закон о министарствима не шири нити сужава надлежности, већ уређује постојећу структуру, а да ће оно што није дефинисано касније уредити нова влада.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Као што вам је речено у уводном излагању, апсолутно смо гледали да не ширимо делатности, да их не сужавамо, него да постојећу структуру министарстава у овом тренутку учинимо таквом да се ефикасније обављају послови, јер заиста немамо прецизне билансе стања, средстава и обавеза које се имају и према пољопривредницима и према поступцима који су у току.",
+    "date": "2012-07-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/STENO - Trece vanredno zasedanje 26. jul 2012, drugi dan rada cir.doc"
    }
   }
  ]

@@ -186,8 +186,20 @@ Izlaz: SAMO JSON objekat, bez ijedne reči pre ili posle, oblika:
 
 
 def reply_json(text: str) -> dict:
-    """The JSON object in a model's reply."""
-    m = re.search(r"\{.*\}", text, flags=re.S)
-    if not m:
-        raise ValueError("nema JSON objekta u odgovoru")
-    return json.loads(m.group(0))
+    """The JSON object in a model's reply. A model sometimes writes its answer, sees a slip and writes it again
+    (two objects one after the other): the last whole object is its answer."""
+    dec, found, i = json.JSONDecoder(), [], text.find("{")
+    while i >= 0:
+        try:
+            obj, end = dec.raw_decode(text, i)
+        except ValueError:
+            break
+        if isinstance(obj, dict):
+            found.append(obj)
+        i = text.find("{", end)
+    if not found:  # not one whole object from the first brace: let the reader say what is wrong with it
+        m = re.search(r"\{.*\}", text, flags=re.S)
+        if not m:
+            raise ValueError("nema JSON objekta u odgovoru")
+        return json.loads(m.group(0))
+    return found[-1]

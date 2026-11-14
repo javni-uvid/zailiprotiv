@@ -1,56 +1,56 @@
 {
  "mp": "милојичић ненад",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 11,
  "sittings": 7,
  "points": [
   {
-   "tekst": "Zamera što plate prosvetnih radnika nisu izjednačene sa republičkim prosekom, iako je to obećano.",
+   "tekst": "Замера што плате просветних радника нису изједначене са републичким просеком, како је обећано.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Говорили сте о томе да ћете почетну плату просветног радника у основном и средњем образовању изједначити са републичким просеком.",
+    "tekst": "Говорили сте о томе да ћете почетну плату просветног радника у основном и средњем образовању изједначити са републичким просеком. Морам сад да вам кажем да смо ми у овом тренутку чак 100 евра испод републичког просека.",
     "date": "2025-10-07",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 7. oktobar 2025. godine.docx"
    }
   },
   {
-   "tekst": "Zamera nova zaduženja države.",
+   "tekst": "Наводи да је у Бору због рударења загађен ваздух и да то утиче на здравље становника.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Морам да вам кажем, без обзира како ви звали ово, да ли је зајам или кредит, ово је ново задужење преко грбаче наших грађана.",
-    "date": "2025-10-20",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 20. oktobra 2025. godine, sedmi dan rada.docx"
+    "tekst": "Оно што у овом тренутку ми имамо у Бору је бригада оловних војника. Чак 70 људи у својој крви има већу концентрацију олова него што је то дозвољено, чак 10 пута већу него што је то дозвољено у ЕУ.",
+    "date": "2025-12-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
    }
   },
   {
-   "tekst": "Zamera što su promene cena struje, po kojima domaćinstva plaćaju više po kilovatu.",
+   "tekst": "Наводи да измене зона потрошње струје грађанима подижу цену за 14 динара по киловату.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Сви они који троше отприлике око 1.000 киловата ће трошити или плаћати 14.000 динара месечно више, а чак и оне категорије које троше минималну струју око 500 киловата ће плаћати 7.000 динара више сваког месеца.",
+    "tekst": "Како је могуће да сте се договорили да не постоје више плава и зелена зона и шта то значи за грађане? То, драги моји грађани, значи да ћете по киловату плаћати 14 динара више сваког месеца.",
     "date": null,
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
    }
   },
   {
-   "tekst": "Upozorava na zagađenje u Boru i na zdravstvene posledice po stanovnike.",
+   "tekst": "Замера Синиши Малом због мера које се тичу пензија, наводећи да пензионери због њих губе.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Чак 70 људи у својој крви има већу концентрацију олова него што је то дозвољено, чак 10 пута већу него што је то дозвољено у ЕУ.",
-    "date": "2025-12-01",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 01.12.2025. dan 5.docx"
+    "tekst": "Ви сте 2015. године донели противзакониту уредбу или закон, како год, где смањујете пензије за 0,34% на месечном нивоу, што доводи до смањења пензија уд 4% на годишњем нивоу, а укупно може да буде смањење чак 20,4%.",
+    "date": "2026-06-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Sedmog vanrednog zasedanja NSRS 2. dan 18.06.2026..docx"
    }
   }
  ]
