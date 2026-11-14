@@ -52,7 +52,7 @@
     {% endfor %}
     </tbody>
   </table></div>
-  <p class="label">Sazivi nisu čitani jednako: brojevi zavise od toga koliko je sednica pročitano u kojem, pa se sazivi ne mogu porediti po zbiru.</p>
+  <p class="label">{% if notes_all %}Sazivi nisu jednako dugi i nemaju isti broj sednica, pa se ne mogu porediti po zbiru.{% else %}Sazivi nisu čitani jednako: brojevi zavise od toga koliko je sednica pročitano u kojem, pa se sazivi ne mogu porediti po zbiru.{% endif %}</p>
 </section>
 {% else %}
 <p class="label">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} ovog saziva. <a href="{{ c.page_who }}">Svih 25 po svakom broju, i svaka teška reč u rečenici</a></p>
@@ -81,9 +81,9 @@
         </summary>
         <div class="measure-more" data-pagefind-ignore>
           <p class="meta">{{ where(e) }}{% if w and w.slug %} · <a href="poslanik/{{ w.slug }}.html#mere">sve mere: {{ w.name }}</a>{% endif %}</p>
-          {% if e.before %}<p class="turn-who">Govor pre toga: {{ person(e.before_who) }}</p><blockquote class="said"><p>{{ e.before.text|latin }}</p></blockquote>{% endif %}
-          <p class="turn-who">Sve reči predsedavajućeg</p>
-          <blockquote class="said"><p>{{ e.chair.text|latin }}</p>{% if e.ours or e.notes %}<footer>{% if e.ours %}<a href="{{ e.ours }}">Na ovom mestu u beleškama</a>{% endif %}{% if e.ours and e.notes %} · {% endif %}{% if e.notes %}<a href="{{ e.notes }}">izvorni fajl Skupštine</a>{% endif %}</footer>{% endif %}</blockquote>
+          {% if e.before %}<p class="turn-who">Govor pre toga: {{ person(e.before_who) }}</p><blockquote class="said"><p>{% if e.before.text|length > 1500 %}… {{ e.before.text[-1500:]|latin }}{% else %}{{ e.before.text|latin }}{% endif %}</p></blockquote>{% endif %}
+          <p class="turn-who">Reči predsedavajućeg oko mere</p>
+          <blockquote class="said"><p>{% if e.chair.text|length > 2000 %}{% set from = [e.at - 900, 0]|max %}{% if from %}… {% endif %}{{ e.chair.text[from:from + 2000]|latin }}{% if from + 2000 < e.chair.text|length %} …{% endif %}{% else %}{{ e.chair.text|latin }}{% endif %}</p>{% if e.ours or e.notes %}<footer>{% if e.ours %}<a href="{{ e.ours }}">Na ovom mestu u beleškama</a>{% endif %}{% if e.ours and e.notes %} · {% endif %}{% if e.notes %}<a href="{{ e.notes }}">izvorni fajl Skupštine</a>{% endif %}</footer>{% endif %}</blockquote>
         </div>
       </details>
     </li>
@@ -141,7 +141,7 @@
   <p class="label">{{ note }}</p>
 </section>
 {% endmacro %}
-<p class="meta">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} {{ "svih saziva zajedno" if part == "svi" else "ovog saziva" }} (sednice zakona sa najviše glasova protiv), ne u svim sednicama; {{ c.speakers }} govornika. Prvih {{ c.top.speeches|length }} po svakom broju, isto pravilo za svakoga. Predsedavajući se ne broji dok vodi sednicu.</p>
+<p class="meta">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} {{ "svih saziva zajedno" if part == "svi" else "ovog saziva" }}{% if notes_all %}: to su sve sednice čije je beleške Skupština objavila{% else %} (sednice zakona sa najviše glasova protiv), ne u svim sednicama{% endif %}; {{ c.speakers }} govornika. Prvih {{ c.top.speeches|length }} po svakom broju, isto pravilo za svakoga. Predsedavajući se ne broji dok vodi sednicu.</p>
 <nav class="page-menu" aria-label="Na ovoj strani"><a href="#govori">Govori</a><a href="#replike">Replike</a><a href="#poslovnik">Poslovnik</a><a href="#mere">Mere</a><a href="#reci">Teške reči</a></nav>
 {{ board("govori", "Najviše govora", c.top.speeches, "speeches", "", "Svako uzimanje reči je jedan govor, i kratka replika i dugo izlaganje; uz broj je ukupan broj izgovorenih reči.") }}
 {{ board("replike", "Najviše razmena replika", c.top.exchanges, "exchanges", "", "U koliko je razmena replika govornik učestvovao. Razmena: dvoje govornika naizmenično, najmanje četiri kratka govora.") }}
@@ -155,7 +155,7 @@
   {% for r in c.top.harsh %}
     <li{% if r.who.slug %} id="reci-{{ r.who.slug }}"{% endif %}><details><summary><span class="board-who">{{ r.who.name }}</span> <b class="board-n">{{ r.harsh|length }}</b> <span class="meta">· {{ r.harsh_words|join(", ") }}</span></summary>
       {% if r.who.slug %}<p class="meta"><a href="poslanik/{{ r.who.slug }}.html">Strana poslanika</a></p>{% endif %}
-      <ul class="plain harsh">{% for h in r.said %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.ours or h.notes %}<a href="{{ h.ours or h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>
+      <ul class="plain harsh">{% for h in r.said[:25] %}<li>„{% for t, hit in h.parts %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“ <span class="meta nowrap">· {% if h.ours or h.notes %}<a href="{{ h.ours or h.notes }}">{{ h.date|day }}</a>{% else %}{{ h.date|day }}{% endif %}</span></li>{% endfor %}</ul>{% if r.said|length > 25 %}<p class="label">Poslednjih 25 od {{ r.said|length }} rečenica. Svaka je u beleškama: <a href="pretraga.html">pretraga po govoru</a>.</p>{% endif %}
     </details></li>
   {% endfor %}
   </ol>

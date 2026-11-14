@@ -28,7 +28,7 @@
     {% endif %}
     {% endfor %}
   </ol>
-  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a> <span class="label">Brojano u pročitanim beleškama, ne u svim sednicama.</span></p>
+  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a> <span class="label">{% if notes_all %}Brojano u beleškama svih sednica saziva koje je Skupština objavila.{% else %}Brojano u pročitanim beleškama, ne u svim sednicama.{% endif %}</span></p>
 </section>
 {% endif %}
   </div>
