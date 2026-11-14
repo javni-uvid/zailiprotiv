@@ -94,11 +94,14 @@ def test_site_builds_every_page(tmp_path):
         if page.name == "pretraga.html":  # and the search's two scripts, both from the site itself
             assert re.findall(r'<script src="(?!site\.js)([^"?]+)', text) == ["pagefind/pagefind-ui.js", "pretraga.js"]
             text = re.sub(r'<script src="(?:pagefind/pagefind-ui|pretraga)\.js[^>]*>', "", text)
-        if page.name == "glasaj.html":  # and its own data and script, both from the site itself
+        v = re.search(r'data-v="(\w+)"', text).group(1)
+        if page.name == "podelili-salu.html":  # the quiz: and its own data and script, both from the site itself
             assert re.findall(r"<script[^>]*>", text)[1:] == ['<script type="application/json" id="quiz-data">',
-                '<script src="glasaj.js?v=' + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
-            text = text.replace('<script type="application/json" id="quiz-data">', "").replace(
-                '<script src="glasaj.js?v=' + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>', "")
+                                                              f'<script src="../glasaj.js?v={v}" defer>']
+            text = text.replace('<script type="application/json" id="quiz-data">', "").replace(f'<script src="../glasaj.js?v={v}" defer>', "")
+        if page.name == "glasaj.html":  # the visitor's ballot: its own script
+            assert re.findall(r"<script[^>]*>", text)[1:] == [f'<script src="listic.js?v={v}" defer>']
+            text = text.replace(f'<script src="listic.js?v={v}" defer>', "")
         assert re.findall(r"<script[^>]*>", text) == [f'<script src="{"../" if page.parent != out else ""}site.js?v='
                                                       + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
         assert "http://" not in text and not re.search(r'(?:src|href)="https?://(?!www\.parlament\.gov\.rs|github\.com)'
@@ -167,7 +170,7 @@ def test_groups_numbers_quiz_and_share_picture(tmp_path):
     assert (out / "zakon" / "zakon-o-oruzju.png").read_bytes()[:4] == b"\x89PNG"
     assert "Skupština u brojkama" in (out / "brojke.html").read_text()
     assert (out / "grupe.html").exists() and (out / "glasaj.js").exists()
-    quiz = json.loads(re.search(r'id="quiz-data">(.*?)</script>', (out / "glasaj.html").read_text(), re.S).group(1))
+    quiz = json.loads(re.search(r'id="quiz-data">(.*?)</script>', (out / "kviz" / "podelili-salu.html").read_text(), re.S).group(1))
     assert quiz["laws"] == [{"s": "zakon-o-oruzju"}] and {m["v"] for m in quiz["mps"]} == {"z", "p", "-"}
     area = next((out / "oblast").glob("*.xml")).read_text()
     assert "<feed" in area and "zakon-o-oruzju.html" in area
@@ -177,12 +180,12 @@ def test_visitors_votes_are_sent_only_when_an_address_is_set(tmp_path):
     out = tmp_path / "_site"
     root = data(tmp_path)
     site.build(root, out, "zailiprotiv.rs")
-    page = (out / "glasaj.html").read_text()
+    page = (out / "kviz" / "podelili-salu.html").read_text()
     assert "ulaze u zbir" not in page and 'data-api=""' in page and "nikuda se ne šalju" in page
     assert json.loads((out / "glasaj.json").read_text()) == {"laws": ["zakon-o-oruzju"]}
     (root / "settings.json").write_text(json.dumps({"votes_api": "https://glasovi.example/"}))
     site.build(root, out, "zailiprotiv.rs")
-    page = (out / "glasaj.html").read_text()
+    page = (out / "kviz" / "podelili-salu.html").read_text()
     assert "ulaze u zbir" in page and 'data-api="https://glasovi.example/"' in page and "nije istraživanje" in page
 
 
@@ -407,3 +410,20 @@ def test_a_quotes_name_depends_on_its_words_alone():
     from zailiprotiv.site import qid
     assert qid("Ovaj zakon je dobar.") == qid("Ovaj zakon je dobar.") != qid("Ovaj zakon je loš.")
     assert len(qid("a")) == 10 and qid("a").isalnum()
+
+
+def test_the_ballots_files_hold_each_law_with_a_letter_per_mp(tmp_path):
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs")
+    where = json.loads((out / "listic" / "zakoni.json").read_text())
+    conv = where["zakon-o-oruzju"]
+    held = json.loads((out / "listic" / f"{conv}.json").read_text())
+    law = held["laws"]["zakon-o-oruzju"]
+    assert len(law["v"]) == len(held["mps"]) == 3 and set(law["v"]) <= set("zpu-") and len(law["k"]) == 3
+    assert law["k"][0] == law["v"].count("z") and len(law["r"]) == 3 and all(0 <= x <= 1 for x in law["r"])
+    assert (out / "kviz" / "podelili-salu.html").exists() and "Moj listić" in (out / "glasaj.html").read_text()
+
+
+def test_place_among_values():
+    from zailiprotiv.pages_ballot import below
+    assert below([0, 0, 5, 10]) == {0: 0.0, 5: 0.67, 10: 1.0}

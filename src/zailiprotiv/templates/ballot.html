@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, votebox with context %}
+{% block title %}Glasaj i ti — Za ili Protiv{% endblock %}
+{% block description %}Glasaj o zakonima kao da si poslanik: kviz o zakonima koji su podelili salu, predlozi o kojima Skupština još nije glasala, i tvoj listić sa svim tvojim glasovima.{% endblock %}
+{% block main %}
+{# The visitor's ballot is in their browser; listic.js fills everything marked data-l. Without votes the page is the
+   invitation: the quiz and the newest bill in procedure. #}
+<div class="lb-h"><h1 id="lb-title">Kako bi ti glasao?</h1><p class="lb-sum" id="lb-sum">Moj listić · <b>prazan</b>, popuni ga glasanjem</p></div>
+<noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
+
+<div id="lb-mine" hidden>
+  <div class="lb-top">
+    <div><small>Najviše glasova kao ja</small><b class="big" id="lb-mp">…</b><p id="lb-mp-n"></p></div>
+    <div><small>Grupa najbliža meni</small><b class="big" id="lb-group">…</b><p id="lb-group-n"></p></div>
+    <div><small>Da se ja pitam</small><b class="big" id="lb-fact">…</b><p id="lb-fact-n"></p></div>
+  </div>
+  <div class="lb-acts"><button type="button" class="lb-btn" id="lb-share-open">Podeli listić</button><span>Listić je samo u ovom pregledaču. <button type="button" class="linklike" id="lb-clear">Obriši ga</button></span></div>
+  <div class="lb-share" id="lb-share" hidden>
+    <img id="lb-card" alt="" width="1080" height="1350">
+    <div>
+      <button type="button" class="button" id="lb-share-img">Podeli sliku</button>
+      <a class="button ghost" id="lb-save" download="moj-listic.png" href="#">Sačuvaj sliku</a>
+      <button type="button" class="button ghost" id="lb-copy">Kopiraj tekst i link</button>
+      <p class="meta" id="lb-shared" aria-live="polite"></p>
+      <p class="label">Na slici nema naziva zakona: vidi se koliko si puta glasao za i protiv i gde si drugačije od Skupštine, ne i o kom zakonu.</p>
+    </div>
+  </div>
+  <section class="lb-pick" id="lb-pick" hidden><small id="lb-pick-why"></small><h2><a id="lb-pick-law"></a></h2><p id="lb-pick-nums"></p></section>
+</div>
+
+<div class="feat">
+  {% if quiz_laws %}
+  <div class="f-quiz" id="lb-quiz" data-laws="{{ quiz_laws|map(attribute="slug")|join(" ") }}">
+    <small class="k" id="lb-quiz-k">Kviz · {{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }} · oko 5 minuta</small>
+    <h2>{{ quiz_laws|length }} zakona koji su podelili salu</h2>
+    <div class="bar" aria-hidden="true"><i></i><i></i></div>
+    <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koji poslanik je glasao kao ti.</p>
+    <a class="lb-btn" id="lb-quiz-go" href="kviz/podelili-salu.html">Počni kviz</a>
+  </div>
+  {% endif %}
+  {% if bill and votes_api %}
+  <div class="f-bill">
+  {% call votebox("p." ~ bill.slug) %}
+    <small class="k">Najnovije u proceduri · podnet {{ bill.submitted|day }}</small>
+    <h2><a href="predlog/{{ bill.slug }}.html">{{ bill.title|latin|truncate(120, killwords=False, end="…") }}</a></h2>
+    <p>{% if bill.gist %}{{ bill.gist|latin|truncate(260, killwords=False, end="…") }} {% endif %}Poslanici još nisu glasali: glasaj pre njih. <a href="predlog/{{ bill.slug }}.html">Šta predlog menja</a> · <a href="u-proceduri.html">Svi predlozi u proceduri ({{ waiting }})</a></p>
+  {% endcall %}
+  </div>
+  {% endif %}
+</div>
+
+<div id="lb-rest" hidden>
+  <section class="lb-list">
+    <h2>Sve o čemu sam glasao</h2>
+    <div class="lb-filters" id="lb-filters" role="group" aria-label="Koji glasovi"></div>
+    <div class="scroll"><table class="ballot"><thead><tr><th>Zakon</th><th>Moj glas</th><th>Skupština</th><th>U sali</th></tr></thead><tbody id="lb-rows"></tbody></table></div>
+    <p><button type="button" class="more-btn" id="lb-more" hidden></button></p>
+  </section>
+  <section class="lb-who">
+    <div><h2>Poslanici</h2><ol id="lb-mps"></ol></div>
+    <div><h2>Grupe</h2><ol id="lb-groups"></ol></div>
+  </section>
+  <p class="label" id="lb-note">Poredimo samo zakone o kojima ste oboje glasali za, protiv ili uzdržano; prikazani su poslanici i grupe sa najmanje polovinom tvojih zakona. Poređenje se računa u pregledaču. Zakon koji je izdvojen bira se pravilom: koliko je podelio salu, koliko je varnica i amandmana bilo u raspravi, i da li si glasao drugačije od Skupštine. Ovo je poređenje glasova, ne preporuka za koga da glasaš.</p>
+</div>
+<p class="meta foot-note">Glasaš bez naloga i imena; listić se čuva samo u ovom pregledaču, a u zbir posetilaca ide glas uz nasumičnu oznaku uređaja. <a href="kako-racunamo.html#posetioci">Šta čuvamo</a></p>
+{% if bill and votes_api %}<script src="glas.js?v={{ css }}" defer></script>
+{% endif %}<script src="listic.js?v={{ css }}" defer></script>
+{% endblock %}

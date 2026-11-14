@@ -37,3 +37,27 @@
 {% macro assembly_tabs(now) -%}
 <nav class="subtabs law-kinds four" aria-label="Skupština">{% for key, page, label in [("nedelje", "nedelje.html", "Nedelje"), ("sednice", "sednice.html", "Sednice"), ("sazivi", "saziv-" ~ current ~ ".html", "Sazivi"), ("brojke", "brojke.html", "U brojkama")] %}<a href="{{ page }}"{% if key == now %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}</nav>
 {%- endmacro %}
+
+{# The visitor's own vote (glas.js): on a law's page with the Assembly's result to compare with, on a bill's page
+   (and its card on "Glasaj i ti") before the Assembly has voted. One vote to a device, replaced by a later one;
+   other visitors' totals show after voting. Without the script the box stays hidden. `item` is the name the
+   counter knows it by: the law's slug, or "p." and the bill's. #}
+{% macro votebox(item, counts=None, conv="", lead="") %}
+<section class="yv" id="glasaj" hidden data-api="{{ votes_api }}" data-item="{{ item }}"{% if counts %} data-za="{{ counts.za }}" data-protiv="{{ counts.protiv }}" data-svi="{{ counts.values()|sum }}"{% endif %} data-pagefind-ignore>
+  <div class="yv-ask">
+    {% if caller %}{{ caller() }}{% else %}<h2>Kako bi ti glasao?</h2>
+    <p>{{ lead }}</p>{% endif %}
+    <p class="yv-fine">Glas ide u zbir posetilaca, bez naloga i imena. Jedan glas po uređaju; možeš ga promeniti. <a href="{{ root }}kako-racunamo.html#posetioci">Šta čuvamo</a></p>
+  </div>
+  <div class="yv-btns"><button type="button" class="z" data-v="z">Za</button><button type="button" class="p" data-v="p">Protiv</button><button type="button" class="u" data-v="u">Uzdržan</button></div>
+  <div class="yv-done" hidden>
+    <h2>Glasao si <span class="yv-you"></span></h2>
+    <p><span class="yv-like"></span> <button type="button" class="linklike yv-again">Promeni glas</button> · <a href="{{ root }}glasaj.html">Moj listić</a></p>
+    <p class="yv-fine">Glasovi posetilaca nisu anketa: glasa ko hoće, i nije reprezentativno.</p>
+  </div>
+  <div class="yv-cmp" hidden>
+    {% if counts %}<div><small>Skupština</small><b><span class="za">{{ counts.za }}</span> : <span class="pr">{{ counts.protiv }}</span></b><div class="yv-bar yv-bar-a"><i></i><i></i><i></i></div></div>{% endif %}
+    <div><small>Posetioci sajta</small><b><span class="za yv-nz">…</span> : <span class="pr yv-np">…</span></b><div class="yv-bar yv-bar-b"><i></i><i></i><i></i></div><small class="yv-nu"></small></div>
+  </div>
+</section>
+{% endmacro %}

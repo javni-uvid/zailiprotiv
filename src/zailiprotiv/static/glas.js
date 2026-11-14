@@ -20,6 +20,7 @@
     return d;
   }
   var votes = read("zip.glasovi", {}), marks = read("zip.citati", {}), mine = votes[item] || "";
+  var bill = !box.dataset.svi;  // a bill in procedure: the Assembly has not voted, so there is nothing to compare with yet
   var ask = box.querySelector(".yv-ask"), btns = box.querySelector(".yv-btns"), done = box.querySelector(".yv-done"), cmp = box.querySelector(".yv-cmp");
   var quotes = Array.prototype.slice.call(document.querySelectorAll("blockquote.quote[data-q]"));
   box.hidden = false;
@@ -36,7 +37,8 @@
     var you = box.querySelector(".yv-you"); you.textContent = WORD[mine]; you.className = "yv-you v-" + mine;
     var like = box.querySelector(".yv-like"), n = mine === "z" ? +box.dataset.za : mine === "p" ? +box.dataset.protiv : 0;
     like.innerHTML = "";
-    if (mine !== "u") {
+    if (bill) like.appendChild(document.createTextNode("Poslanici još nisu glasali. "));
+    else if (mine !== "u") {
       like.appendChild(document.createTextNode("Kao " + n + " " + plural(n, "poslanik", "poslanika", "poslanika") + ". "));
       var who = document.createElement("a"); who.href = "#roll"; who.textContent = "Ko su"; like.appendChild(who);
       like.appendChild(document.createTextNode(" · "));
@@ -46,7 +48,7 @@
         if (d) d.open = true;
       });
     }
-    bar(box.querySelector(".yv-bar-a"), +box.dataset.za, +box.dataset.svi - box.dataset.za - box.dataset.protiv, +box.dataset.protiv);
+    if (!bill) bar(box.querySelector(".yv-bar-a"), +box.dataset.za, +box.dataset.svi - box.dataset.za - box.dataset.protiv, +box.dataset.protiv);
     if (t) {
       box.querySelector(".yv-nz").textContent = num(t.z); box.querySelector(".yv-np").textContent = num(t.p);
       box.querySelector(".yv-nu").textContent = t.u ? num(t.u) + " " + plural(t.u, "uzdržan", "uzdržana", "uzdržanih") : "";
@@ -60,7 +62,9 @@
   }
   btns.addEventListener("click", function (e) {
     var b = e.target.closest("button[data-v]"); if (!b) return;
+    votes = read("zip.glasovi", {});  // another tab may have voted meanwhile
     mine = b.dataset.v; votes[item] = mine; write("zip.glasovi", votes);
+    try { document.dispatchEvent(new CustomEvent("zip:glas")); } catch (e) {}
     show(null);
     post("/z", { d: device(), item: item, v: mine }).then(show).catch(function () {
       box.querySelector(".yv-nu").textContent = "Zbir posetilaca trenutno nije dostupan; tvoj glas je zapamćen u ovom pregledaču.";

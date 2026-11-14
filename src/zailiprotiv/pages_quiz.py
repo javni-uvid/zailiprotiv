@@ -54,8 +54,10 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
     # The laws visitors' votes are counted for: the counter (worker/) accepts no others.
     (out / "glasaj.json").write_text(json.dumps({"laws": [it["slug"] for it in quiz_laws]}), encoding="utf-8")
     shutil.copy(HERE / "static" / "glasaj.js", out / "glasaj.js")
-    (out / "glasaj.html").write_text(env.get_template("quiz.html").render(
+    # The quiz has its own page; "Glasaj i ti" (glasaj.html, pages_ballot) leads to it and holds the visitor's ballot.
+    (out / "kviz").mkdir(exist_ok=True)
+    (out / "kviz" / "podelili-salu.html").write_text(env.get_template("quiz.html").render(
         **common, laws=quiz_laws, chosen_by_hand=chosen_by_hand, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
-        root=""), encoding="utf-8")
+        root="../"), encoding="utf-8")
     render.laws = quiz_laws  # for the home page's band
     return active

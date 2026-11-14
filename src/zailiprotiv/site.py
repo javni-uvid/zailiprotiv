@@ -375,7 +375,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
-    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js"):
+    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js"):
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     # The stylesheet's and script's address changes with their content, so a browser or cache never pairs new pages
@@ -771,6 +771,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_procedure
     coming, waiting = pages_procedure.render(common=common, current=current, env=env,
         items_by_conv=items_by_conv, loaded=loaded, out=out, root=root)
+    from zailiprotiv import pages_ballot
+    pages_ballot.render(common=common, convs=convs, current=current, env=env, floor_of=floor_of,
+        gone=getattr(pages_procedure.render, "gone", []), items_by_conv=items_by_conv, out=out,
+        quiz_laws=getattr(pages_quiz.render, "laws", []), rows_mp=rows_mp, waiting=waiting)
     from zailiprotiv import digest
     digest.render(env=env, common=common, out=out, root=root, current=current, items_by_conv=items_by_conv,
                   site_url=f"https://{domain}/" if domain else "")

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import plural, how with context %}
+{% from "macros.html" import plural, how, votebox with context %}
 {# A bill in procedure: what is known of it before the Assembly votes. Once passed, the page sends on to the law's. #}
 {% set name = b.title|latin %}
 {% block title %}{{ b.title|latin }} — Za ili Protiv{% endblock %}
@@ -20,6 +20,8 @@
   <p class="score"><span class="bill-wait">Poslanici još nisu glasali</span></p>
   <p class="meta">{% if b.sitting %}<b>Na dnevnom redu: {% if b.sitting.url %}<a href="{{ b.sitting.url }}">{{ b.sitting.title|latin }}</a>{% else %}{{ b.sitting.title|latin }}{% endif %}{% if b.sitting.starts %}, {{ b.sitting.starts[:10]|day }}{% endif %}.</b> {% else %}Još nije na dnevnom redu nijedne sazvane sednice. {% endif %}{% if b.days is not none %}U proceduri {{ b.days }} {{ plural(b.days, "dan", "dana", "dana") }}.{% endif %}</p>
 </section>
+{% if votes_api %}{{ votebox("p." ~ b.slug, lead="Glasaj pre poslanika. Kad Skupština odluči, na svom listiću ćeš videti ko je glasao kao ti.") }}
+<script src="{{ root }}glas.js?v={{ css }}" defer></script>{% endif %}
 {% else %}
 <p class="note">Ovaj predlog više nije na spisku Skupštine (poslednji put viđen {{ b.last_seen|day }}): povučen je, ili mu je postupak prestao. Skupština ne navodi razlog, pa ga ne navodimo ni mi.</p>
 {% endif %}

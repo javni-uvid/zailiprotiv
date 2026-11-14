@@ -52,6 +52,12 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
         row["ocr"] = bool(loaded[current][2].get(row.get("bill_file", ""), {}).get("ocr"))
         (out / "predlog" / f"{row['slug']}.html").write_text(page.render(
             **common, b=row, waits=row in waiting, checked=proc["fetched"], root="../"), encoding="utf-8")
+    # The counter accepts votes on the bills that wait, by the name "p.<bill>": added to the list the build wrote.
+    allowed_path = out / "glasanje.json"
+    if allowed_path.exists():
+        allowed = json.loads(allowed_path.read_text(encoding="utf-8"))
+        allowed["laws"].update({"p." + row["slug"]: [] for row in waiting})
+        allowed_path.write_text(json.dumps(allowed, separators=(",", ":")), encoding="utf-8")
     waiting.sort(key=lambda r: (r["submitted"] or "", r["title"]), reverse=True)
     gone.sort(key=lambda r: (r["last_seen"], r["submitted"] or ""), reverse=True)
     who_label = {"vlada": "Vlada", "poslanici": "Poslanici", "drugi": "Drugi predlagači"}
@@ -59,4 +65,5 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
         **common, waiting=waiting, gone=gone[:200], coming=coming, checked=proc["fetched"], who_label=who_label,
         who_counts=[(k, who_label[k], sum(1 for r in waiting if r["who"] == k)) for k in who_label],
         oldest=min((r["submitted"] for r in waiting if r["submitted"]), default=None), root=""), encoding="utf-8")
+    render.gone = gone
     return coming, waiting

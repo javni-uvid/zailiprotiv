@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, chamber, tally, quote, plural, how with context %}
+{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox with context %}
 {% block title %}{{ law.title }} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.title }}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
@@ -37,25 +37,7 @@
   </dl>
 </section>
 {% if votes_api and final %}
-{# The visitor's own vote on this law (glas.js): one to a device, replaced by a later one. What other visitors chose
-   is shown after voting, not before. Without the script the box stays hidden. #}
-<section class="yv" id="glasaj" hidden data-api="{{ votes_api }}" data-item="{{ it.slug }}" data-za="{{ final.counts.za }}" data-protiv="{{ final.counts.protiv }}" data-svi="{{ final.counts.values()|sum }}" data-pagefind-ignore>
-  <div class="yv-ask">
-    <h2>Kako bi ti glasao?</h2>
-    <p>Pročitaj šta zakon menja i šta je rečeno u raspravi, pa glasaj kao da si poslanik.</p>
-    <p class="yv-fine">Glas ide u zbir posetilaca, bez naloga i imena. Jedan glas po uređaju; možeš ga promeniti. <a href="{{ root }}kako-racunamo.html#posetioci">Šta čuvamo</a></p>
-  </div>
-  <div class="yv-btns"><button type="button" class="z" data-v="z">Za</button><button type="button" class="p" data-v="p">Protiv</button><button type="button" class="u" data-v="u">Uzdržan</button></div>
-  <div class="yv-done" hidden>
-    <h2>Glasao si <span class="yv-you"></span></h2>
-    <p><span class="yv-like"></span> <button type="button" class="linklike yv-again">Promeni glas</button></p>
-    <p class="yv-fine">Glasovi posetilaca nisu anketa: glasa ko hoće, i nije reprezentativno.</p>
-  </div>
-  <div class="yv-cmp" hidden>
-    <div><small>Skupština</small><b><span class="za">{{ final.counts.za }}</span> : <span class="pr">{{ final.counts.protiv }}</span></b><div class="yv-bar yv-bar-a"><i></i><i></i><i></i></div></div>
-    <div><small>Posetioci sajta</small><b><span class="za yv-nz">…</span> : <span class="pr yv-np">…</span></b><div class="yv-bar yv-bar-b"><i></i><i></i><i></i></div><small class="yv-nu"></small></div>
-  </div>
-</section>
+{{ votebox(it.slug, final.counts, lead="Pročitaj šta zakon menja i šta je rečeno u raspravi, pa glasaj kao da si poslanik.") }}
 <script src="{{ root }}glas.js?v={{ css }}" defer></script>
 {% endif %}
 {% else %}

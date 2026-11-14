@@ -5,6 +5,7 @@
   var data = JSON.parse(document.getElementById("quiz-data").textContent);
   var list = document.getElementById("quiz"), items = Array.prototype.slice.call(list.querySelectorAll(".q-item"));
   var WORD = { z: "za", p: "protiv", u: "uzdržan" };
+  var ROOT = document.body.dataset.root || "";
   var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
   // What is kept for the tab: the answers by law (so the order of the laws may change), and the law to show first.
   var KEY = "glasaj:" + slugs().sort().join("|"), FIRST = "glasaj:prvi", at = 0;
@@ -45,6 +46,8 @@
   }
   try {
     var saved = JSON.parse(sessionStorage.getItem(KEY) || "null");
+    // Failing the tab's own answers, the visitor's ballot: what they voted on these laws before, here or on a law's page.
+    if (!saved) saved = JSON.parse(localStorage.getItem("zip.glasovi") || "null");
     if (saved && !Array.isArray(saved)) answers = data.laws.map(function (l) { return WORD[saved[l.s]] ? saved[l.s] : ""; });
   } catch (e) {}
   var cameWith = came ? slugs().indexOf(came.law) : -1;
@@ -126,7 +129,7 @@
       var qs = 0; answers.join("").split("").forEach(function (ch, k) { qs = (qs * 31 + ch.charCodeAt(0) + k) % 9973; });
       var pick = withQuote[qs % withQuote.length], foot = tq.querySelector("footer"), link = el("a", "", pick.p.n);
       tq.querySelector("p").textContent = "„" + pick.p.q + "“";
-      link.href = "poslanik/" + pick.p.s + ".html"; foot.textContent = "";
+      link.href = ROOT + "poslanik/" + pick.p.s + ".html"; foot.textContent = "";
       foot.appendChild(link); foot.appendChild(document.createTextNode(", u raspravi u Skupštini"));
     }
     redraw();
@@ -139,7 +142,7 @@
     three.forEach(function (x) {
       var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
       { var im = el("img", "q-face"); im.src = x.p.f ? "foto/" + x.p.f : "bez-slike.svg"; im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
-      a.href = "poslanik/" + x.p.s + ".html"; main.appendChild(a);
+      a.href = ROOT + "poslanik/" + x.p.s + ".html"; main.appendChild(a);
       if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
       li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
     });
@@ -148,7 +151,7 @@
     var gs = document.getElementById("q-groups"); gs.textContent = "";
     groups.forEach(function (x) {
       var tr = el("tr"), td = el("td"), a = el("a", null, x.g.n), cell = el("td", "vote-cell"), bar = el("div", "bar"), s = el("span", "v-za");
-      a.href = "grupa/" + x.g.s + ".html"; td.appendChild(a); tr.appendChild(td);
+      a.href = ROOT + "grupa/" + x.g.s + ".html"; td.appendChild(a); tr.appendChild(td);
       s.style.width = (100 * x.m.share) + "%"; bar.appendChild(s); cell.appendChild(bar); tr.appendChild(cell);
       tr.appendChild(el("td", "num", x.m.same + " od " + x.m.both));
       gs.appendChild(tr);
@@ -311,7 +314,7 @@
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
   }
   function note(text) { document.getElementById("q-shared").textContent = text; }
-  function shareUrl() { return location.protocol === "file:" ? "https://zailiprotiv.rs/glasaj.html" : location.href.split("#")[0]; }
+  function shareUrl() { return location.protocol === "file:" ? "https://zailiprotiv.rs/kviz/podelili-salu" : location.href.split("#")[0]; }
   function copyText() {
     var text = shareText + " " + shareUrl();
     (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
@@ -332,7 +335,7 @@
   });
   document.getElementById("q-reset").addEventListener("click", function () {
     answers = answers.map(function () { return ""; });
-    try { sessionStorage.removeItem(KEY); } catch (e) {}
+    try { sessionStorage.setItem(KEY, "{}"); } catch (e) {}
     items.forEach(function (item, i) { reveal(item, i, false); });
     go(0); window.scrollTo(0, 0);
   });
