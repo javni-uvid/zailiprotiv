@@ -406,7 +406,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                             "people": sorted(rows.values(), key=lambda r: r["who"]["name"]),
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
-                            "sittings": len(debates.get(c, {}))})
+                            "sittings": sum(1 for n in debates.get(c, {}).values() if n.get("speeches"))})
     # Two pages per convocation, as the words in full make long pages: the table by sitting with the chair's
     # measures (replike.html for the newest), and the exchanges (razmene.html).
     for i, c in enumerate(by_conv):
