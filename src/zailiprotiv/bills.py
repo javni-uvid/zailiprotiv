@@ -17,7 +17,7 @@ from pathlib import Path
 from zailiprotiv.translit import latin
 
 # The reader's version: a bill whose memorandum an older reader didn't find is read again by a newer one.
-READER = 2
+READER = 3  # 3: scanned bills (most of the MPs' own) are read by OCR
 
 # Section headings by their key word (in Latin, lowercased, after transliteration).
 SECTIONS = (("ustavni osnov", "basis"), ("hitn", "urgency"), ("razlo", "reasons"), ("objasnjenj", "explained"), ("objašnjenj", "explained"),
@@ -43,6 +43,7 @@ def _heading(line: str):
 class Memorandum:
     sections: dict[str, str] = field(default_factory=dict)  # basis, reasons, urgency, explained, funds, effects
     articles: list[dict] = field(default_factory=list)  # [{"article": 97, "paragraph": None, "points": [6, 7]}]
+    ocr: bool = False  # the text was recognised from scanned pages, so a letter or a digit may be wrong
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -51,6 +52,36 @@ class Memorandum:
 def text_of(pdf: Path | str) -> str:
     return subprocess.run(["pdftotext", "-layout", str(pdf), "-"], check=True, capture_output=True,
                           text=True).stdout
+
+
+OCR_PAGES = 60  # a scanned bill longer than this is read to here; the memorandum of the MPs' bills is short
+
+# What OCR in Cyrillic makes of the Roman numerals that head the memorandum's sections: "П." for "II.", "Ш." for
+# "III.", "ІV"/"ТУ"/"IУ" for "IV", and so on. Only at the start of a line, before a heading in capitals.
+_OCR_NUMERAL = re.compile(r"^(\s*)([IІ1lПШУVХXТT|]{1,4})(\s*[.,:]?\s+)(?=[A-ZА-ЯЂЈЉЊЋЏŠĐČĆŽ]{4,})", re.M)
+_OCR_AS = {"П": "II", "Ш": "III", "ІІ": "II", "ІІІ": "III", "ПІ": "III", "IП": "III", "ІП": "III", "ТУ": "IV", "ІУ": "IV", "IУ": "IV",
+           "ІV": "IV", "1У": "IV", "ГУ": "IV", "У": "V", "УІ": "VI", "УI": "VI", "УП": "VII", "УШ": "VIII", "ІХ": "IX", "IХ": "IX",
+           "Х": "X", "І": "I", "1": "I", "l": "I", "|": "I"}
+
+
+def ocr_headings(text: str) -> str:
+    return _OCR_NUMERAL.sub(lambda m: m.group(1) + _OCR_AS.get(m.group(2), m.group(2)) + ". ", text)
+
+
+def ocr_of(pdf: Path | str) -> str:
+    """The text of scanned pages, by tesseract (Serbian, both scripts). Empty when tesseract is not installed."""
+    import shutil
+    import tempfile
+    if not shutil.which("tesseract") or not shutil.which("pdftoppm"):
+        return ""
+    out = []
+    with tempfile.TemporaryDirectory() as d:
+        subprocess.run(["pdftoppm", "-r", "200", "-gray", "-l", str(OCR_PAGES), "-png", str(pdf), f"{d}/p"], check=True,
+                       capture_output=True)
+        for page in sorted(Path(d).glob("p*.png")):
+            got = subprocess.run(["tesseract", str(page), "-", "-l", "srp+srp_latn", "--psm", "6"], capture_output=True, text=True)
+            out.append(got.stdout if got.returncode == 0 else "")
+    return ocr_headings("\n".join(out))
 
 
 def _kind(heading: str) -> str | None:
@@ -121,4 +152,10 @@ def articles(basis: str) -> list[dict]:
 
 
 def read(pdf: Path | str) -> Memorandum:
-    return memorandum(text_of(pdf))
+    """The bill's memorandum. A PDF with next to no text is a scan (the MPs' own bills mostly are): read by OCR."""
+    text = text_of(pdf)
+    if len("".join(text.split())) >= 400:
+        return memorandum(text)
+    memo = memorandum(ocr_of(pdf))
+    memo.ocr = bool(memo.sections)
+    return memo

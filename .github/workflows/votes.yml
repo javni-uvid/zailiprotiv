@@ -46,7 +46,7 @@ jobs:
           python-version: "3.12"
       - name: Index the sittings and read the roll calls
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null  # tesseract: scanned bills
           pip install uv && uv sync --frozen
           c="--convocation ${{ inputs.convocation || '14' }}"
           uv run zailiprotiv $c index
