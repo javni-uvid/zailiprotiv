@@ -290,11 +290,11 @@
   },
   "summaries-14": {
    "claude-haiku-5-5": {
-    "cache_read": 44714,
-    "cache_written": 1132,
-    "input": 261672,
-    "output": 133971,
-    "replies": 81
+    "cache_read": 45280,
+    "cache_written": 1698,
+    "input": 267421,
+    "output": 137300,
+    "replies": 83
    }
   },
   "summaries-9": {
