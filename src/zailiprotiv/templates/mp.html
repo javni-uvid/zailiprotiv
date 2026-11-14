@@ -159,7 +159,7 @@
 {{ block("Glasovi za", p.for_, "Nijedan glas za među konačnim glasanjima o zakonima.", false, "", more) }}
 {% if p.apart %}{{ block("Drugačije od većine svoje grupe", p.apart, "", true, "drugacije" if first else "") }}{% endif %}
 {% if p.areas %}
-<section{% if first %} id="oblasti"{% endif %}>
+<section{% if first %} id="oblasti"{% endif %} data-pagefind-ignore>
   <h2>Po oblasti</h2>
   <div class="scroll">
   <table class="groups">
@@ -196,7 +196,7 @@
 </div>
 
 {% if by_conv|selectattr("agree")|list %}
-<section id="slaganje">
+<section id="slaganje" data-pagefind-ignore>
   <h2>Sa kim glasa isto</h2>
   {% for c in by_conv if c.agree %}
   {% if by_conv|length > 1 %}<h3>{{ c.name }} saziv</h3>{% endif %}
@@ -217,7 +217,7 @@
 
 
 
-<section class="more" id="svi">
+<section class="more" id="svi" data-pagefind-ignore>
   <h2>Svi glasovi po sazivima</h2>
   {% for c in by_conv %}
   <details id="svi-{{ c.conv }}"{% if loop.first and by_conv|length == 1 %} open{% endif %}>

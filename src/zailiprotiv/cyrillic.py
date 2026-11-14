@@ -94,18 +94,33 @@ def page(html: str, rel: str) -> str:
     return "".join(out)
 
 
+def _twin(job: tuple[str, str]) -> None:
+    out, rel = Path(job[0]), job[1]
+    p = out / rel
+    html = p.read_text(encoding="utf-8")
+    up = "../" * rel.count("/")
+    twin = out / "cir" / rel
+    twin.parent.mkdir(parents=True, exist_ok=True)
+    twin.write_text(page(html, rel).replace('href="#pismo"', f'href="../{up}{rel}"')
+                    .replace(">Ћирилица</a>", ">Latinica</a>"), encoding="utf-8")
+    p.write_text(html.replace('href="#pismo"', f'href="{up}cir/{rel}"'), encoding="utf-8")
+
+
 def edition(out: Path) -> int:
-    """Write cir/<page> for every page of the site at `out`, and point each page and its twin at each other."""
+    """Write cir/<page> for every page of the site at `out`, and point each page and its twin at each other.
+    A third of a site build's time when done one page after another, so the pages are shared among the machine's
+    processors."""
+    import os
+    from concurrent.futures import ProcessPoolExecutor
     pages = [p for p in out.rglob("*.html") if "cir" not in p.relative_to(out).parts[:1]]
-    for p in pages:
-        rel = p.relative_to(out).as_posix()
-        html = p.read_text(encoding="utf-8")
-        up = "../" * rel.count("/")
-        twin = out / "cir" / rel
-        twin.parent.mkdir(parents=True, exist_ok=True)
-        twin.write_text(page(html, rel).replace('href="#pismo"', f'href="../{up}{rel}"')
-                        .replace(">Ћирилица</a>", ">Latinica</a>"), encoding="utf-8")
-        p.write_text(html.replace('href="#pismo"', f'href="{up}cir/{rel}"'), encoding="utf-8")
+    jobs = [(str(out), p.relative_to(out).as_posix()) for p in pages]
+    workers = min(os.cpu_count() or 1, 8)
+    if workers > 1 and len(jobs) > 200:
+        with ProcessPoolExecutor(workers) as pool:
+            list(pool.map(_twin, jobs, chunksize=50))
+    else:
+        for job in jobs:
+            _twin(job)
     sitemap = out / "sitemap.xml"
     if sitemap.exists():  # the Cyrillic pages are pages too
         text = sitemap.read_text(encoding="utf-8")

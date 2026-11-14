@@ -11,6 +11,7 @@ law passed, on the act as a whole where the PDF says so, otherwise that day's la
 from __future__ import annotations
 
 import difflib
+import functools
 import re
 
 from zailiprotiv.kinds import _plain
@@ -19,6 +20,7 @@ from zailiprotiv.kinds import _plain
 CLOSE = 0.9
 
 
+@functools.lru_cache(maxsize=None)  # the same names are asked for many times over in a site build
 def act_name(text: str) -> str:
     t = _plain(text)
     t = re.sub(r"^[\W\d_]+", "", t)  # "20. ", "28. 11. ", "1.1. ", a bullet ("\uf0b7 28. …", 2023)
@@ -34,6 +36,7 @@ def words(text: str) -> str:
     return " ".join(re.findall(r"[0-9a-z]+", text))
 
 
+@functools.lru_cache(maxsize=None)
 def closeness(a: str, b: str) -> float:
     """How alike two names are: the share of words they have in common (Jaccard), or, for a typo in a long name
     ("aksionarsko"), the share of their letters in common (difflib), whichever is higher, letters counting only

@@ -2,6 +2,7 @@
 rules (nothing loaded from another site, no page too heavy). Moved out of `site.py` (13 Nov 2026)."""
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -18,27 +19,30 @@ def clean_urls(out: Path) -> None:
     if cname.exists():
         site = "https://" + cname.read_text(encoding="utf-8").strip() + "/"
 
+    # The site's folders, listed once: asking the disk about each of two million links took a minute.
+    folders = {os.path.normpath(d) for d, _, _ in os.walk(out)}
+
     def absolute(m):
         rel = m.group(2)
         if m.group(1).startswith("https://beleske."):  # the notes' pages live in a bucket, which serves files by their full name
             return m.group(0)
         if rel == "index" or rel.endswith("/index"):
             return m.group(1) + rel[:-5]
-        return m.group(0) if (out / rel).is_dir() else m.group(1) + rel
+        return m.group(0) if os.path.normpath(os.path.join(out, rel)) in folders else m.group(1) + rel
     own = re.compile(r"(https://[^\s\"<>/]*zailiprotiv[^\s\"<>/]*/)([^\s\"<>?#]*?)\.html")
     for f in out.rglob("*"):
         if f.suffix == ".html":
-            def link(m, here=f.parent):
+            def link(m, here=str(f.parent)):
                 path = m.group(2)
                 if path == "index" or path.endswith("/index"):
                     path = path[:-5] or "./"
-                elif (here / path).is_dir():
+                elif os.path.normpath(os.path.join(here, path)) in folders:
                     return m.group(0)
                 return m.group(1) + path + m.group(3)
             text = _HREF.sub(link, f.read_text(encoding="utf-8"))  # relative links: no scheme, so no colon
             if site:  # the page's one address, as the old ones with ".html" still open
                 rel = f.relative_to(out).as_posix()[:-5]
-                rel = rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if (out / rel).is_dir() else "")
+                rel = rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if os.path.normpath(os.path.join(out, rel)) in folders else "")
                 text = text.replace("</head>", f'<link rel="canonical" href="{site}{rel}">\n</head>', 1)
             f.write_text(own.sub(absolute, text), encoding="utf-8")
         elif f.suffix == ".xml":

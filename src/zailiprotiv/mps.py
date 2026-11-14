@@ -8,6 +8,7 @@ and sorted, so the word order and the titles don't matter: "АТЛАГИЋ пр�
 
 from __future__ import annotations
 
+import functools
 import re
 from collections import defaultdict
 
@@ -22,6 +23,7 @@ TITLES = {"проф", "др", "мр", "доц", "прим", "сц", "сци", "�
 ALIASES: dict[str, str] = {}
 
 
+@functools.lru_cache(maxsize=None)  # asked millions of times in a site build, for a few thousand names
 def base_key(name: str) -> str:
     words = re.split(r"[\s.]+", cyrillic(name).lower().replace("і", "и"))
     return " ".join(sorted(w for w in words if w and w not in TITLES))

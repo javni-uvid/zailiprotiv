@@ -177,7 +177,7 @@
   {% if db and db.provisional %}<p class="meta">Skupština objavljuje privremene stenografske beleške, neredigovane i neautorizovane.</p>{% endif %}
 
   {% if final %}
-  <details>
+  <details data-pagefind-ignore>{# the roll call: 250 names on each of two thousand pages are the MPs' pages' to be found by #}
     <summary>Kako je glasao svaki poslanik ({{ roll|length }})</summary>
     <p class="roll-filter js-only" hidden>
       <label class="sr" for="r-g">Grupa</label><select id="r-g"><option value="">Sve grupe</option>{% for g in groups %}<option>{{ g.group }}</option>{% endfor %}</select>
