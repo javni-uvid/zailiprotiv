@@ -32,3 +32,8 @@
 {% macro chamber(counts) -%}
 <svg class="chamber" viewBox="0 0 340 180" role="img" aria-label="{{ counts.za }} za, {{ counts.protiv }} protiv, od 250 poslanika">{% for x, y, k in hemicycle(counts) %}<circle class="s-{{ k }}" cx="{{ x }}" cy="{{ y }}" r="4"/>{% endfor %}<text x="170" y="170" text-anchor="middle"><tspan class="s-za">{{ counts.za }}</tspan> : <tspan class="s-protiv">{{ counts.protiv }}</tspan></text></svg>
 {%- endmacro %}
+
+{# The Assembly's own pages share one heading and these buttons, as the laws' and the MPs' pages do. #}
+{% macro assembly_tabs(now) -%}
+<nav class="subtabs law-kinds four" aria-label="Skupština">{% for key, page, label in [("nedelje", "nedelje.html", "Nedelje"), ("sednice", "sednice.html", "Sednice"), ("sazivi", "saziv-" ~ current ~ ".html", "Sazivi"), ("brojke", "brojke.html", "U brojkama")] %}<a href="{{ page }}"{% if key == now %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}</nav>
+{%- endmacro %}

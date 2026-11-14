@@ -3,7 +3,8 @@
 {% block title %}Skupština u brojkama — Za ili Protiv{% endblock %}
 {% block description %}Kako Narodna skupština Srbije donosi zakone, po sazivima: hitan postupak, dani od predloga do usvajanja, zakoni bez glasa protiv, jedinstvo poslaničkih grupa.{% endblock %}
 {% block main %}
-<h1>Skupština u brojkama</h1>
+<h1>Skupština</h1>
+{% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("brojke") }}
 {% set n0 = numbers[0] %}
 <div class="lead-nums">
   <p><b>{{ n0.laws }}</b><span>{{ plural(n0.laws, "zakon", "zakona", "zakona") }} u {{ n0.conv.name|lower }}m sazivu</span></p>

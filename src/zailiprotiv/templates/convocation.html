@@ -3,7 +3,8 @@
 {% block title %}{{ cv.name }} saziv ({{ cv.years }}) — Za ili Protiv{% endblock %}
 {% block description %}{{ cv.name }} saziv Narodne skupštine Srbije ({{ cv.years }}): zakoni, poslanici, poslaničke grupe, sednice i izdvojena glasanja.{% endblock %}
 {% block main %}
-<h1>{{ cv.name }} saziv</h1>
+<h1>Skupština</h1>
+{% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("sazivi") }}
 {{ tabs(convs, conv, "saziv_page") }}
 <div class="law-hero">
 <div class="law-head">

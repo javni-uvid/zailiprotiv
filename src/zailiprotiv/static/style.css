@@ -779,3 +779,5 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .foot-brand { grid-column: 1 / -1; }
   .foot-col a { padding: .45rem 0; }
 }
+.subtabs.law-kinds.four { max-width: 40rem; }
+@media (max-width: 640px) { .subtabs.law-kinds.four a { flex: 1 1 40%; } }

@@ -5,7 +5,8 @@
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Nedelja u Skupštini" href="nedelje.xml">{% endblock %}
 {% block main %}
-<h1>Nedelja u Skupštini</h1>
+<h1>Skupština</h1>
+{% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("nedelje") }}
 {% if weeks %}{% set w = weeks[0] %}
 <a class="week-lead" href="nedelja/{{ w.key }}.html">
   <span class="hero-kicker">Poslednja nedelja sa novostima</span>
