@@ -78,8 +78,8 @@ def test_site_builds_every_page(tmp_path):
     assert "Allow: /" in (out / "robots.txt").read_text()
     assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()
     assert not (out / "najvise-protiv.html").exists()
-    assert "50% glasova protiv" in law
-    assert law.index("50% glasova protiv") < law.index("Šta zakon menja") < law.index("Rasprava u Skupštini") \
+    assert "<dt>Glasovi protiv</dt><dd>50%" in law
+    assert law.index("<dt>Glasovi protiv</dt><dd>50%") < law.index("Šta zakon menja") < law.index("Rasprava u Skupštini") \
         < law.index("Detaljnije")  # the outcome first, the long text last
     assert "Hitan postupak" in law
     assert "Rasprava u Skupštini" in law and "o 1 amandmanu na ovaj zakon" in law and "Protiv zakona</h3>" in law
