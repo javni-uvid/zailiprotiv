@@ -1,5 +1,6 @@
 {
   "votes_api": "https://glasovi.zailiprotiv.rs/",
   "analytics_token": "62b7969c87164343897a48605c9267c0",
-  "notes_url": "https://beleske.zailiprotiv.rs/"
+  "notes_url": "https://beleske.zailiprotiv.rs/",
+  "files_url": "https://podaci.zailiprotiv.rs/"
 }

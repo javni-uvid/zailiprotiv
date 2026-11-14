@@ -104,6 +104,13 @@ These are the project's promises to its readers. Never change them without the m
      for the site's host (GitHub Pages allows 1 GB; the site is about 740 MB). `notes_site.py` builds them
      (`notes-site`), `notes-upload` sends only what changed (`data/notes_manifest.json`), the `notes` workflow runs
      both after each transcripts run. The site links to them when `data/settings.json` has `notes_url`.
+   - **Downloads and share pictures in a bucket of their own** (the maintainer, 14 Nov 2026): every law's roll call
+     (CSV, JSON) and picture, the MPs' pictures and `podaci/` are no pages, yet were two files in three of the
+     site (over 20,000 with the search index, the limit of the hosts we may move to). When `data/settings.json`
+     has `files_url`, the `pages` workflow moves them out of the built site (`files-split`, `files_site.py`),
+     makes the R2 bucket behind `podaci.zailiprotiv.rs` hold exactly them (`files-upload`, by the bucket's own
+     list) and only then publishes the pages, which link there. `podaci.json` (the search's data) and the site's
+     own picture stay with the site. The `files` workflow does the same by hand without publishing.
    - **A second exception, the maintainer's (13 Nov 2026): counting visits.** Every page loads Cloudflare Web
      Analytics' script (no cookies, no following of a person; totals per page) when `data/settings.json` has
      `analytics_token`; without it nothing is loaded. The footer and "O projektu" say so. `publish.check` lets this
