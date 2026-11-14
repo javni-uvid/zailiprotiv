@@ -222,6 +222,14 @@ def files_upload_cmd(args) -> int:
         return 1
 
 
+def files_purge_cmd(args) -> int:
+    """Tell Cloudflare's cache to forget these files of a bucket's public address (by hand; uploads do it themselves)."""
+    from zailiprotiv import files_site
+    said = files_site.purge(args.url, args.names)
+    print("files: " + said)
+    return 0 if said.startswith("cache purged") else 1
+
+
 def photos_cmd(args) -> int:
     """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
     import time
@@ -1070,6 +1078,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--url", default="https://podaci.zailiprotiv.rs/", help="the bucket's public address, for purging the cache")
     p.add_argument("--dry", action="store_true", help="say what would be sent, send nothing")
     p.set_defaults(run=files_upload_cmd)
+    p = commands.add_parser("files-purge", help="make Cloudflare's cache forget these files of a bucket's address")
+    p.add_argument("names", nargs="+")
+    p.add_argument("--url", default="https://podaci.zailiprotiv.rs/")
+    p.set_defaults(run=files_purge_cmd)
     p = commands.add_parser("notes-check", help="do the notes' pages answer at their public address?")
     p.add_argument("--url", default="https://beleske.zailiprotiv.rs/")
     p.set_defaults(run=notes_check_cmd)

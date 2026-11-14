@@ -9,6 +9,9 @@ on:
       bucket:
         description: "The R2 bucket"
         default: "zailiprotiv-podaci"
+      purge:
+        description: "Only make the cache forget these files (space-separated, e.g. podaci/zakoni.csv); nothing is built"
+        default: ""
       dry:
         description: "Only say what would be sent"
         type: boolean
@@ -44,6 +47,14 @@ jobs:
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
         run: |
           pip install uv && uv sync --frozen
+          if [ -n "${{ inputs.purge }}" ]; then
+            u=https://podaci.zailiprotiv.rs/$(echo "${{ inputs.purge }}" | cut -d" " -f1)
+            curl -sS -o /dev/null -D - "$u" | tr -d '\r' | grep -iE "^cf-cache-status|^age:|^cache-control" | tr '\n' ' '; echo "<- before"
+            uv run zailiprotiv files-purge ${{ inputs.purge }}
+            sleep 5
+            curl -sS -o /dev/null -D - "$u" | tr -d '\r' | grep -iE "^cf-cache-status|^age:|^cache-control" | tr '\n' ' '; echo "<- after"
+            exit 0
+          fi
           uv run zailiprotiv site --out _site --domain zailiprotiv.rs
           uv run zailiprotiv files-split --site _site --out _podaci --url https://podaci.zailiprotiv.rs/
           du -sh --apparent-size _site _podaci; find _site -type f | wc -l
