@@ -31,3 +31,7 @@ jobs:
           for u in https://beleske.zailiprotiv.rs/cir/ https://zailiprotiv.rs/zakon/carinski-zakon.csv https://zailiprotiv.rs/zakon/carinski-zakon.json https://zailiprotiv.rs/zakon/carinski-zakon.png https://zailiprotiv.rs/podaci/zakoni.csv https://zailiprotiv.rs/poslanik/abramovic-nenad.png https://zailiprotiv.rs/poslanik/abramovic-nenad; do
             curl -sS -o /dev/null -L -w "%{url} -> %{http_code} %{url_effective} (%{num_redirects} redirects)\n" "$u"
           done
+          echo "== may the site read the notes' search index? (the bucket's CORS rule)"
+          for o in https://zailiprotiv.rs https://example.org; do
+            curl -sS -o /dev/null -D - -H "Origin: $o" https://beleske.zailiprotiv.rs/pagefind/pagefind-entry.json | tr -d '\r' | grep -iE "^HTTP|^access-control-allow-origin|^cf-cache-status|^vary" | tr '\n' ' '; echo " <- as $o"
+          done
