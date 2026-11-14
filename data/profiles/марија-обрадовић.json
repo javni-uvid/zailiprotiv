@@ -1,13 +1,13 @@
 {
  "mp": "марија обрадовић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 18,
  "speeches": 20,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Navodi da je borba za ravnopravnost polova uglavnom ženska, ali da odluka da budu ravnopravni mora biti i muška.",
-   "govora": 2,
+   "tekst": "Navodi da treba povećati zastupljenost žena i unaprediti rodnu ravnopravnost, i da odluku o ravnopravnosti moraju da donesu i muškarci.",
+   "govora": 4,
    "sazivi": [
     "10",
     "11"
@@ -19,51 +19,52 @@
    }
   },
   {
-   "tekst": "Podržava predlog Gordane Čomić kojim se povećava broj žena na izbornim listama, tako što najmanje dva od pet kandidata budu iz manje zastupljenog pola.",
-   "govora": 3,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Дакле, ми смо за то, и постало је саставни део Предлога закона Гордане Чомић, да две у пет кандидата, у сваких пет, буду мање заступљен пол, а то су жене.",
-    "date": "2020-02-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
-   }
-  },
-  {
-   "tekst": "Upozorava da male stranke i koalicije mogu da ne istaknu ženu na listi, jer su žene na lokalnom nivou manje vidljive onima koji sastavljaju listu.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Ми морамо да омогућимо да у свакој странци жена може да уђе. То је суштина наше приче.",
-    "date": "2020-02-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
-   }
-  },
-  {
-   "tekst": "Navodi da novi medijski zakon ne znači gašenje lokalnih i regionalnih medija, već finansiranje kroz projekte i propisane procedure.",
+   "tekst": "Navodi da su predloženi medijski zakoni dobri i da to potvrđuju Evropska komisija, međunarodna zajednica i novinarska i medijska udruženja.",
    "govora": 2,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "да заиста не треба плашити ни запослене у медијима, ни уреднике редакција, нити људе који су на било који начин сада финансирани из државног буџета да ће по усвајању овог закона апсолутно остати без посла",
+    "tekst": "Потврде да је предлог закона заиста добар смо добили од међународне јавности, од међународне заједнице, Европске комисије, стручњака, струковних медијских удружења, који су подржали овај предлог закона на коме смо сви заједно радили претходних не месеци, него година.",
+    "date": "2014-07-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/30. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da tvrdnje pojedinih kolega nisu tačne i da time zbunjuju građane.",
+   "govora": 3,
+   "sazivi": [
+    "10",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Дакле, упорно кажу да је лоше да буде четири од 10 и критикују Горданин предлог, а заправо ми смо усвојили, јутрос је Одбор усвојио да буде две у пет.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Zalaže se za pristojnu i argumentovanu raspravu i navodi da saradnja većine i opozicije i prihvaćeni amandmani doprinose boljim zakonima i boljoj slici parlamenta.",
+   "govora": 4,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Мислим да је ово једини начин да овако пристојном расправом и аргументованом унапредимо сопствени имиџ посланика и Скупштине Србије као највишег дома у Србији.",
     "date": "2014-08-01",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
    }
   },
   {
-   "tekst": "Navodi da su konsultacije sa ministrom i radnom grupom doprinele da se mnogi amandmani povuku pre rasprave, i da opozicija i pozicija zajedno rade na predlogu zakona o policiji.",
+   "tekst": "Brani projektno finansiranje medija i navodi da ono medijima daje priliku da dobiju novac za kvalitetne programe.",
    "govora": 2,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Јучерашње консултације које смо имали, а и данашњи одбор, допринели су томе да многи амандмани који су поднети буду повучени пре расправе",
-    "date": "2015-07-14",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. jul 2015.docx"
+    "tekst": "Јер, свако ко се озбиљно бави медијима обрадовао се тренутку када може да се финансира на правичан начин, уз комисије, уз прописане процедуре, оно што он жели да пласира гледаоцу и зна да ће бити пронађен новац за то.",
+    "date": "2014-08-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
    }
   }
  ]

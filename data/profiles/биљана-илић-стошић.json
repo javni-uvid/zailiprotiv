@@ -1,37 +1,12 @@
 {
  "mp": "биљана илић стошић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 16,
  "speeches": 16,
  "sittings": 14,
  "points": [
   {
-   "tekst": "Navodi da država pomaže građanima novčanim merama, kao što su stanovi i pokloni za mlade, pomoć pri rođenju dece i paketi pomoći tokom krize.",
-   "govora": 3,
-   "sazivi": [
-    "13",
-    "14"
-   ],
-   "citat": {
-    "tekst": "Признаћете, велика је ствар за некога ко нема свој кров над главом да га држава помогне са поклоном од 20 хиљада евра.",
-    "date": "2025-11-27",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja NSRS, odrzana 27. novembra 2025. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Navodi da je država jaka i stabilna i da zato može da finansira te mere, uz tvrdnju da su javne finansije sigurne.",
-   "govora": 2,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Дакле, само јака и стабилна држава може да изнесе овакве програме, а таква је наша држава.",
-    "date": "2025-03-04",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Privremene stenografske beleske Prve sednica Prvog redovnog zasedanja NSRS, odrzane 4. marta 2025. godine.docx"
-   }
-  },
-  {
-   "tekst": "Navodi da opozicija širi strah i paniku među građanima, na primer oko mleka i rebalansa budžeta.",
+   "tekst": "Замера опозицији што, како наводи, међу грађанима шири страх и панику, у вези са млеком и са ребалансом буџета.",
    "govora": 2,
    "sazivi": [
     "9"
@@ -43,16 +18,41 @@
    }
   },
   {
-   "tekst": "Navodi da treba štititi najranjivije kategorije građana, kao što su trudnice, porodilje, deca i najugroženiji članovi društva.",
-   "govora": 2,
+   "tekst": "Наводи да држава конкретним мерама помаже грађанима и породицама, на пример новчаном помоћи мајкама, помоћи за прву некретнину и већим давањима за рођење детета.",
+   "govora": 3,
    "sazivi": [
-    "9",
+    "13",
     "14"
    ],
    "citat": {
-    "tekst": "На том задатку пре свега треба заштитити најрањивије категорије, а то су свакако труднице, породиље и деца, мада, истини за вољу, нису једини.",
-    "date": "2013-11-14",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+    "tekst": "Прошле године држава је повећала издвајање за рођење првог, другог, трећег и четвртог детета и то је најбољи начин да покажемо да је држава ту за породице и за децу, да брине о њима и да чува оно што је највредније и да то није само празна прича већ конкретна помоћ.",
+    "date": "2025-03-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Privremene stenografske beleske Prve sednica Prvog redovnog zasedanja NSRS, odrzane 4. marta 2025. godine.docx"
+   }
+  },
+  {
+   "tekst": "Navodi да су медији, посебно локални, зависни од власти и од оних који их финансирају, због чега страда новинарство, и да се држава мора повући из медија.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Они су у највећој већини права трансмисија локалних политичких моћника који „држе шапу“ на каси из које се ти исти локални медији финансирају, колико год она била оскудна или скоро празна.",
+    "date": "2014-07-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/30. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi да приватизација у Србији није ишла ка очекиваним циљевима и да је била „дивљачка“ и неправедна.",
+   "govora": 3,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Можда сте, знајући да је криза јавног дуга, да се мора решавати само дугорочним мерама, унапред одустајали у страху да ће неко други политички профитирати, па сте допустили дивљачку приватизацију, уништавање оно мало реалног сектора што је преостало.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
    }
   }
  ]

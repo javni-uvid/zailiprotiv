@@ -1,56 +1,68 @@
 {
  "mp": "весна марјановић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 17,
  "speeches": 21,
  "sittings": 7,
  "points": [
   {
-   "tekst": "Zamera što Skupština po prvi put ima ulogu predlagača za Programski savet, dok izbor vrši Upravni odbor, i smatra da time nije obezbeđena samostalnost članova Programskog saveta.",
+   "tekst": "Замера што су средства за културу у буџету премала и што Влада не гради однос према култури као стратешкој области.",
    "govora": 3,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "Дакле, невероватно је да Скупштина буде предлагач, а да Управни одбор има изборну функцију. То заиста нигде не постоји.",
-    "date": "2014-08-01",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
-   }
-  },
-  {
-   "tekst": "Zamera Vladi što kultura nije među prioritetima u budžetu i što su sredstva za kulturu smanjena.",
-   "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Оно што је инвестиција у будућност, а култура и образовање то сасвим сигурно јесу, мора бити заштићено од драматичних смањења расхода.",
+    "tekst": "Уколико културу ставимо на маргину својих приоритета, морамо бити свесни да су последице такве одлуке дугорочно и драматично штетне.",
     "date": "2012-11-26",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/3. dan VIII sednica II redovnog zasedanja u 2013. 26.11.2012..doc"
    }
   },
   {
-   "tekst": "Zamera što nacrt zakona o naknadama za korišćenje javnih dobara briše odredbe Zakona o kinematografiji.",
+   "tekst": "Упозорава да нацрт закона о накнадама за коришћење јавних добара брише одредбе Закона о кинематографији које обезбеђују средства за српски филм.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "којим је ваше министарство, господине Динкићу, предвидело да се бришу одређене одредбе из Закона о кинематографији.",
-    "date": "2013-07-02",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+    "tekst": "Дакле, уколико се ова одредба из прелазних и завршних одредаба Нацрта закона о коришћењу јавних добара не буде брисала, српски филм ће ове године остати апсолутно без иједног начина да се финансира.",
+    "date": "2013-03-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
    }
   },
   {
-   "tekst": "Traži garancije da će novi rok za medijsku reformu biti poštovan.",
+   "tekst": "Наводи да је неприхватљиво да чланове Програмског одбора РТС и РТВ бира Управни одбор уместо Скупштине и тврди да избор у Скупштини боље обезбеђује њихову самосталност.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Суштина Програмског одбора јесте да буде независан од управљачких органа телевизије, а избор у Скупштини им обезбеђује самосталност већу него било који други начин избора.",
+    "date": "2014-08-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Тражи од министра одговоре на питања о продужењу рока за приватизацију медија и о томе шта ће бити са запосленима и делатношћу Радио Југославије.",
    "govora": 2,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Моје питање за вас је, шта нама гарантује да ћете ви испунити и овај рок који сте сада дали јер он је доста кратак, четири месеца",
-    "date": "2015-06-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. jun 2015.docx"
+    "tekst": "Дакле, мене занима зашто је рок за њих краћи, с обзиром да су финансијска издавања за њих знатно мања него за Танјуг, с обзиром да они немају конкуренцију, не ремете конкуренцију, на тржишту не постоји ниједна установа која се бави емитовањем програма на страним језицима.",
+    "date": "2015-06-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jun 2015.docx"
+   }
+  },
+  {
+   "tekst": "Наводи да се, ако се говори о прошлости медија, мора говорити о целој прошлости, у којој су пре 2000. године медији забрањивани, а да је прва медијска реформа спроведена од 2000. до 2003. године.",
+   "govora": 2,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Прва је обављена у периоду од 2000. до 2003. године. Тада су формирана регулаторна тела, трансформисан јавни сервис и учињени многи кораци у развоју медијског сектора у Србији.",
+    "date": "2015-06-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jun 2015.docx"
    }
   }
  ]

@@ -1,68 +1,56 @@
 {
  "mp": "перић срето",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 13,
  "speeches": 16,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Наводи да се запошљавање у јавним службама, посебно у локалним самоуправама, врши према припадности странкама.",
-   "govora": 2,
+   "tekst": "Traži da se brišu pojedini članovi predloga zakona, uz obrazloženje da su nejasni, da više ograničavaju prava ili da ne rešavaju problem.",
+   "govora": 4,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Уместо да се локална самоуправа бави уз помоћ надлежних министарстава да се створе добри услови за рад, за бољи живот у тој локалној самоуправи, они се надгорњавају ко ће у јавним службама запослити већи број припадника својих странака.",
+    "tekst": "Зато би било добро да се амандман СРС-а на члан 9. прихвати и да се овај члан брише.",
     "date": "2017-10-09",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
    }
   },
   {
-   "tekst": "Наводи да поједини закони нису прецизно написани, односно да појмови и надлежности нису јасно дефинисани.",
-   "govora": 3,
+   "tekst": "Zamera što se u javnoj upravi i lokalnim samoupravama zapošljava prema partijskoj pripadnosti, a traži da se zapošljava javnim konkursom.",
+   "govora": 2,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Ево, рецимо, ви нисте у овом члану 3. у овим појмовима дефинисали тачно шта је зграда.",
+    "tekst": "Нема купљених диплома, него само они који се својим радом, знањем, марљивим учењем буду квалификовали могу да се запосле на тај начин, запошљавање искључиво путем јавног конкурса и онда ће се избећи то намештање, избећи та партократија, коју ви браните, да је нема, ови кажу да је има, а вероватно има.",
+    "date": "2017-10-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Zamera što predloženi zakoni donose nove troškove koje će plaćati građani Srbije.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "С друге стране, ту су ове таксе – биће велики број професионалних управника који ће радити, па регистрација код Привредне коморе, па лиценца и остало; то су све нови, додатни трошкови које ћемо плаћати и ви и ја и сви други грађани Србије из својих средстава.",
     "date": "2016-12-20",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
    }
   },
   {
-   "tekst": "Тражи брисање одредбе о 40% мање заступљеног пола на изборним листама, јер је, по њему, непрецизна.",
+   "tekst": "Navodi da je za veće učešće žena u politici i vlasti, ali da je važniji kvalitet kandidata nego sam broj žena na listama.",
    "govora": 2,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Ова одредба, ми смо предложили да се она брише, зато што је доста непрецизна. У једном делу тог члана 1. каже се – на изборној листи мора бити 40% мање заступљеног пола по редоследу на листи, а онда се каже - на свих десет места четири морају бити мање заступљеног пола.",
+    "tekst": "Наш председник у расправи у начелу је рекао да би добро било када би могло да буде 50% жена у свим представничким органима, као и у извршној власти и то би била права ствар, то би било нешто што је добро. Али, овде по цену да само бројчано имамо, то можда није добро решење.",
     "date": "2020-02-08",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
-   }
-  },
-  {
-   "tekst": "Наводи да се нови трошкови, таксе и обавезе пребацују на грађане Србије.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Па знате ли ви шта локалне самоуправе не могу да исфинансирају, и онда имамо огромну разлику између грађана који живе у једном делу Србије и у другом, а ви захтевате од грађана Србије да финансирају и запослене у агенцији за реформу јавне управе.",
-    "date": "2017-10-09",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
-   }
-  },
-  {
-   "tekst": "Тврди да предложени закони о образовању и јавној управи не решавају проблеме које сам описује.",
-   "govora": 3,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Господине министре, вама је дијагностика добра о томе у каквом стању нам се налази образовни систем, али начин лечења је потпуно погрешан.",
-    "date": "2017-11-03",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. novembar 2017..pdf"
    }
   }
  ]

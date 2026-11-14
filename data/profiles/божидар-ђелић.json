@@ -1,68 +1,68 @@
 {
  "mp": "божидар ђелић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 47,
  "speeches": 48,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Navodi da je spoljni dug Srbije od formiranja ove vlade porastao za oko 4 milijarde evra.",
-   "govora": 3,
+   "tekst": "Наводи да је од почетка рада актуелне владе дуг Србије порастао за четири милијарде евра.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Од момента формирања ове владе па до данас спољни дуг, суверени дуг укупно је порастао за 4 милијарде евра.",
-    "date": "2013-07-01",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. jul 2013. (Osmo vanredno zasedanje).docx"
-   }
-  },
-  {
-   "tekst": "Tvrdi da je budžet za 2013. godinu nerealan i da su prihodi bili precenjeni, pa je rebalans potreban.",
-   "govora": 3,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Шест месеци после почетка примене овог буџета имамо највећи ребаланс у свету. Највећи промашај у приходима у свету.",
+    "tekst": "Чињеница јесте да од момента почетка рада ове владе је дуг Србије повећан за четири милијарди евра. То је математичка чињеница.",
     "date": "2013-07-02",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
    }
   },
   {
-   "tekst": "Zamera što se nezaposlenost ne smanjuje i što vlada u budžetu nema nove mere za zapošljavanje.",
-   "govora": 3,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Незапосленост и даље расте. Шта предлажете у буџету за 2013. годину да ту ситуација буде боља? Не видим ништа ново.",
-    "date": "2012-11-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/3. dan VIII sednica II redovnog zasedanja u 2013. 26.11.2012..doc"
-   }
-  },
-  {
-   "tekst": "Smatra da bi amandman kojim bi se obustavljali transferi Vojvodini bio protivustavan i da bi kažnjavao građane zbog političkog izbora.",
-   "govora": 3,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "По овој логици, сваки пут када је неко именован од стране неког политичара у некој државној фирми и дође до проблема, онда би требало да се казне сви грађани те општине или покрајине.",
-    "date": "2012-11-29",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
-   }
-  },
-  {
-   "tekst": "Predlaže da se formira ministarstvo za visoko obrazovanje, nauku i tehnološki razvoj, kao što su tražili naučnici.",
+   "tekst": "Наводи да је као министар финансија учествовао у отпису 67% дуга Републике Србије.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Говорићу о оном делу који се тиче нашег предлога да се у структури министарстава појави министарство високог образовања, науке и технолошког развоја.",
-    "date": "2013-08-28",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
+    "tekst": "Тада сам био министар финансија и захваљујем вас се зато што је то била могућност коју смо искористили да смањимо за 67% дуг Републике Србије и није тачно да је то покривено приватизацијом.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Наводи да су Фискални савет и ММФ упозорили да је буџет нереалан и да је Влада погрешила у процени прихода и дефицита.",
+   "govora": 5,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "То јесте нешто што упозорава и ми смо овде због упозорења и Фискалног савета и Међународног монетарног фонда да је овај буџет нереалан и да клизимо ка дефициту или од 5,5-6% према Фискалном савету или 8% по процени Међународног монетарног фонда.",
+    "date": "2013-07-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. jul 2013. (Osmo vanredno zasedanje).docx"
+   }
+  },
+  {
+   "tekst": "Замера што буџет за 2013. смањује средства за активне мере запошљавања за три милијарде динара, а повећава за пет милијарди динара фонд за отпуштање.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Испразнили сте све што се тиче инвестиција, ово је буџет за отпуштање, пет милијарди динара више за отпуштање, а три милијарде мање за запошљавање.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Тврди да је амандман о обустави трансфера Војводини противуставан и да је усмерен на кажњавање Војвођана због њиховог гласања.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "То је апсурдно и због тога су ова одредба и овај амандман апсолутно противуставни и противзаконити.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   }
  ]

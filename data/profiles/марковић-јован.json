@@ -1,49 +1,37 @@
 {
  "mp": "марковић јован",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 18,
  "speeches": 33,
  "sittings": 2,
  "points": [
   {
-   "tekst": "Наводи да Агенција за борбу против корупције упозорава да чланови 7, 8. и 9. закона дају локалним управама дискреционо право при умањењу тржишне вредности земљишта.",
-   "govora": 3,
+   "tekst": "Navodi da Agencija za borbu protiv korupcije upozorava da članovi 7, 8. i 9. Predloga zakona o pretvaranju prava korišćenja u pravo svojine daju lokalnim upravama pravo da bez jasnih kriterijuma i rokova umanjuju cenu zemljišta, i da to otvara prostor za korupciju.",
+   "govora": 4,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Агенција каже следеће – на овај начин умањене тржишне вредности грађевинског земљишта приликом одређивања висине накнаде уместо изузетка постају правило.",
+    "tekst": "Ово је члан закона који отвара простор за корупцију. Овај члан закона у ствари говори да неће бити наплате прихода о којима сте говорили.",
     "date": "2015-07-15",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2015.docx"
    }
   },
   {
-   "tekst": "Замера што закон нема јасне критеријуме, рокове и мере кажњавања за поступање локалних управа и органа.",
-   "govora": 3,
+   "tekst": "Zamera Vladi i ministarki što nisu predložile ceo set zakona o ovoj oblasti odjednom, pa se, kako navodi, zakoni o planiranju i izgradnji i o konverziji preklapaju i protivreče jedan drugom, na primer u datumima 13. maj 2003. i 13. maj 2013.",
+   "govora": 4,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Нисте дефинисали ни рокове, ни критеријуме, ни мере кажњавања за оне који не поступају по закону.",
+    "tekst": "Мислим да је било врло логично и упутно да сте послушали наш предлог да се донесе сет закона, значи, и Закон о планирању и изградњи и Закон о конверзији и Закон о јавној својини и Закон о легализацији и Закон о катастру.",
     "date": "2015-07-15",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2015.docx"
    }
   },
   {
-   "tekst": "Наводи да се у закону помиње рок 13. мај 2003. године, а у Закону о планирању и изградњи рок 13. мај 2013. године, и замера због тог неслагања.",
-   "govora": 3,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "у члану 102. Закона о планирању и изградњи каже се да су ова привредна друштва и правна лица ограничена са законом да се уклапају у те неке рокове који су везани до маја 2013. године.",
-    "date": "2015-07-15",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2015.docx"
-   }
-  },
-  {
-   "tekst": "Замера председавајућем што различито поступа према посланицима опозиције и владајуће коалиције, и што дозвољава говорницима из владајуће коалиције да говоре ван дневног реда.",
-   "govora": 3,
+   "tekst": "Zamera predsedavajućima što, kako navodi, ne primenjuju Poslovnik jednako prema poslanicima opozicije i vladajuće koalicije, i poziva se na članove Poslovnika o redu na sednici.",
+   "govora": 4,
    "sazivi": [
     "10"
    ],
@@ -54,15 +42,15 @@
    }
   },
   {
-   "tekst": "Замера што Влада није донела сет повезаних закона о земљишту и изградњи, него појединачне законе, па се њихове одредбе преклапају и нису усклађене.",
+   "tekst": "Navodi da Zoran Babić iz poslaničke grupe SNS iznosi neistine o platama u javnom sektoru od 2010. godine.",
    "govora": 2,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Мислим да је било врло логично и упутно да сте послушали наш предлог да се донесе сет закона, значи, и Закон о планирању и изградњи и Закон о конверзији и Закон о јавној својини и Закон о легализацији и Закон о катастру.",
-    "date": "2015-07-15",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2015.docx"
+    "tekst": "Ако бисте применили принцип континуитета и рекли грађанима истину, онда бисте дошли и до сазнања, односно до тог тренутка када бисте могли да кажете и људима, који данас чине политичку елиту или воде СНС, па и господину Бабићу који овде седи, да није тачно да су повећане плате 72% у јавном сектору 2010. године.",
+    "date": "2014-09-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. septembar 2014.docx"
    }
   }
  ]

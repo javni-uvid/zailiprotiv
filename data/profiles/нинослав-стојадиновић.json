@@ -1,54 +1,54 @@
 {
  "mp": "нинослав стојадиновић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 15,
  "sittings": 2,
  "points": [
   {
-   "tekst": "Navodi da uvođenje мастер струковних студија stvara zabunu kod poslodavaca i inspektora pri priznavanju diploma.",
+   "tekst": "Противи се увођењу мастер струковних студија и наводи да инспектори дипломе гледају само по броју бодова, што по његовим речима ствара забуну и доноси трошкове.",
    "govora": 2,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Како инспектори третирају дипломе? Третирају дипломе само на основу бодова илити кредита, што је за нашу јавност јасније.",
-    "date": "2014-09-04",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. septembar 2014.docx"
+    "tekst": "Према томе, увођење овог степена није у складу са самом природом струковних студија и то је најважнија ствар.",
+    "date": "2014-09-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
    }
   },
   {
-   "tekst": "Navodi da Komisija za akreditaciju treba da bude nezavisnija, u finansiranju i u odlučivanju, i da njena odluka bude konačna.",
+   "tekst": "Тражи да се ојача независност Комисије за акредитацију и контролу квалитета, и финансијски и тако што би њена одлука била коначна, а не да је по жалби мења Национални савет.",
    "govora": 3,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "наша идеја је била да се уведе двостепеност, да се у случају поништења одлуке врати материјал Комисији на поновно одлучивање, при чему би одлука Комисије била коначна.",
+    "tekst": "С тим у вези наша идеја је била да се уведе двостепеност, да се у случају поништења одлуке врати материјал Комисији на поновно одлучивање, при чему би одлука Комисије била коначна.",
     "date": "2014-09-09",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
    }
   },
   {
-   "tekst": "Zamera Vladi što odbija amandmane obrazloženjima koja smatra netačnim ili nejasnim.",
+   "tekst": "Замера што Влада даје нејасна или неутемељена образложења за одбијање његових амандмана на Предлог закона о високом образовању.",
    "govora": 4,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Образложење Владе за одбијање амандмана, јер није у складу са европском праксом у образовању, јесте страшно.",
+    "tekst": "Образложење Владе да се не прихвата амандман јер није у складу са законом којим се уређује буџетски систем је помало некоректно.",
     "date": "2014-09-09",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
    }
   },
   {
-   "tekst": "Traži da se rok za donošenje podzakonskih akata skrati na šest meseci.",
+   "tekst": "Захваљује Влади што је прихватила амандмане којима професори емеритуси и академици САНУ у радном саставу могу да остану ангажовани на факултетима и научноистраживачким пројектима.",
    "govora": 2,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Најављује се да ће следеће године бити готов нов закон, тако да је предлог био да се рок скрати на шест месеци.",
+    "tekst": "Апсолутно сви, укључујући и министра са сарадницима, били су за ово решење да се на неки начин и члановима Српске академије наука и уметности у радном саставу омогући да имају у једном делу исти статус као професори емеритус.",
     "date": "2014-09-09",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
    }

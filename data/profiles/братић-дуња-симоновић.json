@@ -1,68 +1,68 @@
 {
  "mp": "братић дуња симоновић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 12,
  "speeches": 12,
  "sittings": 7,
  "points": [
   {
-   "tekst": "Наводи да су кандидати за Савет РЕМ-а који су у последњем тренутку повукли кандидатуре на првом конкурсу касније поново кандидовани и замера што су се та повлачења правдала притисцима.",
+   "tekst": "Navodi да су кандидати за чланове Савета РЕМ-а повукли кандидатуре у време оставке премијера Милоша Вучевића и да су због тога остали у сенци вести о његовој оставци.",
    "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "да смо први конкурс буквално довели до краја само до гласања у Парламенту, за те кандидате, да би у задњем тренутку четири такозвана независна, односно блокадерско опозициона кандидата повукли своје кандидатуре",
-    "date": "2026-04-17",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 17. aprila 2026. godine, drugi dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да прича о претученој студенткињи у полицијској станици није тачна и замера онима који су је ширили.",
-   "govora": 3,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "А тачно је да она није била у полицијској станици, да јој нису стављали кесу на гласу, да је није нико мучио и злостављао у полицијској станици.",
-    "date": "2025-10-16",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 16.10.2025, 6 dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да већина Србије не прихвата независно Косово и Метохију и замера онима који заговарају признање те независности.",
-   "govora": 3,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Вас боли што већина Србије неће никад да прихвати независно Косово и Метохију. Вас боли што ми у Савету Европе не дозвољавамо да Косово постане члан, вас све то боли.",
-    "date": "2025-06-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да је усаглашавање медијских закона са Европском комисијом завршено и да је то важно за отварање Кластера 3.",
-   "govora": 3,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Ово је све усаглашено са Европском комисијом, ОЕБС-ом, Саветом Европе. Прича да није било јавне расправе је бесмислена, будући да јавна расправа била 2023. године",
+    "tekst": "На њихову велику несрећу, тадашњи премијер Милош Вучевић их није обавестио да ће он тај дан поднети оставку. Онда је та ствар пала у воду и, замислите, главна вест је био Милош Вучевић, а нису били ти генијални кандидати.",
     "date": "2025-06-11",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да СПС и Ивица Дачић увек заговарају редовне парламентарне изборе, а не ванредне.",
+   "tekst": "Tvrdi да се РЕМ мора формирати да би се одржали избори и отворио Кластер 3, и позива опозицију да подржи тај процес.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Проста је ствар људи. Хоћете на изборе. Мора да се формира РЕМ. Хоћете да уђете у ЕУ. Мора да се формира РЕМ. Не знам шта је ту нејасно више.",
+    "date": "2026-07-07",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+   }
+  },
+  {
+   "tekst": "Navodi да је прича о студенткињи коју су у полицији малтретирали била лажна, да је то потврдило саопштење МУП-а и да се они који су је ширили нису извинили.",
+   "govora": 3,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ја бих сад само да подсетим да је колега Борко Стефановић позивао министра Ивицу Дачића да поднесе оставку и да ако не може да се јави да је поднесе барем имејлом. Овог пута га позивамо да се јавно извини, ако није у стању, да барем пошаље имејл са извињењем.",
+    "date": "2025-10-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 20. oktobra 2025. godine, sedmi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Navodi да су посланици опозиције и „блокадери“ у Скупштини и на одборима вређали, претили и физички нападали посланике владајуће већине.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Значи, када нас пљују, када нас шутирају, када хоће да нас запале, то је у реду, али је лоше ако им кажете и подсетите их и објасните начин на који су то радили",
+    "date": "2025-06-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 12. jun 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Navodi да поједини опозициони политичари у иностранству одлазе код „најгорих лобиста“ за независност Косова и да се у Савету Европе бори против тога.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Ми никада нисмо ни тражили ванредне парламентарне изборе, а ови што их траже сада напрасно неће да учествују у ономе у чему су фактички не дали допринос него били инцијална каписла да можемо да дођемо до аутентичног тумачења.",
-    "date": "2026-07-07",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
+    "tekst": "Ја их разумем, јел знате, неко годинама ради на томе и иде по иностранству, обија прагове, обилази најгоре лобисте за независност Косова, који онда омогућавају рецимо у Савету Европе да се организује дебата о нестабилности у Србији.",
+    "date": "2025-10-16",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 16.10.2025, 6 dan rada.docx"
    }
   }
  ]

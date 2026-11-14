@@ -1,48 +1,12 @@
 {
  "mp": "злата ђерић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 27,
  "speeches": 28,
  "sittings": 8,
  "points": [
   {
-   "tekst": "Тражи да Канцеларија за помоћ после поплава подноси Народној скупштини извештај о реализацији свака три месеца, да га скупштина усваја и да тако постане јаван.",
-   "govora": 2,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "Оног момента када они постану предмет усвајања, они постају и предмет јавне анализе и заиста јавног увида у њих.",
-    "date": "2014-07-18",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. jul 2014.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да реч „може“ у закону значи да нешто не мора да се деси, и зато тражи да се у одређеним члановима уместо „може“ стави „мора“ или јаснија одредба.",
-   "govora": 3,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "Ако кажемо – могу да се упишу, то значи да могу добити легитимацију и ако се не упишу.",
-    "date": "2014-08-01",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
-   }
-  },
-  {
-   "tekst": "Тражи скраћење рокова у поступцима високог образовања, на пример да се одговор Националног савета на жалбу даје у року од 30 дана, а не 90.",
-   "govora": 2,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "Амандман на члан 4. који сам поднела такође се односи на скраћење рока по питању давања одговора Националног савета на жалбу.",
-    "date": "2014-09-09",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. septembar 2014.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да буџет не може бити највећи послодавац, него то мора бити привреда, да би буџет био богат.",
+   "tekst": "Navodi da budžet ne sme da bude najveći poslodavac, nego da to mora da bude privreda, jer samo tako budžet može da bude bogat.",
    "govora": 2,
    "sazivi": [
     "9",
@@ -52,6 +16,43 @@
     "tekst": "Господо, не морамо бити економисти да бисмо знали да не може буџет бити највећи послодавац, послодавац мора бити привреда, да би буџет био богат.",
     "date": "2012-11-22",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Traži da se u zakonskim tekstovima preciznije biraju reči i izrazi, na primer da se „могу“ zameni sa „морају“ ili da se izbaci „који може бити“, jer „може“ znači da nešto i ne mora.",
+   "govora": 4,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Кад год у законском предлогу видимо „који може бити“ одмах се сетимо онога да нешто и не мора.",
+    "date": "2014-09-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. septembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da se zakoni i budžetska sredstva moraju sprovoditi transparentno i uz izveštavanje javnosti i Skupštine, jer građani imaju pravo da znaju kako se troši novac.",
+   "govora": 3,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Грађани Републике Србије имају право да увек и у сваком тренутку провере како се средства која су њихово власништво троше.",
+    "date": "2013-11-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da je znanje najvažniji resurs društva i da se obrazovanje i pošten odnos u društvu grade u predškolskim ustanovama i osnovnoj školi, a ne tek na visokoj školi.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Основна школа није основна зато што је она мање важна, него зато што она заиста јесте основ свег друштва и све касније надоградње.",
+    "date": "2014-09-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. septembar 2014.docx"
    }
   }
  ]

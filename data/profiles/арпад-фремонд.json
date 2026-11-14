@@ -1,12 +1,12 @@
 {
  "mp": "арпад фремонд",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 16,
  "speeches": 17,
  "sittings": 11,
  "points": [
   {
-   "tekst": "Наводи да пољопривредници на мањим површинама не могу да плате доприносе за ПИО и здравствено осигурање, јер држава тражи исти износ без обзира на величину газдинства.",
+   "tekst": "Navodi da poljoprivrednici koji gazduju na malim površinama nemaju od čega da plate doprinose za penzijsko i zdravstveno osiguranje, pa se zadužuju prema državi, i traži da se taj problem reši.",
    "govora": 3,
    "sazivi": [
     "9",
@@ -20,41 +20,54 @@
    }
   },
   {
-   "tekst": "Замера што Пореска управа због дугова за ПИО одузима пољопривредно земљиште, и противи се таквом понашању.",
+   "tekst": "Navodi da proizvođači ne mogu da registruju neke poljoprivredne priključne mašine jer ne ispunjavaju uslove iz pravilnika o registraciji vozila, pa ih saobraćajna policija kažnjava.",
    "govora": 2,
    "sazivi": [
     "9",
     "10"
    ],
    "citat": {
-    "tekst": "Проблем је у томе да је држава почела од њих, у зависности од величине дуга према држави, да одузима пољопривредно земљиште.",
-    "date": "2013-11-19",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/19. novembar 2013..doc"
+    "tekst": "То зна и саобраћајна полиција, али без обзира на све кажњава пољопривредне произвођаче због нерегистрованих прикључних машина.",
+    "date": "2013-05-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2013.doc"
    }
   },
   {
-   "tekst": "Наводи да је пољопривредно земљиште природно богатство, и зато се противи споразуму са Уједињеним Арапским Емиратима, по којем би страни купци преузимали државне компаније са земљиштем без јавног тендера.",
-   "govora": 2,
+   "tekst": "Navodi da je poljoprivredno zemljište prirodno bogatstvo koje treba sačuvati i izražava zabrinutost zbog toga što bi ga mogli steći strani ulagači.",
+   "govora": 3,
    "sazivi": [
-    "9"
+    "9",
+    "11"
    ],
    "citat": {
-    "tekst": "Сматрамо да ће на овај начин Република Србија изгубити право над власништвом пољопривредног земљишта, што је природно богатство које ће бити природно богатство и за 100 и за 500 година.",
+    "tekst": "Значи, оно што је за нас изузетно важно, треба да урадимо све да бисмо сачували пољопривредно земљиште, то је наше природно богатство. Због тога се противимо овој сарадњи.",
     "date": "2013-03-11",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
    }
   },
   {
-   "tekst": "Наводи да неке прикључне машине у пољопривреди не могу да се региструју јер не испуњавају прописане услове, па произвођачи због тога добијају казне.",
+   "tekst": "Traži da se otvori nezavisna laboratorija za kontrolu mleka i da se dozvoljeni nivo aflatoksina u mleku vrati na raniji.",
    "govora": 2,
    "sazivi": [
-    "9",
-    "10"
+    "9"
    ],
    "citat": {
-    "tekst": "Законом о безбедности саобраћаја предвиђено је да свако прикључно возило мора да се региструје. Са тим немамо никакав проблем.",
-    "date": "2013-05-28",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2013.doc"
+    "tekst": "Апелујем на вас, господине министре, још једном, да отворите независну лабораторију што пре, где би се контролисало не само млеко него и сточна храна, а наравно и остали прехрамбени производи, јер је то крајње решење за спречавање оваквих појава.",
+    "date": "2013-03-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da zakoni treba da obezbede informisanje i obrazovanje na jezicima nacionalnih manjina i da je zbog toga predlagao garancije i amandmane u tim zakonima.",
+   "govora": 2,
+   "sazivi": [
+    "10",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ово је битно због тога да грађани могу да се информишу на свом матерњем језику и убудуће, као што су то чинили претходних деценија.",
+    "date": "2015-06-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. jun 2015.docx"
    }
   }
  ]

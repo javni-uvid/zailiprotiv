@@ -1,39 +1,39 @@
 {
  "mp": "мацура нада",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 10,
  "speeches": 12,
  "sittings": 8,
  "points": [
   {
-   "tekst": "Navodi da se u zdravstvo ulaže mnogo novca, uz izgradnju i opremanje zdravstvenih ustanova.",
-   "govora": 2,
+   "tekst": "Navodi да су у здравство улагана велика средства и да су изграђени и реконструисани клинички центри и болнице.",
+   "govora": 3,
    "sazivi": [
     "13",
     "14"
    ],
    "citat": {
-    "tekst": "Сви смо сведоци колико је клиничких центара и болница изграђено и реконструисано широм Србије у претходном периоду.",
+    "tekst": "Сви смо сведоци колико је клиничких центара изграђено, а ова додатна милијарда ће омогућити још бржи наставак радова на потпуној реконструкцији и опремању опште болнице у Новом Пазару или Крагујевцу или Ужицу, чиме испуњавамо обећање грађанима да врхунска нега мора бити доступна свуда.",
     "date": "2026-08-26",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
    }
   },
   {
-   "tekst": "Izražava podršku predsedniku Aleksandru Vučiću i ističe njegov rad za Srbiju.",
-   "govora": 3,
+   "tekst": "Изражава подршку председнику Александру Вучићу и хвали његов рад.",
+   "govora": 4,
    "sazivi": [
     "13",
     "14"
    ],
    "citat": {
-    "tekst": "У времену глобалних изазова наш председник Александар Вучић својом способношћу, неисцрпним радом и превеликом љубављу према земљи Србији успева да оствари међудржавничку сарадњу",
+    "tekst": "У времену глобалних изазова наш председник Александар Вучић својом способношћу, неисцрпним радом и превеликом љубављу према земљи Србији успева да оствари међудржавничку сарадњу, јер ни једна земља не може ефикасно да одговори сама на многобројне изазове.",
     "date": "2025-11-05",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 5. novembra 2025. godine, drugi dan rada.docx"
    }
   },
   {
-   "tekst": "Poziva kolege da u danu za glasanje podrže predložene zakone.",
-   "govora": 3,
+   "tekst": "Позива колеге да у дану за гласање подрже предлоге закона о којима говори и образлаже њихов садржај.",
+   "govora": 4,
    "sazivi": [
     "14"
    ],
@@ -44,14 +44,13 @@
    }
   },
   {
-   "tekst": "Zamera što u raspravi o zakonima nema konstruktivnih primedbi i argumenata protiv predloga.",
-   "govora": 2,
+   "tekst": "Navodi да су закони о којима говори важни за здравље грађана, а то образлаже и као лекар.",
+   "govora": 3,
    "sazivi": [
-    "13",
     "14"
    ],
    "citat": {
-    "tekst": "Овде нема места политизацији и зато верујем да колеге у опозицији немају ни један аргумент против предлога овог закона.",
+    "tekst": "Као лекар, на овај предлог закона о спречавању допинга у спорту не могу и не желим да гледам кроз призму политике. За мене је ово, пре свега, питање здравља, медицинске етике и очувања људских живота.",
     "date": "2026-07-07",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
    }

@@ -1,70 +1,71 @@
 {
  "mp": "оља петровић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 12,
  "speeches": 12,
  "sittings": 10,
  "points": [
   {
-   "tekst": "Navodi da će penzioneri dobiti pomoć od 35.000, 27.500 ili 20.000 dinara, u zavisnosti od visine primanja.",
-   "govora": 3,
+   "tekst": "Навodi да држава исплаћује помоћ пензионерима и другим грађанима и повећава плате и пензије.",
+   "govora": 5,
    "sazivi": [
+    "12",
     "14"
    ],
    "citat": {
-    "tekst": "Ове мере обухватају директну подршку пензионерима где ће најугроженији добити помоћ од 35.000 динара, док ће остали пензионери, у зависности од висине примања, добити 27.500 динара или 20.000 динара.",
-    "date": "2026-07-07",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Osmog vanrednog zasedanja NSRS 07.07.2026, 2. dan.docx"
-   }
-  },
-  {
-   "tekst": "Navodi da je javni dug Srbije ispod 45% BDP-a i da zbog toga država može da ulaže i pomaže građanima.",
-   "govora": 2,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "јер смо чули да је, упркос свему, држава Србија задужена само 45% од свог бруто домаћег производа.",
+    "tekst": "Милион и 663 хиљаде пензионера добиће помоћ. Најугроженији добиће 35.000 динара. Следећа категорија 27.500 динара. Они који су са најбољим пензијама добиће 20.000 динара.",
     "date": "2026-08-25",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 25. avgusta 2026, 2. dan rada.docx"
    }
   },
   {
-   "tekst": "Navodi da država gradi puteve, pruge, bolnice i škole i nabraja konkretne projekte, kao što su auto-putevi i brze saobraćajnice.",
+   "tekst": "Навodi да се у Србији граде путеви, пруге и друга инфраструктура и да се улаже у све крајеве земље.",
    "govora": 4,
    "sazivi": [
     "13",
     "14"
    ],
    "citat": {
-    "tekst": "Граде се путеви, пруге, болнице школе и оно што је важно за свакодневни живот наших грађана.",
+    "tekst": "Чињеница је да се данас улаже у сваки део Србије, да се мисли на сваки град, сваку општину, свако село, да се мислим на сваког човека. Граде се путеви, пруге, болнице школе и оно што је важно за свакодневни живот наших грађана.",
     "date": null,
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 27. agusta 2026. godine, 4. dan rada.docx"
    }
   },
   {
-   "tekst": "Osuđuje ponašanje opozicije u Skupštini i navodi da ona blokira rad Skupštine i države.",
+   "tekst": "Навodi да је пре доласка СНС на власт стање у држави било лошије, са празном државном касом, затвореним фирмама и задуживањем за плате и пензије.",
    "govora": 3,
    "sazivi": [
+    "12",
     "14"
    ],
    "citat": {
-    "tekst": "на самом почетку морам да осудим ово срамно понашање опозиције које видимо од почетка ове седнице",
-    "date": "2025-03-04",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Privremene stenografske beleske Prve sednica Prvog redovnog zasedanja NSRS, odrzane 4. marta 2025. godine.docx"
+    "tekst": "Размишљам, да ли можда због оваквих и сличних, у најмању руку, неоправданих трошења средстава, Србија, пре доласка Александра Вучића и СНС, била пред банкротом са празном државном касом и са катанцима на фирмама које су запошљавале на хиљаде радника.",
+    "date": "2020-12-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sesta sednica Drugog redovnog zasedanja NSRS, 10.12.2020..docx"
    }
   },
   {
-   "tekst": "Navodi da država pomaže mladima i porodicama kroz subvencionisane stambene kredite, pomoć za studente i novčanu pomoć za decu.",
+   "tekst": "Замера опозицији да, како каже, уместо програма нуди блокаде и нестабилност.",
    "govora": 3,
    "sazivi": [
-    "13",
     "14"
    ],
    "citat": {
-    "tekst": "Закон који такође данас разматрамо, а који се односи на гарантну шему и субвенционисање камате за куповину прве стамбене непокретности исто има за циљ да помогне младима, да створе темеље за своју будућност.",
-    "date": "2025-03-04",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/f Privremene stenografske beleske Prve sednica Prvog redovnog zasedanja NSRS, odrzane 4. marta 2025. godine.docx"
+    "tekst": "Док се држава бори да очува економску сигурност грађана и стабилност земље у веома тешким међународним околностима блокадери нуде само хаос, заустављање Србије и атмосферу сукоба и подела.",
+    "date": "2026-05-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/F Treca sednica Prvog redovnog zasedanja NSRS 12.05.2026..docx"
+   }
+  },
+  {
+   "tekst": "Навodi да предложени закони јачају правну сигурност и поверење грађана у институције и изборни процес.",
+   "govora": 4,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Видели смо покушаје да се створи страх и сумња, али истина је да ова решења доносе правну сигурност, институционалну стабилност и професионализам, а управо то омогућава да се истраге воде доследно, без прекида и политичког утицаја.",
+    "date": "2026-01-27",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Sestog vanrednog zasedanja NSRS, odrzane 27. januara 2026. godine, peti dan rada.docx"
    }
   }
  ]

@@ -1,13 +1,13 @@
 {
  "mp": "зоран остојић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 13,
  "speeches": 17,
  "sittings": 4,
  "points": [
   {
-   "tekst": "Зам,ера што члан 4. закона дозвољава упис права својине над туђим земљиштем и пита да ли ће га министар мењати.",
-   "govora": 3,
+   "tekst": "Navodi da zakon o upisu prava svojine na objektima izgrađenim bez građevinske dozvole nije legalizacija i da član 4 omogućava upis tuđeg zemljišta.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
@@ -18,32 +18,8 @@
    }
   },
   {
-   "tekst": "Наводи да ће грађани за упис права својине морати да плате по сто евра, што би, по његовом рачуну, било сто милиона евра.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Просто, узеће им по сто евра, па ви израчунајте: милион нека се упише, пута сто евра, и ето вам сто милиона евра које ће грађани платити.",
-    "date": "2013-03-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/8. mart 2013.doc"
-   }
-  },
-  {
-   "tekst": "Наводи да је НИС продат директном погодбом, што је, по његовом мишљењу, утицало на цену, и да се слично дешава и са новим споразумом.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Зашто? Па, зато што смо рекли да се тако не може утврдити тржишна цена НИС-а, да је то директна погодба, да је то противзаконито",
-    "date": "2013-03-11",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
-   }
-  },
-  {
-   "tekst": "Тражи од Владе да сазна и јавно каже докле је стигла платформа за Косово и да ли ће бити представљена посланицима.",
-   "govora": 2,
+   "tekst": "Zamera što Vlada i premijer Ivica Dačić ne predstavljaju poslanicima platformu i stavove o Kosovu i pregovorima sa Prištinom.",
+   "govora": 3,
    "sazivi": [
     "9"
    ],
@@ -51,6 +27,30 @@
     "tekst": "Дакле, јасно и гласно питање – да ли се та платформа ради, да ли ће бити представљена посланицима?",
     "date": "2012-11-22",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da propisi koje predlaže vlada sadrže mogućnost korupcije ili su pisani tako da koriste određenim korisnicima.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "И сада нека ме неко убеди да у писању закона није било предвиђено и намештено да једна фарма добије трећину свих средстава, а да десетине и стотине, нису у питању хиљаде, јер их нема толико, малих сточара, буду закинути.",
+    "date": "2013-05-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da se direktnom pogodbom, kao kod NIS-a i sporazuma sa Emiratima, ne može utvrditi tržišna cena, i da bi to pokazao tender.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Постигнута цена за НИС је онаква каква је, због начина – директне погодбе. Да је било тендера, као за „Теленор“, онда би се видело колика је цена.",
+    "date": "2013-03-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
    }
   }
  ]

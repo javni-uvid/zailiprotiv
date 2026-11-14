@@ -1,25 +1,13 @@
 {
  "mp": "гојковић маја",
- "model": "claude-haiku-5-5",
- "read": 42,
- "speeches": 52,
- "sittings": 9,
+ "model": "claude-sonnet-5-5",
+ "read": 36,
+ "speeches": 61,
+ "sittings": 14,
  "points": [
   {
-   "tekst": "Zamera opoziciji što se poslanici javljaju za povredu Poslovnika da bi replicirali drugima i traži da predsedavajući to zaustavi.",
+   "tekst": "Тражи да председавајући примењује Пословник и да се на седници говори само о тачки дневног реда, односно о амандманима.",
    "govora": 3,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Молим вас, пошто је, по члану 103, очигледна злоупотреба повреде Пословника јер се посланици јављају да би реплицирали другим посланицима, да би вређали Посланичку групу СНС и остале, употребите и одузмите им две минуте од њиховог укупног времена за дискусију",
-    "date": "2017-10-24",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
-   }
-  },
-  {
-   "tekst": "Traži da se amandmani razmatraju samo po svojoj sadržini, da govornici govore o svojim amandmanima i da se ne vodi opšta politička rasprava.",
-   "govora": 2,
    "sazivi": [
     "11"
    ],
@@ -30,27 +18,52 @@
    }
   },
   {
-   "tekst": "Tvrdi da ministri ne moraju biti stručnjaci iz oblasti kojom rukovode, jer je Vlada politička, a ministre biraju političke stranke.",
+   "tekst": "Тврди да министри не морају да буду стручњаци из струке него политичари, и као пример наводи министра одбране који није служио војску.",
    "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Министри су политичке личности, бирају их партије и мени невероватно смета, не невероватно, потпуно вероватно смета демагогија коју смо принуђени ми и грађани Србије да слушамо данима о томе како министри треба да буду људи из струке",
+    "tekst": "Јер Владу чине политичари, и тако ће бити увек, докле год буде вишестраначког система у свету, па и у Србији.",
     "date": "2017-10-09",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
    }
   },
   {
-   "tekst": "Brani uvođenje vanrednog stanja 2020. kao urađeno u skladu sa Ustavom i zakonima i navodi da o tome može da odluči Ustavni sud.",
+   "tekst": "Брани измене закона којима се повећава заступљеност жена у парламенту и наводи да ће у њему заиста бити 40% жена.",
    "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Све је урађено у складу са Пословником, у складу са Уставом и у складу са Законом о Народној Скупштини Републике Србије.",
-    "date": "2020-04-29",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica NSRS za vreme vanrednog stanja odrzana 29. aprila 2020. godine drugi dan rada.docx"
+    "tekst": "Да није било квота система једне трећине, многе жене не би седеле данас овде у парламенту. Нико не би знао за њих.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Тражи да се за културу издваја више новца из буџета и позива се на Мелину Меркури, по којој је култура „тешка индустрија“, односно „фабрика“ која ради.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Мислим да можемо да поредимо Србију са Грчком у тим временима, јер код нас раде само две „фабрике“: једна „фабрика“ је сигурно спорт и већим улагањима у спорт већ смо показали некакве резултате, а друга „фабрика“ која ради, без обзира на то што мало улажемо у њу, свакако је култура.",
+    "date": "2012-11-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. dan VIII sednica II redovnog zasedanja u 2012. 30.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Замера због лоше преговараног Споразума о стабилизацији и придруживању из 2008. године и због реформе правосуђа из 2008. године, за коју наводи да је направила велику штету.",
+   "govora": 4,
+   "sazivi": [
+    "9",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Што се тиче намере да јавности уђе у уши да је Војводина нешто кажњена, не, Војводина је кажњена оним цунамијем из 2008. године, оном катастрофом од реформе правосуђа, због чега је читава Европа скочила на нас.",
+    "date": "2013-11-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. novembar 2013..doc"
    }
   }
  ]

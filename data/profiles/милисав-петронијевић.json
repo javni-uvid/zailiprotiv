@@ -1,25 +1,37 @@
 {
  "mp": "милисав петронијевић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 16,
  "speeches": 20,
  "sittings": 9,
  "points": [
   {
-   "tekst": "Наводи да је економски опоравак национални приоритет, да подржава Владу у том напору и да је запошљавање важан задатак.",
-   "govora": 2,
+   "tekst": "Navodi da je zapošljavanje ljudi u Srbiji najvažniji zadatak i prioritet.",
+   "govora": 5,
    "sazivi": [
     "9",
     "10"
    ],
    "citat": {
-    "tekst": "Зато је економски опоравак и опстанак национални приоритет број један и сви остали, такође важни, зависе од тога.",
-    "date": "2012-11-23",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+    "tekst": "Понављам, а и пре неки дан сам рекао, нема важнијег задатка у Србији него запослити неке људе.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   },
   {
-   "tekst": "Заговара праведније опорезивање, тако да они који имају више плаћају више.",
+   "tekst": "Navodi da bez privrede i proizvodnje nema novih para ni punjenja budžeta.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Нема у Србији бољитка без привреде, без производње, без онога ко прави нову вредност, ко прави паре, ко пуни буџет.",
+    "date": "2013-05-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/24. maj 2013.docx"
+   }
+  },
+  {
+   "tekst": "Zalaže se da porez najviše plaćaju oni koji imaju najviše.",
    "govora": 2,
    "sazivi": [
     "9"
@@ -31,28 +43,31 @@
    }
   },
   {
-   "tekst": "Подржава буџет и мере фискалне консолидације.",
-   "govora": 2,
+   "tekst": "Navodi da je borba protiv sive ekonomije važna i očekuje da je Vlada sprovodi.",
+   "govora": 3,
    "sazivi": [
     "9",
+    "10",
     "11"
    ],
    "citat": {
-    "tekst": "Тај податак и податак да је остварена значајна редукција учешћа јавног дуга у БДП-у говоре да су у Србији мере фискалне консолидације постигле ефекте и да је јавна потрошња у довољној мери редукована",
-    "date": "2017-12-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/8. decembar 2017..pdf"
+    "tekst": "Битно је што је један од циљева овог закона да се Влада ухвати укоштац са сивом економијом и са запошљавањем на црно.",
+    "date": "2014-05-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/30. maj 2014.docx"
    }
   },
   {
-   "tekst": "Тражи да судови буду лакше доступни грађанима.",
-   "govora": 2,
+   "tekst": "Izjavljuje da Poslanička grupa SPS podržava predloge Vlade o kojima se raspravlja.",
+   "govora": 4,
    "sazivi": [
-    "9"
+    "9",
+    "10",
+    "11"
    ],
    "citat": {
-    "tekst": "Прошли пут сам у начелној расправи рекао - најбоља је ствар када би свака општина имала општински суд.",
-    "date": "2013-11-18",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. novembar 2013..doc"
+    "tekst": "Ја подржавам моју владу и позивам да остане, да буде озбиљна у овом послу и да једноставно тај посао изведе до краја, у шта потпуно верујем, да ће тако бити.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   }
  ]

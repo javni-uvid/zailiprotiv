@@ -1,44 +1,44 @@
 {
  "mp": "душица морчев",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 13,
  "speeches": 21,
  "sittings": 4,
  "points": [
   {
-   "tekst": "Навodi da su prihodi od akciza u budžetu nerealno planirani i da povećanje akciza ne donosi uvek veći prihod u budžet.",
+   "tekst": "Navodi da su prihodi od akciza u budžetu nerealno projektovani i da povećanje akciza ne donosi veći prihod, pa traži izmenu Zakona o akcizama.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Демократска странка Србије је упозоравала када се усвајао буџет да су нереално постављени приходи од акциза и да свако повећање акциза не доноси увек и повећање прихода у буџет",
+    "tekst": "Стојим иза тога да повећање акциза није добро и да неће доносити приходе, али наћи ћемо се и говорићемо о томе до краја године, јер како ствари стоје, мислим да ћемо имати још један ребаланс буџета до краја године.",
     "date": "2013-07-04",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
    }
   },
   {
-   "tekst": "Тражи да се рок здравствене заштите породиље која је родила мртворођено дете продужи са три на шест месеци.",
+   "tekst": "Traži da država više ulaže u poljoprivredu i da jača domaću proizvodnju.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Једноставно сматрамо да је три месеца кратак рок, да имају право на здравствену заштиту после губитка детета, поготово што је сврха овог закона да заштитимо децу, труднице и породиље.",
-    "date": "2013-11-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. novembar 2013..doc"
+    "tekst": "Принципијелни став Демократске странке Србије је да не треба да продајемо наше ресурсе, да треба да улажемо у пољопривреду, да треба да јачамо нашу домаћу производњу.",
+    "date": "2013-03-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
    }
   },
   {
-   "tekst": "Замера што нема одговорности за лоше извештаје и злоупотребе и тражи да се одговорност утврди.",
+   "tekst": "Zamera što izostaje odgovornost za zloupotrebe i loše finansijsko izveštavanje i traži da se odgovornost utvrdi i kontrola pojača.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Да ли је неко одговарао за то? Да ли је иједан овлашћени ревизор с лиценцом одговарао за оно што је поднео у извештају?",
-    "date": "2013-07-09",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. jul 2013..doc"
+    "tekst": "Да би се спречило то у будућности, да би коначно постојала одговорност, не видимо зашто је сувишно да се тај извештај подноси Влади?",
+    "date": "2013-11-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/22. novembar 2013..doc"
    }
   }
  ]

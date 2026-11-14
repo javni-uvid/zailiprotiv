@@ -1,56 +1,56 @@
 {
  "mp": "весовић драган",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 35,
  "speeches": 45,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Navodi da produženje mandata predsednicima sudova stvara nejednakost prema drugim sudijama, i to naziva diskriminacijom.",
-   "govora": 2,
+   "tekst": "Замера што председавајући при примени Пословника нема исти критеријум за посланике опозиције и за посланике владајуће већине, и тражи да се примене чланови о опомени и слободи говора.",
+   "govora": 5,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Зашто некоме дозволити да буде дуже на радном месту у односу на неког, а из исте су бранше и бавили су се истим послом?",
-    "date": "2017-05-15",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/15. maj 2017..pdf"
+    "tekst": "Стварно не знам докле ће да се иде са увредама које се изричу посланицима Српског покрета Двери а да за годину дана, колико ја дуго седим у овом здању, имамо изречену само једну једину опомену представницима власти.",
+    "date": "2017-10-09",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/9. oktobar 2017..pdf"
    }
   },
   {
-   "tekst": "Traži od vlasti objašnjenje zašto se mandat predsednika suda menja i zašto je sada bolje nego ranije, jer mu to nije jasno.",
-   "govora": 2,
+   "tekst": "Не верује Привредној комори Србије, због чега у Предлогу закона о дуалном образовању тражи да се њена овлашћења пребаце на Министарство просвете, и наводи да ту постоји могућност за корупцију и фаворизовање појединих послодаваца.",
+   "govora": 4,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "нико није рекао јасно, а ја вас молим да због нас којима није јасно кажете зашто је сада то боље.",
-    "date": "2017-05-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. maj 2017..pdf"
-   }
-  },
-  {
-   "tekst": "Zamera što Privredna komora ima veliku ulogu u određivanju instruktora i u nadzoru dualnog obrazovanja, i smatra da je to udruženje poslodavaca sa partijskim uticajem.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Привредна комора је удружење послодаваца. Привредна комора свуда и на сваком месту протежира своје поједине чланове.",
+    "tekst": "Привредна комора је интересна организација. Привредна комора је удружење послодаваца. Привредна комора свуда и на сваком месту протежира своје поједине чланове.",
     "date": "2017-11-02",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. novembar 2017..pdf"
    }
   },
   {
-   "tekst": "Navodi da odnos 20:80 između teorijske i praktične nastave u dualnom obrazovanju ne odgovara učenicima koji žele da nastave školovanje.",
+   "tekst": "Замера што се закони доносе по хитном поступку и пита зашто је хитност настала баш сада, а не раније.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Да тако јесте, постављамо питање – зашто се то ради под хитно, јер се закон доноси по хитном поступку? Често је у српском народу – оно што је брзо, понекад је и кусо.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Тражи да се формирају анкетни одбори о изборним процесима и наводи да су на изборима постојале неправилности и да на легитимности избора и даље стоји „сенка сумње“.",
    "govora": 2,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Овај проценат у односу 20:80 никако не може да одговара ономе ко ће да настави школовање.",
-    "date": "2017-11-01",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
+    "tekst": "Дакле, позивам господу из владајуће коалиције да гласају за овај предлог, да се формира анкетни одбор који ће, пошто тврдите да ово што ја тврдим није истинито, то доказати као истину.",
+    "date": "2017-12-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. decembar 2017..pdf"
    }
   }
  ]

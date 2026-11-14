@@ -1,56 +1,56 @@
 {
  "mp": "един нумановић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 14,
  "sittings": 8,
  "points": [
   {
-   "tekst": "Наводи да су магистрални путеви кроз Нови Пазар неуређени и тражи обилазнице и брзе саобраћајнице.",
-   "govora": 3,
+   "tekst": "Замера локалној власти у Новом Пазару што су, како наводи, саобраћај и инфраструктура у граду остали неуређени.",
+   "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Чак шта више, у самом центу у чаршији Новог Пазара се тај магистрални пут сужава на једну коловозну траку, где се саобраћај одвија наизменично.",
+    "tekst": "Иако наизглед банално питање, које можда и не заслужује да се налази као тема у овом високом дому, због дугогодишње неспособности локалних власти у Новом Пазару и због бројних смртних случаја које смо имали на том подручју, чак и ученика, то питање је постигло ову алармантност да се помене и у Народној скупштини.",
     "date": "2025-03-18",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog redovnog zasedanja NSRS 18.03.2025. sedmi dan rada.docx"
    }
   },
   {
-   "tekst": "Тражи заштиту изворишта воде и планине Рогозне од геолошких истраживања и рударења.",
+   "tekst": "Traži да се у Санџаку и Новом Пазару изграде ауто-пут, пруга и аеродром, као и брже саобраћајнице.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Други амандман јесте предложен са циљем да општи принцип из овог претходног амандмана, применимо на конкретан пример планине Рогозне, која представља један од кључних изворишта водоснабдевања за део становника Новог Пазара, и околине",
-    "date": "2026-04-22",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 22. aprila 2026. godine, 5. dan rada.docx"
+    "tekst": "Нама су потребне обилазнице, приступне брзе саобраћајнице, изградња ауто-пута, аеродрома, пруге, као основних елементарних чиниоца за даљи развој овога краја, али и за очување безбедности наших суграђана и, наравно, наше деце.",
+    "date": "2026-04-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 17. aprila 2026. godine, drugi dan rada.docx"
    }
   },
   {
-   "tekst": "Захтева право мањина на информисање на матерњем језику.",
+   "tekst": "Traži да држава обезбеди већа права Бошњака и других мањинских народа, међу осталим информисање на босанском језику.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Право на информисање на матерњи језик, поред права на образовање, на развој и очување културе, као и на службену употребу језика и писма јесте једно од кључних мањинских права, сагласно са законом.",
-    "date": "2025-11-10",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana  10. novembra 2025. godine, peti dan rada.docx"
+    "tekst": "То су елементарна права и питање које ће увек бити на дневном реду зато што Бошњаци заслужују да доживе овај медијски сервис као свој и да осете да држава брине о њиховим правима.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
    }
   },
   {
-   "tekst": "Критикује локалну власт у Новом Пазару због немара и урбанистичког хаоса.",
-   "govora": 2,
+   "tekst": "Позива се на договоре Странке правде и помирења са влашћу и наводи резултате министра Усамеа Зукорлића у развоју инфраструктуре.",
+   "govora": 3,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Због седамнаестогодишњег немара локалних власти у Новом Пазару овај град је пред урбанистичким колапсом који се огледа у трајно нарушеном саобраћају, нарушеној екологији",
-    "date": "2025-10-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 8. oktobar 2025. godine, drugi dan rada.docx"
+    "tekst": "када говоримо о буџету, нарочито о појединачним деловима, желим се осврнути на рад кабинета задуженог за помирење и регионалну сарадњу, друштвену стабилност министра Усамеа Зукорлића чији су рад у претходних годину и по дана обележили конкретни резултати на пољу инфраструктурног развоја, подршке локалним заједницама, јачању друштвене кохезије и повезивању Србије са регионом и дијспором.",
+    "date": "2026-08-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Desetog vanrednog zasedanja NSRS, odrzane 26. avgusta 2026. godine, 3. dan rada.docx"
    }
   }
  ]

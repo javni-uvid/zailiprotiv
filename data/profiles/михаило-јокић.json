@@ -1,24 +1,36 @@
 {
  "mp": "михаило јокић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 10,
  "speeches": 18,
  "sittings": 3,
  "points": [
   {
-   "tekst": "Navodi da je cilj dualnog obrazovanja stručan i obrazovan radnik i da škola može da raskine ugovor sa poslodavcem ako on ne ispuni obaveze iz nastavnog plana i programa.",
-   "govora": 4,
+   "tekst": "Брани закон о дуалном образовању тврдећи да је његов циљ стручан и образован радник, а да ученик у предузећу не иде да зарађује.",
+   "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Ако послодавац не може да му обезбеди да ради то што пише у наставном плану и програму, школа раскида уговор са послодавцем.",
+    "tekst": "Да се разумемо, основни циљ дуалног образовања јесте стручан и образован радник. Значи, ученик је присутан у предузећима, а присутан ће бити и у школским радионицама, због тога да би постао добар и стручан мајстор а не да би зарадио.",
     "date": "2017-11-01",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
    }
   },
   {
-   "tekst": "Navodi da oni koji završe dualno obrazovanje mogu da nastave na fakultet i da su najbolji stručni radnici u svojoj struci.",
+   "tekst": "Navodi da ученик код послодавца ради само оно што пише у наставном плану и програму и да школа раскида уговор са послодавцем који то не испоштује.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Оно што хоћу да кажем грађанима, ученик код послодавца не ради оно што му каже послодавац, него оно што пише у наставном плану и програму.",
+    "date": "2017-11-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/1. novembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da најбољи ученици дуалног образовања могу да заврше и факултет и да су такви људи најбољи у својој струци.",
    "govora": 3,
    "sazivi": [
     "11"
@@ -30,13 +42,25 @@
    }
   },
   {
-   "tekst": "Upozorava na zloupotrebe i korupciju u lokalnim samoupravama i traži nadzor nad njihovim radom.",
+   "tekst": "Traži да се говорницима који одступе од дневног реда или почну да вређају одузме реч, односно искључи микрофон.",
    "govora": 2,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Предлажем вам да ви као министар формирате летеће стручне екипе које ће изненада проверавати како се ради у локалним самоуправама.",
+    "tekst": "Ја вас молим да све оне, без обзира на то да ли су позиција или опозиција, ако за јоту одступе од дневног реда, да им одузмете реч.",
+    "date": "2017-10-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/4. oktobar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Traži да се у управи, пре свега у локалним самоуправама, обезбеде контрола и надзор како би се спречиле злоупотребе и корупција.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Молим вас, министре Ружићу, најслабија тачка у градској управи, у општинској управи јесте служба која се бави јавним набавкама. У општинама, градским управама то обично ради један човек, који се врло лагано и врло мекано договори са руководиоцем.",
     "date": "2017-10-06",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. oktobar 2017..pdf"
    }

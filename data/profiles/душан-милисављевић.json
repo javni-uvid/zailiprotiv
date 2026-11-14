@@ -1,68 +1,70 @@
 {
  "mp": "душан милисављевић",
- "model": "claude-haiku-5-5",
- "read": 11,
- "speeches": 11,
- "sittings": 2,
+ "model": "claude-sonnet-5-5",
+ "read": 36,
+ "speeches": 97,
+ "sittings": 10,
  "points": [
   {
-   "tekst": "Navodi da član 250. Krivičnog zakonika treba izbrisati, a obolele od HIV-a prebaciti u član 249, gde se nalaze ostale zarazne bolesti.",
-   "govora": 2,
+   "tekst": "Navodi da je zdravstvo u Srbiji u lošem stanju i traži da se novac ne skida iz zdravstva, nego da se u njega ulaže.",
+   "govora": 3,
    "sazivi": [
-    "11"
+    "10"
    ],
    "citat": {
-    "tekst": "Предлажемо да се члан 250. избрише а да се оболели од ХИВ-а пребаце у члан 249, где се третирају остале заразне болести, и хепатитис Ц и хепатитис Б, које су у неким случајевима много опасније и теже за лечење него пацијенти оболели од ХИВ-а.",
-    "date": "2017-10-24",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
+    "tekst": "Управо сваки динар треба да уложимо у квалитет здравства, побољшање здравственог система, а не да неко каже – ми смо ту уштедели новац.",
+    "date": "2014-05-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. maj 2014.docx"
    }
   },
   {
-   "tekst": "Predlaže zakonsku obavezu da se novorođenčadi meri sluh u porodilištima od trećeg do petog dana od rođenja.",
-   "govora": 2,
+   "tekst": "Navodi da onkološki pacijenti predugo čekaju na zračnu terapiju i da liste čekanja rastu, i traži nabavku aparata za zračnu terapiju.",
+   "govora": 4,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Нажалост, у Србији је тај период продужен на више од три месеца. У Нишу конкретно 530 грађана Србије имају неку врсту малигног тумора и чекају да дођу на ред неколико месеци, чекају на ред да имају шансу за излечење.",
+    "date": "2014-07-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da mladi lekari čekaju posao na birou i traži da se utvrdi koliko lekara državi treba i da se prema tome odredi upis na medicinske fakultete.",
+   "govora": 3,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Треба план за Србију колико лекара треба на годишњем нивоу да школују наши медицински факултети и да то буде закон за све, а не да на мала врата многи медицински факултети нађу начина да убаце 10, 20, 30, 50 студената како би добили нека средства за личне потребе.",
+    "date": "2014-08-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Traži da svi građani Srbije dobiju zdravstvenu knjižicu besplatno, poštom na kućnu adresu, i navodi da je 400 dinara veliko opterećenje za građane.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Поновићу, још једанпут, као папагај, 400 динара је много за грађане Србије, поготово за четворочлану породицу, која треба да плати 1.600 динара за вађење нове документације.",
+    "date": "2014-09-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. septembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Traži da radnici koji boluju od raka ne mogu biti otpušteni i da za vreme bolovanja imaju 100% naknade.",
+   "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Идеја је да се бебама мери слух од трећег до петог дана од рођења како бисмо детектовали на време да ли дете има оштећење слуха или нема и како би ОРЛ службе на време почеле са адекватном терапијом, тј. рехабилитацијом слуха.",
+    "tekst": "Управо је зато ово једна подршка кроз законски оквир – да радник, тј. пацијент, докле год се бори са тумором, не може да буде отпуштен и плус да има 100% надокнаду за боловање за одсуство са посла.",
     "date": "2017-12-06",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. decembar 2017..pdf"
-   }
-  },
-  {
-   "tekst": "Predlaže da krivično delo nelegalno stečene imovine ne može da zastari.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Овим додатком у Кривичном законику омогућили бисмо да ниједно кривично дело нелегалног стицања имовине не може застарити и послали превентивну поруку свим људима који се у одређеном тренутку баве јавним послом да није паметно да злоупотребе свој положај и да ће пре или касније одговарати српском народу за штету коју су нанели буџету Републике Србије.",
-    "date": "2017-10-24",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
-   }
-  },
-  {
-   "tekst": "Predlaže da poslodavac ne sme da otpusti radnika koji boluje od malignog tumora dok je u lečenju.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Овим предлогом забранили бисмо власницима фирми да отпусте радника који болује од карцинома и у процесу је лечења или рехабилитације.",
-    "date": "2017-12-06",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/6. decembar 2017..pdf"
-   }
-  },
-  {
-   "tekst": "Predlaže da radnici koji boluju od malignih tumora imaju pravo na 100% naknade za bolovanje, a ne 65%.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Овај предлог који сам предложио за здравствено осигурање је да радници који болују од малигних тумора имају право на 100% боловања.",
-    "date": "2017-10-24",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/24. oktobar 2017.pdf"
    }
   }
  ]

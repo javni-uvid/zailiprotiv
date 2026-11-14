@@ -1,58 +1,58 @@
 {
  "mp": "милорад мијатовић",
- "model": "claude-haiku-5-5",
- "read": 11,
- "speeches": 11,
- "sittings": 9,
+ "model": "claude-sonnet-5-5",
+ "read": 15,
+ "speeches": 21,
+ "sittings": 12,
  "points": [
   {
-   "tekst": "Navodi da je Srbija zahvaljujući vladi za nekoliko godina prešla sa budžetskog deficita na suficit, i da je to rezultat finansijske konsolidacije.",
-   "govora": 3,
+   "tekst": "Наводи да су Влада и владајућа већина постигли добре резултате у финансијској консолидацији и економији, међу њима суфицит уместо дефицита и очуване плате и пензије.",
+   "govora": 4,
    "sazivi": [
     "11",
     "12"
    ],
    "citat": {
-    "tekst": "у 2014. години имали смо буџетски дефицит 256 милијарди. Сада имамо суфицит, крајем новембра, од 80 милијарди, само за три године.",
+    "tekst": "Сада имамо суфицит, крајем новембра, од 80 милијарди, само за три године. Молим вас, за три године смо од 256 милијарди, колики је био дефицит, дошли до суфицита од 80 милијарди.",
     "date": "2017-12-07",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/7. decembar 2017..pdf"
    }
   },
   {
-   "tekst": "Navodi da su mere vlade protiv kovida dale rezultate i da je lečenje od kovida u Srbiji besplatno.",
-   "govora": 3,
-   "sazivi": [
-    "11",
-    "12"
-   ],
-   "citat": {
-    "tekst": "Напомињем да су трошкови за лечење од Ковида 19 енормни и да је у Србији то бесплатно.",
-    "date": "2020-12-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sesta sednica Drugog redovnog zasedanja NSRS 08.12.2020..docx"
-   }
-  },
-  {
-   "tekst": "Navodi da je Socijaldemokratska partija Srbije za ulazak Srbije u EU i da su otvorena poglavlja pregovora.",
+   "tekst": "Наводи да СДПС и владајућа већина подржавају улазак Србије у ЕУ и да су за то отворена поглавља у преговорима.",
    "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Ви нисте отворили ниједно поглавље. Ми смо отворили 12 поглавља, а ви говорите да нисмо за ЕУ.",
+    "tekst": "Ми смо у власти и сада и бићемо увек уколико се будемо залагали за европске интеграције, за финансијску консолидацију, за бољи живот. Ви нисте отворили ниједно поглавље. Ми смо отворили 12 поглавља, а ви говорите да нисмо за ЕУ.",
     "date": "2017-12-12",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
    }
   },
   {
-   "tekst": "Zamera kritičarima što vide samo prošlost i greške, a ne priznaju rezultate vlade.",
+   "tekst": "Тражи да се питање средстава за Војводину (7% буџета) реши у оквиру Устава и закона и наводи да Устав из 2006. године изнова ствара кризу.",
    "govora": 2,
    "sazivi": [
-    "11"
+    "9"
    ],
    "citat": {
-    "tekst": "Овде не видимо резултате али се зато стално враћамо у прошлост, јер у тој прошлости налазимо неке наше плусеве или минусе, а нико неће да прича шта нас чека сутра.",
-    "date": "2017-12-07",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/7. decembar 2017..pdf"
+    "tekst": "Социјалдемократска партија Србије инсистира и тражи да се у оквиру уставних решења, у оквиру закона изнађе решење. Мислим да то није тешко.",
+    "date": "2012-11-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Наводи да су мере Владе у пандемији Ковида-19 дале резултате и да држава плаћа тестирање и лечење грађана.",
+   "govora": 3,
+   "sazivi": [
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Молим вас, бесплатни су сви тестови, а ми смо скоро већ тестирали два милиона становника Србије, а то износи отприлике 30% грађана Србије.",
+    "date": "2020-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sesta sednica Drugog redovnog zasedanja NSRS 08.12.2020..docx"
    }
   }
  ]

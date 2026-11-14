@@ -1,13 +1,25 @@
 {
  "mp": "срђан шајн",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 35,
  "speeches": 42,
  "sittings": 7,
  "points": [
   {
-   "tekst": "Navodi da Kancelarija za ljudska i manjinska prava nije dovoljno stručna i da je u njoj potrebna promena.",
-   "govora": 3,
+   "tekst": "Navodi da integraciju Roma treba rešavati kroz zapošljavanje, osnivanje zadruga i izgradnju stanova koje bi korisnici otplaćivali, uz podršku međunarodnih organizacija.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Основна идеја тог амандмана јесте следећа: да се обезбеде средства за формирање задруга које ће да подстакну станоградњу, значи стамбених и занатских задруга, јер нас већ идуће године очекује 600.000 евра из једног пројекта који спроводи тим за имплементацију Декаде под окриљем ОЕБС-а.",
+    "date": "2012-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/3. dan VIII sednica II redovnog zasedanja u 2013. 26.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Zamera Kancelariji za ljudska i manjinska prava što su njeni zaposleni nestručni i što ne obavljaju posao kako treba.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
@@ -18,51 +30,39 @@
    }
   },
   {
-   "tekst": "Zalaže se za osnivanje zadruga i zapošljavanje socijalno ugroženih, uključujući Rome, u izgradnji stambenih jedinica koje bi ti ljudi sami otplaćivali.",
+   "tekst": "Navodi da romska zajednica u Vojvodini nema ustanove i list na svom jeziku i pita da li će se iz vojvođanskog budžeta finansirati Zavod za razvoj kulture Roma i novinsko-izdavačka ustanova „Tem“.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "да ти људи дугорочно отплаћују те своје стамбене јединице, раде и на тај начин доприносе земљи из које долазе.",
-    "date": "2012-11-30",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. dan VIII sednica II redovnog zasedanja u 2012. 30.11.2012..doc"
+    "tekst": "Да ли ће тим буџетом да буду опредељена средства за финансирање Завода за развој културе Рома, из врло једноставне ствари?",
+    "date": "2012-12-11",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. dan VIII sednica II redovnog zasedanja u 2012. 11.12.2012..doc"
    }
   },
   {
-   "tekst": "Podržava legalizaciju objekata izgrađenih bez građevinske dozvole i navodi da se time sprečava rušenje kuća socijalno ugroženih.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "На овај начин стварамо корак даље, одузимамо могућност за самовољу некаквих градоначелника који су се осионо понашали у не тако далекој прошлости, који су зарад интереса крупног капитала рушили куће социјално угрожених категорија",
-    "date": "2013-03-11",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. mart 2013.doc"
-   }
-  },
-  {
-   "tekst": "Navodi da se 7% budžeta Vojvodine ne koristi za ustanovu „Тем“ i zahteva da se Ustav i odluke Skupštine Vojvodine poštuju.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Не реализује се 7% за те сврхе, јер у том листу излази чланак који критикује секретара Извршног већа за информисање, и одмах се следеће недеље прекида",
-    "date": "2012-11-22",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
-   }
-  },
-  {
-   "tekst": "Traži da prava u vezi sa planiranjem porodice, trudnoćom i roditeljstvom važe za oba supružnika, a ne samo za trudnicu.",
+   "tekst": "Traži da se pri legalizaciji objekata gleda i na ruralne delove Srbije, na zanatske i poljoprivredne objekte i obične građane, a ne samo na Dedinje.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Један део решења је да се у времену, односно у периоду који је везан за планирање породице, у току трудноће где смо бенефит остваривали само за жене и у току родитељства, да се изједначе права оба супружника у том периоду.",
-    "date": "2012-12-06",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/10. dan VIII sednica II redovnog zasedanja u 2012. 06.12.2012..doc"
+    "tekst": "Дакле, уколико заиста желимо социјално одговорну државу, уколико желимо да помогнемо социјално најугроженијима, онда морамо мало да померимо поглед са Дедиња, да га усмеримо према унутрашњости, према руралном делу Србије.",
+    "date": "2013-03-13",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Navodi da je država urušena i da svi zajedno, uključujući i njegovu stranku, snose deo odgovornosti i moraju da rade na njenoj izgradnji.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Јесте одговорност и на нама зато што смо неке ствари радили и продавали своје гласове за један пакет. Чега је то показатељ? Да је држава урушена и да сви заједно морамо да радимо на изградњи државе.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
    }
   }
  ]

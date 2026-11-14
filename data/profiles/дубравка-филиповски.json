@@ -1,58 +1,73 @@
 {
  "mp": "дубравка филиповски",
- "model": "claude-haiku-5-5",
- "read": 17,
- "speeches": 17,
- "sittings": 15,
+ "model": "claude-sonnet-5-5",
+ "read": 30,
+ "speeches": 49,
+ "sittings": 27,
  "points": [
   {
-   "tekst": "Наводи да су кредити за младе помогли младима да реше стамбено питање.",
-   "govora": 2,
+   "tekst": "Тврди да опозиција нема програм ни план и да у расправи даје само критику ради критике.",
+   "govora": 4,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "Наравно да су кредити за младе нешто што је помогло младима да не само дођу до свог стамбеног решења, него да остану у Србији",
-    "date": "2026-06-18",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sednica Sedmog vanrednog zasedanja NSRS 2. dan 18.06.2026..docx"
+    "tekst": "Кад немате програм, кад немате визију, кад немате идеју, онда користите само два аргумента. Кажете неком, односно етикетирате га да је лопов и спроводите насиље, брутално насиље, које смо и јуче могли да видимо овде у овом високом дому.",
+    "date": "2025-03-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog redovnog zasedanja NSRS, 5. mart 2025.  godine, drugi dan rada.docx"
    }
   },
   {
-   "tekst": "Замера опозицији што блокадама и насиљем угрожава рад Скупштине и грађане.",
-   "govora": 3,
-   "sazivi": [
-    "14"
-   ],
-   "citat": {
-    "tekst": "Ако сте, уважене колеге које сте прекопута мене, после седам месеци блокада и агресије схватили да је пропао покушај вашег уличног преврата и насилне смене власти, онда је то добро.",
-    "date": "2025-06-11",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Petog vanrednog zasedanja NSRS, 11. jun 2025. godine, drugi dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да расту плате и пензије и да привредни раст Србије напредује.",
+   "tekst": "Замера опозицији и „блокадерима“ што, како наводи, примењују насиље и угрожавају колеге посланике.",
    "govora": 3,
    "sazivi": [
     "11",
-    "12",
     "14"
    ],
    "citat": {
-    "tekst": "Две најважније новине овог буџета за мене су повећање плата и пензија и ослобађање од пореза на зараде за оснивање привредних субјеката до девет запослених радника у трајању од две године.",
-    "date": "2017-12-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/8. decembar 2017..pdf"
+    "tekst": "Дивљаштво које је опозиција извела јуче у Скупштини је нечувено. Угрозили су животе три колегинице, без трунке стида и срама, без гриже савести.",
+    "date": "2025-03-05",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Prvog redovnog zasedanja NSRS, 5. mart 2025.  godine, drugi dan rada.docx"
    }
   },
   {
-   "tekst": "Замера опозицији што се само декларативно залаже за европске интеграције Србије.",
-   "govora": 3,
+   "tekst": "Наводи да се у Србији повећавају плате и пензије и да се граде инфраструктурни пројекти.",
+   "govora": 4,
    "sazivi": [
+    "11",
     "14"
    ],
    "citat": {
-    "tekst": "Ви се, господо из опозиције, само декларативно залажете за улазак Србије у ЕУ и за европске интеграције Србије, а до сада нисте гласали ни за један европски закон",
-    "date": "2026-04-22",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Druge sednice Prvog redovnog zasedanja NSRS, odrzane 22. aprila 2026. godine, 5. dan rada.docx"
+    "tekst": "Дакле, ми смо за ових годину дана смањили марже у трговинама. Ефекти се већ виде. Донели смо могућност да млади људи из Србије подижу кредите по најповољнијим условима. Инфлација је смањена на 2,9%. Повећан је минималац. Повећане су плате просветним радницима и лекарима.",
+    "date": "2025-10-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske Prve sednice Drugog redovnog zasedanja NSRS, odrzane 15. oktobra 2025. godine, peti dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Подсећа да је у време када је на власти била данашња опозиција стање било лошије, нарочито по питању запослености и јавних институција.",
+   "govora": 3,
+   "sazivi": [
+    "12",
+    "13",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Сви они који су, односно представници опозиције који су јуче и данас износили критике нека се само сете колика је била минимална плата пре десет година, колика је била незапосленост, каква је била инфраструктура, колико су новца у буџету оставили 2012. године.",
+    "date": "2022-10-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSRS, 19.10.2022. godine, drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Истиче да су предложени закони усклађени са правилима ЕУ и да се доносе у склопу европских интеграција.",
+   "govora": 4,
+   "sazivi": [
+    "10",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Врло је важно што је он усклађен са законима ЕУ, што је Европска комисија дала врло високо мишљење о њему.",
+    "date": "2014-07-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/30. jul 2014.docx"
    }
   }
  ]

@@ -1,56 +1,68 @@
 {
  "mp": "андрић иван",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 25,
  "speeches": 29,
  "sittings": 2,
  "points": [
   {
-   "tekst": "Navodi da funkcioneri stranaka ne bi smeli da budu direktori javnih preduzeća, i traži da kandidat za direktora nije obavljao nikakvu funkciju u političkoj stranci najmanje godinu dana pre raspisivanja konkursa.",
-   "govora": 3,
+   "tekst": "Traži da се странкама забрани да управљају јавним предузећима и navodi да закон о јавним предузећима не доноси праву департизацију, јер функционер странке може да буде директор ако замрзне функцију.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Мислимо да би довољна мера била не забрана обављања функције неке или чланства у органу неке странке, већ то да кандидат за директора јавног предузећа није обављао функцију никакву у некој политичкој странци најмање годину дана пре дана расписивања конкурса.",
+    "tekst": "Ако ћемо нешто назвати реформом јавног предузећа, једина озбиљна реформа мора да буде забрана странкама да управљају јавним предузећима. Све друго је избегавање давања јасног одговора на проблем који имамо.",
+    "date": "2012-12-03",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/7. dan VIII sednica II redovnog zasedanja u 2012. 3.12.2012.doc"
+   }
+  },
+  {
+   "tekst": "Zamera što се услови за избор директора у закону о јавним предузећима не односе на локална јавна предузећа, којих према процени има око 650 од 700.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Од 700 јавних предузећа, колика је процена да постоји, касније ћемо говорити и о томе, 650 су локална јавна предузећа. Овај члан како сада стоји потпуно омогућава избор директора јавног предузећа без икаквих услова који су наведени у овом члану.",
     "date": "2012-12-11",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/11. dan VIII sednica II redovnog zasedanja u 2012. 11.12.2012..doc"
    }
   },
   {
-   "tekst": "Zamera što se za oko 650 lokalnih javnih preduzeća od ukupno oko 700 ne primenjuju uslovi za izbor direktora, jer se oni biraju po Zakonu o radu.",
+   "tekst": "Navodi да је Милан Кркобабић постављен за директора Поште зато што је Влада била под уценом, а не због стручности.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "У овом закону пише да се директори локалних јавних предузећа бирају сходно Закону о раду. Дакле, на њих, услови да нису чланови странака, да имају седам година искуства или четири, да су стручњаци, то ништа не важи, за 650 од 700.",
+    "tekst": "Ми мислимо да се он на тој функцији нашао тако што сте ви уцењивали Владу да се он нађе, а не зато што је постојао некакав конкурс на коме су се људи пријавили, па је он победио.",
     "date": "2012-12-03",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/7. dan VIII sednica II redovnog zasedanja u 2012. 3.12.2012.doc"
    }
   },
   {
-   "tekst": "Zamera što komisija predlaže tri kandidata, a onaj ko odlučuje ne mora da izabere najbolje rangiranog, i ne vidi zašto to nije obavezno.",
-   "govora": 2,
+   "tekst": "Traži да се закони пре расправе у Скупштини изнесу пред јавност и да се продужи време за расправу, jer navodi да није било јавне расправе о њима.",
+   "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Чак ни то није довољна заштита за партијске кадрове, него они могу да предложе три, а онај ко одлучује на крају ће изабрати једног од та три.",
+    "tekst": "С обзиром на важност ових закона и на далекосежне последице њиховог усвајања, с обзиром на то да никаква јавна расправа мање или више није постојала о овим законима, ми инсистирамо да бар Скупштина у пленуму добије више времена да о овим законима расправља.",
     "date": "2012-12-03",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/7. dan VIII sednica II redovnog zasedanja u 2012. 3.12.2012.doc"
    }
   },
   {
-   "tekst": "Zamera što se porezi menjaju bez javne rasprave i bez mogućnosti da poslanici i javnost vide posledice izmena.",
+   "tekst": "Traži да јавност има увид у избор директора и у рад јавних предузећа, укључујући образложење када није изабран најбоље рангирани кандидат.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Потпуно је неприхватљиво из демократског, политичког и сваког другог угла да се овакав сет пореских закона мења без икакве јавне расправе и без икакве могућности да посланици и јавност имају увид у последице које ће наступити овим изменама.",
-    "date": "2013-05-22",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/22. maj 2013 - IV sednica I red.zas.doc"
+    "tekst": "Знате шта, мислим да треба да идемо у сусрет јавности у интересу јавности и да провоцирамо притисак јавности на људе који управљају свим јавним предузећима, а не да чекамо да се јавност труди да дође до неких информација и да онда на такав начин њих контролишемо.",
+    "date": "2012-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/12. dan VIII sednica II redovnog zasedanja u 2012. 12.12.2012..doc"
    }
   }
  ]

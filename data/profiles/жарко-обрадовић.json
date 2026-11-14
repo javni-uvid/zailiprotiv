@@ -1,25 +1,12 @@
 {
  "mp": "жарко обрадовић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 11,
  "sittings": 11,
  "points": [
   {
-   "tekst": "Наводи да СПС подржава предложене законе и да ће за њих гласати.",
-   "govora": 5,
-   "sazivi": [
-    "11",
-    "12"
-   ],
-   "citat": {
-    "tekst": "Као овлашћени представник СПС, ја ћу говорити о ова четири законска документа о којима Скупштина данас расправља и желим да кажем одмах на почетку да ће СПС подржати ове предлоге",
-    "date": "2021-05-18",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvanaesta sednica Prvog redovnog zasedanja NSRS, 18. maj 2021..docx"
-   }
-  },
-  {
-   "tekst": "Наводи да је Влада добро поступила у време пандемије корона вируса.",
+   "tekst": "Navodi da su Vlada Srbije i državno rukovodstvo dobro i mudro reagovali na pandemiju Kovida-19 i da su mere države bile prave.",
    "govora": 3,
    "sazivi": [
     "11",
@@ -32,28 +19,40 @@
    }
   },
   {
-   "tekst": "Наводи да су мере Владе за помоћ привреди и грађанима током пандемије биле важне.",
+   "tekst": "Navodi da zakoni iz oblasti obrazovanja unapređuju obrazovni sistem, da će SPS glasati za njih i hvali rad Ministarstva prosvete.",
    "govora": 2,
    "sazivi": [
     "12"
    ],
    "citat": {
-    "tekst": "Све оно што је Влада Републике Србије као посебан пакет економске помоћи учинила почетком године, односно у првој половини године, показало се јако важним за данашњи тренутак",
-    "date": "2020-12-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sesta sednica Drugog redovnog zasedanja NSRS 08.12.2020..docx"
+    "tekst": "Желео бих да честитам Министарству просвете, науке и технолошком развоју за све оно што је учинило у ове протекле две године да систем функционише.",
+    "date": "2021-12-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 21. decembar 2021. godine.docx"
    }
   },
   {
-   "tekst": "Наводи да закони из области образовања унапређују образовни систем Републике Србије.",
-   "govora": 3,
+   "tekst": "Navodi da pojedini koji kritikuju postupanje države u vezi sa Kovidom-19 ne razumeju dovoljno značaj bolesti.",
+   "govora": 2,
    "sazivi": [
     "11",
     "12"
    ],
    "citat": {
-    "tekst": "Гласаћемо за ове законе из области просвете зато што смо дубоко уверени да они унапређују образовни систем Републике Србије, зато што решавају проблеме са којима се образовни систем суочава",
-    "date": "2021-12-21",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 21. decembar 2021. godine.docx"
+    "tekst": "Мој утисак, не само овде у Србији него на ширем плану, читајући ону литературу која је посвећена овој пандемији вируса, је да има људи који довољно не разумеју значај ковида, односно његове негативне последице.",
+    "date": "2020-11-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Treca sednica Drugog redovnog zasedanja 12.11.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi svetske podatke o broju zaraženih i preminulih od Kovida-19 kako bi pokazao razmere pandemije.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Ево, на данашњи дан, 10. новембар 2020. године, у свету је заражено Ковидом-19 51.345.000 људи. Нажалост, преминула је милион и 271 особа.",
+    "date": "2020-11-10",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
    }
   }
  ]

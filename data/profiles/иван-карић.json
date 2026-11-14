@@ -1,14 +1,27 @@
 {
  "mp": "иван карић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 31,
  "speeches": 37,
  "sittings": 11,
  "points": [
   {
-   "tekst": "Navodi da je neoliberalni kapitalizam već mrtav i zalaže se za zelenu i cirkularnu ekonomiju i za drugačiju politiku javnih nabavki.",
-   "govora": 3,
+   "tekst": "Тражи да заштита животне средине и природни ресурси добију посебно министарство, одвојено од енергетике и рударства, јер онај ко користи ресурсе не може да контролише њихово коришћење.",
+   "govora": 5,
    "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Не може министар надлежан за енергетику истовремено бити надлежан и за послове животне средине, а пре свега за послове заштите животне средине.",
+    "date": "2012-07-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/STENO - Trece vanredno zasedanje 26. jul 2012, drugi dan rada cir.doc"
+   }
+  },
+  {
+   "tekst": "Navodi да је неолиберални капитализам „мртав“ и да Србија треба да се окрене зеленој и циркуларној економији и зеленим јавним набавкама.",
+   "govora": 4,
+   "sazivi": [
+    "9",
     "10"
    ],
    "citat": {
@@ -18,20 +31,8 @@
    }
   },
   {
-   "tekst": "Zamera što su zaštita životne sredine i energetika spojene u jedno ministarstvo i traži osnivanje posebnog ministarstva za zaštitu životne sredine.",
+   "tekst": "Замера што уз Предлог закона о отклањању последица поплава није достављен државни програм обнове, па је предлагао амандмане о еколошкој контроли земљишта, вода и отпада.",
    "govora": 4,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Због тога још једном апелујемо да се министарство за заштиту животне средине и природне ресурсе што пре оформи.",
-    "date": "2013-08-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. avgust 2013..doc"
-   }
-  },
-  {
-   "tekst": "Navodi da nedostaje državni program obnove posle poplava i traži da nacrt ili predlog programa bude predstavljen u Skupštini.",
-   "govora": 3,
    "sazivi": [
     "10"
    ],
@@ -42,27 +43,15 @@
    }
   },
   {
-   "tekst": "Navodi da su Obrenovac i Kostolac među najzagađenijim područjima i da su zbog toga ugrožena okolna sela.",
-   "govora": 2,
+   "tekst": "Наводи да је храст симбол лошег стања у држави, а да су за проблеме, као што су деца без лекова, криви „неспособни министри“, а не храст.",
+   "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Врло често тај пепео представља такозвани сунђер за тешке метале, за радиоактивне метале, за још неке веома опасне супстанце.",
-    "date": "2013-07-02",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
-   }
-  },
-  {
-   "tekst": "Zalaže se da lokalne samouprave same mogu da odluče o osnivanju lokalnih medija i javnih servisa.",
-   "govora": 2,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "Свака локална самоуправа уз подршку грађана може да процени да ли јој је потребан локални медиј или није, а та потреба ни на који начин не гуши слободу јавног информисања.",
-    "date": "2015-06-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. jun 2015.docx"
+    "tekst": "Није храст крив што деца немају лекове, него ваши министри. Није храст крив што људи гину на Ибарској магистрали, него неспособни министри.",
+    "date": "2013-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
    }
   }
  ]

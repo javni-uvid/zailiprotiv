@@ -1,56 +1,56 @@
 {
  "mp": "жарко мићин",
- "model": "claude-haiku-5-5",
- "read": 15,
- "speeches": 15,
- "sittings": 4,
+ "model": "claude-sonnet-5-5",
+ "read": 23,
+ "speeches": 23,
+ "sittings": 9,
  "points": [
   {
-   "tekst": "Navodi da su fabrike „Lir“ i „Delfi“ u Novom Sadu zaposlile 3.000 ljudi i da će ih biti 5.000, te da je to rezultat rada gradonačelnika Miloša Vučevića.",
+   "tekst": "Наводи да су субвенције привреди планиране у буџету за 2018. годину оправдане и позива се на анализу Светске банке према којој су очекивани јавни приходи 4,08 пута већи од одобрених подстицаја.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Анализом пословања дошло се до закључка да је укупан износ очекиваних јавних прихода 512 милиона евра и 4,08 пута је већи од укупних одобрених средстава за пројекте у посматраном периоду.",
+    "date": "2017-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+   }
+  },
+  {
+   "tekst": "Наводи да су привредни показатељи (БДП, инвестиције и други) били лошији за време власти „жутог предузећа“ до 2012. године него за време СНС-а, и то поткрепљује бројкама.",
    "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Сада већ у Новом Саду ове две компаније запошљавају 3.000 људи, а запошљаваће 5.000 људи у року од три године.",
+    "tekst": "Ако погледате од 2008. до 2012. године, њима је укупан БДП пао за две милијарде и сто милиона евра. У време СНС-а, од 2014. до 2016. године, исти тај БДП је нарастао за преко милијарду и триста милиона евра.",
     "date": "2017-12-12",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
    }
   },
   {
-   "tekst": "Navodi da je budžetom za 2018. godinu planirano 15 milijardi dinara za subvencije privredi i investitorima, i da su te subvencije dovele nove fabrike i radna mesta.",
-   "govora": 5,
+   "tekst": "Наводи да су фабрике „Лир“ и „Делфи“ и друга улагања у Новом Саду резултат рада градоначелника Милоша Вучевића.",
+   "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Буџетом Републике Србије за 2018. годину планирано је 15 милијарди динара за субвенције привреди и ту иду и подстицаји за инвеститоре.",
+    "tekst": "Хвала богу, 2012. године то се променило, на чело Новог Сада је дошао градоначелник Милош Вучевић, СНС, и након тога наступа златни период за Нови Сад.",
     "date": "2017-12-12",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
    }
   },
   {
-   "tekst": "Navodi da je prethodna vlast, koju naziva „žuto preduzeće“, u budžetu planirala sve manje kapitalnih ulaganja, a da SNS planira više.",
-   "govora": 2,
+   "tekst": "Брани измене Закона о раду и наводи да оне штите права радника и спречавају злоупотребе послодаваца и рад на црно.",
+   "govora": 3,
    "sazivi": [
-    "11"
+    "10"
    ],
    "citat": {
-    "tekst": "Истина је да су 2010. године планирали 33 милијарде, истина је да су 2011. планирали 31 милијарду, дакле све мање и мање, и да су 2012. године планирали 22 милијарде.",
-    "date": "2017-12-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
-   }
-  },
-  {
-   "tekst": "Navodi da je BDP Srbije između 2008. i 2012. godine pao, a između 2014. i 2016. godine porastao.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "У време СНС-а, од 2014. до 2016. године, исти тај БДП је нарастао за преко милијарду и триста милиона евра.",
-    "date": "2017-12-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+    "tekst": "Дакле, дешавало се да раде на црно, као и низ других неповољних ствари, којима се директно смањују или угрожавају права радника и повећава незапосленост.",
+    "date": "2014-07-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/17. jul 2014.docx"
    }
   }
  ]

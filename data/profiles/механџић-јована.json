@@ -1,12 +1,12 @@
 {
  "mp": "механџић јована",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 12,
  "sittings": 3,
  "points": [
   {
-   "tekst": "Zamera ministru poljoprivrede i Vladi što nisu na vreme reagovali na afl atoksin u kukuruzu i mleku.",
+   "tekst": "Zamera Vladi i ministru poljoprivrede što nisu na vreme reagovali na povišen nivo aflatoksina u kukuruzu i mleku i traži da odgovaraju zašto jesenas nisu preduzeli mere.",
    "govora": 2,
    "sazivi": [
     "9"
@@ -18,37 +18,49 @@
    }
   },
   {
-   "tekst": "Zamera ministru finansija Dinkiću što je u budžetu za 2013. godinu pogrešno planirao prihode za 10,57%.",
+   "tekst": "Zamera ministru finansija Dinkiću što je u rebalansu budžeta za 2013. prihodnu stranu promašio za 10,57% i traži da to prizna i objasni.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Данас смо у ситуацији, пошто тада нисте реаговали, да примања у буџету смањујете за 92,3 милијарде динара.",
+    "tekst": "Ми смо вам скретали пажњу да нереално планирате буџет. Нисмо ми дужни да вама планирамо буџет. Ви сте дужни да представите реалан буџет грађанима Србије. Није опозиција дужна да планира уместо вас.",
     "date": "2013-07-02",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
    }
   },
   {
-   "tekst": "Zamera što se u rebalansu budžeta smanjuju sredstva za nauku i obrazovanje i navodi da se time ugrožava budućnost zemlje.",
+   "tekst": "Navodi da se budžetom i rebalansom smanjuju sredstva za obrazovanje i nauku (sa 21 na 17,7, pa na 15 i na 13,2 milijarde dinara) i traži da se ona povećaju, jer obrazovanje i nauku treba posmatrati kao investiciju.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Ви сте то свели на минимум и ви доводите науку и образовање на ивицу опстанка.",
-    "date": "2013-07-02",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
+    "tekst": "Не бих желела да се понављам, али желим да истакнем поново важност инвестирања у образовање и науку и важност опредељења да се образовање и наука не посматрају као трошак, него да се посматрају као инвестиција.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
    }
   },
   {
-   "tekst": "Traži da se tri ministarstva odreknu dela sredstava i da ta sredstva lokalnim samoupravama budu vraćena za završetak započetih projekata.",
+   "tekst": "Navodi da su lokalnim samoupravama oduzeta sredstva i traži da tri ministarstva ustupe novac kako bi opštine i gradovi završili započete projekte.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Ако већ постоје локалне самоуправе и постоје градови и општине у Србији, онда не видим зашто им не бисмо ставили на располагање средства којима могу да заврше своје пројекте и да те пројекте односно резултате пројеката ставе на располагање грађанима Србије?",
+    "tekst": "Даље, што се тиче локалних самоуправа, ви сте им кроз сет пореских закона одузели око 200 милиона евра прихода, и тиме додатно онемогућили да се ти новци ставе на располагање грађанима Србије који тамо живе.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
+   }
+  },
+  {
+   "tekst": "Zamera ministrima što ne odgovaraju na pitanja koja im je postavila, već govore o drugim stvarima.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Неко вас пита колико је сати, а ви кажете – напољу је сунчано време, као одговор, да поједноставим крајње.",
     "date": "2013-07-04",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
    }

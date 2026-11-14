@@ -1,37 +1,63 @@
 {
  "mp": "драган шормаз",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 43,
  "speeches": 70,
  "sittings": 13,
  "points": [
   {
-   "tekst": "Замера опозицији што подноси амандмане којима се тражи брисање целог члана закона и сматра то опструкцијом.",
-   "govora": 4,
+   "tekst": "Navodi da amandmane kojima se traži brisanje članova zakona treba odbiti, jer se protivljenje zakonu iznosi u načelnoj raspravi, a ne u raspravi o pojedinostima.",
+   "govora": 5,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Ако ви поднесете 95 амандмана на 95 чланова са „брише се“, то сваком паметном човеку значи да сте ви против тог закона.",
+    "tekst": "Ако ви поднесете 95 амандмана на 95 чланова са „брише се“, то сваком паметном човеку значи да сте ви против тог закона. За то имате начелну расправу.",
     "date": "2014-07-31",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. jul 2014.docx"
    }
   },
   {
-   "tekst": "Наводи да приватизација Железаре у Смедереву није била урађена на законит начин и да је продата за много мању суму од процењене вредности; тражи резултате истраге.",
+   "tekst": "Navodi da Srbija što pre treba da postane članica EU i da zakoni i rad skupštine treba da budu usklađeni s tim ciljem.",
+   "govora": 4,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Мени је битно, зато што желим да Србија буде што пре, највише за наредних четири-пет година, део ЕУ.",
+    "date": "2014-08-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Tvrdi da je prethodna vlast Demokratske stranke odgovorna za današnje probleme u zemlji.",
    "govora": 3,
    "sazivi": [
     "9",
     "10"
    ],
    "citat": {
-    "tekst": "Процењена је на 470.000.000 долара, а 2003. године је продата за двадесет три, плус пет милиона.",
+    "tekst": "Демократска странка је владала Србијом петнаест година. Зато нема, зато што је Демократска странка владала. Зато нема, и зато је Влада Мирка Цветковића била најгора влада, не у последњих петнаест година, него у историји Србије.",
+    "date": "2013-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
+   }
+  },
+  {
+   "tekst": "Tvrdi da je privatizacija „Sartida“ (smederevske Železare) i ostalih spornih privatizacija loše urađena i traži da se one istraže.",
+   "govora": 3,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Интересује ме када ће бити конкретни резултати у истрази „Сартида“ и остале двадесет три приватизације? Када ћемо чути да су кренуле неке кривичне пријаве против одговорних за тај велики лоповлук у држави Србији у тим временима, али и за велику штету која је направљена привреди Србије?",
     "date": "2012-11-29",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   },
   {
-   "tekst": "Брани закон о јавним предузећима и департизацију избора директора, наводећи да чланство у политичкој странци само по себи не може бити разлог за искључење из конкурса.",
+   "tekst": "Brani Predlog zakona o javnim preduzećima navodeći da uvodi jasne uslove i javni konkurs za izbor direktora i nadzornih odbora, što on naziva departizacijom.",
    "govora": 3,
    "sazivi": [
     "9"
@@ -40,19 +66,6 @@
     "tekst": "Не, департизација је начин избора. Начин избора одузима право политичким странкама да бирају директоре јавних предузећа.",
     "date": "2012-12-05",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/9. dan VIII sednica II redovno zasedanje u 2012. 05.12.2012..doc"
-   }
-  },
-  {
-   "tekst": "Брани рад владе и њене законе као реформе, наводећи да ова влада исправља грешке претходних влада и да предложени закони нису донети у време ранијих власти.",
-   "govora": 2,
-   "sazivi": [
-    "9",
-    "10"
-   ],
-   "citat": {
-    "tekst": "Ово није трећа година ове владе, ово није ни прва година ове владе, председника Владе господина Вучића, претходна влада је била нека друга Влада, ова влада исправља све грешке из тих ранијих периода и врши озбиљне реформе у земљи и води Србију ка ЕУ.",
-    "date": "2014-12-28",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. decembar 2014.docx"
    }
   }
  ]

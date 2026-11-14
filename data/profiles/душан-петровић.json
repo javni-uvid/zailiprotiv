@@ -1,37 +1,25 @@
 {
  "mp": "душан петровић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 22,
  "speeches": 28,
  "sittings": 6,
  "points": [
   {
-   "tekst": "Замера што држава више не ангажује 1.700 агронома-саветника који су помагали пољопривредницима.",
+   "tekst": "Navodi da bi uz oko 1.700 poljoprivrednih savetodavaca problem sa aflatoksinom bio manji i zamera što država te agronome više ne angažuje.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Оно што и даље чврсто верујем јесте да смо остали у ситуацији да имамо 1.500 или 1.700 агронома који су се широм Србије налазили на услузи пољопривредницима",
-    "date": "2013-03-14",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
+    "tekst": "Да није држава донела одлуку да се одрекне услуга 1600 или 1700 пољопривредних саветодаваца, сигуран сам да 90% не бисмо имали ни трунку ових проблема које смо имали са афлатоксином и да бисмо те ствари решили на други начин.",
+    "date": "2013-07-01",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. jul 2013. (Osmo vanredno zasedanje).docx"
    }
   },
   {
-   "tekst": "Навodi да би, да саветодавна служба није укинута, било мање проблема са афлатоксином у млеку.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Сигуран сам да смо имали ових 1.700 агронома саветодаваца да не бисмо били у неприлици да имамо проблем са афлатоксином.",
-    "date": "2013-07-04",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
-   }
-  },
-  {
-   "tekst": "Тражи да држава покрене пројектовање и изградњу система за наводњавање 100 хиљада хектара земљишта, уз 500 милиона динара за пројекте у Дирекцији за воде.",
-   "govora": 3,
+   "tekst": "Traži da se obezbedi novac za izradu projekata navodnjavanja i odvodnjavanja za oko 100 hiljada hektara zemljišta i navodi da je prošle godine čišćenjem kanala osposobljeno 64.000 hektara.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
@@ -42,27 +30,39 @@
    }
   },
   {
-   "tekst": "Замера министрима пољопривреде што су Управу за аграрна плаћања premestили из Шапца у Београд и што је због тога Србија изгубила новац ЕУ.",
+   "tekst": "Navodi da su ministri poljoprivrede krivi što poljoprivrednici nisu dobili novac EU iz IPARD programa i da je Uprava za agrarna plaćanja u Šapcu dobila odlične ocene evropskih revizija.",
    "govora": 2,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Највећа грешка је, наравно, премештање Управе за аграрна плаћања из Шапца овде у Београд. Није истина да је било ко из Брисела то тражио,",
+    "tekst": "Изгубили смо сто милиона евра пара ЕУ, плус новац који је из буџета морао по том основу да иде, пута два, што би дали људи који би тај новац узимали овде, српски власници регистрованих пољопривредних газдинстава, компанија и чега год.",
     "date": "2016-12-13",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/13. decembar 2016.pdf"
    }
   },
   {
-   "tekst": "Навodi да у Шапцу није требало предузимати ванредне мере, јер је ситуација могла да се држи под контролом, и да треба утврдити ко је давао које предлоге.",
-   "govora": 3,
+   "tekst": "Traži da se predsednik Vrhovnog kasacionog suda i Visokog saveta sudstva Milojević pojavi u Skupštini i da se sa njim razgovara o broju sudija i radu sudstva.",
+   "govora": 2,
    "sazivi": [
-    "10"
+    "11"
    ],
    "citat": {
-    "tekst": "Моје уверење је да је тамо ствар могла да се држи под контролом онако како је од почетка кренуло.",
-    "date": "2014-07-16",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/16. jul 2014.docx"
+    "tekst": "Ово су велике и важне ствари и овај парламент заслужује да га председник ВКС удостоји и појави се овде да бисмо могли да га питамо оно што мислимо да је важно.",
+    "date": "2016-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2016.pdf"
+   }
+  },
+  {
+   "tekst": "Navodi da će prema Fiskalnom savetu budžetski prihodi u 2013. biti manji od planiranih i zamera Vladi što o poreskim i budžetskim izmenama nije vodila širu raspravu sa građanima.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Ако сам добро разумео, 55 милијарди динара биће мањи приходи у односу на оно што је пројектовано буџетом који је парламент усвојио.",
+    "date": "2013-05-24",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/24. maj 2013.docx"
    }
   }
  ]

@@ -1,56 +1,68 @@
 {
  "mp": "палалић јован",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 44,
  "speeches": 46,
  "sittings": 12,
  "points": [
   {
-   "tekst": "Navodi da Demokratska stranka Srbije ne spori Ustav iz 2006. i da insistira na njegovom poštovanju, posebno na odredbi o 7% sredstava za AP Vojvodinu.",
-   "govora": 3,
+   "tekst": "Traži да Влада спроведе одлуку Уставног суда о неуставности 22 надлежности Војводине, да се престане са финансирањем тих надлежности и да се Устав не примењује кроз преговоре са покрајинском администрацијом.",
+   "govora": 5,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Демократска странка Србије нема проблем са поштовањем Устава, поготово нема проблем са том одредбом Устава која се односи на 7% средстава која припадају АП Војводини.",
-    "date": "2012-11-22",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
-   }
-  },
-  {
-   "tekst": "Pita zašto Vlada Republike Srbije ne sprovodi odluke Ustavnog suda o neustavnim nadležnostima AP Vojvodine i zašto ih ne preuzme.",
-   "govora": 4,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Моје питање је – зашто Влада Републике Србије до данас није упутила Народној скупштини нови предлог закона о утврђивању надлежности АП Војводине?",
+    "tekst": "Очекујем да ће тако бити, на основу овога што сте сада рекли, да не може Влада Републике Србије да преговара са нижим органима власти о поштовању Устава. Може само да се Устав поштује.",
     "date": "2012-11-29",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   },
   {
-   "tekst": "Traži da se osnovno javno tužilaštvo formira i u opštinama gde već postoji osnovni sud, a navodi primer opštine Šid i još nekoliko pograničnih opština.",
-   "govora": 2,
+   "tekst": "Zamera predstavnicima vlasti u Vojvodini i Demokratske stranke što su četiri godine glasali za budžete kojima je Vojvodini uskraćeno 7%, a sada traže poštovanje Ustava.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Ради се о осам јавних тужилаштава која једноставно не постоје, а у тим општинама постоје основни судови.",
-    "date": "2013-11-19",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/19. novembar 2013..doc"
+    "tekst": "Господине Ђелићу, четири године сте овде доносили противуставни буџет, четири године сте гласали против уставне одреде о 7%, ваша странка овде.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   },
   {
-   "tekst": "Zamera što se porezom na imovinu oporezuju izbeglice i socijalni slučajevi, i smatra to nepravednim.",
+   "tekst": "Zamera što se sednice zakazuju u kratkom roku i što se zakoni stavljaju na dnevni red po hitnom postupku bez obrazloženja zašto je to potrebno.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Да ли је праведно да се овим решењем закона, ако говоримо о правди, сада опорезују избеглице? Па, није праведно.",
+    "tekst": "Били сте дужни да објасните народним посланицима, а и јавности која сада гледа, који су разлози зашто је седница заказана у овако кратком року.",
+    "date": "2013-05-22",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/22. maj 2013 - IV sednica I red.zas.doc"
+   }
+  },
+  {
+   "tekst": "Zamera što izmene poreskih zakona opterećuju izbeglice i socijalne slučajeve.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Али желим да поставим још једно питање – да ли је праведно да се овим решењем закона, ако говоримо о правди, сада опорезују избеглице?",
     "date": "2013-05-28",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2013.doc"
+   }
+  },
+  {
+   "tekst": "Traži да свака општина у којој постоји основни суд, као што је Шид, добије и основно јавно тужилаштво.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Господине министре, ми мислимо да је било боље решење које је било у садашњем закону, да постојање основног суда прати постојање основног јавног тужилаштва на подручју које покрива основни суд.",
+    "date": "2013-11-19",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/19. novembar 2013..doc"
    }
   }
  ]

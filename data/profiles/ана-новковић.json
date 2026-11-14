@@ -1,48 +1,60 @@
 {
  "mp": "ана новковић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 21,
  "speeches": 27,
  "sittings": 3,
  "points": [
   {
-   "tekst": "Замера што је триста милиона евра утрошено за докапитализацију Развојне банке Војводине, уместо за инфраструктуру у Војводини.",
+   "tekst": "Navodi da će se novom mrežom sudova oko 350.000 građana Vojvodine teže dolaziti do pravde jer će morati da putuju desetinama kilometara do suda, i traži da se ukinute sudske jedinice vrate.",
+   "govora": 6,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "За мене је недопустиво да 350.000 грађана Војводине неће имати адекватан приступ правди. Знам да немају аеродром, али мислим да морају да имају бар судску јединицу, јер ви знате да се највећи број грађана управо обраћа основним судовима за заштиту својих основних права.",
+    "date": "2013-11-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Zamera što je 300 miliona evra utrošeno na dokapitalizaciju Razvojne banke Vojvodine umesto na infrastrukturu, navodeći da sela u Vojvodini nemaju vodovod, kanalizaciju i asfaltne puteve.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Реалност је, нажалост, да је новац који припада Војводини коришћен за играрије попут Развојне банке Војводине.",
+    "tekst": "Играрија јесте то како се потрошило триста милиона евра на докапитализацију Развојне банке Војводине, уместо да се уложило у недостајућу инфраструктуру у Војводини, што је заиста жалосно.",
     "date": "2012-11-22",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
    }
   },
   {
-   "tekst": "Наводи да у општини Ковин и у Војводини има села без водовода, канализације и асфалтног пута.",
+   "tekst": "Zamera što je veliki deo novca Fonda za kapitalna ulaganja otišao u Novi Sad, a male opštine, među njima Kovin, morale su da vraćaju dugove Fonda iz svojih budžeta.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "јер је срамота да у ово време, у 21. веку, имамо села без водовода, канализације и асфалтног пута.",
-    "date": "2012-11-22",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/1. dan VIII sednica II redovnog zasedanja u 2012. 22.11.2012..doc"
+    "tekst": "Оно што је најцрње јесте да смо морали да доплатимо из општинског буџета четрдесет милиона динара да би се санирали дугови Фонда за капитална улагања.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
    }
   },
   {
-   "tekst": "Наводи да у многим селима нема лекара и да локалне самоуправе могу из свог буџета да плаћају лекаре.",
+   "tekst": "Navodi da opštine mogu iz svojih budžeta da plate lekare koji nedostaju u selima, i kao primer navodi Kovin, koji po novom zakonu dobija oko 140 miliona dinara više, dok je bruto plata lekara oko milion i po dinara godišnje.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Заиста мислим да ако се добро организујемо, ако се паре расподеле штедљиво и рационално, могу општине да плате лекаре.",
+    "tekst": "Бруто плата лекара је око милион и по динара на годишњем нивоу и заиста сматрам да, и ми смо једна сиромашна општина, може да издвоји толико средстава да плати лекара који ће бар по једна дан покрити ова села која немају лекара.",
     "date": "2012-12-13",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. dan VIII sednica II redovnog zasedanja u 2012. 13.12.2012..doc"
    }
   },
   {
-   "tekst": "Замера што се у јавним предузећима неконтролисано запошљавају партијски кадрови, а цену тога плаћају грађани.",
+   "tekst": "Navodi da su javna preduzeća bila utočište za zapošljavanje partijskih kadrova i da cenu neefikasnosti plaćaju građani.",
    "govora": 2,
    "sazivi": [
     "9"
@@ -51,18 +63,6 @@
     "tekst": "Хајде већ једном сви да признамо да су то била уточишта за запошљавање партијских кадрова, да су неефикасна, да цену на крају морају ипак да плате грађани.",
     "date": "2013-07-02",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
-   }
-  },
-  {
-   "tekst": "Замера што се новом мрежом судова гасе судске јединице, па грађани морају да путују десетинама километара до суда.",
-   "govora": 3,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Новом мрежом судова отвара се тридесетак нових основних судова, што је добро, међутим, гаси се велики број судских јединица и то ће представљати велики проблем да правда буде доступна грађанима.",
-    "date": "2013-11-06",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6. novembar 2013. (Četvrta sednica Drugog redovnog zasedanja).doc"
    }
   }
  ]

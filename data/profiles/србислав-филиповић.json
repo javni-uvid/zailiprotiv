@@ -1,56 +1,69 @@
 {
  "mp": "србислав филиповић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 22,
  "speeches": 22,
  "sittings": 10,
  "points": [
   {
-   "tekst": "Navodi da opozicija nema konkretnih ideja i samo kritikuje SNS, bez predloga kako da se zakoni poprave.",
+   "tekst": "Тврди да су претходна власт и бивши властодршци оставили хаос, банкрот и „рупу“, и замера им корупцију и сарадњу са тајкунима.",
    "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Чули смо само голу критику на рачун СНС, нисмо чули ништа конкретно, ништа како да побољшамо већ постојеће законе у Републици Србији",
-    "date": "2020-02-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+    "tekst": "Али шта ћете, када се боримо да променимо нешто, неки који су вам оставили хаос, који су вам оставили банкрот, безнађе, минус, рупу до рупе, покушавају, то је инерција оне прошлости, да вас врате у то мрачно време и да Србију и њене грађане поново увуку у раље корупције, криминала, безнађа и сиромаштва.",
+    "date": "2017-10-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/4. oktobar 2017..pdf"
    }
   },
   {
-   "tekst": "Navodi da prethodna vlast nema pravo da govori o korupciji, jer je, po njegovim rečima, korupciju gajila i sarađivala sa tajkunima.",
+   "tekst": "Оптужује Драгана Ђиласа, бившег градоначелника Београда, да је тајкун и „лопов“.",
    "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Драган Ђилас је највеће зло које је задесило Србију у последњих 50 година, већег лопова Србија није видела, већег криминалца град Београд није видео, поновићу ону реч коју не воле да чују председавајући, већи олош и битангу грађани Србије и Београда нису упознали на неком руководећем месту, а поготово на месту градоначелника Београда.",
+    "date": "2020-12-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sedma sednica Drugog redovnog zasedanja NSRS 17.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da се у медијима и на друштвеним мрежама прети председнику Александру Вучићу и његовој деци, и тражи да они који прете буду осуђени, процесуирани и ухапшени.",
+   "govora": 3,
+   "sazivi": [
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Хоћемо да ти људи који позивају на убиство Александра Вучића, председника државе буду похапшени, буду саслушани, буду у притвору, да пропевају битанге ко им је дао паре да то раде.",
+    "date": "2020-12-17",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/3. dan Sedma sednica Drugog redovnog zasedanja NSRS 17.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су под владом СНС смањена незапосленост и преполовљен дуг Града Београда.",
+   "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Како неког није срамота ко је корупцију усадио, гајио у Србији, подстицао, ко је сарађивао са тајкунима, ко је гушио економију и привреду да нама данас говори о корупцији?",
-    "date": "2016-12-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2016.pdf"
+    "tekst": "Преполовивши дуг са 1.200.000.000 на 600 милиона, спустивши рекордно незапосленост у Београду на испод 90.000 незапослених, колико данас имате у Београду.",
+    "date": "2017-12-12",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
    }
   },
   {
-   "tekst": "Brani Predlog zakona o dualnom obrazovanju, jer, po njegovim rečima, mladima daje priliku da steknu praktična znanja i otvore sopstvene kompanije.",
-   "govora": 2,
+   "tekst": "Брани Предлог закона о дуалном образовању и наводи да он младима даје прилику да науче занат и покрену сопствену фирму.",
+   "govora": 3,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Ми данас, СНС и Влада Републике Србије, Предлогом закона о дуалном образовању дајемо младима шансу, дајемо прилику онима који хоће да се остваре да направе своју приватну компанију",
-    "date": "2017-10-31",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/31. oktobar 2017..pdf"
-   }
-  },
-  {
-   "tekst": "Brani izmene Zakona o poljoprivrednom zemljištu, jer, po njegovim rečima, popravljaju ono što je loše urađeno za vreme prethodne vlasti.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "Ми данас покушавамо да оваквим изменама поправимо нешто што је лоше урађено за време претходне власти, нешто што није било добро.",
-    "date": "2017-08-25",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/25. avgust 2017..pdf"
+    "tekst": "Важно је зато што смо ми у претходним временима имали случајеве да деца из средњих стручних школа изађу а практично знање немају. Наша су деца углавном била добри или одлични теоретичари, али слаби практичари.",
+    "date": "2017-10-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/26. oktobar 2017..pdf"
    }
   }
  ]

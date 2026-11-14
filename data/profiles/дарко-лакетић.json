@@ -1,27 +1,30 @@
 {
  "mp": "дарко лакетић",
- "model": "claude-haiku-5-5",
- "read": 17,
- "speeches": 18,
- "sittings": 6,
+ "model": "claude-sonnet-5-5",
+ "read": 25,
+ "speeches": 27,
+ "sittings": 11,
  "points": [
   {
-   "tekst": "Наводи да ранијe није постојала контрола буџета општине Прокупље и њених јавних предузећа, што је, по његовим речима, довело до великих дугова.",
-   "govora": 3,
+   "tekst": "Navodi da su za dugove, gubitke i probleme u Prokuplju i u zdravstvenom sistemu odgovorne ranije vlasti, DS i „жута екипа“.",
+   "govora": 5,
    "sazivi": [
-    "11"
+    "10",
+    "11",
+    "13"
    ],
    "citat": {
-    "tekst": "Управо у том смислу поставља се питање како нису контролисани буџети локалних самоуправа у периоду до 2012. године.",
-    "date": "2017-12-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
+    "tekst": "Те проблеме је оставила власт бивша, власт ДС, са преко 300 радника у комуналном предузећу од чега преко 250 у администрацији.",
+    "date": "2022-11-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, 8. novembar 2022. godine, drugi dan rada.docx"
    }
   },
   {
-   "tekst": "Наводи да је изградња ауто-пута Ниш–Драч кроз Топлицу предуслов за инвестиције и развој тог региона и осуђује изјаве да је тај пут штетан за Топлицу.",
-   "govora": 2,
+   "tekst": "Navodi da su izgradnja saobraćajne infrastrukture u Toplici i Prokuplju, autoputa Niš–Drač i obilaznice oko Prokuplja, potrebna za razvoj tog kraja.",
+   "govora": 3,
    "sazivi": [
-    "11"
+    "11",
+    "14"
    ],
    "citat": {
     "tekst": "Па шта треба, да јужни део Србије остане слепо црево, рупа, место где неће бити инвестиција?",
@@ -30,27 +33,28 @@
    }
   },
   {
-   "tekst": "Брани етичке одборе у здравственим установама, које, по његовим речима, чине најстручнији лекари, и сматра да поређења с тим одборима нису коректна.",
+   "tekst": "Navodi da predloženi zdravstveni zakoni treba da poboljšaju zdravstveni sistem i da koriste građanima.",
+   "govora": 3,
+   "sazivi": [
+    "10",
+    "14"
+   ],
+   "citat": {
+    "tekst": "Као крајњи резултат овог предлога закона, добиће се, уверен сам, квалитетнија и доступнија здравствена заштита, као један поштенији модел стручног усавршавања за високообразован здравствени кадар, али и ефикасније коришћење ресурса здравства.",
+    "date": "2014-08-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/30. avgust 2014..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da 1.700 ljudi čeka organ za transplantaciju, da etičke odbore čine najstručniji lekari i da su tvrdnje o zloupotrebama u donaciji organa dezinformacije.",
    "govora": 2,
    "sazivi": [
     "14"
    ],
    "citat": {
-    "tekst": "а не да у овом дому говоримо пре свега о лажима, дезинформацијама које се тичу етичког одбора, етички одбори сваке установе су најстручнији и најморалнији лекари, тачка, и ту нема даље дискусије.",
+    "tekst": "И постојећи закон је врло строг по питању безбедности и никаква злоупотреба није могућа ни по њему.",
     "date": "2026-06-24",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Privremene stenografske beleske sednice Vandrednog zasedanja NSRS, 24. jun 2026. godine, cetvrti dan rada.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да локална самоуправа у Прокупљу из свог буџета финансира лекаре и медицинске сестре у сеоским амбулантама и друге здравствене пројекте.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "У општини Прокупље се, наиме, из локалног буџета финансира неколико лекара и медицинских сестара који раде у оквиру одређених сеоских амбуланти",
-    "date": "2017-12-12",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/12. decembar 2017..pdf"
    }
   }
  ]

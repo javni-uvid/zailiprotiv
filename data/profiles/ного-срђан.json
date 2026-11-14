@@ -1,13 +1,25 @@
 {
  "mp": "ного срђан",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 36,
  "speeches": 49,
  "sittings": 3,
  "points": [
   {
-   "tekst": "Navodi da zakon o stanovanju i održavanju zgrada uvodi nove namete i obaveze građanima, koje oni zbog ekonomskih prilika ne mogu da podnesu.",
-   "govora": 2,
+   "tekst": "Тврди да се Закон о управљању аеродромима доноси да би се омогућила концесија на Аеродрому „Никола Тесла“ и пита какав је ту јавни интерес.",
+   "govora": 3,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Што се тиче читаве расправе око овог амандмана и овог закона, ми смо у начелу, понављам, указали да је циљ овог закона управо аеродром Београд и да се цео закон доноси да би се омогућила концесија на Аеродрому „Никола Тесла“, што сматрамо јако погрешним.",
+    "date": "2016-12-20",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
+   }
+  },
+  {
+   "tekst": "Тврди да Закон о становању и одржавању зграда грађанима намеће нове обавезе и трошкове, као што су стамбена заједница као правно лице са књиговодством, кратки рокови и високе казне.",
+   "govora": 5,
    "sazivi": [
     "11"
    ],
@@ -18,49 +30,25 @@
    }
   },
   {
-   "tekst": "Zamera što bi Republički geodetski zavod, koji već ima nerešene predmete, dobio novu obavezu da vodi jedinstveni registar stambenih zajednica.",
-   "govora": 2,
+   "tekst": "Traži da se Пословник примењује једнако на посланике опозиције и посланике власти, и замера што се право на реплику и право да се укаже на повреду Пословника дају селективно.",
+   "govora": 4,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "Добро знате да РГЗ има још увек нерешене предмете из 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015. и 2016. године, а за решавање свих тих обавеза узет је кредит од Светске банке ради ангажовања лица на привременим и повременим пословима.",
+    "tekst": "Јер, када су посланици власти у питању, свако помињање њиховог имена или пак тумачење да је реч о том посланику јесте основ за реплику, а када су у питању посланици опозиције захтевате да је било неко директно обраћање, увредљивог карактера, односно директно помињање имена или излагања.",
     "date": "2016-12-20",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
    }
   },
   {
-   "tekst": "Smatra da je zakon o upravljanju aerodromima donet da bi se omogućila koncesija na aerodromu „Nikola Tesla“, i zamera što bi profit otišao privatnom koncesionaru.",
-   "govora": 3,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "ми смо у начелу, понављам, указали да је циљ овог закона управо аеродром Београд и да се цео закон доноси да би се омогућила концесија на Аеродрому „Никола Тесла“, што сматрамо јако погрешним.",
-    "date": "2016-12-20",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
-   }
-  },
-  {
-   "tekst": "Zamera što zakon prepušta ministarstvu da utvrđuje javni interes, a da o tome nije bilo javne rasprave.",
+   "tekst": "Противи се употреби родно осетљивих израза у закону, тврди да је то „џендер идеологија“ и да изрази у мушком роду важе и за мушки и за женски род.",
    "govora": 2,
    "sazivi": [
     "11"
    ],
    "citat": {
-    "tekst": "То што у једном закону стоји да ће утврдити Министарство, не значи да Министарство може тек тако да утврђује јавни интерес.",
-    "date": "2016-12-20",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
-   }
-  },
-  {
-   "tekst": "Protivi se tome da zakon menja upotrebu muškog roda u nazivima i tvrdi da je to uvođenje džender ideologije.",
-   "govora": 2,
-   "sazivi": [
-    "11"
-   ],
-   "citat": {
-    "tekst": "ви сте овим чланом закона извршили један продор радикалног феминистичког приступа и утврђивања некакве џендер идеологије",
+    "tekst": "Хајде да не правимо спрдњу од парламента и хајде да заштитимо наше друштво од те џендер идеологије, која је заиста нешто штетно и нема везе са људским правима и са заштитом жена.",
     "date": "2016-12-20",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/20. decembar 2016..pdf"
    }

@@ -1,56 +1,56 @@
 {
  "mp": "небојша стефановић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 29,
  "speeches": 34,
  "sittings": 3,
  "points": [
   {
-   "tekst": "Navodi da zakon omogućava deci, trudnicama i porodiljama pravo na zdravstvenu zaštitu bez obzira na to da li su im zdravstvene knjižice overene.",
-   "govora": 2,
+   "tekst": "Навoди да закон који је предложио омогућава здравствену заштиту запосленим трудницама, породиљама и деци чији послодавци нису уплаћивали доприносе, па им здравствена књижица није оверена, а по члановима 17. и 30. Закона о здравственом осигурању без овере немају то право.",
+   "govora": 5,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "овим законом се омогућава свој деци, свим особама до осамнаесте године старости, свим трудницама и породиљама, и до годину дана после порођаја, да им се обезбеди пружање здравствених услуга, без обзира да ли су им оверене исправе о здравственом осигурању или нису.",
+    "tekst": "Члан 17. Закона о здравственом осигурању, односно здравственој заштити јасно говори о томе да жена којој је основ осигурања 1010, односно запослење, нема здравствену заштиту ако јој књижица није оверена и то је пропуст у том закону.",
+    "date": "2013-11-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Замера што они који су раније били на власти нису решили проблеме о којима сада критички говоре.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Многи који су раније били у власти имали су све прилике да ствари о којима данас говоре негативно промене када су били на власти.",
     "date": "2013-11-14",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
    }
   },
   {
-   "tekst": "Navodi da deca, trudnice i porodilje ne mogu da ostvare prava na zdravstveno osiguranje zato što poslodavci nisu uplaćivali doprinose.",
+   "tekst": "Тражи да посланици који сматрају да предлог закона не ваља гласају против њега, јер би гласање за значило да њихова критика не стоји.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Када кажете да нешто не ваља, немојте да гласате за. Немојте то подржати, јер ако будете гласали за, онда све ово што је речено данас као критика пада у воду.",
+    "date": "2013-11-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+   }
+  },
+  {
+   "tekst": "Навoди да се залаже за већа права и приоритет трудница, породиља и мајки, као и деце, у запошљавању и здравственој заштити.",
    "govora": 3,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Концентрисао сам се на решавање проблема оне деце, трудница и породиља који своја права не могу да остваре управо зато што послодавци нису могли или нису уплаћивали доприносе.",
-    "date": "2013-11-14",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
-   }
-  },
-  {
-   "tekst": "Navodi da su sredstva za primenu zakona obezbeđena, da Fond za zdravstveno osiguranje izdvaja između 450 i 500 miliona dinara i da zbog toga neće biti umanjena druga sredstva.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Средства су опредељена и ту су. Дакле, неће бити бојазни да ће бити недовољно средстава да се овај закон реализује.",
-    "date": "2013-11-14",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
-   }
-  },
-  {
-   "tekst": "Navodi da je zakon lex specialis, doneto dok se ne uradi šira kodifikacija propisa o zdravstvenom osiguranju i zdravstvenoj zaštiti.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Зато је била само намера да овим законом који јесте лекс специјалис, док не будемо урадили једну опсежнију кодификацију законодавства из области здравственог осигурања здравствене заштите, да ово буде закон којим ћемо помоћи да ствар буде решена.",
-    "date": "2013-11-14",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. novembar 2013..doc"
+    "tekst": "Да ли неког боли што се ја борим за то да жене у овој земљи имају право да имају дуже породиљско одсуство и да имају већу запосленост, и не само ја, него и многе колеге у овом дому?",
+    "date": "2013-08-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. avgust 2013..doc"
    }
   }
  ]

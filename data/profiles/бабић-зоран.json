@@ -1,57 +1,70 @@
 {
  "mp": "бабић зоран",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 32,
  "speeches": 355,
  "sittings": 16,
  "points": [
   {
-   "tekst": "Наводи да држава не сме да буде највећи послодавац и да приватни сектор треба да буде мотор развоја.",
-   "govora": 3,
-   "sazivi": [
-    "10"
-   ],
-   "citat": {
-    "tekst": "Држава не сме и не може да буде највећи послодавац. Држава мора да буде ефикасна, државна управа мања, економичнија, и у служби и привреде и грађана Републике Србије, али свакако не највећи послодавац.",
-    "date": "2014-07-15",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2014.docx"
-   }
-  },
-  {
-   "tekst": "Наводи да су претходне владе и политички актери који су водили државу одговорни за незапосленост и стање јавних финансија.",
+   "tekst": "Navodi da je prethodna vlada ostavila težak ekonomski nasleđeni minus, pre svega visok javni dug i veliku nezaposlenost, i da za to snosi odgovornost bivši režim.",
    "govora": 4,
    "sazivi": [
     "9",
     "10"
    ],
    "citat": {
-    "tekst": "Одговорност за те болести, за те ране имају политички актери који су водили ову земљу, водили су ову владу, Владе Републике Србије до 2012. године.",
-    "date": "2014-05-26",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. maj 2014.docx"
+    "tekst": "Спољни дуг Републике Србије премашио је 24 милијарде евра. Бивши режим се за само задње три године задужио за више од шест милијарди евра.",
+    "date": null,
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
    }
   },
   {
-   "tekst": "Наводи да подстицаји за запошљавање не треба да буду ограничени на младе до 30 и старије од 50 година, јер је то, по његовом мишљењу, дискриминација.",
-   "govora": 2,
+   "tekst": "Navodi da država ne sme da bude najveći poslodavac, da javna preduzeća ne mogu biti generator razvoja i da to mora da bude privatni sektor, a da država treba da bude servis privrede i građana.",
+   "govora": 3,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Ко је прописао границу? Зашто 30-та година, а не рецимо до 32, или до 28? Зашто је 50-та година граница, а не 55-а, или 48-а?",
+    "tekst": "Ово је и порука младим људима да држава не може и не сме да буде највећи послодавац, већ сервис грађана Србије, а да они сходно свом знању, интелекту, сходно својој идеји развијају бизнисе и запошљавају нове људе.",
+    "date": "2014-05-28",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/28. maj 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su krediti u Agrobanci i Razvojnoj banci Vojvodine davani po vezi i na „časnu reč“, a da je račun za to plaćao građani i privreda Srbije.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Зашто би један привредник у Србији плаћао цену и данак неодговорног пословања и неодговорних кредита које је Развојна банка Војводине давала? Зашто би плаћали цех они који томе нису криви?",
+    "date": "2014-09-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/8. septembar 2014.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da je borba protiv korupcije i sive ekonomije neophodna i da u njoj ne sme biti zaštićenih, i da zakoni koje podržava služe toj borbi.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Не, као што и у борби против корупције и криминала нема заштићених, тако и у борби против сиве економије нема и не сме бити заштићених.",
     "date": "2014-05-30",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/30. maj 2014.docx"
    }
   },
   {
-   "tekst": "Брани одговор Владе на поплаве 2014. и истиче улогу министара и волонтера на терену.",
-   "govora": 2,
+   "tekst": "Zamera pokrajinskoj vlasti u AP Vojvodini i Bojanu Pajtiću zbog trošenja javnog novca, uključujući novac uložen u Razvojnu banku Vojvodine.",
+   "govora": 3,
    "sazivi": [
+    "9",
     "10"
    ],
    "citat": {
-    "tekst": "Захвалан сам и даћу подршку овом закону зато што се и Влада понашала одговорно, Влада која је била у сталном заседању, сви министри који су нон-стоп били на терену",
-    "date": "2015-07-13",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. jul 2015.docx"
+    "tekst": "Да ли ћемо исто моћи да радимо, као што ради Бојан Пајтић у АП Војводини, па државним парама, парама грађана Војводине, финансира само хуманитарну организацију у власништву чланова ДС?",
+    "date": "2015-06-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. jun 2015.docx"
    }
   }
  ]

@@ -1,37 +1,25 @@
 {
  "mp": "јадранка јоксимовић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 11,
  "sittings": 4,
  "points": [
   {
-   "tekst": "Navodi da je u prethodnom režimu šef kabineta predsednika imao značajnu ulogu u radu službi bezbednosti.",
+   "tekst": "Тврди да је бивша власт створила за службе безбедности тело и бироа по мери уских интереса, а да нови закон уводи законитост у рад служби.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Значајну улогу у досадашњем раду, досадашњем раду којим је управљао бивши режим, ова два тела, имао је само шеф његовог кабинета",
+    "tekst": "Господа из бившег режима, која сада седе у посланичким клупама, су створили надтело по мери пословних интереса и неких других личних и партикуларних и партијских интереса људи који су управљали тим службама.",
     "date": null,
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/6-Trece vanredno zasedanje Narodne skupstine Republike Srbije -1.dan cir.doc"
    }
   },
   {
-   "tekst": "Navodi da lobi grupe utiču na kašnjenje važnih zakona i da država mora da se bori protiv lobija koji nanose štetu.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Због тога желим да кажем да та врста лобија о којој се прича и која јесте на неки начин допринела пролонгирању доношења овако важног закона, јесте спрега и бизниса и делова полиције и криминалаца током последњих 10 или 12 година.",
-    "date": "2013-11-08",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/8. novembar 2013..doc"
-   }
-  },
-  {
-   "tekst": "Predlaže da se proveri koji poslanici dolaze na sednicu pod dejstvom alkohola ili drugih opijata i navodi da takvi ne treba da budu članovi parlamenta.",
-   "govora": 2,
+   "tekst": "Предлаже да се провери ко је на седници Скупштине под дејством алкохола или других опијата и подржава то као формалну иницијативу.",
+   "govora": 3,
    "sazivi": [
     "9"
    ],
@@ -42,13 +30,25 @@
    }
   },
   {
-   "tekst": "Navodi da su posledice dugogodišnje vladavine DS i prethodnog režima i dalje vidljive u stanju stvari u državi.",
+   "tekst": "Поставља питања Влади о контроли безбедности хране и о афлатоксину у млеку и тражи да се утврди ко одговара за пропусте и за узбуњивање јавности.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "којима је због последица дугогодишње владавине ДС остало да попију литар млека, ако могу, и један килограм хлеба?",
+    "tekst": "Интересује ме – каква је ситуација сада, 2012. године, да ли је ту нешто урађено и да ли Министарство покушава да оснажи те капацитете или је можда решење да се то врати на институте за јавно здравље?",
+    "date": "2013-03-14",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
+   }
+  },
+  {
+   "tekst": "Наводи да у областима о којима се расправља делују лоби групе и да држава и посланици морају да штите јавни и привредни интерес од њих.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Није спорно да велике компаније и фирме лобирају, али је задатак и обавеза државе да заштити своје привредне ресурсе, свој привредни потенцијал и пољопривредну производњу као компаративну предност Србије.",
     "date": "2013-03-14",
     "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/14. mart 2013.doc"
    }

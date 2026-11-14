@@ -1,24 +1,12 @@
 {
  "mp": "александар пејчић",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 19,
  "speeches": 26,
  "sittings": 5,
  "points": [
   {
-   "tekst": "Zalaže se za ulaganje u osnovne sportove, poput atletike i gimnastike, i traži da se sredstva usmere na te sportove.",
-   "govora": 2,
-   "sazivi": [
-    "9"
-   ],
-   "citat": {
-    "tekst": "Наша намера је пре свега била да овим амандманом помогнемо једном базичном спорту, а то је атлетика, пошто је атлетика у успону, а то се видело на претходним олимпијским играма.",
-    "date": "2012-11-29",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
-   }
-  },
-  {
-   "tekst": "Zamera Vladi što štedi na zdravstvu, školstvu i poljoprivredi, a ne na prevelikoj državnoj administraciji.",
+   "tekst": "Замера што Влада штеди на здравству, школству и пољопривреди, а не на прегломазној администрацији.",
    "govora": 2,
    "sazivi": [
     "9"
@@ -30,27 +18,51 @@
    }
   },
   {
-   "tekst": "Traži da se u Vlasotincu osnuje osnovni sud, jer su u tom mestu veliki broj predmeta i mali broj sudija za njih.",
-   "govora": 2,
+   "tekst": "Указује на проблеме југа Србије и Јабланичког округа, као што су незапосленост, стање железнице, траса Коридора 10 и распоред судова.",
+   "govora": 4,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Тражимо од вас господине да судску јединицу у Власотинцу именујете за основни суд у Власотинцу. Постоје многи разлози, навешћу један од разлога.",
-    "date": "2013-11-18",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/18. novembar 2013..doc"
+    "tekst": "Из овог видимо да ће ребаланс буџета највише погодити нас са југа Србије, најсиромашнији део Србије, одакле се исељава највећи део становништва.",
+    "date": "2013-07-02",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. jul 2013.doc"
    }
   },
   {
-   "tekst": "Traži da se sasluša lokalna samouprava i građani Predejana, i da se trasa Koridora 10, koja zaobilazi tu varošicu, promeni.",
+   "tekst": "Залаже се за равномеран регионални развој и замера што се мање средине у унутрашњости запостављају.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Подсетићу вас да се сви овде, бар декларативно, залажемо за равномерни регионални развој. Спортску дворану нема ни Богатић, нити Мало Црниће, нити Бојник, ни многа друга места.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Наводи да Влада није прихватила већину амандмана ДСС-а и тражи да прихвати његове амандмане.",
+   "govora": 4,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Даме и господо народни посланици, господине министре Динкићу, представници Владе, ви добро знате да је Посланичка група ДСС предложила око 65 амандмана на овај предлог закона о буџету. Прихваћена су само три.",
+    "date": "2012-11-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. dan VIII sednica II redovnog zasedanja u 2012. 29.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Замера што се Влада задужује да би покрила дефицит.",
    "govora": 2,
    "sazivi": [
     "9"
    ],
    "citat": {
-    "tekst": "Више пута сам овде говорио о грађанима варошице Предејане који су протестовали због трасе Коридора 10, која заобилази ту варошицу.",
-    "date": "2013-11-13",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/13. novembar 2013..doc"
+    "tekst": "Међутим, оно што је истина је да се и ова влада определила да се задужује како би покрила дефицит, што је и те како нереално, сложићете се са мном.",
+    "date": "2013-07-04",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/4. jul 2013.doc"
    }
   }
  ]

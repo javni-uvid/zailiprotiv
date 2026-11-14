@@ -1,12 +1,24 @@
 {
  "mp": "бирманчевић бобан",
- "model": "claude-haiku-5-5",
+ "model": "claude-sonnet-5-5",
  "read": 11,
  "speeches": 11,
  "sittings": 8,
  "points": [
   {
-   "tekst": "Navodi da su zakoni koje predlaže Vlada reformski i da su u ovom trenutku najbolji mogući.",
+   "tekst": "Navodi da продаја и приватизација локалних медија треба да спречи да локалне власти користе буџетски новац и локалне медије за политичку кампању.",
+   "govora": 3,
+   "sazivi": [
+    "10"
+   ],
+   "citat": {
+    "tekst": "Када буде извршена продаја медија у том случају неће моћи ниједан градоначелник, па ни у граду Шапцу, ни у Панчеву, ни у Ваљеву неће моћи да новцем који је у буџету плаћа своју политичку кампању.",
+    "date": "2015-06-26",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/26. jun 2015.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da su закони о медијима и закон о приватизацији реформски и да су у овом тренутку најбољи могући.",
    "govora": 2,
    "sazivi": [
     "10"
@@ -18,41 +30,29 @@
    }
   },
   {
-   "tekst": "Navodi da su lokalni mediji pod uticajem lokalnih vlasti i da prodaja medija treba da spreči zloupotrebu budžeta u lokalnim samoupravama.",
-   "govora": 3,
+   "tekst": "Traži да се амандмани на предлоге закона не прихвате и објашњава зашто предложене измене нису прихватљиве.",
+   "govora": 5,
    "sazivi": [
     "10"
    ],
    "citat": {
-    "tekst": "Желим да појасним да грађани буду свесни и да знају да је једино ова влада и једино СНС спремна да управо продајом медија спречи злоупотребе које су биле присутне у ранијим периодима, односиле су се на локалне самоуправе и на злоупотребу управљања медијима на локалним и регионалним нивоима.",
-    "date": "2015-06-29",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/29. jun 2015.docx"
+    "tekst": "Тако да једноставно овај закон, односно овај члан мора бити прихваћен у оваквом облику и наравно амандман не треба да буде прихваћен.",
+    "date": "2015-07-15",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/15. jul 2015.docx"
    }
   },
   {
-   "tekst": "Zamera kritičarima što unapred osporavaju primenu zakona i odluka Vlade bez realnih razloga.",
+   "tekst": "Navodi да грађани подржавају СНС и Александра Вучића због резултата које је власт постигла.",
    "govora": 3,
    "sazivi": [
     "10",
+    "11",
     "12"
    ],
    "citat": {
-    "tekst": "Критичари ребаланса немају никакве реалне разлоге, нити имају било какве прихватљиве предлоге за бољи буџет и за боље одлуке које би унапредиле државу и које би унапредиле нашу економију.",
-    "date": "2020-11-10",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS 10.11.2020..docx"
-   }
-  },
-  {
-   "tekst": "Navodi da su vlada i ministri dobro reagovali u kriznim situacijama, kao što su poplave i epidemija.",
-   "govora": 3,
-   "sazivi": [
-    "10",
-    "12"
-   ],
-   "citat": {
-    "tekst": "Сви министри, председник Владе, председник Републике Србије су били на поплављеним подручјима, пружили су сву своју помоћ и све што је у том тренутку било расположиво је дато на употребу штабовима",
-    "date": "2014-07-16",
-    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/16. jul 2014.docx"
+    "tekst": "Грађани више нису имали стрпљења да чекају, па су свој глас дали СНС и Александру Вучићу који предводи нове идеје и све оно што ће овој Србији и овим грађанима учинити набоље.",
+    "date": "2014-08-31",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/31. avgust 2014..docx"
    }
   }
  ]
