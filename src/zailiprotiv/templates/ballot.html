@@ -25,8 +25,10 @@
       <p class="label">Na slici nema naziva zakona: vidi se koliko si puta glasao za i protiv i gde si drugačije od Skupštine, ne i o kom zakonu.</p>
     </div>
   </div>
-  <section class="lb-pick" id="lb-pick" hidden><small id="lb-pick-why"></small><h2><a id="lb-pick-law"></a></h2><p id="lb-pick-nums"></p></section>
 </div>
+{# Shown at once to someone who has voted, before the page is first painted: opened later by the page's script it
+   pushed everything under it down. #}
+<script>try { if (Object.keys(JSON.parse(localStorage.getItem("zip.glasovi")) || {}).length) document.getElementById("lb-mine").hidden = false; } catch (e) {}</script>
 
 <div class="feat">
   {% if quiz_laws %}
@@ -53,6 +55,7 @@
 </div>
 
 <div id="lb-rest" hidden>
+  <section class="lb-pick" id="lb-pick" hidden><small id="lb-pick-why"></small><h2><a id="lb-pick-law"></a></h2><p id="lb-pick-nums"></p></section>
   <section class="lb-list">
     <h2>Sve o čemu sam glasao</h2>
     <div class="lb-filters" id="lb-filters" role="group" aria-label="Koji glasovi"></div>

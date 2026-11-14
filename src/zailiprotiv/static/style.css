@@ -958,3 +958,6 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
   .q-strip { margin-bottom: .9rem; gap: 4px; } .q-strip button { height: 2.1rem; min-width: 0; }
   .q-item:not(.answered) .q-answers { position: sticky; bottom: 0; z-index: 2; background: var(--bg); padding: .5rem 0 calc(.5rem + env(safe-area-inset-bottom)); box-shadow: 0 -1px 0 var(--line); }
 }
+.lb-rest-pick, #lb-rest .lb-pick { margin: 0 0 2rem; }
+.lb-top b.big { min-height: 1.85rem; }
+.q-wait .quiz:not(.on) .q-item:not(:first-child) { display: none; }

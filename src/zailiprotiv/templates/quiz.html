@@ -9,6 +9,9 @@
 {% if votes_api %}<p class="meta q-notice"><span class="q-long">Tvoji glasovi ulaze u zbir svih posetilaca. Uz „za“, „protiv“ ili „uzdržan“ šalje se nasumična oznaka ovog pregledača, da se jedan uređaj broji jednom. Bez naloga, imena i kolačića; adresu ne čuvamo.</span><span class="q-short">Glasovi ulaze u zbir posetilaca uz nasumičnu oznaku uređaja; bez naloga, imena i adrese.</span> <a href="{{ root }}kako-racunamo.html#posetioci">Šta čuvamo</a></p>{% endif %}
 <noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
 <nav class="q-strip js-only" hidden id="q-strip" aria-label="Tvoj listić">{% for it in laws %}<button type="button" data-go="{{ loop.index0 }}" aria-label="Zakon {{ loop.index }}"><span>{{ loop.index }}</span></button>{% endfor %}<button type="button" data-go="kraj" class="q-strip-end" aria-label="Rezultat" disabled>Rezultat</button></nav>
+{# Until the page's script takes over, only the first law shows: all ten painted first and nine then hidden moved
+   everything under them. #}
+<script>document.documentElement.classList.add("q-wait");</script>
 <ol class="quiz" id="quiz">
 {% for it in laws %}
   {% set sd = it.said.debate if it.said else none %}

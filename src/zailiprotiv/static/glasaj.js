@@ -4,6 +4,7 @@
   "use strict";
   var data = JSON.parse(document.getElementById("quiz-data").textContent);
   var list = document.getElementById("quiz"), items = Array.prototype.slice.call(list.querySelectorAll(".q-item"));
+  var takeOver = function () { list.classList.add("on"); };  // from here the script shows and hides the laws
   var WORD = { z: "za", p: "protiv", u: "uzdržan" };
   var ROOT = document.body.dataset.root || "";
   var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
@@ -435,6 +436,7 @@
         try { localStorage.setItem(SENT, JSON.stringify(sentLaws)); } catch (e) {}
       });
   }
+  takeOver();
   if (api) fetch(api).then(function (r) { return r.json(); }).then(function (d) { crowd = d; showCrowd(); }).catch(function () {});
 
   var first = answers.indexOf("");

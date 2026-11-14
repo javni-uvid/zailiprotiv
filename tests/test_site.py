@@ -96,12 +96,14 @@ def test_site_builds_every_page(tmp_path):
             text = re.sub(r'<script src="(?:pagefind/pagefind-ui|pretraga)\.js[^>]*>', "", text)
         v = re.search(r'data-v="(\w+)"', text).group(1)
         if page.name == "podelili-salu.html":  # the quiz: and its own data and script, both from the site itself
-            assert re.findall(r"<script[^>]*>", text)[1:] == ['<script type="application/json" id="quiz-data">',
+            assert re.findall(r"<script[^>]*>", text)[1:] == ["<script>", '<script type="application/json" id="quiz-data">',
                                                               f'<script src="../glasaj.js?v={v}" defer>']
-            text = text.replace('<script type="application/json" id="quiz-data">', "").replace(f'<script src="../glasaj.js?v={v}" defer>', "")
+            assert 'classList.add("q-wait")' in text
+            text = text.replace('<script type="application/json" id="quiz-data">', "").replace(f'<script src="../glasaj.js?v={v}" defer>', "").replace("<script>", "", 1)
         if page.name == "glasaj.html":  # the visitor's ballot: its own script
-            assert re.findall(r"<script[^>]*>", text)[1:] == [f'<script src="listic.js?v={v}" defer>']
-            text = text.replace(f'<script src="listic.js?v={v}" defer>', "")
+            assert re.findall(r"<script[^>]*>", text)[1:] == ["<script>", f'<script src="listic.js?v={v}" defer>']
+            assert text.count("<script>") == 1 and 'getElementById("lb-mine").hidden = false' in text  # opens the ballot before the first paint
+            text = text.replace(f'<script src="listic.js?v={v}" defer>', "").replace("<script>", "", 1)
         assert re.findall(r"<script[^>]*>", text) == [f'<script src="{"../" if page.parent != out else ""}site.js?v='
                                                       + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
         assert "http://" not in text and not re.search(r'(?:src|href)="https?://(?!www\.parlament\.gov\.rs|github\.com)'
