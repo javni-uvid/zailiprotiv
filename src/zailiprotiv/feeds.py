@@ -25,7 +25,7 @@ def write(*, area_slug, by_area, domain, feeds_mp, items_by_conv, out, waiting):
     write_feed(out / "zakoni.xml", "Za ili Protiv: novi zakoni", f"{site}zakoni.xml", f"{site}index.html",
                [entry(it, it["law"]["short"], latin(it.get("gist") or "")) for it in newest])
     write_feed(out / "u-proceduri.xml", "Za ili Protiv: novi predlozi zakona", f"{site}u-proceduri.xml", f"{site}u-proceduri.html",
-               [{"title": latin(r["title"]), "link": r["pdf"], "id": r["pdf"],
+               [{"title": latin(r["title"]), "link": f"{site}predlog/{r['slug']}.html", "id": r["pdf"],
                  "updated": (r["submitted"] or "2000-01-01") + "T00:00:00Z", "summary": "Predlagač: " + latin(r["proposer"])}
                 for r in waiting[:50]])
     for a, its in by_area.items():

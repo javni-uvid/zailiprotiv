@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, how with context %}
+{# A bill in procedure: what is known of it before the Assembly votes. Once passed, the page sends on to the law's. #}
+{% set name = b.title|latin %}
+{% block title %}{{ b.title|latin }} — Za ili Protiv{% endblock %}
+{% block description %}{{ b.title|latin }}: ko ga je podneo, kada, koliko čeka i šta predlagač navodi. Poslanici o njemu još nisu glasali.{% endblock %}
+{% block share %}{% if b.law %}<meta http-equiv="refresh" content="0; url=../zakon/{{ b.law.slug }}.html"><link rel="canonical" href="{{ site_url }}zakon/{{ b.law.slug }}.html">{% endif %}{% endblock %}
+{% block main %}
+{% set sm = b.summary.summary if b.summary else none %}
+<p class="crumbs"><a href="../u-proceduri.html">Zakoni — u proceduri</a>{% if b.kind %} › {{ b.kind|latin }}{% endif %}</p>
+<div class="law-head">
+<h1>{{ name }}</h1>
+{% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
+</div>
+
+{% if b.law %}
+<p class="note">Ovaj predlog je usvojen {{ b.law.law.passed|day }}. <a href="../zakon/{{ b.law.slug }}.html">Zakon, glasanje i rasprava</a></p>
+{% elif waits %}
+<section class="outcome bill-state" aria-label="Stanje">
+  <p class="score"><span class="bill-wait">Poslanici još nisu glasali</span></p>
+  <p class="meta">{% if b.sitting %}<b>Na dnevnom redu: {% if b.sitting.url %}<a href="{{ b.sitting.url }}">{{ b.sitting.title|latin }}</a>{% else %}{{ b.sitting.title|latin }}{% endif %}{% if b.sitting.starts %}, {{ b.sitting.starts[:10]|day }}{% endif %}.</b> {% else %}Još nije na dnevnom redu nijedne sazvane sednice. {% endif %}{% if b.days is not none %}U proceduri {{ b.days }} {{ plural(b.days, "dan", "dana", "dana") }}.{% endif %}</p>
+</section>
+{% else %}
+<p class="note">Ovaj predlog više nije na spisku Skupštine (poslednji put viđen {{ b.last_seen|day }}): povučen je, ili mu je postupak prestao. Skupština ne navodi razlog, pa ga ne navodimo ni mi.</p>
+{% endif %}
+
+{% if sm and (sm.promene or sm.razlozi) %}
+<section>
+  <h2>Šta predlog menja</h2>
+  {% if sm.promene %}<ul>{% for x in sm.promene %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
+  {% if sm.razlozi %}<h3>Zašto, prema predlagaču</h3><ul>{% for x in sm.razlozi %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
+  {% if sm.sredstva %}<p><b>Novac iz budžeta:</b> {{ sm.sredstva|latin }}</p>{% endif %}
+  <p class="label">Sažetak obrazloženja predloga zakona. Napisao ga je AI model ({{ b.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ b.pdf }}">predlog zakona</a>. {{ how("sazetak") }}</p>
+</section>
+{% elif not b.law %}
+<p class="meta">Sažetak predlagačevog obrazloženja još nije napisan. Ceo tekst sa obrazloženjem je u <a href="{{ b.pdf }}">predlogu zakona (PDF na sajtu Skupštine)</a>.</p>
+{% endif %}
+
+<section>
+  <h2>O predlogu</h2>
+  <dl class="facts">
+    <div><dt>Predlagač</dt><dd>{{ b.proposer|latin }}</dd></div>
+    <div><dt>Podnet</dt><dd>{{ b.submitted|day }}</dd></div>
+    {% if b.kind %}<div><dt>Vrsta</dt><dd>{{ b.kind|latin }}</dd></div>{% endif %}
+    <div><dt>Na spisku Skupštine</dt><dd>{% if waits %}da, provereno {{ checked|day_of }}{% else %}poslednji put {{ b.last_seen|day }}{% endif %}</dd></div>
+  </dl>
+  <p class="downloads"><a href="{{ b.pdf }}">Predlog zakona sa obrazloženjem (PDF)</a></p>
+  <p class="label">Predlagač i datum su kako ih navodi Skupština na strani „Zakoni u proceduri“. Kad poslanici glasaju, ova adresa vodi na stranu zakona sa poimeničnim glasanjem. Koliko predlog čeka ne govori zašto: o dnevnom redu odlučuje Skupština. {{ how("procedura") }}</p>
+</section>
+{% endblock %}

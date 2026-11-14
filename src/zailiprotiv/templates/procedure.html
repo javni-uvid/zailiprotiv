@@ -11,7 +11,7 @@
 <div class="lead-nums">
   <p><b>{{ waiting|length }}</b><span>{{ plural(waiting|length, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u Skupštini</span></p>
   {% for k, label, n in who_counts if n %}<p><b>{{ n }}</b><span>{{ "od Vlade" if k == "vlada" else ("od poslanika" if k == "poslanici" else label|lower) }}</span></p>{% endfor %}
-  {% if longest %}<p><b>{{ longest[0].days }}</b><span>{{ plural(longest[0].days, "dan", "dana", "dana") }} čeka najstariji: <a href="{{ longest[0].pdf }}">{{ longest[0].title|latin|truncate(70, killwords=False, end="…") }}</a></span></p>{% endif %}
+  {% if longest %}<p><b>{{ longest[0].days }}</b><span>{{ plural(longest[0].days, "dan", "dana", "dana") }} čeka najstariji: <a href="predlog/{{ longest[0].slug }}.html">{{ longest[0].title|latin|truncate(70, killwords=False, end="…") }}</a></span></p>{% endif %}
 </div>
 <p class="meta"><a href="u-proceduri.xml">Prati nove predloge (RSS)</a></p>
 
@@ -49,7 +49,7 @@
   {% for r in waiting %}
     <li class="row" data-i="{{ loop.index0 }}" data-k="{{ r.who }}{% if r.sitting %} dr{% endif %}" data-d="{{ r.submitted or "" }}" data-w="{{ r.days or 0 }}">
       <div class="row-main">
-        <a class="row-title" href="{{ r.pdf }}">{{ r.title|latin }}</a>
+        <a class="row-title" href="predlog/{{ r.slug }}.html">{{ r.title|latin }}</a>
         {% if r.gist %}<p class="proc-gist">{{ r.gist|latin }}</p>{% endif %}
         <p class="row-meta">{{ r.proposer|latin }} · podnet {{ r.submitted|day }}{% if r.kind %} · {{ r.kind|latin }}{% endif %}{% if r.sitting %} · <b>na dnevnom redu: {{ r.sitting.title|latin }}{% if r.sitting.starts %}, {{ r.sitting.starts[:10]|day }}{% endif %}</b>{% endif %}</p>
       </div>
@@ -60,7 +60,7 @@
   {% else %}
   <p class="meta">Na spisku Skupštine trenutno nema predloga zakona. Novi saziv počinje sa praznim spiskom; predlozi koji nisu usvojeni do kraja prethodnog saziva više nisu u proceduri.</p>
   {% endif %}
-  <p class="label">Naslov vodi na tekst predloga sa obrazloženjem (PDF na sajtu Skupštine). Predlagač i datum su kako ih navodi Skupština. Rečenica ispod naslova, gde je ima, sažetak je predlagačevog obrazloženja koji je napisao AI model. Koliko predlog čeka ne govori zašto: o dnevnom redu odlučuje Skupština.</p>
+  <p class="label">Naslov vodi na stranu predloga, gde je i veza ka tekstu sa obrazloženjem (PDF na sajtu Skupštine). Predlagač i datum su kako ih navodi Skupština. Rečenica ispod naslova, gde je ima, sažetak je predlagačevog obrazloženja koji je napisao AI model. Koliko predlog čeka ne govori zašto: o dnevnom redu odlučuje Skupština.</p>
 </section>
 
 {% if gone %}
@@ -70,7 +70,7 @@
   {% for r in gone %}
     <li class="row"><div class="row-main">
       {% if r.law %}<a class="row-title" href="zakon/{{ r.law.slug }}.html">{{ r.law.law.short }}</a><p class="row-meta">usvojen {{ r.law.law.passed|day }} · {{ r.proposer|latin }}</p>
-      {% else %}<a class="row-title" href="{{ r.pdf }}">{{ r.title|latin }}</a><p class="row-meta">{{ r.proposer|latin }} · podnet {{ r.submitted|day }} · poslednji put na spisku {{ r.last_seen|day }}</p>{% endif %}
+      {% else %}<a class="row-title" href="predlog/{{ r.slug }}.html">{{ r.title|latin }}</a><p class="row-meta">{{ r.proposer|latin }} · podnet {{ r.submitted|day }} · poslednji put na spisku {{ r.last_seen|day }}</p>{% endif %}
     </div></li>
   {% endfor %}
   </ul>

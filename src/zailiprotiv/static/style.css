@@ -843,3 +843,16 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .yv-btns { grid-template-columns: 1fr 1fr; } .yv-btns .u { grid-column: 1 / -1; }
   .yv-cmp { grid-template-columns: 1fr; gap: 1rem; }
 }
+
+/* A bill's page: nothing voted yet. */
+.bill-wait { font-family: var(--serif); color: var(--warn); }
+
+/* The outcome on a law's page: who voted against as a list of groups with their number first, and the facts as a
+   small table of label and value instead of one long dotted line. */
+.outcome div.against h2 { font-size: .85rem; font-weight: 500; margin: .9rem 0 .3rem; border: 0; padding: 0; font-family: inherit; }
+.outcome div.against ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .15rem 1.5rem; font-size: .95rem; }
+.outcome div.against li { display: grid; grid-template-columns: 1.8rem 1fr; gap: .4rem; align-items: baseline; }
+.outcome div.against li b { text-align: right; font-variant-numeric: tabular-nums; }
+.facts-grid { margin: 1rem 0 0; padding-top: .7rem; border-top: 1px solid var(--line); font-size: .9rem; }
+.facts-grid div { display: grid; grid-template-columns: 7.5rem 1fr; gap: .8rem; padding: .12rem 0; }
+.facts-grid dt { color: var(--muted); } .facts-grid dd { margin: 0; }

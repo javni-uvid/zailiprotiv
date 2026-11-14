@@ -5,7 +5,7 @@ Moved out of `site.build` (13 Nov 2026); it takes what it needs from the build a
 from __future__ import annotations
 
 from zailiprotiv.site import (  # noqa: F401
-    days_between, dt, json, kinds
+    days_between, dt, json, kinds, slug
 )
 
 
@@ -35,6 +35,22 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
                "areas": b.get("areas") or [],
                "sitting": on_agenda.get(link_.act_name(b["title"]))}
         (waiting if b["last_seen"] == proc["fetched"] and not row["law"] else gone).append(row)
+    # Every bill gets a page of its own (predlog/<name>.html): what is known of it while it waits. The name comes
+    # from the title and, when two bills share one, the file's own name at the Assembly, so it does not move when
+    # another bill arrives. A bill since passed keeps its address and sends the reader on to the law's page.
+    names = {}
+    for row in waiting + gone:
+        base = slug(row["title"])
+        names.setdefault("zakon-" + base[len("predlog-zakona-"):] if base.startswith("predlog-zakona-") else base, []).append(row)
+    (out / "predlog").mkdir(exist_ok=True)
+    page = env.get_template("bill.html")
+    for base, rows in names.items():
+        for row in rows:
+            row["slug"] = base if len(rows) == 1 else f"{base}-{slug(row['pdf'].rsplit('/', 1)[-1].removesuffix('.pdf'))}"
+    for row in waiting + gone:
+        row["summary"] = loaded[current][2].get(row.get("bill_file", ""), {}).get("summary")
+        (out / "predlog" / f"{row['slug']}.html").write_text(page.render(
+            **common, b=row, waits=row in waiting, checked=proc["fetched"], root="../"), encoding="utf-8")
     waiting.sort(key=lambda r: (r["submitted"] or "", r["title"]), reverse=True)
     gone.sort(key=lambda r: (r["last_seen"], r["submitted"] or ""), reverse=True)
     who_label = {"vlada": "Vlada", "poslanici": "Poslanici", "drugi": "Drugi predlagači"}
