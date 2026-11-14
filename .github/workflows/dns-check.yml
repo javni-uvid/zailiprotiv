@@ -24,3 +24,10 @@ jobs:
           for u in https://zailiprotiv.rs/ https://www.zailiprotiv.rs/ http://zailiprotiv.rs/ https://zailiprotiv.rs/zakon/carinski-zakon https://zailiprotiv.rs/style.css https://zailiprotiv.rs/zakon/carinski-zakon.csv https://zailiprotiv.rs/zakon/carinski-zakon.png https://zailiprotiv.rs/podaci/zakoni.csv; do
             curl -sS -o /dev/null -D - "$u" | tr -d '\r' | grep -iE "^HTTP|^server|^cf-cache-status|^location|^strict-transport|^cache-control" | tr '\n' ' '; echo " <- $u"
           done
+          echo "== twice, for the cache; the Cyrillic front of the notes; where old addresses lead"
+          for u in https://zailiprotiv.rs/ https://zailiprotiv.rs/zakon/carinski-zakon https://zailiprotiv.rs/podaci.json; do
+            for i in 1 2; do curl -sS -o /dev/null -D - "$u" | tr -d '\r' | grep -iE "^HTTP|^cf-cache-status|^cache-control|^age:" | tr '\n' ' '; echo " <- $u"; done
+          done
+          for u in https://beleske.zailiprotiv.rs/cir/ https://zailiprotiv.rs/zakon/carinski-zakon.csv https://zailiprotiv.rs/zakon/carinski-zakon.json https://zailiprotiv.rs/zakon/carinski-zakon.png https://zailiprotiv.rs/podaci/zakoni.csv https://zailiprotiv.rs/poslanik/abramovic-nenad.png https://zailiprotiv.rs/poslanik/abramovic-nenad; do
+            curl -sS -o /dev/null -L -w "%{url} -> %{http_code} %{url_effective} (%{num_redirects} redirects)\n" "$u"
+          done
