@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural, how with context %}
+{% block title %}Prisustvo poslanika na glasanjima — Za ili Protiv{% endblock %}
+{% block description %}Koliko je koji poslanik bio prisutan na konačnim glasanjima o zakonima, {{ conv_name|lower }} saziv: rang lista svih poslanika i poslaničkih grupa, iz listinga glasanja Skupštine.{% endblock %}
+{% block main %}
+<h1>Poslanici</h1>
+<nav class="subtabs law-kinds three" aria-label="Poslanici, poslaničke grupe ili prisustvo"><a href="poslanici.html">Poslanici</a><a href="grupe.html"><span class="w">Poslaničke grupe</span><span class="n">Grupe</span></a><a href="prisustvo.html" aria-current="page">Prisustvo</a></nav>
+<div class="lead-nums">
+  <p><b>{{ votes }}</b><span>{{ plural(votes, "konačno glasanje", "konačna glasanja", "konačnih glasanja") }} o zakonima, {{ first|day }} – {{ last|day }}</span></p>
+  {% if median %}<p><b>{{ (100 * median)|round|int }}%</b><span>prisustvo poslanika na sredini liste (medijana)</span></p>{% endif %}
+  <p><b>{{ rows|length }}</b><span>{{ plural(rows|length, "poslanik", "poslanika", "poslanika") }} na listi, {{ conv_name|lower }} saziv</span></p>
+</div>
+<p class="note">Listing kaže samo da poslanik nije bio u sali kad se glasalo, ne i zašto. Odsustvo može imati opravdan razlog (bolest, službeni put), a poslanici ponekad namerno izađu pre glasanja, u znak protesta; i to se ovde vidi kao odsustvo. Skupština navodi odsutne tek od jeseni 2025, pa starijih glasanja i starijih saziva na ovoj listi nema.</p>
+
+<section>
+  <h2>Poslanici, od najmanje prisutnih</h2>
+  <div class="finder js-only" hidden data-filter="pr-rows">
+    <label class="sr" for="f-q">Pretraži poslanike</label>
+    <input id="f-q" type="search" placeholder="Ime ili prezime" autocomplete="off">
+    <div class="chips">
+      <label class="sr" for="f-g">Poslanička grupa</label>
+      <select id="f-g" class="wide"><option value="">Sve poslaničke grupe</option>{% for g in group_names %}<option value="{{ g }}">{{ g }}</option>{% endfor %}</select>
+      <label class="sr" for="f-sort">Redosled</label>
+      <select id="f-sort"><option value="">Najmanje prisutni prvo</option><option value="pp">Najviše prisutni prvo</option><option value="ng">Najviše „nije glasao“</option></select>
+    </div>
+  </div>
+  <p id="f-n" class="row-meta" aria-live="polite"></p>
+  <ol class="rows compact presence" id="pr-rows" data-more="50">
+  {% for r in rows %}
+    <li class="row" data-i="{{ loop.index }}" data-g="{{ r.group }}" data-pp="{{ "%.4f"|format(r.share) }}" data-ng="{{ r.silent }}">
+      <span class="pr-rank">{{ r.rank }}.</span>
+      <img class="row-face" src="{{ "foto/" ~ r.photo if r.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
+      <div class="row-main">
+        <a class="row-title" href="poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a>
+        <p class="row-meta">{{ r.group or "—" }} · odsutan na {{ r.absent }} od {{ r.listed }}{% if r.silent %} · u sali, a nije glasao: {{ r.silent }}{% endif %}</p>
+      </div>
+      <div class="row-vote pr-share"><span class="pr-bar" aria-hidden="true"><i style="width: {{ (100 * r.share)|round(1) }}%"></i></span><b>{{ (100 * r.share)|round|int }}%</b></div>
+    </li>
+  {% endfor %}
+  </ol>
+  <p class="label">Prisustvo: udeo konačnih glasanja o zakonima na kojima poslanik nije zapisan kao „nije prisutan“, od onih na kojima je na spisku. Na listi je svako ko je na spisku bar {{ least }} takvih glasanja; isto pravilo za svakoga. „Nije glasao“ znači da je bio u sali, a nije pritisnuo taster; to se računa kao prisustvo. {{ how("aktivnost") }}</p>
+</section>
+
+{% if groups %}
+<section>
+  <h2>Poslaničke grupe</h2>
+  <div class="scroll"><table class="groups">
+    <thead><tr><th>Grupa</th><th class="num">Najviše članova</th><th class="num">Prisutno</th></tr></thead>
+    <tbody>
+    {% for g in groups %}<tr><td><a href="grupa/{{ g.slug }}.html">{{ g.name }}</a></td><td class="num">{{ g.members }}</td><td class="num"><b>{{ (100 * g.presence[0] / g.presence[1])|round|int }}%</b></td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="label">Za grupu: od svih mesta njenih članova na spiskovima tih glasanja, na koliko je član bio prisutan. Grupe od najmanje prisutne.</p>
+</section>
+{% endif %}
+{% endblock %}

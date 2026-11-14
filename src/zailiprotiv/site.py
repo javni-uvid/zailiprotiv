@@ -578,6 +578,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shares = sorted(p / n for (k, cc), (p, n) in presence.items() if cc == c and n >= 20)
         if shares:
             median_presence[c] = shares[len(shares) // 2]
+    # Whether the ranking by presence has anything to show (pages_presence): the lists of MPs and groups link to it.
+    env.globals["presence_page"] = any(n >= 20 for _, n in presence.values())
     spoke, words = Counter(), {}
     from zailiprotiv import profiles as profiles_
     seated = profiles_.seated_days(root)
@@ -767,6 +769,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     group_rows, numbers = pages_groups.render(common=common, conv_list=conv_list, env=env, finals=finals,
         former=former, group_slug=group_slug, items_by_conv=items_by_conv, key_finals=key_finals,
         lines_of=lines_of, out=out, rows_mp=rows_mp, seat=seat)
+    from zailiprotiv import pages_presence
+    pages_presence.render(common=common, convs=convs, env=env, finals=finals, group_rows=group_rows,
+        median_presence=median_presence, out=out, presence=presence, rows_mp=rows_mp)
     from zailiprotiv import pages_quiz
     active = pages_quiz.render(by_key_all=by_key_all, common=common, profiles=profiles, convs=convs, current=current, env=env,
         group_rows=group_rows, items_by_conv=items_by_conv, key_votes=key_votes, line=line, out=out, root=root,

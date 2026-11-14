@@ -927,3 +927,22 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .f-bill .yv { align-items: stretch; }
 .lb-next { margin: .9rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; }
 .lb-next:empty { display: none; }
+
+/* The ranking by presence: the place, the MP, and the share as a bar with its number. */
+.rows.presence .row { flex-wrap: nowrap; gap: .4rem .9rem; }
+.pr-rank { flex: 0 0 2.4rem; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; font-size: .9rem; }
+.rows.presence .row-main { flex: 1 1 auto; min-width: 0; }
+.pr-share { flex: 0 0 11rem; display: flex; align-items: center; gap: .6rem; justify-content: flex-end; }
+.pr-share b { font-family: var(--serif); font-size: 1.15rem; min-width: 3.2rem; text-align: right; font-variant-numeric: tabular-nums; }
+.pr-bar { flex: 1 1 auto; height: 8px; background: var(--nije_prisutan); } .pr-bar i { display: block; height: 100%; background: var(--fg); }
+@media (max-width: 640px) {
+  .rows.presence .row { display: grid; grid-template-columns: 1.9rem 42px minmax(0, 1fr) auto; align-items: center; gap: .2rem .6rem; }
+  .rows.presence .row > * { margin: 0; width: auto; }
+  .rows.presence .row .pr-share { display: block; grid-column: 4; grid-row: 1; flex: none; }
+  .pr-bar { display: none; } .pr-share b { min-width: 0; }
+  .subtabs .w { display: none; }
+  .finder .chips select { flex: 1 1 100%; margin-left: 0; }
+  .subtabs.law-kinds.three a { padding: .55rem .3rem; font-size: .86rem; white-space: nowrap; }
+}
+.subtabs .n { display: none; }
+@media (max-width: 640px) { .subtabs .n { display: inline; } }
