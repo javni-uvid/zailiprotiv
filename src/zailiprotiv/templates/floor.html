@@ -63,7 +63,7 @@
 {% if c.measures %}
 <section id="mere">
   <h2>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h2>
-  <ul class="floor measures">
+  <ul class="floor measures" data-more="10">
   {% for e in c.measures %}
     {% set role = e.chair.speaker|latin|lower %}
     <li id="{{ e.id }}">

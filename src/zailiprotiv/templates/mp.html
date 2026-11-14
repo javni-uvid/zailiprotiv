@@ -69,6 +69,14 @@
 {% if shown or spoke or floor %}
 <section class="activity" id="aktivnost">
   <h2>Aktivnost</h2>
+  {# Phones only (hidden on wide screens): the hall's counts across every convocation, as tiles. #}
+  {% if floor %}{% set t_s = floor|sum(attribute="speeches") %}{% set t_e = floor|sum(attribute="exchanges") %}{% set t_m = floor|sum(attribute="measures") + floor|sum(attribute="measures_likely") %}{% set t_h = floor|sum(attribute="harsh") %}
+  <ul class="mp-tiles">
+    <li><span class="tile"><b>{{ t_s }}</b><small>{{ plural(t_s, "govor", "govora", "govora") }} u sali</small></span></li>
+    <li>{% if t_e %}<a href="#replike"><b>{{ t_e }}</b><small>{{ plural(t_e, "razmena replika", "razmene replika", "razmena replika") }}</small></a>{% else %}<span class="tile"><b>0</b><small>razmena replika</small></span>{% endif %}</li>
+    <li>{% if t_m %}<a href="#mere"><b>{{ t_m }}</b><small>{{ plural(t_m, "mera predsedavajućeg", "mere predsedavajućeg", "mera predsedavajućeg") }}</small></a>{% else %}<span class="tile"><b>0</b><small>mera predsedavajućeg</small></span>{% endif %}</li>
+    <li>{% if t_h %}<a href="#reci"><b>{{ t_h }}</b><small>{{ plural(t_h, "teška reč", "teške reči", "teških reči") }}</small></a>{% else %}<span class="tile"><b>0</b><small>teških reči</small></span>{% endif %}</li>
+  </ul>{% endif %}
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
   {% if spoke and not floor %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}

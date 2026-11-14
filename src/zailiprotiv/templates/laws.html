@@ -30,7 +30,7 @@
   </div>
 </div>
 <p id="f-n" class="row-meta" aria-live="polite"></p>
-<ol class="rows" id="f-rows">
+<ol class="rows" id="f-rows" data-more="30">
 {% for it in items %}
   <li class="row" data-k="{{ it.law.kind or "other" }}{% if it.urgent %} u{% endif %}" data-d="{{ it.law.passed }}" data-sh="{{ it.share or 0 }}" data-a="{% for a in it.areas or [] %}{{ a|area_slug }} {% endfor %}">
     <div class="row-main">

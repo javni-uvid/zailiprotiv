@@ -44,7 +44,7 @@
     </div>
   </div>
   <p id="f-n" class="row-meta" aria-live="polite"></p>
-  <ol class="rows proc" id="p-rows">
+  <ol class="rows proc" id="p-rows" data-more="30">
   {% for r in waiting %}
     <li class="row" data-i="{{ loop.index0 }}" data-k="{{ r.who }}{% if r.sitting %} dr{% endif %}" data-d="{{ r.submitted or "" }}" data-w="{{ r.days or 0 }}">
       <div class="row-main">

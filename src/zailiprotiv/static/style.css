@@ -683,3 +683,61 @@ td.lean { white-space: nowrap; }
 .measure-pre .meta, .measure-said .meta { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .82rem; }
 .measure-said b { font-weight: 700; }
 p.measure-pre { margin: .2rem 0 .3rem; }
+
+/* ============ Phones (640px and under). Nothing below touches the wider layout. ============ */
+.more-btn, .mp-tiles { display: none; }
+@media (max-width: 640px) {
+  /* The head: the name scrolls away, the menu stays, one row to swipe. */
+  .top { position: sticky; top: -3rem; z-index: 30; background: var(--bg); margin: 0; padding: 0 16px; display: block; border-bottom-width: 2px; }
+  .top .brand { height: 3rem; font-size: 1.35rem; }
+  .top .brand-mark { width: 1.9rem; }
+  .top nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 0 1.15rem; overflow-x: auto; white-space: nowrap; margin: 0 -16px; padding: 0 16px; height: 2.75rem; scrollbar-width: none; position: static; }
+  .top nav::-webkit-scrollbar { display: none; }
+  .top nav > a, .top nav .nav-more > summary { padding: .5rem 0; flex: 0 0 auto; }
+  .top nav .script-switch { margin-left: 0; }
+  .nav-more { position: static; }
+  .nav-more > div { left: 0; right: 0; top: 100%; min-width: 0; border-width: 0 0 2px; padding: .2rem 16px .5rem; max-height: 70vh; overflow-y: auto; white-space: normal; }
+  [id], .subtabs { scroll-margin-top: 3.4rem; }
+  /* The menu of a long page stays under the head. */
+  .page-menu { position: sticky; top: 2.75rem; z-index: 20; background: var(--bg); margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; }
+  .page-menu::-webkit-scrollbar { display: none; }
+  .page-menu a { padding: .2rem 0; }
+  main:has(.page-menu) [id] { scroll-margin-top: 6.2rem; }
+
+  /* Home: the question, the law of the day, the quiz, then the rest. */
+  main:has(> .home-hero) { display: flex; flex-direction: column; }
+  main:has(> .home-hero) > * { order: 5; }
+  main:has(> .home-hero) > .home-hero, main:has(> .home-hero) .hero-text { display: contents; }
+  main:has(> .home-hero) .hero-text > * { order: 0; }
+  main:has(> .home-hero) .hero-text > h1 { margin-top: 1.6rem; }
+  main:has(> .home-hero) .hero-card { order: 1; margin: 1.4rem 0 0; flex: none; }
+  main:has(> .home-hero) > .home-quiz { order: 2; margin-top: 1.4rem; }
+  main:has(> .home-hero) .hero-text > .home-floor { order: 3; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
+
+  /* Long lists: the first of them, and a button for more (site.js marks the rest). */
+  .capped > .over { display: none; }
+  .more-btn { display: block; width: 100%; margin: 1rem 0 1.6rem; padding: .85rem 1rem; font: inherit; font-weight: 600; background: var(--bg); color: var(--fg); border: 2px solid var(--fg); cursor: pointer; }
+
+  /* An MP's page: the sections after the first fold under their headings. */
+  .fold > h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; cursor: pointer; margin: 0; padding: .9rem 0; border-top: 1px solid var(--line); font-size: 1.25rem; }
+  .fold > h2::after { content: "+"; font-family: system-ui, sans-serif; font-weight: 400; color: var(--muted); flex: none; }
+  .fold.open > h2::after { content: "−"; }
+  .fold:not(.open) > :not(h2) { display: none; }
+  .fold { margin: 0; }
+  .fold.open { padding-bottom: 1rem; }
+
+  /* An MP's counts in the hall as four tiles; the lines in words follow. */
+  .mp-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: .2rem 0 1rem; padding: 0; list-style: none; }
+  .mp-tiles a, .mp-tiles span.tile { display: block; padding: .7rem .8rem; border: 1px solid var(--line); text-decoration: none; color: var(--fg); }
+  .mp-tiles b { display: block; font-family: var(--serif); font-size: 1.9rem; line-height: 1.05; }
+  .mp-tiles small { font-size: .82rem; color: var(--muted); }
+
+  /* The chamber: a finger cannot hit a seat, so the whole of it opens the list by vote. */
+  #sala .chamber.seated { cursor: pointer; }
+  #sala .chamber.seated a { pointer-events: none; }
+
+  /* Things to press are at least a finger high. */
+  .pages a, .pages span { min-width: 2.6rem; min-height: 2.6rem; display: inline-flex; align-items: center; justify-content: center; }
+  .method > summary, details.inline > summary { padding: .5rem 0; }
+  .subtabs a { flex: 1 1 100%; }
+}

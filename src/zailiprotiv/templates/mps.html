@@ -29,7 +29,7 @@
 <p class="label">Prvih pet po svakom broju u ovom sazivu, isto pravilo za svakoga; samo konačna glasanja o zakonima. Izostanak: nije prisutan ili nije glasao.</p>
 {% endif %}
 <p id="f-n" class="row-meta" aria-live="polite"></p>
-<ol class="rows compact" id="f-rows">
+<ol class="rows compact" id="f-rows" data-more="40">
 {% for r in rows %}
   {% set t = r.in.tally %}
   <li class="row" data-g="{{ r.in.groups[0] if r.in.groups else "" }}" data-pr="{{ t.protiv or 0 }}" data-za="{{ t.za or 0 }}" data-ab="{{ (t.nije_prisutan or 0) + (t.nije_glasao or 0) }}" data-i="{{ loop.index }}">

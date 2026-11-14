@@ -18,7 +18,7 @@
 {% for cv, ss in by_conv if ss %}
 <section id="saziv-{{ cv.n }}">
   <h2><a href="{{ cv.saziv_page }}">{{ cv.name }} saziv</a> <span class="count">{{ cv.years }} · {{ ss|length }} {{ "sednica" if ss|length % 10 == 1 and ss|length % 100 != 11 else ("sednice" if ss|length % 10 in [2, 3, 4] and ss|length % 100 not in [12, 13, 14] else "sednica") }}</span></h2>
-  <ul class="plain sittings-list">
+  <ul class="plain sittings-list" data-more="30">
   {% for s in ss %}<li><span class="meta">{{ s.day|day }}</span> <a href="sednica/{{ s.slug }}.html">{{ s.title|latin }}</a> <span class="meta">· {{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span></span></li>{% endfor %}
   </ul>
 </section>

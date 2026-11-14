@@ -37,6 +37,50 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
   var body = document.body, root = body.dataset.root || "", data = null, loading = null;
   document.querySelectorAll(".js-only").forEach(function (el) { el.hidden = false; });
 
+  // Phones. All of this only marks things; what it means is in the stylesheet's rules for narrow screens, so a wide
+  // screen shows the page as it was.
+  var phone = window.matchMedia && window.matchMedia("(max-width: 640px)");
+  // A long list shows its first rows and a button for more (data-more="30" on the list). Searching, sorting or a
+  // link to a row further down shows all of it.
+  document.querySelectorAll("[data-more]").forEach(function (list) {
+    var step = parseInt(list.dataset.more, 10) || 30, items = Array.prototype.slice.call(list.children);
+    if (items.length <= step + 5) return;
+    var btn = document.createElement("button"), at = step;
+    btn.type = "button"; btn.className = "more-btn";
+    function label() { btn.textContent = "Prikaži još " + Math.min(step, items.length - at) + " (od " + items.length + ")"; }
+    function all() { items.forEach(function (li) { li.classList.remove("over"); }); list.classList.remove("capped"); btn.remove(); }
+    items.slice(step).forEach(function (li) { li.classList.add("over"); });
+    list.classList.add("capped"); label();
+    list.parentNode.insertBefore(btn, list.nextSibling);
+    btn.addEventListener("click", function () {
+      items.slice(at, at + step).forEach(function (li) { li.classList.remove("over"); });
+      at += step;
+      if (at >= items.length) all(); else label();
+    });
+    var box = document.querySelector('[data-filter="' + list.id + '"]');
+    if (box) { box.addEventListener("input", all); box.addEventListener("change", all); box.addEventListener("click", function (e) { if (e.target.closest(".chip")) all(); }); }
+    function target() { var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (t && list.contains(t)) all(); }
+    target(); window.addEventListener("hashchange", target);
+  });
+  // An MP's page: the sections after the first ones fold under their headings; a link to one opens it.
+  if (document.querySelector(".mp-hero")) {
+    var folds = Array.prototype.filter.call(document.querySelectorAll("main section"), function (sec) {
+      var h = sec.firstElementChild;
+      return h && h.tagName === "H2" && !/^(kljucna|aktivnost)$/.test(sec.id) && !sec.classList.contains("outcome");
+    });
+    folds.forEach(function (sec) {
+      sec.classList.add("fold");
+      var h = sec.firstElementChild;
+      h.addEventListener("click", function (e) { if (!e.target.closest("a") && phone && phone.matches) sec.classList.toggle("open"); });
+    });
+    var unfold = function () {
+      var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      var sec = t && t.closest(".fold");
+      if (sec) { sec.classList.add("open"); if (phone && phone.matches) t.scrollIntoView(); }
+    };
+    unfold(); window.addEventListener("hashchange", unfold);
+  }
+
   // A link to a folded list opens it.
   window.addEventListener("hashchange", openTarget); openTarget();
   function openTarget() {
@@ -95,7 +139,14 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
     var key = document.querySelector("#sala .chamber-key");
     if (key) {
       // The name under the pointer (or the focused seat) is written out at once, above the key.
-      var who = document.createElement("p"), rest = "Svako sedište je jedan poslanik: pređi mišem ili dodirni.";
+      var small = phone && phone.matches;  // a finger cannot hit one seat: there the chamber opens the list by vote
+      var who = document.createElement("p"), rest = small ? "Dodirni salu za spisak poslanika po glasu." : "Svako sedište je jedan poslanik: pređi mišem ili dodirni.";
+      svg.addEventListener("click", function (e) {
+        if (!(phone && phone.matches)) return;
+        e.preventDefault();
+        var d = table.closest("details");
+        if (d) { d.open = true; d.scrollIntoView(); }
+      });
       who.className = "chamber-who"; who.setAttribute("aria-live", "polite"); who.textContent = rest;
       key.parentNode.insertBefore(who, key);
       var show = function (e) {
