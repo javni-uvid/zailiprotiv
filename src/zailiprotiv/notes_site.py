@@ -196,7 +196,9 @@ def build(root: Path, out: Path) -> dict[str, int]:
     pages = speeches = 0
     listing: dict[str, list] = {}
     for conv, path in convs:
-        for url, notes in site.load_transcripts(path).items():
+        stores = site.load_transcripts(path)
+        debates_.mend(stores, site.load(path)[1])  # the speakers' names mistyped in the notes, set right
+        for url, notes in stores.items():
             if not notes.get("speeches"):
                 continue
             where = layout(conv, notes)

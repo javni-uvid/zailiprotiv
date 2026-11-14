@@ -248,6 +248,76 @@ def speaker_name(name: str) -> str:
                     for w in latin(name).split())
 
 
+def _near(a: str, b: str) -> float:
+    """How alike two words are when one may be the other mistyped: 0 when they are not that alike. A letter left out,
+    doubled, swapped with its neighbour or replaced is alike; another name is not."""
+    import difflib
+    if a == b:
+        return 1.0
+    ratio = difflib.SequenceMatcher(None, a, b).ratio()
+    swapped = len(a) == len(b) and len(a) >= 5 and sorted(a) == sorted(b) and sum(x != y for x, y in zip(a, b)) == 2
+    return max(ratio, 0.86) if swapped or ratio >= 0.85 else 0.0
+
+
+def alike(a: str, b: str) -> float:
+    """How alike two names (keys: words in lower case) are, word for word in whichever order fits best; 0 when they
+    have another number of words or any word is not alike."""
+    import itertools
+    wa, wb = a.split(), b.split()
+    if len(wa) != len(wb) or len(wa) > 4:
+        return 0.0
+    best = 0.0
+    for order in itertools.permutations(wb):
+        scores = [_near(x, y) for x, y in zip(wa, order)]
+        if all(scores):
+            best = max(best, sum(scores) / len(scores))
+    return best
+
+
+RARE = 15  # a spelling heard fewer times than this in a convocation's notes, and on no roll call, may be a typo
+
+
+def mend(stores: dict, votes: dict) -> dict[str, str]:
+    """The speakers' names the stenographers mistyped, set right in a convocation's notes (in place): {the name as
+    written: the name it stands for}. The notes head each speech with its speaker's name, typed by hand, and over
+    hundreds of sittings the same person comes out in many spellings ("АЛЕКСАДРА ЈЕРКОВ", "МИЛЕКО ЈОВАНОВ"), each
+    counted as another speaker. A spelling is mended only when it is on no roll call of the convocation and rare
+    in its notes, and exactly one name that is on a roll call, or is common in the notes (a minister), is very
+    like it; where two are as like, it stays as written. What was said is never touched: only whose name heads it."""
+    from collections import Counter
+    roster = {}
+    for v in votes.values():
+        for row in v["rows"]:
+            roster.setdefault(loose(mps.key(row[1])), row[1])
+    heard = Counter(sp["speaker"] for notes in stores.values() for sp in (notes.get("speeches") or {}).values() if not sp.get("chair"))
+    by_key, spelled = Counter(), {}
+    for name, n in heard.most_common():
+        k = loose(mps.key(name))
+        by_key[k] += n
+        spelled.setdefault(k, name)  # the commonest spelling of the key
+    # The name a mended spelling takes: as the notes mostly write that person, and failing that as the roll call does.
+    good = {k: spelled.get(k, roster[k]) for k in roster} | {k: spelled[k] for k, n in by_key.items() if n >= RARE and k not in roster}
+    by_len: dict[int, list[str]] = {}
+    for k in good:
+        by_len.setdefault(len(k.split()), []).append(k)
+    fixed = {}
+    for k, n in by_key.items():
+        if k in good or len(k.split()) < 2:
+            continue
+        close = sorted(((alike(k, g), g) for g in by_len.get(len(k.split()), []) if abs(len(g) - len(k)) <= 3), reverse=True)
+        close = [c for c in close if c[0]]
+        if close and (len(close) == 1 or close[0][0] - close[1][0] >= 0.02):
+            fixed[k] = good[close[0][1]]
+    out = {}
+    for notes in stores.values():
+        for sp in (notes.get("speeches") or {}).values():
+            to = fixed.get(loose(mps.key(sp["speaker"])))
+            if to and sp["speaker"] != to:
+                out[sp["speaker"]] = to
+                sp["speaker"] = to
+    return out
+
+
 def whole_names(speeches) -> dict[str, str]:
     """The notes sometimes head a speech with a surname alone ("ОБРАДОВИЋ", "НЕДИМОВИЋ"). When exactly one speaker of
     the same sitting carries that word in a full name, it is that person: {the name as written: the full name}.

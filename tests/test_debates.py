@@ -50,3 +50,15 @@ def test_resolve_typos_not_other_people():
     assert debates.resolve("РАДОМИР ЛАЗОВЋ", known) == "лазовић радомир"
     assert debates.resolve("МИЛЕКО ЈОВАНОВ", known) == "јованов миленко"
     assert debates.resolve("АЛЕКСАНДАР МАРТИНОВИЋ", known) is None
+
+
+def test_mistyped_speakers_are_set_right_only_when_one_name_fits():
+    from zailiprotiv import debates
+    votes = {"v": {"rows": [[1, "Јерков Александра", "за", "ДС"], [2, "Марковић Александар", "за", "СНС"],
+                            [3, "Мирковић Александар", "за", "СНС"], [4, "Јованов Миленко", "за", "СНС"]]}}
+    said = ["АЛЕКСАНДРА ЈЕРКОВ"] * 3 + ["АЛЕКСАДРА ЈЕРКОВ", "МИЛЕКО ЈОВАНОВ", "АЛЕКСАНДАР МАИРКОВИЋ", "ПЕТАР ПЕТРОВИЋ"] + ["ЗОРАНА МИХАЈЛОВИЋ"] * 20 + ["ЗОРАНА МИХАЈОВИЋ"]
+    stores = {"s": {"speeches": {str(i): {"speaker": n, "text": "Реч."} for i, n in enumerate(said)}}}
+    mended = debates.mend(stores, votes)
+    assert mended == {"АЛЕКСАДРА ЈЕРКОВ": "АЛЕКСАНДРА ЈЕРКОВ", "МИЛЕКО ЈОВАНОВ": "Јованов Миленко", "ЗОРАНА МИХАЈОВИЋ": "ЗОРАНА МИХАЈЛОВИЋ"}
+    names = {sp["speaker"] for sp in stores["s"]["speeches"].values()}
+    assert "АЛЕКСАНДАР МАИРКОВИЋ" in names and "ПЕТАР ПЕТРОВИЋ" in names  # two names as like: left as written; another person: left

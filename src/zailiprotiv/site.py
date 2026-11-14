@@ -363,6 +363,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     mps.load_aliases(root / "mp_aliases.json")
     loaded = {c: load(path) for c, path in convs}
     debates = {c: load_transcripts(path) for c, path in convs}
+    from zailiprotiv import debates as _debates
+    for c, _ in convs:  # speakers' names the stenographers mistyped, set right before anything counts by speaker
+        _debates.mend(debates[c], loaded[c][1])
     all_votes = {k: v for _, votes, _ in loaded.values() for k, v in votes.items()}
     people = registry(all_votes)
     env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
