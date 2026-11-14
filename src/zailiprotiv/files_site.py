@@ -81,7 +81,36 @@ def plan(local: dict[str, str], there: dict[str, str]) -> tuple[list[str], list[
     return sorted(k for k, v in local.items() if there.get(k) != v), sorted(k for k in there if k not in local)
 
 
-def sync(folder: Path, bucket: str, dry: bool = False, workers: int = 16) -> int:
+def purge(url: str, names: list[str]) -> str:
+    """Tell Cloudflare's cache that these files under `url` changed, so the new ones are served at once and not when
+    the cached copy runs out (a day). A new file needs no telling; this is for those that were there before.
+    Needs CLOUDFLARE_API_TOKEN (Zone: Cache Purge) and CLOUDFLARE_ZONE_ID; without them nothing is done.
+    Many files at once are purged as the whole host. Returns what was done, in words."""
+    import json
+    import urllib.parse
+    import urllib.request
+    token, zone = os.environ.get("CLOUDFLARE_API_TOKEN"), os.environ.get("CLOUDFLARE_ZONE_ID")
+    if not names:
+        return "nothing to purge"
+    if not (token and zone):
+        return f"cache not purged ({len(names)} changed): no CLOUDFLARE_ZONE_ID or token"
+    url = url.rstrip("/") + "/"
+    host = urllib.parse.urlsplit(url).netloc
+    bodies = [{"hosts": [host]}] if len(names) > 300 else \
+        [{"files": [url + urllib.parse.quote(n) for n in names[i:i + 30]]} for i in range(0, len(names), 30)]
+    try:
+        for body in bodies:
+            req = urllib.request.Request(f"https://api.cloudflare.com/client/v4/zones/{zone}/purge_cache", method="POST",
+                                         data=json.dumps(body).encode(), headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                if not json.load(r).get("success"):
+                    return "cache not purged: Cloudflare said no"
+    except Exception as e:
+        return f"cache not purged: {e}"
+    return f"cache purged: {'all of ' + host if 'hosts' in bodies[0] else str(len(names)) + ' files'}"
+
+
+def sync(folder: Path, bucket: str, dry: bool = False, workers: int = 16, url: str = "") -> int:
     """Make the bucket hold exactly the folder. Returns how many files failed."""
     from boto3.s3.transfer import TransferConfig
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -116,4 +145,6 @@ def sync(folder: Path, bucket: str, dry: bool = False, workers: int = 16) -> int
     for i in range(0, len(gone) if not failed else 0, 1000):
         s3.delete_objects(Bucket=bucket, Delete={"Objects": [{"Key": k} for k in gone[i:i + 1000]], "Quiet": True})
     print(f"files: sent {len(send) - failed}, removed {len(gone) if not failed else 0}, failed {failed}")
+    if url:
+        print("files: " + purge(url, [n for n in send if n in there] + (gone if not failed else [])))
     return failed

@@ -346,3 +346,10 @@ def test_downloads_and_share_pictures_move_out_and_pages_point_at_the_bucket(tmp
     assert "https://podaci.zailiprotiv.rs/zakon/a.json" in (site / "cir/zakon/a.html").read_text()
     assert "https://podaci.zailiprotiv.rs/podaci/zakoni.csv" in (site / "podaci.html").read_text()
     assert files_site.plan({"a": "1", "b": "2"}, {"b": "x", "c": "3"}) == (["a", "b"], ["c"])
+
+
+def test_the_cache_is_not_asked_without_a_zone_or_for_nothing(monkeypatch):
+    from zailiprotiv import files_site
+    monkeypatch.delenv("CLOUDFLARE_ZONE_ID", raising=False)
+    assert files_site.purge("https://podaci.zailiprotiv.rs/", []) == "nothing to purge"
+    assert "not purged" in files_site.purge("https://podaci.zailiprotiv.rs/", ["podaci/zakoni.csv"])

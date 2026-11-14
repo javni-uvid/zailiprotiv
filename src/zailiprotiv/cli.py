@@ -127,6 +127,7 @@ def notes_upload_cmd(args) -> int:
         s3.upload_file(str(folder / name), args.bucket, name,
                        ExtraArgs={"ContentType": kind, "CacheControl": "public, max-age=3600"})
 
+    old = set(manifest)
     failed = []
     # The pages first and the lists that link to them last, so a list never points at a page not yet there.
     order = sorted(send, key=lambda n: (n.rsplit("/", 1)[-1] == "index.html", n))
@@ -150,6 +151,8 @@ def notes_upload_cmd(args) -> int:
             failed.append(name)
             print(f"  not removed {name}: {e}")
     save()
+    from zailiprotiv import files_site
+    print("notes: " + files_site.purge("https://beleske.zailiprotiv.rs/", [n for n in send if n in old and n not in failed] + (gone if not failed else [])))
     print(f"notes: sent {len(send) - len([f for f in failed if f in now])}, removed {len(gone) if not failed else 0}, failed {len(failed)}")
     return 1 if failed else 0
 
@@ -209,7 +212,7 @@ def files_upload_cmd(args) -> int:
         print("not sent, missing: " + ", ".join(missing))
         return 1
     try:
-        return 1 if files_site.sync(Path(args.dir), args.bucket, args.dry) else 0
+        return 1 if files_site.sync(Path(args.dir), args.bucket, args.dry, url=args.url) else 0
     except Exception as e:
         print(f"not sent, the bucket {args.bucket} does not answer: {e}")
         try:  # which buckets does this key see? (only a key allowed to list them can say)
@@ -1064,6 +1067,7 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("files-upload", help="make the R2 bucket hold exactly the folder files-split made")
     p.add_argument("--dir", default="_podaci")
     p.add_argument("--bucket", default="zailiprotiv-podaci")
+    p.add_argument("--url", default="https://podaci.zailiprotiv.rs/", help="the bucket's public address, for purging the cache")
     p.add_argument("--dry", action="store_true", help="say what would be sent, send nothing")
     p.set_defaults(run=files_upload_cmd)
     p = commands.add_parser("notes-check", help="do the notes' pages answer at their public address?")
