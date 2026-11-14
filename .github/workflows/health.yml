@@ -1,0 +1,52 @@
+# Every hour: do the site and what stands beside it answer? The site's front page, a law's page, the search index,
+# the visitors' votes counter, the notes' pages and the downloads, each asked from outside. An issue is opened
+# (or commented on) when one does not; nothing else is done.
+name: health
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: health
+  cancel-in-progress: true
+
+jobs:
+  ask:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ask
+        run: |
+          bad=0
+          ask() {  # address, the kind expected, a word the answer must hold (or "")
+            for try in 1 2 3; do
+              got=$(curl -sS -L --max-time 30 -o body -w "%{http_code} %{content_type} %{time_total}s" "$1" 2>&1) || true
+              case "$got" in "200 $2"*) if [ -z "$3" ] || grep -q "$3" body; then echo "ok  $1 ($got)"; return; fi;; esac
+              sleep 20
+            done
+            echo "BAD $1 ($got)"; echo "- $1: $got" >> bad.txt; bad=1
+          }
+          ask https://zailiprotiv.rs/ text/html "Za ili Protiv"
+          ask https://zailiprotiv.rs/zakoni text/html "zakon/"
+          ask https://zailiprotiv.rs/podaci.json application/json ""
+          ask https://zailiprotiv.rs/pagefind/pagefind.js "" ""
+          ask https://www.zailiprotiv.rs/ text/html "Za ili Protiv"
+          ask https://glasovi.zailiprotiv.rs/ application/json ""
+          ask https://beleske.zailiprotiv.rs/index.html text/html "beleške"
+          ask https://podaci.zailiprotiv.rs/podaci/zakoni.csv text/csv ""
+          exit $bad
+      - name: Tell the maintainer
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Sajt ili deo oko njega ne odgovara"
+          body="$(printf 'Provera %s:\n\n%s\n\n%s' "$(date -u +'%F %H:%M UTC')" "$(cat bad.txt 2>/dev/null)" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")"
+          n=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${{ github.repository }}" --body "$body"
+          else gh issue create -R "${{ github.repository }}" --title "$title" --body "$body"; fi
