@@ -78,9 +78,11 @@ class Finder:
         if f not in self._kept:
             notes = self._json.loads(f.read_text(encoding="utf-8"))
             by_day: dict[int, list] = {}
+            whole = debates_.whole_names(notes["speeches"].values())
             for k in sorted(notes["speeches"]):
                 sp = notes["speeches"][k]
-                by_day.setdefault(sp["day"], []).append([k, " ".join(sorted(self._plain(sp["speaker"]).split())), sp["text"], None])
+                name = whole.get(sp["speaker"], sp["speaker"])
+                by_day.setdefault(sp["day"], []).append([k, " ".join(sorted(self._plain(name).split())), sp["text"], None])
             if len(self._kept) >= 48:
                 self._kept.pop(next(iter(self._kept)))
             self._kept[f] = (layout(conv, notes), by_day)
@@ -136,6 +138,12 @@ PAGE = """<!doctype html>
 {body}
 </main>
 <footer><p>{t_foot}</p></footer>
+<script type="module">
+// A page opened from the search shows the words searched for (…?highlight=word): Pagefind's own script, kept here.
+if (new URLSearchParams(location.search).has("highlight")) {{
+  import("{root}pagefind/pagefind-highlight.js").then(() => {{ new PagefindHighlight({{ highlightParam: "highlight" }}); }}).catch(() => {{}});
+}}
+</script>
 </body>
 </html>
 """
@@ -189,6 +197,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
             if not notes.get("speeches"):
                 continue
             where = layout(conv, notes)
+            whole = debates_.whole_names(notes["speeches"].values())  # a surname alone → the one such speaker of the sitting
             days = {d["day"]: d for d in notes["days"]}
             title = re.sub(r"^СТЕНОГРАФСКЕ БЕЛЕШКЕ\s*-\s*", "", notes["days"][0]["title"]).split(" - ")[0] if notes["days"] else url
             by_page: dict[str, list[str]] = {}
@@ -220,6 +229,8 @@ def build(root: Path, out: Path) -> dict[str, int]:
                     body.append(pager)
                     for k in keys:
                         s = notes["speeches"][k]
+                        if s["speaker"] in whole:
+                            s = {**s, "speaker": whole[s["speaker"]]}
                         key = None if s.get("chair") else loose.get(debates_.loose(mps.key(s["speaker"])))
                         body.append(_speech(k, s, {"slug": people[key].slug, "name": people[key].name} if key else None, w, script))
                     body.append(pager)

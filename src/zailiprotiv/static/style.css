@@ -686,7 +686,7 @@ td.lean { white-space: nowrap; }
 p.measure-pre { margin: .2rem 0 .3rem; }
 
 /* ============ Phones (640px and under). Nothing below touches the wider layout. ============ */
-.more-btn, .mp-tiles { display: none; }
+.more-btn { display: none; }
 @media (max-width: 640px) {
   /* The head: the name scrolls away and the menu stays: one row that fits, nothing to swipe. */
   .top { position: sticky; top: -3rem; z-index: 30; background: var(--bg); margin: 0; padding: 0 16px; display: block; border-bottom-width: 2px; }
@@ -798,3 +798,16 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 .top nav .nav-cta { background: var(--fg); color: var(--bg); padding: .42rem .9rem; font-weight: 700; align-self: center; white-space: nowrap; border: 2px solid var(--fg); }
 .top nav .nav-cta:hover { background: var(--za); border-color: var(--za); color: #fff; }
 @media (max-width: 640px) { .top nav .nav-cta { padding: .3rem .5rem; font-size: inherit; } }
+.notes mark, .notes .pagefind-highlight { background: #ffe066; color: #111111; padding: 0 .1em; }
+
+/* An MP's activity: four tiles for the totals, a row to a convocation. (Phones already drew the tiles: two by two.) */
+.mp-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin: .4rem 0 1.2rem; padding: 0; list-style: none; max-width: 52rem; }
+.mp-tiles a, .mp-tiles span.tile { display: block; height: 100%; box-sizing: border-box; padding: .8rem .9rem; border: 1px solid var(--line); text-decoration: none; color: var(--fg); }
+.mp-tiles a:hover { border-color: var(--fg); }
+.mp-tiles b { display: block; font-family: var(--serif); font-size: 2.1rem; line-height: 1.05; }
+.mp-tiles small { font-size: .84rem; color: var(--muted); line-height: 1.35; display: block; margin-top: .2rem; }
+.mp-floor { max-width: 52rem; margin: 0 0 1rem; }
+.mp-floor td .meta { display: block; font-size: .8rem; }
+.mp-floor td.num .meta { display: inline; margin-left: .35rem; white-space: nowrap; }
+.mp-floor th.num, .mp-floor td.num { text-align: right; white-space: nowrap; }
+@media (max-width: 640px) { .mp-tiles { grid-template-columns: 1fr 1fr; gap: .5rem; } .mp-tiles b { font-size: 1.9rem; } .mp-floor { min-width: 34rem; } }

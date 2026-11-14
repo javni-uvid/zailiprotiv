@@ -69,19 +69,34 @@
 {% if shown or spoke or floor %}
 <section class="activity" id="aktivnost">
   <h2>Aktivnost</h2>
-  {# Phones only (hidden on wide screens): the hall's counts across every convocation, as tiles. #}
-  {% if floor %}{% set t_s = floor|sum(attribute="speeches") %}{% set t_e = floor|sum(attribute="exchanges") %}{% set t_m = floor|sum(attribute="measures") + floor|sum(attribute="measures_likely") %}{% set t_h = floor|sum(attribute="harsh") %}
+  {# The hall's counts across every convocation as four tiles, then one row to a convocation, then presence. #}
+  {% if floor %}{% set t_s = floor|sum(attribute="speeches") %}{% set t_w = floor|sum(attribute="words") %}{% set t_e = floor|sum(attribute="exchanges") %}{% set t_m = floor|sum(attribute="measures") + floor|sum(attribute="measures_likely") %}{% set t_h = floor|sum(attribute="harsh") %}
   <ul class="mp-tiles">
-    <li><span class="tile"><b>{{ t_s }}</b><small>{{ plural(t_s, "govor", "govora", "govora") }} u sali</small></span></li>
+    <li><span class="tile"><b>{{ t_s }}</b><small>{{ plural(t_s, "govor", "govora", "govora") }} u sali · {{ "{:,}".format(t_w).replace(",", ".") }} reči</small></span></li>
     <li>{% if t_e %}<a href="#replike"><b>{{ t_e }}</b><small>{{ plural(t_e, "razmena replika", "razmene replika", "razmena replika") }}</small></a>{% else %}<span class="tile"><b>0</b><small>razmena replika</small></span>{% endif %}</li>
     <li>{% if t_m %}<a href="#mere"><b>{{ t_m }}</b><small>{{ plural(t_m, "mera predsedavajućeg", "mere predsedavajućeg", "mera predsedavajućeg") }}</small></a>{% else %}<span class="tile"><b>0</b><small>mera predsedavajućeg</small></span>{% endif %}</li>
     <li>{% if t_h %}<a href="#reci"><b>{{ t_h }}</b><small>{{ plural(t_h, "teška reč", "teške reči", "teških reči") }}</small></a>{% else %}<span class="tile"><b>0</b><small>teških reči</small></span>{% endif %}</li>
-  </ul>{% endif %}
+  </ul>
+  {% if floor|length > 1 or floor[0].outside or floor[0].points %}
+  <div class="scroll"><table class="groups mp-floor">
+    <thead><tr><th>U sali, po sazivu</th><th class="num">Govori</th><th class="num">Reči</th><th class="num">Replike</th><th class="num">Poslovnik</th><th class="num">Mere</th><th class="num">Teške reči</th></tr></thead>
+    <tbody>
+    {% for x in floor %}
+      <tr><td>{{ x.name }} saziv{% if x.outside %}<span class="meta">ne kao poslanik: kao član Vlade ili gost</span>{% endif %}</td>
+        <td class="num">{{ x.speeches or "" }}</td><td class="num">{% if x.words %}{{ "{:,}".format(x.words).replace(",", ".") }}{% endif %}</td>
+        <td class="num">{% if x.exchanges %}<a href="#replike">{{ x.exchanges }}</a>{% endif %}</td><td class="num">{{ x.points or "" }}</td>
+        <td class="num">{% if x.measures or x.measures_likely %}<a href="#mere">{{ x.measures + x.measures_likely }}</a>{% endif %}</td>
+        <td class="num">{% if x.harsh %}<a href="#reci">{{ x.harsh }}</a>{% if x.harsh_place and x.page %} <a class="meta" href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. u sazivu</a>{% endif %}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endif %}{% endif %}
+  {% if shown or (spoke and not floor) %}
   <ul class="facts-line">
   {% for c in shown %}<li>{{ c.name }} saziv: prisutan na <b>{{ c.present[0] }}</b> od {{ c.present[1] }} konačnih glasanja ({{ (100 * c.present[0] / c.present[1])|round|int }}%{% if c.median %}; polovina poslanika ima više od {{ (100 * c.median)|round|int }}%{% endif %})</li>{% endfor %}
   {% if spoke and not floor %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
-  {% for x in floor %}<li>{{ x.name }} saziv, u sali{% if x.outside %} (ne kao poslanik u tom sazivu: kao član Vlade ili gost){% endif %}: {% set parts = [] %}{% if x.speeches %}{% set _ = parts.append("<b>%d</b> %s (%s reči%s)" % (x.speeches, plural(x.speeches, "govor", "govora", "govora"), "{:,}".format(x.words).replace(",", "."), "")) %}{% endif %}{% if x.exchanges %}{% set _ = parts.append('<a href="#replike"><b>%d</b> %s</a>' % (x.exchanges, plural(x.exchanges, "razmena replika", "razmene replika", "razmena replika"))) %}{% endif %}{% if x.points %}{% set _ = parts.append("<b>%d</b> %s na Poslovnik" % (x.points, plural(x.points, "ukazivanje", "ukazivanja", "ukazivanja"))) %}{% endif %}{% if x.measures or x.measures_likely %}{% set _ = parts.append('<a href="#mere"><b>%d</b> %s predsedavajućeg</a>%s' % (x.measures, plural(x.measures, "mera", "mere", "mera"), (" i još %d po kontekstu" % x.measures_likely) if x.measures_likely else "")) %}{% endif %}{% if x.harsh %}{% set _ = parts.append('<a href="#reci"><b>%d</b> %s</a>' % (x.harsh, plural(x.harsh, "teška reč", "teške reči", "teških reči"))) %}{% endif %}{{ parts|join(", ")|safe }}{% if x.harsh_place and x.page %} (<a href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. po teškim rečima u sazivu</a>){% endif %}</li>{% endfor %}
   </ul>
+  {% endif %}
   {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
   {% if timeline %}
   <details class="inline"><summary>Poslednji dani u kojima je glasao ili govorio</summary>

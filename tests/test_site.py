@@ -392,3 +392,12 @@ def test_notes_are_packed_the_same_way_every_time(tmp_path):
     from zailiprotiv import files_site
     f = tmp_path / "a.json"; f.write_text('{"sitting": "x"}')
     assert files_site._packed(f) == files_site._packed(f) and gzip.decompress(files_site._packed(f)) == f.read_bytes()
+
+
+def test_a_surname_alone_is_the_one_such_speaker_of_the_sitting():
+    from zailiprotiv import debates
+    sp = lambda name, chair=False: {"speaker": name, "chair": chair}
+    assert debates.whole_names([sp("БОШКО ОБРАДОВИЋ"), sp("ОБРАДОВИЋ"), sp("ПРЕДСЕДНИК", True)]) == {"ОБРАДОВИЋ": "БОШКО ОБРАДОВИЋ"}
+    assert debates.whole_names([sp("БОШКО ОБРАДОВИЋ"), sp("ЈАСМИНА ОБРАДОВИЋ"), sp("ОБРАДОВИЋ")]) == {}
+    assert debates.whole_names([sp("БОШКОВИЋ")]) == {}
+    assert debates.whole_names([sp("МАРИНИКА ТЕПИЋ"), sp("МАРИНИКАТЕПИЋ")]) == {"МАРИНИКАТЕПИЋ": "МАРИНИКА ТЕПИЋ"}

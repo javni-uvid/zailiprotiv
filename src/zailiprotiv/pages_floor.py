@@ -290,7 +290,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                      "measures_likely": 0, "harsh": []})
         pair_of = {}
         for url, notes in debates.get(c, {}).items():
-            speeches = [{**notes["speeches"][k], "key": k, "text": spoken(notes["speeches"][k]["text"])} for k in sorted(notes["speeches"])]
+            whole = debates_.whole_names(notes["speeches"].values())  # "ОБРАДОВИЋ" alone → the one Obradović of the sitting
+            speeches = [{**notes["speeches"][k], "key": k, "text": spoken(notes["speeches"][k]["text"]),
+                         "speaker": whole.get(notes["speeches"][k]["speaker"], notes["speeches"][k]["speaker"])}
+                        for k in sorted(notes["speeches"])]
             # The speech's own address among the notes' pages (notes_site), when those are published.
             # Only pages known to be in the bucket (data/notes_manifest.json) are linked: no link ahead of its page.
             where = notes_site.layout(c, notes) if notes_url else {}

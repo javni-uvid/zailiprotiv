@@ -246,3 +246,25 @@ def speaker_name(name: str) -> str:
     """"МИЛЕНКО ЈОВАНОВ" → "Milenko Jovanov"."""
     return " ".join(w if not w.isupper() else "-".join(p.capitalize() for p in w.split("-"))
                     for w in latin(name).split())
+
+
+def whole_names(speeches) -> dict[str, str]:
+    """The notes sometimes head a speech with a surname alone ("ОБРАДОВИЋ", "НЕДИМОВИЋ"). When exactly one speaker of
+    the same sitting carries that word in a full name, it is that person: {the name as written: the full name}.
+    A word shared by two speakers of the sitting stays as written."""
+    full: dict[str, set] = {}
+    alone = set()
+    for s in speeches:
+        if s.get("chair"):
+            continue
+        words = s["speaker"].split()
+        if len(words) == 1:
+            alone.add(s["speaker"])
+        else:
+            for w in (words[0], words[-1]):
+                full.setdefault(w, set()).add(s["speaker"])
+    out = {a: next(iter(full[a])) for a in alone if len(full.get(a, ())) == 1}
+    # A name typed without its space ("МАРИНИКАТЕПИЋ") is the speaker of the sitting whose name it spells.
+    joined = {n.replace(" ", ""): n for names in full.values() for n in names}
+    out.update({a: joined[a] for a in alone if a in joined})
+    return out
