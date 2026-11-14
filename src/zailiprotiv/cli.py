@@ -362,7 +362,8 @@ def memoranda(args) -> int:
         stale = False
         if target.exists() and not args.again:
             old = json.loads(target.read_text(encoding="utf-8"))
-            stale = not old.get("sections") and old.get("reader", 1) < bills.READER
+            # read again by a newer reader: a bill with no section found, or with nothing but its basis
+            stale = set(old.get("sections") or {}) <= {"basis"} and old.get("reader", 1) < bills.READER
         if not target.exists() or args.again or stale:
             if args.limit and read >= args.limit:
                 continue

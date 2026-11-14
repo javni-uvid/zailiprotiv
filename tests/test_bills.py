@@ -94,3 +94,14 @@ def test_ocr_headings_are_mended_so_the_reader_finds_the_memorandum():
             "П. РАЗЛОЗИ ЗА ДОНОШЕЊЕ ЗАКОНА\nразлог\nШ. ОБЈАШЊЕЊЕ ПОЈЕДИНАЧНИХ РЕШЕЊА\nчлан 1.\nТУ. ФИНАНСИЈСКА СРЕДСТВА\nнису потребна\n")
     memo = bills.memorandum(bills.ocr_headings(text))
     assert list(memo.sections) == ["basis", "reasons", "explained", "funds"] and memo.articles[0]["article"] == 97
+
+
+def test_ocr_numerals_before_an_underscore_and_a_memorandum_without_sections():
+    from zailiprotiv import bills
+    text = ("ОБРАЗЛОЖЕЊЕ\nIL _ УСТАВНИ ОСНОВ ЗА ДОНОШЕЊЕ ЗАКОНА\nУставни основ је члан 97. тачка 6. Устава\nIL. _ РАЗЛОЗИ ЗА ДОНОШЕЊЕ ЗАКОНА\nразлог\n"
+            "II. _ ОБЈАШЊЕЊЕ ПОЈЕДИНАЧНИХ РЕШЕЊА\nчлан 1.\nIV. _ АНАЛИЗА ЕФЕКАТА ЗАКОНА\nефекти\nУ. _ ФИНАНСИЈСКА СРЕДСТВА ПОТРЕБНА\nнису\n")
+    assert list(bills.memorandum(bills.ocr_headings(text)).sections) == ["basis", "reasons", "explained", "effects", "funds"]
+    plain = "ПРЕДЛОГ ЗАКОНА\nЧлан 1.\nтекст\n\nОБРАЗЛОЖЕЊЕ\n" + "Овим законом се мења казна за напад на запосленог у образовној установи. " * 8 + "\nИЗЈАВА О УСКЛАЂЕНОСТИ ПРОПИСА\nтабела\n"
+    memo = bills.memorandum(plain)
+    assert list(memo.sections) == ["reasons"] and "табела" not in memo.sections["reasons"] and "Члан 1." not in memo.sections["reasons"]
+    assert not bills.memorandum("ПРЕДЛОГ ЗАКОНА\nЧлан 1.\n").sections

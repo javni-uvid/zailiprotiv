@@ -17,7 +17,7 @@ from pathlib import Path
 from zailiprotiv.translit import latin
 
 # The reader's version: a bill whose memorandum an older reader didn't find is read again by a newer one.
-READER = 3  # 3: scanned bills (most of the MPs' own) are read by OCR
+READER = 4  # 3: scanned bills (most of the MPs' own) are read by OCR; 4: headings OCR bent, and memoranda without sections
 
 # Section headings by their key word (in Latin, lowercased, after transliteration).
 SECTIONS = (("ustavni osnov", "basis"), ("hitn", "urgency"), ("razlo", "reasons"), ("objasnjenj", "explained"), ("objašnjenj", "explained"),
@@ -58,13 +58,13 @@ OCR_PAGES = 60  # a scanned bill longer than this is read to here; the memorandu
 
 # What OCR in Cyrillic makes of the Roman numerals that head the memorandum's sections: "П." for "II.", "Ш." for
 # "III.", "ІV"/"ТУ"/"IУ" for "IV", and so on. Only at the start of a line, before a heading in capitals.
-_OCR_NUMERAL = re.compile(r"^(\s*)([IІ1lLПШУVХXТT|]{1,4})(\s*[.,:]?\s+)(?=[A-ZА-ЯЂЈЉЊЋЏŠĐČĆŽ]{4,})", re.M)
+_OCR_NUMERAL = re.compile(r"^(\s*)([IІ1lLПШУVХXТTМ|\[]{1,4})(\s*[.,:]?[\s_–—-]+)(?=[A-ZА-ЯЂЈЉЊЋЏŠĐČĆŽ]{4,})", re.M)
 _OCR_AS = {"П": "II", "Ш": "III", "ІІ": "II", "ІІІ": "III", "ПІ": "III", "IП": "III", "ІП": "III", "ТУ": "IV", "ІУ": "IV", "IУ": "IV",
            "ІV": "IV", "1У": "IV", "ГУ": "IV", "У": "V", "УІ": "VI", "УI": "VI", "УП": "VII", "УШ": "VIII", "ІХ": "IX", "IХ": "IX",
-           "Х": "X", "І": "I", "1": "I", "l": "I", "|": "I"}
+           "Х": "X", "І": "I", "1": "I", "l": "I", "|": "I", "[": "I", "М": "V"}
 
 
-_OCR_FIRST = re.compile(r"^\s*\S{0,3}?\s*((?:УСТАВНИ|USTAVNI)\s+(?:ОСНОВ|OSNOV)\b.*)$", re.M)
+_OCR_FIRST = re.compile(r"^[\s\W\d_IlLТП]{0,10}((?:УСТАВНИ|USTAVNI)\s+(?:ОСНОВ|OSNOV)\b.*)$", re.M)
 
 
 def ocr_headings(text: str) -> str:
@@ -106,7 +106,7 @@ def memorandum(text: str) -> Memorandum:
     start = next((i for i, l in enumerate(lines) if _heading(l) and _kind(_heading(l).group(2)) == "basis"), None)
     out = Memorandum()
     if start is None:
-        return out
+        return whole(lines)
     current, buf = None, []
 
     def flush():
@@ -127,6 +127,29 @@ def memorandum(text: str) -> Memorandum:
             buf.append(line)
     flush()
     out.articles = articles(out.sections.get("basis", ""))
+    return out
+
+
+_MEMO = re.compile(r"^[\sIVX.\d]*(?:О\s*Б\s*Р\s*А\s*З\s*Л\s*О\s*Ж\s*Е\s*Њ\s*Е|O\s*B\s*R\s*A\s*Z\s*L\s*O\s*Ž\s*E\s*NJ\s*E)\s*$")
+_AFTER = re.compile(r"^\s*(?:[IVX]+\.?[\s_–-]*)?(?:ИЗЈАВА О УСКЛАЂЕНОСТИ|IZJAVA O USKLAĐENOSTI|ПРЕГЛЕД ОДРЕД|PREGLED ODRED|ОБРАЗАЦ ИЗЈАВЕ)")
+
+
+def whole(lines: list[str]) -> Memorandum:
+    """A memorandum without the usual numbered sections (many of the MPs' own bills): everything under its heading
+    "ОБРАЗЛОЖЕЊЕ", to the statement of compliance or the overview of changed provisions, as the reasons."""
+    out = Memorandum()
+    at = [i for i, l in enumerate(lines) if _MEMO.match(l)]
+    if not at:
+        return out
+    body = []
+    for line in lines[at[-1] + 1:]:
+        if _AFTER.match(line):
+            break
+        body.append(line.strip())
+    text = re.sub(r"[ \t]+", " ", "\n".join(body)).strip()
+    if len(text) >= 300:  # less is a heading with nothing under it, or a page the scan lost
+        out.sections["reasons"] = text
+        out.articles = articles(text[:1500])
     return out
 
 
