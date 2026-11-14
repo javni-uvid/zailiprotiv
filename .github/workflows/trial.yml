@@ -1,0 +1,49 @@
+# By hand: build the site and the notes' pages with every sitting's notes brought from the bucket, publish nothing,
+# and say how long it took, how much memory, and which pages are largest. Tried before the builds depend on it.
+name: trial
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: og-${{ github.run_id }}
+          restore-keys: og-
+      - name: Bring every sitting's notes
+        run: |
+          pip install -q uv && uv sync --frozen -q
+          uv run zailiprotiv notes-raw --pull --force
+          du -sh --apparent-size data/*/transcripts | cat; ls data/*/transcripts/*.json | wc -l; nproc; free -g | head -2
+      - name: The site
+        run: |
+          set +e
+          /usr/bin/time -v uv run zailiprotiv site --out _site --domain zailiprotiv.rs > site.log 2> site.err; echo "site exit $?"
+          tail -15 site.log; grep -E "Elapsed|Maximum resident" site.err; grep -v "^\s" site.err | tail -25
+          du -sh --apparent-size _site; find _site -type f | wc -l
+          echo "== largest pages"; find _site -name "*.html" -not -path "_site/cir/*" -printf "%s %p\n" | sort -rn | head -25
+          echo "== pages over 1 MB: $(find _site -name '*.html' -size +1000k | wc -l)"
+          echo "== Varnice"; ls -la _site/replike*.html _site/ko-najvise*.html _site/varnice-svi.html | awk '{print $5, $9}'; ls _site/razmene*.html | wc -l
+      - name: The notes' pages and their search index
+        run: |
+          set +e
+          /usr/bin/time -v uv run zailiprotiv notes-site --out _beleske 2> notes.err | tail -2; grep -E "Elapsed|Maximum resident" notes.err; grep -v "^\s" notes.err | tail -8
+          du -sh --apparent-size _beleske; find _beleske -type f | wc -l
+          /usr/bin/time -v npx -y pagefind@1.3.0 --site _beleske --glob "[0-9]*/**/*.html" 2> pf.err | grep -E "Indexed|Finished|Error"; grep -E "Elapsed|Maximum resident" pf.err
+          du -sh --apparent-size _beleske/pagefind; find _beleske/pagefind -type f | wc -l
