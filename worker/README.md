@@ -16,3 +16,22 @@ The **worker** workflow publishes it whenever `worker/` changes. Repository secr
 - `DISPATCH_TOKEN`: a fine-grained GitHub token for javni-uvid/zailiprotiv only, with Actions: Read and write.
 
 To reset the count: in Cloudflare, D1 → `zailiprotiv-glasovi` → Console: `DELETE FROM votes`.
+
+## Votes on a law's page
+
+`POST /z {d, item, v}` is one device's vote on one law (a later one replaces it); `POST /c {d, item, q, on}` marks
+or unmarks a quote as convincing; `GET /z/<law>` gives the law's totals and the marks on its quotes. `d` is a random
+mark the browser makes up and keeps; the counter stores only its hash with the secret `SALT`, the day, and a hash of
+the network (the address's /24 or /64, the day and `SALT`), which changes daily and holds no address. What may be
+voted on is read from the site's `glasanje.json`. The quiz's old sums stay in `votes` and are added to the totals.
+
+## Inflated counts
+
+There is no robot check. The `watch` workflow reads `GET /pregled` four times a day and opens an issue when one
+network sends most of a law's votes of the day. To look closer, and to remove (the maintainer's decision; say so on
+the method page when it is done):
+
+    wrangler d1 execute zailiprotiv-glasovi --remote --command "SELECT net, vote, COUNT(*) FROM ballots WHERE item='<law>' AND day='<day>' GROUP BY net, vote ORDER BY 3 DESC LIMIT 20"
+    wrangler d1 execute zailiprotiv-glasovi --remote --command "DELETE FROM ballots WHERE item='<law>' AND day='<day>' AND net='<net>'"
+
+If this happens often, the next step is Cloudflare Turnstile on `POST /z` (free; adds a script from Cloudflare).

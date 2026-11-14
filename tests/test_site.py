@@ -401,3 +401,9 @@ def test_a_surname_alone_is_the_one_such_speaker_of_the_sitting():
     assert debates.whole_names([sp("БОШКО ОБРАДОВИЋ"), sp("ЈАСМИНА ОБРАДОВИЋ"), sp("ОБРАДОВИЋ")]) == {}
     assert debates.whole_names([sp("БОШКОВИЋ")]) == {}
     assert debates.whole_names([sp("МАРИНИКА ТЕПИЋ"), sp("МАРИНИКАТЕПИЋ")]) == {"МАРИНИКАТЕПИЋ": "МАРИНИКА ТЕПИЋ"}
+
+
+def test_a_quotes_name_depends_on_its_words_alone():
+    from zailiprotiv.site import qid
+    assert qid("Ovaj zakon je dobar.") == qid("Ovaj zakon je dobar.") != qid("Ovaj zakon je loš.")
+    assert len(qid("a")) == 10 and qid("a").isalnum()

@@ -302,6 +302,12 @@ def hemicycle(counts: dict, rows=((60, 17), (75, 21), (90, 25), (105, 29), (120,
     return out
 
 
+def qid(text: str) -> str:
+    """A quote's name for the visitors' marks: the same words give the same name, whatever else changes on the page."""
+    import hashlib
+    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:10]
+
+
 ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
 
 
@@ -364,11 +370,12 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     area_slug = lambda a: slug(latin(a))[:80]
     env.globals.update(hemicycle=hemicycle)
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
+    env.filters["qid"] = qid
     if out.exists():
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
-    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg"):
+    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js"):
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     # The stylesheet's and script's address changes with their content, so a browser or cache never pairs new pages
@@ -390,6 +397,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     settings_file = root / "settings.json"
     settings = json.loads(settings_file.read_text(encoding="utf-8")) if settings_file.exists() else {}
+    env.globals["votes_api"] = settings.get("votes_api", "")  # the visitors' votes counter (worker/)
     env.globals["notes_all"] = bool(settings.get("notes_all"))  # every sitting's notes are read (brought from the bucket)
     env.globals["notes_url"] = settings.get("notes_url", "")  # where the notes' pages (and their search index) are
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
@@ -510,6 +518,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     groups_in: dict[str, list] = defaultdict(list)
     for (key, g) in line:
         groups_in[key].append(g)
+    # What visitors may vote on and mark (the counter accepts nothing else): every law with a final vote, its quotes.
+    (out / "glasanje.json").write_text(json.dumps({"laws": {
+        it["slug"]: [qid(q["tekst"]) for q in it["quotes"]] for its in items_by_conv.values() for it in its if it.get("final")}},
+        separators=(",", ":")), encoding="utf-8")
     # Under a quote, the link leads to the very speech among our notes' pages, not to the Assembly's file to download.
     from zailiprotiv import notes_site
     _sent = root / "notes_manifest.json"

@@ -17,6 +17,12 @@ name = "LIMIT"
 namespace_id = "1001"
 simple = { limit = 5, period = 60 }
 
+# A vote on one law, or a quote marked, from a law's page: more often than the quiz, which sends ten at once.
+[[ratelimits]]
+name = "VLIMIT"
+namespace_id = "1002"
+simple = { limit = 40, period = 60 }
+
 # The clock GitHub's own schedule didn't keep (13 Nov 2026): every hour of the working day the worker starts the
 # votes workflow (reading the Assembly's site), and every six hours the model's writing. Times in UTC.
 [triggers]

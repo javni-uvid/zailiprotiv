@@ -407,7 +407,21 @@
     if (!any) return;
     Object.keys(v).forEach(function (law) { sentLaws[law] = 1; });  // marked first, so a second click can't send twice
     try { localStorage.setItem(SENT, JSON.stringify(sentLaws)); } catch (e) {}
-    fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ v: v }), keepalive: true })
+    // With the device's mark (the same one a law's page uses), these are that device's votes: sent again from a
+    // law's page they replace these and do not add to them. The votes are remembered where "glas.js" keeps its own.
+    var d = null, kept = {};
+    try {
+      d = localStorage.getItem("zip.d");
+      if (!d || !/^[A-Za-z0-9_-]{16,64}$/.test(d)) {
+        var bytes = new Uint8Array(18); window.crypto.getRandomValues(bytes);
+        d = Array.prototype.map.call(bytes, function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+        localStorage.setItem("zip.d", d);
+      }
+      kept = JSON.parse(localStorage.getItem("zip.glasovi")) || {};
+      Object.keys(v).forEach(function (law) { kept[law] = v[law]; });
+      localStorage.setItem("zip.glasovi", JSON.stringify(kept));
+    } catch (e) { d = null; }
+    fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d ? { v: v, d: d } : { v: v }), keepalive: true })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { crowd = d; showCrowd(); })
       .catch(function () {

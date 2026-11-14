@@ -1,0 +1,48 @@
+# Four times a day: do the visitors' votes look inflated? There is no "are you a robot" check on voting, so this
+# reads the counter's own overview (no addresses in it: counts only) and opens an issue when, for one law today,
+# most votes came from one network, or a great many arrived at once, or one device voted on a great many laws.
+# Nothing is removed here; removing is the maintainer's decision (worker/README.md says how).
+name: watch
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  look:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Look
+        run: |
+          curl -sS --fail --max-time 30 --retry 3 https://glasovi.zailiprotiv.rs/pregled -o pregled.json
+          python3 - <<'PY'
+          import json
+          seen = json.load(open("pregled.json"))
+          odd = []
+          for law in seen["laws"]:
+              today, net = law["today"], law["busiest_network"]
+              if today >= 20 and net / today > 0.5:
+                  odd.append(f"- `{law['item']}`: {net} od {today} današnjih glasova sa jedne mreže (ukupno {law['total']})")
+              elif today >= 300 and today > 0.5 * law["total"] and law["total"] - today >= 50:
+                  odd.append(f"- `{law['item']}`: {today} glasova danas, a ukupno {law['total']}")
+          if seen["devices_with_many_votes"]:
+              odd.append(f"- {seen['devices_with_many_votes']} uređaja je danas glasalo o više od 60 zakona")
+          print(seen["day"], len(seen["laws"]), "laws voted on today;", len(odd), "odd")
+          if odd:
+              open("odd.txt", "w").write("\n".join(odd))
+          PY
+      - name: Tell the maintainer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -s odd.txt ] || exit 0
+          title="Glasovi posetilaca izgledaju naduvano"
+          body="$(printf 'Pregled %s:\n\n%s\n\nKako se gleda i briše: worker/README.md, „Inflated counts“.\n%s' "$(date -u +'%F %H:%M UTC')" "$(cat odd.txt)" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")"
+          n=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${{ github.repository }}" --body "$body"
+          else gh issue create -R "${{ github.repository }}" --title "$title" --body "$body"; fi

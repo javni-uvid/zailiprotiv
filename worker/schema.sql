@@ -1,1 +1,4 @@
 CREATE TABLE IF NOT EXISTS votes (law TEXT NOT NULL, vote TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (law, vote));
+CREATE TABLE IF NOT EXISTS ballots (item TEXT NOT NULL, device TEXT NOT NULL, vote TEXT NOT NULL, day TEXT NOT NULL, net TEXT NOT NULL, PRIMARY KEY (item, device));
+CREATE INDEX IF NOT EXISTS ballots_day ON ballots (day, item, net);
+CREATE TABLE IF NOT EXISTS marks (item TEXT NOT NULL, quote TEXT NOT NULL, device TEXT NOT NULL, day TEXT NOT NULL, PRIMARY KEY (item, quote, device));
