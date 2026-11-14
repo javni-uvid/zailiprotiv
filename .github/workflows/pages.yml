@@ -42,6 +42,7 @@ jobs:
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID || secrets.CLOUDFLARE_ZONE_ID }}
         run: |
           pip install uv && uv sync --frozen
+          uv run zailiprotiv notes-raw --pull  # the notes of every sitting; the repository holds only some
           uv run zailiprotiv site --out _site --domain zailiprotiv.rs
           # Downloads and share pictures live in a bucket (files_url in data/settings.json; see files_site). They are
           # there before the pages that link to them are published; a failed upload stops the build.

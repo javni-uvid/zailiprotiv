@@ -25,7 +25,7 @@ concurrency:
 jobs:
   notes:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,6 +40,7 @@ jobs:
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID || secrets.CLOUDFLARE_ZONE_ID }}
         run: |
           pip install uv && uv sync --frozen
+          uv run zailiprotiv notes-raw --pull  # the notes of every sitting; the repository holds only some
           uv run zailiprotiv notes-site --out _beleske
           # The search index of the notes, speech by speech (the Latin pages; the site's search page merges it with its own).
           npx -y pagefind@1.3.0 --site _beleske --glob "[0-9]*/**/*.html"

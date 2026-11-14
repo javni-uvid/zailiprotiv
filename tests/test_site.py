@@ -385,3 +385,10 @@ def test_a_quote_is_found_among_our_notes_pages(tmp_path):
     assert spot("https://p/a.docx", "Неко Други", "речи којих нема") == "https://beleske.zailiprotiv.rs/14/123/dan-1.html"
     assert spot("https://p/other.docx", "Станковић Ђорђе", "Како") == "" and spot.day("https://p/a.docx", "Ђорђе Станковић").endswith("#g00002")
     assert notes_site.Finder(tmp_path, "https://beleske.zailiprotiv.rs", set())("https://p/a.docx", "Станковић Ђорђе", "Како министар") == ""
+
+
+def test_notes_are_packed_the_same_way_every_time(tmp_path):
+    import gzip
+    from zailiprotiv import files_site
+    f = tmp_path / "a.json"; f.write_text('{"sitting": "x"}')
+    assert files_site._packed(f) == files_site._packed(f) and gzip.decompress(files_site._packed(f)) == f.read_bytes()

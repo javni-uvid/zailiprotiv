@@ -8,13 +8,17 @@ on:
       convocation:
         description: "Convocation"
         type: choice
-        options: ["14", "13", "12", "11", "10", "9"]
+        options: ["14", "13", "12", "11", "10", "9", "sve"]
         default: "14"
       top:
         description: "How many of the laws with the largest share of votes against"
         default: "20"
       again:
         description: "Read sittings already read again"
+        type: boolean
+        default: false
+      all:
+        description: "Every sitting, not only those of the contested laws; these notes are kept in the bucket, not in the repository"
         type: boolean
         default: false
 
@@ -30,17 +34,36 @@ concurrency:
 jobs:
   transcripts:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Read the notes
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libreoffice-writer-nogui poppler-utils  # the older notes are .doc
           pip install uv && uv sync --frozen
-          uv run zailiprotiv --convocation "${{ inputs.convocation }}" transcripts --top "${{ inputs.top }}" ${{ inputs.again && '--again' || '' }}
+          convs="${{ inputs.convocation }}"; [ "$convs" = "sve" ] && convs="14 13 12 11 10 9"
+          if [ "${{ inputs.all }}" = "true" ]; then
+            # Every sitting: what the bucket already holds is brought first (so it is not read again), each
+            # convocation gets what is left of five hours, and what was read is sent to the bucket whatever happens.
+            uv run zailiprotiv notes-raw --pull --force
+            deadline=$(( $(date +%s) + 300 * 60 ))
+            for c in $convs; do
+              left=$(( ($deadline - $(date +%s)) / 60 )); [ "$left" -lt 1 ] && break
+              uv run zailiprotiv --convocation "$c" transcripts --all --minutes "$left" ${{ inputs.again && '--again' || '' }} || true
+              uv run zailiprotiv notes-raw --push
+            done
+          else
+            for c in $convs; do
+              uv run zailiprotiv --convocation "$c" transcripts --top "${{ inputs.top }}" ${{ inputs.again && '--again' || '' }}
+            done
+          fi
       - name: Commit
         if: always()  # keep the sittings read even when a later one failed
         env:
@@ -48,13 +71,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
+          # Of every sitting's notes only those already in the repository are committed (the contested laws');
+          # the rest live in the bucket.
+          if [ "${{ inputs.all }}" = "true" ]; then git add -u data; else git add data; fi
           if ! git diff --cached --quiet; then
             git commit -m "Stenographic notes of the debates (convocation ${{ inputs.convocation }})"
             for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
             if git status -sb | grep -q ahead; then exit 1; fi
           fi
-          gh workflow run summaries.yml --ref main -f convocation=${{ inputs.convocation }}
+          # The model writes only from the notes in the repository, so a run over every sitting starts none.
+          if [ "${{ inputs.all }}" != "true" ]; then
+            for c in $(echo "${{ inputs.convocation }}" | sed 's/sve/14 13 12 11 10 9/'); do gh workflow run summaries.yml --ref main -f convocation=$c; done
+          fi
           gh workflow run notes.yml --ref main || true  # the notes as pages of their own (R2)
       - name: Tell the maintainer when this failed
         if: failure()

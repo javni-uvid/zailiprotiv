@@ -163,3 +163,63 @@ def sync(folder: Path, bucket: str, dry: bool = False, workers: int = 16, url: s
     if url:
         print("files: " + purge(url, [n for n in send if n in there] + (gone if not failed else [])))
     return failed
+
+
+RAW = "sirovo/"  # in the notes' bucket: every sitting's notes as read, <convocation>/<sitting>.json.gz
+
+
+def _packed(path: Path) -> bytes:
+    """The file gzipped the same way every time (no time in the header), so the bucket's ETag tells a change."""
+    import gzip
+    import io
+    buf = io.BytesIO()
+    with gzip.GzipFile(fileobj=buf, mode="wb", mtime=0, compresslevel=6) as z:
+        z.write(path.read_bytes())
+    return buf.getvalue()
+
+
+def _listed(s3, bucket: str, prefix: str) -> dict[str, str]:
+    out = {}
+    for page in s3.get_paginator("list_objects_v2").paginate(Bucket=bucket, Prefix=prefix):
+        for o in page.get("Contents", []):
+            out[o["Key"]] = o["ETag"].strip('"')
+    return out
+
+
+def raw_push(root: Path, bucket: str, workers: int = 8) -> int:
+    """Send every data/<N>/transcripts/*.json the bucket lacks or holds differently. Returns how many were sent."""
+    from concurrent.futures import ThreadPoolExecutor
+    s3 = client(workers)
+    there = _listed(s3, bucket, RAW)
+
+    def send(f: Path) -> int:
+        key, body = f"{RAW}{f.parent.parent.name}/{f.name}.gz", _packed(f)
+        if there.get(key) == hashlib.md5(body).hexdigest():
+            return 0
+        s3.put_object(Bucket=bucket, Key=key, Body=body, ContentType="application/json", ContentEncoding="gzip",
+                      CacheControl="public, max-age=3600")
+        return 1
+    with ThreadPoolExecutor(workers) as pool:
+        return sum(pool.map(send, sorted(root.glob("*/transcripts/*.json"))))
+
+
+def raw_pull(root: Path, bucket: str, workers: int = 8) -> int:
+    """Bring the notes this folder lacks (the repository keeps only some). Returns how many were brought."""
+    import gzip
+    from concurrent.futures import ThreadPoolExecutor
+    s3 = client(workers)
+    want = []
+    for key in _listed(s3, bucket, RAW):
+        conv, name = key[len(RAW):].split("/", 1)
+        target = root / conv / "transcripts" / name.removesuffix(".gz")
+        if (root / conv).is_dir() and not target.exists():
+            want.append((key, target))
+
+    def bring(job) -> int:
+        key, target = job
+        body = s3.get_object(Bucket=bucket, Key=key)["Body"].read()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(gzip.decompress(body) if body[:2] == b"\x1f\x8b" else body)
+        return 1
+    with ThreadPoolExecutor(workers) as pool:
+        return sum(pool.map(bring, want))

@@ -671,35 +671,79 @@ def notes_of_debate(args) -> int:
                         key=lambda x: (against_share(x[1]["counts"]), x[1]["counts"]["protiv"]), reverse=True)
         chosen = chosen[:args.top]
     sittings = sorted({v["sitting"] for _, v in chosen})
+    if args.all:  # every sitting of the convocation the index knows, not only those of the contested laws
+        sittings = sorted(json.loads(Path(args.index).read_text(encoding="utf-8"))["sittings"])
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    until = time.time() + args.minutes * 60 if args.minutes else None
+    read = failed = 0
     for url in sittings:
         path = out / f"{sitting_id(url)}.json"
         if path.exists() and not args.again:
             continue
-        page = skupstina.fetch(url).decode("utf-8", "replace")
-        listed = transcripts.days(page, url)
-        if not listed:
-            print(f"{url}: no stenographic notes linked")
+        if until and time.time() > until:  # the rest next run: what was read is kept
+            print(f"time is up; {sum(1 for u in sittings if not (out / (sitting_id(u) + '.json')).exists())} sittings left for the next run")
+            break
+        try:
+            page = skupstina.fetch(url).decode("utf-8", "replace")
+            listed = transcripts.days(page, url)
+            if not listed:
+                print(f"{url}: no stenographic notes linked")
+                if args.all:  # written down as read and empty, so the next run does not ask again
+                    path.write_text(jsonfile.dumps({"sitting": url, "days": [], "agenda": {}, "amendments": [],
+                                                    "speeches": {}}, "speeches"), encoding="utf-8")
+                continue
+            days, meta = [], []
+            for d in sorted(listed, key=lambda d: d["day"]):
+                time.sleep(DELAY)
+                body = skupstina.fetch(d["url"])
+                try:
+                    paras = transcripts.paragraphs(body)
+                except transcripts.Unreadable as e:  # the day is left out, and the log says why
+                    print(f"  {d['url']}: {e}")
+                    paras = []
+                days.append(paras)
+                meta.append({**d, **transcripts.heading(paras), "sha256": hashlib.sha256(body).hexdigest()})
+            found = transcripts.debate(days)
+        except Exception as e:  # one sitting that cannot be fetched or read does not stop the others
+            if not args.all:
+                raise
+            failed += 1
+            print(f"{url}: not read ({type(e).__name__}: {e})")
             continue
-        days, meta = [], []
-        for d in sorted(listed, key=lambda d: d["day"]):
-            time.sleep(DELAY)
-            body = skupstina.fetch(d["url"])
-            try:
-                paras = transcripts.paragraphs(body)
-            except transcripts.Unreadable as e:  # the day is left out, and the log says why
-                print(f"  {d['url']}: {e}")
-                paras = []
-            days.append(paras)
-            meta.append({**d, **transcripts.heading(paras), "sha256": hashlib.sha256(body).hexdigest()})
-        found = transcripts.debate(days)
         record = {"sitting": url, "days": meta, "agenda": {str(k): v for k, v in found["agenda"].items()},
                   "amendments": found["amendments"],
                   "speeches": {f"{i:05d}": s for i, s in enumerate(found["speeches"])}}
         path.write_text(jsonfile.dumps(record, "speeches"), encoding="utf-8")
-        print(f"{path}: {len(meta)} days, {len(found['speeches'])} speeches, {len(found['amendments'])} amendments")
+        read += 1
+        print(f"{path}: {len(meta)} days, {len(found['speeches'])} speeches, {len(found['amendments'])} amendments", flush=True)
         time.sleep(DELAY)
+    if args.all:
+        print(f"transcripts: {read} sittings read, {failed} not read")
+    return 0
+
+
+def notes_raw_cmd(args) -> int:
+    """The notes as read (data/<N>/transcripts/*.json), kept whole in the notes' bucket under sirovo/: the repository
+    holds those of the contested laws only, the bucket all of them. --push sends what the bucket lacks or holds in
+    another form; --pull brings what this folder lacks."""
+    from zailiprotiv import files_site
+    store = ROOT / "settings.json"
+    if args.pull and not args.force and not (json.loads(store.read_text(encoding="utf-8")) if store.exists() else {}).get("notes_all"):
+        # Until data/settings.json says "notes_all": true, the site and the notes' pages are built from the notes in
+        # the repository alone (the bucket is being filled; the builds are tried with all of it first).
+        print("notes: every sitting's notes are not asked for yet (notes_all in data/settings.json)")
+        return 0
+    missing = [v for v in ("R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "CLOUDFLARE_ACCOUNT_ID") if not os.environ.get(v)]
+    if missing:
+        print("notes: the bucket's keys are missing (" + ", ".join(missing) + "); only the notes in the repository are used")
+        return 1 if args.push else 0
+    try:
+        n = (files_site.raw_push if args.push else files_site.raw_pull)(ROOT, args.bucket)
+    except Exception as e:
+        print(f"notes: the bucket {args.bucket} does not answer: {e}")
+        return 1 if args.push else 0
+    print(f"notes: {n} sittings' notes {'sent to' if args.push else 'brought from'} the bucket")
     return 0
 
 
@@ -1047,7 +1091,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--top", type=int, default=20, help="the laws with the largest share of votes against")
     p.add_argument("--law", action="append", default=[], help="a law by bill file or title (instead of --top)")
     p.add_argument("--again", action="store_true")
+    p.add_argument("--all", action="store_true", help="every sitting of the convocation (data/<N>/index.json)")
+    p.add_argument("--index", default=str(DATA / "index.json"))
+    p.add_argument("--minutes", type=float, default=0, help="stop asking for new sittings after this long")
     p.set_defaults(run=notes_of_debate)
+    p = commands.add_parser("notes-raw", help="the notes as read, to or from the bucket (sirovo/)")
+    g = p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--push", action="store_true")
+    g.add_argument("--pull", action="store_true")
+    p.add_argument("--force", action="store_true", help="--pull even before notes_all is set")
+    p.add_argument("--bucket", default="zailiprotiv-beleske")
+    p.set_defaults(run=notes_raw_cmd)
     p = commands.add_parser("debates-export", help="debate material of the most contested laws, for a session")
     p.add_argument("--to", required=True)
     p.add_argument("--top", type=int, default=20)
