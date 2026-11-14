@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d9491317b774a5c625a22a29564e9eacaba5cb17edf5fab4c465df0f43db24f3",
+ "summary": {
+  "ukratko": "Закон potvrđuje Sporazum o usvajanju harmonizovanih tehničkih pravilnika Ujedinjenih nacija za vozila sa točkovima, opremu i delove koji mogu biti ugrađeni i/ili korišćeni na vozilima sa točkovima, kao i uslove za uzajamno priznavanje homologacija dodeljenih na osnovu tih pravilnika. Предлагач наводи да Sporazum čini pravni osnov za postupke homologacije.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4) Ustava Republike Srbije, po kome Narodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Sporazum iz 1958. godine, donet u Ženevi u okviru Ekonomske komisije za Evropu pri UN, izmenjen je 1995. godine i potvrđen 2011. godine, a nove izmene stupile su na snagu 2017. godine i danas su u primeni.",
+   "Predlagač navodi da su sve homologacije koje izdaju zemlje potpisnice izdate na osnovu Revizije 3 ovog sporazuma.",
+   "Predlagač navodi da je sporazum krovni međunarodni sporazum u vezi sa motornim vozilima, opremom i delovima, pa se predlaže hitni postupak po članu 167. Poslovnika Narodne skupštine, jer bi odlaganje primene negativno uticalo na postupke homologacije."
+  ],
+  "promene": [
+   "Potvrđuje se novi izmenjeni Sporazum pod nazivom Sporazum o usvajanju harmonizovanih tehničkih pravilnika Ujedinjenih nacija za vozila sa točkovima, opremu i delove.",
+   "Umesto dva ranija Dodatka, ostao je samo jedan Dodatak o sastavu i načinu rada Administrativnog komiteta.",
+   "Uvodi se institut Međunarodne homologacije tipa celog vozila kao alternativa evropskom WVTA.",
+   "U sastav Sporazuma ušlo je osam novih Priloga koji detaljnije uređuju najvažnije postupke iz Sporazuma."
+  ],
+  "sredstva": "Предлагач наводи да за извршење овог закона нису потребна финансијска средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o usvajanju harmonizovanih tehničkih pravilnika Ujedinjenih nacija za vozila sa točkovima, opremu i delove koji mogu biti ugrađeni i/ili korišćeni na vozilima sa točkovima i uslovima za uzajamno priznavanje dodeljenih homologacija na osnovu ovih pravilnika Ujedinjenih nacija",
+ "depth": "standard"
+}

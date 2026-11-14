@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "e3ed2973c60463c07b257055379d290d9ea2140bb169eae98520f7d29d67dbb2",
+ "summary": {
+  "ukratko": "Zakon uređuje uslove, visinu i postupak isplate jednokratne finansijske podrške i jednokratne novčane naknade radi ublažavanja posledica energetske krize i rasta troškova života pojedinim kategorijama stanovništva, kao i vođenje Privremenog registra lica kojima se isplaćuje naknada. Predlagač navodi da zakon uspostavlja posebni, privremeni okvir za interventnu podršku.",
+  "razlozi": [
+   "Poremećaji na globalnom i domaćem tržištu energenata i sirovina doveli su do inflatornih pritisaka i rasta cena osnovnih životnih namirnica, proizvoda i usluga.",
+   "Rast troškova života najteže pogađa socijalno osetljive kategorije sa fiksnim i niskim primanjima, a umanjio je kupovnu moć svih punoletnih građana.",
+   "Redovni mehanizmi usklađivanja primanja nisu projektovani da trenutno reaguju na iznenadne ekonomske šokove, pa se predlaže poseban zakon.",
+   "Lica koja nemaju status nosioca prava po Zakonu o pravu na besplatne akcije i novčanu naknadu u postupku privatizacije nisu bila obuhvaćena nijednim posebnim vidom novčanih davanja, pa im zakon obezbeđuje naknadu."
+  ],
+  "promene": [
+   "Uvodi jednokratnu finansijsku podršku za korisnike prava iz penzijskog i invalidskog osiguranja, korisnike novčane socijalne pomoći, korisnike dečijeg dodatka, korisnike boračkog dodatka i borce; za korisnike penzija iznos zavisi od visine penzije, a za ostale je fiksan.",
+   "Uvodi jednokratnu novčanu naknadu za punoletne državljane Republike Srbije sa prebivalištem u Srbiji koji nemaju status nosioca prava po pomenutom zakonu i koji se prijave.",
+   "Korisnicima penzijskog i invalidskog osiguranja, korisnicima novčane socijalne pomoći i licima u zavodu za izvršenje krivičnih sankcija naknada se isplaćuje bez podnošenja prijave.",
+   "Podršku isplaćuje Republički fond za penzijsko i invalidsko osiguranje (korisnicima prava iz penzijskog i invalidskog osiguranja), a ostalim kategorijama Ministarstvo za rad, zapošljavanje, boračka i socijalna pitanja.",
+   "Ministarstvo finansija sačinjava i vodi Privremeni registar lica kojima se isplaćuje naknada, a podaci se brišu po isteku godinu dana od stupanja zakona na snagu; naknada se isplaćuje iz budžeta Republike Srbije preko Uprave za trezor, a za nosioce prava iz sredstava Akcionarskog fonda."
+  ],
+  "sredstva": "Predlagač navodi da su sredstva za sprovođenje zakona obezbeđena u budžetu Republike Srbije, bez navođenja ukupnog iznosa."
+ },
+ "usage": {},
+ "law": "Zakon o ublažavanju posledica energetske krize i rasta troškova života pojedinim kategorijama stanovništva kroz jednokratnu finansijsku podršku i jednokratnu novčanu naknadu",
+ "depth": "standard"
+}

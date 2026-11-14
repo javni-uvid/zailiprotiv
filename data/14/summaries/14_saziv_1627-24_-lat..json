@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "3d2000894a8d8635ce3b8a1d38c9fb015a1abb51af7bd210c8ec133fa93fff0b",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum o saradnji u oblasti odbrane između Vlade Republike Srbije i Vlade Republike Gabon, potpisan u Beogradu 20. maja 2024. godine. Према предлагачу, Sporazum uspostavlja opšte principe i procedure saradnje u oblasti odbrane između dve vlade, zasnovane na ravnopravnosti, reciprocitetu i zajedničkim interesima.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kome Narodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Vlada je zaključkom od 16. maja 2024. godine prihvatila usaglašeni tekst Sporazuma i ovlastila ministra odbrane za njegovo potpisivanje.",
+   "Predlagač navodi da je svrha Sporazuma uspostavljanje pravnog okvira za saradnju u oblasti odbrane između ugovornih strana ili njihovih nadležnih organa.",
+   "Predlagač navodi da Sporazum doprinosi razvoju bilateralnih odnosa dve države."
+  ],
+  "promene": [
+   "Uvodi pravni okvir za saradnju u oblasti odbrambene i bezbednosne politike, vojno-ekonomske saradnje, naučno-tehničke saradnje, vojnog obrazovanja i obuke, vojne medicine i veterine, kao i drugih oblasti od zajedničkog interesa.",
+   "Saradnja se sprovodi kroz zvanične posete, radne sastanke, razmenu iskustava i konsultacije, programe obuke i obrazovanja, učešće na vežbama, konferencijama, simpozijumima i seminarima, kao i na druge dogovorene načine.",
+   "Sporazum sadrži odredbe o razmeni podataka, troškovima, zdravstvenoj zaštiti i izmenama i dopunama.",
+   "Sporazum uređuje način rešavanja sporova, prestanak važenja, stupanje na snagu i trajanje."
+  ],
+  "sredstva": "Predlagač navodi da za 2024. godinu nisu potrebna finansijska sredstva, a da će se sredstva za naredne godine, koja zavise od stepena i načina realizacije, planirati u okviru limita koje Ministarstvo finansija utvrdi za razdeo Ministarstva odbrane."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma o saradnji u oblasti odbrane između Vlade Republike Srbije i Vlade Republike Gabon",
+ "depth": "standard"
+}

@@ -216,10 +216,10 @@
   "debates-14": {
    "claude-haiku-5-5": {
     "cache_read": 24840,
-    "cache_written": 828,
-    "input": 1709751,
-    "output": 236536,
-    "replies": 31
+    "cache_written": 1656,
+    "input": 1787508,
+    "output": 241779,
+    "replies": 32
    },
    "claude-sonnet-5-5": {
     "cache_read": 14904,
@@ -290,11 +290,11 @@
   },
   "summaries-14": {
    "claude-haiku-5-5": {
-    "cache_read": 45846,
+    "cache_read": 57732,
     "cache_written": 2264,
-    "input": 272933,
-    "output": 140497,
-    "replies": 85
+    "input": 351413,
+    "output": 179236,
+    "replies": 106
    }
   },
   "summaries-9": {
