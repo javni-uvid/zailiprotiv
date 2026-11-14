@@ -304,8 +304,10 @@
     line.hidden = !card.crowd;
     if (card.crowd) line.textContent = "Na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona") +
       " glasao si kao većina posetilaca sajta.";
-    shareText = card.fact + (card.who ? " Najviše glasova kao ja: " + card.who + " (" + card.score + ")." : "") +
-      (card.crowd ? " Kao većina posetilaca sajta na " + card.crowd.same + " od " + card.crowd.of + "." : "") + " A ti?";
+    // The words that are copied or shared: the laws of this quiz, the MP on the picture (name first, as people say
+    // it; the site lists surnames first), and the question. The link follows.
+    var mpName = card.mp ? card.mp.n.replace(/^(.*)\s(\S+)$/, "$2 $1") : "";
+    shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (mpName ? " Najviše glasova kao ja: " + mpName + "." : "") + " Koji si ti poslanik?";
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
   }
   function note(text) { document.getElementById("q-shared").textContent = text; }
