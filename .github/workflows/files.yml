@@ -1,0 +1,49 @@
+# By hand: build the site, take its downloads and share pictures apart and send them to their R2 bucket, without
+# publishing anything. For the first filling of the bucket (before files_url is set in data/settings.json and the
+# pages workflow takes over), and to see what a run would send.
+name: files
+
+on:
+  workflow_dispatch:
+    inputs:
+      bucket:
+        description: "The R2 bucket"
+        default: "zailiprotiv-podaci"
+      dry:
+        description: "Only say what would be sent"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: files
+  cancel-in-progress: false
+
+jobs:
+  files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4  # the share pictures, drawn once each
+        with:
+          path: .cache
+          key: og-${{ github.run_id }}
+          restore-keys: og-
+      - name: Build, split and send
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv site --out _site --domain zailiprotiv.rs
+          uv run zailiprotiv files-split --site _site --out _podaci --url https://podaci.zailiprotiv.rs/
+          du -sh --apparent-size _site _podaci; find _site -type f | wc -l
+          uv run zailiprotiv files-upload --dir _podaci --bucket "${{ inputs.bucket }}" ${{ inputs.dry && '--dry' || '' }}
+          curl -sS -o /dev/null -w "podaci.zailiprotiv.rs/podaci/zakoni.csv: %{http_code} %{content_type}\n" https://podaci.zailiprotiv.rs/podaci/zakoni.csv || true

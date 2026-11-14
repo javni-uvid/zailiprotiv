@@ -32,9 +32,17 @@ jobs:
           key: og-${{ github.run_id }}
           restore-keys: og-
       - name: Build
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           pip install uv && uv sync --frozen
           uv run zailiprotiv site --out _site --domain zailiprotiv.rs
+          # Downloads and share pictures live in a bucket (files_url in data/settings.json; see files_site). They are
+          # there before the pages that link to them are published; a failed upload stops the build.
+          uv run zailiprotiv files-split --site _site --out _podaci
+          uv run zailiprotiv files-upload --dir _podaci --bucket "${{ vars.R2_FILES_BUCKET || 'zailiprotiv-podaci' }}"
           # The search index of the whole text (Pagefind; made of the pages, served from the site itself).
           npx -y pagefind@1.3.0 --site _site | tail -8
           du -sh --apparent-size _site; find _site -type f | wc -l

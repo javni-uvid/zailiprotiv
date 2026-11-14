@@ -324,3 +324,25 @@ def test_links_to_the_notes_bucket_keep_their_ending(tmp_path):
     publish.clean_urls(tmp_path)
     text = (tmp_path / "a.html").read_text()
     assert "beleske.zailiprotiv.rs/14/1/dan-1.html#g1" in text and 'href="https://zailiprotiv.rs/b"' in text
+
+
+def test_downloads_and_share_pictures_move_out_and_pages_point_at_the_bucket(tmp_path):
+    from zailiprotiv import files_site
+    site, out = tmp_path / "s", tmp_path / "o"
+    for d in ("zakon", "cir/zakon", "podaci", "poslanik"):
+        (site / d).mkdir(parents=True)
+    for f in ("zakon/a.csv", "zakon/a.json", "zakon/a.png", "podaci/zakoni.csv", "poslanik/m.png", "podaci.json", "za-ili-protiv.png"):
+        (site / f).write_text("x")
+    (site / "zakon/a.html").write_text('<meta property="og:image" content="https://zailiprotiv.rs/zakon/a.png">'
+                                       '<a href="a.csv">c</a><a href="a.html">p</a><a href="https://x.rs/a.csv">o</a>')
+    (site / "cir/zakon/a.html").write_text('<a href="../../zakon/a.json">j</a>')
+    (site / "podaci.html").write_text('<a href="podaci/zakoni.csv">z</a>')
+    n = files_site.split(site, out, "https://podaci.zailiprotiv.rs", "zailiprotiv.rs")
+    assert n == {"moved": 5, "pages": 3} and (out / "zakon/a.csv").exists() and not (site / "zakon/a.csv").exists()
+    assert (site / "podaci.json").exists() and (site / "za-ili-protiv.png").exists()  # the search's data and the site's own picture stay
+    law = (site / "zakon/a.html").read_text()
+    assert 'content="https://podaci.zailiprotiv.rs/zakon/a.png"' in law and 'href="https://podaci.zailiprotiv.rs/zakon/a.csv"' in law
+    assert 'href="a.html"' in law and 'href="https://x.rs/a.csv"' in law
+    assert "https://podaci.zailiprotiv.rs/zakon/a.json" in (site / "cir/zakon/a.html").read_text()
+    assert "https://podaci.zailiprotiv.rs/podaci/zakoni.csv" in (site / "podaci.html").read_text()
+    assert files_site.plan({"a": "1", "b": "2"}, {"b": "x", "c": "3"}) == (["a", "b"], ["c"])

@@ -183,6 +183,42 @@ def notes_check_cmd(args) -> int:
     return 1 if bad else 0
 
 
+def files_split_cmd(args) -> int:
+    """Move the downloads and share pictures out of a built site and point its pages at the bucket's address
+    (files_url in data/settings.json; without it nothing is done)."""
+    from zailiprotiv import files_site
+    store = ROOT / "settings.json"
+    url = args.url or (json.loads(store.read_text(encoding="utf-8")).get("files_url", "") if store.exists() else "")
+    if not url:
+        print("files: no files_url in data/settings.json, the site keeps its files")
+        return 0
+    n = files_site.split(Path(args.site), Path(args.out), url, args.domain)
+    print(f"files: {n['moved']} moved to {args.out}, links changed in {n['pages']} pages")
+    return 0
+
+
+def files_upload_cmd(args) -> int:
+    """Make the R2 bucket hold exactly the folder of downloads and share pictures."""
+    import os
+    from zailiprotiv import files_site
+    if not Path(args.dir).is_dir():
+        print(f"files: no folder {args.dir}, nothing to send")
+        return 0
+    missing = [v for v in ("R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "CLOUDFLARE_ACCOUNT_ID") if not os.environ.get(v)]
+    if missing:
+        print("not sent, missing: " + ", ".join(missing))
+        return 1
+    try:
+        return 1 if files_site.sync(Path(args.dir), args.bucket, args.dry) else 0
+    except Exception as e:
+        print(f"not sent, the bucket {args.bucket} does not answer: {e}")
+        try:  # which buckets does this key see? (only a key allowed to list them can say)
+            print("buckets: " + ", ".join(b["Name"] for b in files_site.client().list_buckets()["Buckets"]))
+        except Exception as e2:
+            print(f"buckets: the key may not list them ({type(e2).__name__})")
+        return 1
+
+
 def photos_cmd(args) -> int:
     """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
     import time
@@ -1019,6 +1055,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--bucket", default="zailiprotiv-beleske")
     p.add_argument("--dry", action="store_true", help="say what would be sent, send nothing")
     p.set_defaults(run=notes_upload_cmd)
+    p = commands.add_parser("files-split", help="move downloads and share pictures out of a built site, for the bucket")
+    p.add_argument("--site", default="_site")
+    p.add_argument("--out", default="_podaci")
+    p.add_argument("--url", default="", help="the bucket's public address (default: files_url of data/settings.json)")
+    p.add_argument("--domain", default="zailiprotiv.rs")
+    p.set_defaults(run=files_split_cmd)
+    p = commands.add_parser("files-upload", help="make the R2 bucket hold exactly the folder files-split made")
+    p.add_argument("--dir", default="_podaci")
+    p.add_argument("--bucket", default="zailiprotiv-podaci")
+    p.add_argument("--dry", action="store_true", help="say what would be sent, send nothing")
+    p.set_defaults(run=files_upload_cmd)
     p = commands.add_parser("notes-check", help="do the notes' pages answer at their public address?")
     p.add_argument("--url", default="https://beleske.zailiprotiv.rs/")
     p.set_defaults(run=notes_check_cmd)
