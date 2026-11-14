@@ -30,7 +30,7 @@
   {% if sm.promene %}<ul>{% for x in sm.promene %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.razlozi %}<h3>Zašto, prema predlagaču</h3><ul>{% for x in sm.razlozi %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
   {% if sm.sredstva %}<p><b>Novac iz budžeta:</b> {{ sm.sredstva|latin }}</p>{% endif %}
-  <p class="label">Sažetak obrazloženja predloga zakona. Napisao ga je AI model ({{ b.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ b.pdf }}">predlog zakona</a>. {{ how("sazetak") }}</p>
+  <p class="label">Sažetak obrazloženja predloga zakona. Napisao ga je AI model ({{ b.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku.{% if b.ocr %} Predlog je na sajtu Skupštine skenirana slika, pa je tekst prepoznat mašinski (OCR): slovo ili cifra mogu biti pogrešni.{% endif %} Merodavan je <a href="{{ b.pdf }}">predlog zakona</a>. {{ how("sazetak") }}</p>
 </section>
 {% elif not b.law %}
 <p class="meta">Sažetak predlagačevog obrazloženja još nije napisan. Ceo tekst sa obrazloženjem je u <a href="{{ b.pdf }}">predlogu zakona (PDF na sajtu Skupštine)</a>.</p>

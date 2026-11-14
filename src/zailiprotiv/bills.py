@@ -58,14 +58,22 @@ OCR_PAGES = 60  # a scanned bill longer than this is read to here; the memorandu
 
 # What OCR in Cyrillic makes of the Roman numerals that head the memorandum's sections: "П." for "II.", "Ш." for
 # "III.", "ІV"/"ТУ"/"IУ" for "IV", and so on. Only at the start of a line, before a heading in capitals.
-_OCR_NUMERAL = re.compile(r"^(\s*)([IІ1lПШУVХXТT|]{1,4})(\s*[.,:]?\s+)(?=[A-ZА-ЯЂЈЉЊЋЏŠĐČĆŽ]{4,})", re.M)
+_OCR_NUMERAL = re.compile(r"^(\s*)([IІ1lLПШУVХXТT|]{1,4})(\s*[.,:]?\s+)(?=[A-ZА-ЯЂЈЉЊЋЏŠĐČĆŽ]{4,})", re.M)
 _OCR_AS = {"П": "II", "Ш": "III", "ІІ": "II", "ІІІ": "III", "ПІ": "III", "IП": "III", "ІП": "III", "ТУ": "IV", "ІУ": "IV", "IУ": "IV",
            "ІV": "IV", "1У": "IV", "ГУ": "IV", "У": "V", "УІ": "VI", "УI": "VI", "УП": "VII", "УШ": "VIII", "ІХ": "IX", "IХ": "IX",
            "Х": "X", "І": "I", "1": "I", "l": "I", "|": "I"}
 
 
+_OCR_FIRST = re.compile(r"^\s*\S{0,3}?\s*((?:УСТАВНИ|USTAVNI)\s+(?:ОСНОВ|OSNOV)\b.*)$", re.M)
+
+
 def ocr_headings(text: str) -> str:
-    return _OCR_NUMERAL.sub(lambda m: m.group(1) + _OCR_AS.get(m.group(2), m.group(2)) + ". ", text)
+    def numeral(m):
+        n = m.group(2)
+        n = _OCR_AS.get(n) or _OCR_AS.get(re.sub(r"[lL1|І]", "I", n)) or re.sub(r"[lL1|І]", "I", n)
+        return m.group(1) + n + ". "
+    # The first heading, whatever became of its numeral ("ТУСТАВНИ ОСНОВ", "IL. УСТАВНИ ОСНОВ"): the reader starts there.
+    return _OCR_FIRST.sub(lambda m: "I. " + m.group(1), _OCR_NUMERAL.sub(numeral, text))
 
 
 def ocr_of(pdf: Path | str) -> str:

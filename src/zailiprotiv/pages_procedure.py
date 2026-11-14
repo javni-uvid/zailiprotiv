@@ -49,6 +49,7 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
             row["slug"] = base if len(rows) == 1 else f"{base}-{slug(row['pdf'].rsplit('/', 1)[-1].removesuffix('.pdf'))}"
     for row in waiting + gone:
         row["summary"] = loaded[current][2].get(row.get("bill_file", ""), {}).get("summary")
+        row["ocr"] = bool(loaded[current][2].get(row.get("bill_file", ""), {}).get("ocr"))
         (out / "predlog" / f"{row['slug']}.html").write_text(page.render(
             **common, b=row, waits=row in waiting, checked=proc["fetched"], root="../"), encoding="utf-8")
     waiting.sort(key=lambda r: (r["submitted"] or "", r["title"]), reverse=True)

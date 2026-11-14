@@ -86,3 +86,11 @@ def test_arabic_numbered_headings():
 
 def test_a_bill_without_a_memorandum():
     assert bills.read(FIXTURES / "bills" / "14_saziv_1242-24_-_lat..pdf").sections == {}
+
+
+def test_ocr_headings_are_mended_so_the_reader_finds_the_memorandum():
+    from zailiprotiv import bills
+    text = ("ОБРАЗЛОЖЕЊЕ\nТУСТАВНИ ОСНОВ ЗА ДОНОШЕЊЕ ЗАКОНА\nУставни основ је члан 97. тачка 6. Устава\n"
+            "П. РАЗЛОЗИ ЗА ДОНОШЕЊЕ ЗАКОНА\nразлог\nШ. ОБЈАШЊЕЊЕ ПОЈЕДИНАЧНИХ РЕШЕЊА\nчлан 1.\nТУ. ФИНАНСИЈСКА СРЕДСТВА\nнису потребна\n")
+    memo = bills.memorandum(bills.ocr_headings(text))
+    assert list(memo.sections) == ["basis", "reasons", "explained", "funds"] and memo.articles[0]["article"] == 97
