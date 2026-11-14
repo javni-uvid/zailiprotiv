@@ -23,13 +23,8 @@
     <a href="{{ root }}poslanici.html">Poslanici</a>
     <a href="{{ root }}replike.html">Varnice</a>
     <a href="{{ root }}glasaj.html">Glasaj i ti</a>
-    <details class="nav-more"><summary>Više</summary>
-      <div>
-        <a href="{{ root }}pretraga.html">Pretraga</a>
-        <a href="{{ root }}nedelje.html">Skupština</a>
-      </div>
-    </details>
-    {% if cyrillic %}<a class="script-switch" href="#pismo" hreflang="sr-Cyrl">Ћирилица</a>{% endif %}
+    <a href="{{ root }}nedelje.html">Skupština</a>
+    <span class="nav-tools"><a class="nav-search" href="{{ root }}pretraga.html" aria-label="Pretraga" title="Pretraga"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>{% if cyrillic %}<a class="script-switch" href="#pismo" hreflang="sr-Cyrl">Ћирилица</a>{% endif %}</span>
   </nav>
 </header>
 <main data-pagefind-body>

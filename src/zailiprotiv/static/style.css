@@ -694,8 +694,9 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .top .brand-mark { width: 1.9rem; }
   .top nav { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 0 .4rem; white-space: nowrap; height: 2.75rem; position: static; font-size: clamp(.7rem, 3.9vw, 1rem); }
   html[lang="sr-Cyrl"] .top nav { font-size: clamp(.68rem, 3.4vw, .95rem); }
-  .top nav > a, .top nav .nav-more > summary { padding: .5rem 0; flex: 0 0 auto; margin: 0; font-size: inherit; }
-  .top nav .script-switch { position: absolute; right: 16px; top: .6rem; margin: 0; padding: .2rem .55rem; }
+  .top nav > a { padding: .5rem 0; flex: 0 0 auto; margin: 0; font-size: inherit; }
+  .top nav .nav-tools { position: absolute; right: 16px; top: .35rem; margin: 0; }
+  .top nav .script-switch { padding: .2rem .55rem; font-size: .85rem; }
   .nav-more { position: static; }
   .nav-more > div { left: 0; right: 0; top: 100%; min-width: 0; border-width: 0 0 2px; padding: .2rem 16px .5rem; max-height: 70vh; overflow-y: auto; white-space: normal; }
   [id], .subtabs { scroll-margin-top: 3.4rem; }
@@ -782,3 +783,13 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 .subtabs.law-kinds.four { max-width: 40rem; }
 @media (max-width: 640px) { .subtabs.law-kinds.four a { flex: 1 1 40%; } }
 .subtabs.law-kinds.three { max-width: 34rem; }
+
+/* The head's tools: search as a magnifying glass, and the switch of script. */
+.nav-tools { display: inline-flex; align-items: center; gap: .7rem; align-self: center; }
+.top nav .nav-search { display: inline-flex; align-items: center; justify-content: center; width: 2.3rem; height: 2.3rem; padding: 0; color: var(--fg); }
+.top nav .nav-search:hover { color: var(--za); }
+@media (max-width: 640px) {
+  .subtabs.law-kinds.three { flex-wrap: nowrap; gap: .35rem; }
+  .subtabs.law-kinds.three a { flex: 1 1 0; min-width: 0; padding: .6rem .2rem; font-size: clamp(.8rem, 3.7vw, .95rem); white-space: nowrap; }
+}
+@media (max-width: 350px) { .top .brand { font-size: 1.12rem; } .top .brand-mark { width: 1.6rem; } .nav-tools { gap: .25rem; } }
