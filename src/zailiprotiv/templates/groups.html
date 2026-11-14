@@ -3,7 +3,8 @@
 {% block title %}Poslaničke grupe — Za ili Protiv{% endblock %}
 {% block description %}Poslaničke grupe Narodne skupštine Srbije po sazivima: članovi, kako glasaju i koliko jedinstveno.{% endblock %}
 {% block main %}
-<h1>Poslaničke grupe</h1>
+<h1>Poslanici</h1>
+<nav class="subtabs law-kinds" aria-label="Poslanici ili poslaničke grupe"><a href="poslanici.html">Poslanici</a><a href="grupe.html" aria-current="page">Poslaničke grupe</a></nav>
 {% if by_conv and by_conv[0][1] %}
 {% set now = by_conv[0][1] %}
 {% set biggest = (now|sort(attribute="members", reverse=true))[0] %}

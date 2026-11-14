@@ -761,3 +761,21 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 #search .pagefind-ui__result-nested .pagefind-ui__result-link::before { content: none; }
 #search mark { background: #ffe066; color: #111111; padding: 0 .1em; }
 #search .pagefind-ui__button { background: var(--bg); color: var(--fg); border: 2px solid var(--fg); font-weight: 600; }
+
+/* The foot of every page: the name and what the site is, three columns of where to go, the small print. */
+.site-foot { max-width: 1080px; margin: 3rem auto 0; padding: 0 20px 2.5rem; border-top: 0; font-size: .92rem; color: var(--muted); }
+.foot-top { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 2rem 2.5rem; padding: 2rem 0 1.8rem; border-top: 3px solid var(--fg); }
+.foot-brand .brand { font-size: 1.45rem; }
+.foot-brand .brand-mark { width: 2rem; }
+.foot-brand p { margin: .7rem 0 0; max-width: 24rem; line-height: 1.5; }
+.foot-col { display: flex; flex-direction: column; align-items: flex-start; gap: .1rem; }
+.foot-col h2 { margin: 0 0 .5rem; font-family: var(--serif); font-size: 1.05rem; font-weight: 700; color: var(--fg); border: 0; padding: 0; }
+.foot-col a { color: var(--fg); text-decoration: none; padding: .28rem 0; }
+.foot-col a:hover { text-decoration: underline; color: var(--za); }
+.foot-fine { margin: 0; padding-top: 1.1rem; border-top: 1px solid var(--line); font-size: .8rem; line-height: 1.55; }
+@media (max-width: 760px) {
+  .site-foot { padding: 0 16px 2rem; margin-top: 2.2rem; }
+  .foot-top { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.5rem; padding: 1.6rem 0 1.4rem; }
+  .foot-brand { grid-column: 1 / -1; }
+  .foot-col a { padding: .45rem 0; }
+}
