@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% from "macros.html" import plural, how with context %}
-{% block title %}{% if part == "mere" %}Varnice u sali: replike i opomene{% elif part == "ko" %}Ko najviše govori, replicira i dobija opomene{% else %}Razmene replika{% endif %}, {{ c.name|lower }} saziv — Za ili Protiv{% endblock %}
+{% block title %}{% if part == "mere" %}Varnice u sali: replike i opomene{% elif part == "ko" %}Ko najviše govori, replicira i dobija opomene{% elif part == "svi" %}Varnice u sali: svi sazivi zajedno{% else %}Razmene replika{% endif %}{% if part != "svi" %}, {{ c.name|lower }} saziv{% endif %} — Za ili Protiv{% endblock %}
 {% block description %}Razmene replika između poslanika i mere koje je izrekao predsedavajući (opomena, oduzimanje reči, udaljenje sa sednice), doslovno iz stenografskih beleški Narodne skupštine.{% endblock %}
 {% block main %}
 {% macro person(p) %}{% if p.slug %}<a href="poslanik/{{ p.slug }}.html">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% endmacro %}
 {% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
 <h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
-<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}</nav>
+<nav class="tabs" aria-label="Saziv">{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}{% if all_page %}<a href="{{ all_page }}"{% if part == "svi" %} aria-current="page"{% endif %}>{{ by_conv[-1].years.split("–")[0] }}–{{ by_conv[0].years.split("–")[-1] }}<span>Svi sazivi</span></a>{% endif %}</nav>
 <div class="finder js-only floor-finder" hidden data-filter="floor-rows" data-quiet>
   <label class="sr" for="f-q">Nađi govornika</label>
   <input id="f-q" type="search" placeholder="Nađi poslanika: govori, replike, mere i teške reči, npr. Jovanov" autocomplete="off">
@@ -23,9 +23,9 @@
     </li>
   {% endfor %}
   </ol>
-  <p class="meta">{{ c.people|length }} govornika u pročitanim beleškama ovog saziva. Za reči i rečenice: <a href="pretraga.html">pretraga celog teksta</a>.</p>
+  <p class="meta">{{ c.people|length }} govornika u pročitanim beleškama {{ "svih saziva" if part == "svi" else "ovog saziva" }}. Za reči i rečenice: <a href="pretraga.html">pretraga celog teksta</a>.</p>
 </div>
-<section class="faces-row" aria-label="Ko najviše u ovom sazivu">
+<section class="faces-row" aria-label="Ko najviše">
 {% for key, label, unit in [("speeches", "Najviše govora", "govora"), ("exchanges", "Najviše razmena replika", "razmena"), ("measures", "Najviše mera predsedavajućeg", "mera"), ("harsh", "Najviše teških reči", "reči")] %}
   {% if c.top[key] %}
   <div class="faces-col">
@@ -38,8 +38,24 @@
   {% endif %}
 {% endfor %}
 </section>
+{% if part == "svi" %}
+<p class="label">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} u {{ c.convs|length }} saziva, sabrano po govorniku. Ispod: svaki saziv posebno, pa prvih 25 po svakom broju.</p>
+<section id="sazivi">
+  <h2>Saziv po saziv</h2>
+  <div class="scroll"><table class="groups floor-convs">
+    <thead><tr><th>Saziv</th><th class="num">Pročitanih sednica</th><th class="num">Govornika</th><th class="num">Mera</th><th class="num">Razmena replika</th><th class="num">Teških reči</th><th>Najviše govora</th><th>Najviše mera</th><th>Najviše teških reči</th></tr></thead>
+    <tbody>
+    {% for x in c.convs %}
+      <tr><td><a href="{{ x.page }}">{{ x.name }}</a> <span class="meta nowrap">{{ x.years }}</span></td><td class="num">{{ x.sittings }}</td><td class="num">{{ x.speakers }}</td><td class="num"><a href="{{ x.page }}#deo">{{ x.measures }}</a></td><td class="num"><a href="{{ x.page_exchanges }}#deo">{{ x.exchanges }}</a></td><td class="num"><a href="{{ x.page_who }}#reci">{{ x.harsh }}</a></td>{% for key in ["speeches", "measures", "harsh"] %}<td>{% set r = x.first[key] %}{% if r %}{{ person(r.who) }} <span class="meta">{{ r[key]|length if key == "harsh" else r[key] }}</span>{% endif %}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="label">Sazivi nisu čitani jednako: brojevi zavise od toga koliko je sednica pročitano u kojem, pa se sazivi ne mogu porediti po zbiru.</p>
+</section>
+{% else %}
 <p class="label">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} ovog saziva. <a href="{{ c.page_who }}">Svih 25 po svakom broju, i svaka teška reč u rečenici</a></p>
 <nav class="subtabs" id="deo" aria-label="Deo strane"><a href="{{ c.page }}#deo"{% if part == "mere" %} aria-current="page"{% endif %}>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></a><a href="{{ c.page_exchanges }}#deo"{% if part == "razmene" %} aria-current="page"{% endif %}>Razmene replika <span class="count">{{ c.exchanges|length }}</span></a><a href="{{ c.page_who }}#deo"{% if part == "ko" %} aria-current="page"{% endif %}>Ko najviše</a></nav>
+{% endif %}
 
 {% if part == "mere" %}
 {% if c.measures %}
@@ -107,7 +123,7 @@
 </section>
 {% endif %}
 <p class="meta foot-note">Beleške su privremene i neautorizovane, kako ih objavljuje Skupština.</p>
-{% if part == "ko" %}
+{% if part in ("ko", "svi") %}
 {% macro board(id, title, rows, key, unit, note) %}
 <section id="{{ id }}">
   <h2>{{ title }}</h2>
@@ -116,11 +132,11 @@
   {% for r in rows %}<li><span class="board-who">{{ person(r.who) }}</span> <b class="board-n">{{ r[key] }}</b>{% if key == "speeches" %} <span class="meta">· {{ "{:,}".format(r.words).replace(",", ".") }} reči</span>{% endif %}</li>
   {% endfor %}
   </ol>
-  {% else %}<p class="meta">Nema ih u pročitanim beleškama ovog saziva.</p>{% endif %}
+  {% else %}<p class="meta">Nema ih u pročitanim beleškama.</p>{% endif %}
   <p class="label">{{ note }}</p>
 </section>
 {% endmacro %}
-<p class="meta">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} ovog saziva (sednice zakona sa najviše glasova protiv), ne u svim sednicama; {{ c.speakers }} govornika. Prvih {{ c.top.speeches|length }} po svakom broju, isto pravilo za svakoga. Predsedavajući se ne broji dok vodi sednicu.</p>
+<p class="meta">Brojano u {{ c.sittings }} {{ plural(c.sittings, "pročitanoj sednici", "pročitane sednice", "pročitanih sednica") }} {{ "svih saziva zajedno" if part == "svi" else "ovog saziva" }} (sednice zakona sa najviše glasova protiv), ne u svim sednicama; {{ c.speakers }} govornika. Prvih {{ c.top.speeches|length }} po svakom broju, isto pravilo za svakoga. Predsedavajući se ne broji dok vodi sednicu.</p>
 <nav class="page-menu" aria-label="Na ovoj strani"><a href="#govori">Govori</a><a href="#replike">Replike</a><a href="#poslovnik">Poslovnik</a><a href="#mere">Mere</a><a href="#reci">Teške reči</a></nav>
 {{ board("govori", "Najviše govora", c.top.speeches, "speeches", "", "Svako uzimanje reči je jedan govor, i kratka replika i dugo izlaganje; uz broj je ukupan broj izgovorenih reči.") }}
 {{ board("replike", "Najviše razmena replika", c.top.exchanges, "exchanges", "", "U koliko je razmena replika govornik učestvovao. Razmena: dvoje govornika naizmenično, najmanje četiri kratka govora.") }}
@@ -138,7 +154,7 @@
     </details></li>
   {% endfor %}
   </ol>
-  {% else %}<p class="meta">Nema ih u pročitanim beleškama ovog saziva.</p>{% endif %}
+  {% else %}<p class="meta">Nema ih u pročitanim beleškama.</p>{% endif %}
 </section>
 {% endif %}
 <details class="method"><summary>Kako je ovo nastalo</summary>

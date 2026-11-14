@@ -674,3 +674,7 @@ td.lean { white-space: nowrap; }
 .notes .turn-chair { color: var(--muted); }
 .notes .turn:target { background: var(--za-soft); box-shadow: -1rem 0 0 var(--za-soft), 1rem 0 0 var(--za-soft); }
 .notes .turn { border-width: 0 0 1px; background: none; }
+/* Varnice, all convocations together: one row to a convocation. */
+.floor-convs { min-width: 760px; }
+.floor-convs td, .floor-convs th { vertical-align: top; }
+.floor-convs td .meta { white-space: nowrap; }

@@ -161,6 +161,48 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
     return None
 
 
+def firsts(rows) -> dict[str, list]:
+    """The first TOP of the rows by each count, the same rule for everyone; ties by name."""
+    def first(key):
+        n = lambda r: len(r[key]) if key == "harsh" else r[key]
+        return [r for r in sorted(rows, key=lambda r: (-n(r), r["who"]["name"])) if n(r)][:TOP]
+    return {k: first(k) for k in ("speeches", "exchanges", "points", "measures", "harsh")}
+
+
+def together(by_conv: list[dict]) -> dict:
+    """All the convocations read as one: a person's counts added up across them (one row for one MP, by the MP's
+    page, or by the name for a speaker who has none), and the first TOP by each count."""
+    rows = {}
+    for c in by_conv:
+        for r in c["people"]:
+            t = rows.setdefault(r["who"]["slug"] or r["who"]["name"], {
+                "who": r["who"], "speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
+                "measures_likely": 0, "harsh": [], "convs": []})
+            for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
+                t[k] += r[k]
+            t["harsh"] += r["harsh"]
+            t["convs"].append(c["n"])
+            if r["who"]["photo"] and not t["who"]["photo"]:
+                t["who"] = r["who"]
+    for t in rows.values():
+        t["harsh"].sort(key=lambda h: h["date"], reverse=True)
+        t["said"] = list({(h["date"], h["text"]): h for h in t["harsh"]}.values())
+        t["harsh_words"] = [w for w, _ in Counter(latin(h["word"]) for h in t["harsh"]).most_common(4)]
+    first, last = by_conv[-1]["years"].split("–")[0], by_conv[0]["years"].split("–")[-1]
+    return {"n": "svi", "name": "Svi", "years": f"{first}–{last}" if first != last else first, "top": firsts(rows.values()),
+            "people": sorted(rows.values(), key=lambda r: r["who"]["name"]), "speakers": len(rows),
+            "sittings": sum(c["sittings"] for c in by_conv), "measures": [e for c in by_conv for e in c["measures"]],
+            "exchanges": [e for c in by_conv for e in c["exchanges"]], "page": ALL, "page_exchanges": ALL, "page_who": ALL,
+            "convs": [{"n": c["n"], "name": c["name"], "years": c["years"], "page": c["page"], "page_who": c["page_who"],
+                       "page_exchanges": c["page_exchanges"], "sittings": c["sittings"], "speakers": c["speakers"],
+                       "measures": len(c["measures"]), "exchanges": len(c["exchanges"]),
+                       "harsh": sum(len(r["harsh"]) for r in c["people"]),
+                       "first": {k: (v[0] if v else None) for k, v in c["top"].items()}} for c in by_conv]}
+
+
+ALL = "varnice-svi.html"  # every convocation read, counted together
+
+
 def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
            years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None) -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
@@ -270,10 +312,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             r["harsh"].sort(key=lambda h: h["date"], reverse=True)
             r["said"] = list({(h["date"], h["text"]): h for h in r["harsh"]}.values())  # a sentence once, however many words
             r["harsh_words"] = [w for w, _ in Counter(latin(h["word"]) for h in r["harsh"]).most_common(4)]
-        def first(key):
-            n = lambda r: len(r[key]) if key == "harsh" else r[key]
-            return [r for r in sorted(rows.values(), key=lambda r: (-n(r), r["who"]["name"])) if n(r)][:TOP]
-        top = {k: first(k) for k in ("speeches", "exchanges", "points", "measures", "harsh")}
+        top = firsts(rows.values())
         for key_, r in rows.items():  # each MP's own counts in this convocation, for the MP's page
             if r["who"]["slug"]:
                 place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
@@ -306,11 +345,15 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for e in c["measures"]:
             e["page"] = c["page"]
         for part, name in (("mere", c["page"]), ("ko", c["page_who"])):
-            (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, root=""),
+            (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, all_page=ALL if len(by_conv) > 1 else "", root=""),
                                     encoding="utf-8")
         for k, (chunk, name) in enumerate(zip(chunks, names)):
             (out / name).write_text(env.get_template("floor.html").render(
-                **common, c=c, by_conv=by_conv, part="razmene", shown=chunk, pages=names, page_now=k, root=""), encoding="utf-8")
+                **common, c=c, by_conv=by_conv, part="razmene", shown=chunk, pages=names, page_now=k,
+                all_page=ALL if len(by_conv) > 1 else "", root=""), encoding="utf-8")
+    if len(by_conv) > 1:  # all of them together: a tab beside the convocations'
+        (out / ALL).write_text(env.get_template("floor.html").render(
+            **common, c=together(by_conv), by_conv=by_conv, part="svi", all_page=ALL, root=""), encoding="utf-8")
     # For the home page: the first of each count in each convocation.
     render.by_sitting = {x["url"]: {**x, "page": c["page"], "page_exchanges": c["page_exchanges"]}
                          for c in by_conv for x in c["table"]}
