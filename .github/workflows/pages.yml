@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
     # A build takes about nine minutes; a change that cannot alter the site starts none.
-    paths-ignore: ["tests/**", "worker/**", "**.md", ".github/workflows/**", "!.github/workflows/pages.yml"]
+    paths: ["**", "!tests/**", "!worker/**", "!**.md", "!.github/workflows/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
