@@ -1,0 +1,60 @@
+{
+ "mp": "жарко обрадовић",
+ "model": "claude-haiku-5-5",
+ "read": 11,
+ "speeches": 11,
+ "sittings": 11,
+ "points": [
+  {
+   "tekst": "Наводи да СПС подржава предложене законе и да ће за њих гласати.",
+   "govora": 5,
+   "sazivi": [
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Као овлашћени представник СПС, ја ћу говорити о ова четири законска документа о којима Скупштина данас расправља и желим да кажем одмах на почетку да ће СПС подржати ове предлоге",
+    "date": "2021-05-18",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Dvanaesta sednica Prvog redovnog zasedanja NSRS, 18. maj 2021..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да је Влада добро поступила у време пандемије корона вируса.",
+   "govora": 3,
+   "sazivi": [
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Морам рећи да се наша земља добро понела у време пандемије и да је Влада поступила веома мудро уз све мере које је предузела.",
+    "date": "2020-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sesta sednica Drugog redovnog zasedanja NSRS 08.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да су мере Владе за помоћ привреди и грађанима током пандемије биле важне.",
+   "govora": 2,
+   "sazivi": [
+    "12"
+   ],
+   "citat": {
+    "tekst": "Све оно што је Влада Републике Србије као посебан пакет економске помоћи учинила почетком године, односно у првој половини године, показало се јако важним за данашњи тренутак",
+    "date": "2020-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Sesta sednica Drugog redovnog zasedanja NSRS 08.12.2020..docx"
+   }
+  },
+  {
+   "tekst": "Наводи да закони из области образовања унапређују образовни систем Републике Србије.",
+   "govora": 3,
+   "sazivi": [
+    "11",
+    "12"
+   ],
+   "citat": {
+    "tekst": "Гласаћемо за ове законе из области просвете зато што смо дубоко уверени да они унапређују образовни систем Републике Србије, зато што решавају проблеме са којима се образовни систем суочава",
+    "date": "2021-12-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Cetrnaesta sednica Drugog redovnog zasedanja NSRS, 21. decembar 2021. godine.docx"
+   }
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "mp": "бауер иван",
+ "model": "claude-haiku-5-5",
+ "read": 13,
+ "speeches": 14,
+ "sittings": 10,
+ "points": [
+  {
+   "tekst": "Navodi da budžetski deficit raste i da je javni dug za nekoliko godina naglo porastao.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "10"
+   ],
+   "citat": {
+    "tekst": "Подсетићу вас да је за само четири године, од краја 2008. године па до пројекција за крај ове године, јавни дуг Републике порастао са непуних 30% на готово 60% бруто домаћег производа.",
+    "date": "2012-11-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Podržava mere za smanjenje budžetskog deficita u budžetu za 2013. godinu i u rebalansu za 2013. godinu.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Овако радикалан искорак, а у том смислу ћу вас подсетити да је ово, као што сам већ рекао, први пут од 2006. године да се буџетски дефицит смањује, показује да је Влада имала довољно храбрости да прекине са праксом сталног, неумереног задуживања, које нас је водило на руб пропасти.",
+    "date": "2012-11-23",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/2. dan VIII sednica II redovno zasedanje u 2012. 23.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Navodi da Dontova formula ide u korist najjače stranke, a glasovi ispod izbornog cenzusa se preliju na stranke koje su ga prešle.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Када се одређује број посланика који ће добити нека посланичка листа, ми користимо тзв. Донтову формулу, која да тако кажем, под знацима навода, фаворизује најјачу политичку странку, а то је у овом случају СНС.",
+    "date": "2020-02-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/2. dan Dvadeset drugo vanredno zasedanje NSRS 08.02.2020..docx"
+   }
+  },
+  {
+   "tekst": "Navodi da je naplata doprinosa za PIO fond veća kada je zaposlenost veća.",
+   "govora": 2,
+   "sazivi": [
+    "10",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Погледајмо, рецимо, колики је дефицит ПИО фонда у првих девет месеци ове године па га упоредимо са дефицитом у првих девет месеци 2016. године и видећемо да је нижи. Нижи је, јер је наплата доприноса већа, а она је већа јер је запосленост већа.",
+    "date": "2017-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/8. decembar 2017..pdf"
+   }
+  }
+ ]
+}

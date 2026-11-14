@@ -1,0 +1,70 @@
+{
+ "mp": "мира петровић",
+ "model": "claude-haiku-5-5",
+ "read": 14,
+ "speeches": 17,
+ "sittings": 4,
+ "points": [
+  {
+   "tekst": "Брани Јована Кркобабића, шефа посланичке групе ПУПС-а, од критика о његовој стручности и истиче његово радно искуство.",
+   "govora": 2,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Господин Кркобабић је јавно изнео своју биографију 2008. године, у тренутку када је то било потребно.",
+    "date": "2012-12-03",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/7. dan VIII sednica II redovnog zasedanja u 2012. 3.12.2012.doc"
+   }
+  },
+  {
+   "tekst": "Наводи да су пензионери током ванредног стања прихватили ограничење кретања и остали дисциплиновани.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Они су схватили да сада није питање мог и вашег става, сада је питање окупљања око заставе, сада је питање опстанка ове земље.",
+    "date": "2020-04-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica NSRS za vreme vanrednog stanja odrzana 29. aprila 2020. godine drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Брани начин на који је донета одлука о ванредном стању и тражи подршку Влади.",
+   "govora": 2,
+   "sazivi": [
+    "11"
+   ],
+   "citat": {
+    "tekst": "Све више сам убеђена да је одлуку о ванредном стању требало донети на начин на који је донета.",
+    "date": "2020-04-29",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica NSRS za vreme vanrednog stanja odrzana 29. aprila 2020. godine drugi dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Тражи да жене са ризичном трудноћом добију пуну зараду, а не 65%, и замера Влади што није прихватила амандман.",
+   "govora": 3,
+   "sazivi": [
+    "9"
+   ],
+   "citat": {
+    "tekst": "Морам признати да сам врло изненађена што Влада није прихватила овај амандман, јер је ово нешто о чему ми говоримо већ последњих пар година.",
+    "date": "2012-11-30",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenobeske/5. dan VIII sednica II redovnog zasedanja u 2012. 30.11.2012..doc"
+   }
+  },
+  {
+   "tekst": "Наводи да је Пошта Србије под њеним вођењем остварила добит и да запослени редовно добијају плату.",
+   "govora": 2,
+   "sazivi": [
+    "9",
+    "11"
+   ],
+   "citat": {
+    "tekst": "Ми ћемо завршити ову годину са добити преко две и по милијарде, прошле године смо имали три и нешто; 15.000 запослених који добијају плату редовно;",
+    "date": "2017-12-08",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/8. decembar 2017..pdf"
+   }
+  }
+ ]
+}
