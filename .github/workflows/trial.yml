@@ -34,7 +34,8 @@ jobs:
       - name: The site
         run: |
           set +e
-          /usr/bin/time -v uv run zailiprotiv site --out _site --domain zailiprotiv.rs > site.log 2> site.err; echo "site exit $?"
+          /usr/bin/time -v uv run python -m cProfile -o prof.out -m zailiprotiv.cli site --out _site --domain zailiprotiv.rs > site.log 2> site.err; echo "site exit $?"
+          uv run python -c "import pstats; p = pstats.Stats('prof.out'); p.sort_stats('cumulative').print_stats(70); p.sort_stats('tottime').print_stats(30)" | cut -c1-190 | grep -v "^$" > prof.txt; echo "== where the time goes"; cat prof.txt
           tail -15 site.log; grep -E "Elapsed|Maximum resident" site.err; grep -v "^\s" site.err | tail -25
           du -sh --apparent-size _site; find _site -type f | wc -l
           echo "== largest pages"; find _site -name "*.html" -not -path "_site/cir/*" -printf "%s %p\n" | sort -rn | head -25
