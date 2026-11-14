@@ -5,8 +5,10 @@ change, and how every MP voted on it.
 
 **Site:** https://zailiprotiv.rs
 
-**Status:** first version. The Fourteenth convocation's laws, each with its final roll call by group and by MP, and
-every MP's votes, and Claude's summary of each law's memorandum, labelled as such.
+**Status:** live. Six convocations (9th to 14th, 2012 to now): about 2,100 laws, each with its final roll call by
+group and by MP; about 1,000 MPs; the stenographic notes of every sitting since 2012, word for word and searchable;
+bills in procedure; and visitors' own votes ("Glasaj i ti"). What an AI model wrote (summaries of memoranda and
+debates, overviews of what an MP says) is labelled as such, with the model's name.
 
 ## Principles
 
@@ -17,9 +19,13 @@ every MP's votes, and Claude's summary of each law's memorandum, labelled as suc
 3. **A law's effects are its proposer's,** summarised from the bill's explanatory memorandum and analysis of
    effects, with a link. The site doesn't judge laws.
 4. **MPs are public officials:** their names and votes are shown. Nothing about their private lives.
-5. **Nothing from third parties** on the pages: no analytics, cookies, fonts or scripts from other servers.
+5. **Nothing from third parties** on the pages: no cookies, fonts or scripts from other servers. The maintainer's
+   listed exceptions: visits are counted with Cloudflare Web Analytics (no cookies, no tracking of individuals), and
+   the notes' pages, downloads and share pictures are served from the project's own buckets on its own subdomains.
 6. **What MPs say is not censored and not shaped:** quotes word for word, every name as spoken, nothing left out
    for being harsh or personal, and no label or verdict of the site's own.
+
+`AGENTS.md` holds the principles in full, with the maintainer's decisions and their dates.
 
 ## Source
 
@@ -32,61 +38,93 @@ every agenda item to its roll call; the sittings are listed on the regular and e
 ```sh
 uv sync
 # Every command works on the current convocation, data/14/; `--convocation 13` before the command, on another.
+uv run zailiprotiv status              # what the data still lacks, per convocation; batches running or refused
 uv run zailiprotiv index               # sittings of the convocation and their roll calls → data/14/index.json
-uv run zailiprotiv laws                # laws the current convocation passed → data/14/laws.json
-uv run zailiprotiv summaries           # Claude's summaries of the memoranda → data/14/summaries/ (ANTHROPIC_API_KEY)
-uv run zailiprotiv export --to DIR      # material of laws without a summary, for summaries written in a session
-uv run zailiprotiv import FILE --model M  # save such summaries (JSON Lines: bill_file, summary)
-uv run zailiprotiv site --out _site   # build the static site
+uv run zailiprotiv laws                # laws the convocation passed → data/14/laws.json
+uv run zailiprotiv procedure           # bills in procedure now → data/14/procedure.json
+uv run zailiprotiv votes               # read every roll call not read yet → data/14/votes/ (needs pdftotext)
+uv run zailiprotiv bills               # each bill's memorandum → data/14/bills/ (scanned bills by OCR: tesseract, srp)
 uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/14/laws.json
-uv run zailiprotiv bills               # each law's bill: memorandum and constitutional basis → data/14/bills/
-uv run zailiprotiv votes               # read every roll call not read yet → data/14/votes/<sitting>.json (needs pdftotext)
+uv run zailiprotiv transcripts         # stenographic notes of the sittings → data/14/transcripts/
+uv run zailiprotiv summaries --batch   # the model's summaries of the memoranda, through the Batch API
+uv run zailiprotiv debates-batch       # the model's summaries of the debates on the most contested laws
+uv run zailiprotiv profiles-batch      # the model's overviews of what an MP says → data/profiles/
+uv run zailiprotiv site --out _site    # build the static site
+uv run zailiprotiv notes-site --out _beleske   # the notes as pages of their own (for the bucket)
 uv run pytest
 ```
 
+The sandbox of a coding session usually cannot reach parlament.gov.rs; GitHub's runners can. Everything that reads
+the Assembly's site runs through the workflows below.
+
 ## Pages
 
-Laws (by convocation, area and sitting), a page per law (final vote by group and MP, summary of the memorandum, the
-debate, a picture for sharing), a page per MP (key votes, activity, votes by area and period), a page per
-parliamentary group, "Skupština u brojkama", "Glasaj i ti" (vote on the key laws and compare with groups and MPs, in
-the browser), the week in the Assembly (pages and a feed a newsletter can be sent from), feeds (new laws, per area,
-per MP) and downloads (CSV, JSON). Every page also in Cyrillic, under `cir/`.
+- **Zakoni:** adopted laws by convocation, bills in procedure (a page per bill, with the summary of its memorandum
+  where one is written), areas. A law's page: the final vote by group and MP, the summary of the memorandum, the
+  debate with verbatim quotes, the sparks in its debate, downloads, a picture for sharing, and the visitor's own vote.
+- **Poslanici:** a page per MP (votes, key votes, activity on the floor, what they say, replies and measures) and per
+  parliamentary group.
+- **Varnice:** from the notes, by rule and with no model: the chair's measures, exchanges of replies, harsh words,
+  who speaks most; per convocation and over all of them.
+- **Skupština:** weeks, sittings, convocations, the Assembly in numbers.
+- **Glasaj i ti:** the visitor's ballot ("Moj listić"): everything they voted on (laws, bills before the Assembly
+  votes, the quiz) beside the Assembly's result, with the MPs and groups that voted the same. The ballot stays in
+  the browser. Votes are also counted anonymously by the project's own counter (`worker/`); the method page says
+  what is kept.
+- **Search** over the site and every speech in the notes (Pagefind; Latin without its marks finds the words with
+  them), feeds (new laws, bills, per area, per MP), downloads (CSV, JSON). Every page also in Cyrillic, under `cir/`.
+
+## Where things are served from
+
+| Address | What | From |
+|---|---|---|
+| zailiprotiv.rs | the site's pages | GitHub Pages, behind Cloudflare's proxy |
+| beleske.zailiprotiv.rs | the notes' pages and their search index; the notes as read (`sirovo/`) | R2 bucket `zailiprotiv-beleske` |
+| podaci.zailiprotiv.rs | every law's CSV, JSON and picture, MPs' pictures, `podaci/` | R2 bucket `zailiprotiv-podaci` |
+| glasovi.zailiprotiv.rs | the visitors' votes counter | Cloudflare Worker with D1 (`worker/`) |
+
+Secrets and tokens live in GitHub Secrets and Cloudflare, never in the repository. `data/settings.json` holds the
+public addresses.
 
 ## Workflows
 
 | Workflow | When | What |
 |---|---|---|
-| votes | every morning, and by hand (choose the convocation) | index the sittings and laws, read the roll calls and bills not read yet, link them, commit `data/<N>/` |
-| transcripts | after votes, and by hand | stenographic notes of the debates on the most contested laws |
-| summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API: bill summaries, debate summaries, MP overviews (secret `ANTHROPIC_API_KEY`) |
-| pages | on push, and after each data run | build the site and publish it on GitHub Pages |
-| fixtures | by hand | add real roll-call PDFs to `tests/fixtures` |
+| votes | hourly by day, and by hand (choose the convocation) | index the sittings and laws, the bills in procedure, read the roll calls and bills not read yet, link them, commit `data/<N>/` |
+| transcripts | after votes, and by hand | the stenographic notes of the sittings; the raw notes go to the bucket |
+| summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API: bill summaries, debate summaries, MP overviews. The first pass is always the cheapest model; a stronger one only by hand |
+| pages | on push, and after each data run | build the site, its search index, send downloads to the bucket, publish on GitHub Pages, purge the cache |
+| notes | after transcripts, and by hand | build the notes' pages and their search index, send what changed to the bucket |
+| files | by hand | make the downloads' bucket hold exactly what the site has |
+| worker | on push to `worker/` | deploy the votes counter and its schema |
+| health | hourly | ask the site, the buckets and the counter from outside; an issue when one does not answer |
+| watch | four times a day | do visitors' votes look inflated? An issue when one network sends most of a law's votes |
 | test | on push | the whole test suite |
+| trial, probe, sample, dns-check, fixtures | by hand | a build with all notes and a profile; what is inside scanned bill PDFs; a sample of another model's writing; DNS; test fixtures |
 
 ## Layout
 
 ```
 src/zailiprotiv/
-  config.py      the Assembly's address, User-Agent, delay between requests
-  skupstina.py   the Assembly's site: sittings and the roll-call PDF of each agenda item
-  rollcall.py    reading a roll-call PDF: the vote, and each MP's vote and group
-  laws.py        the adopted laws: title, bill, day passed, Official Gazette, international treaty or not
-  bills.py       a bill's memorandum: constitutional basis (article, points), reasons, funds, effects
-  kinds.py       an act's kind (from its title) and area (from Article 97 of the Constitution), with their labels
-  link.py        which roll calls were on which law, and its final vote
-  summaries.py   Claude's summary of a bill's memorandum: prompt, material, checks
-  site.py        the static site, with templates/ and static/
-  mps.py         who an MP is across roll calls: a name key without word order or titles
-  cli.py         commands
-  translit.py    Cyrillic → Latin
-  jsonfile.py    JSON stores one entry per line, for small git diffs
-data/<N>/        one folder per convocation (14, 13, 12)
-  index.json     sittings and their roll calls (one sitting per line)
-  laws.json      the convocation's adopted laws (one law per line)
-  bills/         one file per bill: its memorandum's sections and the Constitution's articles it cites
-  notes/         outside views on a law (independent bodies; media and civil society): source, date, link, note
-  summaries/     one file per bill: the summary, the model, a fingerprint of what it read
-  votes/         one file per sitting: each vote's date, item, kind, counts and rows (number, name, vote, group)
+  config.py, skupstina.py     the Assembly's site: addresses, sittings, the roll-call PDF of each agenda item
+  rollcall.py, laws.py        reading a roll-call PDF; the adopted laws
+  bills.py, procedure.py      a bill's memorandum (OCR for scans); bills in procedure
+  kinds.py, link.py, mps.py   an act's kind and area; which roll calls were on which law; who an MP is across rolls
+  transcripts.py, debates.py  the stenographic notes; what was said about a law
+  summaries.py, profiles.py, batch.py, federated.py   the model's writing: prompts, checks, the Batch API
+  site.py, pages_*.py         the static site, with templates/ and static/
+  pages_floor.py              "Varnice", by rule from the notes
+  pages_ballot.py, pages_quiz.py   "Glasaj i ti": the ballot and the quiz
+  notes_site.py, files_site.py     the notes' pages and the downloads, for the buckets
+  cyrillic.py, translit.py    the Cyrillic edition; Cyrillic → Latin
+  digest.py, feeds.py, downloads.py, card.py, photos.py, publish.py
+  cli.py                      commands
+worker/                       the visitors' votes counter (Cloudflare Worker, D1)
+data/<N>/                     one folder per convocation (9 to 14)
+  index.json, laws.json, procedure.json
+  votes/, bills/, summaries/, debates/, transcripts/, notes/
+data/profiles/, data/photos/  MPs' overviews and portraits
+data/quiz.json, settings.json, batches.json
 tests/
 ```
 
