@@ -54,7 +54,7 @@ def text_of(pdf: Path | str) -> str:
                           text=True).stdout
 
 
-OCR_PAGES = 60  # a scanned bill longer than this is read to here; the memorandum of the MPs' bills is short
+OCR_PAGES = 200  # a scanned bill longer than this is read to here (a whole labour code ran past 60 pages before its memorandum)
 
 # What OCR in Cyrillic makes of the Roman numerals that head the memorandum's sections: "П." for "II.", "Ш." for
 # "III.", "ІV"/"ТУ"/"IУ" for "IV", and so on. Only at the start of a line, before a heading in capitals.
