@@ -237,24 +237,25 @@ def firsts(rows) -> dict[str, list]:
 def together(by_conv: list[dict]) -> dict:
     """All the convocations read as one: a person's counts added up across them (one row for one MP, by the MP's
     page, or by the name for a speaker who has none), and the first TOP by each count."""
-    rows = {}
+    rows, as_mp = {}, {}  # everyone who spoke; and MPs, counted only in the convocations they sat in
     for c in by_conv:
         for r in c["people"]:
-            t = rows.setdefault(r["who"]["slug"] or r["who"]["name"], {
-                "who": r["who"], "speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
-                "measures_likely": 0, "harsh": [], "convs": []})
-            for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
-                t[k] += r[k]
-            t["harsh"] += r["harsh"]
-            t["convs"].append(c["n"])
-            if r["who"]["photo"] and not t["who"]["photo"]:
-                t["who"] = r["who"]
-    for t in rows.values():
+            for into in [rows] + ([as_mp] if r["who"]["slug"] and not r.get("outside") else []):
+                t = into.setdefault(r["who"]["slug"] or r["who"]["name"], {
+                    "who": r["who"], "speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
+                    "measures_likely": 0, "harsh": [], "convs": []})
+                for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
+                    t[k] += r[k]
+                t["harsh"] = t["harsh"] + r["harsh"]
+                t["convs"].append(c["n"])
+                if r["who"]["photo"] and not t["who"]["photo"]:
+                    t["who"] = r["who"]
+    for t in list(rows.values()) + list(as_mp.values()):
         t["harsh"].sort(key=lambda h: h["date"], reverse=True)
         t["said"] = list({(h["date"], h["text"]): h for h in t["harsh"]}.values())
         t["harsh_words"] = [w for w, _ in Counter(latin(h["word"]) for h in t["harsh"]).most_common(4)]
     first, last = by_conv[-1]["years"].split("–")[0], by_conv[0]["years"].split("–")[-1]
-    return {"n": "svi", "name": "Svi", "years": f"{first}–{last}" if first != last else first, "top": firsts(rows.values()),
+    return {"n": "svi", "name": "Svi", "years": f"{first}–{last}" if first != last else first, "top": firsts(as_mp.values()),
             "people": sorted(rows.values(), key=lambda r: r["who"]["name"]), "speakers": len(rows),
             "sittings": sum(c["sittings"] for c in by_conv), "measures": [e for c in by_conv for e in c["measures"]],
             "exchanges": [e for c in by_conv for e in c["exchanges"]], "page": ALL, "page_exchanges": ALL, "page_who": ALL,
@@ -393,7 +394,9 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             r["harsh"].sort(key=lambda h: h["date"], reverse=True)
             r["said"] = list({(h["date"], h["text"]): h for h in r["harsh"]}.values())  # a sentence once, however many words
             r["harsh_words"] = [w for w, _ in Counter(latin(h["word"]) for h in r["harsh"]).most_common(4)]
-        top = firsts(rows.values())
+        # The first of each count are MPs of this convocation only: a minister or a guest speaks under other rules
+        # (no time limit of an MP's, no chair's measure), and a name on no roll call may be anyone's, mistyped.
+        top = firsts([r for r in rows.values() if r["who"]["slug"] and not r["outside"]])
         for key_, r in rows.items():  # each MP's own counts in this convocation, for the MP's page
             if r["who"]["slug"]:
                 place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
