@@ -55,38 +55,41 @@ class Finder:
     its speaker and its words; the speech is the speaker's on that day that holds the words, and failing that anyone's
     that day, and failing that the day's page. Only pages in the bucket (`pages`) are given."""
 
-    def __init__(self, root: Path, url: str, pages: set | None = None):
+    def __init__(self, root: Path, url: str, pages: set | None = None, stores: dict | None = None):
+        """`stores` are the notes already read, by convocation and sitting, when the caller has them: reading them
+        again, one sitting at a time, was half of the site's build."""
         import json
-        self.url, self.pages, self._json = url.rstrip("/") + "/" if url else "", pages, json
-        self.by_day: dict[str, tuple[Path, str, int]] = {}  # the day's file at the Assembly → (our notes, convocation, day)
+        self.url, self.pages = url.rstrip("/") + "/" if url else "", pages
+        self.by_day: dict[str, tuple[dict, str, int]] = {}  # the day's file at the Assembly → (its notes, convocation, day)
         self._kept: dict = {}
         if not self.url:
             return
-        for f in sorted(root.glob("*/transcripts/*.json")):
-            notes = json.loads(f.read_text(encoding="utf-8"))
-            for i, d in enumerate(notes.get("days", []), 1):
-                if d.get("url"):
-                    self.by_day[d["url"]] = (f, f.parent.parent.name, d.get("day") or i)
+        if stores is None:
+            stores = {}
+            for f in sorted(root.glob("*/transcripts/*.json")):
+                stores.setdefault(f.parent.parent.name, {})[f.name] = json.loads(f.read_text(encoding="utf-8"))
+        for conv, held in stores.items():
+            for notes in held.values():
+                for i, d in enumerate(notes.get("days", []), 1):
+                    if d.get("url"):
+                        self.by_day[d["url"]] = (notes, str(conv), d.get("day") or i)
 
     @staticmethod
     def _plain(text: str) -> str:
         return re.sub(r"[^0-9a-zа-яђјљњћџžšđčć]+", " ", text.lower()).strip()
 
-    def _notes(self, f: Path, conv: str):
-        """The notes of one sitting, kept for the next question (the last 48 asked for): where each speech is, and
-        each day's speeches as [key, speaker's words sorted, text, the text made plain when first needed]."""
-        if f not in self._kept:
-            notes = self._json.loads(f.read_text(encoding="utf-8"))
+    def _notes(self, notes: dict, conv: str):
+        """One sitting's notes made ready, once: where each speech is, and each day's speeches as [key, speaker's
+        words sorted, text, the text made plain when first needed]."""
+        if id(notes) not in self._kept:
             by_day: dict[int, list] = {}
             whole = debates_.whole_names(notes["speeches"].values())
             for k in sorted(notes["speeches"]):
                 sp = notes["speeches"][k]
                 name = whole.get(sp["speaker"], sp["speaker"])
                 by_day.setdefault(sp["day"], []).append([k, " ".join(sorted(self._plain(name).split())), sp["text"], None])
-            if len(self._kept) >= 48:
-                self._kept.pop(next(iter(self._kept)))
-            self._kept[f] = (layout(conv, notes), by_day)
-        return self._kept[f]
+            self._kept[id(notes)] = (layout(conv, notes), by_day)
+        return self._kept[id(notes)]
 
     def __call__(self, day_url: str | None, speaker: str, text: str) -> str:
         at = self.by_day.get(day_url or "")

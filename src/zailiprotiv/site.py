@@ -526,7 +526,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import notes_site
     _sent = root / "notes_manifest.json"
     spot = notes_site.Finder(root, settings.get("notes_url", ""),
-                             set(json.loads(_sent.read_text(encoding="utf-8"))) if _sent.exists() else set())
+                             set(json.loads(_sent.read_text(encoding="utf-8"))) if _sent.exists() else set(), stores=debates)
     for its in items_by_conv.values():
         for it in its:
             days_ = (it["debate"] or {}).get("all_days") or []
