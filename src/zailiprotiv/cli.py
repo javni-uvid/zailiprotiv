@@ -6,6 +6,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import re
 import sys
 import subprocess
@@ -902,17 +903,21 @@ def debates_batch(args) -> int:
     out.mkdir(parents=True, exist_ok=True)
     chosen, pending = {}, state.pending(kind)
     wanted = set(pending["names"]) if pending else set()
+    model = (pending or {}).get("model") or summaries.MODEL
+    # ZAILIPROTIV_REPLACE names a model whose texts are to be written again by the model of this run (a run by hand,
+    # to move from a weaker model to a stronger one); the old text stays until the new one passes the checks.
+    replace = set(filter(None, os.environ.get("ZAILIPROTIV_REPLACE", "").split(",")))
     for i, (law, bill, n, final, item) in enumerate(found):
         name = law["bill_file"]
         text = debates.material(law, bill, n, final, seated, item, df)
-        done = (out / name).exists() and json.loads((out / name).read_text(encoding="utf-8")).get("fingerprint") == \
-            debates.fingerprint(text)
+        saved = json.loads((out / name).read_text(encoding="utf-8")) if (out / name).exists() else {}
+        done = saved.get("fingerprint") == debates.fingerprint(text) and saved.get("model") not in replace
         if only:
             if name in only and not done:
                 chosen[name] = (law, n, final, text)
         elif name in wanted or (i < args.top and not done and not state.gave_up(kind, name)):
             chosen[name] = (law, n, final, text)
-    requests = {name: {"model": summaries.MODEL, "max_tokens": batch.ROOM, "system": batch.cached(debates.SYSTEM),
+    requests = {name: {"model": model, "max_tokens": batch.ROOM, "system": batch.cached(debates.SYSTEM),
                        "messages": batch.messages(kind, name, text, state)}
                 for name, (law, n, final, text) in chosen.items()}
     replies = batch.run(client, state, kind, requests, args.wait, force=bool(only))
@@ -928,7 +933,7 @@ def debates_batch(args) -> int:
             refused += 1
             print(f"  refused {name}: {e}")
             continue
-        (out / name).write_text(json.dumps(debates.record(law, text, debate, summaries.MODEL, dropped),
+        (out / name).write_text(json.dumps(debates.record(law, text, debate, model, dropped),
                                            ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         state.accept(kind, name)
         saved += 1

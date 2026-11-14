@@ -23,6 +23,12 @@ on:
       model:
         description: "Model for this run (empty: the default in summaries.py)"
         default: ""
+      replace:
+        description: "Write again what this model wrote (e.g. claude-haiku-5-5), with the model of this run; debates only for now"
+        default: ""
+      kinds:
+        description: "Which writing to do: summaries debates profiles (empty: all)"
+        default: ""
 
 permissions:
   contents: write
@@ -55,6 +61,8 @@ jobs:
         run: |
           pip install uv && uv sync --frozen
           [ -n "${{ inputs.model }}" ] && export ZAILIPROTIV_MODEL="${{ inputs.model }}"
+          [ -n "${{ inputs.replace }}" ] && export ZAILIPROTIV_REPLACE="${{ inputs.replace }}"
+          kinds=" ${{ inputs.kinds || 'summaries debates profiles' }} "
           # Two passes: the first sends every batch without waiting, so they run side by side; the second waits for
           # them, all together at most the time given (what is left of it for each command).
           deadline=$(( $(date +%s) + ${{ inputs.wait || 90 }} * 60 ))
@@ -63,11 +71,11 @@ jobs:
               [ -f "data/$c/laws.json" ] || continue
               [ -n "${{ inputs.convocation }}" ] && [ "$c" != "${{ inputs.convocation }}" ] && continue
               wait=$(( pass == 1 ? 0 : ($deadline - $(date +%s)) / 60 )); [ "$wait" -lt 0 ] && wait=0
-              uv run zailiprotiv --convocation "$c" summaries --batch --wait "$wait" --limit "${{ inputs.limit || 0 }}"
-              uv run zailiprotiv --convocation "$c" debates-batch --wait "$wait"
+              case "$kinds" in *" summaries "*) uv run zailiprotiv --convocation "$c" summaries --batch --wait "$wait" --limit "${{ inputs.limit || 0 }}";; esac
+              case "$kinds" in *" debates "*) uv run zailiprotiv --convocation "$c" debates-batch --wait "$wait";; esac
             done
             wait=$(( pass == 1 ? 0 : ($deadline - $(date +%s)) / 60 )); [ "$wait" -lt 0 ] && wait=0
-            uv run zailiprotiv profiles-batch --wait "$wait"
+            case "$kinds" in *" profiles "*) uv run zailiprotiv profiles-batch --wait "$wait";; esac
           done
           uv run zailiprotiv status
       - name: Commit

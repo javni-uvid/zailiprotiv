@@ -95,7 +95,8 @@ def run(client, state: State, kind: str, requests: dict[str, dict], wait_minutes
         names = sorted(requests)
         batch = client.messages.batches.create(requests=[{"custom_id": f"r{i}", "params": requests[n]}
                                                          for i, n in enumerate(names)])
-        pending = {"id": batch.id, "names": names}
+        # The model is kept with the batch: a later run that collects it may have another default.
+        pending = {"id": batch.id, "names": names, "model": next(iter(requests.values())).get("model", "")}
         state.data["pending"][kind] = pending
         state.save()
         print(f"{kind}: batch {batch.id} sent, {len(names)} requests")
