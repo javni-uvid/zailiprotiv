@@ -548,7 +548,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             median_presence[c] = shares[len(shares) // 2]
     spoke, words = Counter(), {}
     from zailiprotiv import profiles as profiles_
-    spoken = profiles_.speeches(root)
+    seated = profiles_.seated_days(root)
+    spoken = profiles_.speeches(root, seated)
     distinct = profiles_.distinctive(spoken)
     for key, own in spoken.items():
         if (k := loose_keys.get(key)):
@@ -579,7 +580,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_floor
     sent = root / "notes_manifest.json"  # what notes-upload has put in the bucket
     notes_pages = set(json.loads(sent.read_text(encoding="utf-8"))) if sent.exists() else set()
-    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
+    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
                                                 convs=convs, items_by_conv=items_by_conv)
     from zailiprotiv import card
     import os

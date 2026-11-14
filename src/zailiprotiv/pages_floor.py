@@ -11,6 +11,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from zailiprotiv import debates as debates_, mps, notes_site
+from zailiprotiv.config import CONVOCATIONS
 from zailiprotiv.site import ORDINAL_NAME, slug
 from zailiprotiv.translit import latin
 
@@ -204,7 +205,8 @@ ALL = "varnice-svi.html"  # every convocation read, counted together
 
 
 def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
-           years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None) -> tuple[dict, dict]:
+           years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None,
+           seated: dict | None = None) -> tuple[dict, dict]:
     loose = {debates_.loose(k): k for k in people}
     years_of = years_of or {}
 
@@ -304,10 +306,19 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for raw, t in tally.items():
             w = who(raw)
             r = rows.setdefault(w["slug"] or w["name"], {"who": w, "speeches": 0, "words": 0, "points": 0, "exchanges": 0,
-                                                         "measures": 0, "measures_likely": 0, "harsh": []})
+                                                         "measures": 0, "measures_likely": 0, "harsh": [], "raw": []})
+            r["raw"].append(raw)
             for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
                 r[k] += t[k]
             r["harsh"] += t["harsh"]
+        # Was the person on any roll call of this convocation? If on none, they spoke here as a member of the
+        # Government or as a guest, whatever convocation they sat in as an MP. Said only of the whole convocation:
+        # roll calls are too far apart to tell it of a single speech.
+        conf = CONVOCATIONS.get(c, {})
+        lo, hi = conf.get("from", ""), conf.get("to", "9999")
+        for r in rows.values():
+            r["outside"] = seated is not None and not any(
+                lo <= d.isoformat() < hi for raw in r["raw"] for d in seated.get(debates_.loose(mps.key(raw)), []))
         for r in rows.values():
             r["harsh"].sort(key=lambda h: h["date"], reverse=True)
             r["said"] = list({(h["date"], h["text"]): h for h in r["harsh"]}.values())  # a sentence once, however many words
@@ -317,7 +328,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             if r["who"]["slug"]:
                 place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
                 per_mp[r["who"]["slug"]].append({"conv": c, "name": ORDINAL_NAME.get(c, c), "exchanges": r["exchanges"],
-                                                 "speeches": r["speeches"], "words": r["words"],
+                                                 "speeches": r["speeches"], "words": r["words"], "outside": r["outside"],
                                                  "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
                                                  "measures_likely": r["measures_likely"],
                                                  "said": r["said"], "harsh_place": place,

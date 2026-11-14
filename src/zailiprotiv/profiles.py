@@ -20,8 +20,8 @@ def norm(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[„“”\"'’]", "", text)).strip().lower()
 
 
-def speeches(root: Path) -> dict[str, list[dict]]:
-    """Every speech made as an MP in the notes read, by the speaker's name key (words sorted)."""
+def seated_days(root: Path) -> dict:
+    """The days each MP was on a roll call, by the name's loose key: when a person sat as an MP."""
     seated: dict[str, list[str]] = defaultdict(list)
     for f in root.glob("*/votes/*.json"):
         votes = json.loads(f.read_text(encoding="utf-8"))["votes"]
@@ -29,7 +29,12 @@ def speeches(root: Path) -> dict[str, list[dict]]:
             if isinstance(v, dict):
                 for _, name, _, _ in v["rows"]:
                     seated[debates.loose(mps.key(name))].append(v["when"][:10])
-    days_of = {k: sorted({dt.date.fromisoformat(d) for d in v}) for k, v in seated.items()}
+    return {k: sorted({dt.date.fromisoformat(d) for d in v}) for k, v in seated.items()}
+
+
+def speeches(root: Path, days_of: dict | None = None) -> dict[str, list[dict]]:
+    """Every speech made as an MP in the notes read, by the speaker's name key (words sorted)."""
+    days_of = seated_days(root) if days_of is None else days_of
     out: dict[str, list[dict]] = defaultdict(list)
     for f in sorted(root.glob("*/transcripts/*.json")):
         notes = json.loads(f.read_text(encoding="utf-8"))
