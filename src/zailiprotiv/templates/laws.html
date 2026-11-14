@@ -3,7 +3,7 @@
 {% block title %}Zakoni, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block main %}
 <h1>Zakoni</h1>
-<nav class="subtabs law-kinds" aria-label="Usvojeni ili u proceduri"><a href="zakoni.html" aria-current="page">Usvojeni</a><a href="u-proceduri.html">U proceduri</a></nav>
+<nav class="subtabs law-kinds three" aria-label="Usvojeni, u proceduri ili po oblastima"><a href="zakoni.html" aria-current="page">Usvojeni</a><a href="u-proceduri.html">U proceduri</a><a href="oblasti.html">Oblasti</a></nav>
 <p class="meta follow"><a href="saziv-{{ conv }}.html">O {{ conv_name|lower }}m sazivu: brojke, grupe, sednice</a> · <a href="{{ root }}zakoni.xml">Prati nove zakone (RSS)</a></p>
 {{ tabs(convs, conv, "page") }}
 {% if lead %}

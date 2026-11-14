@@ -781,3 +781,4 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 }
 .subtabs.law-kinds.four { max-width: 40rem; }
 @media (max-width: 640px) { .subtabs.law-kinds.four a { flex: 1 1 40%; } }
+.subtabs.law-kinds.three { max-width: 34rem; }
