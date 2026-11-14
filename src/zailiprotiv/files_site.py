@@ -87,6 +87,7 @@ def purge(url: str, names: list[str]) -> str:
     Needs CLOUDFLARE_API_TOKEN (Zone: Cache Purge) and CLOUDFLARE_ZONE_ID; without them nothing is done.
     Many files at once are purged as the whole host. Returns what was done, in words."""
     import json
+    import urllib.error
     import urllib.parse
     import urllib.request
     token, zone = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip(), os.environ.get("CLOUDFLARE_ZONE_ID", "").strip()
@@ -106,6 +107,9 @@ def purge(url: str, names: list[str]) -> str:
             with urllib.request.urlopen(req, timeout=30) as r:
                 if not json.load(r).get("success"):
                     return "cache not purged: Cloudflare said no"
+    except urllib.error.HTTPError as e:  # Cloudflare's own words say whether it is the token or the zone
+        said = "; ".join(f"{x.get('code')} {x.get('message')}" for x in (json.loads(e.read() or b"{}").get("errors") or []))
+        return f"cache not purged: {e.code} {said} (zone id of {len(zone)} characters)"
     except Exception as e:
         return f"cache not purged: {e}"
     return f"cache purged: {'all of ' + host if 'hosts' in bodies[0] else str(len(names)) + ' files'}"
