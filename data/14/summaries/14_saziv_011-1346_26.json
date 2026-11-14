@@ -1,0 +1,13 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "9942748525fa1f6902aa3cf3138fa5884a620affabe09e2abde23726ee495ee5",
+ "summary": {
+  "ukratko": "Предлагач предлаже измене Закона о извршењу и обезбеђењу. Достављени текст образложења не наводи садржај тих измена.",
+  "razlozi": [],
+  "promene": [],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити средства у буџету Републике Србије."
+ },
+ "usage": {},
+ "law": "Predlog zakona o izmenama Zakona o izvršenju i obezbeđenju",
+ "depth": "standard"
+}
