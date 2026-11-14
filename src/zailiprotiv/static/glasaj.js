@@ -191,6 +191,9 @@
         keep();
         reveal(item, i, true); go(i); showCrowd();
         next.focus({ preventScroll: true });
+        // On a phone the result opens under the buttons, often below the screen: bring "next" and the result into it.
+        var r = next.getBoundingClientRect();
+        if (r.bottom > window.innerHeight - 120 && next.scrollIntoView) next.scrollIntoView({ block: "center", behavior: "smooth" });
         soon(item, i);
       });
     });

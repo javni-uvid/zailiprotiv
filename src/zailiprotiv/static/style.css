@@ -946,3 +946,15 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 }
 .subtabs .n { display: none; }
 @media (max-width: 640px) { .subtabs .n { display: inline; } }
+
+/* The quiz on a phone: the first law and its buttons on the first screen. What stands above them is cut to a line
+   each, and the three buttons stay at the bottom of the screen until the law is voted on. */
+.q-short { display: none; }
+@media (max-width: 640px) {
+  .q-crumbs, .q-lead, .q-long, .q-strip .q-strip-end:disabled { display: none; }
+  .q-short { display: inline; }
+  .q-h1 { font-size: 1.6rem; margin: .9rem 0 .3rem; }
+  .q-notice { margin-bottom: .7rem; font-size: .82rem; }
+  .q-strip { margin-bottom: .9rem; gap: 4px; } .q-strip button { height: 2.1rem; min-width: 0; }
+  .q-item:not(.answered) .q-answers { position: sticky; bottom: 0; z-index: 2; background: var(--bg); padding: .5rem 0 calc(.5rem + env(safe-area-inset-bottom)); box-shadow: 0 -1px 0 var(--line); }
+}
