@@ -446,6 +446,9 @@ def summaries_cmd(args) -> int:
         claimed.add(name)
         target = out_dir / name
         text = summaries.material(law, memo)
+        if "\n## " not in text:  # a memorandum whose only section found is the constitutional basis: nothing to summarise
+            skipped += 1
+            continue
         if target.exists() and json.loads(target.read_text(encoding="utf-8")).get("fingerprint") == \
                 summaries.fingerprint(text):
             continue

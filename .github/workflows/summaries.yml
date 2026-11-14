@@ -45,7 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 340
     steps:
+      # main as it is when the run starts, not as it was when the run was asked for: a run that waited behind
+      # another would otherwise not see what that one wrote, and pay for the same writing again.
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
