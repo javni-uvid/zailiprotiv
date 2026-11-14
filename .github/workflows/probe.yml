@@ -48,7 +48,9 @@ jobs:
           print("scan" if scan else "text", len(text), "chars; sections:", {k: len(v) for k, v in memo.sections.items()}, "articles:", memo.articles)
           if not memo.sections:
               for l in text.splitlines():
-                  if re.search(r"(?i)основ|разлоз|образл|објашњ|osnov|razloz|obrazl", l) and len(l) < 90:
+                  t = l.strip()
+                  caps = sum(c.isupper() for c in t) / max(1, sum(c.isalpha() for c in t))
+                  if 6 < len(t) < 90 and (re.search(r"(?i)основ|разлоз|образл|објашњ|osnov|razloz|obrazl|средств|sredstv", t) and caps > 0.5 or caps > 0.8):
                       print("   |", l.strip())
           else:
               print("   reasons:", memo.sections.get("reasons", "")[:300].replace("\n", " "))
