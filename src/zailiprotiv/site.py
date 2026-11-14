@@ -302,7 +302,7 @@ def hemicycle(counts: dict, rows=((60, 17), (75, 21), (90, 25), (105, 29), (120,
     return out
 
 
-ORDINAL_NAME = {"9": "Deveti", "10": "Deseti", "11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
+ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
 
 
 def convocations(root: Path) -> list[tuple[str, Path]]:

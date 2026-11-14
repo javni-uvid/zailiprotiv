@@ -8,7 +8,7 @@ on:
       convocation:
         description: "Convocation"
         type: choice
-        options: ["14", "13", "12", "11", "10", "9"]
+        options: ["14", "13", "12", "11", "10", "9", "8"]
         default: "14"
       top:
         description: "How many of the laws with the largest share of votes against"

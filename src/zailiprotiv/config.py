@@ -32,6 +32,10 @@ CONVOCATIONS = {
     "9": {"from": "2012-05-31", "to": "2014-04-16", "ordinal": "devet",
           "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-31-maja-2012/zasedanja.2269.html",
           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-31-maja-2012.2194.html"},
+    # "osm": the stem the ordinal is declined from ("u Osmom sazivu").
+    "8": {"from": "2008-06-11", "to": "2012-05-31", "ordinal": "osm",
+          "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-11-juna-2008/zasedanja.1546.html",
+          "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-11-juna-2008.1526.html"},
 }
 CURRENT = "14"
-ORDINALS = ("devet", "deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
+ORDINALS = ("osm", "devet", "deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")

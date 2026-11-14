@@ -12,7 +12,7 @@ on:
       convocation:
         description: "Convocation (14 is the current one; 13 and 12 are in the archive)"
         type: choice
-        options: ["14", "13", "12", "11", "10", "9"]
+        options: ["14", "13", "12", "11", "10", "9", "8"]
         default: "14"
       scheduled:
         description: "Started by the clock (the counter's worker): when nothing new is found, the chain stops"
