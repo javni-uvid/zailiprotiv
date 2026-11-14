@@ -4,6 +4,8 @@
 {% block description %}Razmene replika između poslanika i mere koje je izrekao predsedavajući (opomena, oduzimanje reči, udaljenje sa sednice), doslovno iz stenografskih beleški Narodne skupštine.{% endblock %}
 {% block main %}
 {% macro person(p) %}{% if p.slug %}<a href="poslanik/{{ p.slug }}.html">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% endmacro %}
+{# A name in a count leads to what was counted: the MP's exchanges, measures or speeches on the MP's page, the harsh words in their sentences here. #}
+{% macro counted(p, key) %}{% if not p.slug %}{{ p.name }}{% elif key == "harsh" %}<a href="{{ c.page_who }}#reci-{{ p.slug }}">{{ p.name }}</a>{% else %}<a href="poslanik/{{ p.slug }}.html#{{ {"exchanges": "replike", "measures": "mere"}.get(key, "aktivnost") }}">{{ p.name }}</a>{% endif %}{% endmacro %}
 {% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
 <h1>Varnice u sali</h1>
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene replika između dvoje govornika i mere koje izriče predsedavajući. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
@@ -31,7 +33,7 @@
   <div class="faces-col">
     <h2>{{ label }}</h2>
     <ol class="faces">
-    {% for r in c.top[key][:3] %}<li><img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy"><span class="face-who">{{ person(r.who) }}</span><b>{{ r[key]|length if key == "harsh" else r[key] }}</b></li>
+    {% for r in c.top[key][:3] %}<li><img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy"><span class="face-who">{{ counted(r.who, key) }}</span><b>{{ r[key]|length if key == "harsh" else r[key] }}</b></li>
     {% endfor %}
     </ol>
   </div>
@@ -46,7 +48,7 @@
     <thead><tr><th>Saziv</th><th class="num">Pročitanih sednica</th><th class="num">Govornika</th><th class="num">Mera</th><th class="num">Razmena replika</th><th class="num">Teških reči</th><th>Najviše govora</th><th>Najviše mera</th><th>Najviše teških reči</th></tr></thead>
     <tbody>
     {% for x in c.convs %}
-      <tr><td><a href="{{ x.page }}">{{ x.name }}</a> <span class="meta nowrap">{{ x.years }}</span></td><td class="num">{{ x.sittings }}</td><td class="num">{{ x.speakers }}</td><td class="num"><a href="{{ x.page }}#deo">{{ x.measures }}</a></td><td class="num"><a href="{{ x.page_exchanges }}#deo">{{ x.exchanges }}</a></td><td class="num"><a href="{{ x.page_who }}#reci">{{ x.harsh }}</a></td>{% for key in ["speeches", "measures", "harsh"] %}<td>{% set r = x.first[key] %}{% if r %}{{ person(r.who) }} <span class="meta">{{ r[key]|length if key == "harsh" else r[key] }}</span>{% endif %}</td>{% endfor %}</tr>
+      <tr><td><a href="{{ x.page }}">{{ x.name }}</a> <span class="meta nowrap">{{ x.years }}</span></td><td class="num">{{ x.sittings }}</td><td class="num">{{ x.speakers }}</td><td class="num"><a href="{{ x.page }}#deo">{{ x.measures }}</a></td><td class="num"><a href="{{ x.page_exchanges }}#deo">{{ x.exchanges }}</a></td><td class="num"><a href="{{ x.page_who }}#reci">{{ x.harsh }}</a></td>{% for key in ["speeches", "measures", "harsh"] %}<td>{% set r = x.first[key] %}{% if r %}{% if r.who.slug and key == "harsh" %}<a href="{{ x.page_who }}#reci-{{ r.who.slug }}">{{ r.who.name }}</a>{% else %}{{ counted(r.who, key) }}{% endif %} <span class="meta">{{ r[key]|length if key == "harsh" else r[key] }}</span>{% endif %}</td>{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table></div>
@@ -129,7 +131,7 @@
   <h2>{{ title }}</h2>
   {% if rows %}
   <ol class="board">
-  {% for r in rows %}<li><span class="board-who">{{ person(r.who) }}</span> <b class="board-n">{{ r[key] }}</b>{% if key == "speeches" %} <span class="meta">· {{ "{:,}".format(r.words).replace(",", ".") }} reči</span>{% endif %}</li>
+  {% for r in rows %}<li><span class="board-who">{{ counted(r.who, key) }}</span> <b class="board-n">{{ r[key] }}</b>{% if key == "speeches" %} <span class="meta">· {{ "{:,}".format(r.words).replace(",", ".") }} reči</span>{% endif %}</li>
   {% endfor %}
   </ol>
   {% else %}<p class="meta">Nema ih u pročitanim beleškama.</p>{% endif %}
