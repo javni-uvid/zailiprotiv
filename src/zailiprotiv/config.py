@@ -35,6 +35,8 @@ CONVOCATIONS = {
     # The Eighth (11 June 2008 – 31 May 2012) was tried on 14 Nov 2026 and left out: its 90 sittings' pages
     # (archive …/saziv-od-11-juna-2008/zasedanja.1546.html, laws …/u-sazivu-od-11-juna-2008.1526.html) carry a written
     # account of each sitting and no roll call and no stenographic notes, so there is nothing to say how an MP voted.
+    # Those before it (2007, 2004, 2001: …/arhiva-aktivnosti/saziv-od-14-februara-2007.995.html, .996, .997) have no
+    # list of sittings at all, only the texts of the laws passed (looked at from a runner the same day).
 }
 CURRENT = "14"
 ORDINALS = ("osm", "devet", "deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")
