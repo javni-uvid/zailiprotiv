@@ -961,3 +961,23 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .lb-rest-pick, #lb-rest .lb-pick { margin: 0 0 2rem; }
 .lb-top b.big { min-height: 1.85rem; }
 .q-wait .quiz:not(.on) .q-item:not(:first-child) { display: none; }
+
+/* The home page on a phone, where four visits in five come from: "Kako bi ti glasao?" with its three buttons
+   stands on the first screen, right under the search, and the law that divided the chamber follows it. On wider
+   screens nothing moves. */
+@media (max-width: 640px) {
+  main:has(> .home-hero) { display: flex; flex-direction: column; }
+  main:has(> .home-hero) > * { order: 3; }
+  main:has(> .home-hero) > .home-hero { display: contents; }
+  main:has(> .home-hero) .hero-text { order: 1; padding: 1.1rem 0 .9rem; }
+  main:has(> .home-hero) .home-hero h1 { font-size: 1.85rem; margin-bottom: .45rem; }
+  main:has(> .home-hero) .home-hero .standfirst { margin-bottom: .8rem; font-size: .98rem; }
+  main:has(> .home-hero) .hero-finder input { padding: .7rem .9rem; font-size: 1.05rem; }
+  main:has(> .home-hero) > .home-quiz { order: 2; margin: 0 0 1.4rem; padding: 1.1rem 1.1rem 1.2rem; gap: .9rem; }
+  main:has(> .home-hero) .hero-card { order: 3; margin: 0 0 1.6rem; }
+  /* the counts and the three links under the search follow the vote: the menu above holds the same links */
+  main:has(> .home-hero) .hero-text .masthead { display: none; }
+  main:has(> .home-hero) .home-quiz h2 { font-size: 1.5rem; }
+  main:has(> .home-hero) .home-quiz .hq-text p { font-size: .9rem; margin: 0; }
+  main:has(> .home-hero) .home-quiz .hq-law { font-size: .98rem; line-height: 1.35; margin: 0 0 .7rem; }
+}
