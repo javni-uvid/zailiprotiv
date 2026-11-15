@@ -1,0 +1,46 @@
+# By hand: cognee on one bill, with no LLM key (local GLiNER for the graph, a local multilingual model for
+# embeddings), to see what it makes of our documents. The graph's page and data are kept as the run's artifact;
+# nothing goes to the site and nothing is committed.
+name: cognee-trial
+
+on:
+  workflow_dispatch:
+    inputs:
+      pdf:
+        description: "The bill's PDF at the Assembly"
+        default: "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/14_saziv/2148-25. - Lat..pdf"
+      embedding:
+        description: "fastembed model for the embeddings"
+        default: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+permissions: {}
+
+jobs:
+  trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      TELEMETRY_DISABLED: "true"
+      GRAPH_EXTRACTOR: gliner_demo
+      EMBEDDING_PROVIDER: fastembed
+      EMBEDDING_MODEL: ${{ inputs.embedding }}
+      EMBEDDING_DIMENSIONS: "384"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          pip install -q --extra-index-url https://download.pytorch.org/whl/cpu "cognee[gliner]==1.6.8" pypdf
+          pip list 2>/dev/null | grep -i -E "^(cognee|gliner2|torch|fastembed) " || true
+      - name: Fetch the bill
+        run: curl -sS -L --fail --max-time 120 -A "Mozilla/5.0 (zailiprotiv.rs)" -o zakon.pdf "${{ inputs.pdf }}" && ls -l zakon.pdf
+      - name: Run
+        run: python tools/cognee_trial.py zakon.pdf proba 2>&1 | grep -v -E "^\s*$" | tail -80
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cognee-proba
+          path: proba/
+          if-no-files-found: warn
