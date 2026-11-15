@@ -40,6 +40,11 @@ jobs:
         run: curl -sS -L --fail --max-time 120 -A "Mozilla/5.0 (zailiprotiv.rs)" -o zakon.pdf "${PDF// /%20}" && ls -l zakon.pdf  # the Assembly's file names hold spaces
       - name: Run
         run: python tools/cognee_trial.py zakon.pdf proba 2>&1 | grep -v -E "^\s*$" | tail -80
+      # Also into the log, packed: the artifact's storage is not reachable from every place that reads the result.
+      - name: Print
+        if: always()
+        run: |
+          for f in proba/*; do echo "=== $f"; gzip -9 -c "$f" | base64 -w 0; echo; echo "=== end"; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
