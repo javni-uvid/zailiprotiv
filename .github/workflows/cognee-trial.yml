@@ -35,7 +35,9 @@ jobs:
           pip install -q --extra-index-url https://download.pytorch.org/whl/cpu "cognee[gliner]==1.6.8" pypdf
           pip list 2>/dev/null | grep -i -E "^(cognee|gliner2|torch|fastembed) " || true
       - name: Fetch the bill
-        run: curl -sS -L --fail --max-time 120 -A "Mozilla/5.0 (zailiprotiv.rs)" -o zakon.pdf "${{ inputs.pdf }}" && ls -l zakon.pdf
+        env:
+          PDF: ${{ inputs.pdf }}
+        run: curl -sS -L --fail --max-time 120 -A "Mozilla/5.0 (zailiprotiv.rs)" -o zakon.pdf "${PDF// /%20}" && ls -l zakon.pdf  # the Assembly's file names hold spaces
       - name: Run
         run: python tools/cognee_trial.py zakon.pdf proba 2>&1 | grep -v -E "^\s*$" | tail -80
       - uses: actions/upload-artifact@v4
