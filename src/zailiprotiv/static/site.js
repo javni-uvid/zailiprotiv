@@ -304,6 +304,29 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
   more.addEventListener("click", function () { shown += 20; load().then(render); });
 })();
 
+// Beside a law in any list, the visitor's own vote on it, if they have cast one (kept in this browser by glas.js
+// and the quiz; read here, sent nowhere).
+(function () {
+  var votes;
+  try { votes = JSON.parse(localStorage.getItem("zip.glasovi")) || {}; } catch (e) { return; }
+  var WORD = { z: "za", p: "protiv", u: "uzdržan" };
+  if (!Object.keys(votes).length) return;
+  function mark(scope) {
+    scope.querySelectorAll("a.row-title[href*='zakon/']").forEach(function (a) {
+      var slug = (a.getAttribute("href").split("zakon/")[1] || "").replace(/\.html$/, "").split(/[?#]/)[0], v = votes[slug];
+      if (!WORD[v] || (a.nextElementSibling && a.nextElementSibling.classList.contains("my-vote"))) return;
+      var chip = document.createElement("span");
+      chip.className = "my-vote " + v; chip.textContent = "tvoj glas: " + WORD[v];
+      a.insertAdjacentElement("afterend", chip);
+    });
+  }
+  mark(document);
+  // lists the page's scripts fill later (the home page's, "show more")
+  if (window.MutationObserver) document.querySelectorAll("ol.rows").forEach(function (list) {
+    new MutationObserver(function () { mark(list); }).observe(list, { childList: true });
+  });
+})();
+
 // Lists that are already on the page (all laws, all MPs of a convocation): search, filter and sort the rows in place.
 (function () {
   "use strict";

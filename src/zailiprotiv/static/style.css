@@ -989,3 +989,13 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
   .wide-only { display: none; }
   .home-now ol.rows > li:nth-child(n+4), .spotlight .spot > li:nth-child(n+4), #lista:not(.live) > li:nth-child(n+4) { display: none; }
 }
+
+/* On from one vote to the next: the quiz after a vote on a law's page, a first result halfway through the quiz,
+   a line to the vote above the list of laws, and the visitor's own vote beside a law in any list. */
+.yv-next { margin: .8rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; }
+.f-bill .yv-next { display: none; }
+.q-half { margin: 0 0 .9rem; padding: .6rem .8rem; border-left: 5px solid var(--fg); background: var(--card); font-size: .95rem; }
+.vote-line { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; margin: 1rem 0 1.4rem; font-size: .92rem; color: var(--muted); }
+.vote-line span { flex: 1 1 16rem; }
+.my-vote { display: inline-block; margin-left: .5rem; padding: .05rem .45rem; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .74rem; font-weight: 700; color: #fff; background: var(--uzdrzan); vertical-align: middle; white-space: nowrap; }
+.my-vote.z { background: var(--za); } .my-vote.p { background: var(--protiv); }

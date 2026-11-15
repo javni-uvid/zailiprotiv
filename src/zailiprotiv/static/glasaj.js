@@ -75,6 +75,23 @@
     var same = a === "z" ? za : a === "p" ? protiv : null;
     item.querySelector(".q-verdict").textContent = same === null ? "Uzdržao si se. Zakon je usvojen." :
       "Glasao si " + WORD[a] + ", kao " + same + " " + plural(same, "poslanik", "poslanika", "poslanika") + ". Zakon je usvojen.";
+    // Halfway through, a first look at who votes like the visitor: something of their own for whoever stops here.
+    var old = item.querySelector(".q-half");
+    if (old) old.remove();
+    var half = Math.ceil(answers.length / 2), n = done();
+    if (animate && n === half && n < answers.length) {
+      var best = data.mps.map(function (p) { return { p: p, m: match(p.v) }; }).filter(function (x) { return x.m.both >= Math.max(3, Math.ceil(n / 2)); })
+        .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || a.p.n.localeCompare(b.p.n, "sr"); });
+      var level = best.filter(function (x) { return x.m.share === best[0].m.share && x.m.both === best[0].m.both; });
+      if (level.length) {
+        var note = document.createElement("p");
+        note.className = "q-half";
+        note.textContent = "Na pola si. Zasad najviše glasova kao ti: " +
+          (level.length <= 2 ? names(level.map(function (x) { return x.p.n; })) : level.length + " " + plural(level.length, "poslanik", "poslanika", "poslanika")) +
+          " (" + level[0].m.same + " od " + level[0].m.both + "). Još " + (answers.length - n) + " do celog rezultata.";
+        box.insertBefore(note, box.firstChild);
+      }
+    }
     var widths = [za, protiv, rest].map(function (n) { return (100 * n / total) + "%"; });
     if (animate) { bars.forEach(function (s) { s.style.width = "0"; }); void box.offsetWidth; }
     bars.forEach(function (s, k) { s.style.width = widths[k]; });
@@ -195,7 +212,7 @@
         // On a phone the result opens under the buttons, often below the screen: bring "next" and the result into it.
         var r = next.getBoundingClientRect();
         if (r.bottom > window.innerHeight - 120 && next.scrollIntoView) next.scrollIntoView({ block: "center", behavior: "smooth" });
-        soon(item, i);
+        if (!item.querySelector(".q-half")) soon(item, i);  // the halfway note is read, not passed by on a timer
       });
     });
     next.addEventListener("click", function () { advance(i); });
