@@ -239,7 +239,9 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
   var list = document.getElementById("lista"), more = document.getElementById("jos"), saziv = document.getElementById("saziv");
   var heading = document.getElementById("lista-naslov"), chips = document.querySelectorAll(".chip[data-f]");
   if (!list || !chips.length) return;
-  var filter = "protiv", shown = 8;
+  // On a phone the list opens with three laws, as the page is a long way down already; "Prikaži još" brings the rest.
+  var FIRST = window.matchMedia && window.matchMedia("(max-width: 640px)").matches ? 3 : 8;
+  var filter = "protiv", shown = FIRST;
   var TITLES = { protiv: "Zakoni koji su podelili Skupštinu", novi: "Najnoviji zakoni", hitan: "Usvojeni po hitnom postupku",
                  finance: "Budžet i javne finansije", treaty: "Međunarodni ugovori" };
   function rows() {
@@ -259,6 +261,7 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
   function render() {
     var xs = rows();
     list.textContent = "";
+    list.classList.add("live");  // from here the script decides how many show (see the phone's rule in style.css)
     heading.textContent = TITLES[filter];
     xs.slice(0, shown).forEach(function (l, i) {
       var li = el("li", "row");
@@ -293,11 +296,11 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
     chip.addEventListener("click", function () {
       chips.forEach(function (c) { c.classList.remove("on"); c.setAttribute("aria-pressed", "false"); });
       chip.classList.add("on"); chip.setAttribute("aria-pressed", "true");
-      filter = chip.dataset.f; shown = 8;
+      filter = chip.dataset.f; shown = FIRST;
       load().then(render);
     });
   });
-  if (saziv) saziv.addEventListener("change", function () { shown = 8; load().then(render); });
+  if (saziv) saziv.addEventListener("change", function () { shown = FIRST; load().then(render); });
   more.addEventListener("click", function () { shown += 20; load().then(render); });
 })();
 

@@ -88,12 +88,12 @@
   <ol class="rows compact">
   {% for it in (last_sitting or latest)[:5] %}{{ row(it, none) }}{% endfor %}
   </ol>
-  <p>{% if last_sitting|length > 5 %}<a href="sednica/{{ last_sitting_slug }}.html">Još {{ last_sitting|length - 5 }} sa ove sednice</a> · {% endif %}<a href="zakoni.html">Svi zakoni</a> · <a href="zakoni.xml">RSS</a></p>
+  <p>{% if last_sitting|length > 5 %}<a href="sednica/{{ last_sitting_slug }}.html">Još <span class="wide-only">{{ last_sitting|length - 5 }}</span><span class="phone-only">{{ last_sitting|length - 3 }}</span> sa ove sednice</a> · {% endif %}<a href="zakoni.html">Svi zakoni</a> · <a href="zakoni.xml">RSS</a></p>
 </section>
 <aside class="home-side">
-  <a class="side-box" href="u-proceduri.html">
+  <a class="side-box" href="{{ "glasaj.html" if votes_api else "u-proceduri.html" }}">
     <b>{{ stats.waiting }}</b>
-    <span>{{ plural(stats.waiting, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u proceduri</span>
+    <span>{{ plural(stats.waiting, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u proceduri{% if votes_api %}. <u>Glasaj o njima pre poslanika</u>{% endif %}</span>
     {% if coming %}<span class="side-note">Sazvano: {{ coming[0].title|latin }}{% if coming[0].starts %}, {{ coming[0].starts[:10]|day }}{% endif %}</span>{% endif %}
   </a>
   <a class="side-box" href="poslanici.html">
@@ -123,7 +123,7 @@
     </li>
   {% endfor %}
   </ol>
-  <p class="spot-more"><a href="grupe.html">Kako glasaju poslaničke grupe</a> · <a href="brojke.html">Skupština u brojkama</a></p>
+  <p class="spot-more"><a class="phone-only" href="zakoni.html">Svi zakoni</a><span class="phone-only"> · </span><a href="grupe.html">Kako glasaju poslaničke grupe</a> · <a href="brojke.html">Skupština u brojkama</a></p>
 </section>
 {% endif %}
 

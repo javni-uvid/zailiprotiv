@@ -981,3 +981,11 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
   main:has(> .home-hero) .home-quiz .hq-text p { font-size: .9rem; margin: 0; }
   main:has(> .home-hero) .home-quiz .hq-law { font-size: .98rem; line-height: 1.35; margin: 0 0 .7rem; }
 }
+
+/* The home page on a phone is a long way down: each of its three lists opens with three, and a link leads on. */
+.phone-only { display: none; }
+@media (max-width: 640px) {
+  .phone-only { display: inline; }
+  .wide-only { display: none; }
+  .home-now ol.rows > li:nth-child(n+4), .spotlight .spot > li:nth-child(n+4), #lista:not(.live) > li:nth-child(n+4) { display: none; }
+}
