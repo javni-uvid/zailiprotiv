@@ -23,7 +23,7 @@ from zailiprotiv.config import BASE, CONVOCATIONS, DELAY, ORDINALS, USER_AGENT, 
 from zailiprotiv.translit import latin
 
 # The current convocation's sittings: regular, then extraordinary.
-LISTINGS = CONVOCATIONS["14"]["listings"]
+LISTINGS = CONVOCATIONS["14"]["listings"]  # the same pages serve the current convocation, whichever it is
 
 
 class FetchError(RuntimeError):
@@ -211,9 +211,23 @@ def index(get: Callable[[str], bytes] = fetch, delay: float = DELAY, convocation
     """A convocation's sittings with their roll calls."""
     conf = CONVOCATIONS[convocation]
     found = archive_sittings(conf["archive"], get, delay) if "archive" in conf else sittings(get, conf["listings"])
+    index.later = [s.title for s in found if later_convocation(s.title, conf["ordinal"])]  # a newer one has begun
     found = [s for s in found if not other_convocation(s.title, conf["ordinal"])]
     for sitting in found:
         time.sleep(delay)
         page = get(sitting.url).decode("utf-8", "replace")
         sitting.votes, sitting.agenda, sitting.starts = votes(page, sitting.url), agenda(page), convened(page)
-    return found
+    index.later += [s.title for s in found if s.starts and s.starts[:10] >= conf.get("to", "9999")]
+    return [s for s in found if within(s.starts, conf)]
+
+
+def later_convocation(title: str, ordinal: str) -> bool:
+    """A sitting whose title names a convocation after this one."""
+    t = latin(title).lower()
+    return any(f"{o}om sazivu" in t or f"{o}og saziva" in t for o in ORDINALS[ORDINALS.index(ordinal) + 1:])
+
+
+def within(day: str, conf: dict) -> bool:
+    """Whether a day (a sitting's start, a law's adoption) falls in a convocation's own dates; one without a day is
+    kept, and left to the title's ordinal."""
+    return not day or conf.get("from", "") <= day[:10] < conf.get("to", "9999")

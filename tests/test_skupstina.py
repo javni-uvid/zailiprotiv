@@ -95,3 +95,13 @@ def test_other_convocation():
     assert skupstina.other_convocation("Прва седница Првог редовног заседања у Четрнаестом сазиву", "trinaest")
     assert not skupstina.other_convocation("Прва седница Првог редовног заседања у Тринаестом сазиву", "trinaest")
     assert not skupstina.other_convocation("Друга седница Другог ванредног заседања", "trinaest")
+
+
+def test_a_sitting_belongs_to_its_convocation_by_its_dates_and_title():
+    from zailiprotiv import skupstina
+    from zailiprotiv.config import CONVOCATIONS
+    assert skupstina.within("2026-08-24T10:00", CONVOCATIONS["14"]) and not skupstina.within("2026-11-17", CONVOCATIONS["14"])
+    assert skupstina.within("2026-11-17", CONVOCATIONS["15"]) and not skupstina.within("2026-08-24", CONVOCATIONS["15"])
+    assert skupstina.within("", CONVOCATIONS["14"])  # no date: left to the title
+    assert skupstina.later_convocation("Прва седница Народне скупштине Републике Србије у Петнаестом сазиву", "četrnaest")
+    assert not skupstina.later_convocation("Друга седница у Четрнаестом сазиву", "četrnaest")

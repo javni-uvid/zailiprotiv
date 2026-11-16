@@ -452,9 +452,14 @@ These are the project's promises to its readers. Never change them without the m
   Fourteenth's data during the hourly runs; the site builds with an empty current convocation, and the home page
   and "Glasaj i ti" then show the last convocation with five final votes or more, saying so (`active` in
   `site.build`). Still by hand: the steps in the next point.
-- The Fifteenth convocation was convened in November 2026, after the October elections. The listings show the
-  Fourteenth's sittings (2024–2026). When the Fifteenth's appear there, the Fourteenth moves to the archive:
-  add its archive page to `config.CONVOCATIONS`, the Fifteenth's listings and laws page, and set `CURRENT`.
+- The Fifteenth convocation was constituted on 17 November 2026, after the 25 October elections. Prepared on
+  16 Nov 2026: `config.CONVOCATIONS["15"]` (from 2026-11-17) and the Fourteenth's "to"; both read the same listings
+  and page of adopted laws, and each keeps only the sittings and laws in its own dates and not naming the other.
+  `CURRENT` stays "14" until the Fifteenth has its first roll call; the hourly `votes` run opens an issue ("Novi saziv
+  na sajtu Skupštine") when the listings show a later convocation's sitting. To switch: set `CURRENT = "15"`; copy
+  `data/14/procedure.json` and the waiting bills' files in `data/14/bills/` and `data/14/summaries/` into
+  `data/15/` (or they are read and summarised again); when the Assembly moves the Fourteenth to its archive, give it
+  its "archive" and archived "laws" pages in place of the listings. The site skips a convocation with no laws.json.
 - How a vote is tied to its act (title, bill, memorandum) on the Assembly's site.
 - Summaries of the laws (Claude's, from the memorandum) and a Cyrillic edition of the site.
 - MPs whose name is spelled differently across layouts (Ana/Anna Oreg, middle initials) appear twice: a manual

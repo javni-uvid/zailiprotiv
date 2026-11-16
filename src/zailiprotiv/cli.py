@@ -54,6 +54,8 @@ def index(args) -> int:
         return 0
     out.write_text(jsonfile.dumps(store, "sittings"), encoding="utf-8")
     print(f"sittings: {len(found)}, roll calls: {total}")
+    for title in getattr(skupstina.index, "later", []):  # the votes workflow opens an issue on this line
+        print(f"::notice::A later convocation's sitting is listed: {title}")
     for s in found:
         print(f"  {len(s.votes):4}  {s.title[:100]}")
     if found and not total:
@@ -279,15 +281,18 @@ def adopted(args) -> int:
     """The laws the current convocation passed, from the Assembly's page of adopted laws, into data/laws.json."""
     source = CONVOCATIONS[CONVOCATION]["laws"]
     found = laws.parse(skupstina.fetch(source).decode("utf-8", "replace"), source)
+    listed = len(found)
+    found = [law for law in found if skupstina.within(law.passed or "", CONVOCATIONS[CONVOCATION])]  # the page may hold two
     store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": source,
              "convocation": CONVOCATION,
              "laws": {law.pdf: law.as_dict() for law in found}}
     if _shrunk(Path(args.out), "laws", len(found)):
         return 0
     Path(args.out).write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
-    print(f"laws: {len(found)}, international treaties: {sum(l.treaty for l in found)}, "
+    print(f"laws: {len(found)} (of {listed} on the page), international treaties: {sum(l.treaty for l in found)}, "
           f"without a bill: {sum(not l.bill_pdf for l in found)}")
-    return 0 if found else 1
+    # A page that lists nothing is broken; a new convocation that has passed nothing yet is not.
+    return 0 if found or listed else 1
 
 
 def all_votes(folder: Path) -> dict[str, dict]:

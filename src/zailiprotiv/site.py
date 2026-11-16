@@ -374,6 +374,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env.globals.update(hemicycle=hemicycle)
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     env.filters["qid"] = qid
+    env.filters["locative"] = lambda name: name.lower()[:-1] + "om" if name.lower().endswith("i") else name.lower()  # Četrnaesti → (u) četrnaestom
     if out.exists():
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)

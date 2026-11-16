@@ -10,7 +10,7 @@
 {% set biggest = (now|sort(attribute="members", reverse=true))[0] %}
 {% set against = (now|selectattr("lines.protiv")|sort(attribute="lines.protiv", reverse=true)|list)[:1] %}
 <div class="lead-nums">
-  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "grupa", "grupe", "grupa") }} u {{ by_conv[0][0].name|lower }}m sazivu</span></p>
+  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "grupa", "grupe", "grupa") }} u {{ by_conv[0][0].name|locative }} sazivu</span></p>
   <p><b>{{ biggest.members }}</b><span>{{ plural(biggest.members, "član", "člana", "članova") }} ima najveća: <a href="grupa/{{ biggest.slug }}.html">{{ biggest.name }}</a></span></p>
   {% if against %}<p><b>{{ against[0].lines.protiv }}</b><span>puta je većinom glasala protiv zakona: <a href="grupa/{{ against[0].slug }}.html">{{ against[0].name }}</a>, najviše od svih</span></p>{% endif %}
 </div>

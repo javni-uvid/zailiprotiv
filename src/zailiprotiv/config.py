@@ -12,7 +12,14 @@ DELAY = 1.0
 # on its archive page in Latin, whose sittings' Cyrillic pages (the ones linking roll calls) have the next lower
 # number. Each has its page of adopted laws. Ordinals name a convocation in sitting titles ("у Тринаестом сазиву").
 CONVOCATIONS = {
-    "14": {"from": "2024-02-06", "ordinal": "četrnaest",
+    # The Fifteenth was constituted on 17 November 2026. Until the Assembly moves the Fourteenth to its archive, both
+    # are read from the same listings and the same page of adopted laws, and each keeps only what falls in its own
+    # dates ("from" ≤ a sitting's start or a law's day < "to") and does not name the other in its title.
+    "15": {"from": "2026-11-17", "ordinal": "petnaest",
+           "listings": (BASE + "/активности/народна-скупштина/заседања/редовна.34.html",
+                        BASE + "/активности/народна-скупштина/заседања/ванредна.35.html"),
+           "laws": BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html"},
+    "14": {"from": "2024-02-06", "to": "2026-11-17", "ordinal": "četrnaest",
            "listings": (BASE + "/активности/народна-скупштина/заседања/редовна.34.html",
                         BASE + "/активности/народна-скупштина/заседања/ванредна.35.html"),
            "laws": BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html"},

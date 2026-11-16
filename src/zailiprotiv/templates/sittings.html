@@ -10,7 +10,7 @@
 {% set most = (now|sort(attribute="against", reverse=true))[0] %}
 {% set big = (now|sort(attribute="n", reverse=true))[0] %}
 <div class="lead-nums">
-  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "sednica", "sednice", "sednica") }} sa usvojenim zakonima u {{ by_conv[0][0].name|lower }}m sazivu</span></p>
+  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "sednica", "sednice", "sednica") }} sa usvojenim zakonima u {{ by_conv[0][0].name|locative }} sazivu</span></p>
   <p><b>{{ big.n }}</b><span>{{ plural(big.n, "zakon", "zakona", "zakona") }} na jednoj sednici, najviše: <a href="sednica/{{ big.slug }}.html">{{ big.day|day }}</a></span></p>
   <p><b class="t-protiv">{{ most.against }}</b><span>glasova protiv na jednoj sednici, najviše: <a href="sednica/{{ most.slug }}.html">{{ most.day|day }}</a></span></p>
 </div>

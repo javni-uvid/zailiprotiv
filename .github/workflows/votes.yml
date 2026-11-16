@@ -10,10 +10,10 @@ on:
   workflow_dispatch:
     inputs:
       convocation:
-        description: "Convocation (14 is the current one; 13 and 12 are in the archive)"
+        description: "Convocation (\"tekući\" is config.CURRENT, the one the hourly runs read)"
         type: choice
-        options: ["14", "13", "12", "11", "10", "9"]
-        default: "14"
+        options: ["tekući", "15", "14", "13", "12", "11", "10", "9"]
+        default: "tekući"
       scheduled:
         description: "Started by the clock (the counter's worker): when nothing new is found, the chain stops"
         type: boolean
@@ -48,11 +48,14 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null  # tesseract: scanned bills
           pip install uv && uv sync --frozen
-          c="--convocation ${{ inputs.convocation || '14' }}"
-          uv run zailiprotiv $c index
+          current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
+          conv="${{ inputs.convocation }}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
+          echo "CONV=$conv" >> "$GITHUB_ENV"
+          c="--convocation $conv"
+          uv run zailiprotiv $c index | tee index.log
           uv run zailiprotiv $c laws
           # The bills in procedure are the current convocation's only.
-          if [ "${{ inputs.convocation || '14' }}" = "$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
+          if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
           uv run zailiprotiv $c votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
@@ -62,20 +65,31 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
-          c="${{ inputs.convocation || '14' }}"
+          c="$CONV"
           # Next in the chain: the notes of the debates, then the model's writing, which publishes the site.
           if ! git diff --cached -I'"fetched": "[^"]*"' | grep -q '^@@'; then
             # Nothing new but the time of reading: no commit. An hourly run stops here; one by hand goes on.
             [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.scheduled }}" = "true" ] && exit 0
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
           fi
-          git commit -m "Roll calls read from the Assembly's site (convocation ${{ inputs.convocation || '14' }})"
+          git commit -m "Roll calls read from the Assembly's site (convocation $CONV)"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
           if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main
           gh workflow run transcripts.yml --ref main -f convocation=$c
         env:
           GH_TOKEN: ${{ github.token }}
+      # The Assembly lists a later convocation's sitting among the current one's: time to switch (AGENTS.md, "The
+      # Fifteenth convocation"). Said once, in an issue; the current convocation's data stay as they were.
+      - name: Tell the maintainer a new convocation has begun
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f index.log ] && grep -q "A later convocation's sitting is listed" index.log || exit 0
+          title="Novi saziv na sajtu Skupštine: vreme za prebacivanje"
+          [ -n "$(gh issue list -R "${{ github.repository }}" --state all --search "in:title \"$title\"" --json number -q '.[0].number')" ] && exit 0
+          gh issue create -R "${{ github.repository }}" --title "$title" --body "$(printf 'Sajt Skupštine na spisku sednica ima sednicu novog saziva:\n\n%s\n\nPodaci tekućeg saziva su ostali kakvi su bili. Šta treba uraditi: AGENTS.md, „The Fifteenth convocation“.' "$(grep "A later convocation" index.log | sed 's/.*listed: /- /')")"
       - name: Tell the maintainer when this failed
         if: failure()
         env:

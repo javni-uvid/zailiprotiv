@@ -8,7 +8,7 @@ on:
       convocation:
         description: "Convocation"
         type: choice
-        options: ["14", "13", "12", "11", "10", "9", "sve"]
+        options: ["15", "14", "13", "12", "11", "10", "9", "sve"]
         default: "14"
       top:
         description: "How many of the laws with the largest share of votes against"
@@ -48,7 +48,7 @@ jobs:
         run: |
           sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libreoffice-writer-nogui poppler-utils  # the older notes are .doc
           pip install uv && uv sync --frozen
-          convs="${{ inputs.convocation }}"; [ "$convs" = "sve" ] && convs="14 13 12 11 10 9"
+          convs="${{ inputs.convocation }}"; [ "$convs" = "sve" ] && convs=$(ls -d data/[0-9]*/ | xargs -n1 basename | sort -rn | tr '\n' ' ')
           if [ "${{ inputs.all }}" = "true" ]; then
             # Every sitting: what the bucket already holds is brought first (so it is not read again), each
             # convocation gets what is left of five hours, and what was read is sent to the bucket whatever happens.
@@ -81,7 +81,7 @@ jobs:
           fi
           # The model writes only from the notes in the repository, so a run over every sitting starts none.
           if [ "${{ inputs.all }}" != "true" ]; then
-            for c in $(echo "${{ inputs.convocation }}" | sed 's/sve/14 13 12 11 10 9/'); do gh workflow run summaries.yml --ref main -f convocation=$c; done
+            for c in $(echo "${{ inputs.convocation }}" | sed "s/sve/$(ls -d data/[0-9]*/ | xargs -n1 basename | sort -rn | tr '\n' ' ')/"); do gh workflow run summaries.yml --ref main -f convocation=$c; done
           fi
           gh workflow run notes.yml --ref main || true  # the notes as pages of their own (R2)
       - name: Tell the maintainer when this failed

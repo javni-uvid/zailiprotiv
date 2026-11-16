@@ -7,7 +7,7 @@
 {% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("brojke") }}
 {% set n0 = numbers[0] %}
 <div class="lead-nums">
-  <p><b>{{ n0.laws }}</b><span>{{ plural(n0.laws, "zakon", "zakona", "zakona") }} u {{ n0.conv.name|lower }}m sazivu</span></p>
+  <p><b>{{ n0.laws }}</b><span>{{ plural(n0.laws, "zakon", "zakona", "zakona") }} u {{ n0.conv.name|locative }} sazivu</span></p>
   {% if n0.with_bill %}<p><b>{{ (100 * n0.urgent / n0.with_bill)|round|int }}%</b><span>po hitnom postupku</span></p>{% endif %}
   {% if n0.voted %}<p><b>{{ (100 * n0.unopposed / n0.voted)|round|int }}%</b><span>bez ijednog glasa protiv</span></p>{% endif %}
   {% if n0.days is not none %}<p><b>{{ n0.days }}</b><span>{{ plural(n0.days, "dan", "dana", "dana") }} od predloga do usvajanja, za polovinu zakona</span></p>{% endif %}
