@@ -2,6 +2,15 @@
 var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "е": "e", "ж": "ž", "з": "z", "и": "i", "ј": "j",
   "к": "k", "л": "l", "љ": "lj", "м": "m", "н": "n", "њ": "nj", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "ћ": "ć",
   "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "č", "џ": "dž", "ш": "š" };
+// A use of the quiz or the ballot ("kviz.kraj", "listic.podeljeno", …), told to the counter once per page: it keeps a
+// sum per day and nothing else, not even the device's mark. Plain text, so the browser asks nothing first.
+var zipCounted = {};
+function zipCount(what) {
+  var api = document.body && (document.body.dataset.api || "").replace(/\/$/, "");
+  if (!api || zipCounted[what]) return;
+  zipCounted[what] = 1;
+  try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
+}
 // The Cyrillic edition (cir/): what the scripts write into the page is written in Cyrillic too.
 (function () {
   "use strict";

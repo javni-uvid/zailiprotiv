@@ -1,6 +1,6 @@
 # Counter of visitors' votes ("Glasaj i ti") and the clock
 
-A Cloudflare Worker with a D1 table of three numbers per law. It stores no cookies, addresses or times. The site
+A Cloudflare Worker with a D1 database (`schema.sql`). It stores no cookies or addresses. The site
 shows the totals only when `data/settings.json` names the worker's address.
 
 It is also the project's clock: GitHub's own schedule didn't start the workflows (13 Nov 2026), so the worker starts
@@ -24,6 +24,14 @@ or unmarks a quote as convincing; `GET /z/<law>` gives the law's totals and the 
 mark the browser makes up and keeps; the counter stores only its hash with the secret `SALT`, the day, and a hash of
 the network (the address's /24 or /64, the day and `SALT`), which changes daily and holds no address. What may be
 voted on is read from the site's `glasanje.json`. The quiz's old sums stay in `votes` and are added to the totals.
+
+## Uses of the quiz and the ballot
+
+`POST /e {e}` adds one to a sum per day for one of a fixed list of uses: `kviz.kraj` (the quiz's result reached), and
+for the quiz's picture (`kviz.`) and the ballot's (`listic.`): `otvori` (the ballot's picture opened), `podeli` (the
+share button), `podeljeno` (the share sheet finished), `kopiraj`, `sacuvaj`. Nothing else is stored with it, not even
+the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
+most once.
 
 ## Inflated counts
 

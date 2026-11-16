@@ -11,7 +11,9 @@
 //   GET  /z/<law>     → {"z": 12, "p": 30, "u": 2, "c": {"<quote>": 5, …}}       one law, and its marked quotes
 //   POST /z           ← {"d": "<device>", "item": "<law>", "v": "z" | "p" | "u"} one vote, replacing the device's last
 //   POST /c           ← {"d": "<device>", "item": "<law>", "q": "<quote>", "on": true | false}   mark a quote
-//   GET  /pregled     → what today's votes look like, law by law, for the watch against inflated counts
+//   POST /e           ← {"e": "kviz.kraj" | "listic.podeljeno" | …}               one use of the quiz or the ballot, counted
+//   GET  /pregled     → what today's votes look like, law by law, for the watch against inflated counts, and the
+//                       uses of the last two weeks by day
 //
 // Only laws (and quotes) the site itself lists are counted (glasanje.json, read from the site and kept for an hour),
 // and one address can send only so often (Cloudflare's rate limiter; the address is not stored by us).
@@ -31,6 +33,11 @@ async function allowed() {
   }
   return laws.map;
 }
+
+// What the quiz and the ballot count when it happens (a sum per day, nothing with it): the quiz's result shown, and
+// for each picture to share, opened, the share sheet opened, shared, the text copied, the picture saved.
+const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopiraj", "kviz.sacuvaj",
+  "listic.otvori", "listic.podeli", "listic.podeljeno", "listic.kopiraj", "listic.sacuvaj"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {
@@ -62,13 +69,16 @@ async function one(env, item) {
 // many devices sent many votes today. Numbers only.
 async function overview(env) {
   const day = today();
-  const [items, nets, busy] = await env.DB.batch([
+  const [items, nets, busy, used] = await env.DB.batch([
     env.DB.prepare("SELECT item, COUNT(*) AS total, SUM(day = ?1) AS today FROM ballots GROUP BY item HAVING today > 0").bind(day),
     env.DB.prepare("SELECT item, net, COUNT(*) AS n FROM ballots WHERE day = ?1 GROUP BY item, net").bind(day),
-    env.DB.prepare("SELECT COUNT(*) AS n FROM (SELECT device FROM ballots WHERE day = ?1 GROUP BY device HAVING COUNT(*) > 60)").bind(day)]);
+    env.DB.prepare("SELECT COUNT(*) AS n FROM (SELECT device FROM ballots WHERE day = ?1 GROUP BY device HAVING COUNT(*) > 60)").bind(day),
+    env.DB.prepare("SELECT day, what, n FROM events WHERE day >= ?1 ORDER BY day DESC, what").bind(new Date(Date.now() - 13 * 864e5).toISOString().slice(0, 10))]);
   const top = {};
   for (const r of nets.results) top[r.item] = Math.max(top[r.item] || 0, r.n);
-  return { day, devices_with_many_votes: busy.results[0].n,
+  const uses = {};
+  for (const r of used.results) (uses[r.day] = uses[r.day] || {})[r.what] = r.n;
+  return { day, devices_with_many_votes: busy.results[0].n, uses,
            laws: items.results.map((r) => ({ item: r.item, total: r.total, today: r.today, busiest_network: top[r.item] || 0 }))
              .sort((a, b) => b.today - a.today).slice(0, 200) };
 }
@@ -126,7 +136,7 @@ export default {
     }
     if (request.method !== "POST") return reply({ error: "method" }, 405, origin);
     if (from !== origin) return reply({ error: "origin" }, 403, origin);
-    const single = path === "/z" || path === "/c";
+    const single = path === "/z" || path === "/c" || path === "/e";
     const limiter = single ? env.VLIMIT : env.LIMIT;
     if (limiter) {
       const { success } = await limiter.limit({ key: request.headers.get("cf-connecting-ip") || "x" });
@@ -135,6 +145,12 @@ export default {
     let body;
     try { body = JSON.parse((await request.text()).slice(0, 8000)); } catch (e) { return reply({ error: "json" }, 400, origin); }
     body = body || {};
+    if (path === "/e") {
+      if (!EVENTS.has(body.e)) return reply({ error: "event" }, 400, origin);
+      await env.DB.prepare("INSERT INTO events (day, what, n) VALUES (?, ?, 1) ON CONFLICT (day, what) DO UPDATE SET n = n + 1")
+        .bind(today(), body.e).run();
+      return reply({}, 204, origin);
+    }
     const known = await allowed(), day = today();
     const device = typeof body.d === "string" && DEVICE.test(body.d) && env.SALT ? (await hash(env.SALT + "|" + body.d)).slice(0, 32) : null;
     if (single) {

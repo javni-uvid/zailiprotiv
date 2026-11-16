@@ -7,6 +7,7 @@
   var takeOver = function () { list.classList.add("on"); };  // from here the script shows and hides the laws
   var WORD = { z: "za", p: "protiv", u: "uzdržan" };
   var ROOT = document.body.dataset.root || "";
+  var used = function (what) { if (window.zipCount && ready) window.zipCount(what); }, ready = false;  // site.js
   var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
   // What is kept for the tab: the answers by law (so the order of the laws may change), and the law to show first.
   var KEY = "glasaj:" + slugs().sort().join("|"), FIRST = "glasaj:prvi", at = 0;
@@ -102,6 +103,7 @@
     var end = i === "kraj";
     items.forEach(function (item, k) { item.hidden = end || k !== i; });
     result.hidden = !end; list.hidden = end;
+    if (end) used("kviz.kraj");  // reached now, not a finished quiz the page opens on again
     marks.forEach(function (m, k) {
       var a = answers[k];
       m.className = (m.dataset.go === "kraj" ? "q-strip-end" : "") + (a ? " a-" + a : "") + (String(i) === m.dataset.go ? " now" : "");
@@ -339,16 +341,19 @@
   function copyText() {
     var text = shareText + " " + shareUrl();
     (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
-      .then(function () { note("Kopirano. Nalepi u poruku ili objavu."); })
+      .then(function () { note("Kopirano. Nalepi u poruku ili objavu."); used("kviz.kopiraj"); })
       .catch(function () { note(text); });
   }
   document.getElementById("q-copy").addEventListener("click", copyText);
+  document.getElementById("q-save").addEventListener("click", function () { used("kviz.sacuvaj"); });
+  var shared = function () { used("kviz.podeljeno"); };
   document.getElementById("q-share").addEventListener("click", function () {
+    used("kviz.podeli");
     var file = cardBlob && window.File ? new File([cardBlob], "kako-bih-ja-glasao.png", { type: "image/png" }) : null;
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], text: shareText + " " + shareUrl() }).catch(function () {});
+      navigator.share({ files: [file], text: shareText + " " + shareUrl() }).then(shared, function () {});
     } else if (navigator.share) {
-      navigator.share({ text: shareText, url: shareUrl() }).catch(function () {});
+      navigator.share({ text: shareText, url: shareUrl() }).then(shared, function () {});
     } else {  // a computer without a share sheet: the picture is saved, the text copied
       document.getElementById("q-save").click(); copyText();
       note("Slika je sačuvana, a tekst sa linkom kopiran. Dodaj ih u poruku ili objavu.");
@@ -459,4 +464,5 @@
   var first = answers.indexOf("");
   go(cameWith >= 0 ? cameWith : (first < 0 ? "kraj" : first));
   if (cameWith >= 0) { showCrowd(); soon(items[cameWith], cameWith); }
+  ready = true;
 })();

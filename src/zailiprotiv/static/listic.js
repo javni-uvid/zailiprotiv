@@ -279,17 +279,21 @@
     ready.then(paint);
   }
   function note(text) { $("lb-shared").textContent = text; }
+  function used(what) { if (window.zipCount) window.zipCount(what); }  // site.js
+  function shared() { used("listic.podeljeno"); }
+  $("lb-save").addEventListener("click", function () { used("listic.sacuvaj"); });
   var URL_ = "https://zailiprotiv.rs/glasaj";
-  $("lb-share-open").addEventListener("click", function () { $("lb-share").hidden = !$("lb-share").hidden; if (!$("lb-share").hidden) draw(); });
+  $("lb-share-open").addEventListener("click", function () { $("lb-share").hidden = !$("lb-share").hidden; if (!$("lb-share").hidden) { draw(); used("listic.otvori"); } });
   $("lb-copy").addEventListener("click", function () {
     var text = shareText() + " " + URL_;
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { note("Kopirano. Nalepi u poruku ili objavu."); }).catch(function () { note(text); });
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { note("Kopirano. Nalepi u poruku ili objavu."); used("listic.kopiraj"); }).catch(function () { note(text); });
     else note(text);
   });
   $("lb-share-img").addEventListener("click", function () {
+    used("listic.podeli");
     var file = blob && window.File ? new File([blob], "moj-listic.png", { type: "image/png" }) : null;
-    if (file && navigator.canShare && navigator.canShare({ files: [file] })) navigator.share({ files: [file], text: shareText() + " " + URL_ }).catch(function () {});
-    else if (navigator.share) navigator.share({ text: shareText(), url: URL_ }).catch(function () {});
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) navigator.share({ files: [file], text: shareText() + " " + URL_ }).then(shared, function () {});
+    else if (navigator.share) navigator.share({ text: shareText(), url: URL_ }).then(shared, function () {});
     else note("Ovaj pregledač ne ume da podeli sliku: sačuvaj je, pa je pošalji.");
   });
   $("lb-more").addEventListener("click", function () { all = true; show(); });
