@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, plural, how with context %}
-{% block title %}{{ area|latin }} — Za ili Protiv{% endblock %}
-{% block description %}Zakoni iz oblasti „{{ area|latin }}" (član 97. Ustava) i kako su glasali poslanici.{% endblock %}
+{% block title %}{{ area|latin }}: zakoni i kako su glasali poslanici — Za ili Protiv{% endblock %}
+{% block description %}Zakoni iz oblasti „{{ area|latin }}“ (član 97. Ustava) i kako su glasali poslanici.{% endblock %}
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Novi zakoni: {{ area|latin }}" href="{{ area|area_slug }}.xml">{% endblock %}
 {% block main %}

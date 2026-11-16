@@ -404,6 +404,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     settings_file = root / "settings.json"
     settings = json.loads(settings_file.read_text(encoding="utf-8")) if settings_file.exists() else {}
     env.globals["votes_api"] = settings.get("votes_api", "")  # the visitors' votes counter (worker/)
+    if settings.get("indexnow_key"):  # IndexNow (Bing and others): the key, at the site's root, proves the site is ours
+        (out / f"{settings['indexnow_key']}.txt").write_text(settings["indexnow_key"], encoding="utf-8")
     env.globals["notes_all"] = bool(settings.get("notes_all"))  # every sitting's notes are read (brought from the bucket)
     env.globals["notes_url"] = settings.get("notes_url", "")  # where the notes' pages (and their search index) are
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,

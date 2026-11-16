@@ -51,9 +51,16 @@ jobs:
           # The search index of the whole text (Pagefind; made of the pages, served from the site itself).
           npx -y pagefind@1.5.0 --site _site | tail -8
           du -sh --apparent-size _site; find _site -type f | wc -l
+          # The pages whose text changed since the last build, for search engines (told after publishing).
+          python3 tools/indexnow.py list _site .cache/indexnow.json indexnow.txt
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+      - uses: actions/upload-artifact@v4
+        with:
+          name: indexnow
+          path: indexnow.txt
+          retention-days: 2
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -79,3 +86,16 @@ jobs:
             sleep 10
           done
           echo "::warning::cache not purged: $got"; exit 1
+      # Search engines that take IndexNow (Bing and others) are told which pages changed. A failure here is only noted.
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools
+            data/settings.json
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: indexnow
+      - name: Tell search engines what changed
+        continue-on-error: true
+        run: python3 tools/indexnow.py send indexnow.txt

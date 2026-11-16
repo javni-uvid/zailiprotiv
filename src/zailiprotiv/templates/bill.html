@@ -3,7 +3,7 @@
 {# A bill in procedure: what is known of it before the Assembly votes. Once passed, the page sends on to the law's. #}
 {% set name = b.title|latin %}
 {% block title %}{{ b.title|latin }} — Za ili Protiv{% endblock %}
-{% block description %}{{ b.title|latin }}: ko ga je podneo, kada, koliko čeka i šta predlagač navodi. Poslanici o njemu još nisu glasali.{% endblock %}
+{% block description %}Ko ga je podneo, kada, koliko čeka i šta predlagač navodi; poslanici o njemu još nisu glasali: {{ b.title|latin }}.{% endblock %}
 {% block share %}{% if b.law %}<meta http-equiv="refresh" content="0; url=../zakon/{{ b.law.slug }}.html"><link rel="canonical" href="{{ site_url }}zakon/{{ b.law.slug }}.html">{% endif %}{% endblock %}
 {% block main %}
 {% set sm = b.summary.summary if b.summary else none %}

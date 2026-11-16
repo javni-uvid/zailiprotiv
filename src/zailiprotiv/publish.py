@@ -9,6 +9,29 @@ from pathlib import Path
 _HREF = re.compile(r'((?:href|content)=")([^":?#]*?)\.html((?:[#?][^"]*)?")')
 
 
+_TITLE = re.compile(r"<title>([^<]*)</title>")
+_SAID = re.compile(r'(<meta (?:name="description"|property="og:description") content=")([^"]*)(")')
+_BRAND = (" — Za ili Protiv", " — За или Против")
+
+
+def fit_head(text: str) -> str:
+    """A page's title and description cut to what search engines show (about 65 and 160 characters, Bing's advice):
+    a long title loses the site's name at its end, a long description is cut between words."""
+    def title(m):
+        t = m.group(1)
+        for brand in _BRAND:
+            if len(t) > 65 and t.endswith(brand):
+                t = t[: -len(brand)]
+        return f"<title>{t}</title>"
+
+    def said(m):
+        d = m.group(2)
+        if len(d) > 160:
+            d = d[:157].rsplit(" ", 1)[0].rstrip(" ,;:–—") + "…"
+        return m.group(1) + d + m.group(3)
+    return _SAID.sub(said, _TITLE.sub(title, text, 1))
+
+
 def clean_urls(out: Path) -> None:
     """Addresses without ".html" (the maintainer, 13 Nov 2026): GitHub Pages serves page.html at /page, so the files
     keep their names and only the links change, in pages, feeds, the sitemap and the site's own scripts. "index"
@@ -39,7 +62,7 @@ def clean_urls(out: Path) -> None:
                 elif os.path.normpath(os.path.join(here, path)) in folders:
                     return m.group(0)
                 return m.group(1) + path + m.group(3)
-            text = _HREF.sub(link, f.read_text(encoding="utf-8"))  # relative links: no scheme, so no colon
+            text = fit_head(_HREF.sub(link, f.read_text(encoding="utf-8")))  # relative links: no scheme, so no colon
             if site:  # the page's one address, as the old ones with ".html" still open, and its twin in the other script
                 def address(file: str) -> str:
                     rel = file[:-5]

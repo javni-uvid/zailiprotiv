@@ -3,5 +3,6 @@
   "analytics_token": "62b7969c87164343897a48605c9267c0",
   "notes_url": "https://beleske.zailiprotiv.rs/",
   "files_url": "https://podaci.zailiprotiv.rs/",
-  "notes_all": true
+  "notes_all": true,
+  "indexnow_key": "4d849078ca77a4cd51d8b6c45acc06c1"
 }
