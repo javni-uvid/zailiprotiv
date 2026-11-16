@@ -1,4 +1,5 @@
-# By hand: what Cloudflare Web Analytics counted on the site (pages, where visitors came from, devices, hours).
+# By hand: what Cloudflare Web Analytics counted on the site (pages, where visitors came from, devices, hours), and if
+# asked, what Cloudflare stopped on the way (tools/blocked.py).
 # Sums only, and no row seen fewer than three times: this log is public. Reads only.
 name: visits
 
@@ -8,6 +9,10 @@ on:
       hours:
         description: "How many hours back"
         default: "24"
+      blocked:
+        description: "Also what Cloudflare stopped (security events; how search engines' crawlers fared)"
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -23,3 +28,9 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           HOURS: ${{ inputs.hours }}
         run: python3 tools/visits.py "$HOURS"
+      - name: What was stopped
+        if: inputs.blocked
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          HOURS: ${{ inputs.hours }}
+        run: python3 tools/blocked.py "$HOURS"
