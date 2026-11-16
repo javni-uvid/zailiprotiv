@@ -420,6 +420,30 @@ def website(args) -> int:
     return 1 if bad else 0
 
 
+def summaries_check(args) -> int:
+    """What a person should look at in the summaries kept, by model: reasons that don't say the proposer states
+    them, and items that say "in line with X" where the memorandum says it is not. Nothing is changed."""
+    from zailiprotiv import summaries
+    totals: dict[str, dict] = {}
+    for path in sorted(Path(args.summaries).glob("*.json")):
+        record = json.loads(path.read_text(encoding="utf-8"))
+        bill = Path(args.bills) / path.name
+        memo = json.loads(bill.read_text(encoding="utf-8")) if bill.exists() else {}
+        summary = record["summary"]
+        t = totals.setdefault(record.get("model", "?"), {"summaries": 0, "reasons": 0, "unattributed": 0, "negation": 0})
+        t["summaries"] += 1
+        t["reasons"] += len(summary.get("razlozi", []))
+        t["unattributed"] += len(summaries.unattributed(summary))
+        turned = summaries.negation_review(summary, memo, record.get("law", ""))
+        t["negation"] += bool(turned)
+        if turned:
+            print(f"  {path.name}: {turned[0][:140]}")
+    for model, t in sorted(totals.items(), key=lambda kv: -kv[1]["summaries"]):
+        print(f"{model}: {t['summaries']} summaries, {t['unattributed']} of {t['reasons']} reasons without attribution, "
+              f"{t['negation']} to look at for a turned-round negation")
+    return 0
+
+
 def summaries_cmd(args) -> int:
     """Claude's summary of each bill's memorandum not summarised yet (or whose memorandum changed), into
     data/summaries/<bill file>.json. Needs ANTHROPIC_API_KEY."""
@@ -458,7 +482,7 @@ def summaries_cmd(args) -> int:
         if getattr(args, "batch", False):
             todo[name] = (law, memo, target)
             continue
-        if client is None:
+        if client is None and not summaries.MODEL.startswith("ollama:"):  # a local model needs no key
             import anthropic
             client = anthropic.Anthropic()
         try:
@@ -1071,6 +1095,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--batch", action="store_true", help="through the Batch API (half the price; results may come next run)")
     p.add_argument("--wait", type=float, default=300, help="with --batch: minutes to wait for the batch")
     p.set_defaults(run=summaries_cmd)
+    p = commands.add_parser("summaries-check", help="report summaries whose reasons lack the proposer's attribution, "
+                                                    "or turn a \"not in line with\" round (reads only)")
+    p.add_argument("--summaries", default=str(DATA / "summaries"))
+    p.add_argument("--bills", default=str(DATA / "bills"))
+    p.set_defaults(run=summaries_check)
     for name, run, help_ in (("export", export, "write the material of laws still without a summary"),
                              ("import", import_summaries, "save summaries written in a session (JSON Lines)")):
         p = commands.add_parser(name, help=help_)

@@ -80,3 +80,77 @@ def test_session_summaries_are_checked_and_kept(tmp_path):
     # the API run then leaves it alone
     assert cli._pending(type("A", (), {"laws": str(tmp_path / "laws.json"), "bills": str(tmp_path / "bills"),
                                        "out": str(tmp_path / "s")})) == []
+
+
+# --- checks and the local-model path ---------------------------------------------------------------------------
+
+def test_latin_and_back_keeps_the_digraphs():
+    text = "Предлог закона о љубави, њиви и џему: Љубљана"
+    assert summaries.to_latin(text) == "Predlog zakona o ljubavi, njivi i džemu: Ljubljana"
+    assert summaries.to_cyrillic(summaries.to_latin(text)) == text
+
+
+def test_local_material_drops_the_statement_of_conformity_and_the_quotes():
+    memo = {"sections": {"reasons": "Разлози са „Службени гласник РС“.\nИЗЈАВА О УСКЛАЂЕНОСТИ ПРОПИСА\nНародни посланици Петар Петровић"}}
+    text = summaries.local_material(LAW, memo)
+    assert "Razlozi sa Službeni glasnik RS." in text
+    assert "Petrović" not in text and "„" not in text and '"' not in text
+    # the standard material, which the fingerprint stands for, is untouched
+    assert "ИЗЈАВА" in summaries.material(LAW, memo)
+
+
+def test_attribution_is_added_only_where_it_is_missing():
+    s = {"ukratko": "x", "razlozi": ["Предлагач наводи да је закон стар.", "Закон је застарео.", "Према образложењу, треба се ускладити."],
+         "promene": [], "sredstva": ""}
+    assert summaries.unattributed(s) == ["Закон је застарео."]
+    out, added = summaries.attribute(s)
+    assert added == 1 and out["razlozi"][1] == "Према предлагачу, закон је застарео."
+    assert out["razlozi"][0] == s["razlozi"][0] and s["razlozi"][1] == "Закон је застарео."  # the input is not changed
+
+
+def test_repeated_items_and_the_sentence_about_funds_are_dropped():
+    s = {"ukratko": "x", "razlozi": ["А.", "а", "Б."], "promene": ["В.", "За закон нису потребна додатна средства.", "В."], "sredstva": ""}
+    out = summaries.dedupe(s)
+    assert out["razlozi"] == ["А.", "Б."] and out["promene"] == ["В."]
+
+
+def test_a_turned_round_negation_is_flagged_not_edited():
+    memo = {"sections": {"reasons": "Садржина закона и поступак његовог усвајања нису у складу са обавезама које је Србија преузела."}}
+    bad = {"ukratko": "x", "promene": [], "razlozi": ["Предлагач наводи да је поступак у складу са обавезама које је Србија преузела."]}
+    good = {"ukratko": "x", "promene": [], "razlozi": ["Предлагач наводи да поступак није у складу са обавезама које је Србија преузела."]}
+    assert summaries.negation_review(bad, memo) == bad["razlozi"]
+    assert summaries.negation_review(good, memo) == []
+
+
+class Reply:
+    def __init__(self, content):
+        self.body = json.dumps({"message": {"content": content}, "prompt_eval_count": 7, "eval_count": 5}).encode()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        pass
+
+    def read(self):
+        return self.body
+
+
+def test_a_local_model_answers_in_latin_and_the_summary_is_cyrillic(monkeypatch):
+    monkeypatch.setattr(summaries, "MODEL", "ollama:llama3.1:8b")
+    asked = []
+    answer = ('{"ukratko": "Predlagač predlaže uređenje zaštite potrošača.", "razlozi": ["Usklađivanje sa propisima EU", '
+              '"Usklađivanje sa propisima EU"], "promene": ["Nova pravila"], "sredstva": "Nisu potrebna sredstva."}')
+
+    def urlopen(req, timeout):
+        asked.append(json.loads(req.data))
+        return Reply(answer)
+
+    out = summaries.ollama_summarize(LAW, MEMO, urlopen)
+    assert out["summary"]["ukratko"] == "Предлагач предлаже уређење заштите потрошача."
+    assert out["summary"]["razlozi"] == ["Према предлагачу, усклађивање са прописима ЕУ"]  # once, with the attribution
+    assert out["review"] == {"attribution_added": 1, "negation": []}
+    assert out["model"] == "ollama:llama3.1:8b" and out["usage"] == {"input": 7, "output": 5}
+    assert asked[0]["model"] == "llama3.1:8b" and "format" not in asked[0] and asked[0]["options"]["temperature"] == 0
+    assert out["fingerprint"] == summaries.fingerprint(summaries.material(LAW, MEMO))  # what the API wrote stays
+    assert "Cyrillic" not in asked[0]["messages"][0]["content"] and "latinicom" in asked[0]["messages"][0]["content"]

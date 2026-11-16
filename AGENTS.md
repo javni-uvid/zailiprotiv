@@ -220,6 +220,25 @@ These are the project's promises to its readers. Never change them without the m
     why and links the PDF.
   - In large laws the explanation of individual articles is cut at the material's limit (8,000 characters), so
     their summaries cover the reasons and the first articles. To revisit with a higher limit for those laws.
+  - **Local models, by hand only** (16 Nov 2026): `ZAILIPROTIV_MODEL="ollama:llama3.1:8b"` (or `ollama:qwen2.5:7b`)
+    writes the summaries of laws still without one through a local Ollama server, no key. The workflows never use
+    it. Tried on the 21 summaries of the Fourteenth convocation that a local model rewrote against Haiku's (Nov
+    2026): llama3.1:8b came close in length and structure, qwen2.5:7b was shorter and garbled Cyrillic; neither is as
+    good as Haiku (the maintainer's judgement), so **what the API wrote is never replaced by a local model's**
+    (the fingerprint skips it). What the local path does differently, in `summaries.ollama_summarize`, and only
+    there: the memorandum without the EU statement of conformity that is stuck to the reasons (half of the input,
+    names of signatories and OCR noise), Latin script in and out (values put back in Cyrillic, never the keys), no
+    quotation marks in the input, no JSON mode (llama never stops in it), temperature 0 and a cap on the answer.
+    The standard `SYSTEM` and `material()` are untouched, so the fingerprint is the same.
+  - **Checks on a finished summary** (`summaries.py`; `zailiprotiv summaries-check` reports on any model, changing
+    nothing): reasons without the proposer's attribution (missing in 564 of Haiku's 2,402 reasons and 46 of Opus's
+    4,480, convocations 9-14, Nov 2026), and an item saying "у складу са X" where the memorandum says "није у складу са X" (a small
+    model's mistake: llama turned an argument round in 2 of 21 bills; none in the Claude summaries). Only the local
+    path acts on them: it adds "Према предлагачу, " before a reason with no attribution, removes repeated items and
+    a sentence about funds from "promene", and writes what a person should look at under `review` in the file (the
+    site ignores it). A flagged negation is left for a person, never edited. For the Claude summaries the checks
+    only report: whether to add the attribution rule to `SYSTEM` is the maintainer's decision, as it would make
+    every summary stale and the **summaries** workflow would write them all again.
 
 ### Debates
 

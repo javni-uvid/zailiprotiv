@@ -47,6 +47,8 @@ uv run zailiprotiv bills               # each bill's memorandum → data/14/bill
 uv run zailiprotiv link                # each law's kind, roll calls and final vote, into data/14/laws.json
 uv run zailiprotiv transcripts         # stenographic notes of the sittings → data/14/transcripts/
 uv run zailiprotiv summaries --batch   # the model's summaries of the memoranda, through the Batch API
+uv run zailiprotiv summaries-check     # reasons without the proposer's attribution, in any model's summaries (reads only)
+ZAILIPROTIV_MODEL=ollama:llama3.1:8b uv run zailiprotiv summaries --limit 5   # by hand, a local model, no key
 uv run zailiprotiv debates-batch       # the model's summaries of the debates on the most contested laws
 uv run zailiprotiv profiles-batch      # the model's overviews of what an MP says → data/profiles/
 uv run zailiprotiv site --out _site    # build the static site
