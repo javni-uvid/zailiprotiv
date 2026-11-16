@@ -40,10 +40,19 @@ def clean_urls(out: Path) -> None:
                     return m.group(0)
                 return m.group(1) + path + m.group(3)
             text = _HREF.sub(link, f.read_text(encoding="utf-8"))  # relative links: no scheme, so no colon
-            if site:  # the page's one address, as the old ones with ".html" still open
-                rel = f.relative_to(out).as_posix()[:-5]
-                rel = rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if os.path.normpath(os.path.join(out, rel)) in folders else "")
-                text = text.replace("</head>", f'<link rel="canonical" href="{site}{rel}">\n</head>', 1)
+            if site:  # the page's one address, as the old ones with ".html" still open, and its twin in the other script
+                def address(file: str) -> str:
+                    rel = file[:-5]
+                    return rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if os.path.normpath(os.path.join(out, rel)) in folders else "")
+                file = f.relative_to(out).as_posix()
+                head = f'<link rel="canonical" href="{site}{address(file)}">\n'
+                twin = file[4:] if file.startswith("cir/") else "cir/" + file
+                if (out / twin).exists():
+                    lat, cyr = (twin, file) if file.startswith("cir/") else (file, twin)
+                    head += (f'<link rel="alternate" hreflang="sr-Latn" href="{site}{address(lat)}">\n'
+                             f'<link rel="alternate" hreflang="sr-Cyrl" href="{site}{address(cyr)}">\n'
+                             f'<link rel="alternate" hreflang="x-default" href="{site}{address(lat)}">\n')
+                text = text.replace("</head>", head + "</head>", 1)
             f.write_text(own.sub(absolute, text), encoding="utf-8")
         elif f.suffix == ".xml":
             f.write_text(own.sub(absolute, f.read_text(encoding="utf-8")), encoding="utf-8")

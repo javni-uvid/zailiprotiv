@@ -22,6 +22,7 @@ from zailiprotiv.translit import latin
 HERE = Path(__file__).parent
 PART = 300_000  # bytes of speech to a page, about; a day longer than that is split
 MAIN = "https://zailiprotiv.rs/"
+NOTES = "https://beleske.zailiprotiv.rs/"  # where the bucket is served: the pages' own addresses, for search engines
 _MARK = re.compile(r"^\s*\d+/\d+\s*[A-ZА-ЯЈЉЊЂЋЏ]{1,3}\s*/\s*[A-ZА-ЯЈЉЊЂЋЏ]{1,3}\s*$", re.M)
 
 
@@ -129,6 +130,11 @@ PAGE = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
+<meta name="description" content="{description}">
+<link rel="canonical" href="{here}">
+<link rel="alternate" hreflang="sr-Latn" href="{lat}">
+<link rel="alternate" hreflang="sr-Cyrl" href="{cyr}">
+<link rel="alternate" hreflang="x-default" href="{lat}">
 <link rel="icon" type="image/svg+xml" href="{root}favicon.svg">
 <link rel="stylesheet" href="{root}style.css">
 </head>
@@ -157,12 +163,14 @@ WORDS = {
                     "objavljuje; preslovljene na latinicu. Privremene beleške Skupština kasnije zamenjuje konačnim. "
                     "Merodavan je izvorni fajl.",
             "lead": "Beleške sednica koje smo pročitali, govor po govor. Svaki govor ima svoju adresu.",
+            "about": "Stenografske beleške Narodne skupštine Srbije, od reči do reči",
             "prov": "privremene beleške", "prev": "Prethodni deo", "next": "Sledeći deo", "conv": "saziv"},
     "cir": {"lang": "sr-Cyrl", "notes": "Стенографске белешке", "other": "Latinica", "other_lang": "sr-Latn",
             "chair": "Председавајући", "source": "Изворни фајл Скупштине за овај дан", "day": "дан", "part": "део",
             "foot": "Стенографске белешке Народне скупштине Републике Србије, од речи до речи, како их Скупштина "
                     "објављује. Привремене белешке Скупштина касније замењује коначним. Меродаван је изворни фајл.",
             "lead": "Белешке седница које смо прочитали, говор по говор. Сваки говор има своју адресу.",
+            "about": "Стенографске белешке Народне скупштине Србије, од речи до речи",
             "prov": "привремене белешке", "prev": "Претходни део", "next": "Следећи део", "conv": "сазив"},
 }
 
@@ -244,7 +252,8 @@ def build(root: Path, out: Path) -> dict[str, int]:
                     target.parent.mkdir(parents=True, exist_ok=True)
                     twin = ("../../cir/" if script == "lat" else "../../../") + page
                     target.write_text(PAGE.format(
-                        lang=w["lang"], title=html.escape(head), root="../../" if script == "lat" else "../../../",
+                        lang=w["lang"], title=html.escape(head), description=html.escape(f"{head}. {w['about']}."),
+                        here=NOTES + ("" if script == "lat" else "cir/") + page, lat=NOTES + page, cyr=NOTES + "cir/" + page, root="../../" if script == "lat" else "../../../",
                         main=MAIN if script == "lat" else MAIN + "cir/", home="index.html" if script == "lat" else "cir/index.html",
                         t_notes=w["notes"], other=twin, other_lang=w["other_lang"], t_other=w["other"],
                         body="\n".join(body), t_foot=w["foot"]), encoding="utf-8")
@@ -263,10 +272,18 @@ def build(root: Path, out: Path) -> dict[str, int]:
         target = out / ("index.html" if script == "lat" else "cir/index.html")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(PAGE.format(
-            lang=w["lang"], title=w["notes"], root="" if script == "lat" else "../", main=MAIN if script == "lat" else MAIN + "cir/",
+            lang=w["lang"], title=w["notes"], description=html.escape(w["about"] + ". " + w["lead"]),
+            here=NOTES + ("" if script == "lat" else "cir/"), lat=NOTES, cyr=NOTES + "cir/", root="" if script == "lat" else "../", main=MAIN if script == "lat" else MAIN + "cir/",
             home="index.html" if script == "lat" else "cir/index.html", t_notes=w["notes"],
             other="cir/index.html" if script == "lat" else "../index.html", other_lang=w["other_lang"], t_other=w["other"],
             body="\n".join(body), t_foot=w["foot"]), encoding="utf-8")
+    # For search engines: every page, in both scripts, and where the list of them is. The search index is not for them.
+    found = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html"))
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"<url><loc>{NOTES}{'' if p == 'index.html' else 'cir/' if p == 'cir/index.html' else html.escape(p)}</loc></url>\n" for p in found)
+        + "</urlset>\n", encoding="utf-8")
+    (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /pagefind/\n\nSitemap: {NOTES}sitemap.xml\n", encoding="utf-8")
     return {"pages": pages, "speeches": speeches}
 
 
