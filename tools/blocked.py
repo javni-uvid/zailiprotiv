@@ -71,6 +71,21 @@ def main(hours: int):
     for r in graph(q, v):
         d = r["dimensions"]
         print(f"  {r['count']:>6}  {d['edgeResponseStatus']}  {d['clientRequestHTTPHost']}")
+    print("\nThe 403s Google's crawlers got: hour, host, path, what acted, the crawler")
+    for dims in ("datetimeHour clientRequestHTTPHost clientRequestPath securityAction securitySource userAgent",
+                 "datetimeHour clientRequestHTTPHost clientRequestPath userAgent"):  # the security fields, where the plan has them
+        q = """query($zone: String!, $since: Time!, $until: Time!) { viewer { zones(filter: {zoneTag: $zone}) {
+          rows: httpRequestsAdaptiveGroups(limit: 40, orderBy: [datetimeHour_ASC],
+            filter: {datetime_geq: $since, datetime_leq: $until, userAgent_like: "%%Google%%", edgeResponseStatus: 403}) {
+            count dimensions { %s } } } } }""" % dims
+        rows = graph(q, v)
+        if rows:
+            for r in rows:
+                d = r["dimensions"]
+                bot = next((b for b in CRAWLERS if b in d["userAgent"]), d["userAgent"][:40])
+                print(f"  {r['count']:>4}  {d['datetimeHour'][5:16]}  {d['clientRequestHTTPHost']}{d['clientRequestPath']}"
+                      f"  {d.get('securityAction', '')} {d.get('securitySource', '')}  {bot}")
+            break
     print("\nThe zone's settings that stop bots")
     for path in ("/settings/security_level", "/settings/browser_check", "/bot_management"):
         got = call(f"/zones/{zone}{path}")
