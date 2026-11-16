@@ -86,6 +86,19 @@ def main(hours: int):
                 print(f"  {r['count']:>4}  {d['datetimeHour'][5:16]}  {d['clientRequestHTTPHost']}{d['clientRequestPath']}"
                       f"  {d.get('securityAction', '')} {d.get('securitySource', '')}  {bot}")
             break
+    print("\nThe managed rules that stopped Google's crawlers: rule, network (AS15169 is Google), path")
+    for fields in ("datetime action source ruleId description clientAsn clientRequestHTTPHost clientRequestPath userAgent",
+                   "datetime action source ruleId clientAsn clientRequestHTTPHost clientRequestPath userAgent"):
+        q = """query($zone: String!, $since: Time!, $until: Time!) { viewer { zones(filter: {zoneTag: $zone}) {
+          rows: firewallEventsAdaptive(limit: 30, orderBy: [datetime_DESC],
+            filter: {datetime_geq: $since, datetime_leq: $until, userAgent_like: "%%Google%%"}) { %s } } } }""" % fields
+        rows = graph(q, v)
+        if rows:
+            for d in rows:
+                print(f"  {d['datetime'][5:16]}  {d['action']} {d['source']} rule {d['ruleId']} {d.get('description', '')!r}"
+                      f"  AS{d['clientAsn']}  {d['clientRequestHTTPHost']}{d['clientRequestPath']}"
+                      f"  {next((b for b in CRAWLERS if b in d['userAgent']), d['userAgent'][:40])}")
+            break
     print("\nThe zone's settings that stop bots")
     for path in ("/settings/security_level", "/settings/browser_check", "/bot_management"):
         got = call(f"/zones/{zone}{path}")
