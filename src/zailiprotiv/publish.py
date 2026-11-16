@@ -3,6 +3,7 @@ rules (nothing loaded from another site, no page too heavy). Moved out of `site.
 from __future__ import annotations
 
 import os
+import posixpath
 import re
 from pathlib import Path
 
@@ -30,6 +31,42 @@ def fit_head(text: str) -> str:
             d = d[:157].rsplit(" ", 1)[0].rstrip(" ,;:–—") + "…"
         return m.group(1) + d + m.group(3)
     return _SAID.sub(said, _TITLE.sub(title, text, 1))
+
+
+_CRUMBS = re.compile(r'<p class="crumbs">(.*?)</p>', re.S)
+_CRUMB = re.compile(r'<a href="([^"#]*)">([^<]+)</a>')
+_H1 = re.compile(r"<h1\b[^>]*>(.*?)</h1>", re.S)
+
+
+def structured(text: str, site: str, here: str, address: str) -> str:
+    """Schema.org data for search engines, made from what the page already shows: the site's name on the home page
+    (Google shows it above the results), and the page's place in the site (its crumbs, then the page itself)."""
+    import html as html_
+    import json
+    import posixpath
+    data = None
+    if address in ("", "cir/"):
+        data = {"@context": "https://schema.org", "@type": "WebSite", "name": "Za ili Protiv",
+                "alternateName": "zailiprotiv.rs", "url": site + address}
+    else:
+        crumbs, h1 = _CRUMBS.search(text), _H1.search(text)
+        if crumbs and h1:
+            items = []
+            for href, name in _CRUMB.findall(crumbs.group(1)):
+                if not href or href.startswith("http"):
+                    continue
+                path = posixpath.normpath(posixpath.join(here, href))
+                path = "" if path in (".", "index") else path[:-5] if path.endswith("/index") else path + ("/" if href.endswith("/") and path != "." else "")
+                url = site + path
+                items.append((html_.unescape(name).strip(), url))
+            items.append((html_.unescape(re.sub(r"<[^>]+>", "", h1.group(1))).strip(), site + address))
+            if len(items) > 1:
+                data = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+                    {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]}
+    if not data:
+        return text
+    blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    return text.replace("</head>", f'<script type="application/ld+json">{blob}</script>\n</head>', 1)
 
 
 def clean_urls(out: Path) -> None:
@@ -68,6 +105,11 @@ def clean_urls(out: Path) -> None:
                     rel = file[:-5]
                     return rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if os.path.normpath(os.path.join(out, rel)) in folders else "")
                 file = f.relative_to(out).as_posix()
+                if f.name == "404.html":  # served at any address: not a page of its own
+                    f.write_text(own.sub(absolute, text.replace("</head>", '<meta name="robots" content="noindex">\n</head>', 1)), encoding="utf-8")
+                    continue
+                here = posixpath.dirname(file)
+                text = structured(text, site, here, address(file))
                 head = f'<link rel="canonical" href="{site}{address(file)}">\n'
                 twin = file[4:] if file.startswith("cir/") else "cir/" + file
                 if (out / twin).exists():

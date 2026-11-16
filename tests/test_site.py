@@ -104,7 +104,8 @@ def test_site_builds_every_page(tmp_path):
             assert re.findall(r"<script[^>]*>", text)[1:] == ["<script>", f'<script src="listic.js?v={v}" defer>']
             assert text.count("<script>") == 1 and 'getElementById("lb-mine").hidden = false' in text  # opens the ballot before the first paint
             text = text.replace(f'<script src="listic.js?v={v}" defer>', "").replace("<script>", "", 1)
-        assert re.findall(r"<script[^>]*>", text) == [f'<script src="{"../" if page.parent != out else ""}site.js?v='
+        here = "/" if page.name == "404.html" else "../" if page.parent != out else ""  # the 404 page is served at any depth
+        assert re.findall(r"<script[^>]*>", text) == [f'<script src="{here}site.js?v='
                                                       + re.search(r'data-v="(\w+)"', text).group(1) + '" defer>']
         assert "http://" not in text and not re.search(r'(?:src|href)="https?://(?!www\.parlament\.gov\.rs|github\.com)'
                                                        r'[^"]*\.(?:js|css|woff2?)', text)

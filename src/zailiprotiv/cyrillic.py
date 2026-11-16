@@ -112,7 +112,7 @@ def edition(out: Path) -> int:
     processors."""
     import os
     from concurrent.futures import ProcessPoolExecutor
-    pages = [p for p in out.rglob("*.html") if "cir" not in p.relative_to(out).parts[:1]]
+    pages = [p for p in out.rglob("*.html") if "cir" not in p.relative_to(out).parts[:1] and p.name != "404.html"]
     jobs = [(str(out), p.relative_to(out).as_posix()) for p in pages]
     workers = min(os.cpu_count() or 1, 8)
     if workers > 1 and len(jobs) > 200:

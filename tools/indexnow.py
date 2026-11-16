@@ -1,4 +1,5 @@
-"""Tell search engines which pages changed (IndexNow: Bing, Yandex, Seznam, Naver; Google does not take part).
+"""Tell search engines which pages changed: the date in the sitemap (<lastmod>), and IndexNow (Bing, Yandex, Seznam,
+Naver; Google does not take part).
 
     python3 tools/indexnow.py list _site .cache/indexnow.json changed.txt   (the build: pages whose text changed)
     python3 tools/indexnow.py send changed.txt                               (after publishing: tell them)
@@ -35,11 +36,19 @@ def main():
     if sys.argv[1] == "list":
         site, store, listing = Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4])
         old = json.loads(store.read_text(encoding="utf-8")) if store.exists() else {}
+        old = {u: v if isinstance(v, list) else [v, None] for u, v in old.items()}  # {address: [hash, day it changed]}
         now = pages(site)
-        changed = [u for u, h in now.items() if old.get(u) != h]
+        today = __import__("datetime").date.today().isoformat()
+        changed = [u for u, h in now.items() if old.get(u, [None])[0] != h]
+        kept = {u: [h, today if u in changed or not old.get(u, [0, 0])[1] else old[u][1]] for u, h in now.items()}
+        # The sitemap says when each page last changed (Google and Bing use it when it is right).
+        sm = site / "sitemap.xml"
+        sm.write_text(re.sub(r"<url><loc>([^<]+)</loc></url>",
+                             lambda m: f"<url><loc>{m.group(1)}</loc><lastmod>{kept[m.group(1)][1]}</lastmod></url>" if m.group(1) in kept else m.group(0),
+                             sm.read_text(encoding="utf-8")), encoding="utf-8")
         listing.write_text("\n".join(changed) + ("\n" if changed else ""), encoding="utf-8")
         store.parent.mkdir(parents=True, exist_ok=True)
-        store.write_text(json.dumps(now, separators=(",", ":")), encoding="utf-8")
+        store.write_text(json.dumps(kept, separators=(",", ":")), encoding="utf-8")
         print(f"indexnow: {len(now)} pages, {len(changed)} changed since the last build")
         return
     urls = [u for u in Path(sys.argv[2]).read_text(encoding="utf-8").split("\n") if u]

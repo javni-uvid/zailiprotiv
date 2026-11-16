@@ -60,10 +60,13 @@ def write(*, common, domain, env, items_by_conv, out, people):
     (out / "pretraga.html").write_text(env.get_template("search.html").render(**common, root=""), encoding="utf-8")
     (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(
         **common, harsh_list=", ".join(latin(w.replace("[кц]", "к")) for w in __import__("zailiprotiv.pages_floor", fromlist=["HARSH"]).HARSH), root=""), encoding="utf-8")
+    # The page GitHub Pages shows for an address that doesn't exist (with status 404): its links start at the root,
+    # as it is served at any depth.
+    (out / "404.html").write_text(env.get_template("notfound.html").render(**{**common, "root": "/"}), encoding="utf-8")
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")
         base = f"https://{domain}/"
-        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html"))
+        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html") if p.name != "404.html")
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             + "".join(f"<url><loc>{base}{p}</loc></url>\n" for p in pages) + "</urlset>\n", encoding="utf-8")
