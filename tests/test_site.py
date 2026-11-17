@@ -262,6 +262,12 @@ def test_replies_and_the_chairs_measures_are_found_by_rule():
     assert pages_floor.to_whom(said("Због нарушавања реда изричем опомену Стефану Јовановићу."), two) == "СТЕФАН ЈОВАНОВИЋ"
     assert pages_floor.to_whom(said("Изричем опомену Добрици Веселиновићу."), two) is None  # another Veselinović
     assert pages_floor.to_whom(said("Изричем опомену Стефану Јовановићу, Жељку Веселиновићу."), two) is None  # several
+    # The case decides: the floor goes to the nominative, the measure to the dative (23 Dec 2022).
+    floor_then = said("По Пословнику, народни посланик Миленко Јованов, а народном посланику Новаковићу изричем опомену због недоличног понашања.")
+    assert pages_floor.to_whom(floor_then, {"МИЛЕНКО ЈОВАНОВ": "јованов", "БОРИСЛАВ НОВАКОВИЋ": "новаковић"}) == "БОРИСЛАВ НОВАКОВИЋ"
+    assert pages_floor.to_whom(floor_then, {"МИЛЕНКО ЈОВАНОВ": "јованов"}) is None  # Novaković said no word that day
+    assert pages_floor.to_whom(said("Народни посланик Александар Јовановић, изричем вам опомену."),
+                               {"АЛЕКСАНДАР ЈОВАНОВИЋ": "јовановић"}) == "АЛЕКСАНДАР ЈОВАНОВИЋ"  # the nominative alone
     assert pages_floor.measures([say("ПРЕДСЕДНИК", "Нећу да вам изричем сад никакву опомену.", True)]) == []
     assert pages_floor.spoken(speeches[5]["text"]) == "Господине Б, изричем вам опомену."
 

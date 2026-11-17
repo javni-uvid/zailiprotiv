@@ -137,6 +137,7 @@ def exchanges(speeches: list[dict]) -> list[list[dict]]:
 _ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођице|колега|колегинице|посланиче|посланице|посланику|посланици|"
                         r"посланик|посланица|опомену|опомене|речи|седнице),?\s+"
                         r"((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){1,3})")
+_NOMINATIVE = re.compile(r"(?i:посланик|посланица),?\s")  # "народни посланик Миленко Јованов": who, not to whom
 _POINT = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
 # Harsh words: a fixed list, the same for everyone, of words that are abuse in nearly every use (words with an
 # everyday meaning too, like "ђубре", "свиња", "криминал", "фашиста", are left out: they would count talk about waste,
@@ -216,8 +217,15 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
     for sentence in (sentences[at], sentences[at - 1] if at else ""):
         # Only a name the chair addresses ("господине …", "посланику …") counts: another name in the sentence may be
         # the person the speech was about ("зато што сте колеги Филиповићу рекли …").
+        found = list(_ADDRESSED.finditer(sentence))
+        # The case decides: a measure goes to someone in the dative or the vocative ("посланику Новаковићу",
+        # "господине Живковићу"). A name in the nominative beside one of those is the next speaker given the floor
+        # ("По Пословнику, народни посланик Миленко Јованов, а народном посланику Новаковићу изричем опомену").
+        to_one = [m for m in found if not _NOMINATIVE.match(m.group(0))]
+        if to_one and len(to_one) < len(found):
+            found = to_one
         fits = []
-        for m in _ADDRESSED.finditer(sentence):
+        for m in found:
             if re.match(r"\s*(?:,|и)\s+[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+\s+[А-ЯЈЉЊЂЋЏ]", sentence[m.end():]):
                 return None  # several named at once ("опомену Александру Јовановићу, Бориславу Новаковићу, …"): not one
             words = re.findall(r"[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+", m.group(1))
@@ -228,7 +236,7 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
             fits += named
         if len(set(fits)) == 1:
             return fits[0]
-        if fits:
+        if fits or to_one:  # several, or the one addressed is no speaker of the sitting: not someone else instead
             return None
     return None
 
