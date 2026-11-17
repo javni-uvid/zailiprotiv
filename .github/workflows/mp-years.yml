@@ -1,0 +1,41 @@
+# MPs' years of birth from the Assembly's archive of convocations, and the check of names that are two people
+# (mp_years.py). Writes data/mp_years.json and commits it; what to split is then decided by hand in
+# data/mp_splits.json. Runs by hand, and once when this file or the module changes.
+name: mp-years
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/mp-years.yml
+      - src/zailiprotiv/mp_years.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mp-years
+  cancel-in-progress: false
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Read the archive and check the names
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv mp-years | tee mp-years.log
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/mp_years.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "MPs' years of birth from the Assembly's archive, and the names to check"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

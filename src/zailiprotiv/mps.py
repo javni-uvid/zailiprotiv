@@ -22,6 +22,11 @@ TITLES = {"проф", "др", "мр", "доц", "прим", "сц", "сци", "�
 # → the key of the other. Empty until `load_aliases` is called; the site build calls it.
 ALIASES: dict[str, str] = {}
 
+# Two people under one name (data/mp_splits.json, entered by hand with the reason): in the convocations listed, the
+# name is another person's, and gets a mark of its own, the year of birth the Assembly gives ("Ненад Митровић (1973)").
+# (convocation, key of the name) → the mark. Loaded with the aliases.
+SPLITS: dict[tuple[str, str], str] = {}
+
 
 @functools.lru_cache(maxsize=None)  # asked millions of times in a site build, for a few thousand names
 def base_key(name: str) -> str:
@@ -35,11 +40,25 @@ def key(name: str) -> str:
 
 
 def load_aliases(path) -> None:
+    """data/mp_aliases.json, and data/mp_splits.json beside it."""
     import json
+    from pathlib import Path
     ALIASES.clear()
+    SPLITS.clear()
     if path.exists():
         for name, to in json.loads(path.read_text(encoding="utf-8")).items():
             ALIASES[base_key(name)] = base_key(to["is"])
+    splits = Path(path).with_name("mp_splits.json")
+    if splits.exists():
+        for s in json.loads(splits.read_text(encoding="utf-8")):
+            for conv in s["convocations"]:
+                SPLITS[(str(conv), base_key(s["name"]))] = s["mark"]
+
+
+def split(name: str, conv: str) -> str:
+    """The name as the site keeps it in a convocation: with its mark where it is another person's (SPLITS)."""
+    mark = SPLITS.get((str(conv), base_key(name)))
+    return f"{name} ({mark})" if mark else name
 
 
 def clashes(votes) -> dict[str, set[str]]:

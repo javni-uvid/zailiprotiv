@@ -107,7 +107,8 @@ def load(data: Path) -> tuple[dict, dict, dict]:
     for path in sorted((data / "votes").glob("*.json")):
         store = json.loads(path.read_text(encoding="utf-8"))
         for key, v in store["votes"].items():
-            votes[key] = {**v, "sitting": store["sitting"], "sitting_title": store["title"], "key": key}
+            rows = [[n, mps.split(name, data.name), how, group] for n, name, how, group in v["rows"]]
+            votes[key] = {**v, "rows": rows, "sitting": store["sitting"], "sitting_title": store["title"], "key": key}
     bills = {}
     for path in sorted((data / "bills").glob("*.json")) if (data / "bills").exists() else []:
         bills[path.name] = json.loads(path.read_text(encoding="utf-8"))
@@ -142,6 +143,9 @@ def load_transcripts(data: Path) -> dict[str, dict]:
     out = {}
     for path in sorted(folder.glob("*.json")) if folder.exists() else []:
         store = json.loads(path.read_text(encoding="utf-8"))
+        for sp in store["speeches"].values():
+            if not sp.get("chair"):
+                sp["speaker"] = mps.split(sp["speaker"], data.name)
         out[store["sitting"]] = store
     return out
 
@@ -215,10 +219,11 @@ def registry(votes: dict) -> dict[str, MP]:
     # The older lists write "Given Surname": shown surname first too, so every list sorts one way.
     for k, mp in out.items():
         titles = mps.TITLES | {latin(t) for t in mps.TITLES}
-        words = [w for w in mp.name.split() if w.lower().strip(".") not in titles] or mp.name.split()
+        name, mark = re.fullmatch(r"(.*?)( \(\d{4}\))?", mp.name).groups()  # a split name's mark stays last
+        words = [w for w in name.split() if w.lower().strip(".") not in titles] or name.split()
         if k not in surname_first and len(words) > 1:
             words = words[1:] + words[:1]
-        mp.name = " ".join(words)  # without titles (dr, prof.): they are not part of the name
+        mp.name = " ".join(words) + (mark or "")  # without titles (dr, prof.): they are not part of the name
     taken = Counter()
     for mp in sorted(out.values(), key=lambda m: collate(m.name)):
         base = slug(mp.name, 60)

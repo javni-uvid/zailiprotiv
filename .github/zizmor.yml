@@ -4,6 +4,7 @@ rules:
   artipacked:
     ignore:
       - fixtures.yml
+      - mp-years.yml
       - notes.yml
       - sample.yml
       - summaries.yml

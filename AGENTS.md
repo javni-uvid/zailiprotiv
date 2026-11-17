@@ -205,6 +205,14 @@ The project's promises to its readers. Never change them without the maintainer.
   numbered link to its page in the notes; the links are kept short in the page and made whole by `site.js`). An MP
   with no vote on any list gets `noindex` and is left out of the sitemap. Same-person spellings are joined by hand
   in `data/mp_aliases.json` (candidates: names one letter or word apart that never appear in one vote).
+- **One name, two people** (17 Nov 2026): an MP is known by the words of the name, so namesakes in different
+  convocations became one MP (Aleksandar Jovanović of PUPS, 2020, and Aleksandar Jovanović Ćuta; two Nenad
+  Mitrović). `data/mp_splits.json` (by hand, with the reason) gives the name in the convocations listed a mark, the
+  year of birth the Assembly gives ("Ненад Митровић (1973)"), applied where roll calls and notes are loaded
+  (`mps.split` in `site.load` and `site.load_transcripts`), so that person gets a page of their own
+  (`mitrovic-nenad-1973`); the other keeps the plain name and its address. Candidates come from **mp-years**
+  (`mp_years.py`): the year of birth of every MP in the Assembly's archive of convocations, compared across
+  convocations (`data/mp_years.json`; a year off by one is not counted).
 - **Downloads and share pictures in a bucket** (14 Nov 2026): every law's CSV, JSON and picture, MPs' pictures and
   `podaci/` would be thousands of files on the host; **pages** moves them out of the built site (`files-split`),
   makes the bucket behind `podaci.zailiprotiv.rs` hold exactly them (`files-upload`) and only then publishes the
@@ -287,3 +295,5 @@ times, so a speech cannot be linked to its minute.
 - **16–17 Nov 2026:** search engines (Search Console, Bing, IndexNow, structured data); quizzes by theme; an MP's
   speeches; the Thirteenth's chair's measures attributed; GitHub hardened (security checks, pinned actions, least
   permissions); the cognee and sign-in trials removed.
+- **17 Nov 2026:** namesakes in different convocations split into separate MPs (`mp_splits.json`), checked by
+  year of birth (**mp-years**).

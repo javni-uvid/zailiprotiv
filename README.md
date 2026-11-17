@@ -124,6 +124,7 @@ data/<N>/                     one folder per convocation (9 to 14)
   votes/, bills/, summaries/, debates/, transcripts/, notes/
 data/profiles/, data/photos/  MPs' overviews and portraits
 data/quiz.json, aliases.json, mp_aliases.json, settings.json, batches.json, notes_manifest.json
+data/mp_splits.json, mp_years.json  one name, two people (by hand); years of birth from the Assembly's archive
 tests/
 ```
 

@@ -269,6 +269,50 @@ def files_purge_cmd(args) -> int:
     return 0 if said.startswith("cache purged") else 1
 
 
+def mp_years_cmd(args) -> int:
+    """The year of birth of every MP from the Assembly's archive of convocations → data/mp_years.json, and the check:
+    a name whose year differs between convocations is two people (split by hand in data/mp_splits.json)."""
+    import time
+    from zailiprotiv import mp_years, mps
+    mps.load_aliases(ROOT / "mp_aliases.json")
+    pages, todo, listed = {}, [mp_years.START], {}
+    while todo:  # the start page links the archive's other pages
+        url = todo.pop()
+        if url in pages:
+            continue
+        rows, links = mp_years.parse(skupstina.fetch(url).decode("utf-8", "replace"))
+        pages[url] = rows
+        todo += [u for u in links if u not in pages and mp_years.convocation(u)]
+        time.sleep(DELAY)
+    for url, rows in pages.items():
+        conv = mp_years.convocation(url)
+        if conv and rows:
+            listed[conv] = rows
+            print(f"convocation {conv}: {len(rows)} MPs listed ({url})")
+    if not listed:
+        print("no archive page read")
+        return 1
+    seated = {}
+    for conv in listed:
+        keys = set()
+        for f in sorted((ROOT / conv / "votes").glob("*.json")):
+            for v in json.loads(f.read_text(encoding="utf-8"))["votes"].values():
+                keys |= {mps.key(mps.split(r[1], conv)) for r in v["rows"]}
+        seated[conv] = keys
+    found = mp_years.check(listed, seated)
+    (ROOT / "mp_years.json").write_text(jsonfile.dumps({"check": found, "listed": listed}, "listed"), encoding="utf-8")
+    print(f"\nthe same name, another year of birth ({len(found['differ'])}):")
+    for d in found["differ"]:
+        print(f"  {d['key']}: " + ", ".join(f"{c}: {'/'.join(map(str, y))}" for c, y in d["years"].items()))
+    print(f"\none name twice in one convocation ({len(found['twice'])}):")
+    for t in found["twice"]:
+        print(f"  {t['convocation']}: " + "; ".join(f"{r['name']} {r['party']} {r['place']} {r['year']}" for r in t["rows"]))
+    print("\non the roll calls, not in the archive's list (left mid-term, or spelled otherwise):")
+    for conv, keys in sorted(found["missing"].items(), key=lambda c: int(c[0])):
+        print(f"  {conv}: {len(keys)}: " + ", ".join(keys[:40]) + (" …" if len(keys) > 40 else ""))
+    return 0
+
+
 def photos_cmd(args) -> int:
     """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
     import time
@@ -1200,6 +1244,8 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=videos_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
+    p = commands.add_parser("mp-years", help="MPs' years of birth from the Assembly's archive, and names that are two people")
+    p.set_defaults(run=mp_years_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")
     p.add_argument("--min", type=int, default=10)
     p.set_defaults(run=status)
