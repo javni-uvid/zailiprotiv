@@ -206,11 +206,11 @@
   },
   "debates-13": {
    "claude-haiku-5-5": {
-    "cache_read": 11592,
-    "cache_written": 828,
-    "input": 580002,
-    "output": 69045,
-    "replies": 15
+    "cache_read": 12420,
+    "cache_written": 1656,
+    "input": 638109,
+    "output": 77852,
+    "replies": 17
    }
   },
   "debates-14": {
@@ -286,6 +286,15 @@
     "input": 34402,
     "output": 4903,
     "replies": 3
+   }
+  },
+  "summaries-13": {
+   "claude-haiku-5-5": {
+    "cache_read": 1698,
+    "cache_written": 566,
+    "input": 22032,
+    "output": 7137,
+    "replies": 4
    }
   },
   "summaries-14": {
