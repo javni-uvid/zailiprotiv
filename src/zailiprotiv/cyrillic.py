@@ -126,6 +126,7 @@ def edition(out: Path) -> int:
         text = sitemap.read_text(encoding="utf-8")
         base = re.search(r"<loc>(https://[^/]+/)", text)
         if base:
-            more = "".join(f"<url><loc>{base.group(1)}cir/{p.relative_to(out).as_posix()}</loc></url>\n" for p in sorted(pages))
+            more = "".join(f"<url><loc>{base.group(1)}cir/{r}</loc></url>\n" for r in sorted(p.relative_to(out).as_posix() for p in pages)
+                           if f"<loc>{base.group(1)}{r}</loc>" in text)  # as the Latin sitemap lists them
             sitemap.write_text(text.replace("</urlset>", more + "</urlset>"), encoding="utf-8")
     return len(pages)

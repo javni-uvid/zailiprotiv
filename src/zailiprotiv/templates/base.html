@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}Za ili Protiv{% endblock %}</title>
 <meta name="description" content="{% block description %}Zakoni Narodne skupštine Srbije, šta predlagač kaže da menjaju, i kako je glasao svaki poslanik.{% endblock %}">
-<meta property="og:site_name" content="Za ili Protiv">
+{% block robots %}{% endblock %}<meta property="og:site_name" content="Za ili Protiv">
 <meta property="og:title" content="{{ self.title() }}">
 <meta property="og:description" content="{{ self.description() }}">
 {% block share %}{% if site_url %}<meta property="og:image" content="{{ site_url }}za-ili-protiv.png">

@@ -9,6 +9,9 @@ from zailiprotiv.site import (  # noqa: F401
 )
 
 
+NOINDEX = '<meta name="robots" content="noindex">'  # pages kept out of search engines are left out of the sitemap
+
+
 def write(*, common, domain, env, items_by_conv, out, people):
     # Downloads: every law with its final vote, and every MP's final votes by convocation (CSV), and the roll call
     # of each law beside its page (CSV and JSON).
@@ -66,8 +69,9 @@ def write(*, common, domain, env, items_by_conv, out, people):
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")
         base = f"https://{domain}/"
-        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html") if p.name != "404.html")
+        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html")
+                       if p.name != "404.html" and NOINDEX not in p.read_text(encoding="utf-8")[:3000])
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             + "".join(f"<url><loc>{base}{p}</loc></url>\n" for p in pages) + "</urlset>\n", encoding="utf-8")
-        (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {base}sitemap.xml\n", encoding="utf-8")
+        (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /pagefind/\n\nSitemap: {base}sitemap.xml\n", encoding="utf-8")  # the search index: files for the search page, not pages

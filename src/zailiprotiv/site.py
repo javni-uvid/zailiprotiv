@@ -375,6 +375,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     env.filters["qid"] = qid
     # "Jovanov Milenko" → "Milenko Jovanov": the site lists surnames first, people search the other way round.
+    env.filters["grp"] = lambda g: g if any(ch.isalnum() for ch in g or "") else "Bez poslaničke grupe"  # a roll call's empty or "()"
     env.filters["given_first"] = lambda name: " ".join(name.split()[-1:] + name.split()[:-1])
     env.filters["locative"] = lambda name: name.lower()[:-1] + "om" if name.lower().endswith("i") else name.lower()  # Četrnaesti → (u) četrnaestom
     if out.exists():
@@ -599,7 +600,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     lines_of: dict[tuple, list] = defaultdict(list)
     for (key, g), how in line.items():
         lines_of[(finals[key]["conv"], g)].append((key, how))
-    group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and slug(g)}
+    group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and any(ch.isalnum() for ch in g)}  # no group (" ", "()"): no page
     # Replies and the chair's measures, from the notes read; an MP's exchanges go on the MP's page, a law's on its page.
     # Portraits from the Assembly's list of MPs (data/photos/, the `photos` command), by the MP's key.
     photos_index = root / "photos" / "index.json"
