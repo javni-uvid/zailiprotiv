@@ -45,12 +45,15 @@ def structured(text: str, site: str, here: str, address: str) -> str:
     import json
     import posixpath
     data = None
-    if address in ("", "cir/"):
+    if address == "":  # the site's name: on the home page only (the Cyrillic one is a page of the site, not its home)
         data = {"@context": "https://schema.org", "@graph": [
             {"@type": "WebSite", "@id": site + "#site", "name": "Za ili Protiv", "alternateName": "zailiprotiv.rs",
-             "url": site + address, "inLanguage": "sr-Cyrl" if address else "sr-Latn", "publisher": {"@id": site + "#org"}},
-            {"@type": "Organization", "@id": site + "#org", "name": "Za ili Protiv", "url": site,
-             "email": "kontakt@zailiprotiv.rs", "sameAs": ["https://github.com/javni-uvid/zailiprotiv"]}]}
+             "url": site, "inLanguage": "sr", "publisher": {"@id": site + "#org"}},
+            {"@type": "Organization", "@id": site + "#org", "name": "Za ili Protiv", "alternateName": "zailiprotiv.rs",
+             "url": site, "logo": site + "logo.png", "email": "kontakt@zailiprotiv.rs",
+             "description": "Nezavisan sajt koji iz primarnih izvora Narodne skupštine Srbije pokazuje zakone i kako je glasao "
+                            "svaki poslanik, od 2012. Ista pravila za sve, bez ocena.",
+             "sameAs": ["https://github.com/javni-uvid/zailiprotiv"]}]}
     else:
         crumbs, h1 = _CRUMBS.search(text), _H1.search(text)
         if crumbs and h1:

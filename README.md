@@ -130,4 +130,5 @@ tests/
 
 ## License
 
-MIT
+Code: MIT (`LICENSE`). Data the site publishes (pages and downloads): CC BY 4.0, naming the source as
+„Za ili Protiv (zailiprotiv.rs), prema podacima Narodne skupštine".

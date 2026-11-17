@@ -382,7 +382,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
-    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js"):
+    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js",
+                 "favicon-96.png", "apple-touch-icon.png", "logo.png"):  # PNGs: Google Search doesn't take an SVG favicon
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     # The stylesheet's and script's address changes with their content, so a browser or cache never pairs new pages

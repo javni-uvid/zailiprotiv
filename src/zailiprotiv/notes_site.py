@@ -136,6 +136,7 @@ PAGE = """<!doctype html>
 <link rel="alternate" hreflang="sr-Cyrl" href="{cyr}">
 <link rel="alternate" hreflang="x-default" href="{lat}">
 <link rel="icon" type="image/svg+xml" href="{root}favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="{root}favicon-96.png">
 <link rel="stylesheet" href="{root}style.css">
 </head>
 <body>
@@ -198,7 +199,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
-    for name in ("style.css", "favicon.svg"):
+    for name in ("style.css", "favicon.svg", "favicon-96.png"):
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     pages = speeches = 0

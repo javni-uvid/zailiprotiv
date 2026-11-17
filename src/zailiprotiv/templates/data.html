@@ -6,7 +6,7 @@
 <script type="application/ld+json">{{ dataset|tojson }}</script>{% endif %}{% endblock %}
 {% block main %}
 <h1>Podaci</h1>
-<p class="gist">Sve što sajt prikazuje možete preuzeti i koristiti slobodno, uz navođenje izvora: „Za ili Protiv (zailiprotiv.rs), prema podacima Narodne skupštine".</p>
+<p class="gist">Sve što sajt prikazuje možete preuzeti i koristiti slobodno, uz navođenje izvora: „Za ili Protiv (zailiprotiv.rs), prema podacima Narodne skupštine". Podaci su pod licencom <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Autorstvo 4.0 (CC BY 4.0)</a>; kod sajta je pod licencom MIT.</p>
 <ul class="plain">
   <li><a href="podaci/zakoni.csv">Svi zakoni</a> <span class="meta">(CSV): saziv, datum, naziv, vrsta, oblast, rezultat konačnog glasanja, linkovi</span></li>
   {% for d in downloads %}<li><a href="podaci/glasovi-{{ d.conv }}.csv">Glasovi poslanika, {{ d.name }} saziv</a> <span class="meta">(CSV, {{ d.rows }} redova): svaki glas na konačnim glasanjima o {{ d.laws }} zakona</span></li>{% endfor %}

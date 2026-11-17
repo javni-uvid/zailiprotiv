@@ -24,9 +24,11 @@ def dataset(env, domain: str, downloads: list) -> dict | None:
         "name": "Glasanje poslanika Narodne skupštine Srbije o zakonima, od 2012.",
         "description": "Svi zakoni koje je Narodna skupština Republike Srbije usvojila od devetog saziva (2012) i kako je glasao "
                        "svaki poslanik na konačnom glasanju o svakom zakonu, prepisano iz poimeničnih rezultata glasanja koje "
-                       "Skupština objavljuje. Slobodno za upotrebu uz navođenje izvora: Za ili Protiv (zailiprotiv.rs), "
-                       "prema podacima Narodne skupštine.",
+                       "Skupština objavljuje. Licenca CC BY 4.0: slobodno za upotrebu uz navođenje "
+                       "izvora: Za ili Protiv (zailiprotiv.rs), prema podacima Narodne skupštine.",
         "url": site + "podaci.html", "isAccessibleForFree": True, "inLanguage": "sr",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "variableMeasured": ["zakon", "datum usvajanja", "saziv", "poslanik", "poslanička grupa", "glas (za, protiv, uzdržan, nije glasao)"],
         "keywords": ["Narodna skupština", "Srbija", "zakoni", "glasanje", "poslanici", "parlament"],
         "creator": {"@type": "Organization", "name": "Za ili Protiv", "url": site},
         "temporalCoverage": "2012-05-31/..", "spatialCoverage": {"@type": "Place", "name": "Srbija"},
