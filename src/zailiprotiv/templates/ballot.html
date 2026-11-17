@@ -10,8 +10,7 @@
 
 <div id="lb-mine" hidden>
   <div class="lb-top">
-    <div><small>Najviše glasova kao ja</small><b class="big" id="lb-mp">…</b><p id="lb-mp-n"></p></div>
-    <div><small>Grupa najbliža meni</small><b class="big" id="lb-group">…</b><p id="lb-group-n"></p></div>
+    <div><small>Kao većina u sali</small><b class="big" id="lb-group">…</b><p id="lb-group-n"></p></div>
     <div><small>Da se ja pitam</small><b class="big" id="lb-fact">…</b><p id="lb-fact-n"></p></div>
   </div>
   <div class="lb-acts"><button type="button" class="lb-btn" id="lb-share-open">Podeli listić</button><span>Listić je samo u ovom pregledaču. <button type="button" class="linklike" id="lb-clear">Obriši ga</button></span></div>
@@ -36,7 +35,7 @@
     <small class="k" id="lb-quiz-k">Kviz · {{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }} · oko 5 minuta</small>
     <h2>{{ quiz_laws|length }} zakona {{ "o kojima se najviše govorilo" if by_hand else "koji su podelili salu" }}</h2>
     <div class="bar" aria-hidden="true"><i></i><i></i></div>
-    <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koji poslanik je glasao kao ti.</p>
+    <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koliko puta si glasao kao većina u sali.</p>
     <a class="lb-btn" id="lb-quiz-go" href="kviz/podelili-salu.html">Počni kviz</a>
     {% if quiz_themes %}<p class="lb-themes">Ili po temi: {% for t in quiz_themes.values() %}<a href="kviz/{{ t.slug }}.html">{{ t.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
   </div>
@@ -64,10 +63,9 @@
     <p><button type="button" class="more-btn" id="lb-more" hidden></button></p>
   </section>
   <section class="lb-who">
-    <div><h2>Poslanici</h2><ol id="lb-mps"></ol></div>
-    <div><h2>Grupe</h2><ol id="lb-groups"></ol></div>
+    <div><h2>Poslaničke grupe</h2><ol id="lb-groups"></ol></div>
   </section>
-  <p class="label" id="lb-note">Poredimo samo zakone o kojima ste oboje glasali za, protiv ili uzdržano; prikazani su poslanici i grupe sa najmanje polovinom tvojih zakona. Poređenje se računa u pregledaču. Zakon koji je izdvojen bira se pravilom: koliko je podelio salu, koliko je varnica i amandmana bilo u raspravi, i da li si glasao drugačije od Skupštine. Ovo je poređenje glasova, ne preporuka za koga da glasaš.</p>
+  <p class="label" id="lb-note">Poredimo samo zakone o kojima ste oboje glasali za, protiv ili uzdržano; prikazane su grupe sa najmanje polovinom tvojih zakona. Poređenje se računa u pregledaču. Zakon koji je izdvojen bira se pravilom: koliko je podelio salu, koliko je varnica i amandmana bilo u raspravi, i da li si glasao drugačije od Skupštine. Ovo je poređenje glasova, ne preporuka za koga da glasaš.</p>
 </div>
 <p class="meta foot-note">Glasaš bez naloga i imena; listić se čuva samo u ovom pregledaču, a u zbir posetilaca ide glas uz nasumičnu oznaku uređaja. <a href="kako-racunamo.html#posetioci">Šta čuvamo</a></p>
 {% if bill and votes_api %}<script src="glas.js?v={{ css }}" defer></script>

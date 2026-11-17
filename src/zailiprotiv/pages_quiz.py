@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from zailiprotiv import kinds
 from zailiprotiv.site import (  # noqa: F401
-    HERE, ORDINAL_NAME, given_first, json, latin, most_against, shutil, slug
+    HERE, ORDINAL_NAME, json, latin, most_against, shutil, slug
 )
 
 THEME_LEAST = 5  # an area gets its own quiz when this many of its laws had votes against
@@ -48,22 +48,13 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
     for it in quiz_laws:
         it["heard"] = [next((q for q in it["quotes"] if q["side"] == side), None) for side in ("za", "protiv")]
         it["heard"] = [q for q in it["heard"] if q]
-    # The shortest verbatim quote of each MP's overview, shown with the MP whose votes are closest to the visitor's.
-    def quote(mp):
-        points = ((profiles or {}).get(mp.key) or {}).get("points") or []
-        qs = sorted((t["citat"]["tekst"] for t in points if t.get("citat")), key=len)
-        return latin(qs[0]) if qs and len(qs[0].split()) <= 45 else ""
     letter = {"za": "z", "protiv": "p", "uzdrzan": "u"}
 
     def data(laws):  # what the page's script compares the visitor's answers with
         return {"laws": [{"s": it["slug"]} for it in laws],
             "groups": [{"n": g["name"], "s": g["slug"], "m": g["members"],
                         "v": "".join(letter.get(line.get((it["law"]["final_vote"], g["name"])), "-") for it in laws)}
-                       for g in group_rows.get(active, [])],
-            "mps": [{"n": given_first(r["mp"].name), "s": r["mp"].slug, "g": (r["by_conv"][active]["groups"] or [""])[0],
-                     "v": "".join(letter.get(r["mp"].votes.get(it["law"]["final_vote"]), "-") for it in laws),
-                     **({"q": q} if (q := quote(r["mp"])) else {}), **({"f": r["photo"]} if r.get("photo") else {})}
-                    for r in rows_mp if active in r["by_conv"]]}
+                       for g in group_rows.get(active, [])]}
     quiz = data(quiz_laws)
     settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
     # The laws visitors' votes are counted for: the counter (worker/) accepts no others.

@@ -9,7 +9,6 @@
   var ROOT = document.body.dataset.root || "";
   // Addresses are made only of what the site's own data may hold: a slug, or a portrait's file name.
   var slug = function (s) { return /^[a-z0-9][a-z0-9-]*$/.test(s || "") ? s : ""; };
-  var file = function (s) { return /^[A-Za-z0-9_-]+\.(?:jpg|jpeg|png|webp)$/.test(s || "") ? s : ""; };
   var used = function (what) { if (window.zipCount && ready) window.zipCount(what); }, ready = false;  // site.js
   var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
   // What is kept for the tab: the answers by law (so the order of the laws may change), and the law to show first.
@@ -32,7 +31,7 @@
   if (from > 0) {  // that law first: in the data (every group's and MP's votes are a letter per law) and on the page
     var move = function (xs) { xs.unshift(xs.splice(from, 1)[0]); return xs; };
     move(data.laws);
-    data.groups.concat(data.mps).forEach(function (x) { x.v = move(x.v.split("")).join(""); });
+    data.groups.forEach(function (x) { x.v = move(x.v.split("")).join(""); });
     list.insertBefore(items[from], items[0]);
     move(items);
     items.forEach(function (item, k) {
@@ -65,6 +64,24 @@
     return { same: same, both: both, share: both ? same / both : 0 };
   }
   function done() { return answers.filter(Boolean).length; }
+  // The visitor beside the chamber, law by law: on how many the visitor voted as most MPs did, and the vote shared
+  // with the fewest MPs (the visitor's "loneliest" vote). Nothing about any one MP or group.
+  function hall(i) { var d = items[i].dataset; return { z: +d.za, p: +d.protiv, rest: +d.ostali }; }
+  function versus() {
+    var same = 0, of = 0, lonely = null;
+    answers.forEach(function (a, i) {
+      if (!a) return;
+      var h = hall(i);
+      of++;
+      if (a === (h.z >= h.p ? "z" : "p")) same++;
+      if (a !== "u" && (!lonely || h[a] < lonely.n)) lonely = { n: h[a], a: a };
+    });
+    return { same: same, of: of, lonely: lonely };
+  }
+  function lonelyText(l) {
+    return !l ? "" : l.n === 0 ? "Jednom si glasao " + WORD[l.a] + " kad niko u sali nije." :
+      "Najusamljeniji glas: " + WORD[l.a] + ", kao samo " + l.n + " " + plural(l.n, "poslanik", "poslanika", "poslanika") + ".";
+  }
 
   // After a vote: what the chamber did, and how many MPs voted the same way.
   function reveal(item, i, animate) {
@@ -84,15 +101,12 @@
     if (old) old.remove();
     var half = Math.ceil(answers.length / 2), n = done();
     if (animate && n === half && n < answers.length) {
-      var best = data.mps.map(function (p) { return { p: p, m: match(p.v) }; }).filter(function (x) { return x.m.both >= Math.max(3, Math.ceil(n / 2)); })
-        .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || a.p.n.localeCompare(b.p.n, "sr"); });
-      var level = best.filter(function (x) { return x.m.share === best[0].m.share && x.m.both === best[0].m.both; });
-      if (level.length) {
+      var vs = versus();
+      if (vs.of) {
         var note = document.createElement("p");
         note.className = "q-half";
-        note.textContent = "Na pola si. Zasad najviše glasova kao ti: " +
-          (level.length <= 2 ? names(level.map(function (x) { return x.p.n; })) : level.length + " " + plural(level.length, "poslanik", "poslanika", "poslanika")) +
-          " (" + level[0].m.same + " od " + level[0].m.both + "). Još " + (answers.length - n) + " do celog rezultata.";
+        note.textContent = "Na pola si. Zasad si glasao kao većina u sali na " + vs.same + " od " + vs.of + ". Još " +
+          (answers.length - n) + " do celog rezultata.";
         box.insertBefore(note, box.firstChild);
       }
     }
@@ -122,55 +136,18 @@
     document.getElementById("q-count").textContent = "Glasao si o " + n + " od " + answers.length + " zakona";
     var groups = data.groups.map(function (g) { return { g: g, m: match(g.v) }; }).filter(function (x) { return x.m.both >= need; })
       .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || b.g.m - a.g.m; });
-    var mps = data.mps.map(function (p) { return { p: p, m: match(p.v) }; }).filter(function (x) { return x.m.both >= need; })
-      .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || a.p.n.localeCompare(b.p.n, "sr"); });
-    // MPs first. Many can tie on a few laws: up to three by name, more as a number, and the list below shows them all.
-    var top = mps.filter(function (x) { return x.m.share === mps[0].m.share && x.m.both === mps[0].m.both; });
-    var name = document.getElementById("q-top-name"), score = document.getElementById("q-top-score");
-    var who = !top.length ? "" : top.length <= 3 ? names(top.map(function (x) { return x.p.n; })) :
-      top.length + " " + plural(top.length, "poslanik", "poslanika", "poslanika");
-    name.textContent = who || "—";
-    score.textContent = top.length ? "Isti glas kao ti na " + top[0].m.same + " od " + top[0].m.both + " " +
-      plural(top[0].m.both, "zakona", "zakona", "zakona") + " o kojima ste oboje glasali." : "Nijedan poslanik nije glasao o dovoljno istih zakona.";
+    // The lead: the visitor beside the chamber (17 Nov 2026: no MP or group is named as "like you").
+    var vs = versus();
+    document.getElementById("q-top-name").textContent = vs.same + " od " + vs.of + " " + plural(vs.of, "zakona", "zakona", "zakona");
+    document.getElementById("q-top-score").textContent = lonelyText(vs.lonely);
     var against = answers.filter(function (a) { return a === "p"; }).length;
     card.fact = against === 0 ? "Da se ja pitam, prošlo bi svih " + n + " " + plural(n, "zakon", "zakona", "zakona") + "." :
       against === n ? "Da se ja pitam, ne bi prošao nijedan od " + n + " " + plural(n, "zakona", "zakona", "zakona") + "." :
       "Da se ja pitam, palo bi " + against + " od " + n + " " + plural(n, "zakona", "zakona", "zakona") + ".";
-    card.who = who; card.score = top.length ? top[0].m.same + " od " + top[0].m.both : "";
-    // The one MP on the picture: of those level at the top, one with a portrait when there is one (the maintainer,
-    // 13 Nov 2026); which of several is fixed by the answers, not chosen by us.
-    var faces = top.filter(function (x) { return x.p.f; }), pool = faces.length ? faces : top, cs = 0;
-    answers.join("").split("").forEach(function (ch, k) { cs = (cs * 31 + ch.charCodeAt(0) + k) % 9973; });
-    card.mp = pool.length ? pool[cs % pool.length].p : null; card.more = Math.max(0, top.length - 1);
+    card.vs = vs;
     document.getElementById("q-fact").textContent = card.fact.replace("Da se ja pitam", "Da se ti pitaš") +
       " Skupština je usvojila svih " + answers.length + ".";
-    // Something the closest MP said (the shortest verbatim quote of the overview of their speeches), when one of
-    // those level at the top has one; which of them is taken the same way as the three below.
-    var tq = document.getElementById("q-top-quote"), withQuote = top.filter(function (x) { return x.p.q; });
-    tq.hidden = !withQuote.length;
-    if (withQuote.length) {
-      var qs = 0; answers.join("").split("").forEach(function (ch, k) { qs = (qs * 31 + ch.charCodeAt(0) + k) % 9973; });
-      var pick = withQuote[qs % withQuote.length], foot = tq.querySelector("footer"), link = el("a", "", pick.p.n);
-      tq.querySelector("p").textContent = "„" + pick.p.q + "“";
-      link.href = ROOT + "poslanik/" + slug(pick.p.s) + ".html"; foot.textContent = "";
-      foot.appendChild(link); foot.appendChild(document.createTextNode(", u raspravi u Skupštini"));
-    }
     redraw();
-    // Three MPs. When more are level, which three is not ours to choose: they are taken from the level ones starting
-    // at a place that depends on the answers, and the page says how many more there are.
-    var ms = document.getElementById("q-mps"), three = [], seed = 0; ms.textContent = "";
-    answers.join("").split("").forEach(function (ch, k) { seed = (seed * 31 + ch.charCodeAt(0) + k) % 9973; });
-    for (var k = 0; k < Math.min(3, top.length); k++) three.push(top[(seed + k) % top.length]);
-    mps.slice(top.length).slice(0, 3 - three.length).forEach(function (x) { three.push(x); });
-    three.forEach(function (x) {
-      var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
-      { var im = el("img", "q-face"); im.src = ROOT + (file(x.p.f) ? "foto/" + file(x.p.f) : "bez-slike.svg"); im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
-      a.href = ROOT + "poslanik/" + slug(x.p.s) + ".html"; main.appendChild(a);
-      if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
-      li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
-    });
-    document.getElementById("q-mps-note").textContent = top.length > 3 ? "Još " + (top.length - 3) + " " +
-      plural(top.length - 3, "poslanik ima", "poslanika imaju", "poslanika ima") + " isti broj istih glasova; ova tri su izabrana nasumično." : "";
     var gs = document.getElementById("q-groups"); gs.textContent = "";
     groups.forEach(function (x) {
       var tr = el("tr"), td = el("td"), a = el("a", null, x.g.n), cell = el("td", "vote-cell"), bar = el("div", "bar"), s = el("span", "v-za");
@@ -233,7 +210,7 @@
   });
 
   // The picture to share, drawn here in the browser: the visitor's ballot, what would have happened had it been
-  // up to them, and who voted most like them. Nothing is uploaded; sharing uses the device's own share sheet.
+  // up to them, and which group voted most like them. Nothing is uploaded; sharing uses the device's own share sheet.
   var COLORS = { z: "#1f5fa8", p: "#c2410c", u: "#8a8f99", "": "#e8e8e8" }, cardBlob = null;
   function wrapText(ctx, text, width, lines) {
     var out = [], line = "";
@@ -246,14 +223,15 @@
     return out;
   }
   function drawCard() {
-    // Dark, with one message: the MP who voted most like the visitor (portrait, name, how many votes alike), the
-    // ballot as a strip, and "A ti?". Without a matching MP, the fact about the laws takes the name's place.
+    // Dark, "me against the hall": what would have happened had it been up to the visitor, then a column per law
+    // (how the hall voted, the visitor's vote as a dot over it; no law named), how often the visitor voted as most
+    // MPs did and their loneliest vote, and "A ti?".
     var c = document.createElement("canvas"), W = 1080, H = 1350, P = 84, ctx = c.getContext("2d");
     var serif = '"Literata", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
-    var ZA = "#7cc0f5", PROTIV = "#ff9a52", SOFT = "#c9ccd3", TONE = { z: ZA, p: PROTIV, u: "#7d8390", "": "#30343c" };
+    var ZA = "#7cc0f5", PROTIV = "#ff9a52", SOFT = "#c9ccd3", DIM = "#30343c", TONE = { z: ZA, p: PROTIV, u: "#9aa0ab", "": DIM };
     c.width = W; c.height = H;
-    function paint(face) {
-      var y, x;
+    function paint() {
+      var y, x, vs = card.vs || versus();
       ctx.fillStyle = "#111111"; ctx.fillRect(0, 0, W, H);
       ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
       // the mark and the name of the site
@@ -263,43 +241,50 @@
       [["Za", ZA], [" ili ", "#ffffff"], ["Protiv", PROTIV]].forEach(function (p) {
         ctx.fillStyle = p[1]; ctx.fillText(p[0], x, 150); x += ctx.measureText(p[0]).width;
       });
-      if (card.mp) {
-        ctx.fillStyle = SOFT; ctx.font = "400 46px " + sans; ctx.fillText("U Skupštini glasam kao", P, 282);
-        var fw = 330, fh = 440, fy = 322;
-        ctx.fillStyle = "#30343c"; ctx.fillRect(P, fy, fw, fh);
-        if (face) {  // cover the frame, keeping the portrait's proportions
-          var k = Math.max(fw / face.width, fh / face.height), sw = fw / k, sh = fh / k;
-          ctx.drawImage(face, (face.width - sw) / 2, Math.max(0, (face.height - sh) / 4), sw, sh, P, fy, fw, fh);
-        }
-        var nx = P + fw + 50, lines;
-        ctx.fillStyle = "#ffffff"; ctx.font = "800 96px " + serif;
-        lines = wrapText(ctx, card.mp.n, W - P - nx, 4);
-        if (lines.length > 3) { ctx.font = "800 76px " + serif; lines = wrapText(ctx, card.mp.n, W - P - nx, 4); }
-        lines = lines.filter(Boolean);
-        y = fy + fh - (lines.length - 1) * 102 - 8;
-        lines.forEach(function (l) { ctx.fillText(l, nx, y); y += 102; });
-        y = fy + fh + 112;
-        ctx.fillStyle = PROTIV; ctx.font = "800 92px " + serif; ctx.fillText(card.score, P, y);
-        x = P + ctx.measureText(card.score).width + 24;
-        ctx.fillStyle = "#ffffff"; ctx.font = "400 46px " + sans; ctx.fillText(plural(+card.score.split(" ").pop(), "isti glas", "ista glasa", "istih glasova"), x, y);
-        if (card.more) {
-          ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans;
-          ctx.fillText("i kao još " + card.more + " " + plural(card.more, "poslanik", "poslanika", "poslanika"), P, y + 58);
-        }
-      } else {
-        ctx.fillStyle = "#ffffff"; ctx.font = "800 104px " + serif; y = 420;
-        wrapText(ctx, card.fact, W - 2 * P, 4).forEach(function (l) { ctx.fillText(l, P, y); y += 118; });
+      // what would have happened: "Da se ja pitam," then the rest large, its number in orange
+      ctx.fillStyle = SOFT; ctx.font = "400 46px " + sans; ctx.fillText("Da se ja pitam,", P, 290);
+      var rest = card.fact.replace(/^Da se ja pitam, /, ""), lines;
+      ctx.font = "800 88px " + serif; lines = wrapText(ctx, rest, W - 2 * P, 3); y = 392;
+      lines.forEach(function (l) {
+        var xx = P;
+        l.split(" ").forEach(function (w, k) {
+          var word = (k ? " " : "") + w;
+          ctx.fillStyle = /\d/.test(w) || /^(svih|nijedan)$/.test(w) ? PROTIV : "#ffffff";
+          ctx.fillText(word, xx, y); xx += ctx.measureText(word).width;
+        });
+        y += 100;
+      });
+      // the hall and me: a column per law, the hall's votes stacked (za below, protiv above, the rest dim) out of
+      // the 250 seats, the visitor's vote as a dot above
+      var n = answers.length, gap = n > 8 ? 22 : 30, cw = (W - 2 * P - gap * (n - 1)) / n;
+      var top = y + 40, CH = 240, base = top + CH;
+      answers.forEach(function (a, i) {
+        var h = hall(i), cx = P + i * (cw + gap), k = CH / Math.max(1, h.z + h.p + h.rest);
+        ctx.fillStyle = "#2a2e36"; ctx.fillRect(cx, top, cw, CH);
+        ctx.fillStyle = ZA; ctx.fillRect(cx, base - h.z * k, cw, h.z * k);
+        ctx.fillStyle = PROTIV; ctx.fillRect(cx, base - (h.z + h.p) * k, cw, h.p * k);
+        var dy = top - 34, r = Math.min(cw / 2 - 2, 20);
+        ctx.beginPath(); ctx.arc(cx + cw / 2, dy, r, 0, Math.PI * 2);
+        if (a) { ctx.fillStyle = TONE[a]; ctx.fill(); } else { ctx.strokeStyle = DIM; ctx.lineWidth = 4; ctx.stroke(); }
+      });
+      ctx.fillStyle = SOFT; ctx.font = "400 28px " + sans;
+      ctx.fillText("Svaki stub je jedan zakon i kako je glasala sala. Krug je moj glas.", P, base + 46);
+      // how often with the hall's majority, and the loneliest vote
+      y = base + 128;
+      ctx.fillStyle = "#ffffff"; ctx.font = "800 64px " + serif;
+      var sameTxt = vs.same + " od " + vs.of, sw = ctx.measureText(sameTxt).width;
+      ctx.fillText(sameTxt, P, y);
+      ctx.font = "400 40px " + sans; ctx.fillText(" puta kao većina u sali", P + sw, y);
+      if (vs.lonely) {
+        ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans;
+        ctx.fillText(lonelyText(vs.lonely).replace("si glasao", "sam glasao"), P, y + 56);
       }
-      // the ballot: a strip, one piece per law
-      var n = answers.length, gap = 12, w = (W - 2 * P - gap * (n - 1)) / n, by = H - 318;
-      if (card.mp) { ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans; ctx.fillText(card.fact, P, by - 28); }
-      answers.forEach(function (a, i) { ctx.fillStyle = TONE[a]; ctx.fillRect(P + i * (w + gap), by, w, 52); });
-      ctx.fillStyle = "#ffffff"; ctx.fillRect(P, H - 206, W - 2 * P, 6);
-      ctx.font = "700 64px " + serif; ctx.fillText("A ti?", P, H - 104);
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(P, H - 176, W - 2 * P, 4);
+      ctx.font = "700 64px " + serif; ctx.fillText("A ti?", P, H - 86);
       ctx.font = "400 40px " + sans; ctx.textAlign = "right";
-      ctx.fillText((location.host || "zailiprotiv.rs") + "/glasaj", W - P, H - 104); ctx.textAlign = "left";
+      ctx.fillText("zailiprotiv.rs/glasaj", W - P, H - 86); ctx.textAlign = "left";
       var img = document.getElementById("q-card");
-      img.alt = (card.mp ? "U Skupštini glasam kao " + card.mp.n + ": " + card.score + " istih glasova. " : "") + card.fact;
+      img.alt = card.fact + " Kao većina u sali na " + vs.same + " od " + vs.of + " zakona. " + lonelyText(vs.lonely);
       c.toBlob(function (blob) {
         if (!blob) return;
         cardBlob = blob;
@@ -308,15 +293,9 @@
       }, "image/png");
     }
     var ready = document.fonts && document.fonts.load ? document.fonts.load('800 96px "Literata"').catch(function () {}) : Promise.resolve();
-    ready.then(function () {
-      if (!card.mp) return paint(null);
-      var face = new Image();
-      face.onload = function () { paint(face); };
-      face.onerror = function () { paint(null); };
-      face.src = ROOT + (file(card.mp.f) ? "foto/" + file(card.mp.f) : "bez-slike.svg");
-    });
+    ready.then(paint);
   }
-  var card = { fact: "", who: "", score: "", crowd: null, mp: null, more: 0 };
+  var card = { fact: "", vs: null, crowd: null };
   // On how many laws the visitor voted as most visitors did, among the laws five or more visitors voted on.
   function crowdFact() {
     var same = 0, of = 0;
@@ -333,10 +312,9 @@
     line.hidden = !card.crowd;
     if (card.crowd) line.textContent = "Na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona") +
       " glasao si kao većina posetilaca sajta.";
-    // The words that are copied or shared: the laws of this quiz, the MP on the picture (name first, as people say
-    // it; the site lists surnames first), and the question. The link follows.
-    var mpName = card.mp ? card.mp.n : "";  // already as people say it, given name first
-    shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (mpName ? " Najviše glasova kao ja: " + mpName + "." : "") + " Koji si ti poslanik?";
+    // The words that are copied or shared: what would have happened, how often with the hall, and the question.
+    var vs = card.vs || versus();
+    shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (vs.of ? " Kao većina u sali glasao sam na " + vs.same + " od " + vs.of + "." : "") + " Kako bi ti glasao?";
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
   }
   function note(text) { document.getElementById("q-shared").textContent = text; }

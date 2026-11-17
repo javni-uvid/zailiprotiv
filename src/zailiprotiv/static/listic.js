@@ -1,5 +1,5 @@
 // "Glasaj i ti" with the visitor's ballot ("Moj listić"): everything they voted on, on laws' and bills' pages and in
-// the quiz, beside the Assembly's result, with the MPs and groups that voted the same. The ballot is in this
+// the quiz, beside the Assembly's result, how often with the hall's majority, and the groups that voted the same. The ballot is in this
 // browser only (localStorage "zip.glasovi"); the page reads the Assembly's votes from small files of the site and
 // compares here. Nothing about the visitor is sent.
 (function () {
@@ -110,12 +110,17 @@
       var parts = [3 * r.data.r[0], 2 * r.data.r[1], r.data.r[2], r.my === "p" ? 2 : 0], sum = parts[0] + parts[1] + parts[2] + parts[3];
       if (!pick || sum > pick.sum) pick = { row: r, sum: sum, parts: parts };
     });
-    return { rows: rows, laws: laws, mps: list, groups: groups, pick: laws.length > 1 && pick && pick.sum > 0 ? pick : null,
+    // The visitor beside the chamber: how often with the hall's majority, and the vote the fewest MPs cast.
+    var same = 0, lonely = null;
+    laws.forEach(function (r) {
+      var k = r.data.k, n = r.my === "z" ? k[0] : r.my === "p" ? k[1] : null;
+      if (r.my === (k[0] >= k[1] ? "z" : "p")) same++;
+      if (n !== null && (!lonely || n < lonely.n)) lonely = { n: n, a: r.my };
+    });
+    return { rows: rows, laws: laws, mps: list, groups: groups, same: same, lonely: lonely, pick: laws.length > 1 && pick && pick.sum > 0 ? pick : null,
              against: laws.filter(function (r) { return r.my === "p"; }).length };
   }
 
-  // The rolls write the surname first ("Jefić Branković Sanja"); the given name is the last word.
-  function lastFirst(name) { var w = name.split(" "); return w.length > 1 ? [w[w.length - 1]].concat(w.slice(0, -1)).join(" ") : name; }
 
   function show() {
     var s = state, n = s.laws.length, marks = read("zip.citati", {});
@@ -125,15 +130,8 @@
     [[total + " " + plural(total, "glas", "glasa", "glasova"), ""], [count("z") + " za", "z"], [count("p") + " protiv", "p"], [count("u") + " " + plural(count("u"), "uzdržan", "uzdržana", "uzdržanih"), ""]]
       .forEach(function (p, i) { if (i) $("lb-sum").appendChild(document.createTextNode(" · ")); $("lb-sum").appendChild(el(i === 3 ? "span" : "b", p[1], p[0])); });
     $("lb-mine").hidden = $("lb-rest").hidden = false;
-    var top = s.mps[0], ties = top ? s.mps.filter(function (p) { return p.share === top.share && p.both === top.both; }).length - 1 : 0;
-    $("lb-mp").textContent = ""; $("lb-mp-n").textContent = "";
-    if (top) {
-      var a = el("a", "", lastFirst(top.name)); a.href = root + "poslanik/" + top.slug + ".html"; $("lb-mp").appendChild(a);
-      $("lb-mp-n").textContent = top.same + " od " + top.both + " " + plural(top.both, "zajedničkog glasanja", "zajednička glasanja", "zajedničkih glasanja") + (ties ? " · i još " + ties + " sa istim brojem" : "");
-    } else { $("lb-mp").textContent = "—"; $("lb-mp-n").textContent = n ? "Nema poslanika sa dovoljno zajedničkih glasanja." : "Pojaviće se kad glasaš o usvojenom zakonu."; }
-    var g = s.groups[0];
-    $("lb-group").textContent = g ? g.name : "—";
-    $("lb-group-n").textContent = g ? "isti glas kao većina grupe na " + g.same + " od " + g.both + " " + plural(g.both, "zakona", "zakona", "zakona") : (n ? "Treba bar tri zakona iz istog saziva." : "");
+    $("lb-group").textContent = n ? s.same + " od " + n : "—";
+    $("lb-group-n").textContent = n ? (lonelyText(s.lonely) || plural(n, "zakon", "zakona", "zakona")) : "Pojaviće se kad glasaš o usvojenom zakonu.";
     $("lb-fact").textContent = n ? fact(s.against, n) : "—";
     $("lb-fact-n").textContent = n ? plural(n, "zakon koji je Skupština usvojila", "zakona koje je Skupština usvojila", "zakona koje je Skupština usvojila") : "Još nisi glasao o usvojenom zakonu.";
     $("lb-share-open").hidden = !n;
@@ -188,12 +186,11 @@
     var more = $("lb-more"); more.hidden = shown.length <= cap;
     more.textContent = "Prikaži još " + (shown.length - cap);
 
-    function ranked(list, target, link) {
+    function ranked(list, target) {
       target.textContent = "";
       list.slice(0, 5).forEach(function (x) {
         var li = el("li"), name = el("span");
-        if (link) { var a = el("a", "", lastFirst(x.name)); a.href = root + "poslanik/" + x.slug + ".html"; name.appendChild(a); name.appendChild(el("small", "", " " + x.group)); }
-        else name.textContent = x.name;
+        name.textContent = x.name;
         li.appendChild(name); li.appendChild(el("b", "", Math.round(100 * x.share) + "%"));
         li.appendChild(el("small", "n", x.same + " od " + x.both));
         var bar = el("i"), fill = el("u"); fill.style.width = (100 * x.share) + "%"; bar.appendChild(fill); li.appendChild(bar);
@@ -201,17 +198,22 @@
       });
       if (!list.length) target.appendChild(el("li", "none", "Još nema dovoljno zajedničkih glasanja."));
     }
-    ranked(s.mps, $("lb-mps"), true); ranked(s.groups, $("lb-groups"), false);
+    ranked(s.groups, $("lb-groups"));
     if (!$("lb-share").hidden) draw();
   }
 
-  // The picture to share: the sentence, the closest MP, the law that stands out, and the ballot as squares (framed
+  var WORD = { z: "za", p: "protiv" };
+  function lonelyText(l) {
+    return !l ? "" : l.n === 0 ? "Jednom si glasao " + WORD[l.a] + " kad niko u sali nije." :
+      "Najusamljeniji glas: " + WORD[l.a] + ", kao samo " + l.n + " " + plural(l.n, "poslanik", "poslanika", "poslanika") + ".";
+  }
+  // The picture to share: the sentence, how often with the hall, the law that stands out, and the ballot as squares (framed
   // where the visitor voted against a law the Assembly passed). No law is named beside a vote.
   var blob = null;
   function shareText() {
-    var s = state, top = s.mps[0];
+    var s = state;
     return "Da se ja pitam, " + fact(s.against, s.laws.length) + " " + plural(s.laws.length, "zakon", "zakona", "zakona") + "." +
-      (top ? " Najviše glasova kao ja: " + lastFirst(top.name) + "." : "") + " Kako bi ti glasao?";
+      (s.laws.length ? " Kao većina u sali glasao sam na " + s.same + " od " + s.laws.length + "." : "") + " Kako bi ti glasao?";
   }
   function draw() {
     var s = state, W = 1080, H = 1350, P = 72, c = document.createElement("canvas"), ctx = c.getContext("2d");
@@ -239,8 +241,10 @@
       ctx.font = "400 30px " + sans; ctx.fillStyle = SOFT; ctx.textAlign = "right";
       ctx.fillText("Moj listić · " + s.laws.length + " " + plural(s.laws.length, "zakon", "zakona", "zakona"), W - P, 114); ctx.textAlign = "left";
       var y = words([["Da se ja pitam,", INK], [fact(s.against, s.laws.length), TONE.p], [plural(s.laws.length, "zakon.", "zakona.", "zakona."), INK]], "800 98px " + serif, P, 300, W - 2 * P, 108);
-      var top = s.mps[0];
-      if (top) { y = words([["Najviše glasova kao ja:", INK]], "400 40px " + sans, P, y - 30, W - 2 * P, 56); y = words([[lastFirst(top.name), INK]], "700 48px " + serif, P, y, W - 2 * P, 60); }
+      if (s.laws.length) {
+        y = words([[s.same + " od " + s.laws.length, INK], ["puta kao većina u sali", SOFT]], "700 48px " + serif, P, y - 24, W - 2 * P, 60);
+        if (s.lonely) y = words([[lonelyText(s.lonely).replace("si glasao", "sam glasao"), SOFT]], "400 34px " + sans, P, y - 8, W - 2 * P, 46);
+      }
       // the squares, from the bottom up
       var votes = s.laws.map(function (r) { return r.my; }), size = 14, gap = 4;
       [62, 48, 38, 30, 24, 18].some(function (z) {

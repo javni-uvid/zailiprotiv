@@ -175,7 +175,7 @@ def test_groups_numbers_quiz_and_share_picture(tmp_path):
     assert "Skupština u brojkama" in (out / "brojke.html").read_text()
     assert (out / "grupe.html").exists() and (out / "glasaj.js").exists()
     quiz = json.loads(re.search(r'id="quiz-data">(.*?)</script>', (out / "kviz" / "podelili-salu.html").read_text(), re.S).group(1))
-    assert quiz["laws"] == [{"s": "zakon-o-oruzju"}] and {m["v"] for m in quiz["mps"]} == {"z", "p", "-"}
+    assert quiz["laws"] == [{"s": "zakon-o-oruzju"}] and "groups" in quiz and "mps" not in quiz  # groups only (17 Nov 2026)
     area = next((out / "oblast").glob("*.xml")).read_text()
     assert "<feed" in area and "zakon-o-oruzju.html" in area
 

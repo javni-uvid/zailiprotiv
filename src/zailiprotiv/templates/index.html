@@ -73,7 +73,7 @@
 <section class="home-quiz" aria-labelledby="hq">
   <div class="hq-text">
     <h2 id="hq">Kako bi ti glasao?</h2>
-    <p>{{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }}, tri dugmeta. Na kraju vidiš koji poslanik je glasao kao ti.</p>
+    <p>{{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }}, tri dugmeta. Na kraju vidiš šta bi prošlo da se ti pitaš i koliko puta glasaš kao većina u sali.</p>
   </div>
   <div class="hq-try">
     <p class="hq-law">{% if q.opis %}{{ q.opis }}{% else %}{{ q.gist|latin|truncate(180, killwords=False, end="…") }}{% endif %}</p>
