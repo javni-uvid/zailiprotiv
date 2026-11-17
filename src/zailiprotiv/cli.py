@@ -58,7 +58,8 @@ def index(args) -> int:
         print(f"::notice::A later convocation's sitting is listed: {title}")
     for s in found:
         print(f"  {len(s.votes):4}  {s.title[:100]}")
-    if found and not total:
+    # No roll call at all in the current convocation is a sign the page changed; a newer one may have none yet.
+    if found and not total and CONVOCATION == CURRENT:
         print("no roll calls found: has the sittings' page layout changed?")
         return 1
     return 0

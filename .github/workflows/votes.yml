@@ -63,6 +63,13 @@ jobs:
           uv run zailiprotiv $c votes ${IN_AGAIN_FLAG} --reread "${IN_REREAD}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
+          # A newer convocation with no law yet is read beside the current one; with its first law it becomes the
+          # current one (config.CURRENT).
+          newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
+          if [ -z "${IN_CONVOCATION}" ] && [ "$newest" != "$conv" ]; then
+            n="--convocation $newest"
+            uv run zailiprotiv $n index && uv run zailiprotiv $n laws && uv run zailiprotiv $n votes && uv run zailiprotiv $n link || true
+          fi
       - name: Commit
         if: always()  # keep what was read even when a later step failed
         env:

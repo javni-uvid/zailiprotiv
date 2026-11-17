@@ -45,5 +45,25 @@ CONVOCATIONS = {
     # Those before it (2007, 2004, 2001: …/arhiva-aktivnosti/saziv-od-14-februara-2007.995.html, .996, .997) have no
     # list of sittings at all, only the texts of the laws passed (looked at from a runner the same day).
 }
-CURRENT = "14"
+
+
+def _current() -> str:
+    """The newest convocation with a law that has its final vote. A new convocation becomes the current one with its
+    first law (17 Nov 2026), so the site never opens on a convocation with no MPs or laws; until then the hourly runs
+    read it beside the current one (NEWEST)."""
+    import json
+    from pathlib import Path
+    data = Path(__file__).resolve().parents[2] / "data"
+    for n in sorted(CONVOCATIONS, key=int, reverse=True):
+        try:
+            laws = json.loads((data / n / "laws.json").read_text(encoding="utf-8")).get("laws") or {}
+        except (OSError, ValueError):
+            continue
+        if any(law.get("final_vote") for law in laws.values()):
+            return n
+    return max(CONVOCATIONS, key=int)
+
+
+CURRENT = _current()
+NEWEST = max(CONVOCATIONS, key=int)
 ORDINALS = ("osm", "devet", "deset", "jedanaest", "dvanaest", "trinaest", "četrnaest", "petnaest", "šesnaest")

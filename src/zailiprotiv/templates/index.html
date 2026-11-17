@@ -55,7 +55,7 @@
   </div>
   {% endif %}
 </section>
-{% if of_conv %}<p class="note">Novi saziv još nije usvojio zakone. Dok ih ne usvoji, ovde su zakoni prethodnog, {{ of_conv|lower }}g saziva.</p>{% endif %}
+{% if of_conv %}<p class="note">Novi saziv još nije usvojio zakone. Dok ih ne usvoji, ovde su zakoni prethodnog, {{ (of_conv|lower)[:-1] }}og saziva.</p>{% endif %}
 
 {% macro row(it, n) -%}
 <li class="row">

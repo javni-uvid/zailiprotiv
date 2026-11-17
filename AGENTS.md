@@ -247,17 +247,15 @@ The project's promises to its readers. Never change them without the maintainer.
 
 ## Changing convocation
 
-The Fifteenth convocation was constituted on 17 November 2026. Ready since 16 Nov: `config.CONVOCATIONS["15"]`
-(from 2026-11-17) and the Fourteenth's end; both read the same listings and keep only their own dates; the site
-builds with an empty current convocation and the home page and the quiz then show the last one with five final
-votes, saying so (`active`). **votes** opens an issue ("Novi saziv na sajtu Skupštine", #7) when a later
-convocation's sitting is listed. To switch, once the Fifteenth has its first roll call:
-
-1. set `config.CURRENT = "15"`;
-2. bills in procedure: check whether the Fourteenth's waiting bills stay before the new convocation; if they do,
-   copy `data/14/procedure.json` and their files in `data/14/bills/` and `data/14/summaries/` into `data/15/` (or
-   they are read and summarised again); if they lapse, leave them with the Fourteenth;
-3. when the Assembly moves the Fourteenth to its archive, give it its "archive" and archived "laws" pages.
+The Fifteenth convocation was constituted on 17 November 2026. `config.CONVOCATIONS["15"]` (from 2026-11-17) and
+the Fourteenth's end; both read the same listings and keep only their own dates. `config.CURRENT` is the newest
+convocation with a law that has its final vote, so the Fifteenth becomes the current one by itself with its first
+law, and the site never opens on a convocation with no MPs (17 Nov). Until then **votes** reads `config.NEWEST`
+beside the current one each hour (no bills in procedure, no notes), and the "no roll calls" check applies to the
+current one only. The Fourteenth's waiting bills (still listed by the Assembly on 17 Nov) were copied with their files
+into `data/15/`, so they are not read and summarised again; if the Assembly drops them, `procedure` marks them no
+longer listed. Left to do: when the Assembly moves the Fourteenth to its archive, give it its "archive" and archived
+"laws" pages; close issue #7 once the Fifteenth is current.
 
 ## Open questions
 
