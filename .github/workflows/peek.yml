@@ -11,6 +11,10 @@ on:
       chars:
         description: "How much of each page's text"
         default: "6000"
+      raw:
+        description: "The page's HTML as it is, not its text (as much as chars)"
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -23,10 +27,12 @@ jobs:
         env:
           IN_URLS: ${{ inputs.urls }}
           IN_CHARS: ${{ inputs.chars }}
+          IN_RAW: ${{ inputs.raw }}
         run: |
           for u in ${IN_URLS}; do
             echo "=== $u"
             curl -sS -L --max-time 60 -A "Mozilla/5.0 (zailiprotiv.rs peek)" "$u" -o page.html -w "%{http_code} %{size_download} bytes\n" || continue
+            if [ "${IN_RAW}" = "true" ]; then head -c "${IN_CHARS}" page.html; echo; continue; fi
             python3 - "${IN_CHARS}" <<'PY'
           import re, sys, html
           t = open("page.html", encoding="utf-8", errors="replace").read()
