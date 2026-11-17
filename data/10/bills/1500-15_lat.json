@@ -1,7 +1,10 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/1500-15 lat.pdf",
  "sha256": "bf1fabcb83a242abd771c0cfc1560ecdf2731bdab9363f9030a7310d2d44624c",
- "reader": 2,
- "sections": {},
- "articles": []
+ "reader": 4,
+ "sections": {
+  "reasons": "1. Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Sporazuma između Vlade\nRepublike Srbije i Vlade Ruske Federacije o vojno-tehničkoj saradnji, sadržan je u\nčlanu 99. stav 1. tačka 4. Ustava Republike Srbije, kojim je propisano da Narodna\nskupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza\nnjihovog potvrđivanja.\n2. Razlozi za donošenje Zakona\nSporazumom između Vlade Republike Srbije i Vlade Ruske Federacije o\nvojno-tehničkoj saradnji (u daljem tekstu: Sporazum), čije se potvrđivanje predlaže\novim zakonom, opredeljuju se osnovni ciljevi i principi na kojima će se zasnivati\nvojno-tehnička saradnja između vlada Republike Srbije i Ruske Federacije, odnosno\nnjihovih ovlašćenih organa, a u cilju doprinosa razvoju celokupnih bilateralnih\nodnosa dve države.\nPrvenstveni cilj predloženog zakona, odnosno zaključenog sporazuma, je\nuspostavljanje pravnog okvira koji bi omogućio saradnju Strana i njihovih ovlašćenih\norgana u oblasti isporuke naoružanja i vojne tehnike, remonta i modernizacije robe\nvojne namene, razvoja saradnje tokom projektovanja i proizvodnje robe vojne\nnamene, razmene stručnjaka i obuke kadrova kao i drugim oblastima vojno-tehničke\nsaradnje o kojima se Strane dogovore.\n3. Ocena potrebnih finansijskih sredstava za sprovođenje Zakona\nZa sprovođenje ovog zakona nisu potrebna dodatna finansijska sredstva,\nbudući da su sredstva koja su potrebna za sprovođenje Sporazuma, predviđena\nfinansijskim planom Ministarstva odbrane."
+ },
+ "articles": [],
+ "ocr": false
 }

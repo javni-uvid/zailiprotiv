@@ -1,7 +1,10 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2060-14Lat.pdf",
  "sha256": "e0a79a6e6540d8fe7df754f21be949cce14c4add747a7ce9f017a97fa23a268d",
- "reader": 2,
- "sections": {},
- "articles": []
+ "reader": 4,
+ "sections": {
+  "reasons": "1. Ustavni osnov za donošenje Zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Sporazuma između Vlade\nRepublike Srbije i Vlade Republike Azerbejdžan o saradnji u oblasti odbrane sadržan\nje u članu 99. stav 1. tačka 4. Ustava Republike Srbije, kojim je propisano da\nNarodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena\nobaveza njihovog potvrđivanja.\n2. Razlozi za donošenje Zakona\nSporazumom između Vlade Republike Srbije i Vlade Republike Azerbejdžan o\nsaradnji u oblasti odbrane, čije se potvrđivanje predlaže ovim zakonom, opredeljuju\nse osnovni ciljevi i principi na kojima će se zasnivati odbrambena saradnja između\nvlada Republike Srbije i Republike Azerbejdžan, odnosno njihovih nadležnih organa,\na u cilju doprinosa razvoju celokupnih bilateralnih odnosa dve države, kao i miru i\nbezbednosti u svetu.\nPrvenstveni cilj predloženog zakona, odnosno zaključenog sporazuma, je\nuspostavljanje pravnog okvira koji bi omogućio saradnju ugovornih strana i njihovih\nnadležnih organa u oblasti odbrambene i bezbednosne politike, vojnog obrazovanja i\nobuke, vojnoekonomskoj i naučnotehničkoj saradnji, vojnoj medicini i veterini kao i u\ndrugim oblastima od zajedničkog interesa.\n3. Ocena potrebnih finansijskih sredstava za sprovođenje Zakona\nZa sprovođenje ovog zakona nisu potrebna dodatna finansijska sredstva, budući da\nsu sredstva koja su potrebna za sprovođenje Sporazuma, predviđena finansijskim\nplanom Ministarstva odbrane."
+ },
+ "articles": [],
+ "ocr": false
 }

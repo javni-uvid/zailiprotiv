@@ -1,7 +1,8 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/1757-15 - LAT.pdf",
  "sha256": "e5b801d898ac1607317387e405f64afdd129ee21b172fe444f863d4382a9dd0f",
- "reader": 2,
+ "reader": 4,
  "sections": {},
- "articles": []
+ "articles": [],
+ "ocr": false
 }

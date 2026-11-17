@@ -1,7 +1,10 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2063-14Lat.pdf",
  "sha256": "6481c9973642109500df6a98a7269220b8d1b3ddd83299e86219f4cc452fd7ea",
- "reader": 2,
- "sections": {},
- "articles": []
+ "reader": 4,
+ "sections": {
+  "reasons": "1. Ustavni osnov za donošenje Zakona\n\nUstavni osnov za donošenje Zakona o potvrđivanju Memoranduma o\nrazumevanju između Vlade Republike Srbije i Ujedinjenih nacija koji obezbeđuje\nresurse prelaznim snagama Ujedinjenih nacija u Libanu (UNIFIL), sadržan je u članu\n99. stav 1. tačka 4. Ustava Republike Srbije, kojim je propisano da Narodna skupština\npotvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog\npotvrđivanja.\n\n2. Razlozi za donošenje Zakona\n\nMemorandumom o razumevanju između Vlade Republike Srbije i Ujedinjenih\nnacija koji obezbeđuje resurse prelaznim snagama Ujedinjenih nacija u Libanu\n(UNIFIL), čije se potvrđivanje predlaže ovim zakonom, uspostavljaju se\nadministrativni, logistički i finansijski uslovi kojima se reguliše doprinos Vlade\nRepublike Srbije u vidu osoblja, opreme i usluga, obezbeđenih za podršku Prelaznim\nsnagama Ujedinjenih nacija u Libanu, kao i obaveze Odeljenja Ujedinjenih nacija za\nmirovne operacije prema Republici Srbiji. Upotrebom Vojske Srbije u\nmultinacionalnim operacijama, Republika Srbija se svrstava u red država koje aktivno\nučestvuju u uspostavljanju i očuvanju mira i bezbednosti u svetu.\n\n3. Ocena potrebnih finansijskih sredstava za sprovođenje Zakona\n\nZa sprovođenje ovog zakona nisu potrebna dodatna finansijska sredstva, budući\nda su sredstva koja su potrebna za sprovođenje Sporazuma, predviđena finansijskim\nplanom Ministarstva odbrane."
+ },
+ "articles": [],
+ "ocr": false
 }
