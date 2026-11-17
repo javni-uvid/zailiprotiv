@@ -253,6 +253,13 @@ def test_replies_and_the_chairs_measures_are_found_by_rule():
     assert pages_floor.to_whom(about, {"ЗОРАН ЖИВКОВИЋ": "живковић", "СРБИСЛАВ ФИЛИПОВИЋ": "филиповић"}) == "ЗОРАН ЖИВКОВИЋ"
     victim = {"kind": "opomena", "chair": {"text": "Изричем вам опомену јер сте увредили Мартиновића."}}
     assert pages_floor.to_whom(victim, {"АЛЕКСАНДАР МАРТИНОВИЋ": "мартиновић"}) is None
+    # As the chair of the Thirteenth said it: the name right after the measure, the first name deciding.
+    said = lambda text: {"kind": "opomena", "chair": {"text": text}}
+    two = {"СТЕФАН ЈОВАНОВИЋ": "јовановић", "ЖЕЉКО ВЕСЕЛИНОВИЋ": "веселиновић"}
+    assert pages_floor.to_whom(said("Због нарушавања реда изричем опомену Стефану Јовановићу."), two) == "СТЕФАН ЈОВАНОВИЋ"
+    assert pages_floor.to_whom(said("Изричем опомену Добрици Веселиновићу."), two) is None  # another Veselinović
+    assert pages_floor.to_whom(said("Изричем опомену Стефану Јовановићу, Жељку Веселиновићу."), two) is None  # several
+    assert pages_floor.measures([say("ПРЕДСЕДНИК", "Нећу да вам изричем сад никакву опомену.", True)]) == []
     assert pages_floor.spoken(speeches[5]["text"]) == "Господине Б, изричем вам опомену."
 
 

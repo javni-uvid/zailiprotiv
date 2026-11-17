@@ -36,14 +36,15 @@ def spoken(text: str) -> str:
 # Talk about measures is not a measure: "нећу да изричем опомене, нисмо деца", "шта очекујете - да изричем опомене?",
 # "могу да почнем да опомињем, изричем опомене, али …". A denial right before the verb, or reprimands in the plural
 # with no number ("две опомене"), is talk.
-_DENIED = re.compile(r"(?:\bне|\bнећу да|\bнећемо да|\bне желим да|\bнисам хте\w+ да)\s+$", re.I)
+_DENIED = re.compile(r"(?:\bне|\bнећу да|\bнећемо да|\bне желим да|\bнисам хте\w+ да)(?:\s+(?:вам|му|јој|им|сад|сада|још))*\s+$", re.I)
+_NONE = re.compile(r"изричем\s+(?:\w+\s+){0,3}(?:никакв|ниједн)", re.I)  # "… изричем сад никакву опомену"
 _PLURAL = re.compile(r"изричем(?! (?:вам |му |јој |им )?(?:две|три|четири|\d))[^.!?]{0,30}\bопомене\b", re.I)
 
 
 def pronounced(text: str, pattern) -> re.Match | None:
     """The place where a measure is pronounced in the chair's words, or None when the words only talk of measures."""
     for m in pattern.finditer(text):
-        if _DENIED.search(text[max(0, m.start() - 30):m.start()]) or _PLURAL.match(text, m.start()):
+        if _DENIED.search(text[max(0, m.start() - 40):m.start()]) or _PLURAL.match(text, m.start()) or _NONE.match(text, m.start()):
             continue
         return m
     return None
@@ -130,7 +131,11 @@ def exchanges(speeches: list[dict]) -> list[list[dict]]:
     return out
 
 
-_ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођице|колега|колегинице|посланиче|посланице|посланику|посланици)\s+"
+# Also a name right after the measure itself, as the chair of the Thirteenth said it ("изричем опомену Стефану
+# Јовановићу", "изричем вам прву опомену Зеленовићу", "одузимање речи, Драгана Ракић"), or the MP named first
+# ("Народни посланик Александар Јовановић, … изричем вам опомену").
+_ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођице|колега|колегинице|посланиче|посланице|посланику|посланици|"
+                        r"посланик|посланица|опомену|опомене|речи|седнице),?\s+"
                         r"((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){1,3})")
 _POINT = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
 # Harsh words: a fixed list, the same for everyone, of words that are abuse in nearly every use (words with an
@@ -213,10 +218,12 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
         # the person the speech was about ("зато што сте колеги Филиповићу рекли …").
         fits = []
         for m in _ADDRESSED.finditer(sentence):
+            if re.match(r"\s*(?:,|и)\s+[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+\s+[А-ЯЈЉЊЂЋЏ]", sentence[m.end():]):
+                return None  # several named at once ("опомену Александру Јовановићу, Бориславу Новаковићу, …"): not one
             words = re.findall(r"[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+", m.group(1))
             said = set().union(*(stems(w) for w in words)) if words else set()
             named = [name for name, surname in speakers.items() if surname in said]
-            if len(named) > 1:  # two with the surname: the first name decides
+            if len(named) > 1 or len(words) > 1:  # two with the surname, or a first name said: the first name decides
                 named = [n for n in named if n.split()[0].lower()[:4] in {w.lower()[:4] for w in words}]
             fits += named
         if len(set(fits)) == 1:

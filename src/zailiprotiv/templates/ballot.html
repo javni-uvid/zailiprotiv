@@ -38,6 +38,7 @@
     <div class="bar" aria-hidden="true"><i></i><i></i></div>
     <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koji poslanik je glasao kao ti.</p>
     <a class="lb-btn" id="lb-quiz-go" href="kviz/podelili-salu.html">Počni kviz</a>
+    {% if quiz_themes %}<p class="lb-themes">Ili po temi: {% for t in quiz_themes.values() %}<a href="kviz/{{ t.slug }}.html">{{ t.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
   </div>
   {% endif %}
   {% if bill and votes_api %}

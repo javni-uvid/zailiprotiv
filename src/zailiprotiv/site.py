@@ -41,6 +41,11 @@ def slug(text: str, limit: int = 80) -> str:
     return out or "x"
 
 
+def given_first(name: str) -> str:
+    """"Jovanov Milenko" → "Milenko Jovanov": the site lists surnames first, people say and search the other way round."""
+    return " ".join(name.split()[-1:] + name.split()[:-1])
+
+
 def day(iso: str | None) -> str:
     if not iso:
         return ""
@@ -374,9 +379,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env.globals.update(hemicycle=hemicycle)
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     env.filters["qid"] = qid
-    # "Jovanov Milenko" → "Milenko Jovanov": the site lists surnames first, people search the other way round.
     env.filters["grp"] = lambda g: g if any(ch.isalnum() for ch in g or "") else "Bez poslaničke grupe"  # a roll call's empty or "()"
-    env.filters["given_first"] = lambda name: " ".join(name.split()[-1:] + name.split()[:-1])
+    env.filters["given_first"] = given_first
     env.filters["locative"] = lambda name: name.lower()[:-1] + "om" if name.lower().endswith("i") else name.lower()  # Četrnaesti → (u) četrnaestom
     if out.exists():
         shutil.rmtree(out)

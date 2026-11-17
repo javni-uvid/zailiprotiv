@@ -332,7 +332,7 @@
       " glasao si kao većina posetilaca sajta.";
     // The words that are copied or shared: the laws of this quiz, the MP on the picture (name first, as people say
     // it; the site lists surnames first), and the question. The link follows.
-    var mpName = card.mp ? card.mp.n.replace(/^(.*)\s(\S+)$/, "$2 $1") : "";
+    var mpName = card.mp ? card.mp.n : "";  // already as people say it, given name first
     shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (mpName ? " Najviše glasova kao ja: " + mpName + "." : "") + " Koji si ti poslanik?";
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
   }

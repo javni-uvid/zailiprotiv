@@ -7,7 +7,7 @@ written here: where each law is (listic/zakoni.json), each convocation's final v
 """
 from __future__ import annotations
 
-from zailiprotiv.site import ORDINAL_NAME, json, latin
+from zailiprotiv.site import ORDINAL_NAME, given_first, json, latin
 
 LETTER = {"za": "z", "protiv": "p", "uzdrzan": "u"}
 
@@ -50,7 +50,7 @@ def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, q
             where[it["slug"]] = conv
         (folder / f"{conv}.json").write_text(json.dumps({
             "c": conv, "n": ORDINAL_NAME.get(conv, conv),
-            "mps": [[m["mp"].slug, m["mp"].name, (m["by_conv"][conv]["groups"] or [""])[0]] for m in mps],
+            "mps": [[m["mp"].slug, given_first(m["mp"].name), (m["by_conv"][conv]["groups"] or [""])[0]] for m in mps],
             "laws": laws}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (folder / "zakoni.json").write_text(json.dumps(where, separators=(",", ":")), encoding="utf-8")
     (folder / "predlozi.json").write_text(json.dumps(
