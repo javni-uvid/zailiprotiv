@@ -764,6 +764,11 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                    if x["speeches"] or x["exchanges"] or x["points"] or x["measures"] or x["measures_likely"] or x["harsh"]],
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
             root="../"), encoding="utf-8")
+        # Every speech of the MP's, sitting by sitting, on a page of its own when the MP's page shows only the latest.
+        heard = [x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, []) if x.get("spoken")]
+        if sum(len(x["spoken"]) for x in heard) > 6:
+            (out / "poslanik" / f"{mp.slug}-govori.html").write_text(env.get_template("mp_speeches.html").render(
+                **common, mp=mp, heard=heard, total=sum(s["n"] for x in heard for s in x["spoken"]), root="../"), encoding="utf-8")
     for conv, _ in convs:
         rows = [{"mp": r["mp"], "in": r["by_conv"][conv], "photo": r["photo"]} for r in rows_mp if conv in r["by_conv"]]
         # Who stands out in the convocation, by the same count for everyone: the first five of each.

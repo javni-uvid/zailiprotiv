@@ -113,19 +113,12 @@
 {% endif %}
 {% set heard = floor|selectattr("spoken")|list %}
 {% if heard %}
+{% set all_ = heard|map(attribute="spoken")|map("length")|sum %}
 <section id="govori">
   <h2>Govori u sali <span class="count">{{ heard|map(attribute="spoken")|map("sum", attribute="n")|sum }}</span></h2>
   <p class="meta">Svaki govor od reči do reči, u stenografskim beleškama koje smo pročitali; sednica po sednica, najnovija prvo. Broj vodi do govora.</p>
-  {% for x in heard %}
-  <details class="inline"{% if loop.first %} open{% endif %}><summary>{{ x.name }} saziv · {{ x.spoken|length }} {{ plural(x.spoken|length, "sednica", "sednice", "sednica") }}</summary>
-  <ul class="speech-days">
-  {% for s in x.spoken %}
-    <li><span class="meta nowrap">{{ s.first|day }}{% if s.last != s.first %} – {{ s.last|day }}{% endif %}</span> <a href="{{ s.days[0].first }}">{{ s.sitting }}</a> <span class="meta">· {{ s.n }} {{ plural(s.n, "govor", "govora", "govora") }}</span>
-      {% for d in s.days %}<span class="speech-n" data-base="{{ s.base }}" data-s="{{ d.tails }}"{% if s.days|length > 1 %} data-day="{{ d.day }}"{% endif %}>{% if s.days|length > 1 %}<a href="{{ d.first }}">{{ d.day }}. dan</a>{% endif %}</span>{% endfor %}</li>
-  {% endfor %}
-  </ul>
-  </details>
-  {% endfor %}
+  {% with convs = heard, limit = 6 %}{% include "_speeches.html" %}{% endwith %}
+  {% if all_ > 6 %}<p><a href="{{ mp.slug }}-govori.html">Svi govori, na {{ all_ }} {{ plural(all_, "sednici", "sednice", "sednica") }}</a></p>{% endif %}
 </section>
 {% endif %}
 {% if exchanges %}

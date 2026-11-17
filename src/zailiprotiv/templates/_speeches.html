@@ -1,0 +1,12 @@
+{# An MP's speeches, sitting by sitting: `convs` (the MP's floor rows with "spoken"), `limit` sittings at most. #}
+{% set shown_ = namespace(n=0) %}
+{% for x in convs %}{% if not limit or shown_.n < limit %}
+  <details class="inline"{% if loop.first %} open{% endif %}><summary>{{ x.name }} saziv · {{ x.spoken|length }} {{ plural(x.spoken|length, "sednica", "sednice", "sednica") }}</summary>
+  <ul class="speech-days">
+  {% for s in x.spoken %}{% if not limit or shown_.n < limit %}{% set shown_.n = shown_.n + 1 %}
+    <li><span class="meta nowrap">{{ s.first|day }}{% if s.last != s.first %} – {{ s.last|day }}{% endif %}</span> <a href="{{ s.days[0].first }}">{{ s.sitting }}</a> <span class="meta">· {{ s.n }} {{ plural(s.n, "govor", "govora", "govora") }}</span>
+      {% for d in s.days %}<span class="speech-n" data-base="{{ s.base }}" data-s="{{ d.tails }}"{% if s.days|length > 1 %} data-day="{{ d.day }}"{% endif %}>{% if s.days|length > 1 %}<a href="{{ d.first }}">{{ d.day }}. dan</a>{% endif %}</span>{% endfor %}</li>
+  {% endif %}{% endfor %}
+  </ul>
+  </details>
+{% endif %}{% endfor %}

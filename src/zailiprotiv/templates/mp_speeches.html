@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural with context %}
+{% block title %}Govori u Skupštini: {{ mp.name|given_first }} — Za ili Protiv{% endblock %}
+{% block description %}Svi govori poslanika {{ mp.name|given_first }} u Narodnoj skupštini, sednica po sednica, od reči do reči iz stenografskih beleški.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="../poslanici.html">Poslanici</a> › <a href="{{ mp.slug }}.html">{{ mp.name }}</a></p>
+<h1>Govori: {{ mp.name|given_first }}</h1>
+<p class="standfirst">{{ total }} {{ plural(total, "govor", "govora", "govora") }} u stenografskim beleškama koje smo pročitali, sednica po sednica, najnovija prvo. Broj vodi do govora, od reči do reči.</p>
+<section id="govori">
+{% with convs = heard, limit = 0 %}{% include "_speeches.html" %}{% endwith %}
+</section>
+{% endblock %}
