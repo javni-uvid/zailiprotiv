@@ -233,6 +233,29 @@ def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
     return None
 
 
+def _tail(link: str) -> str:
+    """A speech's address in the sitting's folder, short: "dan-3-2.html#g00527" → "3-2.00527" (site.js makes it whole)."""
+    tail = link.rsplit("/", 1)[1]
+    m = re.fullmatch(r"dan-([\d-]+)\.html#g(\d+)", tail)
+    return f"{m.group(1)}.{m.group(2)}" if m else tail
+
+
+def spoken_by_sitting(days) -> list[dict]:
+    """An MP's speeches for the MP's page: one row to a sitting (newest first), its days in order, each day's
+    speeches as short addresses. The longest MP pages hold thousands of speeches, so nothing is said twice."""
+    by = {}
+    for d in days:
+        s = by.setdefault((d["links"][0].rsplit("/", 1)[0], d["sitting"]), {"sitting": d["sitting"], "base": d["links"][0].rsplit("/", 1)[0] + "/",
+                                                                            "first": d["date"], "last": d["date"], "days": [], "n": 0})
+        s["days"].append({"day": d["day"], "date": d["date"], "first": d["links"][0], "n": len(d["links"]),
+                          "tails": " ".join(_tail(l) for l in d["links"])})
+        s["n"] += len(d["links"])
+        s["first"], s["last"] = min(s["first"] or d["date"], d["date"] or s["first"]), max(s["last"], d["date"])
+    for s in by.values():
+        s["days"].sort(key=lambda d: d["day"])  # the notes number the days; a day may lack its date
+    return sorted(by.values(), key=lambda s: s["last"], reverse=True)
+
+
 def firsts(rows) -> dict[str, list]:
     """The first TOP of the rows by each count, the same rule for everyone; ties by name."""
     def first(key):
@@ -354,11 +377,9 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 # Where each speech is among the notes' pages, day by day: the MP's page lists them to be read.
                 m_ = meta(s_)
                 if m_["ours"]:
-                    d_ = t["days"].setdefault((url, s_["day"]), {"date": m_["date"], "day": s_["day"], "links": [], "on": [],
+                    d_ = t["days"].setdefault((url, s_["day"]), {"date": m_["date"], "day": s_["day"], "links": [],
                                                                   "sitting": re.sub(r"\s+Narodne skupštine Republike Srbije(?: u \w+ sazivu)?", "", title)})
                     d_["links"].append(m_["ours"])
-                    if m_["on"] and m_["on"]["text"] and m_["on"]["text"] not in d_["on"]:
-                        d_["on"].append(m_["on"]["text"])
                 for word, sentence in harsh(s_["text"]):
                     t["harsh"].append({"word": word, "text": sentence, "parts": marked(sentence), **meta(s_)})
             for e in found:
@@ -396,9 +417,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             for k_, d_ in t["days"].items():  # two spellings of one MP on one day: their speeches together
                 if k_ in r["days"]:
                     r["days"][k_]["links"] += d_["links"]
-                    r["days"][k_]["on"] += [x for x in d_["on"] if x not in r["days"][k_]["on"]]
                 else:
-                    r["days"][k_] = {**d_, "links": list(d_["links"]), "on": list(d_["on"])}
+                    r["days"][k_] = {**d_, "links": list(d_["links"])}
             r["raw"].append(raw)
             for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
                 r[k] += t[k]
@@ -426,9 +446,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                                  "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
                                                  "measures_likely": r["measures_likely"],
                                                  "said": r["said"], "harsh_place": place,
-                                                 "spoken": [{**d, "base": d["links"][0].rsplit("/", 1)[0] + "/",
-                                                             "tails": " ".join(l.rsplit("/", 1)[1] for l in d["links"])}
-                                                            for d in sorted(r["days"].values(), key=lambda d: (d["date"], d["day"]), reverse=True)],
+                                                 "spoken": spoken_by_sitting(r["days"].values()),
                                                  "measure_events": [e for e in events if e["type"] == "mera" and (
                                                      (e.get("to") or e.get("likely") or {}).get("slug") == r["who"]["slug"])]})
         if events:

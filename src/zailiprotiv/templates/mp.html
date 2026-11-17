@@ -114,15 +114,14 @@
 {% set heard = floor|selectattr("spoken")|list %}
 {% if heard %}
 <section id="govori">
-  {% set n_ = namespace(s=0) %}{% for x in heard %}{% for d in x.spoken %}{% set n_.s = n_.s + d.links|length %}{% endfor %}{% endfor %}
-  <h2>Govori u sali <span class="count">{{ n_.s }}</span></h2>
-  <p class="meta">Svaki govor od reči do reči, u stenografskim beleškama koje smo pročitali; dan po dan, najnoviji prvo. Broj vodi do govora.</p>
+  <h2>Govori u sali <span class="count">{{ heard|map(attribute="spoken")|map("sum", attribute="n")|sum }}</span></h2>
+  <p class="meta">Svaki govor od reči do reči, u stenografskim beleškama koje smo pročitali; sednica po sednica, najnovija prvo. Broj vodi do govora.</p>
   {% for x in heard %}
-  <details class="inline"{% if loop.first %} open{% endif %}><summary>{{ x.name }} saziv · {{ x.spoken|length }} {{ plural(x.spoken|length, "dan", "dana", "dana") }}</summary>
-  <ul class="plain speech-days">
-  {% for d in x.spoken %}
-    <li><span class="meta nowrap">{{ d.date|day if d.date else "" }}</span> <a href="{{ d.links[0] }}">{{ d.sitting }}{% if d.day > 1 %}, {{ d.day }}. dan{% endif %}</a>{% if d.on %} <span class="meta">· {{ d.on[:2]|join(" · ")|truncate(110, killwords=False, end=" …") }}</span>{% endif %}
-      {% if d.links|length > 1 %}<span class="speech-n" data-base="{{ d.base }}" data-s="{{ d.tails }}">{{ d.links|length }} {{ plural(d.links|length, "govor", "govora", "govora") }}</span>{% endif %}</li>
+  <details class="inline"{% if loop.first %} open{% endif %}><summary>{{ x.name }} saziv · {{ x.spoken|length }} {{ plural(x.spoken|length, "sednica", "sednice", "sednica") }}</summary>
+  <ul class="speech-days">
+  {% for s in x.spoken %}
+    <li><span class="meta nowrap">{{ s.first|day }}{% if s.last != s.first %} – {{ s.last|day }}{% endif %}</span> <a href="{{ s.days[0].first }}">{{ s.sitting }}</a> <span class="meta">· {{ s.n }} {{ plural(s.n, "govor", "govora", "govora") }}</span>
+      {% for d in s.days %}<span class="speech-n" data-base="{{ s.base }}" data-s="{{ d.tails }}"{% if s.days|length > 1 %} data-day="{{ d.day }}"{% endif %}>{% if s.days|length > 1 %}<a href="{{ d.first }}">{{ d.day }}. dan</a>{% endif %}</span>{% endfor %}</li>
   {% endfor %}
   </ul>
   </details>

@@ -17,7 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
   Array.prototype.forEach.call(document.querySelectorAll(".speech-n[data-s]"), function (box) {
     var base = box.dataset.base, parts = box.dataset.s.split(" ");
     box.textContent = "";
-    parts.forEach(function (p, i) { var a = document.createElement("a"); a.href = base + p; a.textContent = String(i + 1); box.appendChild(a); });
+    if (box.dataset.day) { var b = document.createElement("b"); b.textContent = box.dataset.day + ". dan"; box.appendChild(b); }
+    parts.forEach(function (p, i) {
+      var m = /^([\d-]+)\.(\d+)$/.exec(p), a = document.createElement("a");
+      a.href = base + (m ? "dan-" + m[1] + ".html#g" + m[2] : p);
+      a.textContent = String(i + 1);
+      box.appendChild(a);
+    });
   });
 });
 // The Cyrillic edition (cir/): what the scripts write into the page is written in Cyrillic too.
