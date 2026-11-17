@@ -86,3 +86,26 @@ def test_mp_years_check():
     assert found["differ"][0]["years"] == {"12": [1968], "13": [1966]}
     assert [t["convocation"] for t in found["twice"]] == ["13"]
     assert found["missing"] == {"13": [mps.key("Петар Петровић")]}
+
+
+def test_registry_keeps_the_fathers_initial_with_the_given_name():
+    from zailiprotiv import site
+    votes = {"a": {"key": "a", "when": "2023-01-01T10:00:00", "counts": {"nije_prisutan": 0},
+                   "rows": [[1, "Ненад А. Митровић", "za", "СНС"], [2, "Наташа Ст. Јовановић", "za", "СНС"],
+                            [3, "Биљана Илић Стошић", "za", "СНС"]]}}
+    people = sorted(site.registry(votes).values(), key=lambda m: m.slug)
+    assert [(m.name, m.slug, m.was) for m in people] == [
+        ("Ilić Stošić Biljana", "ilic-stosic-biljana", []),
+        ("Jovanović Nataša St.", "jovanovic-natasa-st", ["st-jovanovic-natasa"]),
+        ("Mitrović Nenad A.", "mitrovic-nenad-a", ["a-mitrovic-nenad"])]
+
+
+def test_another_convocations_notes_are_left_out(tmp_path):
+    from zailiprotiv import site
+    folder = tmp_path / "10" / "transcripts"
+    folder.mkdir(parents=True)
+    for sitting, day in (("s1", "2015-03-03"), ("s2", "2016-06-06")):
+        (folder / f"{sitting}.json").write_text(
+            '{"sitting": "%s", "days": [{"day": 1, "listed_date": "%s"}], "speeches": {}}' % (sitting, day),
+            encoding="utf-8")
+    assert list(site.load_transcripts(tmp_path / "10")) == ["s1"]

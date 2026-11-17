@@ -116,7 +116,8 @@ def clean_urls(out: Path) -> None:
                     continue
                 here = posixpath.dirname(file)
                 text = structured(text, site, here, address(file))
-                head = f'<link rel="canonical" href="{site}{address(file)}">\n'
+                # A page that names its own canonical address (one that sends on to another) keeps it.
+                head = "" if 'rel="canonical"' in text else f'<link rel="canonical" href="{site}{address(file)}">\n'
                 twin = file[4:] if file.startswith("cir/") else "cir/" + file
                 if (out / twin).exists():
                     lat, cyr = (twin, file) if file.startswith("cir/") else (file, twin)

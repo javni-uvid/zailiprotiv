@@ -692,6 +692,11 @@ def votes(args) -> int:
                 found = rollcall.read(f.name)
             for key in [k for k in store["votes"] if k.split("#")[0] == pdf]:
                 del store["votes"][key]
+            # A sitting listed without a day can be another convocation's (the Eleventh's first, on the Tenth's
+            # page, 17 Nov 2026): a roll call outside the convocation's dates is not its own.
+            if any(not skupstina.within(v.when or "", CONVOCATIONS[CONVOCATION]) for v in found):
+                print(f"  another convocation's (by its day): {urllib.parse.unquote(pdf)}")
+                found = [v for v in found if skupstina.within(v.when or "", CONVOCATIONS[CONVOCATION])]
             for i, v in enumerate(found):
                 store["votes"][f"{pdf}#{i}"] = {
                     "when": v.when, "item": v.item, "kind": v.kind, "session": v.session,
@@ -704,7 +709,7 @@ def votes(args) -> int:
             store["pdfs"][pdf] = hashlib.sha256(body).hexdigest()
             read += 1
             changed = True
-        if changed:
+        if changed and (store["votes"] or path.exists()):
             path.write_text(jsonfile.dumps(store, "votes"), encoding="utf-8")
     total = sum(len(json.loads(p.read_text(encoding="utf-8"))["votes"]) for p in out_dir.glob("*.json"))
     print(f"PDFs read now: {read}, failed: {failed}; votes in the archive: {total}")

@@ -111,7 +111,9 @@ The project's promises to its readers. Never change them without the maintainer.
   vote per file, sections ЗА/ПРОТИВ/УЗДРЖАНИ/НИСУ ГЛАСАЛИ/НИСУ ПРИСУТНИ, rows "SURNAME Given, vote, group", the
   absent listed; listinzi 2024 several votes per file, "Given Surname (list)", the absent **not** listed; listinzi
   2025 the same with the list in a column. A row's vote must agree with its section and numbers run from 1; anything
-  else is a recorded problem. Latin look-alike letters in Cyrillic words are mapped before matching.
+  else is a recorded problem. Latin look-alike letters in Cyrillic words are mapped before matching. A roll call
+  outside the convocation's dates is not kept, nor are notes of such a sitting loaded (17 Nov 2026: the Eleventh's
+  first sitting, listed without a day on the Tenth's archive page, had put its votes and speeches in the Tenth).
 - `index` → `data/<N>/index.json`; `votes` reads every roll call not yet read into `data/<N>/votes/<sitting>.json`
   with each PDF's SHA-256.
 
@@ -217,6 +219,11 @@ The project's promises to its readers. Never change them without the maintainer.
   (and town) in the Assembly's archive of convocations, compared across convocations (`data/mp_years.json`); a year
   off by one counts only with another town; two namesakes in one convocation are listed apart (the archive gives no
   father's initial, the roll calls do). Six names split on 17 Nov 2026; the check then found none left.
+- **A father's initial stays with the given name** (17 Nov 2026): "Nenad A. Mitrović" is "Mitrović Nenad A."
+  (`mitrovic-nenad-a`); until then the initial came first ("A. Mitrović Nenad"). An MP's earlier addresses (that
+  order, and spellings joined by hand in `data/mp_moved.json`) are small pages that send on to the MP's, with its
+  canonical address and `noindex`, as a bill's page does to its law's; `publish` keeps a canonical address a page
+  names itself.
 - **Downloads and share pictures in a bucket** (14 Nov 2026): every law's CSV, JSON and picture, MPs' pictures and
   `podaci/` would be thousands of files on the host; **pages** moves them out of the built site (`files-split`),
   makes the bucket behind `podaci.zailiprotiv.rs` hold exactly them (`files-upload`) and only then publishes the

@@ -19,7 +19,8 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from zailiprotiv import kinds, mps
+from zailiprotiv import kinds, mps, skupstina
+from zailiprotiv.config import CONVOCATIONS
 from zailiprotiv.translit import latin
 
 HERE = Path(__file__).parent
@@ -96,6 +97,7 @@ class MP:
     key: str
     name: str
     slug: str = ""
+    was: list[str] = field(default_factory=list)  # earlier addresses of the page, sent on to this one
     group: str = ""
     last_seen: str = ""
     votes: dict[str, str] = field(default_factory=dict)  # vote key → za, protiv, …
@@ -143,6 +145,10 @@ def load_transcripts(data: Path) -> dict[str, dict]:
     out = {}
     for path in sorted(folder.glob("*.json")) if folder.exists() else []:
         store = json.loads(path.read_text(encoding="utf-8"))
+        days = [d.get("listed_date") for d in store.get("days", []) if d.get("listed_date")]
+        conf = CONVOCATIONS.get(data.name)
+        if conf and days and not any(skupstina.within(d, conf) for d in days):
+            continue  # another convocation's sitting, listed on this one's page without a day (the Eleventh's first)
         for sp in store["speeches"].values():
             if not sp.get("chair"):
                 sp["speaker"] = mps.split(sp["speaker"], data.name)
@@ -222,7 +228,14 @@ def registry(votes: dict) -> dict[str, MP]:
         name, mark = re.fullmatch(r"(.*?)( \(\d{4}\))?", mp.name).groups()  # a split name's mark stays last
         words = [w for w in name.split() if w.lower().strip(".") not in titles] or name.split()
         if k not in surname_first and len(words) > 1:
-            words = words[1:] + words[:1]
+            # "Nenad A. Mitrović" → "Mitrović Nenad A.": the father's initial stays with the given name. Until 17 Nov
+            # 2026 the initial came first ("A. Mitrović Nenad"); that address sends on to the new one.
+            given = 1
+            while given < len(words) - 1 and re.fullmatch(r"\w{1,3}\.", words[given]):
+                given += 1
+            if given > 1:
+                mp.was.append(slug(" ".join(words[1:] + words[:1]) + (mark or ""), 60))
+            words = words[given:] + words[:given]
         mp.name = " ".join(words) + (mark or "")  # without titles (dr, prof.): they are not part of the name
     taken = Counter()
     for mp in sorted(out.values(), key=lambda m: collate(m.name)):
@@ -787,6 +800,23 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         if sum(len(x["spoken"]) for x in heard) > 6:
             (out / "poslanik" / f"{mp.slug}-govori.html").write_text(env.get_template("mp_speeches.html").render(
                 **common, mp=mp, heard=heard, total=sum(s["n"] for x in heard for s in x["spoken"]), root="../"), encoding="utf-8")
+    # Addresses an MP's page had before (a name written in another order, two spellings joined: data/mp_moved.json,
+    # {old address: the name as the roll calls write it}) send on to the page, as a bill's page does to its law's.
+    import html as html_
+    from zailiprotiv.downloads import NOINDEX
+    moved_file = root / "mp_moved.json"
+    moved = {old: people.get(mps.key(name)) for old, name in
+             (json.loads(moved_file.read_text(encoding="utf-8")).items() if moved_file.exists() else [])}
+    moved |= {old: mp for mp in people.values() for old in mp.was}
+    pages_ = {mp.slug for mp in people.values()}
+    for old, mp in sorted(moved.items()):
+        if mp and old not in pages_ and old != mp.slug:
+            (out / "poslanik" / f"{old}.html").write_text(
+                f'<!doctype html>\n<html lang="sr-Latn"><head><meta charset="utf-8"><title>{html_.escape(mp.name)}</title>\n'
+                f'<meta http-equiv="refresh" content="0; url={mp.slug}.html">\n'
+                f'<link rel="canonical" href="https://{domain or "zailiprotiv.rs"}/poslanik/{mp.slug}.html">\n'
+                f'{NOINDEX}\n</head><body><p><a href="{mp.slug}.html">{html_.escape(mp.name)}</a></p></body></html>\n',
+                encoding="utf-8")
     for conv, _ in convs:
         rows = [{"mp": r["mp"], "in": r["by_conv"][conv], "photo": r["photo"]} for r in rows_mp if conv in r["by_conv"]]
         # Who stands out in the convocation, by the same count for everyone: the first five of each.
