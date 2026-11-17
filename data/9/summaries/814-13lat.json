@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "004ccbf3ea4478b6b7550a5885c2171574b0a9324880aef01864fd544001fe6b",
+ "summary": {
+  "ukratko": "Закон мења Закон о професионалној рехабилитацији и запошљавању особа са инвалидитетом у делу који се односи на обавезу запошљавања, penale, износе средстава која се исплаћују послодавцима и предузећима за професионалну рехабилитацију и на државну помоћ. Према предлагачу, измене су потребне због престанка објављивања податка о просечној заради у привреди и због усклађивања са прописима о државној помоћи.",
+  "razlozi": [
+   "Републички завод за статистику од јануара 2011. године не објављује податке о просечној заради у привреди Републике Србије, а закон се позива на тај податак.",
+   "Предлагач наводи да се рок за плаћање пенала (до 30. у месецу) и рок за остале начине извршења обавезе (до 5. у месецу) разликују, што је у пракси изазвало недоумице.",
+   "Предлагач наводи да је Влада донела закључке о popisu šema državne pomoći i roku za njihovo usklađivanje do 31. decembra 2012. godine, pa je potrebno uskladiti odredbe zakona o državnoj pomoći za zapošljavanje osoba sa invaliditetom.",
+   "Према образложењу, penali su prema podacima Poreske uprave činili svega 1% ukupnih prihoda Budžetskog fonda, pa predlagač navodi da su finansijski efekti brisanja zanemarljivi."
+  ],
+  "promene": [
+   "Brише се član 29. који је прописивао уплату пенала када послодавац не испуни обавезу запошљавања на један од предвиђених начина.",
+   "Učešće u finansiranju zarada osoba sa invaliditetom i iznosi za ugovore o poslovno-tehničkoj saradnji i kupovini proizvoda utvrđuju se preko 50% odnosno 20 prosečnih zarada po zaposlenom u Republici Srbiji, prema poslednjem objavljenom podatku.",
+   "Umesto refundacije uvodi se subvencija zarada zaposlenih osoba sa invaliditetom u preduzećima za profesionalnu rehabilitaciju u visini do 75% ukupnih troškova zarade sa doprinosima, ali ne više od 50% prosečne zarade; predlagač navodi da bi iznos po osobi iznosio do 32.582,50 dinara mesečno prema podatku iz decembra 2012. godine.",
+   "Dodaje se stav 3. u članu 28. o prihodima Budžetskog fonda, koji čine sredstva iz budžeta Republike Srbije i sredstva ostvarena učešćem u finansiranju zarada, i brišu se reči o sporazumnom propisivanju uslova za rad radnih centara.",
+   "Uređuje se rok od šest meseci za usklađivanje propisa o praćenju i dokazivanju izvršenja obaveze zapošljavanja, prelazni režim za postupke započete pre stupanja na snagu, i stupanje na snagu u roku od osam dana od objavljivanja."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона није потребно обезбедити финансијска средства из буџета Републике Србије."
+ },
+ "usage": {},
+ "law": "Zakon o izmenama i dopunama Zakona o profesionalnoj rehabilitaciji i zapošljavanju osoba sa invaliditetom",
+ "depth": "standard"
+}
