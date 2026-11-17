@@ -70,3 +70,16 @@ def parse(html: str, base: str = ADOPTED) -> list[Law]:
             submitted=date(submitted.group(1)) if submitted else None,
         ))
     return out
+
+
+def carry(before: dict, now: dict) -> dict:
+    """The laws just read (now, {pdf: law}) with what later steps added to the same law in the file before (before):
+    its roll calls and final vote (link), kind, and its bill's file, constitutional basis and areas (bills), as long
+    as its bill is the same. Those steps run again after this one; a run that stops between them (17 Nov 2026: the
+    Eleventh lost every final vote when the reading of roll calls failed after `laws`) leaves the file as it was."""
+    for pdf, law in now.items():
+        old = before.get(pdf)
+        if old and old.get("bill_pdf") == law.get("bill_pdf"):
+            for field, value in old.items():
+                law.setdefault(field, value)
+    return now

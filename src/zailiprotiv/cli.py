@@ -354,6 +354,8 @@ def adopted(args) -> int:
              "laws": {law.pdf: law.as_dict() for law in found}}
     if _shrunk(Path(args.out), "laws", len(found)):
         return 0
+    if Path(args.out).exists():
+        laws.carry(json.loads(Path(args.out).read_text(encoding="utf-8")).get("laws") or {}, store["laws"])
     Path(args.out).write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
     print(f"laws: {len(found)} (of {listed} on the page), international treaties: {sum(l.treaty for l in found)}, "
           f"without a bill: {sum(not l.bill_pdf for l in found)}")

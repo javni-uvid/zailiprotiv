@@ -36,3 +36,16 @@ def test_dates_in_both_scripts():
     assert laws.date("1. децембар 2025.") == "2025-12-01"
     assert laws.date("(9. mart 2024. )") == "2024-03-09"
     assert laws.date("80/26") is None
+
+
+def test_carry_keeps_what_later_steps_added():
+    from zailiprotiv import laws
+    before = {"a.pdf": {"title": "A", "bill_pdf": "pa.pdf", "final_vote": "v1", "kind": "change", "areas": [7]},
+              "b.pdf": {"title": "B", "bill_pdf": "pb.pdf", "final_vote": "v2"}}
+    now = {"a.pdf": {"title": "A (ispravljeno)", "bill_pdf": "pa.pdf"},
+           "b.pdf": {"title": "B", "bill_pdf": "pb-novi.pdf"},  # another bill: link and bills decide again
+           "c.pdf": {"title": "C", "bill_pdf": "pc.pdf"}}
+    laws.carry(before, now)
+    assert now["a.pdf"] == {"title": "A (ispravljeno)", "bill_pdf": "pa.pdf", "final_vote": "v1", "kind": "change",
+                            "areas": [7]}
+    assert "final_vote" not in now["b.pdf"] and "final_vote" not in now["c.pdf"]
