@@ -42,6 +42,11 @@ when the service saw the broadcast at all (`pokriveno`; outside them there is no
 the first segment that named the speaker, less one, times the segment's length; `RECORDING_LEAD`). After the sitting
 day, the list stays, under "Poslednji dan sednice" and its date, until someone is read at the next sitting.
 
+**Between sittings** the service looks for a broadcast once a minute, quietly (one line in the log, not one per
+look; yt-dlp's own "not live" errors are kept out of it), and starts reading within a minute of the next sitting
+going live. Each sitting day is a new YouTube video, so the broadcaster's page is read afresh every time; `YOUTUBE_URL`
+is used only while that page can't be read.
+
 Delays: the broadcast runs 15-25 s behind the hall, and a segment is 5 s.
 
 ## Running it

@@ -15,7 +15,7 @@ from .caption import differs, tidy, who
 from .names import Roster
 from .ocr import caption
 from .state import Tracker
-from .stream import VIDEO, resolve_input, start_ffmpeg
+from .stream import VIDEO, NotLive, resolve_input, start_ffmpeg
 
 log = logging.getLogger("worker")
 
@@ -53,15 +53,20 @@ def _mtime(path: str) -> float:
         return 0.0
 
 
+WAIT = 60.0  # between sittings, how often to look for a broadcast: a sitting is read within a minute of going live
+
+
 def run(tracker: Tracker, stop: threading.Event) -> None:
     roster = RosterKeeper()
     backoff = 5.0
+    waiting = False  # said once in the log, not on every look
     while not stop.is_set():
         proc = None
         try:
             source, headers = resolve_input()
             proc = start_ffmpeg(source, headers)
-            log.info("frames started")
+            log.info("frames started: %s", VIDEO.get("id", "") or source[:60])
+            waiting = False
             seen = _mtime(config.FRAME_PATH)
             last_new = time.time()
             while not stop.is_set():
@@ -87,6 +92,11 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
                     raise RuntimeError(f"frames stopped: {err.strip() or 'end of broadcast'}")
                 if time.time() - last_new > max(config.STALE_SECONDS, 4 * config.FRAME_INTERVAL):
                     raise RuntimeError("no new frames")
+        except NotLive as exc:
+            if not waiting:
+                log.info("no broadcast now (%s); looking again every %.0f s", exc, WAIT)
+                waiting = True
+            backoff = WAIT
         except Exception as exc:
             log.warning("no broadcast (%s); trying again in %.0f s", exc, backoff)
         finally:
@@ -94,4 +104,5 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
                 proc.kill()
         tracker.tick()
         stop.wait(backoff)
-        backoff = min(backoff * 2, 120.0)
+        if not waiting:
+            backoff = min(backoff * 2, WAIT)

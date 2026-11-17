@@ -201,3 +201,21 @@ def test_turns_link_to_the_recording_and_stay_until_the_next_sitting(tmp_path):
         t2.observe(Person(person_key("Nikolić Nina"), "Nikolić Nina", "nikolic-nina", "PG B"), now=day2 + 5 + 5 * i)
     assert [d["ime"] for d in t2.snapshot(now=day2 + 20)["danas"]] in ([], ["Nikolić Nina"])
     assert t2.snapshot(now=day2 + 20)["dan"] == "2026-11-19" and not t2.snapshot(now=day2 + 20)["ranije"]
+
+
+def test_between_sittings_the_page_is_read_afresh(monkeypatch):
+    from uzivo import stream
+    seen = []
+    monkeypatch.setattr(config, "YOUTUBE_URL", "https://www.youtube.com/watch?v=old")
+    monkeypatch.setattr(config, "SOURCE_PAGE", "https://example.org/page")
+    monkeypatch.setattr(stream, "_youtube_url_from_page", lambda page: "https://www.youtube.com/watch?v=new")
+
+    def resolve(url):
+        seen.append(url)
+        raise stream.NotLive(url)
+    monkeypatch.setattr(stream, "_resolve_youtube", resolve)
+    try:
+        stream.resolve_input()
+    except stream.NotLive:
+        pass
+    assert seen == ["https://www.youtube.com/watch?v=new"]  # the page's stream of the day, not the one in .env

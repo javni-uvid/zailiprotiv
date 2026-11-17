@@ -36,6 +36,22 @@ _last_youtube_url = ""
 VIDEO: dict = {}  # the YouTube video being read: its id and when the broadcast began (for links to its minute)
 
 
+class NotLive(RuntimeError):
+    """No broadcast now: between sittings. Expected, so waited out quietly."""
+
+
+class _Quiet:
+    """yt-dlp's own messages: its "ERROR: … not live" lines between sittings are not errors here."""
+
+    def debug(self, msg: str) -> None:
+        pass
+
+    info = warning = debug
+
+    def error(self, msg: str) -> None:
+        log.debug("yt-dlp: %s", msg)
+
+
 def _youtube_url_from_page(page_url: str) -> str:
     global _last_youtube_url
     try:
@@ -61,6 +77,8 @@ def _resolve_youtube(url: str) -> str:
     h = config.MAX_HEIGHT
     opts = {
         "quiet": True,
+        "no_warnings": True,
+        "logger": _Quiet(),
         # Only the picture is needed, so a format without sound will do. HLS (m3u8) first: it is read below.
         "format": (
             f"b[protocol^=m3u8][height<={h}]/bv*[protocol^=m3u8][height<={h}]/"
@@ -73,10 +91,13 @@ def _resolve_youtube(url: str) -> str:
         with YoutubeDL(opts) as ydl:
             info = ydl.extract_info(url, download=False)
     except Exception as exc:
+        text = str(exc)
+        if any(w in text for w in ("not live", "live event will begin", "Premieres in", "is offline", "has ended")):
+            raise NotLive(f"{url}: no broadcast now") from exc
         raise RuntimeError(f"yt-dlp got no stream for {url}: {exc}") from exc
     if not info.get("is_live"):
         # Between sittings the page may embed a past broadcast: its last frame would name the last speaker of then.
-        raise RuntimeError(f"{url} is not live ({info.get('live_status')})")
+        raise NotLive(f"{url} is not live ({info.get('live_status')})")
     log.info(
         "format %s: %sp, %s, ~%s kbit/s",
         info.get("format_id"), info.get("height"), info.get("protocol"), info.get("tbr"),
@@ -90,8 +111,13 @@ def resolve_input() -> tuple[str, dict]:
     if config.STREAM_URL:
         VIDEO.clear()
         return config.STREAM_URL, {}
-    yt = config.YOUTUBE_URL or _youtube_url_from_page(config.SOURCE_PAGE)
-    log.info("YouTube stream: %s", yt)
+    # The broadcaster's page first, read afresh each time: each sitting day is a new YouTube video, and an address
+    # fixed in .env would keep pointing at a broadcast that has ended. YOUTUBE_URL only when the page can't be read.
+    global _last_youtube_url
+    if config.YOUTUBE_URL and not _last_youtube_url:
+        _last_youtube_url = config.YOUTUBE_URL
+    yt = _youtube_url_from_page(config.SOURCE_PAGE) if config.SOURCE_PAGE else config.YOUTUBE_URL
+    log.debug("YouTube stream: %s", yt)
     return _resolve_youtube(yt)
 
 
