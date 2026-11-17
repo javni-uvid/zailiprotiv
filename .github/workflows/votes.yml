@@ -68,6 +68,7 @@ jobs:
         env:
           CTX_EVENT_NAME: ${{ github.event_name }}
           IN_SCHEDULED: ${{ inputs.scheduled }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -84,8 +85,6 @@ jobs:
           if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main
           gh workflow run transcripts.yml --ref main -f convocation=$c
-        env:
-          GH_TOKEN: ${{ github.token }}
       # The Assembly lists a later convocation's sitting among the current one's: time to switch (AGENTS.md, "The
       # Fifteenth convocation"). Said once, in an issue; the current convocation's data stay as they were.
       - name: Tell the maintainer a new convocation has begun
