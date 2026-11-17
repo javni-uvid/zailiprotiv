@@ -32,12 +32,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.12"
       - name: Write
         env:
+          IN_CONVOCATION: ${{ inputs.convocation }}
+          IN_ONLY: ${{ inputs.only }}
+          IN_MODEL: ${{ inputs.model }}
+          IN_WAIT: ${{ inputs.wait }}
           ZAILIPROTIV_MODEL: ${{ inputs.model }}
           ANTHROPIC_FEDERATION_RULE_ID: fdrl_01NCmgWJsGrXFudbCfhmGqvD
           ANTHROPIC_ORGANIZATION_ID: 7dd19a6e-f6b2-4240-a238-fa1268701199
@@ -45,15 +49,17 @@ jobs:
           ANTHROPIC_WORKSPACE_ID: wrkspc_01NNmkqCRfENePvimjwqYJtD
         run: |
           pip install uv && uv sync --frozen
-          uv run zailiprotiv --convocation "${{ inputs.convocation }}" debates-batch --only "${{ inputs.only }}" \
-            --out "samples/${{ inputs.model }}/${{ inputs.convocation }}" --wait "${{ inputs.wait }}"
+          uv run zailiprotiv --convocation "${IN_CONVOCATION}" debates-batch --only "${IN_ONLY}" \
+            --out "samples/${IN_MODEL}/${IN_CONVOCATION}" --wait "${IN_WAIT}"
           uv run zailiprotiv status | grep -E "potrošeno|batch u toku" || true
       - name: Commit
         if: always()
+        env:
+          IN_MODEL: ${{ inputs.model }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/batches.json samples 2>/dev/null || git add data/batches.json
           git diff --cached --quiet && exit 0
-          git commit -m "A sample written by ${{ inputs.model }}"
+          git commit -m "A sample written by ${IN_MODEL}"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

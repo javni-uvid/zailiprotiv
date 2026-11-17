@@ -1,0 +1,10 @@
+# zizmor (the workflows' security check, security.yml). These workflows commit and push what they read or wrote,
+# so their checkout keeps the token on purpose.
+rules:
+  artipacked:
+    ignore:
+      - fixtures.yml
+      - notes.yml
+      - sample.yml
+      - summaries.yml
+      - transcripts.yml

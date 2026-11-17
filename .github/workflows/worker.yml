@@ -20,7 +20,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
       - name: Check the secrets
         id: ready
         env:
@@ -30,7 +32,7 @@ jobs:
           else echo "go=yes" >> "$GITHUB_OUTPUT"; fi
       - name: Make the table (once; does nothing when it exists)
         if: steps.ready.outputs.go == 'yes'
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd  # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -39,7 +41,7 @@ jobs:
           command: d1 execute zailiprotiv-glasovi --remote --file schema.sql
       - name: Publish
         if: steps.ready.outputs.go == 'yes'
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd  # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

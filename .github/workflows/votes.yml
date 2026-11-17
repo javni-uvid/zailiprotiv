@@ -40,27 +40,34 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.12"
       - name: Index the sittings and read the roll calls
+        env:
+          IN_CONVOCATION: ${{ inputs.convocation }}
+          IN_AGAIN_FLAG: ${{ inputs.again && '--again' || '' }}
+          IN_REREAD: ${{ inputs.reread }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null  # tesseract: scanned bills
           pip install uv && uv sync --frozen
           current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
-          conv="${{ inputs.convocation }}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
+          conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
           echo "CONV=$conv" >> "$GITHUB_ENV"
           c="--convocation $conv"
           uv run zailiprotiv $c index | tee index.log
           uv run zailiprotiv $c laws
           # The bills in procedure are the current convocation's only.
           if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
-          uv run zailiprotiv $c votes ${{ inputs.again && '--again' || '' }} --reread "${{ inputs.reread }}"
+          uv run zailiprotiv $c votes ${IN_AGAIN_FLAG} --reread "${IN_REREAD}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
       - name: Commit
         if: always()  # keep what was read even when a later step failed
+        env:
+          CTX_EVENT_NAME: ${{ github.event_name }}
+          IN_SCHEDULED: ${{ inputs.scheduled }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -69,7 +76,7 @@ jobs:
           # Next in the chain: the notes of the debates, then the model's writing, which publishes the site.
           if ! git diff --cached -I'"fetched": "[^"]*"' | grep -q '^@@'; then
             # Nothing new but the time of reading: no commit. An hourly run stops here; one by hand goes on.
-            [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.scheduled }}" = "true" ] && exit 0
+            [ "${CTX_EVENT_NAME}" = "schedule" ] || [ "${IN_SCHEDULED}" = "true" ] && exit 0
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
           fi
           git commit -m "Roll calls read from the Assembly's site (convocation $CONV)"
@@ -84,20 +91,25 @@ jobs:
       - name: Tell the maintainer a new convocation has begun
         if: always()
         env:
+          CTX_REPOSITORY: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
           [ -f index.log ] && grep -q "A later convocation's sitting is listed" index.log || exit 0
           title="Novi saziv na sajtu Skupštine: vreme za prebacivanje"
-          [ -n "$(gh issue list -R "${{ github.repository }}" --state all --search "in:title \"$title\"" --json number -q '.[0].number')" ] && exit 0
-          gh issue create -R "${{ github.repository }}" --title "$title" --body "$(printf 'Sajt Skupštine na spisku sednica ima sednicu novog saziva:\n\n%s\n\nPodaci tekućeg saziva su ostali kakvi su bili. Šta treba uraditi: AGENTS.md, „The Fifteenth convocation“.' "$(grep "A later convocation" index.log | sed 's/.*listed: /- /')")"
+          [ -n "$(gh issue list -R "${CTX_REPOSITORY}" --state all --search "in:title \"$title\"" --json number -q '.[0].number')" ] && exit 0
+          gh issue create -R "${CTX_REPOSITORY}" --title "$title" --body "$(printf 'Sajt Skupštine na spisku sednica ima sednicu novog saziva:\n\n%s\n\nPodaci tekućeg saziva su ostali kakvi su bili. Šta treba uraditi: AGENTS.md, „The Fifteenth convocation“.' "$(grep "A later convocation" index.log | sed 's/.*listed: /- /')")"
       - name: Tell the maintainer when this failed
         if: failure()
         env:
+          CTX_WORKFLOW: ${{ github.workflow }}
+          CTX_SERVER_URL: ${{ github.server_url }}
+          CTX_REPOSITORY: ${{ github.repository }}
+          CTX_RUN_ID: ${{ github.run_id }}
           GH_TOKEN: ${{ github.token }}
         run: |
           # One open issue per workflow, not one per failed run.
-          title="Workflow ${{ github.workflow }} ne prolazi"
-          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          n=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
-          if [ -n "$n" ]; then gh issue comment "$n" -R "${{ github.repository }}" --body "Ponovo: $url"
-          else gh issue create -R "${{ github.repository }}" --title "$title" --body "Pokretanje nije prošlo: $url"; fi
+          title="Workflow ${CTX_WORKFLOW} ne prolazi"
+          url="${CTX_SERVER_URL}/${CTX_REPOSITORY}/actions/runs/${CTX_RUN_ID}"
+          n=$(gh issue list -R "${CTX_REPOSITORY}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${CTX_REPOSITORY}" --body "Ponovo: $url"
+          else gh issue create -R "${CTX_REPOSITORY}" --title "$title" --body "Pokretanje nije prošlo: $url"; fi

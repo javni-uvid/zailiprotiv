@@ -9,16 +9,23 @@ on:
         description: "PDF addresses, space-separated (empty: five bills in procedure without a memorandum)"
         default: ""
 
+permissions:
+  contents: read
+
 jobs:
   look:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null && pip install -q uv && uv sync --frozen -q
       - name: Look
+        env:
+          IN_URLS: ${{ inputs.urls }}
         run: |
-          urls="${{ inputs.urls }}"
+          urls="${IN_URLS}"
           [ -n "$urls" ] || urls=$(python3 - <<'PY'
           import json, glob
           d = json.load(open(sorted(glob.glob("data/*/procedure.json"))[-1]))

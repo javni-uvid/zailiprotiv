@@ -1,0 +1,18 @@
+# Dependabot: once a month, one pull request for the workflows' actions (pinned to commits; it moves the pins and
+# their version comments) and one for the Python packages (uv.lock). Security fixes come as soon as they are known.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      python:
+        patterns: ["*"]

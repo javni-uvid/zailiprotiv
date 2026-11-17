@@ -29,17 +29,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.12"
-      - uses: actions/cache@v4  # the share pictures, drawn once each
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0; the share pictures, drawn once each
         with:
           path: .cache
           key: og-${{ github.run_id }}
           restore-keys: og-
       - name: Build, split and send
         env:
+          IN_PURGE: ${{ inputs.purge }}
+          IN_BUCKET: ${{ inputs.bucket }}
+          IN_DRY_FLAG: ${{ inputs.dry && '--dry' || '' }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -47,10 +52,10 @@ jobs:
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID || secrets.CLOUDFLARE_ZONE_ID }}
         run: |
           pip install uv && uv sync --frozen
-          if [ -n "${{ inputs.purge }}" ]; then
-            u=https://podaci.zailiprotiv.rs/$(echo "${{ inputs.purge }}" | cut -d" " -f1)
+          if [ -n "${IN_PURGE}" ]; then
+            u=https://podaci.zailiprotiv.rs/$(echo "${IN_PURGE}" | cut -d" " -f1)
             curl -sS -o /dev/null -D - "$u" | tr -d '\r' | grep -iE "^cf-cache-status|^age:|^cache-control" | tr '\n' ' '; echo "<- before"
-            uv run zailiprotiv files-purge ${{ inputs.purge }}
+            uv run zailiprotiv files-purge ${IN_PURGE}
             sleep 5
             curl -sS -o /dev/null -D - "$u" | tr -d '\r' | grep -iE "^cf-cache-status|^age:|^cache-control" | tr '\n' ' '; echo "<- after"
             exit 0
@@ -58,5 +63,5 @@ jobs:
           uv run zailiprotiv site --out _site --domain zailiprotiv.rs
           uv run zailiprotiv files-split --site _site --out _podaci --url https://podaci.zailiprotiv.rs/
           du -sh --apparent-size _site _podaci; find _site -type f | wc -l
-          uv run zailiprotiv files-upload --dir _podaci --bucket "${{ inputs.bucket }}" ${{ inputs.dry && '--dry' || '' }}
+          uv run zailiprotiv files-upload --dir _podaci --bucket "${IN_BUCKET}" ${IN_DRY_FLAG}
           curl -sS -o /dev/null -w "podaci.zailiprotiv.rs/podaci/zakoni.csv: %{http_code} %{content_type}\n" https://podaci.zailiprotiv.rs/podaci/zakoni.csv || true

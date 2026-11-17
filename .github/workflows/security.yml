@@ -1,0 +1,71 @@
+# Security checks: the workflows themselves (zizmor: injected inputs, tokens left behind, unpinned actions,
+# permissions), the Python packages against known vulnerabilities (pip-audit, from uv.lock), and the code
+# (CodeQL: Python and the site's and the counter's JavaScript; its findings go to the Security tab). On changes to
+# the code or the workflows, every Monday, and by hand. Reads only.
+name: security
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/**", "src/**", "worker/**", "tools/**", "pyproject.toml", "uv.lock"]
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: security
+  cancel-in-progress: true
+
+jobs:
+  workflows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - name: zizmor
+        run: |
+          pip install -q zizmor==1.32.0
+          zizmor --format plain --config .github/zizmor.yml .github/workflows/
+
+  packages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - name: pip-audit
+        run: |
+          pip install -q uv pip-audit==2.9.0
+          uv export --frozen --no-hashes --no-emit-project -q > requirements.txt
+          pip-audit -r requirements.txt --progress-spinner off
+
+  code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write  # the findings, to the Security tab
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, javascript-typescript, actions]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
+        with:
+          category: "/language:${{ matrix.language }}"
