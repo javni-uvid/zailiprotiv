@@ -55,6 +55,7 @@ _TAG = re.compile(r"(<!--.*?-->|<[^>]+>)", re.S)
 _ATTR = re.compile(r'\b(alt|title|placeholder|aria-label)="([^"]*)"')
 _LINK = re.compile(r'\b(href|src)="([^"#?:][^":]*?)([#?][^"]*)?"')
 _PAGE = (".html", "/")
+_CIR_HREF = re.compile(r'\bdata-cir-href="([^"]*)"')
 _SAID = re.compile(r'<meta (?:name="description"|property="og:(?:title|description|site_name)") content="([^"]*)"')
 
 
@@ -88,6 +89,8 @@ def page(html: str, rel: str) -> str:
             elif tag not in ("meta", "link") or "stylesheet" in part or "alternate" in part or "icon" in part:
                 part = _ATTR.sub(lambda m: f'{m.group(1)}="{cyr(m.group(2))}"', part)
                 part = _LINK.sub(link, part)
+                if "data-cir-href=" in part:  # a page elsewhere with its own Cyrillic address (the live page)
+                    part = re.sub(r'\bhref="[^"]*"', lambda _: f'href="{_CIR_HREF.search(part).group(1)}"', part, count=1)
             out.append(part)
         else:
             out.append(part if skip else cyr(part))

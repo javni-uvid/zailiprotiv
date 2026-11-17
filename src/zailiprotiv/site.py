@@ -435,6 +435,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env.globals["notes_all"] = bool(settings.get("notes_all"))  # every sitting's notes are read (brought from the bucket)
     env.globals["files_url"] = settings.get("files_url", "")  # where the downloads are (files_site), for the data's description
     env.globals["notes_url"] = settings.get("notes_url", "")  # where the notes' pages (and their search index) are
+    env.globals["live_page"] = settings.get("live_page", "")  # "Ko sada govori" (live/), linked from the live bar
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read

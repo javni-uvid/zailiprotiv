@@ -64,4 +64,4 @@
 {% endmacro %}
 
 {# A plenary sitting in progress: the Assembly's live broadcast, linked, not played here (principle 5). #}
-{% macro live_bar() %}{% if live %}<p class="live"><span class="live-dot" aria-hidden="true"></span><span><b>Skupština sada zaseda:</b> {{ live|join("; ") }}. <a href="{{ live_url }}">Prenos uživo na sajtu Skupštine</a></span></p>{% endif %}{% endmacro %}
+{% macro live_bar() %}{% if live %}<p class="live"><span class="live-dot" aria-hidden="true"></span><span><b>Skupština sada zaseda:</b> {{ live|join("; ") }}. <a href="{{ live_url }}">Prenos uživo na sajtu Skupštine</a>{% if live_page %} · <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Ko sada govori</a>{% endif %}</span></p>{% endif %}{% endmacro %}

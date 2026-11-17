@@ -279,11 +279,12 @@ issue #7 once the Fifteenth is current.
 ## Broadcasts and recordings
 
 The Assembly broadcasts its sittings live and keeps the recordings with its broadcaster (videonet.co.rs), linked
-from its page "Prenosi". Since 17 Nov 2026: while the newest convocation's listing marks a plenary sitting "(у току)",
-the home page and "Sednice" carry a bar linking to the live broadcast (`config.LIVE`); each sitting's page lists the
-recordings of its days (`videos.py`, `data/<N>/videos.json`, read by **votes** for the current and the newest
-convocation; earlier ones by hand). Both are links: the site plays nothing itself (principle 5). The notes carry no
-times, so a speech cannot be linked to its minute.
+from its page "Prenosi". Since 17 Nov 2026: while the newest convocation's listing marks a plenary sitting
+"(у току)", the home page and "Sednice" carry a bar linking to the live broadcast (`config.LIVE`) and to "Ko sada
+govori" (`live_page`, see below); each sitting's page lists the recordings of its days (`videos.py`,
+`data/<N>/videos.json`, read by **votes** for the current and the newest convocation; earlier ones by hand). Both
+are links: the site plays nothing itself (principle 5). The notes carry no times, so a speech cannot be linked to
+its minute.
 
 ### Who is speaking now (`live/`)
 
@@ -303,8 +304,10 @@ times, so a speech cannot be linked to its minute.
   the one script is inline; the site's MP pages are linked.
 - **Its tests** (`tests/test_live.py`) cover the names, the caption's lines, the turns and the page, with the
   standard library only; OCR and the stream are tried against the broadcast.
-- **The site does not link it yet:** a link from the live bar would lead nowhere while the computer is off. Decide
-  with the maintainer.
+- **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
+  bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
+  in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
+  error while the maintainer's computer is off.
 
 ## Open questions
 

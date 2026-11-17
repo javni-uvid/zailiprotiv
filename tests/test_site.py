@@ -438,3 +438,19 @@ def test_the_ballots_files_hold_each_law_with_a_letter_per_mp(tmp_path):
 def test_place_among_values():
     from zailiprotiv.pages_ballot import below
     assert below([0, 0, 5, 10]) == {0: 0.0, 5: 0.67, 10: 1.0}
+
+
+def test_the_live_bar_links_the_live_page_while_a_sitting_lasts(tmp_path):
+    from zailiprotiv.config import NEWEST
+    out, root = tmp_path / "_site", data(tmp_path)
+    (root / NEWEST).mkdir()
+    (root / NEWEST / "index.json").write_text(json.dumps({"sittings": {"s": {
+        "title": "Прва седница Народне скупштине (у току)"}}}))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    assert "Skupština sada zaseda" in (out / "index.html").read_text() and "Ko sada govori" not in (out / "index.html").read_text()
+    (root / "settings.json").write_text(json.dumps({"live_page": "https://mikrofon.example/"}))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    home, twin = (out / "index.html").read_text(), (out / "cir" / "index.html").read_text()
+    assert '<a href="https://mikrofon.example/" data-cir-href="https://mikrofon.example/cir/">Ko sada govori</a>' in home
+    assert 'href="https://mikrofon.example/cir/"' in twin and "Ко сада говори" in twin
+    assert site.check(out) == []
