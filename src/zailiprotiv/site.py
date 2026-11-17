@@ -321,7 +321,9 @@ def convocations(root: Path) -> list[tuple[str, Path]]:
     from zailiprotiv.config import CURRENT
     if (root / "laws.json").exists():
         return [(CURRENT, root)]
-    found = [(p.name, p) for p in root.iterdir() if p.is_dir() and (p / "laws.json").exists()]
+    # A convocation newer than the current one has no law yet (config.CURRENT): it is read, not shown.
+    found = [(p.name, p) for p in root.iterdir() if p.is_dir() and (p / "laws.json").exists()
+             and not (p.name.isdigit() and int(p.name) > int(CURRENT))]
     return sorted(found, key=lambda c: int(c[0]) if c[0].isdigit() else 0, reverse=True)
 
 
