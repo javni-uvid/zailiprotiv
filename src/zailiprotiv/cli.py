@@ -86,6 +86,24 @@ def videos_cmd(args) -> int:
     return 0
 
 
+def uzivo_pull(args) -> int:
+    """The live page's records of who spoke when (live/) → data/<N>/uzivo/<date>.json. The page runs on the
+    maintainer's computer and may be off: then nothing changes and the run goes on."""
+    from zailiprotiv import uzivo
+    settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8")) if (ROOT / "settings.json").exists() else {}
+    base = settings.get("live_page", "")
+    if not base:
+        print("no live_page in data/settings.json")
+        return 0
+    try:
+        days = uzivo.pull(ROOT, base)
+    except Exception as exc:  # the computer is off, or the page is down
+        print(f"::notice::live records not taken: {exc}")
+        return 0
+    print(f"live records: {', '.join(days) or 'nothing new'}")
+    return 0
+
+
 def in_procedure(args) -> int:
     """The bills waiting in the Assembly now, from its page "Zakoni u proceduri", into data/<N>/procedure.json, which
     also remembers the bills no longer listed and when each was first and last seen."""
@@ -1249,6 +1267,8 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=notes_check_cmd)
     p = commands.add_parser("videos", help="the plenary recordings by day, from the broadcaster's archive → videos.json")
     p.set_defaults(run=videos_cmd)
+    p = commands.add_parser("uzivo-pull", help="the live page's records of who spoke when → data/<N>/uzivo/")
+    p.set_defaults(run=uzivo_pull)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("mp-years", help="MPs' years of birth from the Assembly's archive, and names that are two people")

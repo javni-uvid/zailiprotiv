@@ -70,6 +70,7 @@ uv run zailiprotiv votes               # every roll call not read yet → votes/
 uv run zailiprotiv bills               # each bill's memorandum → bills/ (scans by OCR: tesseract, srp)
 uv run zailiprotiv link                # each law's kind, area, roll calls and final vote
 uv run zailiprotiv transcripts         # the stenographic notes → transcripts/
+uv run zailiprotiv uzivo-pull          # who spoke when, from the live page's day records → data/<N>/uzivo/
 uv run zailiprotiv summaries --batch   # the model's summaries of the memoranda (Batch API)
 uv run zailiprotiv debates-batch       # the model's summaries of the debates
 uv run zailiprotiv profiles-batch      # the model's overviews of what an MP says → data/profiles/
@@ -121,9 +122,9 @@ src/zailiprotiv/
 tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates)
 worker/                       the visitors' votes counter (Cloudflare Worker, D1)
 live/                         "Ko sada govori": the live broadcast's caption read, a page of its own (Docker; README there)
-data/<N>/                     one folder per convocation (9 to 14)
+data/<N>/                     one folder per convocation (9 to 15)
   index.json, laws.json, procedure.json, short_titles.json; links.json, wrong_bills.json where needed
-  votes/, bills/, summaries/, debates/, transcripts/, notes/
+  votes/, bills/, summaries/, debates/, transcripts/, notes/; uzivo/ (who spoke when, from the live page, by day)
 data/profiles/, data/photos/  MPs' overviews and portraits
 data/quiz.json, aliases.json, mp_aliases.json, settings.json, batches.json, notes_manifest.json
 data/mp_splits.json, mp_years.json  one name, two people (by hand); years of birth from the Assembly's archive

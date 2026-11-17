@@ -61,6 +61,7 @@ jobs:
           uv run zailiprotiv $c videos || true  # the sittings' recordings (videos.py); a broadcaster's hiccup stops nothing; before the roll calls, which may fail
           # The bills in procedure are the current convocation's only.
           if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
+          uv run zailiprotiv uzivo-pull  # who spoke when, from the live page (live/); its computer may be off
           uv run zailiprotiv $c votes ${IN_AGAIN_FLAG} --reread "${IN_REREAD}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
@@ -83,8 +84,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           c="$CONV"
-          # Next in the chain: the notes of the debates, then the model's writing, which publishes the site.
-          if ! git diff --cached -I'"fetched": "[^"]*"' | grep -q '^@@'; then
+          # Next in the chain: the notes of the debates, then the model's writing, which publishes the site. The live
+          # page's records alone (data/*/uzivo/) change every hour of a sitting: they are kept, and start nothing.
+          if ! git diff --cached -I'"fetched": "[^"]*"' -- data ':(exclude)data/*/uzivo/**' | grep -q '^@@'; then
+            if ! git diff --cached --quiet -- 'data/*/uzivo/**'; then
+              git reset -q -- data && git add -- 'data/*/uzivo/**'  # the records only, not the times of reading
+              git commit -q -m "Who spoke when, from the live page's records"
+              for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+            fi
             # Nothing new but the time of reading: no commit. An hourly run stops here; one by hand goes on.
             [ "${CTX_EVENT_NAME}" = "schedule" ] || [ "${IN_SCHEDULED}" = "true" ] && exit 0
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0

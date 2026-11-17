@@ -304,6 +304,13 @@ its minute.
   the one script is inline; the site's MP pages are linked.
 - **Its tests** (`tests/test_live.py`) cover the names, the caption's lines, the turns and the page, with the
   standard library only; OCR and the stream are tried against the broadcast.
+- **Who spoke when, kept** (17 Nov 2026): the service keeps a record per day (`/dan/<date>.json`: each turn, how
+  many frames named the speaker, its YouTube video and HLS segments, and the spans when the broadcast was seen at
+  all); **votes** takes the records in each hour (`uzivo-pull` → `data/<N>/uzivo/<date>.json`, the convocation by
+  date). A run that can't reach the computer changes nothing; records alone are committed without starting the
+  chain, as they change every hour of a sitting. Planned on them, in this order (the maintainer): each speech in
+  the notes linked to its minute in the recording; speaking time by MP and group; the records as downloads. Outside
+  `pokriveno` there is no record, and whatever uses them says so.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
