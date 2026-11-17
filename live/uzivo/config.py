@@ -39,6 +39,9 @@ CLEAN_CONF = _i("CLEAN_CONF", 85)  # a name not on the list is shown only when e
 HOLD_SECONDS = _f("HOLD_SECONDS", 25)  # no readable name this long: the speaker is no longer known
 STALE_SECONDS = _f("STALE_SECONDS", 60)  # no new frame this long: no broadcast
 MERGE_SECONDS = _f("MERGE_SECONDS", 120)  # the same speaker again within this: one turn, not two
+# Where a turn begins in the recording: its first segment's number, less one segment as the caption comes up
+# after the speaker begins, times the segment's length (the YouTube video keeps the broadcast's numbering).
+RECORDING_LEAD = _i("RECORDING_LEAD", 1)
 
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 FRAME_PATH = os.environ.get("FRAME_PATH", "/tmp/uzivo/frame.jpg")

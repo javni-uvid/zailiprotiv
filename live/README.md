@@ -38,6 +38,10 @@ broadcast (the YouTube video, the numbers of its first and last HLS segment, the
 when the service saw the broadcast at all (`pokriveno`; outside them there is no record, not silence). The site's
 **votes** workflow takes these in (`uzivo-pull`), to link each speech in the notes to its minute in the recording.
 
+**On the page** (18 Nov 2026), each turn of the day links to its place in the YouTube recording ("▶ snimak 1:23:45":
+the first segment that named the speaker, less one, times the segment's length; `RECORDING_LEAD`). After the sitting
+day, the list stays, under "Poslednji dan sednice" and its date, until someone is read at the next sitting.
+
 Delays: the broadcast runs 15-25 s behind the hall, and a segment is 5 s.
 
 ## Running it

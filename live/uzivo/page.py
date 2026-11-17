@@ -20,6 +20,9 @@ TEXT = {
     "not_listed": "ime iz potpisa; nije na spisku poslanika ovog sajta",
     "today": "Danas su govorili",
     "today_none": "Danas još niko nije prepoznat u prenosu.",
+    "last_day": "Poslednji dan sednice",
+    "recording": "snimak",
+    "recording_title": "Na snimku prenosa, od mesta gde je govor počeo",
     "checked": "provereno pre",
     "s": "s",
     "how_title": "Kako ovo radi",
@@ -27,7 +30,8 @@ TEXT = {
            "sekundi, isto za svakog govornika. Ime poredimo sa spiskom poslanika ovog sajta; ime kog na spisku "
            "nema prikazujemo samo kad je jasno pročitano. Govor traje dok se u potpisu vidi isto ime, a završava "
            "se kad se pojavi drugo ime ili kad se 25 sekundi ne vidi nijedno. Prenos kasni za salom 15 do 25 "
-           "sekundi, a automatsko čitanje može da pogreši.",
+           "sekundi, a automatsko čitanje može da pogreši. Mesto na snimku je mesto gde se ime prvi put pojavilo, "
+           "oko pet sekundi ranije. Spisak poslednjeg dana sednice ostaje dok sledeće zasedanje ne počne.",
     "live": "Prenos uživo na sajtu Skupštine",
     "home": "Svi zakoni i glasanja poslanika",
     "script": "Ћирилица",
@@ -48,6 +52,29 @@ def _clock(ts: int, tz: ZoneInfo) -> str:
 
 def _minutes(sec: int) -> str:
     return str(max(1, round(sec / 60)))
+
+
+MONTHS = ("januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar",
+          "decembar")
+
+
+def _date(day: str) -> str:
+    y, m, d = (int(x) for x in day.split("-"))
+    return f"{d}. {MONTHS[m - 1]} {y}."
+
+
+def _hms(sec: int) -> str:
+    h, m, s = sec // 3600, sec % 3600 // 60, sec % 60
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def _recording(d: dict, cyr: bool) -> str:
+    """A link to the turn's place in the YouTube recording, where the record knows it."""
+    if not d.get("video") or d.get("snimak") is None:
+        return ""
+    href = escape(f'https://www.youtube.com/watch?v={d["video"]}&t={d["snimak"]}s')
+    return (f' <a class="rec" href="{href}" title="{escape(_t("recording_title", cyr))}">▶ '
+            f'{escape(_t("recording", cyr))} {_hms(d["snimak"])}</a>')
 
 
 def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
@@ -71,7 +98,11 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
-    out.append(f'<h2>{t("today")}</h2>')
+    if snap.get("ranije") and snap["danas"]:
+        when = _date(snap["dan"])
+        out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
+    else:
+        out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
         out.append('<ol class="turns">')
         for d in snap["danas"]:
@@ -81,7 +112,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
             side = d["uloga"] or d["grupa"]
             side = f' <span class="meta">{escape(_name(side, cyr))}</span>' if side else ""
             out.append(f'<li><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
-                       f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span></li>')
+                       f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span>{_recording(d, cyr)}</li>')
         out.append("</ol>")
     else:
         out.append(f'<p class="meta">{t("today_none")}</p>')
@@ -121,6 +152,7 @@ h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .state { font-family: var(--serif); font-size: 1.5rem; margin: 2rem 0 .4rem; }
 .turns { list-style: none; padding: 0; margin: 0; }
 .turns li { padding: .5rem 0; border-bottom: 1px solid var(--line); }
+.rec { font-size: .9rem; color: var(--muted); white-space: nowrap; margin-left: .3rem; font-variant-numeric: tabular-nums; }
 .time { font-variant-numeric: tabular-nums; color: var(--muted); margin-right: .4rem; }
 footer { max-width: 760px; margin: 0 auto; padding: 1.2rem 20px 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
 """

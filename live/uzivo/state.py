@@ -141,16 +141,42 @@ class Tracker:
                 self._close()
                 self.status = NO_STREAM
 
-    def snapshot(self) -> dict:
+    @staticmethod
+    def _out(t: dict) -> dict:
+        rec = None
+        if t.get("video") and t.get("sq_start") is not None and t.get("seg"):
+            rec = int(max(0, t["sq_start"] - config.RECORDING_LEAD) * t["seg"])
+        return {"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
+                "od": int(t["start"]), "do": int(t["seen"]), "sekundi": int(t["seen"] - t["start"]),
+                "video": t.get("video") or "", "snimak": rec}
+
+    def _last_day(self) -> tuple[str, list[dict]]:
+        """The latest earlier day with turns: its list stays on the page until someone is read at the next sitting."""
+        if not self.days or not self.days.exists():
+            return "", []
+        for f in sorted(self.days.glob("*.json"), reverse=True):
+            if f.stem >= self.day:
+                continue
+            try:
+                turns = [t for t in json.loads(f.read_text(encoding="utf-8")).get("turns", []) if t["n"] >= 2]
+            except (OSError, ValueError, KeyError):
+                continue
+            if turns:
+                return f.stem, turns
+        return "", []
+
+    def snapshot(self, now: float | None = None) -> dict:
+        today = self._day(time.time() if now is None else now)
         with self._lock:
-            def out(t: dict) -> dict:
-                return {"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
-                        "od": int(t["start"]), "do": int(t["seen"]), "sekundi": int(t["seen"] - t["start"])}
-            current = out(self.turns[-1]) if self.open and self.turns else None
+            current = self._out(self.turns[-1]) if self.open and self.turns else None
             # A turn read in a single frame is shown while it lasts, and left out of the day's list after.
-            done = [out(t) for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])]
+            done = [self._out(t) for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])]
+            day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
+            if not done and not current:
+                day, turns = self._last_day()
+                day, done = (day, [self._out(t) for t in turns]) if turns else (self.day, [])
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
-                    "danas": done[::-1]}
+                    "dan": day, "ranije": day != today, "danas": done[::-1]}
 
     def record(self, day: str) -> dict | None:
         """A day's record, as published at /dan/<date>.json: every turn (with how many frames named the speaker,

@@ -171,3 +171,33 @@ def test_someone_else_unreadably_ends_the_turn():
 def test_tidy_keeps_the_dash_and_drops_specks():
     assert tidy('·" Петар Петровић - Листа за пример |') == "Petar Petrović - Lista za primer"
     assert tidy("~ Листа за пример.") == "Lista za primer"
+
+
+def test_turns_link_to_the_recording_and_stay_until_the_next_sitting(tmp_path):
+    from datetime import datetime
+    from uzivo.names import Person, person_key
+    path = tmp_path / "stanje.json"
+    t = Tracker(str(path), tz="Europe/Belgrade")
+    day1 = datetime(2026, 11, 18, 10, 0, tzinfo=TZ).timestamp()
+    p = Person(person_key("Petrović Petar"), "Petrović Petar", "petrovic-petar", "PG A")
+    for i in range(3):
+        t.observe(p, now=day1 + 5 * i, at={"video": "abc", "sq": 120 + i, "seg": 5.0})
+    t.tick(now=day1 + 200)
+    snap = t.snapshot(now=day1 + 200)
+    assert not snap["ranije"]
+    assert snap["danas"][0]["snimak"] == 595 and snap["danas"][0]["video"] == "abc"  # (120 - 1) × 5 s
+    html = fragment(snap, cyr=False, site="", tz=TZ)
+    assert "youtube.com/watch?v=abc&amp;t=595s" in html and "snimak 9:55" in html
+    # The next day, before anyone is read: the last sitting day's list, with its date.
+    day2 = datetime(2026, 11, 19, 9, 0, tzinfo=TZ).timestamp()
+    t2 = Tracker(str(path), tz="Europe/Belgrade")
+    assert t.snapshot(now=day1 + 86400)["ranije"]  # past midnight, before any frame: no longer "today"
+    t2.observe(None, now=day2)
+    snap = t2.snapshot(now=day2)
+    assert snap["dan"] == "2026-11-18" and [d["ime"] for d in snap["danas"]] == ["Petrović Petar"]
+    assert "Poslednji dan sednice, 18. novembar 2026." in fragment(snap, cyr=False, site="", tz=TZ)
+    # Someone read at the new sitting: today's list only.
+    for i in range(2):
+        t2.observe(Person(person_key("Nikolić Nina"), "Nikolić Nina", "nikolic-nina", "PG B"), now=day2 + 5 + 5 * i)
+    assert [d["ime"] for d in t2.snapshot(now=day2 + 20)["danas"]] in ([], ["Nikolić Nina"])
+    assert t2.snapshot(now=day2 + 20)["dan"] == "2026-11-19" and not t2.snapshot(now=day2 + 20)["ranije"]
