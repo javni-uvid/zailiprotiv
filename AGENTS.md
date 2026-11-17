@@ -29,7 +29,7 @@ in the same commit. README.md describes the project for its users; this file is 
   maintainer's Anthropic Console (subject `repo:javni-uvid@351609597/zailiprotiv@1454693959:ref:refs/heads/main`:
   GitHub writes the owner and repository with their ids), for a short-lived API token, exchanged again before it runs
   out (the client's own `WorkloadIdentityCredentials`). The rule's ids are in the workflow; they grant nothing by themselves. A secret
-  `ANTHROPIC_API_KEY`, if set, is used instead. `anthropic-wif-test.yml` tests the exchange by hand.
+  `ANTHROPIC_API_KEY`, if set, is used instead.
 - **The project's clock is the counter's worker** (13 Nov 2026): GitHub's schedule never started the workflows, so
   the worker (Cloudflare cron) dispatches **votes** every hour of the working day (`scheduled: true`, so a run with
   nothing new stops the chain) and **summaries** every six hours. The **worker** workflow publishes `worker/` with
