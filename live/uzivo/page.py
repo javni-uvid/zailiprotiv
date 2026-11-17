@@ -21,6 +21,8 @@ TEXT = {
     "today": "Danas su govorili",
     "today_none": "Danas još niko nije prepoznat u prenosu.",
     "last_day": "Poslednji dan sednice",
+    "from_recording": "Pročitano posle sednice sa celog snimka prenosa, istim pravilom za svakog govornika: govor "
+                      "traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku.",
     "recording": "snimak",
     "recording_title": "Na snimku prenosa, od mesta gde je govor počeo",
     "checked": "provereno pre",
@@ -101,6 +103,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
+        if snap.get("snimak"):
+            out.append(f'<p class="meta">{t("from_recording")}</p>')
     else:
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:

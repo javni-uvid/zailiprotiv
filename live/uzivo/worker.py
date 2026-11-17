@@ -1,6 +1,7 @@
 """The background loop: keep a frame source running, read each new frame's caption, and tell the tracker."""
 from __future__ import annotations
 
+import json
 import logging
 import os
 import threading
@@ -21,9 +22,11 @@ log = logging.getLogger("worker")
 
 
 class RosterKeeper:
-    """The site's list of MPs: fetched at start and every few hours, with the last good copy kept on disk."""
+    """The site's list of MPs: fetched at start and every few hours, with the last good copy kept on disk. With it,
+    the last sitting day read from the recording, handed to the tracker."""
 
-    def __init__(self) -> None:
+    def __init__(self, tracker: Tracker | None = None) -> None:
+        self.tracker = tracker
         self.cache = Path(config.STATE_PATH).with_name("podaci.json")
         self.roster = Roster()
         self.fetched = 0.0
@@ -43,6 +46,13 @@ class RosterKeeper:
                 log.info("roster: %d MPs", len(self.roster.people))
             except Exception as exc:  # the last good list stays
                 log.warning("roster not fetched (%s); keeping %d MPs", exc, len(self.roster.people))
+            if self.tracker:
+                try:
+                    req = urllib.request.Request(config.DAY_URL, headers={"User-Agent": "zailiprotiv-uzivo"})
+                    with urllib.request.urlopen(req, timeout=30) as resp:
+                        self.tracker.use_recording(json.loads(resp.read().decode("utf-8")))
+                except Exception as exc:  # the last good day stays
+                    log.warning("day from the recording not fetched (%s)", exc)
         return self.roster
 
 
@@ -57,7 +67,8 @@ WAIT = 60.0  # between sittings, how often to look for a broadcast: a sitting is
 
 
 def run(tracker: Tracker, stop: threading.Event) -> None:
-    roster = RosterKeeper()
+    roster = RosterKeeper(tracker)
+    roster.get()  # the list, and the last day from the recording, before any broadcast
     backoff = 5.0
     waiting = False  # said once in the log, not on every look
     while not stop.is_set():

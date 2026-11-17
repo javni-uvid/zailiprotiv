@@ -4,12 +4,45 @@
 Cloudflare answers with its own error. The edge worker (live/edge/) then shows this page instead, built with the
 site: what the page is and why it is down, where the broadcast is, the next sitting convened, and a few facts from
 the site's data, each by the same rule as on the page it links to, about no MP in particular.
+
+The last sitting day read from the whole recording afterwards (`data/<N>/snimak/<date>.json`, 18 Nov 2026) is listed
+on this page and published as `mikrofon-dan.json`, which the live service shows between sittings in place of its own,
+when it is of the same day or a later one: the service may have missed part of the day, the recording has all of it.
 """
 from __future__ import annotations
+
+import json
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from zailiprotiv.config import LIVE
 
 PAGE = "mikrofon.html"
+DAY_FILE = "mikrofon-dan.json"
+TZ = ZoneInfo("Europe/Belgrade")
+
+
+def last_day(root: Path) -> dict | None:
+    """The newest day read from a recording, any convocation's."""
+    files = sorted(root.glob("*/snimak/*.json"), key=lambda f: f.stem)
+    return json.loads(files[-1].read_text(encoding="utf-8")) if files else None
+
+
+def turns(day: dict) -> list[dict]:
+    """The day's turns for the page, in order: a turn named in a single frame is left out, as on the live page."""
+    out = []
+    for t in day["govori"]:
+        if t.get("okvira", 0) < 2:
+            continue
+        sec = t["do"] - t["od"]
+        rec = t.get("snimak")
+        out.append({"from": datetime.fromtimestamp(t["od"], TZ).strftime("%H:%M"),
+                    "to": datetime.fromtimestamp(t["do"], TZ).strftime("%H:%M"),
+                    "name": " ".join(t["ime"].split(" ", 1)[::-1]), "slug": t["adresa"], "side": t["uloga"] or t["grupa"],
+                    "minutes": max(1, round(sec / 60)),
+                    "recording": f"https://www.youtube.com/watch?v={t['video']}&t={rec}s" if t.get("video") and rec is not None else ""})
+    return out
 
 
 def facts(*, stats: dict, numbers: list[dict], items: list[dict], most_against, totals: dict, active: str) -> list[dict]:
@@ -48,8 +81,12 @@ def facts(*, stats: dict, numbers: list[dict], items: list[dict], most_against, 
     return out
 
 
-def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict]) -> None:
+def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None) -> None:
     """mikrofon.html: an ordinary page of the site (its links relative), which the edge worker (live/edge) shows at
-    mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap."""
+    mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap. With the
+    last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
     (out / PAGE).write_text(env.get_template("mikrofon.html").render(
-        **common, facts=facts_, coming=coming[:1], broadcast=LIVE, root=""), encoding="utf-8")
+        **common, facts=facts_, coming=coming[:1], broadcast=LIVE, root="",
+        day=day["dan"] if day else "", day_turns=turns(day) if day else []), encoding="utf-8")
+    if day:
+        (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")

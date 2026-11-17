@@ -23,6 +23,9 @@ FRAME_INTERVAL = _f("FRAME_INTERVAL", 2)  # only for a stream that is not HLS; H
 SITE = os.environ.get("SITE", "https://zailiprotiv.rs/").strip()
 ROSTER_URL = os.environ.get("ROSTER_URL", SITE + "podaci.json").strip()
 ROSTER_HOURS = _f("ROSTER_HOURS", 6)
+# The last sitting day read afterwards from the whole recording (the site's pages_mikrofon), fetched with the list:
+# between sittings it is shown in place of this service's own record of that day, which may have gaps.
+DAY_URL = os.environ.get("DAY_URL", SITE + "mikrofon-dan.json").strip()
 
 # Where the caption is, as a share of the frame: its two lines sit in the bottom ~12 %, on the left.
 CROP_LEFT = _f("CROP_LEFT", 0.0)

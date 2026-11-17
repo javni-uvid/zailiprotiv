@@ -912,7 +912,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
     from zailiprotiv import pages_mikrofon  # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
-    pages_mikrofon.render(common=common, env=env, out=out, coming=coming, facts_=pages_mikrofon.facts(
+    pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),
+                          facts_=pages_mikrofon.facts(
         stats=stats, numbers=numbers, items=items, most_against=most_against, active=active,
         totals=getattr(pages_floor.render, "totals", {})))
     from zailiprotiv import pages_lists

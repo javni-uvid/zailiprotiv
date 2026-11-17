@@ -26,3 +26,14 @@ def test_facts_leave_out_what_is_not_known():
     facts = _facts(days=None, word=(None, 0))
     assert not any("Polovina" in f["text"] or "Teška reč" in f["text"] for f in facts)
     assert "za 22 dana " in _facts(days=22)[2]["text"]
+
+
+def test_the_last_day_read_from_the_recording():
+    day = {"dan": "2026-11-17", "govori": [
+        {"ime": "Vučić Aleksandar", "adresa": "vucic-aleksandar", "grupa": "", "uloga": "Lista A", "od": 1794920657,
+         "do": 1794926412, "okvira": 1152, "video": "qkm", "snimak": 14527},
+        {"ime": "Jović Jova", "adresa": "", "grupa": "", "uloga": "", "od": 1794926500, "do": 1794926505, "okvira": 1,
+         "video": "qkm", "snimak": 20370}]}
+    out = pages_mikrofon.turns(day)
+    assert out == [{"from": "14:04", "to": "15:40", "name": "Aleksandar Vučić", "slug": "vucic-aleksandar",
+                    "side": "Lista A", "minutes": 96, "recording": "https://www.youtube.com/watch?v=qkm&t=14527s"}]

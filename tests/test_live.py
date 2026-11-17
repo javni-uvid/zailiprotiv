@@ -232,3 +232,37 @@ def test_a_day_kept_only_in_the_old_state_file_gets_its_own(tmp_path):
     snap = t.snapshot(now=datetime(2026, 11, 18, 9, 0, tzinfo=TZ).timestamp())
     if t.day > "2026-11-17":  # the clock of the test run decides which day the tracker starts on
         assert snap["dan"] == "2026-11-17" and snap["ranije"] and [d["ime"] for d in snap["danas"]] == ["Petrović Petar"]
+
+
+def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the_services_own(tmp_path):
+    from datetime import datetime
+    from uzivo.names import Person, person_key
+    path = tmp_path / "stanje.json"
+    t = Tracker(str(path), tz="Europe/Belgrade")
+    day1 = datetime(2026, 11, 17, 17, 38, tzinfo=TZ).timestamp()
+    p = Person(person_key("Petrović Petar"), "Petrović Petar", "petrovic-petar", "PG A")
+    for i in range(3):
+        t.observe(p, now=day1 + 5 * i)
+    t.tick(now=day1 + 200)
+    rec = {"dan": "2026-11-17", "izvor": "snimak", "govori": [
+        {"ime": "Nikolić Nina", "adresa": "", "grupa": "", "uloga": "Lista B", "od": int(day1 - 3600),
+         "do": int(day1 - 3000), "okvira": 120, "video": "xyz", "snimak": 95},
+        {"ime": "Jović Jova", "adresa": "", "grupa": "", "uloga": "", "od": int(day1 - 2000), "do": int(day1 - 1995),
+         "okvira": 1, "video": "xyz", "snimak": 600},
+        {"ime": "Petrović Petar", "adresa": "petrovic-petar", "grupa": "", "uloga": "", "od": int(day1 - 60),
+         "do": int(day1 + 600), "okvira": 130, "video": "xyz", "snimak": 3500}]}
+    t.use_recording(rec)
+    assert not t.snapshot(now=day1 + 200)["snimak"]  # the same day, while it lasts: what the service read
+    next_day = datetime(2026, 11, 18, 9, 0, tzinfo=TZ).timestamp()
+    snap = Tracker(str(path), tz="Europe/Belgrade").snapshot(now=next_day)  # kept across restarts
+    if snap["dan"] == "2026-11-17":  # a tracker started after the test day (as in any run after 17 Nov 2026)
+        assert snap["snimak"] and [d["ime"] for d in snap["danas"]] == ["Petrović Petar", "Nikolić Nina"]
+        html = fragment(snap, cyr=False, site="", tz=TZ)
+        assert "Poslednji dan sednice, 17. novembar 2026." in html and "sa celog snimka" in html
+        assert "youtube.com/watch?v=xyz&amp;t=95s" in html
+    # An older day from the recording does not replace a later day the service read itself.
+    t.use_recording({**rec, "dan": "2026-11-16"})
+    snap = Tracker(str(path), tz="Europe/Belgrade").snapshot(now=next_day)
+    assert not snap["snimak"]
+    t.use_recording({"dan": 5})  # not shaped like a day: ignored
+    assert t.recording["dan"] == "2026-11-16"

@@ -49,6 +49,13 @@ is used only while that page can't be read.
 
 Delays: the broadcast runs 15-25 s behind the hall, and a segment is 5 s.
 
+**The last sitting day from the recording.** Between sittings the page lists the last sitting day. The service may
+have missed part of it (it was off, or the caption's layout was one it doesn't read), so when the site has that day
+read afterwards from the whole recording (`data/<N>/snimak/<date>.json`, published as
+`zailiprotiv.rs/mikrofon-dan.json`, fetched with the list of MPs and kept as `/data/snimak.json`), the page lists
+that day instead and says so. It does so only for a day the same as or later than the service's own last day, and
+never for today. `/dan/<date>.json` stays the service's own record.
+
 ## Running it
 
 ```sh

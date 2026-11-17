@@ -9,6 +9,10 @@ when the broadcast stops. A name not on the site's list of MPs
 Every day is kept in a file of its own (`dani/<date>.json` beside STATE_PATH): its turns, each with where it is in
 the broadcast (the YouTube video and the numbers of its first and last segment), and when the service saw the
 broadcast at all (`cover`), so a day's record says where it has gaps.
+
+Between sittings the page lists the last sitting day. When the site has that day (or a later one) read afterwards from
+the whole recording (`use_recording`, kept beside STATE_PATH as `snimak.json`), the page lists that instead, said so:
+this service may have missed part of the day. Its own record at /dan/<date>.json stays as it was read.
 """
 from __future__ import annotations
 
@@ -39,8 +43,25 @@ class Tracker:
         self.open = False
         self._pending = ""  # a name not on the list, read once
         self._others = 0  # frames in a row naming someone other than the current speaker
+        self.recording_file = Path(path).with_name("snimak.json") if path else None
+        self.recording: dict = {}  # the last sitting day read from the recording (the site's mikrofon-dan.json)
         self._migrate()
         self._load()
+        try:
+            if self.recording_file and self.recording_file.exists():
+                self.recording = json.loads(self.recording_file.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            pass
+
+    def use_recording(self, day: dict) -> None:
+        """The site's last sitting day read from the recording; anything not shaped like one is ignored."""
+        if not isinstance(day, dict) or not isinstance(day.get("dan"), str) or not isinstance(day.get("govori"), list):
+            return
+        with self._lock:
+            self.recording = day
+        if self.recording_file:
+            self.recording_file.parent.mkdir(parents=True, exist_ok=True)
+            self.recording_file.write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
 
     # --- keeping today's turns across restarts ---
     def _day(self, ts: float) -> str:
@@ -185,6 +206,12 @@ class Tracker:
                 return f.stem, turns
         return "", []
 
+    @staticmethod
+    def _recorded(t: dict) -> dict:
+        return {"ime": t["ime"], "adresa": t.get("adresa", ""), "grupa": t.get("grupa", ""), "uloga": t.get("uloga", ""),
+                "od": int(t["od"]), "do": int(t["do"]), "sekundi": int(t["do"] - t["od"]),
+                "video": t.get("video") or "", "snimak": t.get("snimak")}
+
     def snapshot(self, now: float | None = None) -> dict:
         today = self._day(time.time() if now is None else now)
         with self._lock:
@@ -192,11 +219,16 @@ class Tracker:
             # A turn read in a single frame is shown while it lasts, and left out of the day's list after.
             done = [self._out(t) for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])]
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
+            recorded = False
             if not done and not current:
                 day, turns = self._last_day()
                 day, done = (day, [self._out(t) for t in turns]) if turns else (self.day, [])
+                rec = self.recording
+                if rec and rec["dan"] < today and (not done or rec["dan"] >= day):
+                    day, recorded = rec["dan"], True
+                    done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
-                    "dan": day, "ranije": day != today, "danas": done[::-1]}
+                    "dan": day, "ranije": day != today, "snimak": recorded, "danas": done[::-1]}
 
     def record(self, day: str) -> dict | None:
         """A day's record, as published at /dan/<date>.json: every turn (with how many frames named the speaker,

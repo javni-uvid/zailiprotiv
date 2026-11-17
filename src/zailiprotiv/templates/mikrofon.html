@@ -13,6 +13,14 @@
   {% if coming %}{% set s = coming[0] %}<li>Sazvano: <a href="{{ s.url }}">{{ s.title|latin }}</a>{% if s.starts %}, {{ s.starts[:10]|day }}{% if s.starts|length > 10 %} u {{ s.starts[11:16] }}{% endif %}{% endif %}</li>{% endif %}
   <li><a href="{{ root }}sednice.html">Sednice i snimci</a> · <a href="{{ root }}replike.html">Varnice</a> · <a href="{{ root }}glasaj.html">Glasaj i ti</a></li>
 </ul>
+{% if day_turns %}
+<h2>Poslednji dan sednice, {{ day|day }}</h2>
+<p class="label">Pročitano posle sednice sa celog snimka prenosa, iz potpisa ispod govornika, isto za svakog: govor traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku. Automatsko čitanje može da pogreši.</p>
+<ol class="plain turns">
+  {% for t in day_turns %}<li><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}">▶ snimak</a>{% endif %}</li>
+  {% endfor %}
+</ol>
+{% endif %}
 {% if facts %}
 <h2>Dok čekate</h2>
 <ul class="plain facts">

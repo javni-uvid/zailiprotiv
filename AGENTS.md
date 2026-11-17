@@ -329,6 +329,16 @@ its minute.
   (first segment − 1) × segment length, labelled as found automatically. **Off until checked:** the notes show the
   links only with `recording_links` in `data/settings.json`, to be set once a few links from a real sitting have
   been opened by hand and land on the speaker (that a live video's time is its segment number × length is assumed).
+- **A sitting day read afterwards from the recording** (18 Nov 2026, the maintainer's request): the live service read
+  only the end of 17 Nov (it was started late, and the caption has a second layout, one line in the middle, that it
+  does not read). The day was read again from the whole YouTube recording, a frame every 5 s, the name line of the
+  caption matched to each speaker's own caption (the names read by eye), and kept as `data/<N>/snimak/<date>.json`
+  (the shape of a live record, with `snimak` the second in the video and `uloga` the caption's list line; the
+  chair has no caption and is not listed). The newest such day is listed on the site's `mikrofon` page and published
+  as `mikrofon-dan.json`; between sittings the live service shows it in place of its own record of that day or an
+  earlier one, and says it was read from the recording. Its own `/dan/<date>.json` (and so `data/<N>/uzivo/`) is
+  unchanged. Reading a day this way is by hand for now; a script for it (the recording, the caption in both layouts,
+  OCR) is the next step.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
@@ -361,3 +371,5 @@ its minute.
   broadcast's caption, every speaker by one rule, run at the maintainer's home behind a Cloudflare tunnel.
 - **17 Nov 2026:** while "Ko sada govori" is down, `mikrofon.zailiprotiv.rs` shows the site's `mikrofon` page (a worker
   in front of the tunnel, `live/edge/`) instead of Cloudflare's error.
+- **18 Nov 2026:** the first sitting day of the Fifteenth read afterwards from the whole recording
+  (`data/15/snimak/2026-11-17.json`), shown on `mikrofon.zailiprotiv.rs` as the last sitting day.

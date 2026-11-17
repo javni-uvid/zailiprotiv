@@ -486,3 +486,18 @@ def test_a_speech_in_the_notes_links_to_its_minute_in_the_recording(tmp_path):
     assert 'href="https://www.youtube.com/watch?v=vid&amp;t=1200s"' in page and "▶ snimak, " in page
     assert page.count("▶ snimak") == 1                  # Abramović's speech only; the minister's is not in the record
     assert "▶ снимак" in next(out.glob("cir/*/*/dan-1.html")).read_text()
+
+
+def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_published_for_the_service(tmp_path):
+    out, root = tmp_path / "_site", data(tmp_path)
+    day = {"dan": "2026-11-17", "izvor": "snimak", "govori": [
+        {"ime": "Petrović Petar", "adresa": "", "grupa": "", "uloga": "Lista A", "od": 1794920657, "do": 1794926412,
+         "okvira": 1152, "video": "qkm", "snimak": 14527}]}
+    (root / "15" / "snimak").mkdir(parents=True)
+    (root / "15" / "snimak" / "2026-11-17.json").write_text(json.dumps(day))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    page = (out / "mikrofon.html").read_text()
+    assert "Poslednji dan sednice, 17. novembar 2026." in page and "Petar Petrović" in page and "· 96 min" in page
+    assert "youtube.com/watch?v=qkm&amp;t=14527s" in page and "Петар Петровић" in (out / "cir" / "mikrofon.html").read_text()
+    assert json.loads((out / "mikrofon-dan.json").read_text())["dan"] == "2026-11-17"
+    assert site.check(out) == []

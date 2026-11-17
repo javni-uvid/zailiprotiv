@@ -1,0 +1,156 @@
+{
+ "dan": "2026-11-17",
+ "izvor": "snimak",
+ "napomena": "Pročitano posle sednice sa celog snimka prenosa na YouTube kanalu Skupštine (video qkmMyGsHo9o), kadar na svakih 5 sekundi, isto pravilo za svakog govornika: govor traje od prvog do poslednjeg kadra s imenom govornika u potpisu, dok se ne pojavi drugo ime. Predsedavajući nema potpis i nije u spisku. 'uloga' je donji red potpisa; 'snimak' je mesto u snimku u sekundama, pet sekundi pre prvog kadra.",
+ "pokriveno": [
+  {
+   "od": 1794906125,
+   "do": 1794934681
+  }
+ ],
+ "govori": [
+  {
+   "ime": "Radeta Vjerica",
+   "adresa": "radeta-vjerica",
+   "grupa": "",
+   "uloga": "",
+   "od": 1794910712,
+   "do": 1794910792,
+   "okvira": 17,
+   "video": "qkmMyGsHo9o",
+   "snimak": 4582
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794920657,
+   "do": 1794926412,
+   "okvira": 1152,
+   "video": "qkmMyGsHo9o",
+   "snimak": 14527
+  },
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1794926552,
+   "do": 1794926612,
+   "okvira": 13,
+   "video": "qkmMyGsHo9o",
+   "snimak": 20422
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794926632,
+   "do": 1794927132,
+   "okvira": 97,
+   "video": "qkmMyGsHo9o",
+   "snimak": 20502
+  },
+  {
+   "ime": "Hubač Željko",
+   "adresa": "",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1794927607,
+   "do": 1794928282,
+   "okvira": 67,
+   "video": "qkmMyGsHo9o",
+   "snimak": 21477
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794928292,
+   "do": 1794928452,
+   "okvira": 26,
+   "video": "qkmMyGsHo9o",
+   "snimak": 22162
+  },
+  {
+   "ime": "Mitov Petar",
+   "adresa": "",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1794928467,
+   "do": 1794928567,
+   "okvira": 21,
+   "video": "qkmMyGsHo9o",
+   "snimak": 22337
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794928587,
+   "do": 1794928997,
+   "okvira": 83,
+   "video": "qkmMyGsHo9o",
+   "snimak": 22457
+  },
+  {
+   "ime": "Gašić Jugoslav",
+   "adresa": "",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1794929017,
+   "do": 1794930102,
+   "okvira": 218,
+   "video": "qkmMyGsHo9o",
+   "snimak": 22887
+  },
+  {
+   "ime": "Brnabić Ana",
+   "adresa": "brnabic-ana",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794930142,
+   "do": 1794930367,
+   "okvira": 46,
+   "video": "qkmMyGsHo9o",
+   "snimak": 24012
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794930402,
+   "do": 1794931537,
+   "okvira": 228,
+   "video": "qkmMyGsHo9o",
+   "snimak": 24272
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794931622,
+   "do": 1794932672,
+   "okvira": 208,
+   "video": "qkmMyGsHo9o",
+   "snimak": 25492
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794932717,
+   "do": 1794934527,
+   "okvira": 363,
+   "video": "qkmMyGsHo9o",
+   "snimak": 26587
+  }
+ ]
+}
