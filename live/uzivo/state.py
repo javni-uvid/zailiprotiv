@@ -39,6 +39,7 @@ class Tracker:
         self.open = False
         self._pending = ""  # a name not on the list, read once
         self._others = 0  # frames in a row naming someone other than the current speaker
+        self._migrate()
         self._load()
 
     # --- keeping today's turns across restarts ---
@@ -47,6 +48,25 @@ class Tracker:
 
     def _file(self, day: str) -> Path | None:
         return self.days / f"{day}.json" if self.days else None
+
+    def _migrate(self) -> None:
+        """Days recorded before the day files (until 17 Nov 2026) are only in the old state file: each gets its file,
+        so the last sitting day stays on the page and is served at /dan/<date>.json."""
+        if not self.days or not self.old or not self.old.exists():
+            return
+        try:
+            turns = json.loads(self.old.read_text(encoding="utf-8")).get("turns", [])
+        except (OSError, ValueError):
+            return
+        by_day: dict[str, list[dict]] = {}
+        for t in turns:
+            by_day.setdefault(self._day(t["start"]), []).append(t)
+        today = self._day(time.time())
+        for day, ts in by_day.items():
+            f = self._file(day)
+            if day < today and f and not f.exists():
+                f.parent.mkdir(parents=True, exist_ok=True)
+                f.write_text(json.dumps({"day": day, "turns": ts, "cover": []}, ensure_ascii=False), encoding="utf-8")
 
     def _load(self, day: str | None = None) -> None:
         self.day = day or self._day(time.time())

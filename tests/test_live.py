@@ -219,3 +219,16 @@ def test_between_sittings_the_page_is_read_afresh(monkeypatch):
     except stream.NotLive:
         pass
     assert seen == ["https://www.youtube.com/watch?v=new"]  # the page's stream of the day, not the one in .env
+
+
+def test_a_day_kept_only_in_the_old_state_file_gets_its_own(tmp_path):
+    from datetime import datetime
+    day = datetime(2026, 11, 17, 17, 38, tzinfo=TZ).timestamp()
+    turn = {"key": "a", "name": "Petrović Petar", "slug": "petrovic-petar", "group": "PG A", "role": "",
+            "start": day, "seen": day + 600, "n": 120}
+    (tmp_path / "stanje.json").write_text(json.dumps({"turns": [turn]}), encoding="utf-8")
+    t = Tracker(str(tmp_path / "stanje.json"), tz="Europe/Belgrade")
+    assert (tmp_path / "dani" / "2026-11-17.json").exists()
+    snap = t.snapshot(now=datetime(2026, 11, 18, 9, 0, tzinfo=TZ).timestamp())
+    if t.day > "2026-11-17":  # the clock of the test run decides which day the tracker starts on
+        assert snap["dan"] == "2026-11-17" and snap["ranije"] and [d["ime"] for d in snap["danas"]] == ["Petrović Petar"]
