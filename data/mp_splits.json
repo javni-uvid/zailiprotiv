@@ -1,6 +1,8 @@
 [
-  {"name": "Александар Јовановић", "convocations": ["12"], "mark": "1968",
-   "why": "Two MPs: the 12th convocation's (PUPS, Belgrade, born 1968: the Assembly's page of the PUPS group, 2020) and Aleksandar Jovanović Ćuta (born 1966, MP from August 2022), in the 13th and 14th. Found 17 Nov 2026."},
-  {"name": "Ненад Митровић", "convocations": ["10", "11", "12"], "mark": "1973",
-   "why": "Two MPs: Nenad A. Mitrović (SNS, Bujanovac, born 1973: the Assembly's MP page) in the 10th to 12th convocations, and dr Nenad Mitrović (DS, born 1970, MP from August 2022) in the 13th and 14th. Found 17 Nov 2026."}
+  {"name": "Александар Јовановић", "convocations": ["12"], "mark": "1968", "why": "Two MPs: the 12th convocation's (PUPS, Belgrade, born 1968, the Assembly's archive) and Aleksandar Jovanović Ćuta (Belgrade, Čukarica, born 1966), in the 13th and 14th. Found 17 Nov 2026."},
+  {"name": "Ненад Митровић", "convocations": ["10", "11", "12"], "as": "Ненад А. Митровић", "why": "Two MPs: Nenad A. Mitrović (SNS, Bujanovac, born 1973), written so in the 13th's roll calls and in the archive, and dr Nenad Mitrović (DS, Vladičin Han, born 1970) in the 13th and 14th. Found 17 Nov 2026."},
+  {"name": "Наташа Јовановић", "convocations": ["12"], "as": "Наташа Ст. Јовановић", "why": "Two MPs: Nataša St. Jovanović (SNS, Mladenovac, born 1967), the 12th's, and Nataša Sp. Jovanović (Kragujevac, born 1966; SRS in the 11th, SNS from the 13th), written without the father's initial from the 12th on. The archive (mp-years), 17 Nov 2026."},
+  {"name": "Зоран Радојичић", "convocations": ["10", "11"], "mark": "1975", "why": "Two MPs: Zoran Radojičić of Dveri (Obrenovac, born 1975) in the 11th, and prof. dr Zoran Radojičić (Belgrade, born 1963) in the 13th. The archive (mp-years), 17 Nov 2026."},
+  {"name": "Горан Николић", "convocations": ["10", "11"], "mark": "1967", "why": "Two MPs: Goran Nikolić of SNS from Odžaci (born 1967) in the 11th, and Goran Nikolić of SNS from Vranje (born 1976) in the 14th. The archive (mp-years), 17 Nov 2026."},
+  {"name": "Предраг Марковић", "convocations": ["9"], "mark": "1955", "why": "Two MPs: Predrag Marković of URS/G17 (born 1955) in the 9th, and prof. dr Predrag Marković of SPS (born 1965) in the 12th. The archive (mp-years), 17 Nov 2026."}
 ]

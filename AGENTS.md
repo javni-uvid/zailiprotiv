@@ -119,7 +119,9 @@ The project's promises to its readers. Never change them without the maintainer.
 
 - **The adopted laws** come from "Донети закони" (`laws.py`): title and PDF, the bill (title, PDF, day submitted),
   the day passed, the Gazette issue, "(MU)" for treaties. `index` and `laws` keep the file when a reading has far
-  fewer entries (`cli._shrunk`), so an empty page can't wipe a convocation's data.
+  fewer entries (`cli._shrunk`), so an empty page can't wipe a convocation's data; `laws` keeps what `link` and
+  `bills` added to a law whose bill is unchanged (`laws.carry`, 17 Nov 2026: a **votes** run for the Eleventh that
+  failed after `laws` committed its laws without a single final vote, and the site showed none).
 - **Two sortings, both from the documents** (12 Nov 2026): the kind of act (treaty; budget and public finance; a law
   or changes to one; elections and dismissals; the Assembly's own work; declarations) from the title and the Gazette's
   mark; the area, from the point of Article 97 of the Constitution the bill's "Уставни основ" names. No area of our
@@ -207,12 +209,14 @@ The project's promises to its readers. Never change them without the maintainer.
   in `data/mp_aliases.json` (candidates: names one letter or word apart that never appear in one vote).
 - **One name, two people** (17 Nov 2026): an MP is known by the words of the name, so namesakes in different
   convocations became one MP (Aleksandar Jovanović of PUPS, 2020, and Aleksandar Jovanović Ćuta; two Nenad
-  Mitrović). `data/mp_splits.json` (by hand, with the reason) gives the name in the convocations listed a mark, the
-  year of birth the Assembly gives ("Ненад Митровић (1973)"), applied where roll calls and notes are loaded
-  (`mps.split` in `site.load` and `site.load_transcripts`), so that person gets a page of their own
-  (`mitrovic-nenad-1973`); the other keeps the plain name and its address. Candidates come from **mp-years**
-  (`mp_years.py`): the year of birth of every MP in the Assembly's archive of convocations, compared across
-  convocations (`data/mp_years.json`; a year off by one is not counted).
+  Mitrović). `data/mp_splits.json` (by hand, with the reason) renames the name in the convocations listed: to the
+  name that person has elsewhere in the roll calls (`"as"`: "Ненад А. Митровић", "Наташа Ст. Јовановић"), or else
+  with a mark, the year of birth the Assembly gives ("Александар Јовановић (1968)"); applied where roll calls and
+  notes are loaded (`mps.split` in `site.load` and `site.load_transcripts`). The person of the newest convocation
+  keeps the plain name and its address. Candidates come from **mp-years** (`mp_years.py`): every MP's year of birth
+  (and town) in the Assembly's archive of convocations, compared across convocations (`data/mp_years.json`); a year
+  off by one counts only with another town; two namesakes in one convocation are listed apart (the archive gives no
+  father's initial, the roll calls do). Six names split on 17 Nov 2026; the check then found none left.
 - **Downloads and share pictures in a bucket** (14 Nov 2026): every law's CSV, JSON and picture, MPs' pictures and
   `podaci/` would be thousands of files on the host; **pages** moves them out of the built site (`files-split`),
   makes the bucket behind `podaci.zailiprotiv.rs` hold exactly them (`files-upload`) and only then publishes the

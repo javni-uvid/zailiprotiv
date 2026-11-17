@@ -18,5 +18,6 @@
   "др Снежана Богосављевић Бошковић": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "9, 10, 11. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
   "проф. др Снежана Богосављевић-": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "10, 11. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
   "Биљана Хасановић Кораћ": {"is": "Биљана Хасановић-Кораћ", "why": "9, 10. saziv: isto ime sa crticom i bez nje (ili drugim redom reči), nikad na istom glasanju"},
-  "проф. др Снежана Богосављевић- Бошковић": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "11. saziv: listing je prelomio prezime posle crtice"}
+  "проф. др Снежана Богосављевић- Бошковић": {"is": "проф. др Снежана Богосављевић-Бошковић", "why": "11. saziv: listing je prelomio prezime posle crtice"},
+  "Наташа Сп. Јовановић": {"is": "Наташа Јовановић", "why": "11. saziv: the father's initial; the same MP (Kragujevac, born 1966) as Nataša Jovanović of the 13th and 14th, the Assembly's archive (mp-years), 17 Nov 2026"}
 }

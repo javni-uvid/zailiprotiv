@@ -83,19 +83,30 @@ def check(listed: dict[str, list[dict]], seated: dict[str, set[str]]) -> dict:
     """Names whose year of birth differs between convocations, names listed twice in one, and MPs of the roll calls
     the archive doesn't list. listed: {convocation: archive rows}; seated: {convocation: roll-call keys}."""
     years: dict[str, dict[str, set[int]]] = defaultdict(lambda: defaultdict(set))
-    twice = []
+    places: dict[str, set[str]] = defaultdict(set)
+    twice, keys_of = [], {}
     for conv, rows in listed.items():
         seen = defaultdict(list)
         for r in rows:
             k = key(r["name"], conv)
             years[k][conv].add(r["year"])
+            if not re.match(r"\d", r["place"]):  # an MP who left has the dates of the mandate there instead
+                places[k].add(r["place"].split(",")[0].strip())
             seen[k].append(r)
         twice += [{"convocation": conv, "rows": rs} for rs in seen.values() if len(rs) > 1]
+        keys_of[conv] = set(seen)
+        for k, rs in seen.items():  # two namesakes in one convocation: listed under "twice", not compared here
+            if len(rs) > 1:
+                del years[k][conv]
     differ = []
     for k, by in years.items():
         all_years = sorted(set().union(*by.values()))
-        if len(by) > 1 and all_years[-1] - all_years[0] > 1:  # a year off by one is a typo, not another person
-            differ.append({"key": k, "years": {c: sorted(y) for c, y in sorted(by.items(), key=lambda c: int(c[0]))}})
-    missing = {c: sorted(k for k in keys if c in listed and c not in years.get(k, {})) for c, keys in seated.items()}
+        gap = all_years[-1] - all_years[0]
+        # A year off by one may be a typo; with another town too, it is another person (Nataša Jovanović,
+        # Mladenovac 1967 and Kragujevac 1966).
+        if len(by) > 1 and (gap > 1 or (gap == 1 and len(places[k]) > 1)):
+            differ.append({"key": k, "years": {c: sorted(y) for c, y in sorted(by.items(), key=lambda c: int(c[0]))},
+                           "places": sorted(places[k])})
+    missing = {c: sorted(keys - keys_of[c]) for c, keys in seated.items() if c in keys_of}
     return {"differ": sorted(differ, key=lambda d: d["key"]), "twice": twice,
             "missing": {c: ks for c, ks in missing.items() if ks}}

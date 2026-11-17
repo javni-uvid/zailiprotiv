@@ -17,7 +17,9 @@ def test_clashes():
 def test_split_one_name_two_people(tmp_path):
     (tmp_path / "mp_aliases.json").write_text("{}", encoding="utf-8")
     (tmp_path / "mp_splits.json").write_text(
-        '[{"name": "Ненад Митровић", "convocations": ["11"], "mark": "1973", "why": "two people"}]', encoding="utf-8")
+        '[{"name": "Ненад Митровић", "convocations": ["11"], "mark": "1973", "why": "two people"},'
+        ' {"name": "Наташа Јовановић", "convocations": ["12"], "as": "Наташа Ст. Јовановић", "why": "two people"}]',
+        encoding="utf-8")
     mps.load_aliases(tmp_path / "mp_aliases.json")
     try:
         assert mps.split("Ненад Митровић", "11") == "Ненад Митровић (1973)"
@@ -25,6 +27,10 @@ def test_split_one_name_two_people(tmp_path):
         assert mps.split("МИТРОВИЋ др НЕНАД", "14") == "МИТРОВИЋ др НЕНАД"  # other convocations: the other person
         assert mps.key(mps.split("Ненад Митровић", "11")) != mps.key("МИТРОВИЋ др НЕНАД")
         assert mps.key(mps.split("Ненад Митровић", "11")) == mps.key(mps.split("НЕНАД МИТРОВИЋ", "11"))
+        assert mps.split("Наташа Јовановић", "12") == "Наташа Ст. Јовановић"
+        assert mps.split("НАТАША ЈОВАНОВИЋ", "12") == "НАТАША СТ. ЈОВАНОВИЋ"
+        assert mps.key(mps.split("Наташа Јовановић", "12")) == mps.key("Наташа Ст. Јовановић")
+        assert mps.split("Наташа Јовановић", "13") == "Наташа Јовановић"
     finally:
         mps.load_aliases(tmp_path / "none.json")
 
@@ -65,12 +71,18 @@ def test_mp_years_check():
     from zailiprotiv import mp_years
     listed = {"12": [{"name": "JOVANOVIĆ ALEKSANDAR", "party": "PUPS", "place": "Beograd", "year": 1968}],
               "13": [{"name": "JOVANOVIĆ ALEKSANDAR", "party": "-", "place": "Beograd", "year": 1966},
+                     {"name": "JOVANOVIĆ NATAŠA", "party": "SNS", "place": "Kragujevac", "year": 1966},
+                     {"name": "PETROVIĆ MIRA", "party": "PUPS", "place": "Beograd", "year": 1956},
                      {"name": "ANTIĆ IVAN", "party": "SNS", "place": "Novi Sad", "year": 1978},
                      {"name": "ANTIĆ IVAN", "party": "SPS", "place": "Niš", "year": 1990}],
-              "14": [{"name": "ANTIĆ IVAN", "party": "SNS", "place": "Novi Sad", "year": 1979}]}
+              "14": [{"name": "ANTIĆ IVAN", "party": "SNS", "place": "Novi Sad", "year": 1979},
+                     {"name": "JOVANOVIĆ NATAŠA", "party": "SNS", "place": "Mladenovac", "year": 1967},
+                     {"name": "PETROVIĆ MIRA", "party": "PUPS", "place": "Beograd", "year": 1957}]}
     seated = {"13": {mps.key("Иван Антић"), mps.key("Петар Петровић")}}
     found = mp_years.check(listed, seated)
-    assert [d["key"] for d in found["differ"]] == [mps.key("Александар Јовановић"), mps.key("Иван Антић")]
+    # Mira Petrović: one year apart, the same town (a typo); Nataša Jovanović: one year apart, another town;
+    # Ivan Antić: two namesakes in the 13th, listed under "twice" and not compared
+    assert [d["key"] for d in found["differ"]] == [mps.key("Александар Јовановић"), mps.key("Наташа Јовановић")]
     assert found["differ"][0]["years"] == {"12": [1968], "13": [1966]}
     assert [t["convocation"] for t in found["twice"]] == ["13"]
     assert found["missing"] == {"13": [mps.key("Петар Петровић")]}
