@@ -223,15 +223,16 @@
     return out;
   }
   function drawCard() {
-    // Dark, "me against the hall": what would have happened had it been up to the visitor, then a column per law
-    // (how the hall voted, the visitor's vote as a dot over it; no law named), how often the visitor voted as most
-    // MPs did and their loneliest vote, and "A ti?".
+    // Dark, "me against the other visitors": what would have happened had it been up to the visitor, then a column
+    // per law (how the site's visitors voted, the visitor's vote as a dot over it; no law named), how often the
+    // visitor voted as most visitors did and their loneliest vote, and "A ti?". With too few visitors' votes yet
+    // (none of the laws has five), the hall stands in for them (the maintainer, 17 Nov 2026).
     var c = document.createElement("canvas"), W = 1080, H = 1350, P = 84, ctx = c.getContext("2d");
     var serif = '"Literata", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
     var ZA = "#7cc0f5", PROTIV = "#ff9a52", SOFT = "#c9ccd3", DIM = "#30343c", TONE = { z: ZA, p: PROTIV, u: "#9aa0ab", "": DIM };
     c.width = W; c.height = H;
     function paint() {
-      var y, x, vs = card.vs || versus();
+      var y, x, cr = card.crowd, vs = cr || card.vs || versus();
       ctx.fillStyle = "#111111"; ctx.fillRect(0, 0, W, H);
       ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
       // the mark and the name of the site
@@ -254,12 +255,12 @@
         });
         y += 100;
       });
-      // the hall and me: a column per law, the hall's votes stacked (za below, protiv above, the rest dim) out of
-      // the 250 seats, the visitor's vote as a dot above
+      // the others and me: a column per law, their votes stacked (za below, protiv above, the rest dim), the
+      // visitor's vote as a dot above
       var n = answers.length, gap = n > 8 ? 22 : 30, cw = (W - 2 * P - gap * (n - 1)) / n;
       var top = y + 40, CH = 240, base = top + CH;
       answers.forEach(function (a, i) {
-        var h = hall(i), cx = P + i * (cw + gap), k = CH / Math.max(1, h.z + h.p + h.rest);
+        var h = cr ? crowdOf(i) : hall(i), cx = P + i * (cw + gap), k = CH / Math.max(1, cr ? h.n : h.z + h.p + h.rest);
         ctx.fillStyle = "#2a2e36"; ctx.fillRect(cx, top, cw, CH);
         ctx.fillStyle = ZA; ctx.fillRect(cx, base - h.z * k, cw, h.z * k);
         ctx.fillStyle = PROTIV; ctx.fillRect(cx, base - (h.z + h.p) * k, cw, h.p * k);
@@ -268,23 +269,22 @@
         if (a) { ctx.fillStyle = TONE[a]; ctx.fill(); } else { ctx.strokeStyle = DIM; ctx.lineWidth = 4; ctx.stroke(); }
       });
       ctx.fillStyle = SOFT; ctx.font = "400 28px " + sans;
-      ctx.fillText("Svaki stub je jedan zakon i kako je glasala sala. Krug je moj glas.", P, base + 46);
+      ctx.fillText(cr ? "Stub je zakon: kako su glasali posetioci sajta. Krug je moj glas." :
+        "Svaki stub je jedan zakon i kako je glasala sala. Krug je moj glas.", P, base + 46);
       // how often with the hall's majority, and the loneliest vote
       y = base + 128;
       ctx.fillStyle = "#ffffff"; ctx.font = "800 64px " + serif;
       var sameTxt = vs.same + " od " + vs.of, sw = ctx.measureText(sameTxt).width;
       ctx.fillText(sameTxt, P, y);
-      ctx.font = "400 40px " + sans; ctx.fillText(" puta kao većina u sali", P + sw, y);
-      if (vs.lonely) {
-        ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans;
-        ctx.fillText(lonelyText(vs.lonely).replace("si glasao", "sam glasao"), P, y + 56);
-      }
+      ctx.font = "400 40px " + sans; ctx.fillText(cr ? " puta kao većina posetilaca" : " puta kao većina u sali", P + sw, y);
+      var alone = cr ? crowdLonely(cr.lonely) : lonelyText(vs.lonely).replace("si glasao", "sam glasao");
+      if (alone) { ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans; ctx.fillText(alone, P, y + 56); }
       ctx.fillStyle = "#ffffff"; ctx.fillRect(P, H - 176, W - 2 * P, 4);
       ctx.font = "700 64px " + serif; ctx.fillText("A ti?", P, H - 86);
       ctx.font = "400 40px " + sans; ctx.textAlign = "right";
       ctx.fillText("zailiprotiv.rs/glasaj", W - P, H - 86); ctx.textAlign = "left";
       var img = document.getElementById("q-card");
-      img.alt = card.fact + " Kao većina u sali na " + vs.same + " od " + vs.of + " zakona. " + lonelyText(vs.lonely);
+      img.alt = card.fact + (cr ? " Kao većina posetilaca na " : " Kao većina u sali na ") + vs.same + " od " + vs.of + " zakona. " + alone;
       c.toBlob(function (blob) {
         if (!blob) return;
         cardBlob = blob;
@@ -296,15 +296,20 @@
     ready.then(paint);
   }
   var card = { fact: "", vs: null, crowd: null };
-  // On how many laws the visitor voted as most visitors did, among the laws five or more visitors voted on.
+  // On how many laws the visitor voted as most visitors did, among the laws five or more visitors voted on, and
+  // the vote (za or protiv) the smallest share of them cast.
   function crowdFact() {
-    var same = 0, of = 0;
+    var same = 0, of = 0, lonely = null;
     answers.forEach(function (a, i) {
       var c = crowdOf(i);
       if (!a || c.n < 5) return;
       of++; if (c[a] >= Math.max(c.z, c.p, c.u)) same++;
+      if (a !== "u" && (!lonely || c[a] / c.n < lonely.share)) lonely = { share: c[a] / c.n, a: a };
     });
-    return of ? { same: same, of: of } : null;
+    return of ? { same: same, of: of, lonely: lonely } : null;
+  }
+  function crowdLonely(l) {
+    return !l || l.share > 0.5 ? "" : "Najusamljeniji glas: " + WORD[l.a] + ", kao samo " + Math.max(1, Math.round(100 * l.share)) + "% posetilaca.";
   }
   function redraw() {
     card.crowd = api ? crowdFact() : null;
@@ -312,9 +317,10 @@
     line.hidden = !card.crowd;
     if (card.crowd) line.textContent = "Na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona") +
       " glasao si kao većina posetilaca sajta.";
-    // The words that are copied or shared: what would have happened, how often with the hall, and the question.
-    var vs = card.vs || versus();
-    shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (vs.of ? " Kao većina u sali glasao sam na " + vs.same + " od " + vs.of + "." : "") + " Kako bi ti glasao?";
+    // The words that are copied or shared: what would have happened, how often with the others, and the question.
+    var vs = card.crowd || card.vs || versus();
+    shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (vs.of ? (card.crowd ? " Kao većina posetilaca" : " Kao većina u sali") +
+      " glasao sam na " + vs.same + " od " + vs.of + "." : "") + " Kako bi ti glasao?";
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
   }
   function note(text) { document.getElementById("q-shared").textContent = text; }
