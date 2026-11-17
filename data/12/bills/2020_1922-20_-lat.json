@@ -1,7 +1,8 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2020/1922-20 -LAT.pdf",
  "sha256": "f4d1c6940edc4ff102656f35ec030aefb707ed11943dc2e84600025976e260a8",
- "reader": 2,
+ "reader": 4,
  "sections": {},
- "articles": []
+ "articles": [],
+ "ocr": false
 }

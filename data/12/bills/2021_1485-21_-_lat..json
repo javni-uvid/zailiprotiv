@@ -1,7 +1,10 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/2021/1485-21 - Lat..pdf",
  "sha256": "2aa3570965f69df112fd0c8d572b382751cdb673960e36ac5f9cc2e532781437",
- "reader": 2,
- "sections": {},
- "articles": []
+ "reader": 4,
+ "sections": {
+  "reasons": "1. Ustavni osnov\n\nUstavni osnov za donošenje Zakona o potvrđivanju Sporazuma između Vlade\nRepublike Srbije i Vlade Savezne Republike Nemačke o ratnim memorijalima, koji je\nsačinjen u Beogradu, 28. novembra 2018. godine, sadržan je u članu 99. stav 1.\ntačka 4. Ustava Republike Srbije, kojim je propisano da Narodna skupština potvrđuje\nmeđunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.\n\n2. Razlozi za potvrđivanje Sporazuma\n\nČlanom 16. Zakona o ministarstvima („Službeni glasnik RS”, br. 44/14, 44/15,\n54/15, 96/15 - dr. zakon i 62/17) definisano je da je oblast negovanja tradicija\noslobodilačkih ratova Srbije, zaštita spomenika i spomen - obeležja oslobodilačkih\nratova Srbije, vojnih grobova i grobalja boraca u zemlji i inostranstvu nadležnost\nMinistarstva za rad, zapošljavanje, boračka i socijalna pitanja.\nU cilju zaštite ratnih grobova i vojnih memorijala postoji interes da se pitanja iz ove\noblasti urede na sveobuhvatan način.\nU skladu sa članom 9. Zakona o zaključivanju i izvršavanju međunarodnih ugovora\n(„Službeni glasnik RS”, broj 32/13) po završenim pregovorima, podnosi se izveštaj\nVladi o toku pregovora i usaglašen tekst međunarodnog sporazuma.\n\n3. Procena potrebnih finansijskih sredstava za sprovođenje Zakona\n\nZa realizaciju ovog sporazuma u 2021. godini, nisu potrebna finansijska\nsredstva u budžetu Republike Srbije, kao ni za dve naredne godine. Nije planirano\nsprovođenje aktivnosti koje iziskuju troškove.\nUkoliko se pojavi potreba za realizacijom aktivnosti definisanih ovim\nzakonom, koristiće se sredstva obezbeđena u budžetu Republike Srbije za 2021.\ngodinu u okviru razdela 30 - Ministarstvo za rad, zapošljavanje, boračka i socijalna\npitanja, funkcija 010 - bolest i invalidnost, u okviru Programa 0904 Boračko-\ninvalidska zaštita, programska aktivnost 0002 - Očuvanje tradicija oslobodilačkih\nratova Srbije, ekonomska klasifikacija 424 - Specijalizovane usluge, a za 2022. i\n2023. godinu će biti u okviru limita koje odredi Ministarstvo finansija."
+ },
+ "articles": [],
+ "ocr": false
 }
