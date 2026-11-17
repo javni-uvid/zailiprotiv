@@ -309,10 +309,10 @@
   "summaries-9": {
    "claude-haiku-5-5": {
     "cache_read": 120558,
-    "cache_written": 1132,
-    "input": 885341,
-    "output": 390006,
-    "replies": 215
+    "cache_written": 1698,
+    "input": 887180,
+    "output": 391555,
+    "replies": 216
    }
   }
  }
