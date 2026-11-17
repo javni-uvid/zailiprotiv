@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{# Shown at mikrofon.zailiprotiv.rs while "Ko sada govori" is down (pages_mikrofon.py, live/edge/). #}
+{% block title %}Ko sada govori — trenutno ne radi — Za ili Protiv{% endblock %}
+{% block description %}Stranica „Ko sada govori“ trenutno ne prati prenos. Prenos Skupštine, sledeća sednica i nekoliko činjenica iz podataka sajta.{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block main %}
+<div data-pagefind-ignore="all">
+<p class="kicker">Ko sada govori</p>
+<h1>Trenutno ne pratimo prenos</h1>
+<p class="lead">Ova stranica čita ime ispod govornika u prenosu Skupštine. To radi računar koji je sada isključen; kad se uključi, ovde je opet ko govori i ko je danas govorio.</p>
+<ul class="plain">
+  <li><a href="{{ broadcast }}">Prenos Narodne skupštine</a> (sajt Skupštine)</li>
+  {% if coming %}{% set s = coming[0] %}<li>Sazvano: <a href="{{ s.url }}">{{ s.title|latin }}</a>{% if s.starts %}, {{ s.starts[:10]|day }}{% if s.starts|length > 10 %} u {{ s.starts[11:16] }}{% endif %}{% endif %}</li>{% endif %}
+  <li><a href="{{ root }}sednice.html">Sednice i snimci</a> · <a href="{{ root }}replike.html">Varnice</a> · <a href="{{ root }}glasaj.html">Glasaj i ti</a></li>
+</ul>
+{% if facts %}
+<h2>Dok čekate</h2>
+<ul class="plain facts">
+  {% for f in facts %}<li><a href="{{ root }}{{ f.href }}">{{ f.text|latin }}</a></li>
+  {% endfor %}
+</ul>
+<p class="label">Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.</p>
+{% endif %}
+</div>
+{% endblock %}

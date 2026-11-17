@@ -1,0 +1,8 @@
+# In front of "Ko sada govori" (live/): passes everything to the tunnel, and while the tunnel is down (Cloudflare's
+# 530, the maintainer's computer off) shows the site's page for that instead (zailiprotiv.rs/mikrofon). Published by
+# the worker workflow with the counter.
+name = "zailiprotiv-mikrofon"
+main = "worker.js"
+compatibility_date = "2026-06-01"
+workers_dev = false
+routes = [{ pattern = "mikrofon.zailiprotiv.rs/*", zone_name = "zailiprotiv.rs" }]

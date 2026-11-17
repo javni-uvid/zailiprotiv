@@ -1,12 +1,12 @@
-# Publishes the counter of visitors' votes and the clock (worker/) to Cloudflare whenever worker/ changes, or by
-# hand. Needs the repository secrets CLOUDFLARE_API_TOKEN (Workers and D1, edit), CLOUDFLARE_ACCOUNT_ID and
+# Publishes the counter of visitors' votes and the clock (worker/), and the worker in front of "Ko sada govori"
+# (live/edge/: the site's page while the tunnel is down), to Cloudflare whenever they change, or by hand. Needs the repository secrets CLOUDFLARE_API_TOKEN (Workers and D1, edit; Workers Routes on the zone, for live/edge), CLOUDFLARE_ACCOUNT_ID and
 # DISPATCH_TOKEN (a GitHub token that may run this repository's Actions; the worker uses it to start the workflows).
 name: worker
 
 on:
   push:
     branches: [main]
-    paths: ["worker/**", ".github/workflows/worker.yml"]
+    paths: ["worker/**", "live/edge/**", ".github/workflows/worker.yml"]
   workflow_dispatch:
 
 permissions:
@@ -52,3 +52,12 @@ jobs:
             DISPATCH_TOKEN
         env:
           DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      - name: Publish the worker in front of "Ko sada govori"
+        if: steps.ready.outputs.go == 'yes'
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0  # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: live/edge
+          wranglerVersion: "4.152.0"
+          command: deploy

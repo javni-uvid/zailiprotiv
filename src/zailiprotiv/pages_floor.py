@@ -488,4 +488,23 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     pages = {c["n"]: c["page_who"] for c in by_conv}
     render.per_mp = {slug_: [{**x, "page": pages.get(x["conv"], "")} for x in xs] for slug_, xs in per_mp.items()}
     render.top = {c["n"]: {k: (v[0] if v else None) for k, v in c["top"].items()} | {"page": c["page_who"]} for c in by_conv}
+    # Each convocation's totals, as the table of all convocations gives them (for the page shown while "Ko sada
+    # govori" is down): sittings read, speeches, chair's measures, exchanges, harsh words and the commonest of them.
+    render.totals = {c["n"]: {"name": c["name"], "years": c["years"], "page": c["page"], "page_who": c["page_who"],
+                              "sittings": c["sittings"], "speeches": sum(r["speeches"] for r in c["people"]),
+                              "measures": len(c["measures"]), "exchanges": len(c["exchanges"]),
+                              "harsh": sum(len(r["harsh"]) for r in c["people"]),
+                              "harsh_word": commonest([h["word"] for r in c["people"] for h in r["harsh"]])}
+                     for c in by_conv}
     return by_mp, by_law
+
+
+def commonest(words: list[str]) -> tuple[str | None, int]:
+    """The harsh word said most often, its forms counted together by their entry in HARSH ("издајници" and
+    "издајника" are one), shown in the form said most often; and how many times."""
+    entry = lambda w: next((h for h in HARSH if re.match(h, w, re.I)), w)
+    by_entry = Counter(entry(w) for w in words)
+    if not by_entry:
+        return None, 0
+    top, n = by_entry.most_common(1)[0]
+    return latin(Counter(w for w in words if entry(w) == top).most_common(1)[0][0]), n

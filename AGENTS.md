@@ -296,6 +296,12 @@ its minute.
   computer behind a Cloudflare tunnel, because YouTube often refuses data centres' addresses (GitHub's runners
   among them) and a home address works. When the computer is off the page is down; **health** does not ask it.
   The tunnel's token lives in `live/.tunnel.env` (never committed) and in Cloudflare.
+- **While it is down** (17 Nov 2026): a worker in front of the hostname (`live/edge/`, a route on the zone, published
+  by the `worker` workflow) passes every request to the tunnel; on a 5xx (530 when the tunnel is down) it shows the
+  site's `mikrofon` page (`pages_mikrofon.py`, noindex) under a `<base>` pointing to zailiprotiv.rs, and the live
+  JSON answers `{"radi": false}`. The page says why it is off, links the broadcast and the next sitting, and lists a
+  few facts from the site's own counts (laws, urgent procedure, days to adoption, the harsh word said most often),
+  each linked to the page with its rule, about no MP in particular.
 - **Read from the broadcast, matched to the roll calls:** a name counts when it matches an MP on the site's list
   (`podaci.json`, from the roll calls) on the caption's name line only, never the list line under it (a list's name
   often holds its leader's name). A name not on the list (ministers, guests) is shown only when read surely in two
@@ -348,3 +354,5 @@ its minute.
   year of birth (**mp-years**).
 - **17 Nov 2026:** "Ko sada govori" (`live/`, `mikrofon.zailiprotiv.rs`): the current speaker read from the live
   broadcast's caption, every speaker by one rule, run at the maintainer's home behind a Cloudflare tunnel.
+- **17 Nov 2026:** while "Ko sada govori" is down, `mikrofon.zailiprotiv.rs` shows the site's `mikrofon` page (a worker
+  in front of the tunnel, `live/edge/`) instead of Cloudflare's error.

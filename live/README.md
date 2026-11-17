@@ -53,6 +53,11 @@ docker compose logs -f uzivo
 In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostname `mikrofon.zailiprotiv.rs` points to
 `http://uzivo:8000`. A log line per frame: `name matched | name line | list line -> state`.
 
+While the computer is off, Cloudflare would answer with its own error (530). A worker in front of the hostname
+(`edge/`, published by the `worker` workflow) passes every request to the tunnel and, when it fails, shows the site's
+page for that instead (zailiprotiv.rs/mikrofon: why it is down, the broadcast, the next sitting, a few facts from the
+site). Nothing changes in the tunnel or the DNS.
+
 When YouTube asks to sign in, put a `cookies.txt` in the volume and set `YTDLP_COOKIES=/data/cookies.txt`; when
 yt-dlp stops working, `docker compose build --pull --no-cache uzivo` takes the newest.
 

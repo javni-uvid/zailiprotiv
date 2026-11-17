@@ -52,7 +52,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 | beleske.zailiprotiv.rs | the notes' pages and their search index; the notes as read (`sirovo/`) | R2 bucket `zailiprotiv-beleske` |
 | podaci.zailiprotiv.rs | every law's CSV, JSON and picture, MPs' pictures, `podaci/` | R2 bucket `zailiprotiv-podaci` |
 | glasovi.zailiprotiv.rs | the visitors' votes counter, and the project's clock | Cloudflare Worker with D1 (`worker/`) |
-| mikrofon.zailiprotiv.rs | who is speaking now, read from the live broadcast's caption | Docker on the maintainer's computer, Cloudflare tunnel (`live/`) |
+| mikrofon.zailiprotiv.rs | who is speaking now, read from the live broadcast's caption; while it is down, the site's `mikrofon` page | Docker on the maintainer's computer, Cloudflare tunnel (`live/`); a worker in front (`live/edge/`) |
 
 Secrets live in GitHub Secrets and Cloudflare, never in the repository; `data/settings.json` holds the public
 addresses.
