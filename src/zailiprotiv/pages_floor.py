@@ -394,6 +394,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
             dates = sorted(e["date"] for e in found if e["date"]) or sorted(
                 d.get("listed_date") or "" for d in notes["days"] if d.get("listed_date"))
             sittings.append({"url": url, "title": title, "date": dates[0] if dates else "", "days": len(notes["days"]),
+                             "dates": sorted({d["listed_date"] for d in notes["days"] if d.get("listed_date")}),
                              "measures": sum(1 for e in found if e["type"] == "mera"),
                              "exchanges": sum(1 for e in found if e["type"] == "razmena"),
                              "points": sum(1 for s in speeches if not s.get("chair") and _POINT.search(s["text"][:300])),

@@ -62,3 +62,6 @@
   </div>
 </section>
 {% endmacro %}
+
+{# A plenary sitting in progress: the Assembly's live broadcast, linked, not played here (principle 5). #}
+{% macro live_bar() %}{% if live %}<p class="live"><span class="live-dot" aria-hidden="true"></span><span><b>Skupština sada zaseda:</b> {{ live|join("; ") }}. <a href="{{ live_url }}">Prenos uživo na sajtu Skupštine</a></span></p>{% endif %}{% endmacro %}

@@ -7,6 +7,10 @@ VOTES_PATHS = ("/upload/rezultati_glasanja/", "/upload/archive/files/cir/doc/Lis
 USER_AGENT = "zailiprotiv/0.1 (+https://github.com/javni-uvid/zailiprotiv)"
 # Seconds between requests to the Assembly's site.
 DELAY = 1.0
+# The plenary sittings live, and their recordings: the Assembly's page "Prenosi" leads to its broadcaster's pages
+# (videonet.co.rs), one archive page of the plenary sittings per convocation ("videos" below).
+LIVE = BASE + "/prenosi/sednice-narodne-skupstine.2083.html"
+VIDEONET = "https://www.videonet.co.rs/"
 
 # The convocations the site covers. The current one's sittings are listed on two Cyrillic pages; an earlier one's
 # on its archive page in Latin, whose sittings' Cyrillic pages (the ones linking roll calls) have the next lower
@@ -18,27 +22,34 @@ CONVOCATIONS = {
     "15": {"from": "2026-11-17", "ordinal": "petnaest",
            "listings": (BASE + "/активности/народна-скупштина/заседања/редовна.34.html",
                         BASE + "/активности/народна-скупштина/заседања/ванредна.35.html"),
-           "laws": BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html"},
+           "laws": BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html",
+           "videos": VIDEONET + "nsrsArhiva15Z.htm"},
     "14": {"from": "2024-02-06", "to": "2026-11-17", "ordinal": "četrnaest",
            "listings": (BASE + "/активности/народна-скупштина/заседања/редовна.34.html",
                         BASE + "/активности/народна-скупштина/заседања/ванредна.35.html"),
-           "laws": BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html"},
+           "laws": BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html",
+           "videos": VIDEONET + "nsrsArhiva14Z.htm"},
     "13": {"from": "2022-08-01", "to": "2024-02-06", "ordinal": "trinaest",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-1-avgusta-2022/zasedanja.4921.html",
-           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-1-avgusta-2022.4962.html"},
+           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-1-avgusta-2022.4962.html",
+           "videos": VIDEONET + "nsrsArhiva13Z.htm"},
     "12": {"from": "2020-08-03", "to": "2022-08-01", "ordinal": "dvanaest",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-3-avgusta-2020-godine/zasedanja.4620.html",
-           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-avgusta-2020.4686.html"},
+           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-avgusta-2020.4686.html",
+           "videos": VIDEONET + "nsrsArhiva12Z.htm"},
     "11": {"from": "2016-06-03", "to": "2020-08-03", "ordinal": "jedanaest",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-3-juna-2016/zasedanja.4184.html",
-           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-juna-2016.4242.html"},
+           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-3-juna-2016.4242.html",
+           "videos": VIDEONET + "nsrsArhiva11Z.htm"},
     # The address of this page of laws has a Cyrillic "а" in "аprila": as the Assembly links it.
     "10": {"from": "2014-04-16", "to": "2016-06-03", "ordinal": "deset",
            "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-16-aprila-2014/zasedanja.3458.html",
-           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-16-аprila-2014.3411.html"},
+           "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-16-аprila-2014.3411.html",
+           "videos": VIDEONET + "nsrsArhiva2Z.htm"},
     "9": {"from": "2012-05-31", "to": "2014-04-16", "ordinal": "devet",
           "archive": BASE + "/aktivnosti/narodna-skupstina/arhiva-aktivnosti/saziv-od-31-maja-2012/zasedanja.2269.html",
-          "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-31-maja-2012.2194.html"},
+          "laws": BASE + "/akti/doneti-zakoni/u-sazivu-od-31-maja-2012.2194.html",
+           "videos": VIDEONET + "nsrsArhiva1Z.htm"},
     # The Eighth (11 June 2008 – 31 May 2012) was tried on 14 Nov 2026 and left out: its 90 sittings' pages
     # (archive …/saziv-od-11-juna-2008/zasedanja.1546.html, laws …/u-sazivu-od-11-juna-2008.1526.html) carry a written
     # account of each sitting and no roll call and no stenographic notes, so there is nothing to say how an MP voted.

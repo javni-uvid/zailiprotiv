@@ -9,7 +9,26 @@ from zailiprotiv.site import (  # noqa: F401
 )
 
 
-def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbers, out, rows_mp):
+ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+
+
+def recorded(dates, recordings, latin):
+    """The recordings of a sitting's days: [(day, [{"title", "parts": [{"n", "url"}]}])], a day's entries grouped by
+    the archive's words for them (one day can hold the sitting and MPs' questions)."""
+    import re
+    rows = []
+    for d in dates:
+        groups = {}
+        for p in recordings.get(d) or []:
+            title = re.sub(r"\s+(Народне скупштине Републике Србије|НСРС)\b.*$", "", p["title"]).strip()
+            groups.setdefault(latin(title), []).append({"n": ROMAN[p["part"]] if p["part"] < len(ROMAN) else str(p["part"]),
+                                                        "url": p["url"]})
+        if groups:
+            rows.append((d, [{"title": t, "parts": ps} for t, ps in groups.items()]))
+    return rows
+
+
+def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbers, out, rows_mp, recordings=None):
     # A page per area (the point of Article 97), every convocation, newest first.
     by_area = defaultdict(list)
     for its in items_by_conv.values():
@@ -39,9 +58,12 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
         first = its[0]
         name = sitting_page(url, first["final"]["sitting_title"])
         sitting_slug[url] = name
+        floor = floor_by_sitting.get(url)
+        days = sorted(set((floor or {}).get("dates") or []) | {it["final"]["when"][:10] for it in its})
         (out / "sednica" / f"{name}.html").write_text(env.get_template("sitting.html").render(
             **common, title=first["final"]["sitting_title"], url=url, laws=its, conv_name=first["conv_name"],
-            lead=max(its, key=lambda it: (it["final"]["counts"]["protiv"] or 0)), floor=floor_by_sitting.get(url),
+            lead=max(its, key=lambda it: (it["final"]["counts"]["protiv"] or 0)), floor=floor,
+            recordings=recorded(days, recordings or {}, env.filters["latin"]),
             first=its[0]["final"]["when"][:10], last=its[-1]["final"]["when"][:10], root="../"), encoding="utf-8")
     sittings_list = sorted(({"slug": sitting_slug[u], "title": its[0]["final"]["sitting_title"], "n": len(its),
                              "day": its[0]["final"]["when"][:10], "conv": its[0]["conv"], "conv_name": its[0]["conv_name"],

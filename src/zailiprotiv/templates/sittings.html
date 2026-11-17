@@ -4,6 +4,7 @@
 {% block description %}Sednice Narodne skupštine na kojima su usvajani zakoni, po sazivima i datumu.{% endblock %}
 {% block main %}
 <h1>Skupština</h1>
+{% from "macros.html" import live_bar with context %}{{ live_bar() }}
 {% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("sednice") }}
 {% set now = by_conv[0][1] if by_conv else [] %}
 {% if now %}

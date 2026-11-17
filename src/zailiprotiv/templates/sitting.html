@@ -23,5 +23,14 @@
 </li>
 {% endfor %}
 </ul>
+{% if recordings %}
+<section class="recordings" id="snimci">
+<h2>Snimci sednice</h2>
+<ul class="plain rec-days">
+{% for d, groups in recordings %}<li><span class="rec-day">{{ d|day }}</span>{% for g in groups %}<span class="rec-group">{% if groups|length > 1 %}<span class="meta">{{ g.title }}</span> {% endif %}{% for p in g.parts %}<a class="rec-part" href="{{ p.url }}" rel="noopener">{{ "Ceo dan" if g.parts|length == 1 else "Deo " ~ p.n }}</a>{% endfor %}</span>{% endfor %}</li>
+{% endfor %}</ul>
+<p class="label">Snimci Skupštine iz arhive njenih prenosa, kako ih ona deli: svaki dan u nekoliko delova, MP4, od sto megabajta do više od gigabajta po delu. Otvaraju se na serveru Skupštininog prenosa, ne ovde.</p>
+</section>
+{% endif %}
 <p class="label">Samo konačna glasanja o zakonima; ostale tačke dnevnog reda (izbori, odluke, amandmani) nisu ovde. {{ how("glasanje") }}</p>
 {% endblock %}

@@ -257,6 +257,15 @@ showing the Fifteenth only (the Fourteenth's 91 waiting bills are no longer list
 data. Left to do: give the Fourteenth its "archive" and archived "laws" pages once the Assembly publishes them; close
 issue #7 once the Fifteenth is current.
 
+## Broadcasts and recordings
+
+The Assembly broadcasts its sittings live and keeps the recordings with its broadcaster (videonet.co.rs), linked
+from its page "Prenosi". Since 17 Nov 2026: while the newest convocation's listing marks a plenary sitting "(у току)",
+the home page and "Sednice" carry a bar linking to the live broadcast (`config.LIVE`); each sitting's page lists the
+recordings of its days (`videos.py`, `data/<N>/videos.json`, read by **votes** for the current and the newest
+convocation; earlier ones by hand). Both are links: the site plays nothing itself (principle 5). The notes carry no
+times, so a speech cannot be linked to its minute.
+
 ## Open questions
 
 - Interaction for readers beyond votes (questions to MPs, comments) needs a server or a third party, which

@@ -1006,3 +1006,18 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .vote-line span { flex: 1 1 16rem; }
 .my-vote { display: inline-block; margin-left: .5rem; padding: .05rem .45rem; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .74rem; font-weight: 700; color: #fff; background: var(--uzdrzan); vertical-align: middle; white-space: nowrap; }
 .my-vote.z { background: var(--za); } .my-vote.p { background: var(--protiv); }
+
+/* A plenary sitting in progress (macros.live_bar) */
+.live { order: -1; display: flex; gap: .7rem; align-items: baseline; margin: 1.2rem 0 1.4rem; padding: .75rem 1rem; border: 2px solid var(--fg); border-radius: 10px; }
+.live-dot { flex: none; width: .7rem; height: .7rem; border-radius: 50%; background: var(--protiv); transform: translateY(.05rem); }
+.live a { font-weight: 600; white-space: nowrap; }
+/* A sitting's recordings, day by day */
+.recordings { margin: 2rem 0 1rem; }
+.rec-days { list-style: none; padding-left: 0; }
+.rec-days li { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.rec-day { display: block; font-weight: 600; margin-bottom: .4rem; }
+.rec-group { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-top: .3rem; }
+.rec-group .meta { flex-basis: 100%; }
+.rec-part { border: 1px solid var(--line); border-radius: 999px; padding: .15rem .7rem; text-decoration: none; font-size: .92rem; }
+.rec-part:hover { border-color: var(--za); }
+main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above the home page's reordered parts on a phone */

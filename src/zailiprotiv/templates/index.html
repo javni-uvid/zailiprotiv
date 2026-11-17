@@ -2,6 +2,7 @@
 {% from "macros.html" import bar, chamber, plural, how with context %}
 {% block title %}Za ili Protiv: svako glasanje u Skupštini Srbije od 2012.{% endblock %}
 {% block main %}
+{% from "macros.html" import live_bar with context %}{{ live_bar() }}
 <section class="home-hero">
   <div class="hero-text">
     <h1>Ko je u Skupštini glasao za, a ko protiv?</h1>

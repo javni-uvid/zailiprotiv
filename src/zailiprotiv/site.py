@@ -419,6 +419,17 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env.globals["notes_url"] = settings.get("notes_url", "")  # where the notes' pages (and their search index) are
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
+    # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
+    # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
+    from zailiprotiv.config import LIVE, NEWEST
+    common["live"], common["live_url"] = [], LIVE
+    try:
+        listed = json.loads((root / NEWEST / "index.json").read_text(encoding="utf-8"))["sittings"].values()
+    except (OSError, ValueError, KeyError):
+        listed = []
+    for s in listed:
+        if "(у току)" in s["title"] and "седниц" in s["title"].lower():
+            common["live"].append(latin(s["title"].replace("(у току)", "").strip()))
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
@@ -851,8 +862,15 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
     from zailiprotiv import pages_lists
+    recordings = {}  # the plenary recordings by day (videos.py), every convocation's
+    for p_ in sorted(root.glob("*/videos.json")):
+        try:
+            recordings.update(json.loads(p_.read_text(encoding="utf-8")).get("days") or {})
+        except ValueError:
+            pass
     by_area = pages_lists.render(area_slug=area_slug, common=common, conv_list=conv_list, env=env,
-        items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp)
+        items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp,
+        recordings=recordings)
     from zailiprotiv import downloads
     downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
     from zailiprotiv import feeds

@@ -65,6 +65,27 @@ def index(args) -> int:
     return 0
 
 
+def videos_cmd(args) -> int:
+    """The convocation's plenary recordings by day, from the broadcaster's archive page → data/<N>/videos.json."""
+    from zailiprotiv import videos
+    page = CONVOCATIONS[CONVOCATION].get("videos")
+    if not page:
+        print("no archive of recordings for this convocation")
+        return 0
+    found = videos.parse(skupstina.fetch(page).decode("utf-8", errors="replace"))
+    days = videos.by_day(found)
+    out = DATA / "videos.json"
+    if out.exists() and len(days) < 0.8 * len(json.loads(out.read_text(encoding="utf-8")).get("days") or {}):
+        print(f"::warning::videos: the archive gives {len(days)} days, fewer than the file; kept the file")
+        return 0
+    store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": page,
+             "days": days}
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(jsonfile.dumps(store, "days"), encoding="utf-8")
+    print(f"recordings: {len(found)} on {len(days)} days")
+    return 0
+
+
 def in_procedure(args) -> int:
     """The bills waiting in the Assembly now, from its page "Zakoni u proceduri", into data/<N>/procedure.json, which
     also remembers the bills no longer listed and when each was first and last seen."""
@@ -1175,6 +1196,8 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("notes-check", help="do the notes' pages answer at their public address?")
     p.add_argument("--url", default="https://beleske.zailiprotiv.rs/")
     p.set_defaults(run=notes_check_cmd)
+    p = commands.add_parser("videos", help="the plenary recordings by day, from the broadcaster's archive → videos.json")
+    p.set_defaults(run=videos_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")
