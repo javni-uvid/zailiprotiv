@@ -1,7 +1,10 @@
 {
  "bill": "https://www.parlament.gov.rs/upload/archive/files/lat/pdf/predlozi_zakona/340-13Lat.pdf",
  "sha256": "95fd880db3db4b3072d468e6eaf53a05f23be8d0938e93c5766d6f9b9be6a2cc",
- "reader": 2,
- "sections": {},
- "articles": []
+ "reader": 4,
+ "sections": {
+  "reasons": "1. Ustavni osnov za donošenje zakona\nUstavni osnov za donošenje Zakona o potvrđivanju Sporazuma između Vlade\nRepublike Srbije i Vlade Republike Bugarske o uzajamnoj zaštiti i razmeni tajnih\npodataka sadržan je u odredbi člana 99. stav 1. tačka 4. Ustava Republike Srbije\nkoja propisuje da Narodna skupština potvrđuje međunarodne ugovore kada je\nzakonom predviđena obaveza njihovog potvrđivanja.\n2. Razlozi za potvrđivanje Sporazuma\nDonošenjem Zakona o potvrđivanju Sporazuma Republika Srbija pokazuje\nspremnost da bilateralnu saradnju sa Republikom Bugarskom unapredi i u sektoru\nbezbednosti uz međusobno definisan način razmene i zaštite tajnih podataka.\nDonošenjem Zakona o potvrđivanju stvaraju se uslovi za intenzivniju saradnju\nsa jednom od država koja pripada regionu jugoistočne Evrope i koja je članica\nEvropske unije i NATO. U Strategiji nacionalne bezbednosti Republika Srbija se\nopredelila da unapređuje saradnju i uspostavlja kvalitetnije i sadržajnije odnose sa\ndržavama u regionu Zapadnog Balkana i izrazila uverenje da je nacionalna\nbezbednost usko povezana sa bezbednošću regiona jugoistočne Evrope i kontinenta\nu celini. Istovremeno se opredelila da unapređuje odnose sa članicama Evropske\nunije, kao i članicama i partnerima NATO.\nTakođe, stvaraju se uslovi zajedničkog delovanja protiv izazova, rizika i pretnji\nkoji se odnose ne samo na Republiku Srbiju već predstavljaju globalne izazove,\nrizike i pretnje.\nIsto tako otvaraju se mogućnosti za regionalnu saradnju u oblastima\nzajedničke obuke i angažovanja elemenata sistema bezbednosti u multinacionalnim\noperacijama, upravljanju krizama i upravljanju granicom, suprotstavljanju terorizmu,\norganizovanom kriminalu i korupciji, ilegalnoj migraciji i trgovini ljudima, u zaštiti\nživotne sredine, prirodnih resursa i zdravlja, za šta se Republika Srbija opredelila u\nStrategiji nacionalne bezbednosti.\n3. Ocena potrebnih finansijskih sredstava\nZa ispunjenje potrebnih bezbednosno-tehničkih standarda za primenu ovog\nzakona biće obezbeđena sredstva iz budžeta resornih ministarstava i drugih državnih\norgana."
+ },
+ "articles": [],
+ "ocr": false
 }
