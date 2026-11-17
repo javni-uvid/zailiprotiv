@@ -252,10 +252,10 @@ the Fourteenth's end; both read the same listings and keep only their own dates.
 convocation with a law that has its final vote, so the Fifteenth becomes the current one by itself with its first
 law, and the site never opens on a convocation with no MPs (17 Nov). Until then **votes** reads `config.NEWEST`
 beside the current one each hour (no bills in procedure, no notes), and the "no roll calls" check applies to the
-current one only. The Fourteenth's waiting bills (still listed by the Assembly on 17 Nov) were copied with their files
-into `data/15/`, so they are not read and summarised again; if the Assembly drops them, `procedure` marks them no
-longer listed. Left to do: when the Assembly moves the Fourteenth to its archive, give it its "archive" and archived
-"laws" pages; close issue #7 once the Fifteenth is current.
+current one only. On 17 Nov the Assembly's listings of sittings and laws and its page of bills in procedure began
+showing the Fifteenth only (the Fourteenth's 91 waiting bills are no longer listed); the files keep the Fourteenth's
+data. Left to do: give the Fourteenth its "archive" and archived "laws" pages once the Assembly publishes them; close
+issue #7 once the Fifteenth is current.
 
 ## Open questions
 
