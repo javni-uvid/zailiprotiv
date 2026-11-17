@@ -274,11 +274,11 @@
   },
   "summaries-12": {
    "claude-haiku-5-5": {
-    "cache_read": 566,
+    "cache_read": 9056,
     "cache_written": 566,
-    "input": 23061,
-    "output": 5223,
-    "replies": 2
+    "input": 61135,
+    "output": 32492,
+    "replies": 17
    },
    "claude-sonnet-5-5": {
     "cache_read": 566,

@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "4cd6e3fe000b12930a7c5366e70185220c4f12fc1038a6d75aca1222a3a032dc",
+ "summary": {
+  "ukratko": "Predlagač navodi da zakon potvrđuje Izmenu Međunarodne konvencije o Harmonizovanom sistemu naziva i šифarskih oznaka robe, kojom se menja član 8. Konvencije o postupku za razmatranje predloga za izmenu Konvencije.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kome Narodna skupština potvrđuje međunarodne ugovore kada je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Republika Srbija je strana ugovornica HS Konvencije i obavezala se da će nomenklatura carinske tarife i statistička nomenklatura biti usklađene sa Harmonizovanim sistemom.",
+   "Depozitar Konvencije (Svetska carinska organizacija) dopisom od 5. februara 2020. godine obavestio je strane ugovornice da je prihvaćena Preporuka Saveta za izmenu člana 8. Konvencije, a prigovora na Preporuku u roku od šest meseci nije bilo.",
+   "Cilj izmene je olakšavanje postupka ponovnog razmatranja pitanja i ograničavanje broja prigovora strana ugovornica na najviše dva, kako bi se izbeglo odugovlačenje donošenja odluka o jednoobraznoj praksi svrstavanja robe."
+  ],
+  "promene": [
+   "Potvrđuje se Izmena Međunarodne konvencije o Harmonizovanom sistemu naziva i šifarskih oznaka robe, kojom se menja član 8. Konvencije.",
+   "Ograničava se broj predloga (rezervacija) za ponovno razmatranje na dva, i to za komentar, odluke o svrstavanju, druga mišljenja za tumačenje Harmonizovanog sistema i preporuke za jednoobraznost u tumačenju i primeni Harmonizovanog sistema."
+  ],
+  "sredstva": "Predlagač navodi da izvršavanjem Izmene Konvencije ne nastaju nove finansijske obaveze za Republiku Srbiju i da za njeno izvršavanje nisu potrebna sredstva iz budžeta Republike Srbije."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Izmene Međunarodne konvencije o Harmonizovanom sistemu naziva i šifarskih oznaka robe",
+ "depth": "standard"
+}

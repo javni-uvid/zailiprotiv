@@ -1,0 +1,20 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d4eed2356708ad83aaf73e895bef768a3b4278f8ecb57492d52543078f1482bd",
+ "summary": {
+  "ukratko": "Predlagač navodi da se ovim zakonom potvrđuje Sporazum између Владе Републике Србије и Владе Савезне Републике Немачке о ратним меморијалима, сачињен у Београду 28. новембра 2018. године.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kojem Narodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Prema Zakonu o ministarstvima, oblast negovanja tradicija oslobodilačkih ratova Srbije, zaštite spomenika i spomen-obeležja, vojnih grobova i grobalja boraca u zemlji i inostranstvu spada u nadležnost Ministarstva za rad, zapošljavanje, boračka i socijalna pitanja.",
+   "Predlagač navodi interes da se pitanja zaštite ratnih grobova i vojnih memorijala urede na sveobuhvatan način.",
+   "Po Zakonu o zaključivanju i izvršavanju međunarodnih ugovora, nakon završenih pregovora podnosi se izveštaj Vladi o toku pregovora i usaglašen tekst sporazuma."
+  ],
+  "promene": [
+   "Zakonom se potvrđuje Sporazum између Владе Републике Србије и Владе Савезне Републике Немачке о ратним меморијалима."
+  ],
+  "sredstva": "Predlagač navodi da za 2021. godinu i naredne dve godine nisu potrebna sredstva iz budžeta Republike Srbije za realizaciju sporazuma, jer nisu planirane aktivnosti koje iziskuju troškove, a ako se pojavi potreba, sredstva bi se obezbedila iz budžeta za 2021. godinu u okviru razdela 30 (Ministarstvo za rad, zapošljavanje, boračka i socijalna pitanja), programa 0904 i ekonomske klasifikacije 424, dok će se za 2022. i 2023. godinu sredstva odrediti u okviru limita koje odredi Ministarstvo finansija."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Savezne Republike Nemačke o ratnim memorijalima",
+ "depth": "standard"
+}

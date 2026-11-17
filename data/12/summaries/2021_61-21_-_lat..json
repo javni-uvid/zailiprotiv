@@ -1,0 +1,22 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "35cd5debf062a5d6785ac6c78be7afd3ddf86db2cebdc637bec64feb15ee9715",
+ "summary": {
+  "ukratko": "Zakonom se potvrđuje Sporazum između Vlade Republike Srbije i Vlade Kraljevine Lesoto o saradnji u oblasti odbrane, potpisan u Beogradu 21. oktobra 2019. godine. Према образложењу предлагача, Споразум утврђује основне циљеве и принципе на којима ће се заснивати сарадња у области одбране између две владе, у циљу доприноса развоју укупних двострани односа.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kojem Narodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Vlada je zaključkom od 5. septembra 2019. godine utvrdila osnovu za zaključivanje sporazuma, usvojila tekst i ovlastila ministra odbrane za potpisivanje.",
+   "Prvenstveni cilj je uspostavljanje pravnog okvira za vojnu saradnju u oblasti odbrambene i bezbednosne politike, vojnoekonomske i naučnotehničke saradnje, vojnog obrazovanja i obuke, vojne medicine i veterine."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum između Vlade Republike Srbije i Vlade Kraljevine Lesoto o saradnji u oblasti odbrane.",
+   "Saradnja će se sprovoditi zvaničnim posetama, programima obuke i obrazovanja, učešćem na vežbama, konferencijama i seminarima, kao i na druge načine o kojima se strane dogovore.",
+   "Sporazum sadrži odredbe o razmeni podataka, troškovima, zdravstvenoj zaštiti i izmenama i dopunama.",
+   "Sporazum predviđa način rešavanja sporova, otkazivanja i stupanja na snagu."
+  ],
+  "sredstva": "Predlagač navodi da za realizaciju zakona u 2021. godini nisu potrebna finansijska sredstva, a da će sredstva za narednih godina zavisiti od stepena i načina realizacije i biti planirana u okviru limita koji utvrdi Ministarstvo finansija za razdeo Ministarstva odbrane."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Kraljevine Lesoto o saradnji u oblasti odbrane",
+ "depth": "standard"
+}
