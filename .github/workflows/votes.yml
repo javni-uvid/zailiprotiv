@@ -58,12 +58,12 @@ jobs:
           c="--convocation $conv"
           uv run zailiprotiv $c index | tee index.log
           uv run zailiprotiv $c laws
+          uv run zailiprotiv $c videos || true  # the sittings' recordings (videos.py); a broadcaster's hiccup stops nothing; before the roll calls, which may fail
           # The bills in procedure are the current convocation's only.
           if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
           uv run zailiprotiv $c votes ${IN_AGAIN_FLAG} --reread "${IN_REREAD}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
-          uv run zailiprotiv $c videos || true  # the sittings' recordings (videos.py); a broadcaster's hiccup stops nothing
           # A newer convocation with no law yet is read beside the current one; with its first law it becomes the
           # current one (config.CURRENT).
           newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
