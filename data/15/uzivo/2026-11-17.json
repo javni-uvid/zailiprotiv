@@ -1,0 +1,33 @@
+{
+ "dan": "2026-11-17",
+ "napomena": "Pročitano automatski iz potpisa u prenosu Skupštine; može da sadrži greške. Van 'pokriveno' servis prenos nije video.",
+ "pokriveno": [],
+ "govori": [
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "SNS",
+   "uloga": "",
+   "od": 1794933163,
+   "do": 1794933182,
+   "okvira": 2,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "SNS",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1794933508,
+   "do": 1794934641,
+   "okvira": 151,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null
+  }
+ ]
+}
