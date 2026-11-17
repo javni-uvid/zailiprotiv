@@ -673,6 +673,7 @@ td.lean { white-space: nowrap; }
 .notes .turn h2 .anchor { text-decoration: none; color: inherit; } .notes .turn h2 a[href^="https"] { text-decoration: underline; }
 .notes .turn p { margin: 0 0 .6rem; line-height: 1.55; }
 .notes .turn-chair { color: var(--muted); }
+.notes .turn p.clip { margin: -.2rem 0 .5rem; font-size: .88rem; } .notes .turn p.clip a { color: var(--muted); }
 .notes .turn:target, .notes .turn:has(h2:target) { background: var(--za-soft); box-shadow: -1rem 0 0 var(--za-soft), 1rem 0 0 var(--za-soft); }
 .notes .turn { border-width: 0 0 1px; background: none; }
 /* Varnice, all convocations together: one row to a convocation. */

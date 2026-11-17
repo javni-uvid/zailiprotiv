@@ -165,18 +165,35 @@ WORDS = {
                     "Merodavan je izvorni fajl.",
             "lead": "Beleške sednica koje smo pročitali, govor po govor. Svaki govor ima svoju adresu.",
             "about": "Stenografske beleške Narodne skupštine Srbije, od reči do reči",
-            "prov": "privremene beleške", "prev": "Prethodni deo", "next": "Sledeći deo", "conv": "saziv"},
+            "prov": "privremene beleške", "prev": "Prethodni deo", "next": "Sledeći deo", "conv": "saziv",
+            "clip": "snimak",
+            "clip_how": "Mesto u snimku prenosa Skupštine, nađeno automatski po redosledu govornika iz potpisa u "
+                        "prenosu; može da promaši."},
     "cir": {"lang": "sr-Cyrl", "notes": "Стенографске белешке", "other": "Latinica", "other_lang": "sr-Latn",
             "chair": "Председавајући", "source": "Изворни фајл Скупштине за овај дан", "day": "дан", "part": "део",
             "foot": "Стенографске белешке Народне скупштине Републике Србије, од речи до речи, како их Скупштина "
                     "објављује. Привремене белешке Скупштина касније замењује коначним. Меродаван је изворни фајл.",
             "lead": "Белешке седница које смо прочитали, говор по говор. Сваки говор има своју адресу.",
             "about": "Стенографске белешке Народне скупштине Србије, од речи до речи",
-            "prov": "привремене белешке", "prev": "Претходни део", "next": "Следећи део", "conv": "сазив"},
+            "prov": "привремене белешке", "prev": "Претходни део", "next": "Следећи део", "conv": "сазив",
+            "clip": "снимак",
+            "clip_how": "Место у снимку преноса Скупштине, нађено аутоматски по редоследу говорника из потписа у "
+                        "преносу; може да промаши."},
 }
 
 
-def _speech(k: str, s: dict, who: dict | None, w: dict, script: str) -> str:
+def _clip(at: dict | None, w: dict) -> str:
+    """A link to where the speech begins in the recording of the broadcast, found by the live page's record."""
+    if not at:
+        return ""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    when = datetime.fromtimestamp(at["at"], ZoneInfo("Europe/Belgrade")).strftime("%H:%M")
+    url = f"https://www.youtube.com/watch?v={urllib.parse.quote(at['video'])}&t={int(at['t'])}s"
+    return f'<p class="clip"><a href="{html.escape(url)}" title="{html.escape(w["clip_how"])}">▶ {w["clip"]}, {when}</a></p>'
+
+
+def _speech(k: str, s: dict, who: dict | None, w: dict, script: str, at: dict | None = None) -> str:
     show = (lambda t: latin(t)) if script == "lat" else (lambda t: t)
     name = show(s["speaker"]).title() if not s.get("chair") else show(s["speaker"]).capitalize()
     if who and who.get("slug"):
@@ -185,7 +202,7 @@ def _speech(k: str, s: dict, who: dict | None, w: dict, script: str) -> str:
         name = html.escape(name)
     paras = "".join(f"<p>{html.escape(show(p))}</p>" for p in _MARK.sub("", s["text"]).split("\n") if p.strip())
     return (f'<article class="turn{" turn-chair" if s.get("chair") else ""}" id="g{k}">'
-            f'<h2 id="s{k}"><a class="anchor" href="#g{k}">{name}</a></h2>{paras}</article>')
+            f'<h2 id="s{k}"><a class="anchor" href="#g{k}">{name}</a></h2>{_clip(at, w)}{paras}</article>')
 
 
 def build(root: Path, out: Path) -> dict[str, int]:
@@ -204,13 +221,19 @@ def build(root: Path, out: Path) -> dict[str, int]:
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     pages = speeches = 0
     listing: dict[str, list] = {}
+    from zailiprotiv import uzivo
+    settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
     for conv, path in convs:
+        # The live page's record of who spoke when, by day: links to the recording's minute, once the maintainer has
+        # checked a few by hand and set `recording_links` (data/settings.json).
+        records = uzivo.load(path) if settings.get("recording_links") else {}
         stores = site.load_transcripts(path)
         debates_.mend(stores, site.load(path)[1])  # the speakers' names mistyped in the notes, set right
         for url, notes in stores.items():
             if not notes.get("speeches"):
                 continue
             where = layout(conv, notes)
+            clips = uzivo.minutes(notes, records) if records else {}
             whole = debates_.whole_names(notes["speeches"].values())  # a surname alone → the one such speaker of the sitting
             days = {d["day"]: d for d in notes["days"]}
             title = re.sub(r"^СТЕНОГРАФСКЕ БЕЛЕШКЕ\s*-\s*", "", notes["days"][0]["title"]).split(" - ")[0] if notes["days"] else url
@@ -246,7 +269,8 @@ def build(root: Path, out: Path) -> dict[str, int]:
                         if s["speaker"] in whole:
                             s = {**s, "speaker": whole[s["speaker"]]}
                         key = None if s.get("chair") else loose.get(debates_.loose(mps.key(s["speaker"])))
-                        body.append(_speech(k, s, {"slug": people[key].slug, "name": people[key].name} if key else None, w, script))
+                        body.append(_speech(k, s, {"slug": people[key].slug, "name": people[key].name} if key else None, w, script,
+                                            clips.get(k)))
                     body.append(pager)
                     body.append("</div>")
                     target = out / ("" if script == "lat" else "cir") / page

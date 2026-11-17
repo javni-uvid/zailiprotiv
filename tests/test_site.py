@@ -454,3 +454,26 @@ def test_the_live_bar_links_the_live_page_while_a_sitting_lasts(tmp_path):
     assert '<a href="https://mikrofon.example/" data-cir-href="https://mikrofon.example/cir/">Ko sada govori</a>' in home
     assert 'href="https://mikrofon.example/cir/"' in twin and "Ко сада говори" in twin
     assert site.check(out) == []
+
+
+def test_a_speech_in_the_notes_links_to_its_minute_in_the_recording(tmp_path):
+    from zailiprotiv import notes_site
+    root, out = data(tmp_path), tmp_path / "_beleske"
+    t = json.loads((root / "transcripts" / "1.json").read_text())
+    t["days"][0]["listed_date"] = "2026-07-10"
+    (root / "transcripts" / "1.json").write_text(json.dumps(t))
+    notes_site.build(root, out)
+    page = next(out.glob("*/*/dan-1.html")).read_text()
+    assert "▶ snimak" not in page                       # no record of the day: no link, no guess
+    (root / "uzivo").mkdir()
+    (root / "uzivo" / "2026-07-10.json").write_text(json.dumps({"dan": "2026-07-10", "pokriveno": [], "govori": [
+        {"ime": "Abramović Nenad", "od": 1783670000, "do": 1783670300, "okvira": 9, "video": "vid", "sq_od": 241,
+         "sq_do": 300, "segment": 5.0}]}))
+    notes_site.build(root, out)
+    assert "▶ snimak" not in next(out.glob("*/*/dan-1.html")).read_text()  # not until the links are switched on
+    (root / "settings.json").write_text(json.dumps({"recording_links": True}))
+    notes_site.build(root, out)
+    page = next(out.glob("*/*/dan-1.html")).read_text()
+    assert 'href="https://www.youtube.com/watch?v=vid&amp;t=1200s"' in page and "▶ snimak, " in page
+    assert page.count("▶ snimak") == 1                  # Abramović's speech only; the minister's is not in the record
+    assert "▶ снимак" in next(out.glob("cir/*/*/dan-1.html")).read_text()

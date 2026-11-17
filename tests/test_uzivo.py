@@ -28,3 +28,22 @@ def test_records_are_kept_by_convocation_and_the_recent_ones_taken_again(tmp_pat
 def test_a_day_belongs_to_the_convocation_of_its_dates():
     assert uzivo.convocation("2026-11-17") == "15" and uzivo.convocation("2026-11-16") == "14"
     assert uzivo.convocation("2001-01-01") is None
+
+
+def test_speeches_are_lined_up_with_the_record_by_the_order_of_names():
+    say = lambda who, day=1, chair=False: {"speaker": who, "day": day, "chair": chair, "text": "…"}
+    notes = {"days": [{"day": 1, "listed_date": "2026-11-17"}, {"day": 2, "listed_date": "2026-11-18"}],
+             "speeches": {"00": say("ПРЕДСЕДНИК", chair=True), "01": say("ПЕТАР ПЕТРОВИЋ"),
+                          "02": say("ПРЕДСЕДНИК", chair=True), "03": say("ПЕТАР ПЕТРОВИЋ"),  # his again: one run
+                          "04": say("МАРКО ЈОВАНОВИЋ"), "05": say("НИНА НИКОЛИЋ"), "06": say("ЛАЗАР ЛАЗИЋ"),
+                          "07": say("МАРКО ЈОВАНОВИЋ", day=2)}}
+    turn = lambda name, sq, n=3: {"ime": name, "od": 1794920000 + sq * 5, "okvira": n, "video": "v1", "sq_od": sq,
+                                  "segment": 5.0}
+    rec = {"dan": "2026-11-17", "govori": [
+        turn("Petrović Petar", 100), turn("Petrović Petar", 130),     # one run, as in the notes
+        turn("Jovanović Marko", 200), turn("Šum Neki", 250, n=1),      # read in one frame: left out
+        turn("Lazić Lazar", 300)]}                                       # Nina's turn was in a gap
+    got = uzivo.minutes(notes, {"2026-11-17": rec})
+    assert got["01"] == {"video": "v1", "t": 495, "at": 1794920500}     # (100 - 1) segments of 5 s
+    assert set(got) == {"01", "04", "06"}                               # no guess for Nina, none for day 2
+    assert "03" not in got                                              # within Petar's turn

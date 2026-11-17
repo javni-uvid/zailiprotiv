@@ -311,6 +311,13 @@ its minute.
   chain, as they change every hour of a sitting. Planned on them, in this order (the maintainer): each speech in
   the notes linked to its minute in the recording; speaking time by MP and group; the records as downloads. Outside
   `pokriveno` there is no record, and whatever uses them says so.
+- **A speech's minute in the recording** (17 Nov 2026, `uzivo.minutes`, `notes_site._clip`): a day's speeches (the
+  chair's left out, one speaker's in a row as one) are lined up with the day's turns (named in two frames or more)
+  by the order of the speakers' names, difflib's matching blocks; a speech gets its turn's place, the first of a
+  run only, and where the record has a gap or the order disagrees it gets nothing. The link is the YouTube video at
+  (first segment − 1) × segment length, labelled as found automatically. **Off until checked:** the notes show the
+  links only with `recording_links` in `data/settings.json`, to be set once a few links from a real sitting have
+  been opened by hand and land on the speaker (that a live video's time is its segment number × length is assumed).
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

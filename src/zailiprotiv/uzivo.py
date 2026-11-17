@@ -48,3 +48,67 @@ def pull(root: Path, base: str, today: str | None = None, get=_get) -> list[str]
         path.write_text(text, encoding="utf-8")
         written.append(day)
     return written
+
+
+# --- the notes' speeches matched to the record ---------------------------------------------------------------------
+
+def _key(name: str) -> str:
+    """A name in either script, any order, without marks → its words, plain and sorted."""
+    import re
+    import unicodedata
+    from zailiprotiv.translit import latin
+    text = latin(name).lower().replace("đ", "dj").replace("-", " ")
+    text = "".join(ch for ch in unicodedata.normalize("NFKD", text) if not unicodedata.combining(ch))
+    return " ".join(sorted(w for w in re.split(r"[^a-z]+", text) if len(w) >= 2))
+
+
+LEAD = 1  # segments before the first frame that named the speaker: the caption comes up as they begin
+
+
+def minutes(notes: dict, records: dict[str, dict]) -> dict[str, dict]:
+    """Where each speech of a sitting's notes begins in the broadcast, from the live page's record of its day:
+    {speech key: {"video", "t" (seconds into the video), "at" (time of day, unix)}}.
+
+    The same rule for every speaker. A day's speeches, the chair's left out and one speaker's in a row taken as one,
+    are lined up with the day's turns (those named in two frames or more, the same way taken as one) by the order of
+    the speakers' names (difflib's matching blocks: the longest runs in the same order first); a speech gets the
+    place of the turn it lines up with, and only the first of a speaker's speeches in a row gets one (the rest are
+    within the turn). Where the record has a gap, or the order disagrees, a speech gets nothing rather than a guess."""
+    import difflib
+    out: dict[str, dict] = {}
+    by_day: dict[int, list[str]] = {}
+    for k in sorted(notes.get("speeches", {})):
+        by_day.setdefault(notes["speeches"][k]["day"], []).append(k)
+    dates = {d["day"]: d.get("listed_date") for d in notes.get("days", [])}
+    for day, keys in by_day.items():
+        rec = records.get(dates.get(day) or "")
+        if not rec:
+            continue
+        said: list[tuple[str, str]] = []  # (name key, first speech key) for each run of one speaker
+        for k in keys:
+            s = notes["speeches"][k]
+            if s.get("chair"):
+                continue
+            nk = _key(s["speaker"])
+            if not said or said[-1][0] != nk:
+                said.append((nk, k))
+        turns: list[tuple[str, dict]] = []
+        for t in rec.get("govori", []):
+            if t.get("okvira", 0) < 2 or t.get("sq_od") is None or not t.get("video"):
+                continue
+            tk = _key(t["ime"])
+            if not turns or turns[-1][0] != tk:
+                turns.append((tk, t))
+        match = difflib.SequenceMatcher(None, [a for a, _ in said], [b for b, _ in turns], autojunk=False)
+        for block in match.get_matching_blocks():
+            for i in range(block.size):
+                t = turns[block.b + i][1]
+                out[said[block.a + i][1]] = {"video": t["video"], "at": t["od"],
+                                             "t": max(0, int((t["sq_od"] - LEAD) * (t.get("segment") or 5)))}
+    return out
+
+
+def load(conv_dir: Path) -> dict[str, dict]:
+    """A convocation's day records: {date: record}."""
+    folder = conv_dir / "uzivo"
+    return {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in sorted(folder.glob("*.json"))} if folder.is_dir() else {}
