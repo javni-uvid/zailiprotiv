@@ -16,11 +16,19 @@ from pathlib import Path
 
 HOST = "zailiprotiv.rs"
 MAIN = re.compile(r"<main\b.*?</main>", re.S)
+# The pictures of a page, for Google Images (image sitemap): its own share picture and an MP's portrait. The site's
+# general picture, on most pages, is left out.
+OG = re.compile(r'<meta property="og:image" content="([^"]+)"')
+PORTRAIT = re.compile(r'<img class="mp-photo" src="([^"]+)"')
 VERSION = re.compile(r"\?v=[0-9a-f]+")
+
+
+IMAGES: dict[str, list[str]] = {}  # address → its pictures, filled by pages()
 
 
 def pages(site: Path) -> dict[str, str]:
     """Every page in the sitemap, by its address, with a hash of its main text."""
+    from urllib.parse import urljoin
     out = {}
     for url in re.findall(r"<loc>([^<]+)</loc>", (site / "sitemap.xml").read_text(encoding="utf-8")):
         path = url.split(HOST + "/", 1)[1]
@@ -29,6 +37,10 @@ def pages(site: Path) -> dict[str, str]:
             text = f.read_text(encoding="utf-8")
             m = MAIN.search(text)
             out[url] = hashlib.sha256(VERSION.sub("", m.group(0) if m else text).encode()).hexdigest()[:16]
+            pics = [x for x in OG.findall(text) if not x.endswith("/za-ili-protiv.png")]
+            pics += [urljoin(url, x) for x in PORTRAIT.findall(text)]
+            if pics:
+                IMAGES[url] = pics
     return out
 
 
@@ -44,9 +56,17 @@ def main():
         kept = {u: [h, today if u in fresh or not old.get(u, [0, 0])[1] else old[u][1]] for u, h in now.items()}
         # The sitemap says when each page last changed (Google and Bing use it when it is right).
         sm = site / "sitemap.xml"
-        sm.write_text(re.sub(r"<url><loc>([^<]+)</loc></url>",
-                             lambda m: f"<url><loc>{m.group(1)}</loc><lastmod>{kept[m.group(1)][1]}</lastmod></url>" if m.group(1) in kept else m.group(0),
-                             sm.read_text(encoding="utf-8")), encoding="utf-8")
+        def entry(m):
+            u = m.group(1)
+            if u not in kept:
+                return m.group(0)
+            pics = "".join(f"<image:image><image:loc>{x}</image:loc></image:image>" for x in IMAGES.get(u, []))
+            return f"<url><loc>{u}</loc><lastmod>{kept[u][1]}</lastmod>{pics}</url>"
+        text = re.sub(r"<url><loc>([^<]+)</loc></url>", entry, sm.read_text(encoding="utf-8"))
+        text = text.replace('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+                            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+                            'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">', 1)
+        sm.write_text(text, encoding="utf-8")
         listing.write_text("\n".join(changed) + ("\n" if changed else ""), encoding="utf-8")
         store.parent.mkdir(parents=True, exist_ok=True)
         store.write_text(json.dumps(kept, separators=(",", ":")), encoding="utf-8")
