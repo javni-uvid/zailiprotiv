@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "fd5fde732552c31cb12916a481ff9c873eb989e4a5ab09ea31fa6eafe8ab682b",
+ "summary": {
+  "ukratko": "Законом се потврђује Споразум између Владе Републике Србије и Владе Руске Федерације о војно-техничкој сарадњи, којим се опредељују основни циљеви и принципи те сарадње. Према предлагачу, Споразум треба да послужи развоју целокупних билатералних односа две државе.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kojem Narodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Sporazum opredeljuje osnovne ciljeve i principe na kojima će se zasnivati vojno-tehnička saradnja između vlada dve države, odnosno njihovih ovlašćenih organa.",
+   "Prvenstveni cilj je uspostavljanje pravnog okvira koji omogućava saradnju strana i njihovih ovlašćenih organa u utvrđenim oblastima.",
+   "Cilj je doprinos razvoju celokupnih bilateralnih odnosa dve države."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum između Vlade Republike Srbije i Vlade Ruske Federacije o vojno-tehničkoj saradnji.",
+   "Uspostavlja se pravni okvir za isporuku naoružanja i vojne tehnike.",
+   "Uređuje se remont i modernizacija robe vojne namene.",
+   "Uvodi se saradnja tokom projektovanja i proizvodnje robe vojne namene, razmena stručnjaka i obuka kadrova.",
+   "Obuhvaćene su i druge oblasti vojno-tehničke saradnje o kojima se strane dogovore."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење закона нису потребна додатна финансијска средства, јер су средства потребна за спровођење Споразума предвиђена финансијским планом Министарства одбране."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Ruske Federacije o vojno-tehničkoj saradnji",
+ "depth": "standard"
+}

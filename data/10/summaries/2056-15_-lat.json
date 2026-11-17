@@ -1,0 +1,23 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "c77b260e0c50b3ea3d42c562801d742a1c4ba8e440a135aeeca31bfe09f79b2f",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum o saradnji u oblasti odbrane između Vlade Republike Srbije, koju predstavlja Ministarstvo odbrane, i Vlade Republike Mjanmarske Unije, koju predstavlja Ministarstvo odbrane. Prema obrazloženju, potvrđivanje se vrši na osnovu člana 99. stav 1. tačka 4. Ustava Republike Srbije.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava, prema kojem Narodna skupština potvrđuje međunarodne ugovore kad je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Diplomatski odnosi sa Republikom Mjanmarskom Unijom uspostavljeni su 1950. godine, a privredna i vojna saradnja bila je razvijena do krize na području bivše SFRJ i uvođenja sankcija od strane zapadnih zemalja zbog vladavine vojne hunte.",
+   "Nakon demokratskih reformi u Mjanmaru stvoreni su uslovi za obnavljanje kontakata i intenziviranje saradnje, posebno nakon dopunskih parlamentarnih izbora u aprilu 2012. godine.",
+   "Mjanmarska strana iskazala je interesovanje za vojno-obrazovnu i vojno-ekonomsku saradnju, što se, prema predlagaču, poklapa sa interesima Republike Srbije."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum o saradnji u oblasti odbrane između Vlade Republike Srbije i Vlade Republike Mjanmarske Unije.",
+   "Prema obrazloženju, nakon potpisivanja sporazuma saradnja sa Republikom Mjanmarskom Unijom može se razvijati u više pravaca.",
+   "Jedan od pravaca je vojno-obrazovna saradnja kroz različite oblike kurseva i usavršavanja u oblastima bilateralne vojne saradnje.",
+   "Drugi pravac je različiti oblici vojno-ekonomske saradnje."
+  ],
+  "sredstva": "Predlagač navodi da u slučaju početka primene zakona u 2015. godini nisu potrebna finansijska sredstva, dok će se sredstva za naredne godine, u zavisnosti od stepena i načina realizacije, planirati u okviru limita utvrđenog na razdelu Ministarstva odbrane."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije koju predstavlja Ministarstvo odbrane i Vlade Republike Mjanmarske Unije koju predstavlja Ministarstvo odbrane o saradnji u oblasti odbrane",
+ "depth": "standard"
+}

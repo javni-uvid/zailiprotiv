@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "97683fcad4ca03457bbb66e1b99ab2213baac237a3fa0add30bdd2527712143c",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum između država članica Severnoatlantskog ugovora i ostalih država učesnica u Partnerstvu za mir o statusu njihovih snaga, sa Dodatnim protokolom i Narednim dodatnim protokolom. Према предлагачу, sporazum uređuje privilegije, angažovanje i imunitet pripadnika snaga jedne države na teritoriji druge države članice sporazuma.",
+  "razlozi": [
+   "Ustavni osnov je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kojem Narodna skupština potvrđuje međunarodne ugovore kada je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Predlagač navodi da je saradnja Republike Srbije sa NATO pod okriljem Programa „Partnerstvo za mir” sve intenzivnija i sadržajnija.",
+   "Predlagač navodi da Republika Srbija još ne primenjuje ovaj sporazum, zbog čega se Ministarstvo odbrane i Vojska Srbije suočavaju sa poteškoćama, posebno pri angažovanju u Konceptu operativnih sposobnosti.",
+   "Predlagač navodi da se hitan postupak traži radi efikasnijeg sprovođenja procedure za učešće na međunarodnim vežbama i ispunjenja međunarodnih obaveza Republike Srbije prema Konceptu operativnih sposobnosti."
+  ],
+  "promene": [
+   "Član 1. potvrđuje sporazum potpisan u Vašingtonu 27. januara 2014. godine, sa Dodatnim protokolom i Narednim dodatnim protokolom.",
+   "Član 2. sadrži tekst sporazuma i protokola na engleskom jeziku i u prevodu na srpski jezik.",
+   "Član 3. sadrži tekst Sporazuma između strana Severnoatlantskog ugovora o statusu njihovih snaga, sačinjenog u Vašingtonu 4. aprila 1949. godine, na koji se poziva član I sporazuma.",
+   "Član 4. sadrži tekst Protokola o statusu međunarodnih vojnih štabova, sačinjenog u Parizu 28. avgusta 1952. godine, na koji se poziva Naredni dodatni protokol.",
+   "Član 5. sadrži rezerve Republike Srbije na član VII Sporazuma o statusu snaga NATO, koje se odnose na neprihvatanje jurisdikcije sudova Države pošiljaoca i na predaju pripadnika snaga uz uslov da se smrtna kazna neće izreći; član 6. uređuje stupanje zakona na snagu."
+  ],
+  "sredstva": "Predlagač navodi da u slučaju početka primene zakona u 2015. godini nisu potrebna finansijska sredstva, dok će sredstva za naredne godine zavisiti od stepena i načina realizacije i biti planirana u okviru limita utvrđenih na razdelu Ministarstva odbrane."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između država članica Severnoatlantskog ugovora i ostalih država učesnica u Partnerstvu za mir o statusu njihovih snaga, sa Dodatnim protokolom Sporazuma između država članica Severnoatlantskog ugovora i ostalih država učesnica u Partnerstvu za mir o statusu njihovih snaga i Narednim dodatnim protokolom Sporazuma između država članica Severnoatlantskog ugovora i ostalih država učesnica u Partnerstvu za mir o statusu njihovih snaga",
+ "depth": "standard"
+}

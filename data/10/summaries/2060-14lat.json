@@ -1,0 +1,21 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "d979bffc1465aa4e81041319a43e4e456881cd03bcf6c2d25faa1d2974c904eb",
+ "summary": {
+  "ukratko": "Zakon potvrđuje Sporazum između Vlade Republike Srbije i Vlade Republike Azerbejdžan o saradnji u oblasti odbrane, kojim se utvrđuju osnovni ciljevi i principi odbrambene saradnje dviju država. Према образложењу предлагача, Sporazum uspostavlja pravni okvir za saradnju nadležnih organa dviju strana.",
+  "razlozi": [
+   "Ustavni osnov za donošenje zakona je član 99. stav 1. tačka 4. Ustava Republike Srbije, prema kojem Narodna skupština potvrđuje međunarodne ugovore kada je zakonom predviđena obaveza njihovog potvrđivanja.",
+   "Sporazum opredeljuje osnovne ciljeve i principe odbrambene saradnje između vlada Republike Srbije i Republike Azerbejdžan, u cilju doprinosa razvoju bilateralnih odnosa, miru i bezbednosti u svetu.",
+   "Prvenstveni cilj je uspostavljanje pravnog okvira za saradnju u oblasti odbrambene i bezbednosne politike, vojnog obrazovanja i obuke, vojnoekonomske i naučnotehničke saradnje, vojne medicine i veterine.",
+   "Sporazum obuhvata i druge oblasti od zajedničkog interesa."
+  ],
+  "promene": [
+   "Potvrđuje se Sporazum između Vlade Republike Srbije i Vlade Republike Azerbejdžan o saradnji u oblasti odbrane.",
+   "Uspostavlja se pravni okvir za saradnju ugovornih strana i njihovih nadležnih organa u navedenim oblastima."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење закона nisu potrebna dodatna finansijska sredstva, jer su sredstva potrebna za sprovođenje Sporazuma predviđena finansijskim planom Ministarstva odbrane."
+ },
+ "usage": {},
+ "law": "Zakon o potvrđivanju Sporazuma između Vlade Republike Srbije i Vlade Republike Azerbejdžan o saradnji u oblasti odbrane",
+ "depth": "standard"
+}

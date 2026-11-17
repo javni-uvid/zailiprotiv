@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "51b31f1f06f8115af46bb96c8fc4685775758d5770b5edb18355bb35e45b6399",
+ "summary": {
+  "ukratko": "Предлагач наводи да закон уређује претварање права коришћења на građevinskom zemljištu у право својине уз накнаду, односно услове, поступак и начин плаћања накнаде за ту конверзију.",
+  "razlozi": [
+   "Предлагач наводи да је циљ окончање својинске трансформације на градском грађевинском земљишту, у складу са Уставом, који од 2006. године не признаје право коришћења као уставну категорију, и Одлуком Уставног суда („Службени гласник РС”, број 98/13).",
+   "Предлагач наводи да конверзија уз накнаду, уведена 2009. године, није заживела у пракси, па грађевинско земљиште није могло да се приведе урбанистичкој намени, а нека правна лица нису могла да прошире производне капацитете.",
+   "Према образложењу, због тога су настали дуготрајно заустављање инвестиција, правна несигурност тих лица и мањи приливи у општинске и градске буџете по основу изградње објеката.",
+   "Предлагач наводи да лица из члана 102. став 9. Закона о планирању и изгradnji nisu mogla da steknu pravo svojine bez naknade, za razliku od ostalih upisanih nosilaca prava korišćenja."
+  ],
+  "promene": [
+   "Уводи право на пretvaranje prava korišćenja u pravo svojine uz plaćanje tržišne vrednosti zemljišta, uz mogućnost umanjenja pod uslovima iz zakona i propisa o kontroli državne pomoći (čl. 2, 3, 7–9).",
+   "Visinu naknade utvrđuje organ jedinice lokalne samouprave nadležan za imovinsko-pravne odnose, po pribavljenom aktu lokalne poreske administracije (čl. 3).",
+   "Predmet konverzije je katastarska parcela; pre zahteva sprovodi se razvrgnuće sukorisničke zajednice, a određeno zemljište je isključeno iz konverzije (čl. 5, 6).",
+   "Uvodi mogućnost sticanja prava dugoročnog zakupa uz naknadu na zemljištu pre upisa prava svojine (čl. 18).",
+   "Prestaje da važi Uredba o konverziji iz 2011. godine; zakon stupa na snagu osmog dana od objavljivanja u „Службеном гласнику Републике Србије” (čl. 22, 23)."
+  ],
+  "sredstva": "Предлагач наводи да за спровођење овог закона нису потребна додатна финансијска средства из буџета."
+ },
+ "usage": {},
+ "law": "Zakon o pretvaranju prava korišćenja u pravo svojine na građevinskom zemljištu uz naknadu",
+ "depth": "standard"
+}

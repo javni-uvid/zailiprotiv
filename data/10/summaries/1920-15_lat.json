@@ -1,0 +1,24 @@
+{
+ "model": "claude-haiku-5-5",
+ "fingerprint": "73296a3ab67b3d798ac2e88e87916e870d7e8b8fa703fee08bb0c8d18234820b",
+ "summary": {
+  "ukratko": "Предлог закона уређује припремање, одобравање, избор, издавање, повлачење и праћење удžбеника, priručnika i nastavnih materijala i dodatnih nastavnih sredstava za osnovnu i srednju školu, као и дидактичkих sredstava za predškolsko vaspitanje i školu. Према образложењу, циљ је усклађивање са Законом о основама система образовања и васпитања и повећање доступности и квалитета udžbenika.",
+  "razlozi": [
+   "Према образложењу, важећи закон није усклађен са Законом о основама система образовања и васпитања у делу надлежности Завода за унапређивање образовања и васпитања за предлагање одобравања удžbenika министру.",
+   "Предлагач наводи да досадашња примена закона није довела до очекиваног повећања доступности и квалитета udžbenika, посебно за стручне школе, где су постојећи udžbenici zastareli.",
+   "Предлагач наводи да за ученике са сметњама у развоју и инвалидитетом готово не постоје нови или одговарајући udžbenici i nastavna sredstva.",
+   "Према образложењу, поједине одредбе засноване су на препорукама Агенције за борбу против корупције, Заштитника грађана и Повереника за информације од јавног значаја и заштиту података о личности."
+  ],
+  "promene": [
+   "Udžbenik i udžbenički komplet po pravilu sadrže elektronski dodatak, odobren u skladu sa ovim zakonom.",
+   "Uvodi se nova kategorija nastavnog sredstva – priručnik i nastavni materijal, za stručne predmete, osnovno obrazovanje odraslih i obrazovanje učenika sa smetnjama u razvoju i invaliditetom, uz kraći i fleksibilniji postupak odobravanja.",
+   "Uvode se pojmovi dodatnog nastavnog sredstva, nastavnog pomagala, didaktičkog sredstva i didaktičkog igrovnog sredstva, a škola Godišnjim planom rada predviđa potrebna dodatna nastavna sredstva.",
+   "Propisuje se da javni izdavač priprema rukopise udžbenika za sve predmete u osnovnoj školi, a udruženja stručnih škola i drugi navedeni subjekti mogu da se bave izdavanjem priručnika i nastavnih materijala; izuzetno, priručnik za stručne predmete može biti štampan na srpskom jeziku latiničnim pismom.",
+   "Uređuje se finansiranje i sufinansiranje udžbenika sredstvima budžeta Republike Srbije, kojim Vlada može da odlučuje za učenike iz socijalno/materijalno ugroženih porodica i za nedostajuće udžbenike."
+  ],
+  "sredstva": "Образложење не наводи износ средстава; предлагач наводи да Влада може донети одлуку о финансирању или суфинансирању набавке и доделе udžbenika, priručnika i nastavnih materijala sredstvima budžeta Republike Srbije za наведене категорије."
+ },
+ "usage": {},
+ "law": "Zakon o udžbenicima",
+ "depth": "standard"
+}

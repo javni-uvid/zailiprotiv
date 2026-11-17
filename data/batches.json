@@ -179,11 +179,11 @@
  "usage": {
   "debates-10": {
    "claude-haiku-5-5": {
-    "cache_read": 15732,
-    "cache_written": 828,
-    "input": 867698,
-    "output": 123105,
-    "replies": 20
+    "cache_read": 17388,
+    "cache_written": 2484,
+    "input": 1073116,
+    "output": 144442,
+    "replies": 24
    }
   },
   "debates-11": {
@@ -265,11 +265,11 @@
   },
   "summaries-10": {
    "claude-haiku-5-5": {
-    "cache_read": 185082,
-    "cache_written": 566,
-    "input": 1751148,
-    "output": 610179,
-    "replies": 328
+    "cache_read": 204326,
+    "cache_written": 1698,
+    "input": 1853225,
+    "output": 673628,
+    "replies": 364
    }
   },
   "summaries-12": {
