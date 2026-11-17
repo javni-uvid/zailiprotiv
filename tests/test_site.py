@@ -66,7 +66,10 @@ def test_site_builds_every_page(tmp_path):
     home = (out / "index.html").read_text()
     assert '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>' in home
     mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
-    assert "Glasovi protiv" in mp and "Glasovi za" in mp and "Po vrsti zakona" in mp
+    # The page opens with the card; the lists of every vote are on a page of their own, linked from it.
+    votes = (out / "poslanik" / "abramovic-nenad-glasovi.html").read_text()
+    assert 'id="ukratko"' in mp and 'href="abramovic-nenad-glasovi.html"' in mp and "Po vrsti zakona" not in mp
+    assert "Glasovi protiv" in votes and "Glasovi za" in votes and "Po vrsti zakona" in votes and 'href="abramovic-nenad.html"' in votes
     assert "Sa kim glasa isto" not in mp  # fewer than ten votes in common with any group
     assert (out / "kako-racunamo.html").exists() and "kako-racunamo.html#" in (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
     import xml.dom.minidom as dom
@@ -149,7 +152,7 @@ def test_site_builds_every_convocation(tmp_path):
     assert (out / "zakon" / "zakon-o-oruzju.html").exists()  # the current convocation keeps the plain address
     assert "Trinaesti saziv" in (out / "zakon" / "zakon-o-oruzju-2.html").read_text()
     assert (out / "zakoni-13.html").exists() and "zakoni-13.html" in (out / "zakoni.html").read_text()
-    mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
+    mp = (out / "poslanik" / "abramovic-nenad-glasovi.html").read_text()
     assert "zakon-o-oruzju.html" in mp and "zakon-o-oruzju-2.html" in mp
     assert "abramovic-nenad.html" in (out / "poslanici.html").read_text()  # one page of MPs per convocation
     assert "abramovic-nenad.html" in (out / "poslanici-13.html").read_text()

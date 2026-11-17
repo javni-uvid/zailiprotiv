@@ -202,9 +202,14 @@ The project's promises to its readers. Never change them without the maintainer.
   a section per figure, linked from each label: keep it in step with any change to how a figure is computed).
   Feeds: new laws, bills, per area, per MP, weeks. A law's address is its title, current convocation first, so it
   never changes when an older one is added.
-- **An MP's page:** final votes for and against, key votes (a rule: laws with a public name, then the most divided),
-  votes against the group's majority, by area and kind, presence (where the absent are listed, against the median),
-  activity on the floor, what they say, quotes from debates, who they vote with. **Speeches** (17 Nov 2026): the
+- **An MP's page:** opens with a card ("Ukratko", `mp_card.py`, 17 Nov 2026): a few facts, each one sentence with
+  its number first and a link to where it comes from (presence, votes unlike the group's majority, speeches and
+  hours at 130 words a minute, the longest speech, the busiest day, the three most frequent exchange partners,
+  measures, harsh words, the most alike other group, distinctive words); a fact the data can't support is left out,
+  not shown as zero. Then key votes (a rule: laws with a public name, then the most divided), votes against the
+  group's majority, activity on the floor, what they say, quotes from debates, who they vote with. Every vote (for
+  and against, by area and kind, by period and convocation) is on `poslanik/<slug>-glasovi` (`mp_votes.html`, the
+  lists shared through `mp_macros.html`): those lists grow with every sitting and made the page 300 KB. **Speeches** (17 Nov 2026): the
   latest six sittings on the MP's page, every one on `poslanik/<slug>-govori` (by sitting and day, each speech a
   numbered link to its page in the notes; the links are kept short in the page and made whole by `site.js`). An MP
   with no vote on any list gets `noindex` and is left out of the sitemap. Same-person spellings are joined by hand

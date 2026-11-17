@@ -516,6 +516,13 @@ td.lean { white-space: nowrap; }
 .mp-line p { margin: 0 0 .3rem; font-family: var(--serif); font-size: 1.35rem; line-height: 1.35; }
 .mp-line footer { font-size: .88rem; color: var(--muted); border: 0; padding: 0; margin: 0; }
 .mp-line { border: 0; padding: 0; }
+/* An MP's card: a few facts, each with its number first, before the lists. */
+.mp-card { margin: 1.4rem 0 1.6rem; padding: 1rem 1.2rem .6rem; border: 1px solid var(--line); border-left: 4px solid var(--fg); }
+.mp-card h2 { margin: 0 0 .6rem; font-size: 1.1rem; }
+.mp-facts { list-style: none; margin: 0 0 .6rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: .5rem 1.4rem; }
+.mp-facts li { line-height: 1.4; padding: .35rem 0; border-top: 1px solid var(--line); }
+.mp-facts b { font-family: var(--serif); font-size: 1.45rem; margin-right: .15rem; }
+.mp-facts a { white-space: nowrap; }
 
 /* A sitting's page: its most opposed law as the chamber, and what happened on the floor. */
 .sitting-lead { text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: .2rem; }

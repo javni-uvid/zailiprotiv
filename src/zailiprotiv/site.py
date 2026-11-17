@@ -660,7 +660,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     notes_pages = set(json.loads(sent.read_text(encoding="utf-8"))) if sent.exists() else set()
     exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
                                                 convs=convs, items_by_conv=items_by_conv)
-    from zailiprotiv import card
+    from zailiprotiv import card, mp_card
     import os
     cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
     cache.mkdir(parents=True, exist_ok=True)
@@ -785,17 +785,31 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         if tally:  # the picture shown when the MP's page is shared: the name and the final votes
             picture(out / "poslanik" / f"{mp.slug}.png", mp.name, "Konačna glasanja o zakonima",
                     {k: tally.get(k, 0) for k in VOTES}, (by_conv[0]["groups"] or [""])[0] if by_conv else "")
+        floor_mp = [x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, [])
+                    if x["speeches"] or x["exchanges"] or x["points"] or x["measures"] or x["measures_likely"] or x["harsh"]]
+        apart_mp = [r for r in record if r["differs"]]
+        # The day with the most speeches, among the days whose speeches are linked in the notes (the MP's card).
+        busiest = max(((d["n"], d["date"], d["first"]) for x in floor_mp for s_ in x.get("spoken", []) for d in s_["days"]
+                       if d.get("date")), key=lambda t: (t[0], t[1]), default=None)
+        card_facts = mp_card.facts(slug=mp.slug, by_conv=by_conv, floor=floor_mp, exchanges=exchanges_of.get(mp.slug, []),
+                                   apart=len(apart_mp), voted=sum(1 for r in record if r["line"] and r["vote"] in ("za", "protiv", "uzdrzan")),
+                                   busiest=busiest, words=[latin(w) for w in words.get(mp.key, [])],
+                                   day=env.filters["day"], given_first=env.filters["given_first"])
+        page_args = dict(**common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
+                         areas_table=areas_table, periods=periods, group_slug=group_slug, photo=photo_of.get(mp.key, ""),
+                         against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
+                         apart=apart_mp, root="../")
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
-            **common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table, areas_table=areas_table, periods=periods,
-            against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
-            apart=[r for r in record if r["differs"]],
-            timeline=timeline, key_votes=keys_, group_slug=group_slug, exchanges=exchanges_of.get(mp.slug, []),
+            **page_args, facts=card_facts,
+            timeline=timeline, key_votes=keys_, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
-            photo=photo_of.get(mp.key, ""),
-            floor=[x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, [])
-                   if x["speeches"] or x["exchanges"] or x["points"] or x["measures"] or x["measures_likely"] or x["harsh"]],
-            said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True),
-            root="../"), encoding="utf-8")
+            floor=floor_mp,
+            said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True)),
+            encoding="utf-8")
+        # Every vote, by period, area and kind, on a page of its own: the lists that grow with every sitting.
+        if record:
+            (out / "poslanik" / f"{mp.slug}-glasovi.html").write_text(env.get_template("mp_votes.html").render(**page_args),
+                                                                     encoding="utf-8")
         # Every speech of the MP's, sitting by sitting, on a page of its own when the MP's page shows only the latest.
         heard = [x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, []) if x.get("spoken")]
         if sum(len(x["spoken"]) for x in heard) > 6:

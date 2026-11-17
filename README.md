@@ -33,8 +33,10 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Zakoni:** laws by convocation, kind and area; bills in procedure and convened sittings. A law's page: the final
   vote by group and MP, the summary of the memorandum, the debate with verbatim quotes, the sparks in it, outside
   views, downloads, and the visitor's own vote.
-- **Poslanici:** a page per MP (votes, key votes, votes against the group, presence, activity on the floor, what
-  they say, every speech linked to its notes) and per parliamentary group; presence ranked by one rule for all.
+- **Poslanici:** a page per MP, opening with a card of facts by one rule for all (presence, votes unlike the group,
+  hours spoken, the longest speech, exchange partners, the most alike group), then key votes, votes against the
+  group, activity on the floor, what they say and every speech linked to its notes; every vote on a page of its own;
+  a page per parliamentary group; presence ranked by one rule for all.
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.

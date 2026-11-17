@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, plural, how with context %}
+{% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}, poslanik: kako glasa — Za ili Protiv{% endblock %}
 {% block description %}Kako je glasao poslanik {{ mp.name|given_first }} ({{ mp.name }}): zakoni za i protiv, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
 {% block robots %}{% if not record %}<meta name="robots" content="noindex">{% endif %}{% endblock %}{# no vote of theirs is on any list: little to find #}
@@ -8,31 +9,6 @@
 {% block share %}{% if site_url and tally %}<meta property="og:image" content="{{ site_url }}poslanik/{{ mp.slug }}.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">{% else %}{{ super() }}{% endif %}{% endblock %}
 {% block main %}
-{% macro rows(rs, show_line=false) -%}
-<ul class="rows compact">
-{% for r in rs %}
-  <li class="row">
-    <div class="row-main">
-      <a class="row-title" href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a>
-      <p class="row-meta">{{ r.it.final.when[:10]|day }}{% if show_line %} · glas: <span class="v-text-{{ r.vote }}">{{ vote_label[r.vote]|lower }}</span>, većina grupe {{ r.group }}: {{ vote_label[r.line]|lower }}{% endif %}</p>
-    </div>
-    <div class="row-vote">{{ bar(r.it.final.counts) }}<span class="row-score"><span class="t-za">{{ r.it.final.counts.za }}</span> : <span class="t-protiv">{{ r.it.final.counts.protiv }}</span></span></div>
-  </li>
-{% endfor %}
-</ul>
-{%- endmacro %}
-
-{% macro block(title, rs, empty, show_line=false, id="", more="") -%}
-<section{% if id %} id="{{ id }}"{% endif %}>
-  <h2>{{ title }} <span class="count">{{ rs|length }}</span></h2>
-  {% if rs %}
-  {{ rows(rs[:6], show_line) }}
-  {% if rs|length > 6 %}{% if more %}<p><a href="#{{ more }}">Svih {{ rs|length }} u tabeli „Svi glasovi"</a></p>{% else %}<details><summary>Još {{ rs|length - 6 }}</summary>{{ rows(rs[6:], show_line) }}</details>{% endif %}{% endif %}
-  {% else %}<p class="meta">{{ empty }}</p>{% endif %}
-  {% if show_line %}<p class="label">Glas za, protiv ili uzdržan drugačiji od onoga što je izabrala većina njegove grupe. {{ how("drugacije") }}</p>{% endif %}
-</section>
-{%- endmacro %}
-
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
 <div class="mp-hero">
 {% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% else %}<img class="mp-photo" src="../bez-slike.svg" alt="" width="150" height="200">{% endif %}
@@ -48,12 +24,19 @@
   <div class="big"><div class="t-za"><b>{{ tally.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ tally.protiv or 0 }}</b><span>protiv</span></div></div>
   {{ bar({"za": tally.za or 0, "protiv": tally.protiv or 0, "uzdrzan": tally.uzdrzan or 0, "nije_glasao": tally.nije_glasao or 0, "nije_prisutan": tally.nije_prisutan or 0}) }}
   <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
-  <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
+  <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · <a href="{{ mp.slug }}-glasovi.html">Svi glasovi</a> · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 </section>
+{% if facts %}
+<section class="mp-card" id="ukratko">
+  <h2>Ukratko</h2>
+  <ul class="mp-facts">{% for f in facts %}<li>{% if f.n %}<b>{{ f.n }}</b> {% endif %}{{ f.text }}</li>{% endfor %}</ul>
+  <p class="label">Izračunato iz poimeničnih glasanja i stenograma, istim pravilom za svakog poslanika; ovo nije ocena rada poslanika. {{ how("ukratko") }}</p>
+</section>
+{% endif %}
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke or floor), ("govori", "Govori", floor|selectattr("spoken")|list), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("glasovi", "Glasovi", true), ("drugacije", "Drugačije od grupe", apart), ("oblasti", "Po oblasti", areas_table), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("svi", "Svi glasovi", true)] %}
-<nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}</nav>
+{% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke or floor), ("govori", "Govori", floor|selectattr("spoken")|list), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list)] %}
+<nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}{% if record %}<a href="{{ mp.slug }}-glasovi.html">Svi glasovi →</a>{% endif %}</nav>
 {% if key_votes %}
 <section id="kljucna">
   <h2>Izdvojena glasanja</h2>
@@ -72,12 +55,6 @@
   <h2>Aktivnost</h2>
   {# The hall's counts across every convocation as four tiles, then one row to a convocation, then presence. #}
   {% if floor %}{% set t_s = floor|sum(attribute="speeches") %}{% set t_w = floor|sum(attribute="words") %}{% set t_e = floor|sum(attribute="exchanges") %}{% set t_m = floor|sum(attribute="measures") + floor|sum(attribute="measures_likely") %}{% set t_h = floor|sum(attribute="harsh") %}
-  <ul class="mp-tiles">
-    <li><span class="tile"><b>{{ t_s }}</b><small>{{ plural(t_s, "govor", "govora", "govora") }} u sali · {{ "{:,}".format(t_w).replace(",", ".") }} reči</small></span></li>
-    <li>{% if t_e %}<a href="#replike"><b>{{ t_e }}</b><small>{{ plural(t_e, "razmena replika", "razmene replika", "razmena replika") }}</small></a>{% else %}<span class="tile"><b>0</b><small>razmena replika</small></span>{% endif %}</li>
-    <li>{% if t_m %}<a href="#mere"><b>{{ t_m }}</b><small>{{ plural(t_m, "mera predsedavajućeg", "mere predsedavajućeg", "mera predsedavajućeg") }}</small></a>{% else %}<span class="tile"><b>0</b><small>mera predsedavajućeg</small></span>{% endif %}</li>
-    <li>{% if t_h %}<a href="#reci"><b>{{ t_h }}</b><small>{{ plural(t_h, "teška reč", "teške reči", "teških reči") }}</small></a>{% else %}<span class="tile"><b>0</b><small>teških reči</small></span>{% endif %}</li>
-  </ul>
   {% if floor|length > 1 or floor[0].outside or floor[0].points %}
   <div class="scroll"><table class="groups mp-floor">
     <thead><tr><th>U sali, po sazivu</th><th class="num">Govori</th><th class="num">Reči</th><th class="num">Replike</th><th class="num">Poslovnik</th><th class="num">Mere</th><th class="num">Teške reči</th></tr></thead>
@@ -98,7 +75,6 @@
   {% if spoke and not floor %}<li><b>{{ spoke }}</b> {{ plural(spoke, "govor", "govora", "govora") }} u raspravama o zakonima sa najviše glasova protiv</li>{% endif %}
   </ul>
   {% endif %}
-  {% if words %}<p><span class="meta">Reči koje u raspravama koristi više od drugih poslanika:</span> {{ words|map("latin")|join(", ") }}</p>{% endif %}
   {% if timeline %}
   <details class="inline"><summary>Poslednji dani u kojima je glasao ili govorio</summary>
   <ul class="timeline">
@@ -185,51 +161,7 @@
 </section>
 {% endif %}
 
-<div class="periods">
-{% if periods|length > 1 %}<nav class="tabs period-tabs js-only" hidden aria-label="Period">{% for p in periods %}<button type="button" data-period="{{ p.key }}"{% if loop.first %} aria-pressed="true"{% else %} aria-pressed="false"{% endif %}>{{ p.label }}</button>{% endfor %}</nav>{% endif %}
-{% for p in periods %}{% set first = loop.first %}
-<div class="period" data-panel="{{ p.key }}"{% if not first %} hidden{% endif %}>
-{% if not first %}<p class="row-meta period-sum"><b class="t-za">{{ p.tally.za or 0 }} za</b> · <b class="t-protiv">{{ p.tally.protiv or 0 }} protiv</b> · {{ p.tally.uzdrzan or 0 }} uzdržan · {{ p.tally.nije_glasao or 0 }} nije glasao · {{ p.tally.nije_prisutan or 0 }} nije prisutan, od {{ p.n }} konačnih glasanja</p>{% endif %}
-{% set more = "svi" if first else "svi-" ~ p.key %}
-{{ block("Glasovi protiv", p.against, "Nijedan glas protiv među konačnim glasanjima o zakonima.", false, "glasovi" if first else "", more) }}
-{{ block("Glasovi za", p.for_, "Nijedan glas za među konačnim glasanjima o zakonima.", false, "", more) }}
-{% if p.apart %}{{ block("Drugačije od većine svoje grupe", p.apart, "", true, "drugacije" if first else "") }}{% endif %}
-{% if p.areas %}
-<section{% if first %} id="oblasti"{% endif %} data-pagefind-ignore>
-  <h2>Po oblasti</h2>
-  <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Oblast</th><th>Glasao</th><th>Njegova grupa</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
-    <tbody>
-    {% for g in p.areas %}
-      <tr><td><a href="../oblast/{{ g.label|area_slug }}.html">{{ g.label|latin }}</a>{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}{% if g.treaties %}<span class="meta small"> · od toga {{ g.treaties }} {{ plural(g.treaties, "ugovor", "ugovora", "ugovora") }}</span>{% endif %}</td><td class="lean">{{ g.word or "—" }}</td><td class="lean meta">{{ g.group_word or "—" }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  <p class="label">Oblast je tačka člana 97. Ustava na koju se predlagač poziva u ustavnom osnovu predloga; jedan zakon može imati više oblasti. Prikazane su oblasti sa najmanje pet zakona. „Glasao" i „njegova grupa" opisuju udeo glasova za među glasovima za i protiv (najmanje pet): dosledno (95% i više), uglavnom (75%), češće (60%), mešovito. Međunarodni ugovori se broje u tabeli, ali ne ulaze u reči. {{ how("oblasti") }}</p>
-</section>
-{% endif %}
-
-{% if p.kinds %}
-<section>
-  <h2>Po vrsti zakona</h2>
-  <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Vrsta</th><th class="vote-cell"></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
-    <tbody>
-    {% for g in p.kinds %}
-      <tr><td>{{ g.label|latin }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  <p class="label">Vrsta zakona se određuje po naslovu i oznaci Službenog glasnika, istim pravilom za svaki zakon. Brojevi su izračunati iz poimeničnih glasanja; ovo nije ocena rada poslanika. {{ how("vrste") }}</p>
-</section>
-{% endif %}
-</div>
-{% endfor %}
-</div>
+{% if apart %}{{ block("Drugačije od većine svoje grupe", apart, "", true, "drugacije") }}{% endif %}
 
 {% if by_conv|selectattr("agree")|list %}
 <section id="slaganje" data-pagefind-ignore>
@@ -253,23 +185,10 @@
 
 
 
-<section class="more" id="svi" data-pagefind-ignore>
-  <h2>Svi glasovi po sazivima</h2>
-  {% for c in by_conv %}
-  <details id="svi-{{ c.conv }}"{% if loop.first and by_conv|length == 1 %} open{% endif %}>
-    <summary>{{ c.name }} saziv · {{ c.n }} {{ plural(c.n, "glasanje", "glasanja", "glasanja") }} · {{ c.tally.za or 0 }} za, {{ c.tally.protiv or 0 }} protiv</summary>
-    <div class="scroll">
-    <table class="record">
-      <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
-      <tbody>
-      {% for r in c.record %}
-        <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-    </div>
-  </details>
-  {% endfor %}
-  <p class="meta">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala odsutne, pa se ta glasanja ovde ne vide.</p>
+{% if record %}
+<section class="more" id="svi">
+  <h2>Svi glasovi</h2>
+  <p><a href="{{ mp.slug }}-glasovi.html">Svih {{ record|length }} {{ plural(record|length, "glasanje", "glasanja", "glasanja") }}</a>: glasovi za i protiv, po oblasti, po vrsti zakona i po sazivima.</p>
 </section>
+{% endif %}
 {% endblock %}

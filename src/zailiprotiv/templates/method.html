@@ -69,6 +69,11 @@
 <p>Broj govora je broj obraćanja poslanika (bez predsedavajućeg) u stenografskim beleškama {% if notes_all %}svih sednica od 2012. čije je beleške Skupština objavila.{% else %}sednica koje smo pročitali, a to su sednice o zakonima sa najviše glasova protiv. Nije broj svih njegovih govora u Skupštini.{% endif %}</p>
 </section>
 
+<section id="ukratko">
+<h2>Ukratko: kartica poslanika</h2>
+<p>Na vrhu strane poslanika je nekoliko brojeva, svaki u jednoj rečenici, izračunatih istim pravilom za svakog poslanika. Prisustvo i glasovi drugačiji od većine grupe su kao u odeljcima <a href="#aktivnost">Aktivnost</a> i <a href="#drugacije">Drugačije od većine svoje grupe</a>. Sati govora su broj reči u stenogramima podeljen sa 130 reči u minuti, uobičajenim tempom govora; to je procena, ne izmereno vreme. Najduži govor je obraćanje sa najviše reči. Dan sa najviše govora je dan u stenografskim beleškama sa najviše njegovih obraćanja. Sagovornici u replikama su poslanici sa kojima ima najviše razmena replika (tri najčešća). Najsličnija grupa je, od grupa kojima ne pripada, ona čija je većina najčešće glasala isto kao on (<a href="#slaganje">Sa kim glasa isto</a>), u najnovijem sazivu za koji postoji. Broj koji podaci ne mogu da potvrde se izostavlja, ne prikazuje se kao nula.</p>
+</section>
+
 <section id="reci">
 <h2>Reči koje poslanik koristi više od drugih</h2>
 <p>Bez AI modela: brojimo reči od pet i više slova u govorima poslanika iz pročitanih beleški, bez čestih reči (veznici, „zakon", „poslanik", obraćanja), i oblike iste reči spajamo po prvih sedam slova. Za svaku reč poredimo koliko je poslanik koristi u odnosu na sve ostale govornike (log-odds), i prikazujemo 12 reči koje najviše odskaču, a koje je koristio u bar pet govora. Prikazan je najčešći oblik reči. Imena se mogu naći među rečima kad ih poslanik često pominje.</p>

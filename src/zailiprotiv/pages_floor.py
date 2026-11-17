@@ -318,7 +318,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     for c, _ in convs:
         events, sittings = [], []
         tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
-                                     "measures_likely": 0, "harsh": [], "days": {}})
+                                     "measures_likely": 0, "harsh": [], "days": {}, "longest": None})
         pair_of = {}
         for url, notes in debates.get(c, {}).items():
             whole = debates_.whole_names(notes["speeches"].values())  # "ОБРАДОВИЋ" alone → the one Obradović of the sitting
@@ -372,10 +372,13 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                     continue
                 t = tally[s_["speaker"]]
                 t["speeches"] += 1
-                t["words"] += len(s_["text"].split())
+                n_words = len(s_["text"].split())
+                t["words"] += n_words
                 t["points"] += bool(_POINT.search(s_["text"][:300]))
                 # Where each speech is among the notes' pages, day by day: the MP's page lists them to be read.
                 m_ = meta(s_)
+                if not t["longest"] or n_words > t["longest"]["words"]:  # the longest speech, for the MP's card
+                    t["longest"] = {"words": n_words, "date": m_["date"], "url": m_["ours"] or m_.get("notes", "")}
                 if m_["ours"]:
                     d_ = t["days"].setdefault((url, s_["day"]), {"date": m_["date"], "day": s_["day"], "links": [],
                                                                   "sitting": re.sub(r"\s+Narodne skupštine Republike Srbije(?: u \w+ sazivu)?", "", title)})
@@ -414,7 +417,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for raw, t in tally.items():
             w = who(raw)
             r = rows.setdefault(w["slug"] or w["name"], {"who": w, "speeches": 0, "words": 0, "points": 0, "exchanges": 0,
-                                                         "measures": 0, "measures_likely": 0, "harsh": [], "raw": [], "days": {}})
+                                                         "measures": 0, "measures_likely": 0, "harsh": [], "raw": [], "days": {},
+                                                         "longest": None})
+            if t["longest"] and (not r["longest"] or t["longest"]["words"] > r["longest"]["words"]):
+                r["longest"] = t["longest"]
             for k_, d_ in t["days"].items():  # two spellings of one MP on one day: their speeches together
                 if k_ in r["days"]:
                     r["days"][k_]["links"] += d_["links"]
@@ -444,6 +450,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 place = next((k + 1 for k, x in enumerate(top["harsh"]) if x is r), None)
                 per_mp[r["who"]["slug"]].append({"conv": c, "name": ORDINAL_NAME.get(c, c), "exchanges": r["exchanges"],
                                                  "speeches": r["speeches"], "words": r["words"], "outside": r["outside"],
+                                                 "longest": r["longest"],
                                                  "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
                                                  "measures_likely": r["measures_likely"],
                                                  "said": r["said"], "harsh_place": place,

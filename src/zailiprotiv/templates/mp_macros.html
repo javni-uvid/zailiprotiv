@@ -1,0 +1,26 @@
+{# The vote lists shared by an MP's page and the page of all their votes. #}
+{% from "macros.html" import bar, how with context %}
+{% macro rows(rs, show_line=false) -%}
+<ul class="rows compact">
+{% for r in rs %}
+  <li class="row">
+    <div class="row-main">
+      <a class="row-title" href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a>
+      <p class="row-meta">{{ r.it.final.when[:10]|day }}{% if show_line %} · glas: <span class="v-text-{{ r.vote }}">{{ vote_label[r.vote]|lower }}</span>, većina grupe {{ r.group }}: {{ vote_label[r.line]|lower }}{% endif %}</p>
+    </div>
+    <div class="row-vote">{{ bar(r.it.final.counts) }}<span class="row-score"><span class="t-za">{{ r.it.final.counts.za }}</span> : <span class="t-protiv">{{ r.it.final.counts.protiv }}</span></span></div>
+  </li>
+{% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro block(title, rs, empty, show_line=false, id="", more="") -%}
+<section{% if id %} id="{{ id }}"{% endif %}>
+  <h2>{{ title }} <span class="count">{{ rs|length }}</span></h2>
+  {% if rs %}
+  {{ rows(rs[:6], show_line) }}
+  {% if rs|length > 6 %}{% if more %}<p><a href="#{{ more }}">Svih {{ rs|length }} u tabeli „Svi glasovi"</a></p>{% else %}<details><summary>Još {{ rs|length - 6 }}</summary>{{ rows(rs[6:], show_line) }}</details>{% endif %}{% endif %}
+  {% else %}<p class="meta">{{ empty }}</p>{% endif %}
+  {% if show_line %}<p class="label">Glas za, protiv ili uzdržan drugačiji od onoga što je izabrala većina njegove grupe. {{ how("drugacije") }}</p>{% endif %}
+</section>
+{%- endmacro %}
