@@ -16,10 +16,12 @@ function zipCount(what) {
 document.addEventListener("DOMContentLoaded", function () {
   Array.prototype.forEach.call(document.querySelectorAll(".speech-n[data-s]"), function (box) {
     var base = box.dataset.base, parts = box.dataset.s.split(" ");
+    if (!/^https:\/\/[a-z0-9.-]+\/[A-Za-z0-9\/_-]*\/$/.test(base)) return;  // the notes' own folder, nothing else
     box.textContent = "";
     if (box.dataset.day) { var b = document.createElement("b"); b.textContent = box.dataset.day + ". dan"; box.appendChild(b); }
     parts.forEach(function (p, i) {
       var m = /^([\d-]+)\.(\d+)$/.exec(p), a = document.createElement("a");
+      if (!m && !/^[A-Za-z0-9_.-]+(?:#[A-Za-z0-9_-]+)?$/.test(p)) return;
       a.href = base + (m ? "dan-" + m[1] + ".html#g" + m[2] : p);
       a.textContent = String(i + 1);
       box.appendChild(a);

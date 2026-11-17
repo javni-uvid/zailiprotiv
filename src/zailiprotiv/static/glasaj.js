@@ -7,6 +7,9 @@
   var takeOver = function () { list.classList.add("on"); };  // from here the script shows and hides the laws
   var WORD = { z: "za", p: "protiv", u: "uzdržan" };
   var ROOT = document.body.dataset.root || "";
+  // Addresses are made only of what the site's own data may hold: a slug, or a portrait's file name.
+  var slug = function (s) { return /^[a-z0-9][a-z0-9-]*$/.test(s || "") ? s : ""; };
+  var file = function (s) { return /^[A-Za-z0-9_-]+\.(?:jpg|jpeg|png|webp)$/.test(s || "") ? s : ""; };
   var used = function (what) { if (window.zipCount && ready) window.zipCount(what); }, ready = false;  // site.js
   var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
   // What is kept for the tab: the answers by law (so the order of the laws may change), and the law to show first.
@@ -149,7 +152,7 @@
       var qs = 0; answers.join("").split("").forEach(function (ch, k) { qs = (qs * 31 + ch.charCodeAt(0) + k) % 9973; });
       var pick = withQuote[qs % withQuote.length], foot = tq.querySelector("footer"), link = el("a", "", pick.p.n);
       tq.querySelector("p").textContent = "„" + pick.p.q + "“";
-      link.href = ROOT + "poslanik/" + pick.p.s + ".html"; foot.textContent = "";
+      link.href = ROOT + "poslanik/" + slug(pick.p.s) + ".html"; foot.textContent = "";
       foot.appendChild(link); foot.appendChild(document.createTextNode(", u raspravi u Skupštini"));
     }
     redraw();
@@ -161,8 +164,8 @@
     mps.slice(top.length).slice(0, 3 - three.length).forEach(function (x) { three.push(x); });
     three.forEach(function (x) {
       var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
-      { var im = el("img", "q-face"); im.src = ROOT + (x.p.f ? "foto/" + x.p.f : "bez-slike.svg"); im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
-      a.href = ROOT + "poslanik/" + x.p.s + ".html"; main.appendChild(a);
+      { var im = el("img", "q-face"); im.src = ROOT + (file(x.p.f) ? "foto/" + file(x.p.f) : "bez-slike.svg"); im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
+      a.href = ROOT + "poslanik/" + slug(x.p.s) + ".html"; main.appendChild(a);
       if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
       li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
     });
@@ -171,7 +174,7 @@
     var gs = document.getElementById("q-groups"); gs.textContent = "";
     groups.forEach(function (x) {
       var tr = el("tr"), td = el("td"), a = el("a", null, x.g.n), cell = el("td", "vote-cell"), bar = el("div", "bar"), s = el("span", "v-za");
-      a.href = ROOT + "grupa/" + x.g.s + ".html"; td.appendChild(a); tr.appendChild(td);
+      a.href = ROOT + "grupa/" + slug(x.g.s) + ".html"; td.appendChild(a); tr.appendChild(td);
       s.style.width = (100 * x.m.share) + "%"; bar.appendChild(s); cell.appendChild(bar); tr.appendChild(cell);
       tr.appendChild(el("td", "num", x.m.same + " od " + x.m.both));
       gs.appendChild(tr);
@@ -310,7 +313,7 @@
       var face = new Image();
       face.onload = function () { paint(face); };
       face.onerror = function () { paint(null); };
-      face.src = ROOT + (card.mp.f ? "foto/" + card.mp.f : "bez-slike.svg");
+      face.src = ROOT + (file(card.mp.f) ? "foto/" + file(card.mp.f) : "bez-slike.svg");
     });
   }
   var card = { fact: "", who: "", score: "", crowd: null, mp: null, more: 0 };

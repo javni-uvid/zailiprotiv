@@ -321,11 +321,12 @@
     b.textContent = voted ? "Sledeći predlog" : "Preskoči: sledeći predlog";
     $("lb-bill-n").textContent = left.length ? "još " + left.length + " u proceduri o " + plural(left.length, "kom", "kojima", "kojima") + " nisi glasao" : (voted ? "Glasao si o svim predlozima u proceduri." : "");
   }
+  function slug(s) { return /^[a-z0-9][a-z0-9-]*$/.test(s || "") ? s : ""; }  // addresses only from a slug
   function putBill(b) {
     seen[billBox.dataset.item.slice(2)] = 1;
     billBox.dataset.item = "p." + b.s;
     $("lb-bill-k").textContent = "U proceduri · podnet " + day(b.d);
-    $("lb-bill-t").textContent = b.t; $("lb-bill-t").href = $("lb-bill-more").href = root + "predlog/" + b.s + ".html";
+    $("lb-bill-t").textContent = b.t; $("lb-bill-t").href = $("lb-bill-more").href = root + "predlog/" + slug(b.s) + ".html";
     $("lb-bill-g").textContent = b.g;
     document.dispatchEvent(new CustomEvent("zip:predlog"));
     nextBill();
