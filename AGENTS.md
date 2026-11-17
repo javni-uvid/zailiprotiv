@@ -48,7 +48,7 @@ decisions unless said otherwise.
 - **Signing in to the Anthropic API without a key** (13 Nov 2026, `federated.py`): **summaries** asks GitHub for the
   repository's identity token (`id-token: write`) and exchanges it under a federation rule in the maintainer's
   Anthropic Console (subject `repo:javni-uvid@351609597/zailiprotiv@1454693959:ref:refs/heads/main`) for a
-  short-lived token. The rule's ids are in the workflow and grant nothing by themselves. A secret
+  short-lived token. The rule's ids are repository variables (`vars.ANTHROPIC_*`) and grant nothing by themselves. A secret
   `ANTHROPIC_API_KEY`, if set, is used instead.
 - **One pending run per workflow** (concurrency groups). A failed **votes**, **transcripts** or **summaries** run
   opens (or comments on) one issue.

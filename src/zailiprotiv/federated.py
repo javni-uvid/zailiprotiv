@@ -3,7 +3,7 @@
 In a GitHub Actions job allowed to ask for an identity token (`permissions: id-token: write`), GitHub gives a
 short-lived token saying which repository, branch and workflow is running; the Anthropic client exchanges it, under
 the federation rule set up in the Console, for a short-lived API token, and exchanges again before that one runs out
-(`anthropic.WorkloadIdentityCredentials`). Nothing secret is stored. The rule's ids come from the workflow
+(`anthropic.WorkloadIdentityCredentials`). Nothing secret is stored. The rule's ids come from the repository's variables
 (ANTHROPIC_FEDERATION_RULE_ID and the rest below); they grant nothing by themselves.
 """
 from __future__ import annotations

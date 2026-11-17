@@ -63,11 +63,11 @@ jobs:
           IN_LIMIT_OR: ${{ inputs.limit || 0 }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           # Signing in without a key (src/zailiprotiv/federated.py): the federation rule set up in the Anthropic
-          # Console for this repository's main branch. These ids grant nothing by themselves.
-          ANTHROPIC_FEDERATION_RULE_ID: fdrl_01NCmgWJsGrXFudbCfhmGqvD
-          ANTHROPIC_ORGANIZATION_ID: 7dd19a6e-f6b2-4240-a238-fa1268701199
-          ANTHROPIC_SERVICE_ACCOUNT_ID: svac_01B894Uyt46AtSiNR9igxMvJ
-          ANTHROPIC_WORKSPACE_ID: wrkspc_01NNmkqCRfENePvimjwqYJtD
+          # Console for this repository's main branch. Its ids are repository variables; they grant nothing by themselves.
+          ANTHROPIC_FEDERATION_RULE_ID: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
+          ANTHROPIC_ORGANIZATION_ID: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
+          ANTHROPIC_SERVICE_ACCOUNT_ID: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
+          ANTHROPIC_WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
         run: |
           pip install uv && uv sync --frozen
           [ -n "${IN_MODEL}" ] && export ZAILIPROTIV_MODEL="${IN_MODEL}"

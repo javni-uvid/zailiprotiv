@@ -43,10 +43,10 @@ jobs:
           IN_MODEL: ${{ inputs.model }}
           IN_WAIT: ${{ inputs.wait }}
           ZAILIPROTIV_MODEL: ${{ inputs.model }}
-          ANTHROPIC_FEDERATION_RULE_ID: fdrl_01NCmgWJsGrXFudbCfhmGqvD
-          ANTHROPIC_ORGANIZATION_ID: 7dd19a6e-f6b2-4240-a238-fa1268701199
-          ANTHROPIC_SERVICE_ACCOUNT_ID: svac_01B894Uyt46AtSiNR9igxMvJ
-          ANTHROPIC_WORKSPACE_ID: wrkspc_01NNmkqCRfENePvimjwqYJtD
+          ANTHROPIC_FEDERATION_RULE_ID: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
+          ANTHROPIC_ORGANIZATION_ID: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
+          ANTHROPIC_SERVICE_ACCOUNT_ID: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
+          ANTHROPIC_WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
         run: |
           pip install uv && uv sync --frozen
           uv run zailiprotiv --convocation "${IN_CONVOCATION}" debates-batch --only "${IN_ONLY}" \
