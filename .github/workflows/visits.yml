@@ -9,6 +9,10 @@ on:
       hours:
         description: "How many hours back"
         default: "24"
+      search:
+        description: "Also Google Search: the searches the site came up for (needs the secret GSC_KEY)"
+        type: boolean
+        default: false
       blocked:
         description: "Also what Cloudflare stopped (security events; how search engines' crawlers fared)"
         type: boolean
@@ -28,6 +32,14 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           HOURS: ${{ inputs.hours }}
         run: python3 tools/visits.py "$HOURS"
+      - name: What Google Search showed
+        if: inputs.search
+        env:
+          GSC_KEY: ${{ secrets.GSC_KEY }}
+          HOURS: ${{ inputs.hours }}
+        run: |
+          pip install -q google-auth requests
+          python3 tools/search.py $(( (HOURS + 23) / 24 < 7 ? 7 : (HOURS + 23) / 24 ))
       - name: What was stopped
         if: inputs.blocked
         env:
