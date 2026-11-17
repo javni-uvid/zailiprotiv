@@ -12,6 +12,28 @@ from zailiprotiv.site import (  # noqa: F401
 NOINDEX = '<meta name="robots" content="noindex">'  # pages kept out of search engines are left out of the sitemap
 
 
+def dataset(env, domain: str, downloads: list) -> dict | None:
+    """The downloads described for Google's Dataset Search (schema.org Dataset), with the bucket's addresses."""
+    if not domain:
+        return None
+    site = f"https://{domain}/"
+    files = env.globals.get("files_url") or site
+    csv = lambda name, path: {"@type": "DataDownload", "encodingFormat": "text/csv", "name": name, "contentUrl": files + path}
+    return {
+        "@context": "https://schema.org", "@type": "Dataset",
+        "name": "Glasanje poslanika Narodne skupštine Srbije o zakonima, od 2012.",
+        "description": "Svi zakoni koje je Narodna skupština Republike Srbije usvojila od devetog saziva (2012) i kako je glasao "
+                       "svaki poslanik na konačnom glasanju o svakom zakonu, prepisano iz poimeničnih rezultata glasanja koje "
+                       "Skupština objavljuje. Slobodno za upotrebu uz navođenje izvora: Za ili Protiv (zailiprotiv.rs), "
+                       "prema podacima Narodne skupštine.",
+        "url": site + "podaci.html", "isAccessibleForFree": True, "inLanguage": "sr",
+        "keywords": ["Narodna skupština", "Srbija", "zakoni", "glasanje", "poslanici", "parlament"],
+        "creator": {"@type": "Organization", "name": "Za ili Protiv", "url": site},
+        "temporalCoverage": "2012-05-31/..", "spatialCoverage": {"@type": "Place", "name": "Srbija"},
+        "distribution": [csv("Svi zakoni", "podaci/zakoni.csv")]
+                        + [csv(f"Glasovi poslanika, {d['name']} saziv", f"podaci/glasovi-{d['conv']}.csv") for d in downloads]}
+
+
 def write(*, common, domain, env, items_by_conv, out, people):
     # Downloads: every law with its final vote, and every MP's final votes by convocation (CSV), and the roll call
     # of each law beside its page (CSV and JSON).
@@ -58,7 +80,8 @@ def write(*, common, domain, env, items_by_conv, out, people):
                      "glasanje": f["when"], "pdf": f["key"].split("#")[0], "rezultat": f["counts"],
                      "glasovi": [{"poslanik": a, "grupa": b, "glas": c} for a, b, c in roll]},
                     ensure_ascii=False, indent=1), encoding="utf-8")
-    (out / "podaci.html").write_text(env.get_template("data.html").render(**common, downloads=downloads, root=""),
+    (out / "podaci.html").write_text(env.get_template("data.html").render(**common, downloads=downloads, root="",
+                                                                         dataset=dataset(env, domain, downloads)),
                                      encoding="utf-8")
     (out / "pretraga.html").write_text(env.get_template("search.html").render(**common, root=""), encoding="utf-8")
     (out / "kako-racunamo.html").write_text(env.get_template("method.html").render(

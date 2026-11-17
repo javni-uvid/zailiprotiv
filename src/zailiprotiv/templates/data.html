@@ -2,6 +2,8 @@
 {% from "macros.html" import how with context %}
 {% block title %}Podaci o glasanju za preuzimanje — Za ili Protiv{% endblock %}
 {% block description %}Preuzmite zakone i glasove poslanika u CSV i JSON formatu.{% endblock %}
+{% block feeds %}{% if dataset %}
+<script type="application/ld+json">{{ dataset|tojson }}</script>{% endif %}{% endblock %}
 {% block main %}
 <h1>Podaci</h1>
 <p class="gist">Sve što sajt prikazuje možete preuzeti i koristiti slobodno, uz navođenje izvora: „Za ili Protiv (zailiprotiv.rs), prema podacima Narodne skupštine".</p>

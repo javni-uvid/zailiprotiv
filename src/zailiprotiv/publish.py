@@ -46,8 +46,11 @@ def structured(text: str, site: str, here: str, address: str) -> str:
     import posixpath
     data = None
     if address in ("", "cir/"):
-        data = {"@context": "https://schema.org", "@type": "WebSite", "name": "Za ili Protiv",
-                "alternateName": "zailiprotiv.rs", "url": site + address}
+        data = {"@context": "https://schema.org", "@graph": [
+            {"@type": "WebSite", "@id": site + "#site", "name": "Za ili Protiv", "alternateName": "zailiprotiv.rs",
+             "url": site + address, "inLanguage": "sr-Cyrl" if address else "sr-Latn", "publisher": {"@id": site + "#org"}},
+            {"@type": "Organization", "@id": site + "#org", "name": "Za ili Protiv", "url": site,
+             "email": "kontakt@zailiprotiv.rs", "sameAs": ["https://github.com/javni-uvid/zailiprotiv"]}]}
     else:
         crumbs, h1 = _CRUMBS.search(text), _H1.search(text)
         if crumbs and h1:
