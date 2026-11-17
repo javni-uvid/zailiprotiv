@@ -52,6 +52,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 | beleske.zailiprotiv.rs | the notes' pages and their search index; the notes as read (`sirovo/`) | R2 bucket `zailiprotiv-beleske` |
 | podaci.zailiprotiv.rs | every law's CSV, JSON and picture, MPs' pictures, `podaci/` | R2 bucket `zailiprotiv-podaci` |
 | glasovi.zailiprotiv.rs | the visitors' votes counter, and the project's clock | Cloudflare Worker with D1 (`worker/`) |
+| uzivo.zailiprotiv.rs | who is speaking now, read from the live broadcast's caption | Docker on the maintainer's computer, Cloudflare tunnel (`live/`) |
 
 Secrets live in GitHub Secrets and Cloudflare, never in the repository; `data/settings.json` holds the public
 addresses.
@@ -119,6 +120,7 @@ src/zailiprotiv/
   cli.py                      commands
 tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates)
 worker/                       the visitors' votes counter (Cloudflare Worker, D1)
+live/                         "Ko sada govori": the live broadcast's caption read, a page of its own (Docker; README there)
 data/<N>/                     one folder per convocation (9 to 14)
   index.json, laws.json, procedure.json, short_titles.json; links.json, wrong_bills.json where needed
   votes/, bills/, summaries/, debates/, transcripts/, notes/

@@ -285,6 +285,27 @@ recordings of its days (`videos.py`, `data/<N>/videos.json`, read by **votes** f
 convocation; earlier ones by hand). Both are links: the site plays nothing itself (principle 5). The notes carry no
 times, so a speech cannot be linked to its minute.
 
+### Who is speaking now (`live/`)
+
+- **A page of its own at `uzivo.zailiprotiv.rs`** (17 Nov 2026): who is speaking in the Assembly now, and who spoke
+  today, read from the caption under the speaker in the live broadcast (README in `live/`). It grew out of the
+  maintainer's page following one speaker; under the project it follows **every speaker by one rule** (principle
+  1): nobody is followed, singled out or ranked; today's turns are listed by time.
+- **Not static, so not on GitHub Pages:** a service watches the broadcast. It runs in Docker on the maintainer's
+  computer behind a Cloudflare tunnel, because YouTube often refuses data centres' addresses (GitHub's runners
+  among them) and a home address works. When the computer is off the page is down; **health** does not ask it.
+  The tunnel's token lives in `live/.tunnel.env` (never committed) and in Cloudflare.
+- **Read from the broadcast, matched to the roll calls:** a name counts when it matches an MP on the site's list
+  (`podaci.json`, from the roll calls) on the caption's name line only, never the list line under it (a list's name
+  often holds its leader's name). A name not on the list (ministers, guests) is shown only when read surely in two
+  frames in a row; a half-read name is never shown. The page says it is read automatically and may err.
+- **Nothing from elsewhere** (principle 5): the fonts are copied from `src/zailiprotiv/static/fonts` into the image,
+  the one script is inline; the site's MP pages are linked.
+- **Its tests** (`tests/test_live.py`) cover the names, the caption's lines, the turns and the page, with the
+  standard library only; OCR and the stream are tried against the broadcast.
+- **The site does not link it yet:** a link from the live bar would lead nowhere while the computer is off. Decide
+  with the maintainer.
+
 ## Open questions
 
 - Interaction for readers beyond votes (questions to MPs, comments) needs a server or a third party, which
@@ -308,3 +329,5 @@ times, so a speech cannot be linked to its minute.
   permissions); the cognee and sign-in trials removed.
 - **17 Nov 2026:** namesakes in different convocations split into separate MPs (`mp_splits.json`), checked by
   year of birth (**mp-years**).
+- **17 Nov 2026:** "Ko sada govori" (`live/`, `uzivo.zailiprotiv.rs`): the current speaker read from the live
+  broadcast's caption, every speaker by one rule, run at the maintainer's home behind a Cloudflare tunnel.

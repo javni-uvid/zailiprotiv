@@ -1,0 +1,274 @@
+"""Finding the broadcast and taking its newest frame.
+
+For an HLS stream (YouTube live) the playlist is read here and only the newest segment is fetched, its last frame
+taken. ffmpeg's own HLS reader gave YouTube's frames in bursts 20-30 s apart; this way each frame is from the very
+end of the broadcast.
+"""
+from __future__ import annotations
+
+import io
+import logging
+import os
+import re
+import subprocess
+import tempfile
+import threading
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+from . import config
+
+log = logging.getLogger("stream")
+_YT_ID = re.compile(r"youtube(?:-nocookie)?\.com/embed/([\w-]{11})")
+
+
+_BROWSER_HEADERS = {
+    # The broadcaster's page refuses (403) requests that do not look like a browser.
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "sr,en;q=0.8",
+    "Referer": "https://www.parlament.gov.rs/",
+}
+_last_youtube_url = ""
+
+
+def _youtube_url_from_page(page_url: str) -> str:
+    global _last_youtube_url
+    try:
+        req = urllib.request.Request(page_url, headers=_BROWSER_HEADERS)
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            html = resp.read().decode("utf-8", "replace")
+        m = _YT_ID.search(html)
+        if not m:
+            raise RuntimeError("no YouTube embed on the page")
+        _last_youtube_url = f"https://www.youtube.com/watch?v={m.group(1)}"
+    except Exception as exc:
+        if not _last_youtube_url:
+            raise RuntimeError(
+                f"{page_url} not read ({exc}); set YOUTUBE_URL in .env"
+            ) from exc
+        log.warning("page not read (%s); using the last known stream", exc)
+    return _last_youtube_url
+
+
+def _resolve_youtube(url: str) -> str:
+    from yt_dlp import YoutubeDL
+
+    h = config.MAX_HEIGHT
+    opts = {
+        "quiet": True,
+        # Only the picture is needed, so a format without sound will do. HLS (m3u8) first: it is read below.
+        "format": (
+            f"b[protocol^=m3u8][height<={h}]/bv*[protocol^=m3u8][height<={h}]/"
+            f"b[height<={h}]/bv*[height<={h}]/b/bv*"
+        ),
+    }
+    if config.YTDLP_COOKIES:
+        opts["cookiefile"] = config.YTDLP_COOKIES
+    try:
+        with YoutubeDL(opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+    except Exception as exc:
+        raise RuntimeError(f"yt-dlp got no stream for {url}: {exc}") from exc
+    if not info.get("is_live"):
+        # Between sittings the page may embed a past broadcast: its last frame would name the last speaker of then.
+        raise RuntimeError(f"{url} is not live ({info.get('live_status')})")
+    log.info(
+        "format %s: %sp, %s, ~%s kbit/s",
+        info.get("format_id"), info.get("height"), info.get("protocol"), info.get("tbr"),
+    )
+    return info["url"], info.get("http_headers") or {}
+
+
+def resolve_input() -> tuple[str, dict]:
+    """An address (or a path) to read frames from, and the HTTP headers for it."""
+    if config.STREAM_URL:
+        return config.STREAM_URL, {}
+    yt = config.YOUTUBE_URL or _youtube_url_from_page(config.SOURCE_PAGE)
+    log.info("YouTube stream: %s", yt)
+    return _resolve_youtube(yt)
+
+
+def _is_hls(source: str) -> bool:
+    return not os.path.exists(source) and ("m3u8" in source or "hls_playlist" in source)
+
+
+def _ffmpeg_last_frame(segment: str) -> None:
+    """A segment's last frame → FRAME_PATH (atomically, so the worker never reads half a file)."""
+    subprocess.run(
+        [
+            "ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-y",
+            "-i", segment, "-an", "-vf", "fps=2", "-q:v", "3",
+            "-f", "image2", "-atomic_writing", "1", "-update", "1", config.FRAME_PATH,
+        ],
+        check=True, capture_output=True, timeout=30,
+    )
+
+
+_SQ = re.compile(r"/sq/(\d+)/")
+
+
+class HlsPoller(threading.Thread):
+    """Takes the last frame of each new HLS segment. Behaves like Popen (poll/kill/stderr), so the worker need not
+    know the difference.
+
+    YouTube's playlist answers slowly (5-12 s) while a segment comes in a fraction of a second. So the playlist is
+    read in the background only to know where the broadcast's end is, and the next segment is asked for by its
+    number (/sq/N/ in the address) as soon as it is there.
+    """
+
+    def __init__(self, playlist_url: str, headers: dict) -> None:
+        super().__init__(daemon=True)
+        self.url = playlist_url
+        self.headers = {"User-Agent": "Mozilla/5.0", **headers}
+        self.stderr = io.BytesIO()
+        self._stop = threading.Event()
+        self._code: int | None = None
+        self._lock = threading.Lock()
+        self._segments: dict[int, str] = {}   # number → address, from the latest playlist
+        self._newest = -1
+        self._dur = 5.0
+        self._ended = False
+        self._pl_error: Exception | None = None
+        self._pl_ok_at = time.time()
+        self.start()
+
+    # --- network -------------------------------------------------------------------------
+    def _get(self, url: str, timeout: float = 20) -> bytes:
+        req = urllib.request.Request(url, headers=self.headers)
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.read()
+
+    def _read_playlist(self) -> None:
+        text = self._get(self.url).decode("utf-8", "replace")
+        if "#EXT-X-STREAM-INF" in text:  # a master playlist: take its first variant
+            variant = next(l for l in text.splitlines() if l and not l.startswith("#"))
+            self.url = urllib.parse.urljoin(self.url, variant.strip())
+            return self._read_playlist()
+        seq, dur, segs = 0, self._dur, {}
+        for line in text.splitlines():
+            line = line.strip()
+            if line.startswith("#EXT-X-MEDIA-SEQUENCE:"):
+                seq = int(line.split(":", 1)[1])
+            elif line.startswith("#EXTINF:"):
+                dur = float(line[8:].split(",")[0] or dur)
+            elif line and not line.startswith("#"):
+                url = urllib.parse.urljoin(self.url, line)
+                m = _SQ.search(url)
+                segs[int(m.group(1)) if m else seq] = url
+                seq += 1
+        if not segs:
+            raise RuntimeError("playlist without segments")
+        with self._lock:
+            self._segments, self._newest, self._dur = segs, max(segs), dur
+            self._ended = "#EXT-X-ENDLIST" in text
+            self._pl_ok_at = time.time()
+
+    def _playlist_loop(self) -> None:
+        while not self._stop.is_set():
+            try:
+                self._read_playlist()
+                self._pl_error = None
+            except Exception as exc:  # one error is not the end; the worker judges by frames
+                self._pl_error = exc
+                log.warning("playlist: %s", exc)
+            self._stop.wait(1.0)
+
+    def _segment_url(self, n: int) -> str | None:
+        with self._lock:
+            if n in self._segments:
+                return self._segments[n]
+            # Not yet in the (slow) playlist: make its address from a known segment's.
+            for url in reversed(list(self._segments.values())):
+                if _SQ.search(url):
+                    return _SQ.sub(f"/sq/{n}/", url)
+        return None
+
+    def _fetch(self, n: int) -> bytes | None:
+        url = self._segment_url(n)
+        if not url:
+            return None
+        try:
+            data = self._get(url, timeout=15)
+        except urllib.error.HTTPError as exc:
+            if exc.code in (204, 404, 410, 425):  # not published yet
+                return None
+            raise
+        return data if len(data) > 1024 else None
+
+    # --- main loop -----------------------------------------------------------------
+    def run(self) -> None:
+        os.makedirs(os.path.dirname(config.FRAME_PATH), exist_ok=True)
+        threading.Thread(target=self._playlist_loop, daemon=True).start()
+        try:
+            while self._newest < 0:  # the first playlist
+                if self._stop.wait(0.2):
+                    return
+                if self._pl_error and time.time() - self._pl_ok_at > 60:
+                    raise RuntimeError(f"playlist unavailable: {self._pl_error}")
+            nxt = self._newest
+            last_new = time.time()
+            with tempfile.TemporaryDirectory() as tmp:
+                path = os.path.join(tmp, "seg")
+                while not self._stop.is_set():
+                    with self._lock:
+                        newest, dur, ended = self._newest, self._dur, self._ended
+                    if newest > nxt:      # fell behind (after a stall): jump to the end
+                        nxt = newest
+                    t0 = time.time()
+                    data = self._fetch(nxt)
+                    if data is None:
+                        if ended and nxt > newest:
+                            raise RuntimeError("end of broadcast")
+                        if time.time() - last_new > max(60, 6 * dur):
+                            raise RuntimeError(f"no new segment for {time.time() - last_new:.0f} s")
+                        self._stop.wait(0.5)
+                        continue
+                    t1 = time.time()
+                    with open(path, "wb") as f:
+                        f.write(data)
+                    _ffmpeg_last_frame(path)
+                    t2 = time.time()
+                    if t2 - last_new > 2.5 * dur:
+                        log.info(
+                            "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",
+                            nxt, t2 - last_new, dur, t1 - t0, t2 - t1,
+                        )
+                    last_new = t2
+                    nxt += 1
+            self._code = 0
+        except Exception as exc:
+            if isinstance(exc, subprocess.CalledProcessError):
+                msg = exc.stderr.decode("utf-8", "replace")
+            else:
+                msg = str(exc)
+            self.stderr = io.BytesIO(msg.encode())
+            self._code = 1
+
+    def poll(self) -> int | None:
+        return self._code
+
+    def kill(self) -> None:
+        self._stop.set()
+
+
+def start_ffmpeg(source: str, headers: dict | None = None):
+    os.makedirs(os.path.dirname(config.FRAME_PATH), exist_ok=True)
+    if _is_hls(source):
+        return HlsPoller(source, headers or {})
+    # A file or another stream: one ffmpeg that keeps running.
+    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-re"]
+    if headers and headers.get("User-Agent"):
+        cmd += ["-user_agent", headers["User-Agent"]]
+    cmd += [
+        "-i", source,
+        "-an",
+        "-vf", f"fps=1/{config.FRAME_INTERVAL}",
+        "-q:v", "3",
+        "-f", "image2", "-atomic_writing", "1", "-update", "1", "-y",
+        config.FRAME_PATH,
+    ]
+    return subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)

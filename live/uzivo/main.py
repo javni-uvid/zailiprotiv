@@ -1,0 +1,75 @@
+"""The web part: the page in both scripts, the changing part of it, the state as JSON, and the fonts."""
+from __future__ import annotations
+
+import logging
+import os
+import threading
+from contextlib import asynccontextmanager
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+
+from . import config, worker
+from .page import fragment, page
+from .state import Tracker
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
+tracker = Tracker(config.STATE_PATH)
+_stop = threading.Event()
+_tz = ZoneInfo(config.TZ)
+FONTS = Path(__file__).parent / "static" / "fonts"
+URL = os.environ.get("PUBLIC_URL", "").strip()  # the page's own address, for canonical links
+NO_STORE = {"Cache-Control": "no-store"}
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    threading.Thread(target=worker.run, args=(tracker, _stop), daemon=True).start()
+    yield
+    _stop.set()
+
+
+app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+
+
+def _page(cyr: bool) -> HTMLResponse:
+    return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL), headers=NO_STORE)
+
+
+def _part(cyr: bool) -> HTMLResponse:
+    return HTMLResponse(fragment(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz), headers=NO_STORE)
+
+
+@app.get("/")
+def latin_page() -> HTMLResponse:
+    return _page(False)
+
+
+@app.get("/cir/")
+def cyrillic_page() -> HTMLResponse:
+    return _page(True)
+
+
+@app.get("/deo")
+def latin_part() -> HTMLResponse:
+    return _part(False)
+
+
+@app.get("/cir/deo")
+def cyrillic_part() -> HTMLResponse:
+    return _part(True)
+
+
+@app.get("/stanje.json")
+def state() -> JSONResponse:
+    return JSONResponse(tracker.snapshot(), headers=NO_STORE)
+
+
+@app.get("/fonts/{name}")
+def font(name: str) -> FileResponse:
+    path = FONTS / name
+    if path.parent != FONTS or not path.is_file():
+        raise HTTPException(404)
+    return FileResponse(path, headers={"Cache-Control": "public, max-age=31536000, immutable"})

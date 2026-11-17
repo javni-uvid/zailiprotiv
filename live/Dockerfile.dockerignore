@@ -1,0 +1,6 @@
+# The build runs from the repository's root; send Docker only what the image needs (not data/, hundreds of MB).
+*
+!live/requirements.txt
+!live/uzivo
+!src/zailiprotiv/static/fonts
+**/__pycache__

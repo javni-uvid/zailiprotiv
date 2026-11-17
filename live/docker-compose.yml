@@ -1,0 +1,23 @@
+# Run from this folder: docker compose up -d --build
+services:
+  uzivo:
+    build:
+      context: ..
+      dockerfile: live/Dockerfile
+    env_file: .env
+    volumes:
+      - uzivo-data:/data          # today's turns and the last list of MPs, kept across restarts
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+
+  tunel:                          # Cloudflare's named tunnel: uzivo.zailiprotiv.rs → http://uzivo:8000
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    env_file: .tunnel.env         # TUNNEL_TOKEN=… (from Cloudflare; never committed)
+    depends_on:
+      - uzivo
+    restart: unless-stopped
+
+volumes:
+  uzivo-data:
