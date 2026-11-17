@@ -527,7 +527,7 @@ def _pending(args):
 
 
 def export(args) -> int:
-    """The material of laws still without a summary, one text file each, for summaries written in a session."""
+    """The material of laws still without a summary, one text file each, for summaries written by hand."""
     from zailiprotiv import summaries
     to = Path(args.to)
     to.mkdir(parents=True, exist_ok=True)
@@ -552,7 +552,7 @@ def export(args) -> int:
 
 
 def import_summaries(args) -> int:
-    """Summaries written in a session (a JSON Lines file: {"bill_file", "summary"}), checked and saved like the
+    """Summaries written by hand (a JSON Lines file: {"bill_file", "summary"}), checked and saved like the
     API's, under the name of the model that wrote them."""
     from zailiprotiv import summaries
     store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
@@ -775,7 +775,7 @@ def _debated(args):
 
 def debates_export(args) -> int:
     """The debate material of the laws with most votes against whose notes were read, one text file each, for
-    summaries of the debate written in a session."""
+    summaries of the debate written by hand."""
     from zailiprotiv import debates
     found, votes_, bills_ = _debated(args)
     seated, df = debates.seats(votes_), debates.document_frequency(bills_)
@@ -810,7 +810,7 @@ def profiles_export(args) -> int:
 
 
 def profiles_import(args) -> int:
-    """Overviews written in a session (DIR/out/<name>.json beside the exported DIR/<name>.json), checked and saved to
+    """Overviews written by hand (DIR/out/<name>.json beside the exported DIR/<name>.json), checked and saved to
     data/profiles/. With --check FILE: only say what is wrong with one reply."""
     from zailiprotiv import profiles
     src = Path(args.dir)
@@ -835,7 +835,7 @@ def profiles_import(args) -> int:
 
 
 def debates_import(args) -> int:
-    """Debate summaries written in a session (JSON Lines: {"bill_file", "debate"}): quotes checked against the notes
+    """Debate summaries written by hand (JSON Lines: {"bill_file", "debate"}): quotes checked against the notes
     word for word, saved to data/<N>/debates/<bill file>.json."""
     from zailiprotiv import debates
     found, votes_, bills_ = _debated(args)
@@ -1077,7 +1077,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--wait", type=float, default=300, help="with --batch: minutes to wait for the batch")
     p.set_defaults(run=summaries_cmd)
     for name, run, help_ in (("export", export, "write the material of laws still without a summary"),
-                             ("import", import_summaries, "save summaries written in a session (JSON Lines)")):
+                             ("import", import_summaries, "save summaries written by hand (JSON Lines)")):
         p = commands.add_parser(name, help=help_)
         p.add_argument("--laws", default=str(DATA / "laws.json"))
         p.add_argument("--bills", default=str(DATA / "bills"))
@@ -1115,17 +1115,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--to", required=True)
     p.add_argument("--top", type=int, default=20)
     p.set_defaults(run=debates_export)
-    p = commands.add_parser("profiles-export", help="MPs' speeches from the notes read, for overviews written in a session")
+    p = commands.add_parser("profiles-export", help="MPs' speeches from the notes read, for overviews written by hand")
     p.add_argument("--to", required=True)
     p.add_argument("--min", type=int, default=10, help="speeches of some length an MP needs")
     p.add_argument("--again", action="store_true")
     p.set_defaults(run=profiles_export)
-    p = commands.add_parser("profiles-import", help="save overviews of MPs' speeches written in a session")
+    p = commands.add_parser("profiles-import", help="save overviews of MPs' speeches written by hand")
     p.add_argument("dir")
     p.add_argument("--model", default="")
     p.add_argument("--check", default="", help="check one reply only")
     p.set_defaults(run=profiles_import)
-    p = commands.add_parser("debates-import", help="save debate summaries written in a session")
+    p = commands.add_parser("debates-import", help="save debate summaries written by hand")
     p.add_argument("file")
     p.add_argument("--model", required=True)
     p.set_defaults(run=debates_import)

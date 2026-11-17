@@ -1,5 +1,5 @@
 """Many requests to the model at once, through the Message Batches API: half the price of single calls, and the
-writing runs in GitHub Actions instead of a Claude session.
+writing runs in GitHub Actions.
 
 A batch can take from minutes to hours. Its id is kept in data/batches.json (committed), so a run that stops
 waiting picks the results up next time instead of paying for them again. The same file counts how often a reply

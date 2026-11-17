@@ -77,7 +77,7 @@ uv run zailiprotiv notes-site --out _beleske   # the notes as pages of their own
 uv run pytest -q
 ```
 
-A coding session's sandbox usually cannot reach parlament.gov.rs; GitHub's runners can. Everything that reads the
+A development environment may not reach parlament.gov.rs; GitHub's runners can. Everything that reads the
 Assembly's site runs through the workflows.
 
 ## Workflows

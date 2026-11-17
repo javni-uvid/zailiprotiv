@@ -177,7 +177,7 @@ def distinctive(by_mp: dict[str, list[dict]], top: int = 12, min_speeches: int =
 
 def system(root: Path) -> str:
     """The rules a model writes an overview under (data/profiles/RULES.md), for a batch: the reply is the JSON
-    itself, instead of a file written in a session."""
+    itself, instead of a file written by hand."""
     rules = (root / "profiles" / "RULES.md").read_text(encoding="utf-8").split("\nIzlaz:")[0].rstrip()
     return rules + """
 

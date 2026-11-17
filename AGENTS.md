@@ -7,13 +7,13 @@ decisions unless said otherwise.
 
 ## How to work here
 
-- **Commit straight to `main`.** No branches or pull requests (as in the sibling repos `izborna-analiza`,
-  `izborna-analiza-hr`). Dependabot's monthly pull requests are the one exception: merge them once their checks pass.
+- **Commit straight to `main`.** No branches or pull requests; Dependabot's monthly pull requests are the one
+  exception: merge them once their checks pass.
 - **Run `uv run pytest -q` before every push.** The **test** workflow runs it again; a red run is fixed first.
 - **Explain why in commit messages**: what changed for the site or the data, and the reason.
 - **Update README.md with every feature**, and this file with every decision.
 - **Talk to the maintainer in Serbian** (Latin script), briefly. Code, comments and docs are in English.
-- **The sandbox of a session may not reach parlament.gov.rs, the subdomains or the buckets; GitHub's runners can.**
+- **A development environment may not reach parlament.gov.rs, the subdomains or the buckets; GitHub's runners can.**
   Read the outside through workflows: **peek** (a page's text), **health**, **visits** (Cloudflare's counts, what
   Cloudflare stopped, Google Search), **dns-check**, **probe**. Never ask the maintainer to paste secrets in chat.
 - **Ask the Assembly little.** Requests name the project in the User-Agent and wait a second between pages;
@@ -40,15 +40,14 @@ decisions unless said otherwise.
   cron dispatches **votes** every hour of the working day (`scheduled: true`: nothing new stops the chain) and
   **summaries** every six hours. **worker** publishes `worker/` with CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID and
   DISPATCH_TOKEN.
-- **The model's writing runs in Actions, not in a session** (13 Nov 2026: sessions used up the maintainer's limits).
+- **The model's writing runs in Actions** (13 Nov 2026), not by hand.
   `summaries --batch`, `debates-batch` and `profiles-batch` send Message Batches, check every reply (quotes word for
   word) and keep running batches and refused replies in `data/batches.json`; a refused reply is sent once more with
   what was wrong, then left for a person. The first pass is always the cheapest model (Haiku); a stronger one only by
-  hand. The session commands (`export`/`import`, `*-export`/`*-import`) stay for work by hand.
+  hand. The `export`/`import` commands (and `*-export`/`*-import`) stay for work by hand.
 - **Signing in to the Anthropic API without a key** (13 Nov 2026, `federated.py`): **summaries** asks GitHub for the
-  repository's identity token (`id-token: write`) and exchanges it under a federation rule in the maintainer's
-  Anthropic Console (subject `repo:javni-uvid@351609597/zailiprotiv@1454693959:ref:refs/heads/main`) for a
-  short-lived token. The rule's ids are repository variables (`vars.ANTHROPIC_*`) and grant nothing by themselves. A secret
+  repository's identity token (`id-token: write`) and exchanges it, under a federation rule for this repository's
+  main branch, for a short-lived token. The rule's ids are repository variables (`vars.ANTHROPIC_*`) and grant nothing by themselves. A secret
   `ANTHROPIC_API_KEY`, if set, is used instead.
 - **One pending run per workflow** (concurrency groups). A failed **votes**, **transcripts** or **summaries** run
   opens (or comments on) one issue.
@@ -274,7 +273,7 @@ convocation's sitting is listed. To switch, once the Fifteenth has its first rol
 
 - **12 Nov 2026:** the project starts as "Za ili protiv" (`zailiprotiv`) in the organisation `javni-uvid`
   ("public inspection" of what institutions do). The source is the Assembly's own site; Otvoreni parlament's "API"
-  is HTML behind a Cloudflare check and is not a source. GitHub's runners reach parlament.gov.rs; the sandbox doesn't.
+  is HTML behind a Cloudflare check and is not a source.
 - **13 Nov 2026:** six convocations read (9th to 14th); the model's writing moved to Actions; the worker became the
   clock; the Cyrillic edition, Varnice, bills in procedure, weeks, group pages, visitors' votes.
 - **14 Nov 2026:** every sitting's notes read; notes and downloads moved to buckets on subdomains.
