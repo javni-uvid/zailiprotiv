@@ -1,4 +1,4 @@
-# Security checks: the workflows themselves (zizmor: injected inputs, tokens left behind, unpinned actions,
+# Security checks: the workflows themselves (actionlint: can GitHub read them; zizmor: injected inputs, tokens left behind, unpinned actions,
 # permissions), the Python packages against known vulnerabilities (pip-audit, from uv.lock), and the code
 # (CodeQL: Python and the site's and the counter's JavaScript; its findings go to the Security tab). On changes to
 # the code or the workflows, every Monday, and by hand. Reads only.
@@ -28,6 +28,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
+      - name: actionlint
+        run: |
+          # GitHub refuses a workflow it can't read (a key twice in a step, a wrong expression) without a word until
+          # it is started: votes stopped so on 17 Nov 2026.
+          pip install -q actionlint-py==1.7.12.25
+          actionlint -shellcheck= -pyflakes=
       - name: zizmor
         run: |
           pip install -q zizmor==1.32.0
