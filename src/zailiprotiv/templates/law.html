@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox with context %}
-{% block title %}{{ law.title }}{% if law.title|length < 25 %}: kako su glasali poslanici{% endif %} — Za ili Protiv{% endblock %}
-{% block description %}Kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi: {{ law.title }}.{% endblock %}
+{% block title %}{{ law.title }}{% if law.title in twice and law.passed %} ({{ law.passed|day }}){% elif law.title|length < 25 %}: kako su glasali poslanici{% endif %} — Za ili Protiv{% endblock %}
+{% block description %}{{ law.short }}{% if law.passed %} (usvojen {{ law.passed|day }}){% endif %}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:type" content="article"><meta property="og:url" content="{{ site_url }}zakon/{{ it.slug }}.html">

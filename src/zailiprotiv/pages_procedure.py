@@ -47,11 +47,13 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
     for base, rows in names.items():
         for row in rows:
             row["slug"] = base if len(rows) == 1 else f"{base}-{slug(row['pdf'].rsplit('/', 1)[-1].removesuffix('.pdf'))}"
+    shared = {row["slug"] for rows in names.values() if len(rows) > 1 for row in rows}  # one title, several bills
     for row in waiting + gone:
         row["summary"] = loaded[current][2].get(row.get("bill_file", ""), {}).get("summary")
         row["ocr"] = bool(loaded[current][2].get(row.get("bill_file", ""), {}).get("ocr"))
-        (out / "predlog" / f"{row['slug']}.html").write_text(page.render(
-            **common, b=row, waits=row in waiting, checked=proc["fetched"], root="../"), encoding="utf-8")
+        (out / "predlog" / f"{row['slug']}.html").write_text(page.render(  # a title shared by several: with its day
+            **common, b=row, waits=row in waiting, checked=proc["fetched"], root="../",
+            shared=row["slug"] in shared), encoding="utf-8")
     # The counter accepts votes on the bills that wait, by the name "p.<bill>": added to the list the build wrote.
     allowed_path = out / "glasanje.json"
     if allowed_path.exists():

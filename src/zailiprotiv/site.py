@@ -633,6 +633,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             card.draw(kept, *args_)
         shutil.copy(kept, path)
     picture(out / "za-ili-protiv.png", "Kako glasaju poslanici Narodne skupštine Srbije", "Zakoni, glasanja, rasprave", None, "")
+    # A name the Assembly used for more than one law (the same law amended again): its pages' titles carry the day.
+    named = Counter(a["law"]["title"] for a in law_pages)
+    env.globals["twice"] = {t for t, n in named.items() if n > 1}
     for args in law_pages:
         it = args["it"]
         if it["final"]:  # the picture shown when the page is shared

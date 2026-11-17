@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, chamber, plural, tabs %}
 {% block title %}Zakoni, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
+{% block description %}Svi zakoni usvojeni u {{ conv_name|locative }} sazivu Narodne skupštine Srbije, i kako je svaki poslanik glasao o svakom od njih.{% endblock %}
 {% block main %}
 <h1>Zakoni</h1>
 <nav class="subtabs law-kinds three" aria-label="Usvojeni, u proceduri ili po oblastima"><a href="zakoni.html" aria-current="page">Usvojeni</a><a href="u-proceduri.html">U proceduri</a><a href="oblasti.html">Oblasti</a></nav>
