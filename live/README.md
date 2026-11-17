@@ -32,6 +32,12 @@ centres' addresses (GitHub's runners among them), and a home address works.
 The page is in Latin at `/` and in Cyrillic at `/cir/`, links each MP to their page on the site, and loads nothing
 from elsewhere (the fonts are served with it, the one script is inline). `/stanje.json` is the same as JSON.
 
+**Each day's record** is kept in a file of its own (`/data/dani/<date>.json`) and served at `/dan/<date>.json`
+(`/dani.json` lists the days): every turn with how many frames named the speaker (`okvira`), where it is in the
+broadcast (the YouTube video, the numbers of its first and last HLS segment, the segment's length), and the spans
+when the service saw the broadcast at all (`pokriveno`; outside them there is no record, not silence). The site's
+**votes** workflow takes these in (`uzivo-pull`), to link each speech in the notes to its minute in the recording.
+
 Delays: the broadcast runs 15-25 s behind the hall, and a segment is 5 s.
 
 ## Running it

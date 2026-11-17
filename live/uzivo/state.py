@@ -5,6 +5,10 @@ on naming them (frames with no readable name in between do not end it for HOLD_S
 is read, when two frames in a row name someone else even if unreadably, when nothing is read for HOLD_SECONDS, or
 when the broadcast stops. A name not on the site's list of MPs
 (a minister, a guest) must be read in two frames in a row first: OCR noise can look like a name once.
+
+Every day is kept in a file of its own (`dani/<date>.json` beside STATE_PATH): its turns, each with where it is in
+the broadcast (the YouTube video and the numbers of its first and last segment), and when the service saw the
+broadcast at all (`cover`), so a day's record says where it has gaps.
 """
 from __future__ import annotations
 
@@ -24,11 +28,14 @@ SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 class Tracker:
     def __init__(self, path: str | None = None, tz: str | None = None) -> None:
         self._lock = threading.Lock()
-        self.path = Path(path) if path else None
+        self.days = Path(path).parent / "dani" if path else None
+        self.old = Path(path) if path else None  # until 17 Nov 2026 today's turns were kept here
         self.tz = ZoneInfo(tz or config.TZ)
         self.status = NO_STREAM
         self.last_frame = 0.0
         self.turns: list[dict] = []  # oldest first; the last may be open
+        self.cover: list[list[float]] = []  # [from, to]: frames kept coming
+        self.day = ""
         self.open = False
         self._pending = ""  # a name not on the list, read once
         self._others = 0  # frames in a row naming someone other than the current speaker
@@ -38,23 +45,32 @@ class Tracker:
     def _day(self, ts: float) -> str:
         return datetime.fromtimestamp(ts, self.tz).date().isoformat()
 
-    def _load(self) -> None:
-        if not self.path or not self.path.exists():
-            return
+    def _file(self, day: str) -> Path | None:
+        return self.days / f"{day}.json" if self.days else None
+
+    def _load(self, day: str | None = None) -> None:
+        self.day = day or self._day(time.time())
+        self.turns, self.cover, self.open = [], [], False
+        f = self._file(self.day)
         try:
-            turns = json.loads(self.path.read_text(encoding="utf-8")).get("turns", [])
+            if f and f.exists():
+                kept = json.loads(f.read_text(encoding="utf-8"))
+                self.turns, self.cover = kept.get("turns", []), kept.get("cover", [])
+            elif self.old and self.old.exists():
+                turns = json.loads(self.old.read_text(encoding="utf-8")).get("turns", [])
+                self.turns = [t for t in turns if self._day(t["start"]) == self.day]
         except (OSError, ValueError):
-            return
-        today = self._day(time.time())
-        self.turns = [t for t in turns if self._day(t["start"]) == today]
+            pass
 
     def _save(self) -> None:
-        if not self.path:
+        f = self._file(self.day)
+        if not f:
             return
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = self.path.with_suffix(".tmp")
-        tmp.write_text(json.dumps({"turns": self.turns}, ensure_ascii=False), encoding="utf-8")
-        tmp.replace(self.path)
+        f.parent.mkdir(parents=True, exist_ok=True)
+        tmp = f.with_suffix(".tmp")
+        tmp.write_text(json.dumps({"day": self.day, "turns": self.turns, "cover": self.cover}, ensure_ascii=False),
+                       encoding="utf-8")
+        tmp.replace(f)
 
     # --- readings ---
     def _close(self) -> None:
@@ -66,14 +82,22 @@ class Tracker:
         with self._lock:
             return self.turns[-1]["name"] if self.open and self.turns else ""
 
-    def observe(self, person: Person | None, role: str = "", now: float | None = None, other: bool = False) -> None:
-        """One frame read: who its caption names (or None), the line under the name if read cleanly, and whether
-        the caption names someone else than the current speaker without saying clearly whom (`caption.differs`)."""
+    def observe(self, person: Person | None, role: str = "", now: float | None = None, other: bool = False,
+                at: dict | None = None) -> None:
+        """One frame read: who its caption names (or None), the line under the name if read cleanly, whether the
+        caption names someone else than the current speaker without saying clearly whom (`caption.differs`), and
+        where the frame is in the broadcast (`at`: video, sq, seg)."""
         now = time.time() if now is None else now
+        at = at or {}
         with self._lock:
+            if self._day(now) != self.day:
+                self._close()
+                self._load(self._day(now))  # a new day, a new file
+            if self.cover and now - self.cover[-1][1] <= config.STALE_SECONDS:
+                self.cover[-1][1] = now
+            else:
+                self.cover.append([now, now])
             self.last_frame = now
-            if self.turns and self._day(self.turns[0]["start"]) != self._day(now):
-                self.turns, self.open = [t for t in self.turns if self._day(t["start"]) == self._day(now)], False
             if self.status == NO_STREAM:
                 self.status = UNKNOWN
             cur = self.turns[-1] if self.turns else None
@@ -86,13 +110,19 @@ class Tracker:
                 if self.open and cur["key"] == person.key:
                     cur["seen"], cur["n"] = now, cur["n"] + 1
                     cur["role"] = role or cur["role"]
+                    if at.get("sq") is not None and cur.get("video") == at.get("video"):
+                        cur["sq_seen"] = at["sq"]
                 else:
                     self._close()
                     if cur and cur["key"] == person.key and now - cur["seen"] <= config.MERGE_SECONDS:
                         cur["seen"], cur["n"] = now, cur["n"] + 1  # the same speaker after a short break
+                        if at.get("sq") is not None and cur.get("video") == at.get("video"):
+                            cur["sq_seen"] = at["sq"]
                     else:
                         self.turns.append({"key": person.key, "name": person.name, "slug": person.slug,
-                                           "group": person.group, "role": role, "start": now, "seen": now, "n": 1})
+                                           "group": person.group, "role": role, "start": now, "seen": now, "n": 1,
+                                           "video": at.get("video", ""), "sq_start": at.get("sq"),
+                                           "sq_seen": at.get("sq"), "seg": at.get("seg")})
                     self.open = True
                     self._save()
                 self.status = SPEAKING
@@ -101,6 +131,7 @@ class Tracker:
                 self.status = UNKNOWN
             elif not self.open:
                 self.status = UNKNOWN
+            self._save()
 
     def tick(self, now: float | None = None) -> None:
         """Called each second, frame or not: a broadcast that stopped ends the turn."""
@@ -120,3 +151,32 @@ class Tracker:
             done = [out(t) for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])]
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
                     "danas": done[::-1]}
+
+    def record(self, day: str) -> dict | None:
+        """A day's record, as published at /dan/<date>.json: every turn (with how many frames named the speaker,
+        so a reader can leave out one-frame readings), where each is in the broadcast, and when the broadcast was
+        seen at all."""
+        with self._lock:
+            if day == self.day:
+                turns, cover = list(self.turns), list(self.cover)
+            else:
+                f = self._file(day)
+                if not f or not f.exists():
+                    return None
+                kept = json.loads(f.read_text(encoding="utf-8"))
+                turns, cover = kept.get("turns", []), kept.get("cover", [])
+        return {
+            "dan": day,
+            "napomena": "Pročitano automatski iz potpisa u prenosu Skupštine; može da sadrži greške. Van 'pokriveno' "
+                        "servis prenos nije video.",
+            "pokriveno": [{"od": int(a), "do": int(b)} for a, b in cover],
+            "govori": [{"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
+                        "od": int(t["start"]), "do": int(t["seen"]), "okvira": t["n"], "video": t.get("video", ""),
+                        "sq_od": t.get("sq_start"), "sq_do": t.get("sq_seen"), "segment": t.get("seg")}
+                       for t in turns],
+        }
+
+    def days_kept(self) -> list[str]:
+        if not self.days or not self.days.exists():
+            return [self.day] if self.turns or self.cover else []
+        return sorted({p.stem for p in self.days.glob("*.json")} | ({self.day} if self.turns or self.cover else set()))

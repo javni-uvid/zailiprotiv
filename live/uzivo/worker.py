@@ -15,7 +15,7 @@ from .caption import differs, tidy, who
 from .names import Roster
 from .ocr import caption
 from .state import Tracker
-from .stream import resolve_input, start_ffmpeg
+from .stream import VIDEO, resolve_input, start_ffmpeg
 
 log = logging.getLogger("worker")
 
@@ -70,6 +70,8 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
                 m = _mtime(config.FRAME_PATH)
                 if m > seen:
                     seen, last_new, backoff = m, time.time(), 5.0
+                    at = {"video": VIDEO.get("id", ""), "sq": getattr(proc, "frame_seq", None),
+                          "seg": getattr(proc, "seg_dur", None)}
                     try:
                         cap = caption(Image.open(config.FRAME_PATH).convert("RGB"))
                     except Exception:  # a broken frame or an OCR error: skip it
@@ -77,7 +79,7 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
                         continue
                     person = who(cap, roster.get(), config.MATCH)
                     tracker.observe(person, tidy(cap.role_line) if cap.role_clean else "",
-                                    other=differs(cap, tracker.current(), config.MATCH))
+                                    other=differs(cap, tracker.current(), config.MATCH), at=at)
                     log.info("%s | %s | %s -> %s", person.name if person else "-", cap.name_line[:40],
                              cap.role_line[:40], tracker.status)
                 if proc.poll() is not None:

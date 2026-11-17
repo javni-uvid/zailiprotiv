@@ -89,8 +89,25 @@ def test_turns(tmp_path):
     assert [d["ime"] for d in t.snapshot()["danas"]] == ["Petrović Petar"]  # Marko read once: not listed
     t.tick(now=now + 200)
     assert t.status == NO_STREAM
-    kept = json.loads((tmp_path / "s.json").read_text(encoding="utf-8"))["turns"]  # kept across a restart
+    kept = json.loads((tmp_path / "dani" / f"{t.day}.json").read_text(encoding="utf-8"))["turns"]  # across restarts
     assert [x["name"] for x in kept] == ["Petrović Petar", "Jovanović Marko"]
+    again = Tracker(str(tmp_path / "s.json"), "Europe/Belgrade")
+    again._load(t.day)
+    assert [x["name"] for x in again.turns] == ["Petrović Petar", "Jovanović Marko"]
+
+
+def test_a_days_record_says_where_each_turn_is_and_where_the_gaps_are(tmp_path):
+    t = Tracker(str(tmp_path / "s.json"), "Europe/Belgrade")
+    petar = ROSTER.match("Петар Петровић", 0.8)
+    now = 1794920000.0
+    for i in range(3):
+        t.observe(petar, now=now + 5 * i, at={"video": "abc", "sq": 100 + i, "seg": 5.0})
+    t.observe(None, now=now + 300, at={"video": "abc", "sq": 160, "seg": 5.0})  # after a gap: no frames for 285 s
+    rec = t.record(t.day)
+    assert rec["pokriveno"] == [{"od": int(now), "do": int(now + 10)}, {"od": int(now + 300), "do": int(now + 300)}]
+    g = rec["govori"][0]
+    assert (g["ime"], g["video"], g["sq_od"], g["sq_do"], g["segment"], g["okvira"]) == ("Petrović Petar", "abc", 100, 102, 5.0, 3)
+    assert t.days_kept() == [t.day] and t.record("2001-01-01") is None
 
 
 def test_a_name_not_on_the_list_needs_two_frames():

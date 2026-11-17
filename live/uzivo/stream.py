@@ -33,6 +33,7 @@ _BROWSER_HEADERS = {
     "Referer": "https://www.parlament.gov.rs/",
 }
 _last_youtube_url = ""
+VIDEO: dict = {}  # the YouTube video being read: its id and when the broadcast began (for links to its minute)
 
 
 def _youtube_url_from_page(page_url: str) -> str:
@@ -80,12 +81,14 @@ def _resolve_youtube(url: str) -> str:
         "format %s: %sp, %s, ~%s kbit/s",
         info.get("format_id"), info.get("height"), info.get("protocol"), info.get("tbr"),
     )
+    VIDEO.update(id=info.get("id", ""), started=info.get("release_timestamp"))
     return info["url"], info.get("http_headers") or {}
 
 
 def resolve_input() -> tuple[str, dict]:
     """An address (or a path) to read frames from, and the HTTP headers for it."""
     if config.STREAM_URL:
+        VIDEO.clear()
         return config.STREAM_URL, {}
     yt = config.YOUTUBE_URL or _youtube_url_from_page(config.SOURCE_PAGE)
     log.info("YouTube stream: %s", yt)
@@ -134,6 +137,8 @@ class HlsPoller(threading.Thread):
         self._ended = False
         self._pl_error: Exception | None = None
         self._pl_ok_at = time.time()
+        self.frame_seq: int | None = None
+        self.seg_dur: float | None = None
         self.start()
 
     # --- network -------------------------------------------------------------------------
@@ -230,6 +235,7 @@ class HlsPoller(threading.Thread):
                     t1 = time.time()
                     with open(path, "wb") as f:
                         f.write(data)
+                    self.frame_seq, self.seg_dur = nxt, dur  # read with the frame: where it is in the broadcast
                     _ffmpeg_last_frame(path)
                     t2 = time.time()
                     if t2 - last_new > 2.5 * dur:

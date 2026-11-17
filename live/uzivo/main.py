@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -65,6 +66,22 @@ def cyrillic_part() -> HTMLResponse:
 @app.get("/stanje.json")
 def state() -> JSONResponse:
     return JSONResponse(tracker.snapshot(), headers=NO_STORE)
+
+
+@app.get("/dani.json")
+def days() -> JSONResponse:
+    """The days this service has a record of, for the site's workflow that takes them in."""
+    return JSONResponse({"dani": tracker.days_kept()}, headers=NO_STORE)
+
+
+@app.get("/dan/{day}.json")
+def day(day: str) -> JSONResponse:
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+        raise HTTPException(404)
+    rec = tracker.record(day)
+    if rec is None:
+        raise HTTPException(404)
+    return JSONResponse(rec, headers=NO_STORE)
 
 
 @app.get("/fonts/{name}")
