@@ -54,9 +54,19 @@ def read(lines: list[list[Word]], conf: float) -> Caption:
     return Caption(_text(name), _text(role), _clean(name, conf, True), _clean(role, conf, False))
 
 
+_EDGE = "·•\"'“”„«».,;:!|~_*°()[]{}<>"
+
+
 def tidy(text: str) -> str:
-    """A line as read, for showing: Latin, words only, each capitalised as read."""
-    return " ".join(w.strip(".,;:!|") for w in latin(text).split() if w.strip(".,;:!|"))
+    """A line as read, for showing: Latin, each word as read, without the specks OCR leaves around it; a dash between
+    words stays ("Ime Prezime - Lista"), bits with no letter at either end of the line go."""
+    parts = [w.strip(_EDGE) for w in latin(text).split()]
+    parts = [w for w in parts if w]
+    while parts and not any(ch.isalpha() for ch in parts[0]):
+        parts.pop(0)
+    while parts and not any(ch.isalpha() for ch in parts[-1]):
+        parts.pop()
+    return " ".join(parts)
 
 
 def who(cap: Caption, roster: Roster, threshold: float) -> Person | None:

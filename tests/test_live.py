@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "live"))
 
 from uzivo import config  # noqa: E402
-from uzivo.caption import differs, read, who  # noqa: E402
+from uzivo.caption import differs, read, tidy, who  # noqa: E402
 from uzivo.names import Roster, cyrillic, given_first, latin, normalize  # noqa: E402
 from uzivo.page import fragment, page  # noqa: E402
 from uzivo.state import NO_STREAM, SPEAKING, UNKNOWN, Tracker  # noqa: E402
@@ -149,3 +149,8 @@ def test_someone_else_unreadably_ends_the_turn():
     assert t.status == SPEAKING                          # once is not enough
     t.observe(None, now=now + 10, other=True)
     assert t.status == UNKNOWN and t.snapshot()["sada"] is None
+
+
+def test_tidy_keeps_the_dash_and_drops_specks():
+    assert tidy('·" Петар Петровић - Листа за пример |') == "Petar Petrović - Lista za primer"
+    assert tidy("~ Листа за пример.") == "Lista za primer"
