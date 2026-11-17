@@ -119,7 +119,7 @@ def test_page_both_scripts():
     petar = ROSTER.match("Петар Петровић", 0.8)
     t.observe(petar, "Lista za primer", now=1794920000.0)
     snap = t.snapshot()
-    lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://uzivo.zailiprotiv.rs/")
+    lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
     assert "Petar Petrović" in lat and 'href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in lat
     assert "Ko sada govori u Skupštini" in lat and "Lista za primer" in lat
     cyr = page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)

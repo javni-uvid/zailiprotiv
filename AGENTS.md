@@ -287,7 +287,7 @@ times, so a speech cannot be linked to its minute.
 
 ### Who is speaking now (`live/`)
 
-- **A page of its own at `uzivo.zailiprotiv.rs`** (17 Nov 2026): who is speaking in the Assembly now, and who spoke
+- **A page of its own at `mikrofon.zailiprotiv.rs`** (17 Nov 2026): who is speaking in the Assembly now, and who spoke
   today, read from the caption under the speaker in the live broadcast (README in `live/`). It grew out of the
   maintainer's page following one speaker; under the project it follows **every speaker by one rule** (principle
   1): nobody is followed, singled out or ranked; today's turns are listed by time.
@@ -329,5 +329,5 @@ times, so a speech cannot be linked to its minute.
   permissions); the cognee and sign-in trials removed.
 - **17 Nov 2026:** namesakes in different convocations split into separate MPs (`mp_splits.json`), checked by
   year of birth (**mp-years**).
-- **17 Nov 2026:** "Ko sada govori" (`live/`, `uzivo.zailiprotiv.rs`): the current speaker read from the live
+- **17 Nov 2026:** "Ko sada govori" (`live/`, `mikrofon.zailiprotiv.rs`): the current speaker read from the live
   broadcast's caption, every speaker by one rule, run at the maintainer's home behind a Cloudflare tunnel.

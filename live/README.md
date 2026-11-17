@@ -1,6 +1,6 @@
 # uzivo: who is speaking now
 
-**https://uzivo.zailiprotiv.rs**: who is speaking in the National Assembly at this moment, and who spoke today, read
+**https://mikrofon.zailiprotiv.rs**: who is speaking in the National Assembly at this moment, and who spoke today, read
 from the caption under the speaker in the Assembly's live broadcast.
 
 Unlike the rest of the project this is not a static page: something has to watch the broadcast. It runs as two
@@ -44,7 +44,7 @@ docker compose up -d --build
 docker compose logs -f uzivo
 ```
 
-In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostname `uzivo.zailiprotiv.rs` points to
+In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostname `mikrofon.zailiprotiv.rs` points to
 `http://uzivo:8000`. A log line per frame: `name matched | name line | list line -> state`.
 
 When YouTube asks to sign in, put a `cookies.txt` in the volume and set `YTDLP_COOKIES=/data/cookies.txt`; when
