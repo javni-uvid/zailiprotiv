@@ -11,6 +11,15 @@ function zipCount(what) {
   zipCounted[what] = 1;
   try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
 }
+// An MP's speeches of a day (the MP's page): each one's address among the notes' pages, kept short in the page
+// ("dan-3-2.html#g00527 …" beside the sitting's folder) and made into numbered links here.
+document.addEventListener("DOMContentLoaded", function () {
+  Array.prototype.forEach.call(document.querySelectorAll(".speech-n[data-s]"), function (box) {
+    var base = box.dataset.base, parts = box.dataset.s.split(" ");
+    box.textContent = "";
+    parts.forEach(function (p, i) { var a = document.createElement("a"); a.href = base + p; a.textContent = String(i + 1); box.appendChild(a); });
+  });
+});
 // The Cyrillic edition (cir/): what the scripts write into the page is written in Cyrillic too.
 (function () {
   "use strict";

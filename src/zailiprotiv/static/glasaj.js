@@ -161,7 +161,7 @@
     mps.slice(top.length).slice(0, 3 - three.length).forEach(function (x) { three.push(x); });
     three.forEach(function (x) {
       var li = el("li", "row"), main = el("div", "row-main"), a = el("a", "row-title", x.p.n);
-      { var im = el("img", "q-face"); im.src = x.p.f ? "foto/" + x.p.f : "bez-slike.svg"; im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
+      { var im = el("img", "q-face"); im.src = ROOT + (x.p.f ? "foto/" + x.p.f : "bez-slike.svg"); im.alt = ""; im.width = 56; im.height = 75; im.loading = "lazy"; li.appendChild(im); }
       a.href = ROOT + "poslanik/" + x.p.s + ".html"; main.appendChild(a);
       if (x.p.g) main.appendChild(el("p", "row-meta", x.p.g));
       li.appendChild(main); li.appendChild(el("div", "row-vote row-score", x.m.same + " od " + x.m.both)); ms.appendChild(li);
@@ -310,7 +310,7 @@
       var face = new Image();
       face.onload = function () { paint(face); };
       face.onerror = function () { paint(null); };
-      face.src = card.mp.f ? "foto/" + card.mp.f : "bez-slike.svg";
+      face.src = ROOT + (card.mp.f ? "foto/" + card.mp.f : "bez-slike.svg");
     });
   }
   var card = { fact: "", who: "", score: "", crowd: null, mp: null, more: 0 };

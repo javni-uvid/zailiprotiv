@@ -295,7 +295,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
     for c, _ in convs:
         events, sittings = [], []
         tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
-                                     "measures_likely": 0, "harsh": []})
+                                     "measures_likely": 0, "harsh": [], "days": {}})
         pair_of = {}
         for url, notes in debates.get(c, {}).items():
             whole = debates_.whole_names(notes["speeches"].values())  # "ОБРАДОВИЋ" alone → the one Obradović of the sitting
@@ -351,6 +351,14 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 t["speeches"] += 1
                 t["words"] += len(s_["text"].split())
                 t["points"] += bool(_POINT.search(s_["text"][:300]))
+                # Where each speech is among the notes' pages, day by day: the MP's page lists them to be read.
+                m_ = meta(s_)
+                if m_["ours"]:
+                    d_ = t["days"].setdefault((url, s_["day"]), {"date": m_["date"], "day": s_["day"], "links": [], "on": [],
+                                                                  "sitting": re.sub(r"\s+Narodne skupštine Republike Srbije(?: u \w+ sazivu)?", "", title)})
+                    d_["links"].append(m_["ours"])
+                    if m_["on"] and m_["on"]["text"] and m_["on"]["text"] not in d_["on"]:
+                        d_["on"].append(m_["on"]["text"])
                 for word, sentence in harsh(s_["text"]):
                     t["harsh"].append({"word": word, "text": sentence, "parts": marked(sentence), **meta(s_)})
             for e in found:
@@ -384,7 +392,13 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         for raw, t in tally.items():
             w = who(raw)
             r = rows.setdefault(w["slug"] or w["name"], {"who": w, "speeches": 0, "words": 0, "points": 0, "exchanges": 0,
-                                                         "measures": 0, "measures_likely": 0, "harsh": [], "raw": []})
+                                                         "measures": 0, "measures_likely": 0, "harsh": [], "raw": [], "days": {}})
+            for k_, d_ in t["days"].items():  # two spellings of one MP on one day: their speeches together
+                if k_ in r["days"]:
+                    r["days"][k_]["links"] += d_["links"]
+                    r["days"][k_]["on"] += [x for x in d_["on"] if x not in r["days"][k_]["on"]]
+                else:
+                    r["days"][k_] = {**d_, "links": list(d_["links"]), "on": list(d_["on"])}
             r["raw"].append(raw)
             for k in ("speeches", "words", "points", "exchanges", "measures", "measures_likely"):
                 r[k] += t[k]
@@ -412,6 +426,9 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                                  "points": r["points"], "measures": r["measures"], "harsh": len(r["harsh"]),
                                                  "measures_likely": r["measures_likely"],
                                                  "said": r["said"], "harsh_place": place,
+                                                 "spoken": [{**d, "base": d["links"][0].rsplit("/", 1)[0] + "/",
+                                                             "tails": " ".join(l.rsplit("/", 1)[1] for l in d["links"])}
+                                                            for d in sorted(r["days"].values(), key=lambda d: (d["date"], d["day"]), reverse=True)],
                                                  "measure_events": [e for e in events if e["type"] == "mera" and (
                                                      (e.get("to") or e.get("likely") or {}).get("slug") == r["who"]["slug"])]})
         if events:
