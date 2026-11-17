@@ -1,7 +1,7 @@
 """Tell search engines which pages changed: the date in the sitemap (<lastmod>), and IndexNow (Bing, Yandex, Seznam,
 Naver; Google does not take part).
 
-    python3 tools/indexnow.py list _site .cache/indexnow.json changed.txt   (the build: pages whose text changed)
+    python3 tools/indexnow.py list _site .cache/indexnow.json changed.txt [--all]   (the build: pages whose text changed)
     python3 tools/indexnow.py send changed.txt                               (after publishing: tell them)
 
 A page counts as changed when the text of its <main> changed since the last build that was told, so the footer's
@@ -39,8 +39,9 @@ def main():
         old = {u: v if isinstance(v, list) else [v, None] for u, v in old.items()}  # {address: [hash, day it changed]}
         now = pages(site)
         today = __import__("datetime").date.today().isoformat()
-        changed = [u for u, h in now.items() if old.get(u, [None])[0] != h]
-        kept = {u: [h, today if u in changed or not old.get(u, [0, 0])[1] else old[u][1]] for u, h in now.items()}
+        changed = [u for u, h in now.items() if old.get(u, [None])[0] != h or "--all" in sys.argv]
+        fresh = {u for u, h in now.items() if old.get(u, [None])[0] != h}  # the day only moves when the text did
+        kept = {u: [h, today if u in fresh or not old.get(u, [0, 0])[1] else old[u][1]] for u, h in now.items()}
         # The sitemap says when each page last changed (Google and Bing use it when it is right).
         sm = site / "sitemap.xml"
         sm.write_text(re.sub(r"<url><loc>([^<]+)</loc></url>",

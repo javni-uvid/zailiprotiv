@@ -8,6 +8,11 @@ on:
     # A build takes about nine minutes; a change that cannot alter the site starts none.
     paths: ["**", "!tests/**", "!worker/**", "!**.md", "!.github/workflows/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
+    inputs:
+      indexnow_all:
+        description: "Tell IndexNow about every page, not only those that changed (after it first refused, say)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -52,7 +57,7 @@ jobs:
           npx -y pagefind@1.5.0 --site _site | tail -8
           du -sh --apparent-size _site; find _site -type f | wc -l
           # The pages whose text changed since the last build, for search engines (told after publishing).
-          python3 tools/indexnow.py list _site .cache/indexnow.json indexnow.txt
+          python3 tools/indexnow.py list _site .cache/indexnow.json indexnow.txt ${{ inputs.indexnow_all && '--all' || '' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
