@@ -1,6 +1,6 @@
-# A sample of debate summaries written by another model, into samples/<model>/<convocation>/, to compare its
-# quality and cost with the published texts before changing the model. By hand only; run again to pick up a batch
-# that was still running.
+# A sample of debate summaries written by another model, to compare its quality and cost with the published texts
+# before changing the model. By hand only; run again to pick up a batch that was still running. The sample is kept
+# as the run's artifact (two weeks), not in the repository: it is for looking at, not for publishing.
 name: sample
 
 on:
@@ -52,6 +52,13 @@ jobs:
           uv run zailiprotiv --convocation "${IN_CONVOCATION}" debates-batch --only "${IN_ONLY}" \
             --out "samples/${IN_MODEL}/${IN_CONVOCATION}" --wait "${IN_WAIT}"
           uv run zailiprotiv status | grep -E "potrošeno|batch u toku" || true
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        if: always()
+        with:
+          name: sample
+          path: samples/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Commit
         if: always()
         env:
@@ -59,7 +66,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/batches.json samples 2>/dev/null || git add data/batches.json
+          git add data/batches.json  # what is still running, for the next run
           git diff --cached --quiet && exit 0
           git commit -m "A sample written by ${IN_MODEL}"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done

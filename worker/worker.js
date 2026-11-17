@@ -123,7 +123,7 @@ export default {
 
   async fetch(request, env) {
     const from = request.headers.get("origin") || "";
-    const origin = from === SITE || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(from) ? from : SITE;
+    const origin = SITE;  // CORS names the site only; a POST from any other page is refused below
     const path = new URL(request.url).pathname;
     if (request.method === "OPTIONS") return reply({}, 204, origin);
     if (request.method === "GET") {
