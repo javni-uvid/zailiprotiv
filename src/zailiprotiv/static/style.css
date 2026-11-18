@@ -521,7 +521,7 @@ td.lean { white-space: nowrap; }
 .mp-card h2 { margin: 0 0 .6rem; font-size: 1.1rem; }
 .mp-facts { list-style: none; margin: 0 0 .6rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: .5rem 1.4rem; }
 .mp-facts li { line-height: 1.4; padding: .35rem 0; border-top: 1px solid var(--line); }
-.mp-facts b { font-family: var(--serif); font-size: 1.45rem; margin-right: .15rem; }
+.mp-facts b { font-family: var(--serif); font-size: 1.45rem; margin-right: .15rem; font-variant-numeric: lining-nums tabular-nums; }
 .mp-facts a { white-space: nowrap; }
 
 /* A sitting's page: its most opposed law as the chamber, and what happened on the floor. */
