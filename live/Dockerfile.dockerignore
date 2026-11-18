@@ -3,4 +3,6 @@
 !live/requirements.txt
 !live/uzivo
 !src/zailiprotiv/static/fonts
+!src/zailiprotiv/templates/mikrofon.js
+!src/zailiprotiv/templates/mikrofon.css
 **/__pycache__
