@@ -69,6 +69,13 @@ TEXT = {
     "facts_note": "Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.",
     "live": "Prenos uživo na sajtu Skupštine",
     "home": "Svi zakoni i glasanja poslanika",
+    "o_votes": "Konačna glasanja o zakonima:",
+    "v_za": "za",
+    "v_protiv": "protiv",
+    "v_uzdrzan": "uzdržan",
+    "o_new": "Novi poslanik u ovom sazivu",
+    "o_more": "Svi glasovi i govori na Za ili Protiv",
+    "site_cta": "Svaki zakon od 2012. i kako je glasao svaki poslanik",
     "script": "Ћирилица",
 }
 
@@ -134,6 +141,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         if not cur["adresa"]:
             out.append(f'<p class="meta">({t("not_listed")})</p>')
         out.append(f'<p class="meta">{t("since")} {_clock(cur["od"], tz)}, {_minutes(cur["sekundi"])} {t("min")}</p>')
+        out.append(_about(cur, cyr=cyr, site=site))
     else:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
     if snap["provereno"]:
@@ -161,6 +169,29 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append("</div>")
     return "\n".join(out)
 
+
+
+def _about(cur: dict, *, cyr: bool, site: str) -> str:
+    """Under the speaker: their final votes on laws and the first facts of their page on the site, or where a new MP
+    comes from, and the way to that page. The site's numbers, by its one rule for all; nothing for a name not listed."""
+    o = cur.get("o")
+    if not o or not cur.get("adresa"):
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    s = lambda x: escape(_name(x, cyr))
+    href = escape(f'{site}{"cir/" if cyr else ""}poslanik/{cur["adresa"]}')
+    out = ['<div class="o">']
+    if o.get("novi"):
+        out.append(f'<p><b>{t("o_new")}</b>{(" · " + s(o["f"][0])) if o.get("f") else ""}</p>')
+    else:
+        if o.get("za", 0) + o.get("protiv", 0) + o.get("uzdrzan", 0):
+            out.append(f'<p>{t("o_votes")} <b class="v-za">{int(o.get("za", 0))} {t("v_za")}</b> · '
+                       f'<b class="v-protiv">{int(o.get("protiv", 0))} {t("v_protiv")}</b> · '
+                       f'{int(o.get("uzdrzan", 0))} {t("v_uzdrzan")}</p>')
+        if o.get("f"):
+            out.append('<ul>' + "".join(f"<li>{s(f)}</li>" for f in o["f"][:3]) + '</ul>')
+    out.append(f'<a class="cta" href="{href}">{t("o_more")} →</a></div>')
+    return "".join(out)
 
 
 def _shared(name: str) -> str:
@@ -197,6 +228,12 @@ h1 { font-size: clamp(1.7rem, 4.5vw, 2.4rem); line-height: 1.12; margin: 1.4rem 
 h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .lead, .meta { color: var(--muted); } .meta { font-size: .9rem; margin: .2rem 0; }
 .now { display: flex; gap: .8rem; align-items: baseline; margin: 2rem 0 .3rem; }
+.o { margin: .9rem 0 0; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 8px; }
+.o p, .o ul { margin: 0 0 .5rem; } .o ul { padding-left: 1.1rem; color: var(--muted); font-size: .95rem; }
+.v-za { color: var(--za); } .v-protiv { color: var(--protiv); }
+.cta { display: inline-block; font-weight: 600; text-decoration: none; padding: .45rem .8rem; border-radius: 6px;
+  background: var(--fg); color: var(--bg); } .cta:hover { color: var(--bg); opacity: .85; }
+.site-cta { margin: 1.4rem 0 0; font-weight: 600; } .site-cta a { color: var(--za); }
 .dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--protiv); }
 .who { font-family: var(--serif); font-weight: 700; font-size: clamp(2rem, 7vw, 3.4rem); line-height: 1.05; }
 .who a { text-decoration: none; }
@@ -338,12 +375,13 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="lead">{t("lead")}</p>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
+<p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>
 <p>{t("how")}</p>
 <p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: zailiprotiv.rs{(". " + t("counted")) if analytics else ""}</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
 </body>

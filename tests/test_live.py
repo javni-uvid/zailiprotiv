@@ -458,3 +458,19 @@ def test_one_frame_of_another_name_inside_a_speech_is_not_a_turn():
     t.observe(marko, now=now + 30)
     t.observe(marko, now=now + 35)
     assert [x["name"] for x in t.turns] == ["Petrović Petar", "Jovanović Marko"]
+
+
+def test_the_speaker_shows_votes_and_facts_from_the_site_and_the_way_to_the_page():
+    t = Tracker(None, "Europe/Belgrade")
+    t.use_facts({"petrovic-petar": {"za": 300, "protiv": 12, "uzdrzan": 1, "f": ["87% prisutan na konačnim glasanjima."]},
+                 "jovanovic-marko": {"novi": 1, "f": ["Niš, godište 1980."]}})
+    petar = ROSTER.match("Петар Петровић", 0.8)
+    t.observe(petar, now=1794920000.0)
+    html = fragment(t.snapshot(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "300 za" in html and "12 protiv" in html and "87% prisutan" in html
+    assert 'class="cta" href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in html
+    marko = ROSTER.match("Марко Јовановић", 0.8)
+    t.observe(marko, now=1794920100.0)
+    t.observe(marko, now=1794920105.0)
+    html = fragment(t.snapshot(), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Нови посланик" in html and "Ниш" in html and "/cir/poslanik/jovanovic-marko" in html

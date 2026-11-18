@@ -31,6 +31,8 @@ ROSTER_HOURS = _f("ROSTER_HOURS", 1)
 DAY_URL = os.environ.get("DAY_URL", SITE + "mikrofon-dan.json").strip()
 # "Dok čekate" (a short quiz and facts from the site's counts, pages_mikrofon), shown between sittings.
 WAIT_URL = os.environ.get("WAIT_URL", SITE + "mikrofon-cekanje.json").strip()
+# The speaker's final votes and the first facts of their page on the site, shown under the name: a reason to open it.
+FACTS_URL = os.environ.get("FACTS_URL", SITE + "mikrofon-poslanici.json").strip()
 
 # Where the caption is, as a share of the frame: its two lines sit in the bottom ~12 %, on the left.
 CROP_LEFT = _f("CROP_LEFT", 0.0)

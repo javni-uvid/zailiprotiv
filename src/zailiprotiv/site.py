@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import datetime as dt
 import hashlib
+import html
 import json
 import re
 import urllib.parse
@@ -40,6 +41,13 @@ def slug(text: str, limit: int = 80) -> str:
             break
         out = f"{out}-{w}" if out else w
     return out or "x"
+
+
+def _plain(fact: dict) -> str:
+    """A fact of an MP's card as one plain sentence: its number, then the text without its links."""
+    text = re.sub(r"<a [^>]*>.*?</a>", "", str(fact["text"]))
+    text = html.unescape(re.sub(r"<[^>]+>", "", text)).strip()
+    return f"{fact['n']} {text}".strip() if fact["n"] else text
 
 
 def given_first(name: str) -> str:
@@ -764,7 +772,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
                                           title_case=title_case, slug=slug)
         member_now = pages_members.now_of(member_rows)
-    rows_mp = []
+    rows_mp, live_facts = [], {}
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
         for k, how in mp.votes.items():
@@ -852,6 +860,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                                    apart=len(apart_mp), voted=sum(1 for r in record if r["line"] and r["vote"] in ("za", "protiv", "uzdrzan")),
                                    busiest=busiest, words=[latin(w) for w in words.get(mp.key, [])],
                                    day=env.filters["day"], given_first=env.filters["given_first"])
+        if mp.key in member_now:  # for the live page (mikrofon-poslanici.json): the speaker's votes and first facts
+            live_facts[mp.slug] = {"za": tally.get("za", 0), "protiv": tally.get("protiv", 0),
+                                   "uzdrzan": tally.get("uzdrzan", 0), "f": [_plain(f) for f in card_facts[:3]]}
         page_args = dict(**common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
                          areas_table=areas_table, periods=periods, group_slug=group_slug, photo=photo_of.get(mp.key, ""),
                          against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
@@ -953,6 +964,14 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                       else r["mp"].group or ""} for r in rows_mp]
              + [{"n": r["name"], "s": r["slug"], "g": latin(r.get("group", ""))} for r in member_rows if r["new"]]}
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # The live page ("Ko sada govori") shows the speaker's final votes and the first facts of their page's card, and
+    # for a new MP where they come from: a reason to open the MP's page while they speak. The newest convocation only.
+    for r in member_rows:
+        if r["new"]:
+            where = ", ".join(x for x in (latin(r.get("place", "")), f"godište {r['year']}" if r.get("year") else "") if x)
+            live_facts[r["slug"]] = {"novi": 1, "f": [where + "."] if where else []}
+    (out / "mikrofon-poslanici.json").write_text(json.dumps(live_facts, ensure_ascii=False, separators=(",", ":")),
+                                                 encoding="utf-8")
 
     items = items_by_conv[active]
     votes = loaded[active][1]

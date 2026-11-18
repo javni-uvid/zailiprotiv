@@ -47,7 +47,8 @@ class RosterKeeper:
             except Exception as exc:  # the last good list stays
                 log.warning("roster not fetched (%s); keeping %d MPs", exc, len(self.roster.people))
             if self.tracker:
-                for url, use in ((config.DAY_URL, self.tracker.use_recording), (config.WAIT_URL, self.tracker.use_waiting)):
+                for url, use in ((config.DAY_URL, self.tracker.use_recording), (config.WAIT_URL, self.tracker.use_waiting),
+                                 (config.FACTS_URL, self.tracker.use_facts)):
                     try:
                         req = urllib.request.Request(url, headers={"User-Agent": "zailiprotiv-uzivo"})
                         with urllib.request.urlopen(req, timeout=30) as resp:

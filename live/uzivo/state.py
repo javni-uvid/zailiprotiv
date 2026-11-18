@@ -47,9 +47,11 @@ class Tracker:
         self.recording: dict = {}  # the last sitting day read from the recording (the site's mikrofon-dan.json)
         self.waiting_file = Path(path).with_name("cekanje.json") if path else None
         self.waiting: dict = {}  # "Dok čekate": the site's quiz and facts (mikrofon-cekanje.json)
+        self.facts_file = Path(path).with_name("poslanici.json") if path else None
+        self.facts: dict = {}  # the speaker's votes and facts from their page (mikrofon-poslanici.json)
         self._migrate()
         self._load()
-        for f, attr in ((self.recording_file, "recording"), (self.waiting_file, "waiting")):
+        for f, attr in ((self.recording_file, "recording"), (self.waiting_file, "waiting"), (self.facts_file, "facts")):
             try:
                 if f and f.exists():
                     setattr(self, attr, json.loads(f.read_text(encoding="utf-8")))
@@ -64,6 +66,17 @@ class Tracker:
         if self.waiting_file:
             self.waiting_file.parent.mkdir(parents=True, exist_ok=True)
             self.waiting_file.write_text(json.dumps(w, ensure_ascii=False), encoding="utf-8")
+
+    def use_facts(self, facts: dict) -> None:
+        """The site's facts per MP's page (mikrofon-poslanici.json): {slug: {"za", "protiv", "uzdrzan", "f", "novi"}}."""
+        if isinstance(facts, dict):
+            with self._lock:
+                self.facts = facts
+            if self.facts_file:
+                try:
+                    self.facts_file.write_text(json.dumps(facts, ensure_ascii=False), encoding="utf-8")
+                except OSError:
+                    pass
 
     def use_recording(self, day: dict) -> None:
         """The site's last sitting day read from the recording; anything not shaped like one is ignored."""
@@ -246,6 +259,8 @@ class Tracker:
                     day, recorded, parts = rec["dan"], True, [p for p in rec.get("datoteke") or []
                                                               if p.get("url") and p.get("od") and p.get("trajanje")]
                     done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
+            if current and current["adresa"] in self.facts:
+                current["o"] = self.facts[current["adresa"]]
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
