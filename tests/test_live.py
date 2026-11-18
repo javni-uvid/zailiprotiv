@@ -182,19 +182,24 @@ def test_turns_link_to_the_recording_and_stay_until_the_next_sitting(tmp_path):
     p = Person(person_key("Petrović Petar"), "Petrović Petar", "petrovic-petar", "PG A")
     for i in range(3):
         t.observe(p, now=day1 + 5 * i, at={"video": "abc", "sq": 120 + i, "seg": 5.0})
-    t.tick(now=day1 + 200)
-    snap = t.snapshot(now=day1 + 200)
+    nina = Person(person_key("Nikolić Nina"), "Nikolić Nina", "nikolic-nina", "PG B")
+    for i in range(2):
+        t.observe(nina, now=day1 + 15 + 5 * i, at={"video": "abc", "sq": 123 + i, "seg": 5.0})
+    snap = t.snapshot(now=day1 + 25)
     assert not snap["ranije"]
     assert snap["danas"][0]["snimak"] == 595 and snap["danas"][0]["video"] == "abc"  # (120 - 1) × 5 s
     html = fragment(snap, cyr=False, site="", tz=TZ)
     assert "youtube.com/watch?v=abc&amp;t=595s" in html and "snimak 9:55" in html
+    # The broadcast over: its YouTube video goes private, so no link into it (18 Nov 2026).
+    t.tick(now=day1 + 200)
+    assert all(d["snimak"] is None for d in t.snapshot(now=day1 + 200)["danas"])
     # The next day, before anyone is read: the last sitting day's list, with its date.
     day2 = datetime(2026, 11, 19, 9, 0, tzinfo=TZ).timestamp()
     t2 = Tracker(str(path), tz="Europe/Belgrade")
     assert t.snapshot(now=day1 + 86400)["ranije"]  # past midnight, before any frame: no longer "today"
     t2.observe(None, now=day2)
     snap = t2.snapshot(now=day2)
-    assert snap["dan"] == "2026-11-18" and [d["ime"] for d in snap["danas"]] == ["Petrović Petar"]
+    assert snap["dan"] == "2026-11-18" and [d["ime"] for d in snap["danas"]] == ["Nikolić Nina", "Petrović Petar"]
     assert "Poslednji dan sednice, 18. novembar 2026." in fragment(snap, cyr=False, site="", tz=TZ)
     # Someone read at the new sitting: today's list only.
     for i in range(2):
@@ -333,14 +338,15 @@ def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the
          "do": int(day1 + 600), "okvira": 130, "video": "", "datoteka": "https://arhiva.example/zas.mp4",
          "snimak": 3500}]}
     t.use_recording(rec)
-    assert not t.snapshot(now=day1 + 200)["snimak"]  # the same day, while it lasts: what the service read
+    # The same day, the broadcast over: the day read from the recording (its links lead into the archive).
+    assert t.snapshot(now=day1 + 200)["snimak"]
     next_day = datetime(2026, 11, 18, 9, 0, tzinfo=TZ).timestamp()
     snap = Tracker(str(path), tz="Europe/Belgrade").snapshot(now=next_day)  # kept across restarts
     if snap["dan"] == "2026-11-17":  # a tracker started after the test day (as in any run after 17 Nov 2026)
         assert snap["snimak"] and [d["ime"] for d in snap["danas"]] == ["Petrović Petar", "Nikolić Nina"]
         html = fragment(snap, cyr=False, site="", tz=TZ)
         assert "Poslednji dan sednice, 17. novembar 2026." in html and "sa celog snimka" in html
-        assert "youtube.com/watch?v=xyz&amp;t=95s" in html and 'href="https://arhiva.example/zas.mp4#t=3500"' in html
+        assert "youtube.com" not in html and 'href="https://arhiva.example/zas.mp4#t=3500"' in html
     # An older day from the recording does not replace a later day the service read itself.
     t.use_recording({**rec, "dan": "2026-11-16"})
     snap = Tracker(str(path), tz="Europe/Belgrade").snapshot(now=next_day)

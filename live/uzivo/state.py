@@ -50,6 +50,8 @@ class Tracker:
         self.facts_file = Path(path).with_name("poslanici.json") if path else None
         self.facts: dict = {}  # the speaker's votes and facts from their page (mikrofon-poslanici.json)
         self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
+        self._snap: tuple[float, dict] | None = None  # the last snapshot and when: every visitor asks every few seconds
+        self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
         self._migrate()
         self._load()
         for f, attr in ((self.recording_file, "recording"), (self.waiting_file, "waiting"), (self.facts_file, "facts")):
@@ -73,6 +75,7 @@ class Tracker:
         if isinstance(facts, dict):
             with self._lock:
                 self.facts = facts
+                self._snap = None
             if self.facts_file:
                 try:
                     self.facts_file.write_text(json.dumps(facts, ensure_ascii=False), encoding="utf-8")
@@ -85,6 +88,7 @@ class Tracker:
             return
         with self._lock:
             self.recording = day
+            self._snap = None
         if self.recording_file:
             self.recording_file.parent.mkdir(parents=True, exist_ok=True)
             self.recording_file.write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
@@ -156,6 +160,7 @@ class Tracker:
         where the frame is in the broadcast (`at`: video, sq, seg)."""
         now = time.time() if now is None else now
         at = at or {}
+        self._snap = None
         with self._lock:
             if self._day(now) != self.day:
                 self._close()
@@ -213,6 +218,7 @@ class Tracker:
             if self.status != NO_STREAM and now - self.last_frame > config.STALE_SECONDS:
                 self._close()
                 self.status = NO_STREAM
+                self._snap = None
 
     @staticmethod
     def _out(t: dict) -> dict:
@@ -252,14 +258,22 @@ class Tracker:
         out: list[dict] = []
         for t in turns:
             if self.roster:
+                if self._memo.get("roster") is not self.roster:
+                    self._memo = {"roster": self.roster}
                 person = Person(t["key"], t["name"], t["slug"], t["group"])
                 if not t["slug"]:
-                    found = self.roster.match(t["name"], config.MATCH)
+                    k = ("name", t["name"])
+                    if k not in self._memo:
+                        self._memo[k] = self.roster.match(t["name"], config.MATCH)
+                    found = self._memo[k]
                     if found:
                         person = found
                         t = {**t, "key": found.key, "name": found.name, "slug": found.slug, "group": found.group}
                 if t.get("role"):
-                    t = {**t, "role": role(t["role"], person, self.roster, config.MATCH)}
+                    k = ("role", t["role"], person.group)
+                    if k not in self._memo:
+                        self._memo[k] = role(t["role"], person, self.roster, config.MATCH)
+                    t = {**t, "role": self._memo[k]}
             last = out[-1] if out else None
             if merge and last and last["key"] == t["key"] and t["start"] - last["seen"] <= config.MERGE_SECONDS:
                 out[-1] = {**last, "seen": t["seen"], "n": last["n"] + t["n"], "role": last["role"] or t["role"],
@@ -269,6 +283,18 @@ class Tracker:
         return out
 
     def snapshot(self, now: float | None = None) -> dict:
+        """The state for the page. Kept a second (and dropped with each frame read): thousands of open pages and
+        other sites ask for it every few seconds, and each answer used to compute it anew under the lock."""
+        if now is None:
+            kept = self._snap
+            if kept and time.time() - kept[0] < 1.0:
+                return kept[1]
+            snap = self._snapshot(None)
+            self._snap = (time.time(), snap)
+            return snap
+        return self._snapshot(now)
+
+    def _snapshot(self, now: float | None) -> dict:
         today = self._day(time.time() if now is None else now)
         with self._lock:
             current = self._out(self._named([self.turns[-1]])[0]) if self.open and self.turns else None
@@ -277,7 +303,14 @@ class Tracker:
                 [t for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])])]
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
             recorded, parts = False, []
-            if not done and not current:
+            rec = self.recording
+            if done and not current and self.status == NO_STREAM and rec and rec["dan"] == self.day:
+                # Today's sitting is over and the site has the day read from the recording: that list, with its
+                # links into the Assembly's archive (the YouTube video goes private after the broadcast, 18 Nov 2026).
+                recorded, parts = True, [p for p in rec.get("datoteke") or []
+                                         if p.get("url") and p.get("od") and p.get("trajanje")]
+                done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
+            elif not done and not current:
                 day, turns = self._last_day()
                 day, done = (day, [self._out(t) for t in self._named(turns)]) if turns else (self.day, [])
                 rec = self.recording
@@ -285,6 +318,8 @@ class Tracker:
                     day, recorded, parts = rec["dan"], True, [p for p in rec.get("datoteke") or []
                                                               if p.get("url") and p.get("od") and p.get("trajanje")]
                     done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
+            if self.status == NO_STREAM:  # no broadcast: a link into its YouTube video would lead to a private video
+                done = [{**d, "snimak": None} if not d.get("datoteka") else d for d in done]
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,

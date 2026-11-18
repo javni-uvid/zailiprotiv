@@ -76,6 +76,12 @@ TEXT = {
     "o_new": "Novi poslanik u ovom sazivu",
     "o_more": "Svi glasovi i govori na Za ili Protiv",
     "site_cta": "Svaki zakon od 2012. i kako je glasao svaki poslanik",
+    "totals": "Ko je koliko govorio",
+    "totals_rest": "Ostalih",
+    "speakers_n": "govornika",
+    "all_turns": "Svi govori, redom",
+    "speeches_1": "govor",
+    "speeches_n": "govora",
     "script": "Ћирилица",
 }
 
@@ -154,6 +160,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     else:
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
+        out.append(_totals(snap["danas"], cyr=cyr, site=site))
+        out.append(f'<h3 class="sub">{t("all_turns")}</h3>')
         out.append('<ol class="turns">')
         for d in snap["danas"]:
             nm = escape(_name(given_first(d["ime"]), cyr))
@@ -169,6 +177,44 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append("</div>")
     return "\n".join(out)
 
+
+
+def _dur(sec: int) -> str:
+    h, m = divmod(max(60, sec) // 60, 60)
+    return f"{h} h {m} min" if h else f"{m} min"
+
+
+def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
+    """The day's time on the floor per speaker, longest first, as bars: the turns summed, by the same rule for all."""
+    t = lambda k: escape(_t(k, cyr))
+    by: dict[str, list] = {}
+    for d in turns:
+        row = by.setdefault(d["ime"], [0, 0, d.get("adresa", ""), d.get("uloga") or d.get("grupa") or ""])
+        row[0] += max(0, d["sekundi"])
+        row[1] += 1
+    rows = sorted(by.items(), key=lambda kv: -kv[1][0])
+    if len(rows) < 2:
+        return ""
+    whole = sum(r[0] for _, r in rows) or 1
+    most = rows[0][1][0] or 1
+    out = [f'<h3 class="sub">{t("totals")}</h3><div class="tot">']
+    def line(name_html: str, side: str, sec: int, n: int, rest: bool = False) -> str:
+        share = f"{100 * sec / whole:.0f}".replace(".", ",")
+        word = t("speeches_1") if n == 1 else t("speeches_n")
+        return (f'<div class="tr{" rest" if rest else ""}"><div class="tn">{name_html}</div>'
+                f'<div class="tb"><i style="width:{max(1.5, 100 * sec / most):.1f}%"></i></div>'
+                f'<div class="tv"><b>{_dur(sec)}</b><span>{share}% · {n} {word}</span></div></div>')
+    for name, (sec, n, slug, side) in rows[:top]:
+        nm = escape(_name(given_first(name), cyr))
+        if slug:
+            nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + slug)}">{nm}</a>'
+        out.append(line(nm, side, sec, n))
+    rest = rows[top:]
+    if rest:
+        out.append(line(f'{t("totals_rest")} {len(rest)} {t("speakers_n")}', "", sum(r[0] for _, r in rest),
+                        sum(r[1] for _, r in rest), rest=True))
+    out.append("</div>")
+    return "".join(out)
 
 
 def _about(cur: dict, *, cyr: bool, site: str) -> str:
@@ -246,6 +292,18 @@ h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .time { font-variant-numeric: tabular-nums; color: var(--muted); margin-right: .4rem; }
 footer { max-width: 760px; margin: 0 auto; padding: 1.2rem 20px 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
 h3 { font-family: var(--serif); }
+h3.sub { font-size: 1.1rem; margin: 1.6rem 0 .6rem; }
+.tot { display: grid; gap: .55rem; }
+.tr { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr 7.5rem; gap: .8rem; align-items: center; }
+.tn { font-weight: 600; line-height: 1.2; } .tn a { text-decoration: none; }
+.tn span { display: block; font-weight: 400; font-size: .8rem; color: var(--muted); }
+.tb { height: .9rem; } .tb i { display: block; height: 100%; background: var(--fg); border-radius: 0 3px 3px 0; opacity: .8; }
+.tv { line-height: 1.15; font-variant-numeric: tabular-nums; } .tv b { display: block; }
+.tv span { font-size: .8rem; color: var(--muted); }
+.tr.rest .tn { color: var(--muted); font-weight: 500; } .tr.rest .tb i { opacity: .35; }
+@media (max-width: 520px) { .tr { grid-template-columns: 1fr 6.5rem; } .tb { grid-column: 1 / -1; order: 3; height: .6rem; } }
+.now { padding-top: .2rem; }
+.o { background: color-mix(in srgb, var(--fg) 4%, transparent); }
 """ + _shared("mikrofon.css")
 
 SCRIPT = _shared("mikrofon.js") + """

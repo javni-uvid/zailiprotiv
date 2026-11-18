@@ -7,18 +7,45 @@ const SITE = "https://zailiprotiv.rs";
 const LIVE_JSON = /^\/(stanje\.json|dani\.json|dan\/)/;
 const PART = /^\/(cir\/)?deo$/;  // what an open page asks for every few seconds; a failure keeps what it shows
 
+// What every open page asks for every few seconds, the same for everyone: kept here three seconds per Cloudflare
+// location, so the computer answers each about once in three seconds there, however many ask (18 Nov 2026: some
+// 4,500 visits an hour, each page asking every five seconds, and other sites reading the state, left it unanswering).
+const SHARED = /^\/((cir\/)?(deo)?|stanje\.json)$/;
+const KEEP = 3;
+
 export default {
-  async fetch(request) {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const shared = request.method === "GET" && SHARED.test(url.pathname);
+    const key = shared ? new Request(url.origin + url.pathname) : null;  // a query string doesn't make it new
+    if (shared) {
+      const hit = await caches.default.match(key);
+      if (hit) return fresh(hit);
+    }
     let answer = null;
     try {
       answer = await fetch(request);
     } catch (e) {
       answer = null;
     }
-    if (answer && answer.status < 500) return answer;
-    return fallback(new URL(request.url));
+    if (answer && answer.status < 500) {
+      if (shared && answer.status === 200) {
+        const kept = new Response(answer.clone().body, answer);
+        kept.headers.set("cache-control", `public, max-age=${KEEP}`);
+        ctx.waitUntil(caches.default.put(key, kept));
+      }
+      return answer;
+    }
+    return fallback(url);
   },
 };
+
+// A kept answer as the browser gets it: not to be kept again by the browser (the page asks for the newest).
+function fresh(hit) {
+  const out = new Response(hit.body, hit);
+  out.headers.set("cache-control", "no-store");
+  return out;
+}
 
 async function fallback(url) {
   const busy = { "cache-control": "no-store", "retry-after": "300" };
