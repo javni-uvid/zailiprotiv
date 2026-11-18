@@ -1,0 +1,64 @@
+{
+ "dan": "2026-11-18",
+ "napomena": "Pročitano automatski iz potpisa u prenosu Skupštine; može da sadrži greške. Van 'pokriveno' servis prenos nije video.",
+ "pokriveno": [
+  {
+   "od": 1794992279,
+   "do": 1794993833
+  }
+ ],
+ "govori": [
+  {
+   "ime": "Srdanović Ilija",
+   "adresa": "",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1794992999,
+   "do": 1794992999,
+   "okvira": 1,
+   "video": "CUkNRQE7PfU",
+   "sq_od": 155,
+   "sq_do": 155,
+   "segment": 5.0
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "PG AV-SNSDS",
+   "uloga": "Aleksandar Vučić - Srbija",
+   "od": 1794993169,
+   "do": 1794993258,
+   "okvira": 12,
+   "video": "CUkNRQE7PfU",
+   "sq_od": 189,
+   "sq_do": 207,
+   "segment": 5.0
+  },
+  {
+   "ime": "Jovanović Jovan",
+   "adresa": "jovanovic-jovan",
+   "grupa": "KSP",
+   "uloga": "Aleksandar Vučić - Srbija",
+   "od": 1794993263,
+   "do": 1794993263,
+   "okvira": 1,
+   "video": "CUkNRQE7PfU",
+   "sq_od": 208,
+   "sq_do": 208,
+   "segment": 5.0
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "SNS",
+   "uloga": "Aleksandar Vučić - Srbija",
+   "od": 1794993569,
+   "do": 1794993833,
+   "okvira": 48,
+   "video": "CUkNRQE7PfU",
+   "sq_od": 269,
+   "sq_do": 322,
+   "segment": 5.0
+  }
+ ]
+}
