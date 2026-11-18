@@ -339,6 +339,14 @@ its minute.
   earlier one, and says it was read from the recording. Its own `/dan/<date>.json` (and so `data/<N>/uzivo/`) is
   unchanged. Reading a day this way is by hand for now; a script for it (the recording, the caption in both layouts,
   OCR) is the next step.
+- **"Dok čekate"** (18 Nov 2026, the maintainer's request: "more fun", on both pages): between sittings the live
+  page, and the site's `mikrofon` page, carry a short quiz and the facts (`pages_mikrofon.quiz`, `facts`), published
+  for the service as `mikrofon-cekanje.json` (so a change needs no rebuild of the image). The quiz asks for numbers the
+  site computes (urgent procedure, days to adoption, laws with no vote against, speeches) and the commonest harsh word;
+  the wrong answers are the right one times fixed factors, in turn so the right one is now smallest, now middle, now
+  largest (`SCALES`), unrounded like it; the words are the three commonest, by the alphabet. Each answer links to the
+  page with its rule; about no MP in particular. A fact the quiz asks about is not listed beside it. Right and wrong
+  are shown in black and white, not in the colours of "za" and "protiv".
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
@@ -372,4 +380,5 @@ its minute.
 - **17 Nov 2026:** while "Ko sada govori" is down, `mikrofon.zailiprotiv.rs` shows the site's `mikrofon` page (a worker
   in front of the tunnel, `live/edge/`) instead of Cloudflare's error.
 - **18 Nov 2026:** the first sitting day of the Fifteenth read afterwards from the whole recording
-  (`data/15/snimak/2026-11-17.json`), shown on `mikrofon.zailiprotiv.rs` as the last sitting day.
+  (`data/15/snimak/2026-11-17.json`), shown on `mikrofon.zailiprotiv.rs` as the last sitting day; "Dok čekate" (a
+  quiz and the facts) on both versions of that page.

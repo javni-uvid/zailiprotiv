@@ -36,7 +36,8 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 
 
 def _page(cyr: bool) -> HTMLResponse:
-    return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL), headers=NO_STORE)
+    return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting),
+                        headers=NO_STORE)
 
 
 def _part(cyr: bool) -> HTMLResponse:

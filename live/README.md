@@ -56,6 +56,11 @@ read afterwards from the whole recording (`data/<N>/snimak/<date>.json`, publish
 that day instead and says so. It does so only for a day the same as or later than the service's own last day, and
 never for today. `/dan/<date>.json` stays the service's own record.
 
+**"Dok čekate".** While there is no broadcast the page also carries a short quiz and a few facts from the site's own
+counts (`zailiprotiv.rs/mikrofon-cekanje.json`, fetched with the list and kept as `/data/cekanje.json`), each linked
+to the page that says how it is computed. The quiz works by the page's one inline script; without it each answer is
+under "Odgovor".
+
 ## Running it
 
 ```sh

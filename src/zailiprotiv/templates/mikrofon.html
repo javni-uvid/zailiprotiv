@@ -21,13 +21,53 @@
   {% endfor %}
 </ol>
 {% endif %}
-{% if facts %}
+{% if quiz or facts %}
 <h2>Dok čekate</h2>
-<ul class="plain facts">
+{% if quiz %}
+<p>Pet pitanja iz brojki ovog sajta. Pogodite, pa proverite.</p>
+<ol class="mq" id="mq">
+  {% for q in quiz %}<li class="mq-q" data-a="{{ q.answer }}">
+    <p class="mq-ask">{{ q.q|latin }}</p>
+    <p class="mq-opts">{% for o in q.options %}<button type="button" class="mq-o" data-i="{{ loop.index0 }}">{{ o|latin }}</button>{% endfor %}</p>
+    <details class="mq-why"><summary>Odgovor</summary><p><b class="mq-yes">Tačno! </b><b class="mq-no">Nije. </b>{{ q.why|latin }} <a href="{{ root }}{{ q.href }}">Kako je izračunato</a></p></details>
+  </li>
+  {% endfor %}
+</ol>
+<p class="mq-score" id="mq-score" hidden>Pogođeno <b>0</b> od {{ quiz|length }}.
+  <span data-k="all" hidden>Sve tačno! Skupštinu pratite pažljivije od većine.</span>
+  <span data-k="some" hidden>Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.</span>
+  <span data-k="none" hidden>Ništa? Zato i postoji ovaj sajt: sve brojke su ovde, s pravilom kako su izračunate.</span></p>
+<script>
+(function () {
+  var list = document.getElementById("mq"), score = document.getElementById("mq-score");
+  if (!list || !score) return;
+  var got = 0, done = 0, n = list.querySelectorAll(".mq-q").length;
+  list.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".mq-o") : null;
+    if (!b) return;
+    var q = b.closest(".mq-q");
+    if (q.classList.contains("done")) return;
+    var a = +q.getAttribute("data-a"), i = +b.getAttribute("data-i");
+    q.querySelectorAll(".mq-o")[a].classList.add("right");
+    if (i !== a) b.classList.add("wrong"); else got++;
+    q.classList.add("done", i === a ? "ok" : "miss");
+    q.querySelector("details").open = true;
+    done++;
+    score.hidden = false;
+    score.querySelector("b").textContent = got;
+    if (done === n) score.querySelector('[data-k="' + (got === n ? "all" : got ? "some" : "none") + '"]').hidden = false;
+  });
+})();
+</script>
+{% endif %}
+{% if facts %}
+<h3>Da li ste znali</h3>
+<ul class="plain facts-list">
   {% for f in facts %}<li><a href="{{ root }}{{ f.href }}">{{ f.text|latin }}</a></li>
   {% endfor %}
 </ul>
 <p class="label">Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.</p>
+{% endif %}
 {% endif %}
 </div>
 {% endblock %}

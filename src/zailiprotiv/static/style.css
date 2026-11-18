@@ -1029,3 +1029,27 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .rec-part { border: 1px solid var(--line); border-radius: 999px; padding: .15rem .7rem; text-decoration: none; font-size: .92rem; }
 .rec-part:hover { border-color: var(--za); }
 main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above the home page's reordered parts on a phone */
+
+/* "Dok čekate" on the mikrofon page: a short quiz from the site's numbers (pages_mikrofon.quiz). No vote colours:
+   right and wrong are not "za" and "protiv". */
+.mq { list-style: none; counter-reset: mq; padding: 0; margin: 1rem 0; max-width: 46rem; }
+.mq-q { counter-increment: mq; border-top: 1px solid var(--line); padding: .9rem 0 .6rem; }
+.mq-ask { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; line-height: 1.3; margin: 0 0 .6rem; }
+.mq-ask::before { content: counter(mq) ". "; color: var(--muted); }
+.mq-opts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .5rem; }
+.mq-o { font: inherit; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 5.5rem; padding: .55rem 1rem;
+  border: 2px solid var(--fg); border-radius: 999px; background: transparent; color: var(--fg); cursor: pointer;
+  transition: transform .12s ease, background .12s ease; }
+.mq-o:hover { transform: translateY(-2px); }
+.mq-q.done .mq-o { cursor: default; transform: none; opacity: .55; }
+.mq-q.done .mq-o.right { opacity: 1; background: var(--fg); color: var(--bg); }
+.mq-q.done .mq-o.right::before { content: "✓ "; }
+.mq-q.done .mq-o.wrong { opacity: 1; border-style: dashed; text-decoration: line-through; }
+.mq-why summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
+.mq-why p { margin: .4rem 0 0; }
+.mq-yes, .mq-no { display: none; } .mq-q.ok .mq-yes, .mq-q.miss .mq-no { display: inline; }
+.mq-score { font-family: var(--serif); font-size: 1.3rem; margin: .4rem 0 1.4rem; max-width: 46rem; }
+.mq-score span { display: block; font-family: inherit; font-size: 1rem; margin-top: .2rem; }
+.mq-score span[hidden] { display: none; }
+.facts-list li { margin: .35rem 0; }
+@media (prefers-reduced-motion: reduce) { .mq-o { transition: none; } .mq-o:hover { transform: none; } }

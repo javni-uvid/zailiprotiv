@@ -37,3 +37,34 @@ def test_the_last_day_read_from_the_recording():
     out = pages_mikrofon.turns(day)
     assert out == [{"from": "14:04", "to": "15:40", "name": "Aleksandar Vučić", "slug": "vucic-aleksandar",
                     "side": "Lista A", "minutes": 96, "recording": "https://www.youtube.com/watch?v=qkm&t=14527s"}]
+
+
+def _quiz():
+    conv = {"n": "14", "years": "2024–2026"}
+    numbers = [{"conv": conv, "with_bill": 395, "urgent": 66, "days": 21, "voted": 394, "unopposed": 239}]
+    totals = {"14": {"years": "2024–2026", "page": "varnice.html", "page_who": "varnice-ko.html", "sittings": 16,
+                     "speeches": 7298, "measures": 38, "exchanges": 60, "harsh_word": ("izdajnici", 145),
+                     "harsh_top": [("izdajnici", 145), ("lopovi", 90), ("bitange", 12)]}}
+    return pages_mikrofon.quiz(numbers=numbers, totals=totals, active="14")
+
+
+def test_the_quiz_asks_for_the_sites_own_numbers_with_wrong_answers_by_a_fixed_rule():
+    quiz = _quiz()
+    assert len(quiz) == 5
+    for q in quiz:
+        assert len(q["options"]) == 3 and len(set(q["options"])) == 3 and 0 <= q["answer"] < 3 and q["href"]
+    assert [q["options"][q["answer"]] for q in quiz] == ["66", "21", "239", "7298", "„izdajnici“"]
+    assert [q["answer"] for q in quiz[:4]] == [0, 1, 2, 0]  # the right one now smallest, now middle, now largest
+    assert all(int(o) <= 395 for o in quiz[0]["options"]) and all(int(o) <= 394 for o in quiz[2]["options"])
+    assert quiz[4]["options"] == ["„bitange“", "„izdajnici“", "„lopovi“"]  # the three commonest, by the alphabet
+
+
+def test_the_quiz_leaves_out_what_is_not_known_and_the_live_page_gets_plain_links():
+    conv = {"n": "14", "years": "2024–2026"}
+    numbers = [{"conv": conv, "with_bill": 0, "urgent": 0, "days": None, "voted": 10, "unopposed": 4}]
+    quiz = pages_mikrofon.quiz(numbers=numbers, totals={}, active="14")
+    assert [q["options"][q["answer"]] for q in quiz] == ["4"]
+    w = pages_mikrofon.waiting([{"text": "x", "href": "zakon/a.html"}], _quiz())
+    assert w["cinjenice"][0]["href"] == "zakon/a" and w["kviz"][0]["href"] == "brojke"
+    # Beside the quiz, only the facts it does not ask about.
+    assert [f["key"] for f in pages_mikrofon.besides(_facts(), _quiz())] == ["laws", "against"]

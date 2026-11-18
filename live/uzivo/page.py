@@ -34,6 +34,19 @@ TEXT = {
            "se kad se pojavi drugo ime ili kad se 25 sekundi ne vidi nijedno. Prenos kasni za salom 15 do 25 "
            "sekundi, a automatsko čitanje može da pogreši. Mesto na snimku je mesto gde se ime prvi put pojavilo, "
            "oko pet sekundi ranije. Spisak poslednjeg dana sednice ostaje dok sledeće zasedanje ne počne.",
+    "wait_title": "Dok čekate",
+    "quiz_lead": "Pitanja iz brojki sajta Za ili Protiv. Pogodite, pa proverite.",
+    "answer": "Odgovor",
+    "yes": "Tačno!",
+    "no": "Nije.",
+    "how_counted": "Kako je izračunato",
+    "score": "Pogođeno",
+    "of": "od",
+    "all": "Sve tačno! Skupštinu pratite pažljivije od većine.",
+    "some": "Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.",
+    "none": "Ništa? Zato i postoji ovaj sajt: sve brojke su tamo, s pravilom kako su izračunate.",
+    "know": "Da li ste znali",
+    "facts_note": "Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.",
     "live": "Prenos uživo na sajtu Skupštine",
     "home": "Svi zakoni i glasanja poslanika",
     "script": "Ћирилица",
@@ -158,6 +171,28 @@ h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .turns li { padding: .5rem 0; border-bottom: 1px solid var(--line); }
 .rec { font-size: .9rem; color: var(--muted); white-space: nowrap; margin-left: .3rem; font-variant-numeric: tabular-nums; }
 .time { font-variant-numeric: tabular-nums; color: var(--muted); margin-right: .4rem; }
+h3 { font-family: var(--serif); font-size: 1.1rem; margin: 1.8rem 0 .4rem; }
+.mq { list-style: none; counter-reset: mq; padding: 0; margin: 1rem 0; }
+.mq-q { counter-increment: mq; border-top: 1px solid var(--line); padding: .9rem 0 .6rem; }
+.mq-ask { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; line-height: 1.3; margin: 0 0 .6rem; }
+.mq-ask::before { content: counter(mq) ". "; color: var(--muted); }
+.mq-opts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .5rem; }
+.mq-o { font: inherit; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 5.5rem; padding: .55rem 1rem;
+  border: 2px solid var(--fg); border-radius: 999px; background: transparent; color: var(--fg); cursor: pointer;
+  transition: transform .12s ease; }
+.mq-o:hover { transform: translateY(-2px); }
+.mq-q.done .mq-o { cursor: default; transform: none; opacity: .55; }
+.mq-q.done .mq-o.right { opacity: 1; background: var(--fg); color: var(--bg); }
+.mq-q.done .mq-o.right::before { content: "✓ "; }
+.mq-q.done .mq-o.wrong { opacity: 1; border-style: dashed; text-decoration: line-through; }
+.mq-why summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
+.mq-why p { margin: .4rem 0 0; }
+.mq-yes, .mq-no { display: none; } .mq-q.ok .mq-yes, .mq-q.miss .mq-no { display: inline; }
+.mq-score { font-family: var(--serif); font-size: 1.3rem; margin: .4rem 0 1.4rem; }
+.mq-score span { display: block; font-size: 1rem; margin-top: .2rem; }
+.mq-score span[hidden] { display: none; }
+.facts { padding-left: 1.1rem; } .facts li { margin: .35rem 0; }
+@media (prefers-reduced-motion: reduce) { .mq-o { transition: none; } .mq-o:hover { transform: none; } }
 footer { max-width: 760px; margin: 0 auto; padding: 1.2rem 20px 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
 """
 
@@ -174,11 +209,59 @@ SCRIPT = """
       .catch(function () {});
   }
   setInterval(load, 2000); setInterval(tick, 1000); tick();
+  var list = document.getElementById("mq"), score = document.getElementById("mq-score");
+  if (!list || !score) return;
+  var got = 0, done = 0, n = list.querySelectorAll(".mq-q").length;
+  list.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".mq-o") : null;
+    if (!b) return;
+    var q = b.closest(".mq-q");
+    if (q.classList.contains("done")) return;
+    var a = +q.getAttribute("data-a"), i = +b.getAttribute("data-i");
+    q.querySelectorAll(".mq-o")[a].classList.add("right");
+    if (i !== a) b.classList.add("wrong"); else got++;
+    q.classList.add("done", i === a ? "ok" : "miss");
+    q.querySelector("details").open = true;
+    done++;
+    score.hidden = false;
+    score.querySelector("b").textContent = got;
+    if (done === n) score.querySelector('[data-k="' + (got === n ? "all" : got ? "some" : "none") + '"]').hidden = false;
+  });
 })();
 """
 
 
-def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "") -> str:
+def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
+    """"Dok čekate": the site's short quiz and facts (pages_mikrofon), shown between sittings. The quiz works by the
+    page's one script; without it each answer is under "Odgovor"."""
+    w = w or {}
+    quiz, facts = w.get("kviz") or [], w.get("cinjenice") or []
+    if not quiz and not facts:
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    s = lambda text: escape(cyrillic(text) if cyr else text)
+    home = site + ("cir/" if cyr else "")
+    out = [f'<h2>{t("wait_title")}</h2>']
+    if quiz:
+        out.append(f'<p>{t("quiz_lead")}</p><ol class="mq" id="mq">')
+        for q in quiz:
+            opts = "".join(f'<button type="button" class="mq-o" data-i="{i}">{s(o)}</button>'
+                           for i, o in enumerate(q["options"]))
+            out.append(f'<li class="mq-q" data-a="{int(q["answer"])}"><p class="mq-ask">{s(q["q"])}</p>'
+                       f'<p class="mq-opts">{opts}</p><details class="mq-why"><summary>{t("answer")}</summary>'
+                       f'<p><b class="mq-yes">{t("yes")} </b><b class="mq-no">{t("no")} </b>{s(q["why"])} '
+                       f'<a href="{escape(home + q["href"])}">{t("how_counted")}</a></p></details></li>')
+        out.append("</ol>")
+        out.append(f'<p class="mq-score" id="mq-score" hidden>{t("score")} <b>0</b> {t("of")} {len(quiz)}.'
+                   + "".join(f'<span data-k="{k}" hidden>{t(k)}</span>' for k in ("all", "some", "none")) + "</p>")
+    if facts:
+        out.append(f'<h3>{t("know")}</h3><ul class="facts">')
+        out += [f'<li><a href="{escape(home + f["href"])}">{s(f["text"])}</a></li>' for f in facts]
+        out.append(f'</ul><p class="meta">{t("facts_note")}</p>')
+    return "\n".join(out)
+
+
+def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None) -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -207,6 +290,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "") -> st
 <h1>{t("title")}</h1>
 <p class="lead">{t("lead")}</p>
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
+{waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>
 <p>{t("how")}</p>
 <p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>

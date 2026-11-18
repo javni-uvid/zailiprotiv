@@ -23,7 +23,7 @@ log = logging.getLogger("worker")
 
 class RosterKeeper:
     """The site's list of MPs: fetched at start and every few hours, with the last good copy kept on disk. With it,
-    the last sitting day read from the recording, handed to the tracker."""
+    the last sitting day read from the recording and "Dok čekate", handed to the tracker."""
 
     def __init__(self, tracker: Tracker | None = None) -> None:
         self.tracker = tracker
@@ -47,12 +47,13 @@ class RosterKeeper:
             except Exception as exc:  # the last good list stays
                 log.warning("roster not fetched (%s); keeping %d MPs", exc, len(self.roster.people))
             if self.tracker:
-                try:
-                    req = urllib.request.Request(config.DAY_URL, headers={"User-Agent": "zailiprotiv-uzivo"})
-                    with urllib.request.urlopen(req, timeout=30) as resp:
-                        self.tracker.use_recording(json.loads(resp.read().decode("utf-8")))
-                except Exception as exc:  # the last good day stays
-                    log.warning("day from the recording not fetched (%s)", exc)
+                for url, use in ((config.DAY_URL, self.tracker.use_recording), (config.WAIT_URL, self.tracker.use_waiting)):
+                    try:
+                        req = urllib.request.Request(url, headers={"User-Agent": "zailiprotiv-uzivo"})
+                        with urllib.request.urlopen(req, timeout=30) as resp:
+                            use(json.loads(resp.read().decode("utf-8")))
+                    except Exception as exc:  # the last good copy stays
+                        log.warning("%s not fetched (%s)", url, exc)
         return self.roster
 
 

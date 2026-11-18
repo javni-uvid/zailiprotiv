@@ -45,13 +45,25 @@ class Tracker:
         self._others = 0  # frames in a row naming someone other than the current speaker
         self.recording_file = Path(path).with_name("snimak.json") if path else None
         self.recording: dict = {}  # the last sitting day read from the recording (the site's mikrofon-dan.json)
+        self.waiting_file = Path(path).with_name("cekanje.json") if path else None
+        self.waiting: dict = {}  # "Dok čekate": the site's quiz and facts (mikrofon-cekanje.json)
         self._migrate()
         self._load()
-        try:
-            if self.recording_file and self.recording_file.exists():
-                self.recording = json.loads(self.recording_file.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            pass
+        for f, attr in ((self.recording_file, "recording"), (self.waiting_file, "waiting")):
+            try:
+                if f and f.exists():
+                    setattr(self, attr, json.loads(f.read_text(encoding="utf-8")))
+            except (OSError, ValueError):
+                pass
+
+    def use_waiting(self, w: dict) -> None:
+        """The site's "Dok čekate"; anything not shaped like it is ignored."""
+        if not isinstance(w, dict) or not isinstance(w.get("kviz"), list) or not isinstance(w.get("cinjenice"), list):
+            return
+        self.waiting = w
+        if self.waiting_file:
+            self.waiting_file.parent.mkdir(parents=True, exist_ok=True)
+            self.waiting_file.write_text(json.dumps(w, ensure_ascii=False), encoding="utf-8")
 
     def use_recording(self, day: dict) -> None:
         """The site's last sitting day read from the recording; anything not shaped like one is ignored."""

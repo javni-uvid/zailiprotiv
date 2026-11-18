@@ -266,3 +266,23 @@ def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the
     assert not snap["snimak"]
     t.use_recording({"dan": 5})  # not shaped like a day: ignored
     assert t.recording["dan"] == "2026-11-16"
+
+
+def test_between_sittings_the_page_has_the_sites_quiz_and_facts(tmp_path):
+    from uzivo.page import waiting_part
+    path = tmp_path / "stanje.json"
+    t = Tracker(str(path), tz="Europe/Belgrade")
+    w = {"kviz": [{"q": "Koliko?", "options": ["10", "21", "34"], "answer": 1, "why": "21 dan.", "href": "brojke"}],
+         "cinjenice": [{"text": "Na sajtu je 2097 zakona.", "href": "zakoni"}]}
+    t.use_waiting(w)
+    t.use_waiting({"kviz": "x"})  # not shaped like it: ignored
+    assert Tracker(str(path), tz="Europe/Belgrade").waiting == w  # kept across restarts
+    snap = t.snapshot()
+    lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, waiting=w)
+    assert snap["stanje"] == NO_STREAM and "Dok čekate" in lat and 'data-a="1"' in lat
+    assert '<a href="https://zailiprotiv.rs/brojke">Kako je izračunato</a>' in lat and "Da li ste znali" in lat
+    cyr = waiting_part(w, cyr=True, site="https://zailiprotiv.rs/")
+    assert "Док чекате" in cyr and 'href="https://zailiprotiv.rs/cir/zakoni"' in cyr
+    snap["stanje"] = SPEAKING
+    assert "Dok čekate" not in page(snap, cyr=False, site="", tz=TZ, waiting=w)  # not while someone speaks
+    assert waiting_part({}, cyr=False, site="") == ""

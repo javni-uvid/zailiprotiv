@@ -509,7 +509,8 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                               "sittings": c["sittings"], "speeches": sum(r["speeches"] for r in c["people"]),
                               "measures": len(c["measures"]), "exchanges": len(c["exchanges"]),
                               "harsh": sum(len(r["harsh"]) for r in c["people"]),
-                              "harsh_word": commonest([h["word"] for r in c["people"] for h in r["harsh"]])}
+                              "harsh_word": commonest([h["word"] for r in c["people"] for h in r["harsh"]]),
+                              "harsh_top": commonest_k([h["word"] for r in c["people"] for h in r["harsh"]], 3)}
                      for c in by_conv}
     return by_mp, by_law
 
@@ -517,9 +518,13 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
 def commonest(words: list[str]) -> tuple[str | None, int]:
     """The harsh word said most often, its forms counted together by their entry in HARSH ("издајници" and
     "издајника" are one), shown in the form said most often; and how many times."""
+    top = commonest_k(words, 1)
+    return top[0] if top else (None, 0)
+
+
+def commonest_k(words: list[str], k: int) -> list[tuple[str, int]]:
+    """The k harsh words said most often, counted as `commonest` does, most often first."""
     entry = lambda w: next((h for h in HARSH if re.match(h, w, re.I)), w)
     by_entry = Counter(entry(w) for w in words)
-    if not by_entry:
-        return None, 0
-    top, n = by_entry.most_common(1)[0]
-    return latin(Counter(w for w in words if entry(w) == top).most_common(1)[0][0]), n
+    return [(latin(Counter(w for w in words if entry(w) == e).most_common(1)[0][0]), n)
+            for e, n in by_entry.most_common(k)]

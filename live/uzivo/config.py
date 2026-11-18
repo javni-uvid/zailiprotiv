@@ -26,6 +26,8 @@ ROSTER_HOURS = _f("ROSTER_HOURS", 6)
 # The last sitting day read afterwards from the whole recording (the site's pages_mikrofon), fetched with the list:
 # between sittings it is shown in place of this service's own record of that day, which may have gaps.
 DAY_URL = os.environ.get("DAY_URL", SITE + "mikrofon-dan.json").strip()
+# "Dok čekate" (a short quiz and facts from the site's counts, pages_mikrofon), shown between sittings.
+WAIT_URL = os.environ.get("WAIT_URL", SITE + "mikrofon-cekanje.json").strip()
 
 # Where the caption is, as a share of the frame: its two lines sit in the bottom ~12 %, on the left.
 CROP_LEFT = _f("CROP_LEFT", 0.0)
