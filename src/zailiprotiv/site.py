@@ -493,12 +493,17 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         listed = json.loads((root / NEWEST / "index.json").read_text(encoding="utf-8"))["sittings"].values()
     except (OSError, ValueError, KeyError):
         listed = []
+    # The live page's reading, where there is one (data/live.json, from the votes run), decides: the Assembly marks a
+    # sitting of several days "(у току)" overnight too, and doesn't always mark one that is on.
+    try:
+        reading = json.loads((root / "live.json").read_text(encoding="utf-8")).get("live")
+    except (OSError, ValueError, AttributeError):
+        reading = None
     for s in listed:
-        if "(у току)" in s["title"] and "седниц" in s["title"].lower():
+        if reading is not False and "(у току)" in s["title"] and "седниц" in s["title"].lower():
             common["live"].append(latin(s["title"].replace("(у току)", "").strip()))
-    # Or the live page reads a sitting now (data/live.json, from the votes run): the Assembly doesn't always mark
-    # one "(у току)". Then the newest sitting listed is the one on.
-    if not common["live"] and (root / "live.json").exists():
+    # The live page reads a sitting the Assembly didn't mark: the newest sitting listed is the one on.
+    if not common["live"] and reading:
         # "седница", a sitting's own title: the listing also carries news "… уочи конститутивне седнице".
         newest = max((s for s in listed if "седница" in s["title"].lower()), key=lambda s: s.get("starts") or "",
                      default=None)

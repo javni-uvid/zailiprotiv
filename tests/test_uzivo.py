@@ -60,4 +60,4 @@ def test_a_sitting_is_on_while_the_live_page_reads_someone(tmp_path):
     assert not uzivo.live_now({**reading, "ranije": True}, now)  # the list of an earlier day
     assert uzivo.live_mark(tmp_path, "https://m/", now, get=lambda url: reading) and (tmp_path / "live.json").exists()
     assert not uzivo.live_mark(tmp_path, "https://m/", now + 4 * 3600, get=lambda url: reading)
-    assert not (tmp_path / "live.json").exists()
+    assert json.loads((tmp_path / "live.json").read_text()) == {"live": False}

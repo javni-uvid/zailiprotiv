@@ -59,15 +59,15 @@ def live_now(state: dict, now: float) -> bool:
 
 
 def live_mark(root: Path, base: str, now: float | None = None, get=_get) -> bool:
-    """data/live.json while the live page reads a sitting, removed after: a change of it starts the site's build, so
-    the bar "Skupština sada zaseda" appears and goes within the hour."""
+    """data/live.json: {"live": true} while the live page reads a sitting, {"live": false} when it reads none (a
+    sitting of several days stays "(у току)" at the Assembly overnight, 18 Nov 2026). A change of it starts the site's
+    build, so the bar "Skupština sada zaseda" appears and goes within the hour. No file: the page couldn't be read."""
     import time
     on = live_now(get(base.rstrip("/") + "/stanje.json"), time.time() if now is None else now)
     path = root / "live.json"
-    if on and not path.exists():
-        path.write_text('{"live": true}\n', encoding="utf-8")
-    elif not on and path.exists():
-        path.unlink()
+    text = '{"live": true}\n' if on else '{"live": false}\n'
+    if not path.exists() or path.read_text(encoding="utf-8") != text:
+        path.write_text(text, encoding="utf-8")
     return on
 
 

@@ -542,6 +542,17 @@ def test_the_bar_shows_while_the_live_page_reads_a_sitting(tmp_path):
     assert "Skupština sada zaseda" in (out / "index.html").read_text()
 
 
+def test_no_bar_overnight_while_a_sitting_of_several_days_is_still_marked_on(tmp_path):
+    from zailiprotiv.config import NEWEST
+    out, root = tmp_path / "_site", data(tmp_path)
+    (root / NEWEST).mkdir()
+    (root / NEWEST / "index.json").write_text(json.dumps({"sittings": {"s": {
+        "title": "Прва седница Народне скупштине (у току)"}}}))
+    (root / "live.json").write_text('{"live": false}', encoding="utf-8")
+    site.build(root, out, "zailiprotiv.rs")
+    assert "Skupština sada zaseda" not in (out / "index.html").read_text()
+
+
 def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     from zailiprotiv import members, pages_members
     out, root = tmp_path / "_site", data(tmp_path)
