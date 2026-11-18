@@ -183,7 +183,7 @@ class HlsPoller(threading.Thread):
         self.url = playlist_url
         self.headers = {"User-Agent": "Mozilla/5.0", **headers}
         self.stderr = io.BytesIO()
-        self._stop = threading.Event()
+        self._halt = threading.Event()
         self._code: int | None = None
         self._lock = threading.Lock()
         self._segments: dict[int, str] = {}   # number → address, from the latest playlist
@@ -229,14 +229,14 @@ class HlsPoller(threading.Thread):
             self._pl_ok_at = time.time()
 
     def _playlist_loop(self) -> None:
-        while not self._stop.is_set():
+        while not self._halt.is_set():
             try:
                 self._read_playlist()
                 self._pl_error = None
             except Exception as exc:  # one error is not the end; the worker judges by frames
                 self._pl_error = exc
                 log.warning("playlist: %s", exc)
-            self._stop.wait(1.0)
+            self._halt.wait(1.0)
 
     def _segment_url(self, n: int) -> str | None:
         with self._lock:
@@ -272,7 +272,7 @@ class HlsPoller(threading.Thread):
         threading.Thread(target=self._playlist_loop, daemon=True).start()
         try:
             while self._newest < 0:  # the first playlist
-                if self._stop.wait(0.2):
+                if self._halt.wait(0.2):
                     return
                 if self._pl_error and time.time() - self._pl_ok_at > 60:
                     raise RuntimeError(f"playlist unavailable: {self._pl_error}")
@@ -280,7 +280,7 @@ class HlsPoller(threading.Thread):
             last_new = time.time()
             with tempfile.TemporaryDirectory() as tmp:
                 path = os.path.join(tmp, "seg")
-                while not self._stop.is_set():
+                while not self._halt.is_set():
                     with self._lock:
                         newest, dur, ended = self._newest, self._dur, self._ended
                     if newest > nxt:      # fell behind (after a stall): jump to the end
@@ -293,7 +293,7 @@ class HlsPoller(threading.Thread):
                         if time.time() - last_new > max(60, 6 * dur):
                             why = f" (last: {self._net_error})" if self._net_error else ""
                             raise RuntimeError(f"no new segment for {time.time() - last_new:.0f} s{why}")
-                        self._stop.wait(1.0 if self._net_error else 0.5)
+                        self._halt.wait(1.0 if self._net_error else 0.5)
                         continue
                     t1 = time.time()
                     with open(path, "wb") as f:
@@ -319,13 +319,13 @@ class HlsPoller(threading.Thread):
         finally:
             # The playlist's thread ends with this one. Left running (until 18 Nov 2026 it was, after every reading
             # that ended by itself), each kept asking YouTube for its playlist for as long as the service ran.
-            self._stop.set()
+            self._halt.set()
 
     def poll(self) -> int | None:
         return self._code
 
     def kill(self) -> None:
-        self._stop.set()
+        self._halt.set()
 
 
 def start_ffmpeg(source: str, headers: dict | None = None):
