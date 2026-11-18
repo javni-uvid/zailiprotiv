@@ -231,16 +231,18 @@ class Tracker:
             # A turn read in a single frame is shown while it lasts, and left out of the day's list after.
             done = [self._out(t) for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])]
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
-            recorded = False
+            recorded, parts = False, []
             if not done and not current:
                 day, turns = self._last_day()
                 day, done = (day, [self._out(t) for t in turns]) if turns else (self.day, [])
                 rec = self.recording
                 if rec and rec["dan"] < today and (not done or rec["dan"] >= day):
-                    day, recorded = rec["dan"], True
+                    day, recorded, parts = rec["dan"], True, [p for p in rec.get("datoteke") or []
+                                                              if p.get("url") and p.get("od") and p.get("trajanje")]
                     done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
-                    "dan": day, "ranije": day != today, "snimak": recorded, "danas": done[::-1]}
+                    "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
+                    "danas": done[::-1]}
 
     def record(self, day: str) -> dict | None:
         """A day's record, as published at /dan/<date>.json: every turn (with how many frames named the speaker,

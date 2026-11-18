@@ -36,6 +36,7 @@ TEXT = {
            "oko pet sekundi ranije. Spisak poslednjeg dana sednice ostaje dok sledeće zasedanje ne počne.",
     "play_live": "Pusti prenos uživo",
     "play_day": "Pusti snimak dana",
+    "part": "Deo",
     "yt_note": "Klik učitava plejer sa YouTube-a (Google). Dok ne kliknete, sa YouTube-a se ništa ne učitava.",
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
@@ -186,6 +187,9 @@ h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
 .play { font: inherit; font-weight: 700; font-size: 1.1rem; padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
 .play:hover { transform: scale(1.04); }
+.parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
+.part { font: inherit; font-size: .85rem; font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+.part.on { border-color: currentColor; font-weight: 700; }
 h3 { font-family: var(--serif); font-size: 1.1rem; margin: 1.8rem 0 .4rem; }
 .mq { list-style: none; counter-reset: mq; padding: 0; margin: 1rem 0; }
 .mq-q { counter-increment: mq; border-top: 1px solid var(--line); padding: .9rem 0 .6rem; }
@@ -232,8 +236,14 @@ SCRIPT = """
       v = document.createElement("video");
       v.controls = true; v.playsInline = true; v.preload = "metadata";
       v.setAttribute("src", url);
+      v.addEventListener("ended", function () {  // a day in several files: on to the next one
+        var parts = document.querySelectorAll(".part[data-file]");
+        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0); break; }
+      });
       put(v);
     }
+    var parts = document.querySelectorAll(".part[data-file]");
+    for (var j = 0; j < parts.length; j++) parts[j].classList.toggle("on", parts[j].getAttribute("data-file") === url);
     var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
     if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
   }
@@ -282,19 +292,26 @@ SCRIPT = """
 """
 
 
-def player(snap: dict, *, cyr: bool, live: str = "") -> str:
+def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None) -> str:
     """The player: while the broadcast is on, the YouTube video of it; between sittings, the last day's recording in
     the broadcaster's archive, from its first turn. Only a button until clicked (AGENTS.md, principle 5)."""
     t = lambda k: escape(_t(k, cyr))
     if snap["stanje"] != "nema_prenosa" and live:
         button, note = f'<button type="button" class="play" data-yt="{escape(live)}">▶ {t("play_live")}</button>', t("yt_note")
     else:
+        parts = snap.get("datoteke") or []
         first = next((d for d in reversed(snap["danas"]) if d.get("datoteka") and d.get("snimak") is not None), None)
-        if not first:
+        if not parts and not first:
             return ""
-        button = (f'<button type="button" class="play" data-file="{escape(first["datoteka"])}" '
-                  f'data-t="{int(first["snimak"])}">▶ {t("play_day")}</button>')
+        url, at = (parts[0]["url"], 0) if parts else (first["datoteka"], int(first["snimak"]))
+        button = f'<button type="button" class="play" data-file="{escape(url)}" data-t="{at}">▶ {t("play_day")}</button>'
         note = t("archive_note")
+        if len(parts) > 1:  # the day in several files: each one, by the hours it covers
+            chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
+                            f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'
+                            for i, p in enumerate(parts, 1))
+            return (f'<section class="player"><div class="screen" id="screen">{button}</div><ul class="parts">{chips}'
+                    f'</ul><p class="meta">{note}</p></section>')
     return f'<section class="player"><div class="screen" id="screen">{button}</div><p class="meta">{note}</p></section>'
 
 
@@ -357,7 +374,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <main>
 <h1>{t("title")}</h1>
 <p class="lead">{t("lead")}</p>
-{player(snap, cyr=cyr, live=live)}
+{player(snap, cyr=cyr, live=live, tz=tz)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>

@@ -38,6 +38,13 @@ def last_day(root: Path) -> dict | None:
     return json.loads(files[-1].read_text(encoding="utf-8")) if files else None
 
 
+def parts(day: dict) -> list[dict]:
+    """The day's recording in the broadcaster's archive, file by file, each with the hours it covers."""
+    clock = lambda ts: datetime.fromtimestamp(ts, TZ).strftime("%H:%M")
+    return [{"url": p["url"], "from": clock(p["od"]), "to": clock(p["od"] + p["trajanje"])}
+            for p in day.get("datoteke") or [] if p.get("url") and p.get("od") and p.get("trajanje")]
+
+
 def turns(day: dict) -> list[dict]:
     """The day's turns for the page, in order: a turn named in a single frame is left out, as on the live page. A
     turn's recording is a file in the broadcaster's archive (`datoteka`, its second as a media fragment), or the
@@ -165,7 +172,8 @@ def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], da
     last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
     (out / PAGE).write_text(env.get_template("mikrofon.html").render(
         **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
-        day=day["dan"] if day else "", day_turns=turns(day) if day else []), encoding="utf-8")
+        day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
+        encoding="utf-8")
     (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or []), ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")

@@ -1060,3 +1060,6 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
 .play { font: inherit; font-weight: 700; font-size: 1.1rem; padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
 .play:hover { transform: scale(1.04); }
+.parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
+.part { font: inherit; font-size: .85rem; font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+.part.on { border-color: currentColor; font-weight: 700; }

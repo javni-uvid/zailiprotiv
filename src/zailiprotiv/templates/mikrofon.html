@@ -16,8 +16,9 @@
 {% if day_turns %}
 <h2>Poslednji dan sednice, {{ day|day }}</h2>
 {% set first = day_turns|selectattr("file")|first %}
-{% if first %}
-<section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ first.file }}" data-t="{{ first.t }}">▶ Pusti snimak dana</button></div>
+{% if day_parts or first %}
+<section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button></div>
+{% if day_parts|length > 1 %}<ul class="parts">{% for p in day_parts %}<li><button type="button" class="part" data-file="{{ p.url }}" data-t="0">Deo {{ loop.index }} · {{ p.from }}–{{ p.to }}</button></li>{% endfor %}</ul>{% endif %}
 <p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
 <script>
 (function () {
@@ -40,8 +41,14 @@
       v = document.createElement("video");
       v.controls = true; v.playsInline = true; v.preload = "metadata";
       v.setAttribute("src", url);
+      v.addEventListener("ended", function () {  // a day in several files: on to the next one
+        var parts = document.querySelectorAll(".part[data-file]");
+        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0); break; }
+      });
       put(v);
     }
+    var parts = document.querySelectorAll(".part[data-file]");
+    for (var j = 0; j < parts.length; j++) parts[j].classList.toggle("on", parts[j].getAttribute("data-file") === url);
     var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
     if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
   }

@@ -506,6 +506,13 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
     site.build(root, out, "zailiprotiv.rs", cyrillic=True)
     page = (out / "mikrofon.html").read_text()
     assert 'data-file="https://arhiva.videonet.co.rs/f/zas.mp4" data-t="60"' in page and "Pusti snimak dana" in page
+    day["datoteke"] = [{"url": "https://arhiva.videonet.co.rs/f/1.mp4", "od": 1794909938, "trajanje": 1102},
+                       {"url": "https://arhiva.videonet.co.rs/f/2.mp4", "od": 1794920192, "trajanje": 6938}]
+    (root / "15" / "snimak" / "2026-11-17.json").write_text(json.dumps(day))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    page = (out / "mikrofon.html").read_text()
+    assert 'class="play" data-file="https://arhiva.videonet.co.rs/f/1.mp4" data-t="0"' in page
+    assert "Deo 2 · 13:56–15:52" in page
     assert site.check(out) == []
 
 

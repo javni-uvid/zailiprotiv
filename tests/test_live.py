@@ -307,3 +307,13 @@ def test_the_player_is_a_button_until_clicked():
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in frag  # each turn opens in the player
     page_ = page(day, cyr=False, site="", tz=TZ, live="")
     assert 'id="screen"' in page_ and "youtube-nocookie.com/embed/" in page_  # the address is only in the script
+
+
+def test_a_day_in_several_files_plays_from_the_first_with_each_part_listed():
+    from uzivo.page import player
+    day = {"stanje": NO_STREAM, "danas": [], "datoteke": [
+        {"url": "https://arhiva.videonet.co.rs/1.mp4", "od": 1794909938, "trajanje": 1102},
+        {"url": "https://arhiva.videonet.co.rs/2.mp4", "od": 1794920192, "trajanje": 6938}]}
+    html = player(day, cyr=False, tz=TZ)
+    assert 'class="play" data-file="https://arhiva.videonet.co.rs/1.mp4" data-t="0"' in html
+    assert "Deo 1 · 11:05–11:24" in html and "Deo 2 · 13:56–15:52" in html and '<p class="meta"></p>' not in html

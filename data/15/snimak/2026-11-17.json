@@ -1,7 +1,7 @@
 {
  "dan": "2026-11-17",
  "izvor": "snimak",
- "napomena": "Pročitano posle sednice sa celog snimka prenosa (YouTube kanal Skupštine, video qkmMyGsHo9o, sada privatan), kadar na svakih 5 sekundi, isto pravilo za svakog govornika: govor traje od prvog do poslednjeg kadra s imenom govornika u potpisu, dok se ne pojavi drugo ime. Predsedavajući nema potpis i nije u spisku. 'uloga' je donji red potpisa; 'datoteka' je snimak dana u arhivi videonet.co.rs, a 'snimak' mesto u njemu u sekundama, pet sekundi pre prvog kadra.",
+ "napomena": "Pročitano posle sednice sa celog snimka prenosa (YouTube kanal Skupštine, video qkmMyGsHo9o, sada privatan), kadar na svakih 5 sekundi, isto pravilo za svakog govornika: govor traje od prvog do poslednjeg kadra s imenom govornika u potpisu, dok se ne pojavi drugo ime. Predsedavajući nema potpis i nije u spisku. 'uloga' je donji red potpisa; 'datoteka' je snimak dana u arhivi videonet.co.rs, a 'snimak' mesto u njemu u sekundama, pet sekundi pre prvog kadra. 'datoteke' su delovi snimka dana redom, svaki s početkom (od) i trajanjem u sekundama.",
  "pokriveno": [
   {
    "od": 1794906125,
@@ -164,6 +164,23 @@
    "video": "",
    "snimak": 5581,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710b.mp4"
+  }
+ ],
+ "datoteke": [
+  {
+   "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710.mp4",
+   "od": 1794909938,
+   "trajanje": 1102
+  },
+  {
+   "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710a.mp4",
+   "od": 1794920192,
+   "trajanje": 6938
+  },
+  {
+   "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710b.mp4",
+   "od": 1794927131,
+   "trajanje": 7413
   }
  ]
 }
