@@ -17,6 +17,7 @@ and in `mikrofon-cekanje.json`, which the live service shows between sittings.
 from __future__ import annotations
 
 import json
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -26,8 +27,8 @@ from zailiprotiv.config import LIVE
 PAGE = "mikrofon.html"
 DAY_FILE = "mikrofon-dan.json"
 WAIT_FILE = "mikrofon-cekanje.json"
-# The wrong answers: the right one times each pair, in turn per question, so the right one is now the smallest,
-# now in the middle, now the largest.
+# The wrong answers: the right one times one of these pairs, picked by the question's key, so the right one is now the
+# smallest, now in the middle, now the largest, in no order a player could learn.
 SCALES = ((1.5, 2.4), (0.5, 1.6), (0.35, 0.65))
 TZ = ZoneInfo("Europe/Belgrade")
 
@@ -113,42 +114,86 @@ def options(right: int, turn: int, cap: int | None = None) -> tuple[list[int], i
     return [right], 0
 
 
-def quiz(*, numbers: list[dict], totals: dict, active: str) -> list[dict]:
-    """The questions, each {"key", "q", "options", "answer" (its index), "why", "href"}, in a fixed order; a question
-    whose number the site lacks is left out. A fact the quiz asks about (the same key) is not listed beside it."""
+MONTHS_OF = ("januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra",
+             "novembra", "decembra")
+
+
+def _day(iso: str) -> str:
+    """"20. aprila 2026", as a date is said in a sentence."""
+    y, m, d = iso[:10].split("-")
+    return f"{int(d)}. {MONTHS_OF[int(m) - 1]} {y}"
+
+
+def _times(n: int) -> str:
+    return "put" if n % 10 == 1 and n % 100 != 11 else "puta"
+
+
+def quiz(*, numbers: list[dict], totals: dict, active: str, items: list[dict] | None = None) -> list[dict]:
+    """The questions, each {"key", "q", "options", "answer" (its index), "why", "href"} and maybe "more" (the link's
+    words), in a fixed order; a question whose number the site lacks is left out. A fact the quiz asks about (the
+    same key) is not listed beside it. Numbers are the site's own counts; the one sentence quoted is chosen by rule
+    (`pages_floor.harsh_quote`), and the days and words offered are the three with the most, so nothing is picked."""
     out = []
 
     def ask(key: str, q: str, right: int, why: str, href: str, cap: int | None = None) -> None:
-        opts, at = options(right, len(out), cap)
+        opts, at = options(right, sum(map(ord, key)), cap)  # the factors by the question's key: no pattern to learn
         if len(opts) == 3:
             out.append({"key": key, "q": q, "options": [str(o) for o in opts], "answer": at, "why": why, "href": href})
 
     n = next((x for x in numbers if x["conv"]["n"] == active), None)
-    if n:
-        years = n["conv"]["years"]
-        if n["with_bill"]:
-            ask("urgent", f"Od {n['with_bill']} zakona u sazivu {years}, koliko ih je predloženo po hitnom postupku?",
-                n["urgent"], f"{n['urgent']}. Hitni postupak skraćuje rokove za raspravu.", "brojke.html",
-                cap=n["with_bill"])
-        if n["days"] is not None:
-            d = n["days"]
-            ask("days", f"Za koliko dana od podnošenja predloga je usvojena polovina zakona u sazivu {years}?", d,
-                f"{d} {'dan' if d % 10 == 1 and d % 100 != 11 else 'dana'} ili manje.", "brojke.html")
-        if n["voted"]:
-            ask("unopposed", f"Od {n['voted']} zakona u sazivu {years} o kojima se glasalo, koliko ih je prošlo bez ijednog "
-                f"glasa protiv?", n["unopposed"], f"{n['unopposed']}.", "brojke.html", cap=n["voted"])
-    t = next(iter(totals.values()), None)
+    t = next(iter(totals.values()), None)  # the newest convocation with notes read
+    top = (t or {}).get("harsh_top") or []
+    quote = (t or {}).get("harsh_quote")
+    if t and quote and len(top) == 3:  # which word is missing from a sentence said in the hall
+        said = quote["word"]
+        words = sorted({said, *(w for w, _ in top[1:])}, key=str.lower)  # the quote's word is the commonest one
+        if len(words) == 3:
+            gap = quote["text"].replace(said, "_____", 1)
+            out.append({"key": "quote", "q": f"Koja reč nedostaje? „{gap}“", "options": [f"„{w}“" for w in words],
+                        "answer": words.index(said),
+                        "why": f"„{quote['text']}“ Rečeno {_day(quote['date'])}." if quote["date"] else f"„{quote['text']}“",
+                        "href": quote["url"] or t["page_who"], "more": "Ceo govor" if quote["url"] else ""})
+    if n and n["with_bill"]:
+        ask("urgent", f"Od {n['with_bill']} zakona u sazivu {n['conv']['years']}, koliko ih je predloženo po hitnom "
+                      f"postupku?", n["urgent"], f"{n['urgent']}. Hitni postupak skraćuje rokove za raspravu.",
+            "brojke.html", cap=n["with_bill"])
+    if t and top:
+        word, times = top[0]
+        ask("harsh", f"Koliko puta je u sazivu {t['years']} izgovorena reč „{word}“, u svim oblicima?", times,
+            f"{times} {_times(times)}. To je teška reč izgovorena najčešće.", t["page_who"])
+    passed = Counter((it["law"].get("passed") or "")[:10] for it in items or [] if it["law"].get("passed"))
+    if n and passed:
+        most_day, most = sorted(passed.items(), key=lambda kv: (-kv[1], kv[0]))[0]
+        ask("per_day", f"Koliko je zakona najviše usvojeno u jednom danu u sazivu {n['conv']['years']}?", most,
+            f"{most}, {_day(most_day)}. Na sednicama se o zakonima često glasa u nizu, posle zajedničke rasprave.",
+            "zakoni.html")
+    if n and n["days"] is not None:
+        d = n["days"]
+        ask("days", f"Za koliko dana od podnošenja predloga je usvojena polovina zakona u sazivu {n['conv']['years']}?",
+            d, f"{d} {'dan' if d % 10 == 1 and d % 100 != 11 else 'dana'} ili manje.", "brojke.html")
+    if t and t.get("harsh"):
+        ask("harsh_all", f"Koliko teških reči (uvreda kao „lopovi“, „izdajnici“, „ološ“) je izgovoreno u sazivu "
+                         f"{t['years']}?", t["harsh"],
+            f"{t['harsh']}, u {t['sittings']} sednica čije su beleške pročitane.", t["page_who"])
+    if t and t.get("measures"):
+        ask("measures", f"Koliko puta je predsedavajući u sazivu {t['years']} izrekao meru: opomenu, oduzimanje reči "
+                        f"ili udaljenje sa sednice?", t["measures"], f"{t['measures']} {_times(t['measures'])}.",
+            t["page"])
+    if n and n["voted"]:
+        ask("unopposed", f"Od {n['voted']} zakona u sazivu {n['conv']['years']} o kojima se glasalo, koliko ih je "
+                         f"prošlo bez ijednog glasa protiv?", n["unopposed"], f"{n['unopposed']}.", "brojke.html",
+            cap=n["voted"])
+    days = (t or {}).get("harsh_days") or []
+    if len(days) == 3:  # the day with the most harsh words, among the three with the most
+        dates = sorted(d for d, _ in days)
+        first, times = days[0]
+        out.append({"key": "harsh_day", "q": f"Kog dana u sazivu {t['years']} je izgovoreno najviše teških reči?",
+                    "options": [_day(d) for d in dates], "answer": dates.index(first),
+                    "why": f"{_day(first)}: {times} {_times(times)}. Sva tri dana su među onima sa najviše.",
+                    "href": t["page_who"]})
     if t:
-        ask("speeches", f"Koliko govora je zapisano u stenogramima {t['sittings']} sednica saziva {t['years']}?", t["speeches"],
-            f"{t['speeches']}, zajedno sa {t['exchanges']} razmena replika.", t["page"])
-        top = t.get("harsh_top") or []
-        if len(top) == 3:
-            words = sorted(w for w, _ in top)
-            first, times = top[0]
-            out.append({"key": "harsh", "q": f"Koja teška reč je izgovorena najčešće u sazivu {t['years']}?",
-                        "options": [f"„{w}“" for w in words], "answer": words.index(first),
-                        "why": f"„{first}“, u svim oblicima {times} puta. Sve tri su među najčešćim.",
-                        "href": t["page_who"]})
+        ask("speeches", f"Koliko govora je zapisano u stenogramima {t['sittings']} sednica saziva {t['years']}?",
+            t["speeches"], f"{t['speeches']}, zajedno sa {t['exchanges']} razmena replika.", t["page"])
     return out
 
 
@@ -160,7 +205,7 @@ def besides(facts_: list[dict], quiz_: list[dict]) -> list[dict]:
 
 def waiting(facts_: list[dict], quiz_: list[dict]) -> dict:
     """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own)."""
-    plain = lambda h: h.removesuffix(".html")
+    plain = lambda h: h if h.startswith("http") else h.removesuffix(".html")
     return {"kviz": [{**q, "href": plain(q["href"])} for q in quiz_],
             "cinjenice": [{**f, "href": plain(f["href"])} for f in besides(facts_, quiz_)]}
 

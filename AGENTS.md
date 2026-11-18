@@ -357,14 +357,19 @@ its minute.
   begins in the day was found by lining up a caption's first frame in the file and in the video. The live record's
   links (`video`, YouTube) will go private the same way: moving them to the archive's files is to do, and
   `recording_links` stays off until then.
-- **"Dok čekate"** (18 Nov 2026, the maintainer's request: "more fun", on both pages): between sittings the live
-  page, and the site's `mikrofon` page, carry a short quiz and the facts (`pages_mikrofon.quiz`, `facts`), published
-  for the service as `mikrofon-cekanje.json` (so a change needs no rebuild of the image). The quiz asks for numbers the
-  site computes (urgent procedure, days to adoption, laws with no vote against, speeches) and the commonest harsh word;
-  the wrong answers are the right one times fixed factors, in turn so the right one is now smallest, now middle, now
-  largest (`SCALES`), unrounded like it; the words are the three commonest, by the alphabet. Each answer links to the
-  page with its rule; about no MP in particular. A fact the quiz asks about is not listed beside it. Right and wrong
-  are shown in black and white, not in the colours of "za" and "protiv".
+- **"Dok čekate"** (18 Nov 2026, the maintainer's request: "more fun", on both pages, "like the voting quiz"):
+  between sittings the live page, and the site's `mikrofon` page, carry a quiz and the facts
+  (`pages_mikrofon.quiz`, `facts`), published for the service as `mikrofon-cekanje.json` (so a change needs no rebuild
+  of the image). Ten questions, one at a time as in the site's quiz (a strip of numbers, big answers, the answer and
+  its source, on by itself after four seconds, a score to share at the end). They ask for what the site computes:
+  urgent procedure, days to adoption, laws with no vote against, the most laws passed in one day, speeches, the chair's
+  measures, harsh words (how many, the commonest and how often, the day with most), and one sentence said in the hall
+  with its harsh word left out (`pages_floor.harsh_quote`, chosen by rule: the commonest word alone in a sentence of
+  40–170 characters, the latest said; its answer links the speech). Wrong numbers are the right one times fixed
+  factors picked by the question's key, unrounded like it (`SCALES`); words and days offered are the three with the
+  most. About no MP in particular; a fact the quiz asks about is not listed beside it. Black and white only, not the
+  colours of "za" and "protiv". The script and styles (`templates/mikrofon.js`, `.css`) are one file each, inline in
+  both pages; the image copies them.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

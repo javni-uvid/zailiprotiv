@@ -510,9 +510,31 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                               "measures": len(c["measures"]), "exchanges": len(c["exchanges"]),
                               "harsh": sum(len(r["harsh"]) for r in c["people"]),
                               "harsh_word": commonest([h["word"] for r in c["people"] for h in r["harsh"]]),
-                              "harsh_top": commonest_k([h["word"] for r in c["people"] for h in r["harsh"]], 3)}
+                              "harsh_top": commonest_k([h["word"] for r in c["people"] for h in r["harsh"]], 3),
+                              "harsh_days": Counter(h["date"] for r in c["people"] for h in r["harsh"]
+                                                    if h.get("date")).most_common(3),
+                              "harsh_quote": harsh_quote(c["people"])}
                      for c in by_conv}
     return by_mp, by_law
+
+
+def harsh_quote(people: list[dict]) -> dict | None:
+    """One sentence with the commonest harsh word, for the mikrofon page's quiz ("which word is missing?"), chosen by
+    rule so that nobody is picked: the sentence holds that word and no other harsh one, is 40 to 170 characters long,
+    and is the latest said (then the shortest, then by the alphabet). Word for word, with who said it and where."""
+    entry = lambda w: next((h for h in HARSH if re.match(h, w, re.I)), w)
+    words = [h["word"] for r in people for h in r["harsh"]]
+    if not words:
+        return None
+    top = Counter(entry(w) for w in words).most_common(1)[0][0]
+    found = [(h.get("date") or "", -len(h["text"]), h["text"], r, h) for r in people for h in r["harsh"]
+             if entry(h["word"]) == top and 40 <= len(h["text"]) <= 170 and len(_HARSH.findall(h["text"])) == 1]
+    if not found:
+        return None
+    _, _, text, r, h = max(found, key=lambda x: (x[0], x[1], [-ord(ch) for ch in x[2]]))
+    said = _HARSH.search(text).group(0)
+    return {"text": latin(text), "word": latin(said), "who": r["who"]["name"], "slug": r["who"].get("slug") or "",
+            "date": h.get("date") or "", "url": h.get("ours") or h.get("notes") or ""}
 
 
 def commonest(words: list[str]) -> tuple[str | None, int]:

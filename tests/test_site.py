@@ -107,6 +107,9 @@ def test_site_builds_every_page(tmp_path):
             assert re.findall(r"<script\b[^>]*>", text, re.I)[1:] == ["<script>", f'<script src="listic.js?v={v}" defer>']
             assert text.count("<script>") == 1 and 'getElementById("lb-mine").hidden = false' in text  # opens the ballot before the first paint
             text = text.replace(f'<script src="listic.js?v={v}" defer>', "").replace("<script>", "", 1)
+        if page.name == "mikrofon.html" and "<script>" in text:  # the player and the quiz: one script of its own, inline
+            assert text.count("<script>") == 1 and "youtube-nocookie.com/embed/" in text
+            text = text.replace("<script>", "", 1)
         text = re.sub(r'<script type="application/ld\+json">.*?</script\s*>', "", text, flags=re.S | re.I)  # data for search engines, not code
         here = "/" if page.name == "404.html" else "../" if page.parent != out else ""  # the 404 page is served at any depth
         assert re.findall(r"<script\b[^>]*>", text, re.I) == [f'<script src="{here}site.js?v='

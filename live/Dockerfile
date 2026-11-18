@@ -9,5 +9,7 @@ COPY live/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY live/uzivo ./uzivo
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
+# The script and styles shared with the site's mikrofon page (page._shared)
+COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
 EXPOSE 8000
 CMD ["uvicorn", "uzivo.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

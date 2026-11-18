@@ -20,49 +20,6 @@
 <section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button></div>
 {% if day_parts|length > 1 %}<ul class="parts">{% for p in day_parts %}<li><button type="button" class="part" data-file="{{ p.url }}" data-t="0">Deo {{ loop.index }} · {{ p.from }}–{{ p.to }}</button></li>{% endfor %}</ul>{% endif %}
 <p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
-<script>
-(function () {
-  // The player (AGENTS.md, principle 5): nothing from YouTube or the archive loads until a click asks for it.
-  var screen = document.getElementById("screen");
-  if (!screen) return;
-  var ARCHIVE = /^https:\/\/arhiva\.videonet\.co\.rs\//, ID = /^[\w-]{6,20}$/;
-  function put(el) { screen.textContent = ""; screen.appendChild(el); }
-  function yt(id, t) {
-    var f = document.createElement("iframe");
-    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1" + (t > 0 ? "&start=" + t : "");
-    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-    f.allowFullscreen = true;
-    f.title = "YouTube";
-    put(f);
-  }
-  function file(url, t) {
-    var v = screen.querySelector("video");
-    if (!v || v.getAttribute("src") !== url) {
-      v = document.createElement("video");
-      v.controls = true; v.playsInline = true; v.preload = "metadata";
-      v.setAttribute("src", url);
-      v.addEventListener("ended", function () {  // a day in several files: on to the next one
-        var parts = document.querySelectorAll(".part[data-file]");
-        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0); break; }
-      });
-      put(v);
-    }
-    var parts = document.querySelectorAll(".part[data-file]");
-    for (var j = 0; j < parts.length; j++) parts[j].classList.toggle("on", parts[j].getAttribute("data-file") === url);
-    var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
-    if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
-  }
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest ? e.target.closest("[data-file], [data-yt]") : null;
-    if (!a) return;
-    var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
-    if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
-    e.preventDefault();
-    if (url) file(url, t); else yt(id, t);
-    if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-})();
-</script>
 {% endif %}
 <p class="label">Pročitano posle sednice sa celog snimka prenosa, iz potpisa ispod govornika, isto za svakog: govor traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku. Automatsko čitanje može da pogreši.</p>
 <ol class="plain turns">
@@ -73,41 +30,33 @@
 {% if quiz or facts %}
 <h2>Dok čekate</h2>
 {% if quiz %}
-<p>Pet pitanja iz brojki ovog sajta. Pogodite, pa proverite.</p>
-<ol class="mq" id="mq">
+<p>Kviz o Skupštini: {{ quiz|length }} pitanja iz brojki i beleški ovog sajta. Pogodite, pa vidite koliko ste blizu.</p>
+<div class="mq" id="mq">
+<nav class="mq-strip" hidden aria-label="Pitanja">{% for q in quiz %}<button type="button" aria-label="Pitanje {{ loop.index }}">{{ loop.index }}</button>{% endfor %}</nav>
+<ol class="mq-list">
   {% for q in quiz %}<li class="mq-q" data-a="{{ q.answer }}">
-    <p class="mq-ask">{{ q.q|latin }}</p>
-    <p class="mq-opts">{% for o in q.options %}<button type="button" class="mq-o" data-i="{{ loop.index0 }}">{{ o|latin }}</button>{% endfor %}</p>
-    <details class="mq-why"><summary>Odgovor</summary><p><b class="mq-yes">Tačno! </b><b class="mq-no">Nije. </b>{{ q.why|latin }} <a href="{{ root }}{{ q.href }}">Kako je izračunato</a></p></details>
+    <p class="mq-n">Pitanje {{ loop.index }} od {{ quiz|length }}</p>
+    <h3 class="mq-ask">{{ q.q|latin }}</h3>
+    <div class="mq-opts" role="group" aria-label="Odgovori">{% for o in q.options %}<button type="button" class="mq-o" data-i="{{ loop.index0 }}">{{ o|latin }}</button>{% endfor %}</div>
+    <details class="mq-why"><summary>Odgovor</summary>
+      <p class="mq-verdict"><span class="mq-yes">Tačno!</span><span class="mq-no"><b>Nije. </b>Tačno je {{ q.options[q.answer]|latin }}.</span></p>
+      <p>{{ q.why|latin }} <a href="{% if q.href.startswith('http') %}{{ q.href }}{% else %}{{ root }}{{ q.href }}{% endif %}">{{ q.more or "Kako je izračunato" }}</a></p>
+      <p class="mq-next"><span class="mq-auto"></span><button type="button" class="mq-go">{% if loop.last %}Vidi rezultat{% else %}Sledeće pitanje{% endif %}</button></p>
+    </details>
   </li>
   {% endfor %}
 </ol>
-<p class="mq-score" id="mq-score" hidden>Pogođeno <b>0</b> od {{ quiz|length }}.
-  <span data-k="all" hidden>Sve tačno! Skupštinu pratite pažljivije od većine.</span>
-  <span data-k="some" hidden>Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.</span>
-  <span data-k="none" hidden>Ništa? Zato i postoji ovaj sajt: sve brojke su ovde, s pravilom kako su izračunate.</span></p>
-<script>
-(function () {
-  var list = document.getElementById("mq"), score = document.getElementById("mq-score");
-  if (!list || !score) return;
-  var got = 0, done = 0, n = list.querySelectorAll(".mq-q").length;
-  list.addEventListener("click", function (e) {
-    var b = e.target.closest ? e.target.closest(".mq-o") : null;
-    if (!b) return;
-    var q = b.closest(".mq-q");
-    if (q.classList.contains("done")) return;
-    var a = +q.getAttribute("data-a"), i = +b.getAttribute("data-i");
-    q.querySelectorAll(".mq-o")[a].classList.add("right");
-    if (i !== a) b.classList.add("wrong"); else got++;
-    q.classList.add("done", i === a ? "ok" : "miss");
-    q.querySelector("details").open = true;
-    done++;
-    score.hidden = false;
-    score.querySelector("b").textContent = got;
-    if (done === n) score.querySelector('[data-k="' + (got === n ? "all" : got ? "some" : "none") + '"]').hidden = false;
-  });
-})();
-</script>
+<section class="mq-end" hidden aria-live="polite">
+  <p class="mq-n">Rezultat</p>
+  <p class="mq-big"><span class="mq-got">0</span> od {{ quiz|length }}</p>
+  <p data-k="all" hidden>Sve tačno! Skupštinu pratite pažljivije od većine.</p>
+  <p data-k="some" hidden>Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.</p>
+  <p data-k="none" hidden>Ništa? Zato i postoji ovaj sajt: sve brojke su ovde, s pravilom kako su izračunate.</p>
+  <p class="mq-acts"><button type="button" class="mq-share">Podeli rezultat</button> <button type="button" class="mq-again">Igraj ponovo</button> <a class="button ghost" href="{{ root }}kviz/podelili-salu.html">Kviz: kako bi ti glasao</a></p>
+  <p class="label mq-shared" hidden>Tekst i link su kopirani.</p>
+  <p class="mq-share-text" hidden>Moj rezultat u kvizu o Skupštini: <span class="mq-got">0</span> od {{ quiz|length }}. Za ili Protiv, „Ko sada govori“.</p>
+</section>
+</div>
 {% endif %}
 {% if facts %}
 <h3>Da li ste znali</h3>
@@ -117,6 +66,14 @@
 </ul>
 <p class="label">Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.</p>
 {% endif %}
+{% endif %}
+{% if quiz or day_turns %}
+<style>
+{% include "mikrofon.css" %}
+</style>
+<script>
+{% include "mikrofon.js" %}
+</script>
 {% endif %}
 </div>
 {% endblock %}

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from html import escape
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from .names import cyrillic, given_first
@@ -41,7 +42,19 @@ TEXT = {
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "wait_title": "Dok čekate",
-    "quiz_lead": "Pitanja iz brojki sajta Za ili Protiv. Pogodite, pa proverite.",
+    "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
+                 "ste blizu.",
+    "question": "Pitanje",
+    "questions": "Pitanja",
+    "right_is": "Tačno je",
+    "next_q": "Sledeće pitanje",
+    "see_result": "Vidi rezultat",
+    "result": "Rezultat",
+    "share": "Podeli rezultat",
+    "again": "Igraj ponovo",
+    "copied": "Tekst i link su kopirani.",
+    "share_text": "Moj rezultat u kvizu o Skupštini:",
+    "share_end": "Za ili Protiv, „Ko sada govori“.",
     "answer": "Odgovor",
     "yes": "Tačno!",
     "no": "Nije.",
@@ -148,6 +161,17 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     return "\n".join(out)
 
 
+
+def _shared(name: str) -> str:
+    """A file the page shares with the site's mikrofon page (src/zailiprotiv/templates): copied into the image beside
+    this module, read from the repository when run from it (the tests)."""
+    for path in (Path(__file__).parent / "static" / name,
+                 Path(__file__).resolve().parents[2] / "src" / "zailiprotiv" / "templates" / name):
+        if path.is_file():
+            return path.read_text(encoding="utf-8")
+    return ""
+
+
 CSS = """
 @font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
   src: url(/fonts/literata-latin-ext-wght-normal.woff2) format("woff2");
@@ -182,82 +206,11 @@ h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .turns li { padding: .5rem 0; border-bottom: 1px solid var(--line); }
 .rec { font-size: .9rem; color: var(--muted); white-space: nowrap; margin-left: .3rem; font-variant-numeric: tabular-nums; }
 .time { font-variant-numeric: tabular-nums; color: var(--muted); margin-right: .4rem; }
-.player { margin: 1.4rem 0 .4rem; }
-.screen { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; display: grid; place-items: center; }
-.screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
-.play { font: inherit; font-weight: 700; font-size: 1.1rem; padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
-.play:hover { transform: scale(1.04); }
-.parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
-.part { font: inherit; font-size: .85rem; font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
-.part.on { border-color: currentColor; font-weight: 700; }
-h3 { font-family: var(--serif); font-size: 1.1rem; margin: 1.8rem 0 .4rem; }
-.mq { list-style: none; counter-reset: mq; padding: 0; margin: 1rem 0; }
-.mq-q { counter-increment: mq; border-top: 1px solid var(--line); padding: .9rem 0 .6rem; }
-.mq-ask { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; line-height: 1.3; margin: 0 0 .6rem; }
-.mq-ask::before { content: counter(mq) ". "; color: var(--muted); }
-.mq-opts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .5rem; }
-.mq-o { font: inherit; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 5.5rem; padding: .55rem 1rem;
-  border: 2px solid var(--fg); border-radius: 999px; background: transparent; color: var(--fg); cursor: pointer;
-  transition: transform .12s ease; }
-.mq-o:hover { transform: translateY(-2px); }
-.mq-q.done .mq-o { cursor: default; transform: none; opacity: .55; }
-.mq-q.done .mq-o.right { opacity: 1; background: var(--fg); color: var(--bg); }
-.mq-q.done .mq-o.right::before { content: "✓ "; }
-.mq-q.done .mq-o.wrong { opacity: 1; border-style: dashed; text-decoration: line-through; }
-.mq-why summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
-.mq-why p { margin: .4rem 0 0; }
-.mq-yes, .mq-no { display: none; } .mq-q.ok .mq-yes, .mq-q.miss .mq-no { display: inline; }
-.mq-score { font-family: var(--serif); font-size: 1.3rem; margin: .4rem 0 1.4rem; }
-.mq-score span { display: block; font-size: 1rem; margin-top: .2rem; }
-.mq-score span[hidden] { display: none; }
-.facts { padding-left: 1.1rem; } .facts li { margin: .35rem 0; }
-@media (prefers-reduced-motion: reduce) { .mq-o { transition: none; } .mq-o:hover { transform: none; } }
 footer { max-width: 760px; margin: 0 auto; padding: 1.2rem 20px 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
-"""
+h3 { font-family: var(--serif); }
+""" + _shared("mikrofon.css")
 
-SCRIPT = """
-(function () {
-  // The player (AGENTS.md, principle 5): nothing from YouTube or the archive loads until a click asks for it.
-  var screen = document.getElementById("screen");
-  if (!screen) return;
-  var ARCHIVE = /^https:\\/\\/arhiva\\.videonet\\.co\\.rs\\//, ID = /^[\\w-]{6,20}$/;
-  function put(el) { screen.textContent = ""; screen.appendChild(el); }
-  function yt(id, t) {
-    var f = document.createElement("iframe");
-    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1" + (t > 0 ? "&start=" + t : "");
-    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-    f.allowFullscreen = true;
-    f.title = "YouTube";
-    put(f);
-  }
-  function file(url, t) {
-    var v = screen.querySelector("video");
-    if (!v || v.getAttribute("src") !== url) {
-      v = document.createElement("video");
-      v.controls = true; v.playsInline = true; v.preload = "metadata";
-      v.setAttribute("src", url);
-      v.addEventListener("ended", function () {  // a day in several files: on to the next one
-        var parts = document.querySelectorAll(".part[data-file]");
-        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0); break; }
-      });
-      put(v);
-    }
-    var parts = document.querySelectorAll(".part[data-file]");
-    for (var j = 0; j < parts.length; j++) parts[j].classList.toggle("on", parts[j].getAttribute("data-file") === url);
-    var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
-    if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
-  }
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest ? e.target.closest("[data-file], [data-yt]") : null;
-    if (!a) return;
-    var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
-    if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
-    e.preventDefault();
-    if (url) file(url, t); else yt(id, t);
-    if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-})();
-
+SCRIPT = _shared("mikrofon.js") + """
 (function () {
   var base = document.body.getAttribute("data-base");
   function tick() {
@@ -274,24 +227,6 @@ SCRIPT = """
   }
   setInterval(load, 5000); setInterval(tick, 1000); tick();
   document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
-  var list = document.getElementById("mq"), score = document.getElementById("mq-score");
-  if (!list || !score) return;
-  var got = 0, done = 0, n = list.querySelectorAll(".mq-q").length;
-  list.addEventListener("click", function (e) {
-    var b = e.target.closest ? e.target.closest(".mq-o") : null;
-    if (!b) return;
-    var q = b.closest(".mq-q");
-    if (q.classList.contains("done")) return;
-    var a = +q.getAttribute("data-a"), i = +b.getAttribute("data-i");
-    q.querySelectorAll(".mq-o")[a].classList.add("right");
-    if (i !== a) b.classList.add("wrong"); else got++;
-    q.classList.add("done", i === a ? "ok" : "miss");
-    q.querySelector("details").open = true;
-    done++;
-    score.hidden = false;
-    score.querySelector("b").textContent = got;
-    if (done === n) score.querySelector('[data-k="' + (got === n ? "all" : got ? "some" : "none") + '"]').hidden = false;
-  });
 })();
 """
 
@@ -320,8 +255,8 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
 
 
 def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
-    """"Dok čekate": the site's short quiz and facts (pages_mikrofon), shown between sittings. The quiz works by the
-    page's one script; without it each answer is under "Odgovor"."""
+    """"Dok čekate": the site's quiz, one question at a time like the site's own quiz, and facts (pages_mikrofon),
+    shown between sittings; the markup as the site's mikrofon page has it, for the same script and styles."""
     w = w or {}
     quiz, facts = w.get("kviz") or [], w.get("cinjenice") or []
     if not quiz and not facts:
@@ -329,22 +264,36 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
     t = lambda k: escape(_t(k, cyr))
     s = lambda text: escape(cyrillic(text) if cyr else text)
     home = site + ("cir/" if cyr else "")
+    href = lambda h: escape(h if h.startswith("http") else home + h)
+    n = len(quiz)
     out = [f'<h2>{t("wait_title")}</h2>']
     if quiz:
-        out.append(f'<p>{t("quiz_lead")}</p><ol class="mq" id="mq">')
-        for q in quiz:
-            opts = "".join(f'<button type="button" class="mq-o" data-i="{i}">{s(o)}</button>'
-                           for i, o in enumerate(q["options"]))
-            out.append(f'<li class="mq-q" data-a="{int(q["answer"])}"><p class="mq-ask">{s(q["q"])}</p>'
-                       f'<p class="mq-opts">{opts}</p><details class="mq-why"><summary>{t("answer")}</summary>'
-                       f'<p><b class="mq-yes">{t("yes")} </b><b class="mq-no">{t("no")} </b>{s(q["why"])} '
-                       f'<a href="{escape(home + q["href"])}">{t("how_counted")}</a></p></details></li>')
-        out.append("</ol>")
-        out.append(f'<p class="mq-score" id="mq-score" hidden>{t("score")} <b>0</b> {t("of")} {len(quiz)}.'
-                   + "".join(f'<span data-k="{k}" hidden>{t("q_" + k)}</span>' for k in ("all", "some", "none")) + "</p>")
+        marks = "".join(f'<button type="button" aria-label="{t("question")} {i}">{i}</button>' for i in range(1, n + 1))
+        out.append(f'<p>{s(_t("quiz_lead", False).format(n=n))}</p><div class="mq" id="mq">'
+                   f'<nav class="mq-strip" hidden aria-label="{t("questions")}">{marks}</nav><ol class="mq-list">')
+        for i, q in enumerate(quiz, 1):
+            opts = "".join(f'<button type="button" class="mq-o" data-i="{k}">{s(o)}</button>'
+                           for k, o in enumerate(q["options"]))
+            more = s(q["more"]) if q.get("more") else t("how_counted")
+            out.append(f'<li class="mq-q" data-a="{int(q["answer"])}"><p class="mq-n">{t("question")} {i} {t("of")} {n}</p>'
+                       f'<h3 class="mq-ask">{s(q["q"])}</h3><div class="mq-opts" role="group">{opts}</div>'
+                       f'<details class="mq-why"><summary>{t("answer")}</summary>'
+                       f'<p class="mq-verdict"><span class="mq-yes">{t("yes")}</span><span class="mq-no"><b>{t("no")} </b>'
+                       f'{t("right_is")} {s(q["options"][int(q["answer"])])}.</span></p>'
+                       f'<p>{s(q["why"])} <a href="{href(q["href"])}">{more}</a></p>'
+                       f'<p class="mq-next"><span class="mq-auto"></span><button type="button" class="mq-go">'
+                       f'{t("see_result" if i == n else "next_q")}</button></p></details></li>')
+        out.append('</ol><section class="mq-end" hidden aria-live="polite">'
+                   f'<p class="mq-n">{t("result")}</p><p class="mq-big"><span class="mq-got">0</span> {t("of")} {n}</p>'
+                   + "".join(f'<p data-k="{k}" hidden>{t("q_" + k)}</p>' for k in ("all", "some", "none"))
+                   + f'<p class="mq-acts"><button type="button" class="mq-share">{t("share")}</button> '
+                     f'<button type="button" class="mq-again">{t("again")}</button></p>'
+                     f'<p class="meta mq-shared" hidden>{t("copied")}</p>'
+                     f'<p class="mq-share-text" hidden>{t("share_text")} <span class="mq-got">0</span> {t("of")} {n}. '
+                     f'{t("share_end")}</p></section></div>')
     if facts:
         out.append(f'<h3>{t("know")}</h3><ul class="facts">')
-        out += [f'<li><a href="{escape(home + f["href"])}">{s(f["text"])}</a></li>' for f in facts]
+        out += [f'<li><a href="{href(f["href"])}">{s(f["text"])}</a></li>' for f in facts]
         out.append(f'</ul><p class="meta">{t("facts_note")}</p>')
     return "\n".join(out)
 

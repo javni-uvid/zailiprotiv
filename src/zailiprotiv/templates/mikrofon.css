@@ -1,0 +1,47 @@
+/* The mikrofon page's styles for the player and the quiz, in both its versions, inline in each. Black and
+   white only: right and wrong are not "za" and "protiv". */
+.player { margin: 1.4rem 0 .4rem; }
+.screen { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; display: grid; place-items: center; }
+.screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+.play { font: inherit; font-weight: 700; font-size: 1.1rem; padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
+.play:hover { transform: scale(1.04); }
+.parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
+.part { font: inherit; font-size: .85rem; font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+.part.on { border-color: currentColor; font-weight: 700; }
+.mq { margin: 1rem 0 2rem; max-width: 46rem; }
+.mq-strip { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 1.2rem; }
+.mq-strip button { font: inherit; font-size: .9rem; font-variant-numeric: tabular-nums; width: 2.2rem; height: 2.2rem; border: 2px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+.mq-strip button.m-ok { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.mq-strip button.m-miss { border-style: dashed; border-color: var(--fg); text-decoration: line-through; }
+.mq-strip button.mq-now { border-color: var(--fg); box-shadow: 0 3px 0 var(--fg); }
+.mq-list { list-style: none; padding: 0; margin: 0; }
+.mq:not(.on) .mq-q { padding-bottom: 1.6rem; margin-bottom: 1.6rem; border-bottom: 1px solid var(--line); }
+.mq-n { margin: 0 0 .5rem; font-size: .95rem; color: var(--muted); }
+.mq-ask { font-family: var(--serif); font-size: clamp(1.45rem, 4.4vw, 2.1rem); font-weight: 700; line-height: 1.15; letter-spacing: -.015em; margin: 0 0 1.1rem; }
+.mq-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .6rem; margin: 0 0 1rem; }
+.mq-o { font: inherit; font-family: var(--serif); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; padding: 1rem .8rem; border: 2px solid var(--fg); background: transparent; color: var(--fg); cursor: pointer; transition: transform .08s; }
+.mq-o:hover { background: var(--fg); color: var(--bg); }
+.mq-o:active { transform: translateY(2px); }
+.mq-o:focus-visible, .mq-strip button:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+.mq-q.done .mq-o { cursor: default; opacity: .3; background: transparent; color: var(--fg); }
+.mq-q.done .mq-o.right { opacity: 1; background: var(--fg); color: var(--bg); }
+.mq-q.done .mq-o.right::before { content: "✓ "; }
+.mq-q.done .mq-o.wrong { opacity: 1; border-style: dashed; text-decoration: line-through; }
+.mq-why summary { cursor: pointer; color: var(--muted); font-size: .95rem; }
+.mq.on .mq-why summary { display: none; }
+.mq-verdict { font-family: var(--serif); font-size: 1.45rem; line-height: 1.3; font-weight: 700; margin: 0 0 .5rem; }
+.mq-yes, .mq-no { display: none; } .mq-q.ok .mq-yes, .mq-q.miss .mq-no, .mq:not(.on) .mq-no { display: inline; }
+.mq:not(.on) .mq-no b { display: none; }
+.mq-why p { margin: .3rem 0 0; font-size: 1.05rem; line-height: 1.5; }
+.mq-next { position: relative; margin: 1.2rem 0 0; padding-top: .9rem; }
+.mq:not(.on) .mq-next, .mq:not(.on) .mq-strip, .mq:not(.on) .mq-end { display: none; }
+.mq-auto { position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--fg); }
+.mq-auto.run { width: 100%; transition: width 4s linear; }
+.mq-go, .mq-share, .mq-again { font: inherit; font-weight: 700; padding: .7rem 1.2rem; border: 2px solid var(--fg); background: var(--fg); color: var(--bg); cursor: pointer; }
+.mq-again { background: transparent; color: var(--fg); }
+.mq-end .mq-big { font-family: var(--serif); font-weight: 700; font-size: clamp(2.4rem, 9vw, 4rem); line-height: 1; margin: .2rem 0 .6rem; }
+.mq-end [data-k] { font-family: var(--serif); font-size: 1.3rem; line-height: 1.35; margin: 0 0 1.2rem; }
+.mq-acts { display: flex; flex-wrap: wrap; gap: .6rem; margin: 0; }
+.mq-end [hidden], .mq [hidden] { display: none !important; }
+.facts-list, .facts { padding-left: 1.1rem; } .facts-list li, .facts li { margin: .35rem 0; }
+@media (prefers-reduced-motion: reduce) { .mq-o, .mq-auto.run { transition: none; } }
