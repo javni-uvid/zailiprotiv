@@ -323,6 +323,10 @@ its minute.
   (`podaci.json`, from the roll calls) on the caption's name line only, never the list line under it (a list's name
   often holds its leader's name). A name not on the list (ministers, guests) is shown only when read surely in two
   frames in a row; a half-read name is never shown. The page says it is read automatically and may err.
+- **Visits counted as on the site** (18 Nov 2026, the maintainer's decision, once the page became the site's main way
+  in): the live page carries the site's Cloudflare Web Analytics beacon (principle 5's first exception), its token
+  read from `data/settings.json` copied into the image (`config.ANALYTICS_TOKEN`; `ANALYTICS_TOKEN=` empty turns it
+  off); the footer says so. Until then only the site's page shown while the service is down was counted.
 - **Nothing from elsewhere** (principle 5): the fonts are copied from `src/zailiprotiv/static/fonts` into the image,
   the one script is inline; the site's MP pages are linked.
 - **Its tests** (`tests/test_live.py`) cover the names, the caption's lines, the turns and the page, with the

@@ -6,3 +6,4 @@
 !src/zailiprotiv/templates/mikrofon.js
 !src/zailiprotiv/templates/mikrofon.css
 **/__pycache__
+!data/settings.json

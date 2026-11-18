@@ -11,5 +11,7 @@ COPY live/uzivo ./uzivo
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
 # The script and styles shared with the site's mikrofon page (page._shared)
 COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
+# The site's analytics token (config.ANALYTICS_TOKEN): visits counted as on the site
+COPY data/settings.json ./uzivo/static/settings.json
 EXPOSE 8000
 CMD ["uvicorn", "uzivo.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

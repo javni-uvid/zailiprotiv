@@ -54,3 +54,24 @@ RECORDING_LEAD = _i("RECORDING_LEAD", 1)
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 FRAME_PATH = os.environ.get("FRAME_PATH", "/tmp/uzivo/frame.jpg")
 STATE_PATH = os.environ.get("STATE_PATH", "/data/stanje.json")  # today's turns, kept across restarts
+
+
+def _analytics() -> str:
+    """The site's Cloudflare Web Analytics token (public by design, in every page): the image's copy of
+    data/settings.json, or the repository's; ANALYTICS_TOKEN overrides, an empty one turns the counting off."""
+    if "ANALYTICS_TOKEN" in os.environ:
+        return os.environ["ANALYTICS_TOKEN"].strip()
+    import json
+    from pathlib import Path
+    for path in (Path(__file__).parent / "static" / "settings.json",
+                 Path(__file__).resolve().parents[2] / "data" / "settings.json"):
+        try:
+            return str(json.loads(path.read_text(encoding="utf-8")).get("analytics_token") or "")
+        except (OSError, ValueError):
+            continue
+    return ""
+
+
+# Visits counted as on the site (AGENTS.md, principle 5): Cloudflare's beacon, no cookies, totals per page.
+ANALYTICS_TOKEN = _analytics()
+

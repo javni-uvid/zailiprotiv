@@ -107,3 +107,7 @@ uzivo/
 
 The tests are in the repository's `tests/test_live.py` and run with the rest (`uv run pytest -q`); they need none
 of the service's packages.
+
+**Visits** are counted as on the site, by Cloudflare Web Analytics (no cookies, totals per page): the page carries
+the site's beacon, its token from `data/settings.json` (copied into the image). Set `ANALYTICS_TOKEN=` (empty) in
+the environment to leave it out.

@@ -407,3 +407,17 @@ def test_the_shared_state_is_cacheable_and_open_to_other_pages():
     r = TestClient(main.app).get("/stanje.js")
     assert r.status_code == 200 and r.headers["access-control-allow-origin"] == "*"
     assert "s-maxage=2" in r.headers["cache-control"] and "stanje" in r.json()
+
+
+def test_the_page_is_counted_as_the_site_is():
+    from uzivo import config
+    snap = {"stanje": NO_STREAM, "provereno": 0, "sada": None, "dan": "2026-11-17", "ranije": False, "danas": []}
+    html = page(snap, cyr=False, site="", tz=TZ, analytics="62b7969c87164343897a48605c9267c0")
+    assert 'src="https://static.cloudflareinsights.com/beacon.min.js"' in html and "62b7969c87164343897a48605c9267c0" in html
+    assert "posete se samo broje" in html
+    plain = page(snap, cyr=False, site="", tz=TZ)
+    assert "cloudflareinsights" not in plain and "broje" not in plain
+    assert "cloudflareinsights" not in page(snap, cyr=False, site="", tz=TZ, analytics='x" onload="y')
+    assert config.ANALYTICS_TOKEN.isalnum()  # read from data/settings.json, as the image has it
+    ignore = (Path(__file__).parents[1] / "live" / "Dockerfile.dockerignore").read_text()
+    assert "!data/settings.json" in ignore  # the image's build is sent the file it copies

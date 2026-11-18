@@ -41,6 +41,7 @@ TEXT = {
     "yt_note": "Klik učitava plejer sa YouTube-a (Google). Dok ne kliknete, sa YouTube-a se ništa ne učitava.",
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
+    "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "wait_title": "Dok čekate",
     "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
                  "ste blizu.",
@@ -231,6 +232,14 @@ SCRIPT = _shared("mikrofon.js") + """
 """
 
 
+def _beacon(token: str) -> str:
+    """Cloudflare Web Analytics, as on the site (base.html): the page counted, no cookies, nobody followed."""
+    if not token or not token.isalnum():
+        return ""
+    return ('<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" '
+            f'data-cf-beacon=\'{{"token": "{token}"}}\'></script>')
+
+
 def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None) -> str:
     """The player: while the broadcast is on, the YouTube video of it; between sittings, the last day's recording in
     the broadcaster's archive, from its first turn. Only a button until clicked (AGENTS.md, principle 5)."""
@@ -299,7 +308,7 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
 
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
-         live: str = "") -> str:
+         live: str = "", analytics: str = "") -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -334,8 +343,9 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p>{t("how")}</p>
 <p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: zailiprotiv.rs</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: zailiprotiv.rs{(". " + t("counted")) if analytics else ""}</footer>
 <script>{SCRIPT}</script>
+{_beacon(analytics)}
 </body>
 </html>
 """
