@@ -9,10 +9,11 @@
 {% if m.photo %}<img class="mp-photo" src="../foto/{{ m.photo }}" alt="{{ m.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% else %}<img class="mp-photo" src="../bez-slike.svg" alt="" width="150" height="200">{% endif %}
 <div class="mp-head">
 <h1>{{ m.name }}</h1>
-<p class="mp-groups">{{ conv_name }} saziv, od {{ since|day_of }}</p>
+<p class="mp-groups">{{ conv_name }} saziv, od {{ since|day_of }}{% if m.group %}: {{ m.group|latin }}{% elif m.group is defined %}: van poslaničkih grupa{% endif %}</p>
 </div>
 </div>
 <ul class="mp-facts">
+  {% if m.group is defined %}<li>Poslanička grupa: <b>{{ m.group|latin if m.group else "nije član nijedne" }}</b></li>{% endif %}
   <li>Stranka na čiji je predlog izabran(a): <b>{{ (m.party_ or "nije navedena")|latin }}</b></li>
   <li>Mesto: {{ m.place|latin }}</li>
   <li>Godište: {{ m.year }}.</li>

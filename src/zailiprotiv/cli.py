@@ -299,7 +299,15 @@ def members_cmd(args) -> int:
     from zailiprotiv import members
     from zailiprotiv.config import NEWEST
     conv = NEWEST
-    found = members.read(skupstina.fetch(members.URL).decode("utf-8", "replace"))
+    import time
+    page = skupstina.fetch(members.URL).decode("utf-8", "replace")
+    found = members.read(page)
+    by_group = {}
+    for value, label in members.groups(page):  # each group's MPs: the page filtered by it (members.py)
+        time.sleep(DELAY)
+        by_group[label] = members.read(skupstina.fetch(members.group_url(value)).decode("utf-8", "replace"))
+        print(f"  {label}: {len(by_group[label])}")
+    found = members.with_groups(found, by_group)
     path = ROOT / conv / "members.json"
     old = json.loads(path.read_text(encoding="utf-8"))["members"] if path.exists() else []
     if len(found) < 200 or (old and len(found) < len(old) * 0.8):

@@ -4,7 +4,8 @@
 put them forward, place and year of birth as the Assembly gives them, and whether they were MPs in an earlier
 convocation the site has (a name of the roll calls whose year of birth, in the Assembly's archive, agrees). Those link
 to their page, which says they sit in the new convocation; a new MP gets a page of their own, with what the list says
-and nothing more until there is a vote or a speech. The parliamentary groups come later.
+and nothing more until there is a vote or a speech. With the parliamentary groups read (18 Nov 2026) the list goes
+group by group, the largest first (then by name, as everywhere on the site), the MPs in no group last.
 """
 from __future__ import annotations
 
@@ -73,9 +74,11 @@ def render(*, env, common: dict, out: Path, conv: str, listed: dict, rows: list[
     parties = {}
     for r in rows:
         parties[r["party_"] or "bez stranke"] = parties.get(r["party_"] or "bez stranke", 0) + 1
+    sections = by_group(rows)
     (out / PAGE.format(conv=conv)).write_text(env.get_template("members.html").render(
         **common, rows=rows, conv=conv, conv_name=conv_name, since=since(conv), listed_on=listed.get("fetched", ""),
         source=listed.get("source", ""), parties=sorted(parties.items(), key=lambda kv: (-kv[1], kv[0])),
+        sections=sections, grouped=any("group" in r for r in rows),
         new=sum(1 for r in rows if r["new"]), root=""), encoding="utf-8")
     (out / "poslanik").mkdir(exist_ok=True)
     for r in rows:
@@ -83,6 +86,26 @@ def render(*, env, common: dict, out: Path, conv: str, listed: dict, rows: list[
             (out / "poslanik" / f"{r['slug']}.html").write_text(env.get_template("mp_new.html").render(
                 **common, m=r, conv=conv, conv_name=conv_name, since=since(conv), source=listed.get("source", ""),
                 list_page=PAGE.format(conv=conv), root="../"), encoding="utf-8")
+
+
+def by_group(rows: list[dict]) -> list[dict]:
+    """The members group by group: the groups by seats, then by name (the site's neutral order); the MPs in no group,
+    then those no group's page lists, last. Without groups read, one section of all."""
+    from zailiprotiv.site import collate
+    from zailiprotiv.translit import latin
+    rows = sorted(rows, key=lambda r: collate(r["name"]))  # by surname, in the Serbian Latin alphabet
+    if not any("group" in r for r in rows):
+        return [{"name": "", "rows": rows}]
+    named: dict[str, list] = {}
+    for r in rows:
+        named.setdefault(r.get("group", None) if "group" in r else None, []).append(r)
+    order = sorted((g for g in named if g), key=lambda g: (-len(named[g]), collate(latin(g))))
+    out = [{"name": latin(g), "rows": named[g]} for g in order]
+    if "" in named:
+        out.append({"name": "Van poslaničkih grupa", "rows": named[""], "none": True})
+    if None in named:
+        out.append({"name": "Grupa nije navedena", "rows": named[None], "none": True})
+    return out
 
 
 def now_of(rows: list[dict]) -> dict:

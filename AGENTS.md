@@ -298,7 +298,10 @@ convocations they were on a roll call of), linked from `poslanici.html`. One alr
 same MP unless the archive gives another year of birth (mp_years; one year off counts as a typo): their page says
 they sit in the new convocation. A new one gets a page of their own (noindex, as any MP's page with no vote) under
 the name written as the roll calls write names, a namesake's address getting the year after it; their search entry
-is in `podaci.json`, so "Ko sada govori" matches them too. The parliamentary groups are not on that list: to add.
+is in `podaci.json`, so "Ko sada govori" matches them too. **Groups** (18 Nov 2026): not in the list's table, but its
+form filters it by group (`?submitted=true&group=<value>`), so `members` reads each group's page and keeps the group
+on each MP ("" for the form's "not members of a group"). The list goes group by group, largest first, then by name;
+the pages and `podaci.json` (so the live page too) give an MP of the newest convocation their group there.
 Left to do: give the Fourteenth its "archive" and archived "laws" pages once the Assembly publishes them; close
 issue #7 once the Fifteenth is current.
 

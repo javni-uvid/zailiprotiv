@@ -947,8 +947,11 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                        "n": sum(it["final"]["counts"].values()) if it["final"] else None,
                        "sh": round(it.get("share") or 0, 4), "u": int(bool(it["urgent"])), "k": it["law"].get("kind", "other"),
                        "c": it["conv"]} for its in items_by_conv.values() for it in its],
-             "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": r["mp"].group or ""} for r in rows_mp]
-             + [{"n": r["name"], "s": r["slug"], "g": ""} for r in member_rows if r["new"]]}
+             # An MP of the newest convocation with its group there (the live page shows it), else the last one seen.
+             "mps": [{"n": r["mp"].name, "s": r["mp"].slug,
+                      "g": latin(member_now[r["mp"].key]["group"]) if r["mp"].key in member_now and "group" in member_now[r["mp"].key]
+                      else r["mp"].group or ""} for r in rows_mp]
+             + [{"n": r["name"], "s": r["slug"], "g": latin(r.get("group", ""))} for r in member_rows if r["new"]]}
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     items = items_by_conv[active]

@@ -4,12 +4,17 @@ The site knows MPs from the roll calls, so a new convocation has none until its 
 sitting MPs ("Aktuelni saziv", the page photos.py reads the portraits from) gives every one at once, with the party
 that put them forward, place and year of birth: the table the archive of convocations has (mp_years.parse). It is
 read into data/<N>/members.json for the newest convocation, and the site lists them (pages_members.py): an MP already
-on the site by the roll calls of earlier convocations links to their page, a new one gets a page of their own. The
-parliamentary groups are not in this table; they come later.
+on the site by the roll calls of earlier convocations links to their page, a new one gets a page of their own.
+
+The parliamentary groups (18 Nov 2026) are not in the table: the page's form filters it by group ("group" in the
+query, with "submitted=true"), so each group's MPs are read from the page filtered by it, the group named as the
+form's list names it ("Посланичка група „Студентска листа“"), the MPs in none as "" (the form's "not members").
 """
 from __future__ import annotations
 
 import re
+
+from html.parser import HTMLParser
 
 from zailiprotiv import mp_years, mps
 from zailiprotiv.config import BASE
@@ -24,6 +29,62 @@ def clean(name: str) -> str:
     after it is left out, as the roll calls leave it out; "ЖИВКОВИЋ - ОБРАДОВИЋ" → "ЖИВКОВИЋ-ОБРАДОВИЋ"."""
     name = re.sub(r"\s*\([^)]*\)\s*", " ", name)
     return re.sub(r"\s*-\s*", "-", re.sub(r"\s+", " ", name)).strip()
+
+
+class _Groups(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.found, self._in, self._value, self._text = [], False, None, []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "select":
+            self._in = a.get("name") == "group"
+        elif tag == "option" and self._in:
+            self._value, self._text = a.get("value"), []
+
+    def handle_data(self, data):
+        if self._value is not None:
+            self._text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "option" and self._value is not None:
+            if self._value not in ("", "0"):
+                self.found.append((self._value, re.sub(r"\s+", " ", "".join(self._text)).strip()))
+            self._value = None
+        elif tag == "select":
+            self._in = False
+
+
+NOT_IN_A_GROUP = re.compile(r"нису чланови|nisu članovi", re.I)
+
+
+def groups(html: str) -> list[tuple[str, str]]:
+    """The parliamentary groups the page's form offers: (its value, its name), the MPs in none ("Народни посланици
+    који нису чланови посланичких група") among them."""
+    p = _Groups()
+    p.feed(html)
+    return p.found
+
+
+def group_url(value: str) -> str:
+    return f"{URL}?submitted=true&group={value}"
+
+
+def group_name(label: str) -> str:
+    """"Посланичка група „Студентска листа“" → "Студентска листа"; the MPs in no group → ""."""
+    if NOT_IN_A_GROUP.search(label):
+        return ""
+    return re.sub(r"^Посланичка група\s*", "", label).strip().strip("„“\"").strip()
+
+
+def with_groups(found: list[dict], by_group: dict[str, list[dict]]) -> list[dict]:
+    """Each MP with their group ("group": the name, "" for none; absent when no group's page lists them)."""
+    of = {}
+    for label, rows in by_group.items():
+        for r in rows:
+            of[clean(r["name"])] = group_name(label)
+    return [{**m, **({"group": of[m["name"]]} if m["name"] in of else {})} for m in found]
 
 
 def read(html: str) -> list[dict]:

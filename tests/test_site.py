@@ -567,3 +567,34 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     assert not members.same_person("петар петровић", 1970, {"петар петровић": {1951}})
     assert members.same_person("петар петровић", 1970, {"петар петровић": {1971}})  # a year off: a typo
     assert pages_members.party("-") == "" and pages_members.party(" СНС ") == "СНС"
+
+
+def test_the_new_convocations_members_by_parliamentary_group(tmp_path):
+    from zailiprotiv import members
+    out, root = tmp_path / "_site", data(tmp_path)
+    form = ('<select name="group"><option value="0">Изаберите посланичку групу</option>'
+            '<option value="174">Посланичка група „Студентска листа“</option>'
+            '<option value="173">Народни посланици који нису чланови посланичких група</option></select>')
+    assert members.groups(form) == [("174", "Посланичка група „Студентска листа“"),
+                                    ("173", "Народни посланици који нису чланови посланичких група")]
+    assert members.group_url("174").endswith("?submitted=true&group=174")
+    found = [{"name": "ПЕТРОВИЋ ПЕТАР", "party": "-", "place": "Ниш", "year": 1970},
+             {"name": "ЈОВИЋ ЈОВА", "party": "-", "place": "Бор", "year": 1980},
+             {"name": "НИКОЛИЋ НИНА", "party": "СНС", "place": "Бор", "year": 1990},
+             {"name": "ЛАЗИЋ ЛАЗА", "party": "-", "place": "Бор", "year": 1985}]
+    by = {"Посланичка група „Студентска листа“": [{"name": "ПЕТРОВИЋ ПЕТАР"}, {"name": "ЈОВИЋ ЈОВА"}],
+          "Народни посланици који нису чланови посланичких група": [{"name": "НИКОЛИЋ НИНА (NIKOLIĆ NINA)"}]}
+    found = members.with_groups(found, by)
+    assert [m.get("group") for m in found] == ["Студентска листа", "Студентска листа", "", None]
+    (root / "15").mkdir(exist_ok=True)
+    (root / "15" / "members.json").write_text(members.dumps("2026-11-18T10:00:00+00:00", found))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    listing = (out / "poslanici-15.html").read_text()
+    order = [listing.index(n) for n in ("Jović Jova", "Petrović Petar", "Nikolić Nina", "Lazić Laza")]
+    assert order == sorted(order)  # the group first, then those in none, then those no group's page lists
+    assert '<option value="Studentska lista">Studentska lista (2)</option>' in listing and "Van poslaničkih grupa" in listing
+    assert "Poslanička grupa: <b>Studentska lista</b>" in (out / "poslanik" / "jovic-jova.html").read_text()
+    assert "nije član nijedne" in (out / "poslanik" / "nikolic-nina.html").read_text()
+    index = {m["s"]: m["g"] for m in json.loads((out / "podaci.json").read_text())["mps"]}
+    assert index["jovic-jova"] == "Studentska lista" and index["nikolic-nina"] == ""
+    assert site.check(out) == []
