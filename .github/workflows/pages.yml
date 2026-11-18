@@ -5,7 +5,8 @@ name: pages
 on:
   push:
     branches: [main]
-    # A build takes about nine minutes; a change that cannot alter the site starts none.
+    # A build takes about seven minutes (a change only to static/, about two: the fast path below); a change that
+    # cannot alter the site starts none.
     paths: ["**", "!tests/**", "!worker/**", "!live/**", "!**.md", "!.github/workflows/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
     inputs:
@@ -27,10 +28,44 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read  # the fast path: the last published site, from the run that published it
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0  # to see what changed since the commit of the site now published
+      # The fast path (18 Nov 2026): a push that changes only static/ (styles, scripts, fonts, icons) needs no new
+      # build of seven minutes. The site the last successful run published is taken from that run and static/ is put
+      # into it (zailiprotiv static-patch; the same pages a full build would make, checked by building both). Any
+      # other change, a run started by hand, or that site not found: the full build.
+      - name: What changed since the site now published
+        id: changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IN_EVENT: ${{ github.event_name }}
+        run: |
+          fast=false
+          last=$(gh run list -R "$GITHUB_REPOSITORY" -w pages -s success -b main -L 1 --json headSha,databaseId \
+                 -q '.[0] | "\(.headSha) \(.databaseId)"' 2>/dev/null || true)
+          sha=${last% *}; run=${last#* }
+          if [ "$IN_EVENT" = push ] && [ -n "$sha" ] && git cat-file -e "$sha^{commit}" 2>/dev/null; then
+            changed=$(git diff --name-only "$sha" HEAD)
+            # What can't alter the site is left out (as the push filter above); pages.yml itself means a full build.
+            other=$(printf '%s\n' "$changed" \
+                    | grep -vE '^$|^(src/zailiprotiv/static/|tests/|worker/|live/|\.github/workflows/)|\.md$' || true)
+            if printf '%s\n' "$changed" | grep -qx '.github/workflows/pages.yml'; then other=pages.yml; fi
+            echo "changed: $(printf '%s\n' "$changed" | wc -l) files; others than static/: ${other:-none}" | head -c 600
+            if [ -z "$other" ] && printf '%s\n' "$changed" | grep -q '^src/zailiprotiv/static/'; then
+              if gh run download "$run" -R "$GITHUB_REPOSITORY" -n github-pages -D _published 2>/dev/null \
+                 && mkdir -p _site && tar -xf _published/artifact.tar -C _site; then
+                fast=true
+              else
+                echo "::notice::the published site of run $run is not there (kept 7 days): full build"
+              fi
+            fi
+          fi
+          echo "fast=$fast" >> "$GITHUB_OUTPUT"
+          echo "since $sha (run $run): fast path $fast"
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.12"
@@ -39,7 +74,14 @@ jobs:
           path: .cache
           key: og-${{ github.run_id }}
           restore-keys: og-
+      - name: Patch styles and scripts into the published site
+        if: steps.changes.outputs.fast == 'true'
+        run: |
+          pip install uv && uv sync --frozen
+          uv run zailiprotiv static-patch --site _site
+          : > indexnow.txt  # the pages' text is as it was: nothing to tell search engines
       - name: Build
+        if: steps.changes.outputs.fast != 'true'
         env:
           CTX_R2_FILES_BUCKET_OR: ${{ vars.R2_FILES_BUCKET || 'zailiprotiv-podaci' }}
           IN_INDEXNOW_ALL_FLAG: ${{ inputs.indexnow_all && '--all' || '' }}
@@ -66,6 +108,7 @@ jobs:
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
         with:
           path: _site
+          retention-days: 7  # the fast path takes the published site from here
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
           name: indexnow

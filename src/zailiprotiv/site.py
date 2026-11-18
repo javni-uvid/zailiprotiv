@@ -334,6 +334,49 @@ def qid(text: str) -> str:
 ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
 
 
+# The files copied as they are from static/ to the site's root (glasaj.js comes with the quiz's pages). PNGs: Google
+# Search doesn't take an SVG favicon.
+STATIC_FILES = ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js",
+                "favicon-96.png", "apple-touch-icon.png", "logo.png")
+VERSIONED = ("style.css", "site.js", "pretraga.js", "glas.js", "listic.js", "glasaj.js")
+
+
+def asset_version() -> str:
+    """The pages ask for the stylesheet and scripts with ?v=<this>: it changes with their content, so a browser or
+    cache never pairs new pages with old styles. Every script that carries it counts, not only the stylesheet."""
+    return hashlib.sha256(b"".join((HERE / "static" / n).read_bytes() for n in VERSIONED)).hexdigest()[:10]
+
+
+def patch_static(out: Path) -> dict:
+    """Put static/ as it is now into a site built before (the fast path of the pages workflow: a push that changes
+    only static/ needs no new build). The files are copied as the build copies them, scripts get clean_urls' change
+    of their links when the site has its domain, and every page's ?v= moves to the new version. The pages are
+    otherwise the ones built before, so this is only right when nothing but static/ changed since that build."""
+    import re
+    from zailiprotiv.publish import _CLEAN, _clean_file
+    index = (out / "index.html").read_text(encoding="utf-8")
+    old = re.search(r'style\.css\?v=([0-9a-f]{10})"', index).group(1)
+    new = asset_version()
+    for name in STATIC_FILES + ("glasaj.js",):
+        shutil.copy(HERE / "static" / name, out / name)
+    shutil.rmtree(out / "fonts", ignore_errors=True)
+    shutil.copytree(HERE / "static" / "fonts", out / "fonts")
+    if (out / "CNAME").exists():
+        _CLEAN.update(out=out, site="", folders=set())  # only the scripts' link change is used
+        for name in STATIC_FILES + ("glasaj.js",):
+            if name.endswith(".js"):
+                _clean_file(str(out / name))
+    pages = 0
+    if new != old:
+        for f in out.rglob("*.html"):
+            text = f.read_text(encoding="utf-8")
+            if f"?v={old}" in text or f'data-v="{old}"' in text:  # the addresses, and the one the scripts read
+                f.write_text(text.replace(f"?v={old}", f"?v={new}").replace(f'data-v="{old}"', f'data-v="{new}"'),
+                             encoding="utf-8")
+                pages += 1
+    return {"version": new, "was": old, "pages": pages}
+
+
 def convocations(root: Path) -> list[tuple[str, Path]]:
     """The convocations with data, newest first: data/<N>/laws.json (or a single folder with laws.json in it)."""
     from zailiprotiv.config import CURRENT
@@ -406,14 +449,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shutil.rmtree(out)
     (out / "zakon").mkdir(parents=True)
     (out / "poslanik").mkdir()
-    for name in ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js",
-                 "favicon-96.png", "apple-touch-icon.png", "logo.png"):  # PNGs: Google Search doesn't take an SVG favicon
+    for name in STATIC_FILES:
         shutil.copy(HERE / "static" / name, out / name)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
-    # The stylesheet's and script's address changes with their content, so a browser or cache never pairs new pages
-    # with old styles.
-    css_version = hashlib.sha256((HERE / "static" / "style.css").read_bytes()
-                                 + (HERE / "static" / "site.js").read_bytes()).hexdigest()[:10]
+    css_version = asset_version()
     built = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     from zailiprotiv.config import CONVOCATIONS
 

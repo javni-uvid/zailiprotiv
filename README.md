@@ -91,7 +91,7 @@ Assembly's site runs through the workflows.
 | votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links; commits `data/<N>/` |
 | transcripts | after votes, and by hand | the stenographic notes; the raw notes go to the bucket |
 | summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API; the cheapest model first, a stronger one only by hand |
-| pages | on push, and after each data run | build the site and its search index, send downloads to the bucket, publish, purge the cache, tell search engines what changed |
+| pages | on push, and after each data run | build the site and its search index, send downloads to the bucket, publish, purge the cache, tell search engines what changed (about seven minutes); a push that changes only `static/` puts it into the site published last instead (`static-patch`, about two) |
 | notes | after transcripts, and by hand | the notes' pages and their search index; send what changed to the bucket |
 | worker | on push to `worker/` | deploy the votes counter and its schema |
 | health | hourly | ask the site, the buckets and the counter from outside; an issue when one does not answer |

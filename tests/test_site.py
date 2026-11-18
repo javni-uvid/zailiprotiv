@@ -502,3 +502,18 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
     assert json.loads((out / "mikrofon-dan.json").read_text())["dan"] == "2026-11-17"
     assert set(json.loads((out / "mikrofon-cekanje.json").read_text())) == {"kviz", "cinjenice"}
     assert site.check(out) == []
+
+
+def test_static_patch_moves_every_page_to_the_new_version(tmp_path, monkeypatch):
+    # The pages workflow's fast path: static/ into a site built before, as a full build would have it.
+    out = tmp_path / "_site"
+    site.build(data(tmp_path), out, "zailiprotiv.rs", cyrillic=True)
+    old = site.asset_version()
+    (out / "site.js").write_text("stale", encoding="utf-8")
+    monkeypatch.setattr(site, "asset_version", lambda: "0123456789")
+    got = site.patch_static(out)
+    assert got["was"] == old and got["pages"] > 10
+    law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
+    assert "style.css?v=0123456789" in law and 'data-v="0123456789"' in law and old not in law
+    assert (out / "cir" / "zakon" / "zakon-o-oruzju.html").read_text().count("?v=0123456789") >= 2
+    assert (out / "site.js").read_text() != "stale" and ' + ".html"' not in (out / "site.js").read_text()

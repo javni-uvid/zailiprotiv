@@ -54,6 +54,13 @@ decisions unless said otherwise.
 
 ### The code
 
+- **Build time** (18 Nov 2026): the steps that change each file on its own (the Cyrillic twins, `clean_urls`,
+  `check`) share the files among the processors (`publish._pool_map`; the output is the same, checked byte for
+  byte). A push that changes only `src/zailiprotiv/static/` takes the pages workflow's fast path: the site the last
+  successful run published (its Pages artifact, kept seven days) gets `static-patch` (static/ copied as the build
+  copies it, the scripts' links cleaned, every page's `?v=`/`data-v` moved to the new `asset_version()`), checked to
+  equal a full build. Day counts in pages ("u proceduri N dana") then stay as the last full build left them, until
+  the next data run. Any other change takes the full build.
 - `site.py` loads the data, works out what pages share (groups, lines, key votes) and renders the law and MP pages;
   the rest is in modules called from `site.build` with what they need: `pages_groups`, `pages_quiz`,
   `pages_procedure`, `pages_ballot`, `pages_lists`, `pages_floor`, `pages_presence`, `digest`, `downloads`, `feeds`,

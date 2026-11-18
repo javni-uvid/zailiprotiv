@@ -511,6 +511,17 @@ def website(args) -> int:
     return 1 if bad else 0
 
 
+def static_patch(args) -> int:
+    """static/ into a site built before: the pages workflow's fast path when a push changes nothing else."""
+    from zailiprotiv import site
+    got = site.patch_static(Path(args.site))
+    print(f"static: version {got['was']} -> {got['version']}, {got['pages']} pages")
+    bad = site.check(Path(args.site))
+    for b in bad:
+        print(f"  {b}")
+    return 1 if bad else 0
+
+
 def summaries_cmd(args) -> int:
     """Claude's summary of each bill's memorandum not summarised yet (or whose memorandum changed), into
     data/summaries/<bill file>.json. Needs ANTHROPIC_API_KEY."""
@@ -1282,6 +1293,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--latin-only", action="store_true", help="skip the Cyrillic edition (cir/), for a quicker build")
     p.add_argument("--html-links", action="store_true", help="keep .html in links, to open the pages from disk")
     p.set_defaults(run=website)
+    p = commands.add_parser("static-patch", help="put static/ into a site built before (styles and scripts only)")
+    p.add_argument("--site", default="_site")
+    p.set_defaults(run=static_patch)
     p = commands.add_parser("votes", help="read the roll calls in the index not read yet, into data/votes/")
     p.add_argument("--index", default=str(DATA / "index.json"))
     p.add_argument("--out", default=str(DATA / "votes"))
