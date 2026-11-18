@@ -15,9 +15,51 @@
 </ul>
 {% if day_turns %}
 <h2>Poslednji dan sednice, {{ day|day }}</h2>
+{% set first = day_turns|selectattr("file")|first %}
+{% if first %}
+<section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ first.file }}" data-t="{{ first.t }}">▶ Pusti snimak dana</button></div>
+<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
+<script>
+(function () {
+  // The player (AGENTS.md, principle 5): nothing from YouTube or the archive loads until a click asks for it.
+  var screen = document.getElementById("screen");
+  if (!screen) return;
+  var ARCHIVE = /^https:\/\/arhiva\.videonet\.co\.rs\//, ID = /^[\w-]{6,20}$/;
+  function put(el) { screen.textContent = ""; screen.appendChild(el); }
+  function yt(id, t) {
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1" + (t > 0 ? "&start=" + t : "");
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    f.title = "YouTube";
+    put(f);
+  }
+  function file(url, t) {
+    var v = screen.querySelector("video");
+    if (!v || v.getAttribute("src") !== url) {
+      v = document.createElement("video");
+      v.controls = true; v.playsInline = true; v.preload = "metadata";
+      v.setAttribute("src", url);
+      put(v);
+    }
+    var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("[data-file], [data-yt]") : null;
+    if (!a) return;
+    var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
+    if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
+    e.preventDefault();
+    if (url) file(url, t); else yt(id, t);
+    if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+})();
+</script>
+{% endif %}
 <p class="label">Pročitano posle sednice sa celog snimka prenosa, iz potpisa ispod govornika, isto za svakog: govor traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku. Automatsko čitanje može da pogreši.</p>
 <ol class="plain turns">
-  {% for t in day_turns %}<li><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}">▶ snimak</a>{% endif %}</li>
+  {% for t in day_turns %}<li><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %}</li>
   {% endfor %}
 </ol>
 {% endif %}

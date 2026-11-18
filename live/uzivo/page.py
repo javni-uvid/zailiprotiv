@@ -34,6 +34,11 @@ TEXT = {
            "se kad se pojavi drugo ime ili kad se 25 sekundi ne vidi nijedno. Prenos kasni za salom 15 do 25 "
            "sekundi, a automatsko čitanje može da pogreši. Mesto na snimku je mesto gde se ime prvi put pojavilo, "
            "oko pet sekundi ranije. Spisak poslednjeg dana sednice ostaje dok sledeće zasedanje ne počne.",
+    "play_live": "Pusti prenos uživo",
+    "play_day": "Pusti snimak dana",
+    "yt_note": "Klik učitava plejer sa YouTube-a (Google). Dok ne kliknete, sa YouTube-a se ništa ne učitava.",
+    "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
+                    "govora pušta ga od tog mesta.",
     "wait_title": "Dok čekate",
     "quiz_lead": "Pitanja iz brojki sajta Za ili Protiv. Pogodite, pa proverite.",
     "answer": "Odgovor",
@@ -42,9 +47,9 @@ TEXT = {
     "how_counted": "Kako je izračunato",
     "score": "Pogođeno",
     "of": "od",
-    "all": "Sve tačno! Skupštinu pratite pažljivije od većine.",
-    "some": "Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.",
-    "none": "Ništa? Zato i postoji ovaj sajt: sve brojke su tamo, s pravilom kako su izračunate.",
+    "q_all": "Sve tačno! Skupštinu pratite pažljivije od većine.",
+    "q_some": "Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.",
+    "q_none": "Ništa? Zato i postoji ovaj sajt: sve brojke su tamo, s pravilom kako su izračunate.",
     "know": "Da li ste znali",
     "facts_note": "Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.",
     "live": "Prenos uživo na sajtu Skupštine",
@@ -90,7 +95,10 @@ def _recording(d: dict, cyr: bool) -> str:
         return ""
     href = escape(f'{d["datoteka"]}#t={d["snimak"]}' if d.get("datoteka") else
                   f'https://www.youtube.com/watch?v={d["video"]}&t={d["snimak"]}s')
-    return (f' <a class="rec" href="{href}" title="{escape(_t("recording_title", cyr))}">▶ '
+    # The page's player opens it in place on a click (data-*); without the script the link opens the recording.
+    data = (f'data-file="{escape(d["datoteka"])}"' if d.get("datoteka") else f'data-yt="{escape(d["video"])}"')
+    data += f' data-t="{int(d["snimak"])}"' 
+    return (f' <a class="rec" href="{href}" {data}title="{escape(_t("recording_title", cyr))}">▶ '
             f'{escape(_t("recording", cyr))} {_hms(d["snimak"])}</a>')
 
 
@@ -173,6 +181,11 @@ h2 { font-size: 1.35rem; margin: 2.4rem 0 .6rem; }
 .turns li { padding: .5rem 0; border-bottom: 1px solid var(--line); }
 .rec { font-size: .9rem; color: var(--muted); white-space: nowrap; margin-left: .3rem; font-variant-numeric: tabular-nums; }
 .time { font-variant-numeric: tabular-nums; color: var(--muted); margin-right: .4rem; }
+.player { margin: 1.4rem 0 .4rem; }
+.screen { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; display: grid; place-items: center; }
+.screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+.play { font: inherit; font-weight: 700; font-size: 1.1rem; padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
+.play:hover { transform: scale(1.04); }
 h3 { font-family: var(--serif); font-size: 1.1rem; margin: 1.8rem 0 .4rem; }
 .mq { list-style: none; counter-reset: mq; padding: 0; margin: 1rem 0; }
 .mq-q { counter-increment: mq; border-top: 1px solid var(--line); padding: .9rem 0 .6rem; }
@@ -199,6 +212,42 @@ footer { max-width: 760px; margin: 0 auto; padding: 1.2rem 20px 3rem; border-top
 """
 
 SCRIPT = """
+(function () {
+  // The player (AGENTS.md, principle 5): nothing from YouTube or the archive loads until a click asks for it.
+  var screen = document.getElementById("screen");
+  if (!screen) return;
+  var ARCHIVE = /^https:\\/\\/arhiva\\.videonet\\.co\\.rs\\//, ID = /^[\\w-]{6,20}$/;
+  function put(el) { screen.textContent = ""; screen.appendChild(el); }
+  function yt(id, t) {
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1" + (t > 0 ? "&start=" + t : "");
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    f.title = "YouTube";
+    put(f);
+  }
+  function file(url, t) {
+    var v = screen.querySelector("video");
+    if (!v || v.getAttribute("src") !== url) {
+      v = document.createElement("video");
+      v.controls = true; v.playsInline = true; v.preload = "metadata";
+      v.setAttribute("src", url);
+      put(v);
+    }
+    var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("[data-file], [data-yt]") : null;
+    if (!a) return;
+    var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
+    if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
+    e.preventDefault();
+    if (url) file(url, t); else yt(id, t);
+    if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+})();
+
 (function () {
   var base = document.body.getAttribute("data-base");
   function tick() {
@@ -233,6 +282,22 @@ SCRIPT = """
 """
 
 
+def player(snap: dict, *, cyr: bool, live: str = "") -> str:
+    """The player: while the broadcast is on, the YouTube video of it; between sittings, the last day's recording in
+    the broadcaster's archive, from its first turn. Only a button until clicked (AGENTS.md, principle 5)."""
+    t = lambda k: escape(_t(k, cyr))
+    if snap["stanje"] != "nema_prenosa" and live:
+        button, note = f'<button type="button" class="play" data-yt="{escape(live)}">▶ {t("play_live")}</button>', t("yt_note")
+    else:
+        first = next((d for d in reversed(snap["danas"]) if d.get("datoteka") and d.get("snimak") is not None), None)
+        if not first:
+            return ""
+        button = (f'<button type="button" class="play" data-file="{escape(first["datoteka"])}" '
+                  f'data-t="{int(first["snimak"])}">▶ {t("play_day")}</button>')
+        note = t("archive_note")
+    return f'<section class="player"><div class="screen" id="screen">{button}</div><p class="meta">{note}</p></section>'
+
+
 def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
     """"Dok čekate": the site's short quiz and facts (pages_mikrofon), shown between sittings. The quiz works by the
     page's one script; without it each answer is under "Odgovor"."""
@@ -255,7 +320,7 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
                        f'<a href="{escape(home + q["href"])}">{t("how_counted")}</a></p></details></li>')
         out.append("</ol>")
         out.append(f'<p class="mq-score" id="mq-score" hidden>{t("score")} <b>0</b> {t("of")} {len(quiz)}.'
-                   + "".join(f'<span data-k="{k}" hidden>{t(k)}</span>' for k in ("all", "some", "none")) + "</p>")
+                   + "".join(f'<span data-k="{k}" hidden>{t("q_" + k)}</span>' for k in ("all", "some", "none")) + "</p>")
     if facts:
         out.append(f'<h3>{t("know")}</h3><ul class="facts">')
         out += [f'<li><a href="{escape(home + f["href"])}">{s(f["text"])}</a></li>' for f in facts]
@@ -263,7 +328,8 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
     return "\n".join(out)
 
 
-def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None) -> str:
+def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
+         live: str = "") -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -291,6 +357,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <main>
 <h1>{t("title")}</h1>
 <p class="lead">{t("lead")}</p>
+{player(snap, cyr=cyr, live=live)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>

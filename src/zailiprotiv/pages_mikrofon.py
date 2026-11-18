@@ -53,7 +53,9 @@ def turns(day: dict) -> list[dict]:
                     "name": " ".join(t["ime"].split(" ", 1)[::-1]), "slug": t["adresa"], "side": t["uloga"] or t["grupa"],
                     "minutes": max(1, round(sec / 60)),
                     "recording": "" if rec is None else f"{t['datoteka']}#t={rec}" if t.get("datoteka") else
-                    f"https://www.youtube.com/watch?v={t['video']}&t={rec}s" if t.get("video") else ""})
+                    f"https://www.youtube.com/watch?v={t['video']}&t={rec}s" if t.get("video") else "",
+                    # for the page's player, which opens an archive file in place on a click
+                    "file": t.get("datoteka", "") if rec is not None else "", "t": rec or 0})
     return out
 
 

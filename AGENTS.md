@@ -94,6 +94,11 @@ The project's promises to its readers. Never change them without the maintainer.
      has `analytics_token`; `publish.check` lets this one script through; the footer and "O projektu" say so;
    - **visitors' votes** sent to the project's own counter (`worker/`; 13 Nov 2026) when `votes_api` is set; what is
      kept is on the method page (see "Visitors' votes" below);
+   - **a player on `mikrofon.zailiprotiv.rs`, only on a click** (18 Nov 2026): while the broadcast is on, the YouTube
+     video of it (`youtube-nocookie.com`); between sittings, the last day's recording from the broadcaster's archive
+     (videonet.co.rs, a plain `<video>`), from where a turn's "▶ snimak" says. Until the click the page shows our own
+     button and loads nothing from either; the page and "O projektu" say so. The links work without the script;
+     the script plays only archive files and YouTube ids it recognises;
    - things of others' making **served from the project itself**: the search (Pagefind), MPs' portraits from the
      Assembly (`photos.py`, `data/photos/`), and the project's own subdomains for the notes' pages and the downloads.
 6. **What MPs say is not censored and not shaped** (13 Nov 2026). Quotes are word for word, checked against the

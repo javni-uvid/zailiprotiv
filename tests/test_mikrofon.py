@@ -36,7 +36,8 @@ def test_the_last_day_read_from_the_recording():
          "video": "qkm", "snimak": 20370}]}
     out = pages_mikrofon.turns(day)
     assert out == [{"from": "14:04", "to": "15:40", "name": "Aleksandar Vučić", "slug": "vucic-aleksandar",
-                    "side": "Lista A", "minutes": 96, "recording": "https://www.youtube.com/watch?v=qkm&t=14527s"}]
+                    "side": "Lista A", "minutes": 96, "recording": "https://www.youtube.com/watch?v=qkm&t=14527s",
+                    "file": "", "t": 14527}]
 
 
 def _quiz():
@@ -74,4 +75,5 @@ def test_a_turn_in_the_archive_links_to_its_second_in_the_file():
     day = {"dan": "2026-11-17", "govori": [{"ime": "Radeta Vjerica", "adresa": "radeta-vjerica", "grupa": "",
             "uloga": "", "od": 1794910712, "do": 1794910792, "okvira": 17, "video": "",
             "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710.mp4", "snimak": 769}]}
-    assert pages_mikrofon.turns(day)[0]["recording"].endswith("zas2026111710.mp4#t=769")
+    t = pages_mikrofon.turns(day)[0]
+    assert t["recording"].endswith("zas2026111710.mp4#t=769") and t["file"].endswith("10.mp4") and t["t"] == 769

@@ -13,6 +13,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from . import config, worker
+from .stream import VIDEO
 from .page import fragment, page
 from .state import Tracker
 
@@ -36,8 +37,8 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 
 
 def _page(cyr: bool) -> HTMLResponse:
-    return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting),
-                        headers=NO_STORE)
+    return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
+                             live=VIDEO.get("id", "")), headers=NO_STORE)
 
 
 def _part(cyr: bool) -> HTMLResponse:

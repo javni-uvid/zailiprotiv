@@ -281,9 +281,29 @@ def test_between_sittings_the_page_has_the_sites_quiz_and_facts(tmp_path):
     snap = t.snapshot()
     lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, waiting=w)
     assert snap["stanje"] == NO_STREAM and "Dok čekate" in lat and 'data-a="1"' in lat
+    assert "Skupština sada ne zaseda" in lat  # the quiz's words don't take the state's place
     assert '<a href="https://zailiprotiv.rs/brojke">Kako je izračunato</a>' in lat and "Da li ste znali" in lat
     cyr = waiting_part(w, cyr=True, site="https://zailiprotiv.rs/")
     assert "Док чекате" in cyr and 'href="https://zailiprotiv.rs/cir/zakoni"' in cyr
     snap["stanje"] = SPEAKING
     assert "Dok čekate" not in page(snap, cyr=False, site="", tz=TZ, waiting=w)  # not while someone speaks
     assert waiting_part({}, cyr=False, site="") == ""
+
+
+def test_the_player_is_a_button_until_clicked():
+    from uzivo.page import player
+    day = {"stanje": NO_STREAM, "provereno": 0, "sada": None, "dan": "2026-11-17", "ranije": True, "snimak": True,
+           "danas": [{"ime": "B", "adresa": "", "grupa": "", "uloga": "", "od": 2, "do": 3, "sekundi": 1, "video": "",
+                      "datoteka": "https://arhiva.videonet.co.rs/b.mp4", "snimak": 40},
+                     {"ime": "A", "adresa": "", "grupa": "", "uloga": "", "od": 0, "do": 1, "sekundi": 1, "video": "",
+                      "datoteka": "https://arhiva.videonet.co.rs/a.mp4", "snimak": 7}]}
+    html = player(day, cyr=False, live="abcdefghijk")  # between sittings: the day's recording, from its first turn
+    assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in html and "Pusti snimak dana" in html
+    assert "<iframe" not in html and "<video" not in html and " src=" not in html  # nothing loads before a click
+    live = player({**day, "stanje": SPEAKING}, cyr=False, live="abcdefghijk")
+    assert 'data-yt="abcdefghijk"' in live and "YouTube" in live and "<iframe" not in live
+    assert player({**day, "danas": []}, cyr=False) == ""
+    frag = fragment(day, cyr=False, site="", tz=TZ)
+    assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in frag  # each turn opens in the player
+    page_ = page(day, cyr=False, site="", tz=TZ, live="")
+    assert 'id="screen"' in page_ and "youtube-nocookie.com/embed/" in page_  # the address is only in the script

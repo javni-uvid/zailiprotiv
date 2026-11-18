@@ -501,6 +501,11 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
     assert "youtube.com/watch?v=qkm&amp;t=14527s" in page and "Петар Петровић" in (out / "cir" / "mikrofon.html").read_text()
     assert json.loads((out / "mikrofon-dan.json").read_text())["dan"] == "2026-11-17"
     assert set(json.loads((out / "mikrofon-cekanje.json").read_text())) == {"kviz", "cinjenice"}
+    day["govori"][0].update(video="", datoteka="https://arhiva.videonet.co.rs/f/zas.mp4", snimak=60)
+    (root / "15" / "snimak" / "2026-11-17.json").write_text(json.dumps(day))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    page = (out / "mikrofon.html").read_text()
+    assert 'data-file="https://arhiva.videonet.co.rs/f/zas.mp4" data-t="60"' in page and "Pusti snimak dana" in page
     assert site.check(out) == []
 
 

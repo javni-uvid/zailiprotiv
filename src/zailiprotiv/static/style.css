@@ -1053,3 +1053,10 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .mq-score span[hidden] { display: none; }
 .facts-list li { margin: .35rem 0; }
 @media (prefers-reduced-motion: reduce) { .mq-o { transition: none; } .mq-o:hover { transform: none; } }
+
+/* The player on the mikrofon page: a button until clicked (principle 5). */
+.player { margin: 1.4rem 0 .4rem; }
+.screen { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; display: grid; place-items: center; }
+.screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+.play { font: inherit; font-weight: 700; font-size: 1.1rem; padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
+.play:hover { transform: scale(1.04); }
