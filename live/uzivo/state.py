@@ -222,7 +222,7 @@ class Tracker:
     def _recorded(t: dict) -> dict:
         return {"ime": t["ime"], "adresa": t.get("adresa", ""), "grupa": t.get("grupa", ""), "uloga": t.get("uloga", ""),
                 "od": int(t["od"]), "do": int(t["do"]), "sekundi": int(t["do"] - t["od"]),
-                "video": t.get("video") or "", "snimak": t.get("snimak")}
+                "video": t.get("video") or "", "datoteka": t.get("datoteka") or "", "snimak": t.get("snimak")}
 
     def snapshot(self, now: float | None = None) -> dict:
         today = self._day(time.time() if now is None else now)

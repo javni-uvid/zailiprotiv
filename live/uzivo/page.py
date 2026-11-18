@@ -84,10 +84,12 @@ def _hms(sec: int) -> str:
 
 
 def _recording(d: dict, cyr: bool) -> str:
-    """A link to the turn's place in the YouTube recording, where the record knows it."""
-    if not d.get("video") or d.get("snimak") is None:
+    """A link to the turn's place in the recording, where the record knows it: in a file of the broadcaster's archive
+    (`datoteka`, a day read from the recording) or in the YouTube video of the live broadcast."""
+    if d.get("snimak") is None or not (d.get("datoteka") or d.get("video")):
         return ""
-    href = escape(f'https://www.youtube.com/watch?v={d["video"]}&t={d["snimak"]}s')
+    href = escape(f'{d["datoteka"]}#t={d["snimak"]}' if d.get("datoteka") else
+                  f'https://www.youtube.com/watch?v={d["video"]}&t={d["snimak"]}s')
     return (f' <a class="rec" href="{href}" title="{escape(_t("recording_title", cyr))}">▶ '
             f'{escape(_t("recording", cyr))} {_hms(d["snimak"])}</a>')
 

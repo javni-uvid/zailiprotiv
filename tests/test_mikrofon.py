@@ -68,3 +68,10 @@ def test_the_quiz_leaves_out_what_is_not_known_and_the_live_page_gets_plain_link
     assert w["cinjenice"][0]["href"] == "zakon/a" and w["kviz"][0]["href"] == "brojke"
     # Beside the quiz, only the facts it does not ask about.
     assert [f["key"] for f in pages_mikrofon.besides(_facts(), _quiz())] == ["laws", "against"]
+
+
+def test_a_turn_in_the_archive_links_to_its_second_in_the_file():
+    day = {"dan": "2026-11-17", "govori": [{"ime": "Radeta Vjerica", "adresa": "radeta-vjerica", "grupa": "",
+            "uloga": "", "od": 1794910712, "do": 1794910792, "okvira": 17, "video": "",
+            "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710.mp4", "snimak": 769}]}
+    assert pages_mikrofon.turns(day)[0]["recording"].endswith("zas2026111710.mp4#t=769")

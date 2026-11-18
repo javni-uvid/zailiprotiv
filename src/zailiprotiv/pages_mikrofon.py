@@ -39,7 +39,9 @@ def last_day(root: Path) -> dict | None:
 
 
 def turns(day: dict) -> list[dict]:
-    """The day's turns for the page, in order: a turn named in a single frame is left out, as on the live page."""
+    """The day's turns for the page, in order: a turn named in a single frame is left out, as on the live page. A
+    turn's recording is a file in the broadcaster's archive (`datoteka`, its second as a media fragment), or the
+    YouTube video of the live broadcast: the Assembly makes those private after a while (18 Nov 2026)."""
     out = []
     for t in day["govori"]:
         if t.get("okvira", 0) < 2:
@@ -50,7 +52,8 @@ def turns(day: dict) -> list[dict]:
                     "to": datetime.fromtimestamp(t["do"], TZ).strftime("%H:%M"),
                     "name": " ".join(t["ime"].split(" ", 1)[::-1]), "slug": t["adresa"], "side": t["uloga"] or t["grupa"],
                     "minutes": max(1, round(sec / 60)),
-                    "recording": f"https://www.youtube.com/watch?v={t['video']}&t={rec}s" if t.get("video") and rec is not None else ""})
+                    "recording": "" if rec is None else f"{t['datoteka']}#t={rec}" if t.get("datoteka") else
+                    f"https://www.youtube.com/watch?v={t['video']}&t={rec}s" if t.get("video") else ""})
     return out
 
 

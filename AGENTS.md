@@ -346,6 +346,12 @@ its minute.
   earlier one, and says it was read from the recording. Its own `/dan/<date>.json` (and so `data/<N>/uzivo/`) is
   unchanged. Reading a day this way is by hand for now; a script for it (the recording, the caption in both layouts,
   OCR) is the next step.
+- **The live broadcast's YouTube video goes private** (18 Nov 2026: 17 Nov's, a day after). The broadcaster's archive
+  (videonet.co.rs, `videos.json`) keeps the day as MP4 files, so a day read from the recording links each turn to its
+  file and second (`datoteka`, `snimak`; a `#t=` fragment, which browsers follow for a video file). Where each file
+  begins in the day was found by lining up a caption's first frame in the file and in the video. The live record's
+  links (`video`, YouTube) will go private the same way: moving them to the archive's files is to do, and
+  `recording_links` stays off until then.
 - **"Dok čekate"** (18 Nov 2026, the maintainer's request: "more fun", on both pages): between sittings the live
   page, and the site's `mikrofon` page, carry a short quiz and the facts (`pages_mikrofon.quiz`, `facts`), published
   for the service as `mikrofon-cekanje.json` (so a change needs no rebuild of the image). The quiz asks for numbers the

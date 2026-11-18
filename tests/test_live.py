@@ -250,7 +250,8 @@ def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the
         {"ime": "Jović Jova", "adresa": "", "grupa": "", "uloga": "", "od": int(day1 - 2000), "do": int(day1 - 1995),
          "okvira": 1, "video": "xyz", "snimak": 600},
         {"ime": "Petrović Petar", "adresa": "petrovic-petar", "grupa": "", "uloga": "", "od": int(day1 - 60),
-         "do": int(day1 + 600), "okvira": 130, "video": "xyz", "snimak": 3500}]}
+         "do": int(day1 + 600), "okvira": 130, "video": "", "datoteka": "https://arhiva.example/zas.mp4",
+         "snimak": 3500}]}
     t.use_recording(rec)
     assert not t.snapshot(now=day1 + 200)["snimak"]  # the same day, while it lasts: what the service read
     next_day = datetime(2026, 11, 18, 9, 0, tzinfo=TZ).timestamp()
@@ -259,7 +260,7 @@ def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the
         assert snap["snimak"] and [d["ime"] for d in snap["danas"]] == ["Petrović Petar", "Nikolić Nina"]
         html = fragment(snap, cyr=False, site="", tz=TZ)
         assert "Poslednji dan sednice, 17. novembar 2026." in html and "sa celog snimka" in html
-        assert "youtube.com/watch?v=xyz&amp;t=95s" in html
+        assert "youtube.com/watch?v=xyz&amp;t=95s" in html and 'href="https://arhiva.example/zas.mp4#t=3500"' in html
     # An older day from the recording does not replace a later day the service read itself.
     t.use_recording({**rec, "dan": "2026-11-16"})
     snap = Tracker(str(path), tz="Europe/Belgrade").snapshot(now=next_day)
