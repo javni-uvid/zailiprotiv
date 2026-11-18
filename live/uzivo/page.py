@@ -264,12 +264,16 @@ SCRIPT = """
     var d = document.getElementById("deo"), c = document.querySelector("#checked span");
     if (d && c) c.textContent = Math.max(0, Math.round(Date.now() / 1000 - (+d.getAttribute("data-checked"))));
   }
+  // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
+  // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
   function load() {
+    if (document.hidden) return;
     fetch(base + "deo", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; })
       .then(function (html) { if (html) { document.getElementById("deo").outerHTML = html; tick(); } })
       .catch(function () {});
   }
-  setInterval(load, 2000); setInterval(tick, 1000); tick();
+  setInterval(load, 5000); setInterval(tick, 1000); tick();
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
   var list = document.getElementById("mq"), score = document.getElementById("mq-score");
   if (!list || !score) return;
   var got = 0, done = 0, n = list.querySelectorAll(".mq-q").length;

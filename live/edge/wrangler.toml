@@ -5,4 +5,15 @@ name = "zailiprotiv-mikrofon"
 main = "worker.js"
 compatibility_date = "2026-06-01"
 workers_dev = false
-routes = [{ pattern = "mikrofon.zailiprotiv.rs/*", zone_name = "zailiprotiv.rs" }]
+# Only the pages and the JSON: not /deo, which an open page asks for every few seconds (18 Nov 2026: through the
+# worker, a sitting's viewers spent the free plan's 100,000 requests a day, and Cloudflare answered 429, the counter
+# of votes included, as the limit is the account's). While the tunnel is down /deo gets Cloudflare's 530, and the
+# page keeps what it shows. A pattern without "*" is that path only.
+routes = [
+  { pattern = "mikrofon.zailiprotiv.rs/", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/cir", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/cir/", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/stanje.json", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/dani.json", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/dan/*", zone_name = "zailiprotiv.rs" },
+]
