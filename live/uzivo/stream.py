@@ -6,6 +6,7 @@ end of the broadcast.
 """
 from __future__ import annotations
 
+import http.client
 import io
 import logging
 import os
@@ -190,6 +191,7 @@ class HlsPoller(threading.Thread):
         self._dur = 5.0
         self._ended = False
         self._pl_error: Exception | None = None
+        self._net_error: Exception | None = None  # the last segment that did not come for a fault on the way
         self._pl_ok_at = time.time()
         self.frame_seq: int | None = None
         self.seg_dur: float | None = None
@@ -256,6 +258,12 @@ class HlsPoller(threading.Thread):
             if exc.code in (204, 404, 410, 425):  # not published yet
                 return None
             raise
+        except (OSError, http.client.HTTPException) as exc:
+            # A fault on the way (a name not found, a reset, a timeout: 18 Nov 2026, one lookup failed and the
+            # reading stopped) is asked again; only the broadcast standing still for long ends the reading.
+            self._net_error = exc
+            return None
+        self._net_error = None
         return data if len(data) > 1024 else None
 
     # --- main loop -----------------------------------------------------------------
@@ -283,8 +291,9 @@ class HlsPoller(threading.Thread):
                         if ended and nxt > newest:
                             raise RuntimeError("end of broadcast")
                         if time.time() - last_new > max(60, 6 * dur):
-                            raise RuntimeError(f"no new segment for {time.time() - last_new:.0f} s")
-                        self._stop.wait(0.5)
+                            why = f" (last: {self._net_error})" if self._net_error else ""
+                            raise RuntimeError(f"no new segment for {time.time() - last_new:.0f} s{why}")
+                        self._stop.wait(1.0 if self._net_error else 0.5)
                         continue
                     t1 = time.time()
                     with open(path, "wb") as f:
@@ -307,6 +316,10 @@ class HlsPoller(threading.Thread):
                 msg = str(exc)
             self.stderr = io.BytesIO(msg.encode())
             self._code = 1
+        finally:
+            # The playlist's thread ends with this one. Left running (until 18 Nov 2026 it was, after every reading
+            # that ended by itself), each kept asking YouTube for its playlist for as long as the service ran.
+            self._stop.set()
 
     def poll(self) -> int | None:
         return self._code

@@ -238,6 +238,69 @@ def test_a_private_video_on_the_page_falls_back_to_the_live_one(monkeypatch):
     assert stream._last_live.endswith("live1")  # and kept for the next time
 
 
+_PLAYLIST = b"#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:10\n#EXTINF:5.0,\nhttps://v/sq/10/a\n#EXTINF:5.0,\nhttps://v/sq/11/a\n"
+
+
+def _poller(monkeypatch, tmp_path, segment):
+    """An HlsPoller on a fake YouTube: the playlist always answers, `segment(n)` answers for segment n."""
+    import time
+    from uzivo import stream
+    calls = {"playlist": 0, "frames": 0}
+
+    def get(self, url, timeout=20):
+        if "/sq/" not in url:
+            calls["playlist"] += 1
+            return _PLAYLIST
+        return segment(int(url.split("/sq/")[1].split("/")[0]))
+
+    def frame(path):
+        calls["frames"] += 1
+    monkeypatch.setattr(config, "FRAME_PATH", str(tmp_path / "frame" / "now.jpg"))
+    monkeypatch.setattr(stream.HlsPoller, "_get", get)
+    monkeypatch.setattr(stream, "_ffmpeg_last_frame", frame)
+    p = stream.HlsPoller("https://v/playlist", {})
+
+    def until(cond, limit=5.0):
+        end = time.time() + limit
+        while not cond() and time.time() < end:
+            time.sleep(0.05)
+        return cond()
+    return p, calls, until
+
+
+def test_a_fault_on_the_way_to_a_segment_does_not_stop_the_reading(monkeypatch, tmp_path):
+    import urllib.error
+    faults = [urllib.error.URLError(OSError(-5, "No address associated with hostname"))]
+
+    def segment(n):
+        if n == 11 and faults:
+            raise faults.pop()  # 18 Nov 2026: one failed lookup ended the reading
+        if n > 11:
+            raise urllib.error.HTTPError("https://v", 404, "not yet", None, None)
+        return b"x" * 2000
+    p, calls, until = _poller(monkeypatch, tmp_path, segment)
+    try:
+        assert until(lambda: calls["frames"] == 1)  # the segment came when asked again
+        assert p.poll() is None  # and the reading goes on
+    finally:
+        p.kill()
+
+
+def test_a_reading_that_ends_stops_asking_for_the_playlist(monkeypatch, tmp_path):
+    import time
+    import urllib.error
+
+    def segment(n):
+        raise urllib.error.HTTPError("https://v", 403, "expired", None, None)  # the address no longer valid
+    p, calls, _ = _poller(monkeypatch, tmp_path, segment)
+    p.join(5)
+    assert p.poll() == 1 and b"403" in p.stderr.read()
+    time.sleep(1.3)  # the playlist's thread asks once a second while it runs
+    asked = calls["playlist"]
+    time.sleep(1.3)
+    assert calls["playlist"] == asked  # it ended with the reading
+
+
 def test_a_day_kept_only_in_the_old_state_file_gets_its_own(tmp_path):
     from datetime import datetime
     day = datetime(2026, 11, 17, 17, 38, tzinfo=TZ).timestamp()
