@@ -70,6 +70,15 @@ def state() -> JSONResponse:
     return JSONResponse(tracker.snapshot(), headers=NO_STORE)
 
 
+@app.get("/stanje.js")
+def state_shared() -> JSONResponse:
+    """The same state for other pages to read (18 Nov 2026: a joke page on a quick tunnel, whose 200 requests in
+    flight its visitors filled): any origin may read it, and as a ".js" Cloudflare keeps it two seconds, so however
+    many read it the computer answers once in two seconds per Cloudflare location."""
+    return JSONResponse(tracker.snapshot(), headers={"Cache-Control": "public, max-age=2, s-maxage=2",
+                                                     "Access-Control-Allow-Origin": "*"})
+
+
 @app.get("/dani.json")
 def days() -> JSONResponse:
     """The days this service has a record of, for the site's workflow that takes them in."""

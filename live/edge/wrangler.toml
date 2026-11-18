@@ -17,3 +17,4 @@ routes = [
   { pattern = "mikrofon.zailiprotiv.rs/dani.json", zone_name = "zailiprotiv.rs" },
   { pattern = "mikrofon.zailiprotiv.rs/dan/*", zone_name = "zailiprotiv.rs" },
 ]
+# Not /stanje.js either: other pages read it every few seconds, from Cloudflare's cache (live/uzivo/main.py).

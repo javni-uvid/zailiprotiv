@@ -317,3 +317,13 @@ def test_a_day_in_several_files_plays_from_the_first_with_each_part_listed():
     html = player(day, cyr=False, tz=TZ)
     assert 'class="play" data-file="https://arhiva.videonet.co.rs/1.mp4" data-t="0"' in html
     assert "Deo 1 · 11:05–11:24" in html and "Deo 2 · 13:56–15:52" in html and '<p class="meta"></p>' not in html
+
+
+def test_the_shared_state_is_cacheable_and_open_to_other_pages():
+    import pytest
+    pytest.importorskip("fastapi")  # the live service's own packages (live/requirements.txt), not the site's
+    from fastapi.testclient import TestClient
+    from uzivo import main
+    r = TestClient(main.app).get("/stanje.js")
+    assert r.status_code == 200 and r.headers["access-control-allow-origin"] == "*"
+    assert "s-maxage=2" in r.headers["cache-control"] and "stanje" in r.json()
