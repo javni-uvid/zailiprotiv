@@ -431,3 +431,15 @@ def test_specks_around_an_unknown_name_are_left_out():
     assert who(Caption(name_line="Milica Vasiljević-Blagojević", name_clean=True), Roster(), 0.8).name == \
         "Vasiljević-Blagojević Milica"
     assert tidy("c Studentska lista") == "Studentska lista"
+
+
+def test_a_role_read_with_a_word_missing_is_the_list_the_site_names():
+    from uzivo.caption import role
+    roster = Roster.from_json(json.dumps({"mps": [
+        {"n": "Mirković Aleksandar", "s": "mirkovic-aleksandar", "g": "Aleksandar Vučić - Srbija pobeđuje"},
+        {"n": "Gašić Jugoslav", "s": "gasic-jugoslav", "g": "Studentska lista"},
+        {"n": "Stari Poslanik", "s": "stari-poslanik", "g": "A. VUČIĆ - Srbija ne sme da stane"}]}))
+    mirkovic = roster.match("Aleksandar Mirković", 0.8)
+    assert role("RA Aleksandar Vučić Srbija", mirkovic, roster, 0.8) == "Aleksandar Vučić - Srbija pobeđuje"
+    assert role("c Studentska lista", None, roster, 0.8) == "Studentska lista"
+    assert role("ministar finansija", None, roster, 0.8) == "ministar finansija"

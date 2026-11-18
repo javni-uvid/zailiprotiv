@@ -12,7 +12,7 @@ from pathlib import Path
 from PIL import Image
 
 from . import config
-from .caption import differs, tidy, who
+from .caption import differs, role, who
 from .names import Roster
 from .ocr import caption
 from .state import Tracker
@@ -95,7 +95,7 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
                         log.exception("frame not read")
                         continue
                     person = who(cap, roster.get(), config.MATCH)
-                    tracker.observe(person, tidy(cap.role_line) if cap.role_clean else "",
+                    tracker.observe(person, role(cap.role_line, person, roster.get(), config.MATCH) if cap.role_clean else "",
                                     other=differs(cap, tracker.current(), config.MATCH), at=at)
                     log.info("%s | %s | %s -> %s", person.name if person else "-", cap.name_line[:40],
                              cap.role_line[:40], tracker.status)

@@ -83,6 +83,12 @@ class Roster:
 
     def __init__(self, people: list[Person] | None = None):
         self.people = people or []
+        # the lists and groups the site names, most MPs first ("Studentska lista", "Aleksandar Vučić - Srbija pobeđuje")
+        count: dict[str, int] = {}
+        for p in self.people:
+            if p.group:
+                count[p.group] = count.get(p.group, 0) + 1
+        self.groups = sorted(count, key=lambda g: -count[g])
         self._by_len: dict[int, list[tuple[list[str], Person]]] = {}
         for p in self.people:
             ws = sorted(words(p.name))

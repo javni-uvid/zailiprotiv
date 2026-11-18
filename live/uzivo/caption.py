@@ -87,6 +87,29 @@ def who(cap: Caption, roster: Roster, threshold: float) -> Person | None:
     return None
 
 
+def _found(want: list[str], got: list[str], threshold: float) -> float:
+    """The share of the words wanted that are on the line, each read closely enough."""
+    if not want or not got:
+        return 0.0
+    return sum(max(difflib.SequenceMatcher(None, w, g).ratio() for g in got) >= threshold for w in want) / len(want)
+
+
+def role(line: str, person: Person | None, roster: Roster, threshold: float) -> str:
+    """The line under the name, as read; when it is close to the speaker's list on the site's list of MPs, or to
+    any list there, that list's name as the site writes it: OCR drops a word and reads specks of the picture
+    beside it ("RA Aleksandar Vučić Srbija" for "Aleksandar Vučić - Srbija pobeđuje", 18 Nov 2026)."""
+    text = tidy(line)
+    got = words(text)
+    if not got:
+        return text
+    lists = ([person.group] if person and person.group else []) + roster.groups
+    for name in lists:
+        want = words(name)
+        if _found(want, got, threshold) >= 0.6 and _found(got, want, threshold) >= 0.6:
+            return name
+    return text
+
+
 def differs(cap: Caption, current: str, threshold: float) -> bool:
     """The caption names someone, unreadably perhaps, and it is not the current speaker: two or more words on the
     name line, none of them close to a word of the current speaker's name."""
