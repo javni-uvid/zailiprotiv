@@ -443,3 +443,18 @@ def test_a_role_read_with_a_word_missing_is_the_list_the_site_names():
     assert role("RA Aleksandar Vučić Srbija", mirkovic, roster, 0.8) == "Aleksandar Vučić - Srbija pobeđuje"
     assert role("c Studentska lista", None, roster, 0.8) == "Studentska lista"
     assert role("ministar finansija", None, roster, 0.8) == "ministar finansija"
+
+
+def test_one_frame_of_another_name_inside_a_speech_is_not_a_turn():
+    t = Tracker(None, "Europe/Belgrade")
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    for s in (0, 5, 10):
+        t.observe(petar, now=now + s)
+    t.observe(marko, now=now + 15)
+    for s in (20, 25):
+        t.observe(petar, now=now + s)
+    assert [x["name"] for x in t.turns] == ["Petrović Petar"] and t.turns[0]["n"] == 5
+    t.observe(marko, now=now + 30)
+    t.observe(marko, now=now + 35)
+    assert [x["name"] for x in t.turns] == ["Petrović Petar", "Jovanović Marko"]

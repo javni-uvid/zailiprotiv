@@ -167,6 +167,12 @@ class Tracker:
                         cur["sq_seen"] = at["sq"]
                 else:
                     self._close()
+                    prev = self.turns[-2] if len(self.turns) > 1 else None
+                    if (cur and cur["key"] != person.key and cur["n"] == 1 and prev and prev["key"] == person.key
+                            and now - prev["seen"] <= config.MERGE_SECONDS):
+                        # one frame of another name inside a speech (a caption misread, 18 Nov 2026): not a turn
+                        self.turns.pop()
+                        cur = prev
                     if cur and cur["key"] == person.key and now - cur["seen"] <= config.MERGE_SECONDS:
                         cur["seen"], cur["n"] = now, cur["n"] + 1  # the same speaker after a short break
                         if at.get("sq") is not None and cur.get("video") == at.get("video"):
