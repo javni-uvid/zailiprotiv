@@ -15,6 +15,9 @@ def _i(name: str, default: int) -> int:
 STREAM_URL = os.environ.get("STREAM_URL", "").strip()
 YOUTUBE_URL = os.environ.get("YOUTUBE_URL", "").strip()
 SOURCE_PAGE = os.environ.get("SOURCE_PAGE", "https://www.videonet.co.rs/nsrsZasedanje1l.htm").strip()
+# The Assembly's own YouTube channel: its "/live" is whatever it broadcasts now. Tried when the page's video isn't
+# live (18 Nov 2026: the page embedded a private video while the sitting went on in another).
+CHANNEL_LIVE = os.environ.get("CHANNEL_LIVE", "https://www.youtube.com/channel/UCghngrfQwzJ4aaPZ-UgNIZQ/live").strip()
 YTDLP_COOKIES = os.environ.get("YTDLP_COOKIES", "").strip()
 MAX_HEIGHT = _i("MAX_HEIGHT", 480)  # the caption reads well at 480p, and the stream is two to three times lighter
 FRAME_INTERVAL = _f("FRAME_INTERVAL", 2)  # only for a stream that is not HLS; HLS gives one frame per segment

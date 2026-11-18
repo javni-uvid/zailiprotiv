@@ -218,7 +218,24 @@ def test_between_sittings_the_page_is_read_afresh(monkeypatch):
         stream.resolve_input()
     except stream.NotLive:
         pass
-    assert seen == ["https://www.youtube.com/watch?v=new"]  # the page's stream of the day, not the one in .env
+    assert seen[0] == "https://www.youtube.com/watch?v=new"  # the page's stream of the day first
+    assert seen[1:] == ["https://www.youtube.com/watch?v=old", config.CHANNEL_LIVE]  # then the others, none live
+
+
+def test_a_private_video_on_the_page_falls_back_to_the_live_one(monkeypatch):
+    from uzivo import stream
+    monkeypatch.setattr(config, "YOUTUBE_URL", "")
+    monkeypatch.setattr(config, "SOURCE_PAGE", "https://example.org/page")
+    monkeypatch.setattr(stream, "_youtube_url_from_page", lambda page: "https://www.youtube.com/watch?v=private")
+
+    def resolve(url):
+        if url.endswith("private"):
+            raise RuntimeError("Private video")
+        stream.VIDEO.update(id="live1")
+        return "https://hls/live1.m3u8", {}
+    monkeypatch.setattr(stream, "_resolve_youtube", resolve)
+    assert stream.resolve_input()[0] == "https://hls/live1.m3u8"  # the channel's live broadcast
+    assert stream._last_live.endswith("live1")  # and kept for the next time
 
 
 def test_a_day_kept_only_in_the_old_state_file_gets_its_own(tmp_path):

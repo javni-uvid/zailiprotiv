@@ -92,7 +92,7 @@ def _resolve_youtube(url: str) -> str:
             info = ydl.extract_info(url, download=False)
     except Exception as exc:
         text = str(exc)
-        if any(w in text for w in ("not live", "live event will begin", "Premieres in", "is offline", "has ended")):
+        if any(w in text for w in ("not live", "not currently live", "live event will begin", "Premieres in", "is offline", "has ended")):
             raise NotLive(f"{url}: no broadcast now") from exc
         raise RuntimeError(f"yt-dlp got no stream for {url}: {exc}") from exc
     if not info.get("is_live"):
@@ -116,9 +116,37 @@ def resolve_input() -> tuple[str, dict]:
     global _last_youtube_url
     if config.YOUTUBE_URL and not _last_youtube_url:
         _last_youtube_url = config.YOUTUBE_URL
-    yt = _youtube_url_from_page(config.SOURCE_PAGE) if config.SOURCE_PAGE else config.YOUTUBE_URL
-    log.debug("YouTube stream: %s", yt)
-    return _resolve_youtube(yt)
+    # The page's video may be other than the live one (18 Nov 2026: a private video, the sitting live in another):
+    # then the last video seen live, the one in .env, and the channel's "/live", whichever is live first.
+    first = _youtube_url_from_page(config.SOURCE_PAGE) if config.SOURCE_PAGE else config.YOUTUBE_URL
+    tried, err = [], None
+    for yt in (first, _last_live, config.YOUTUBE_URL, config.CHANNEL_LIVE):
+        if not yt or yt in tried:
+            continue
+        tried.append(yt)
+        try:
+            got = _resolve_youtube(yt)
+        except NotLive as exc:
+            err = exc
+            continue
+        except Exception as exc:  # a private or removed video: try the next
+            err = exc
+            continue
+        _remember_live()
+        log.debug("YouTube stream: %s", yt)
+        return got
+    if isinstance(err, NotLive) or err is None:
+        raise NotLive(f"none live of {len(tried)} tried")
+    raise err
+
+
+_last_live = ""  # the last video found live, kept for when the page points elsewhere
+
+
+def _remember_live() -> None:
+    global _last_live
+    if VIDEO.get("id"):
+        _last_live = f"https://www.youtube.com/watch?v={VIDEO['id']}"
 
 
 def _is_hls(source: str) -> bool:

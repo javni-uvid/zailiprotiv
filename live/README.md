@@ -45,7 +45,9 @@ day, the list stays, under "Poslednji dan sednice" and its date, until someone i
 **Between sittings** the service looks for a broadcast once a minute, quietly (one line in the log, not one per
 look; yt-dlp's own "not live" errors are kept out of it), and starts reading within a minute of the next sitting
 going live. Each sitting day is a new YouTube video, so the broadcaster's page is read afresh every time; `YOUTUBE_URL`
-is used only while that page can't be read.
+is used only while that page can't be read. When the page's video isn't live (18 Nov 2026: it embedded a private
+video while the sitting went on in another), the last video seen live, `YOUTUBE_URL`, and the Assembly's channel's
+`/live` (`CHANNEL_LIVE`) are tried, in that order.
 
 Delays: the broadcast runs 15-25 s behind the hall, and a segment is 5 s.
 
