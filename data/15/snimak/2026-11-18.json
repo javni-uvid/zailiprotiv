@@ -1,7 +1,7 @@
 {
  "dan": "2026-11-18",
  "izvor": "snimak",
- "napomena": "Pročitano sa snimka prenosa (YouTube kanal Skupštine, video CUkNRQE7PfU), isto pravilo za svakog govornika: govor traje od prvog do poslednjeg kadra s imenom govornika u potpisu, dok se ne pojavi drugo ime. Do 15:03 kadar na svakih 10 sekundi sa snimka; od 15:03 zapis servisa „Ko sada govori“ (kadar na oko 5 sekundi), proveren na snimku: ispravljena imena koja servis nije prepoznao, spojeni delovi istog govora. Predsedavajući nema potpis i nije u spisku. 'uloga' je poslanička lista iz spiska poslanika na sajtu Skupštine; 'snimak' je mesto u videu u sekundama, pet sekundi pre prvog kadra. Od oko 14:00 do 15:00 je pauza.",
+ "napomena": "Pročitano sa snimka prenosa (YouTube kanal Skupštine, video CUkNRQE7PfU, sada privatan), isto pravilo za svakog govornika: govor traje od prvog do poslednjeg kadra s imenom govornika u potpisu, dok se ne pojavi drugo ime. Do 15:03 kadar na svakih 10 sekundi sa snimka; od 15:03 zapis servisa „Ko sada govori“ (kadar na oko 5 sekundi), proveren na snimku: ispravljena imena koja servis nije prepoznao, spojeni delovi istog govora. Predsedavajući nema potpis i nije u spisku. 'uloga' je poslanička lista iz spiska poslanika na sajtu Skupštine; Od oko 14:00 do 15:00 je pauza. 'datoteka' je snimak dana u arhivi videonet.co.rs, a 'snimak' mesto u njemu u sekundama, pet sekundi pre prvog kadra; za popodne (od 15 h) arhiva još nema snimak, pa ni govor nema mesto u njemu.",
  "pokriveno": [
   {
    "od": 1794992220,
@@ -17,8 +17,9 @@
    "od": 1794992930,
    "do": 1794993000,
    "okvira": 8,
-   "video": "CUkNRQE7PfU",
-   "snimak": 707
+   "video": "",
+   "snimak": 330,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Jovanov Milenko",
@@ -28,8 +29,9 @@
    "od": 1794993150,
    "do": 1794993260,
    "okvira": 12,
-   "video": "CUkNRQE7PfU",
-   "snimak": 927
+   "video": "",
+   "snimak": 550,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -39,8 +41,9 @@
    "od": 1794993570,
    "do": 1794995920,
    "okvira": 236,
-   "video": "CUkNRQE7PfU",
-   "snimak": 1347
+   "video": "",
+   "snimak": 970,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Mitov Petar",
@@ -50,8 +53,9 @@
    "od": 1794996210,
    "do": 1794996310,
    "okvira": 9,
-   "video": "CUkNRQE7PfU",
-   "snimak": 3987
+   "video": "",
+   "snimak": 3610,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Radović Vera",
@@ -61,8 +65,9 @@
    "od": 1794996340,
    "do": 1794996410,
    "okvira": 8,
-   "video": "CUkNRQE7PfU",
-   "snimak": 4117
+   "video": "",
+   "snimak": 3740,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -72,8 +77,9 @@
    "od": 1794996470,
    "do": 1794996650,
    "okvira": 19,
-   "video": "CUkNRQE7PfU",
-   "snimak": 4247
+   "video": "",
+   "snimak": 3870,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Belić Sanja",
@@ -83,8 +89,9 @@
    "od": 1794996670,
    "do": 1794996670,
    "okvira": 1,
-   "video": "CUkNRQE7PfU",
-   "snimak": 4447
+   "video": "",
+   "snimak": 4070,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Fric Sanja",
@@ -94,8 +101,9 @@
    "od": 1794996690,
    "do": 1794996740,
    "okvira": 6,
-   "video": "CUkNRQE7PfU",
-   "snimak": 4467
+   "video": "",
+   "snimak": 4090,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -105,8 +113,9 @@
    "od": 1794996760,
    "do": 1794996810,
    "okvira": 6,
-   "video": "CUkNRQE7PfU",
-   "snimak": 4537
+   "video": "",
+   "snimak": 4160,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Pastor Balint",
@@ -116,8 +125,9 @@
    "od": 1794996860,
    "do": 1794997320,
    "okvira": 46,
-   "video": "CUkNRQE7PfU",
-   "snimak": 4637
+   "video": "",
+   "snimak": 4260,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Vučević Miloš",
@@ -127,8 +137,9 @@
    "od": 1794997340,
    "do": 1794998120,
    "okvira": 79,
-   "video": "CUkNRQE7PfU",
-   "snimak": 5117
+   "video": "",
+   "snimak": 4740,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -138,8 +149,9 @@
    "od": 1794998180,
    "do": 1794998190,
    "okvira": 2,
-   "video": "CUkNRQE7PfU",
-   "snimak": 5957
+   "video": "",
+   "snimak": 5580,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Andrić Miroslav",
@@ -149,8 +161,9 @@
    "od": 1794998200,
    "do": 1794998410,
    "okvira": 22,
-   "video": "CUkNRQE7PfU",
-   "snimak": 5977
+   "video": "",
+   "snimak": 5600,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -160,8 +173,9 @@
    "od": 1794998430,
    "do": 1794999280,
    "okvira": 86,
-   "video": "CUkNRQE7PfU",
-   "snimak": 6207
+   "video": "",
+   "snimak": 5830,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4"
   },
   {
    "ime": "Brnabić Ana",
@@ -171,8 +185,9 @@
    "od": 1794999290,
    "do": 1794999870,
    "okvira": 59,
-   "video": "CUkNRQE7PfU",
-   "snimak": 7067
+   "video": "",
+   "snimak": 24,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -182,8 +197,9 @@
    "od": 1794999940,
    "do": 1795000120,
    "okvira": 19,
-   "video": "CUkNRQE7PfU",
-   "snimak": 7717
+   "video": "",
+   "snimak": 674,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Raguš Marina",
@@ -193,8 +209,9 @@
    "od": 1795000150,
    "do": 1795001100,
    "okvira": 96,
-   "video": "CUkNRQE7PfU",
-   "snimak": 7927
+   "video": "",
+   "snimak": 884,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Belić Sanja",
@@ -204,8 +221,9 @@
    "od": 1795001170,
    "do": 1795001560,
    "okvira": 40,
-   "video": "CUkNRQE7PfU",
-   "snimak": 8947
+   "video": "",
+   "snimak": 1904,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -215,8 +233,9 @@
    "od": 1795001570,
    "do": 1795002530,
    "okvira": 97,
-   "video": "CUkNRQE7PfU",
-   "snimak": 9347
+   "video": "",
+   "snimak": 2304,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Brnabić Ana",
@@ -226,8 +245,9 @@
    "od": 1795002540,
    "do": 1795002630,
    "okvira": 10,
-   "video": "CUkNRQE7PfU",
-   "snimak": 10317
+   "video": "",
+   "snimak": 3274,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -237,8 +257,9 @@
    "od": 1795002720,
    "do": 1795002770,
    "okvira": 6,
-   "video": "CUkNRQE7PfU",
-   "snimak": 10497
+   "video": "",
+   "snimak": 3454,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Zukorlić Usame",
@@ -248,8 +269,9 @@
    "od": 1795002800,
    "do": 1795003140,
    "okvira": 35,
-   "video": "CUkNRQE7PfU",
-   "snimak": 10577
+   "video": "",
+   "snimak": 3534,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Pantić Pilja Biljana",
@@ -259,8 +281,9 @@
    "od": 1795003150,
    "do": 1795003750,
    "okvira": 61,
-   "video": "CUkNRQE7PfU",
-   "snimak": 10927
+   "video": "",
+   "snimak": 3884,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Hubač Željko",
@@ -270,8 +293,9 @@
    "od": 1795003800,
    "do": 1795004390,
    "okvira": 60,
-   "video": "CUkNRQE7PfU",
-   "snimak": 11577
+   "video": "",
+   "snimak": 4534,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -281,8 +305,9 @@
    "od": 1795004420,
    "do": 1795005160,
    "okvira": 75,
-   "video": "CUkNRQE7PfU",
-   "snimak": 12197
+   "video": "",
+   "snimak": 5154,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Đukanović Vladimir",
@@ -292,8 +317,9 @@
    "od": 1795005180,
    "do": 1795005240,
    "okvira": 7,
-   "video": "CUkNRQE7PfU",
-   "snimak": 12957
+   "video": "",
+   "snimak": 5914,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Hubač Željko",
@@ -303,8 +329,9 @@
    "od": 1795005280,
    "do": 1795005300,
    "okvira": 3,
-   "video": "CUkNRQE7PfU",
-   "snimak": 13057
+   "video": "",
+   "snimak": 6014,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -314,8 +341,9 @@
    "od": 1795005310,
    "do": 1795006000,
    "okvira": 70,
-   "video": "CUkNRQE7PfU",
-   "snimak": 13087
+   "video": "",
+   "snimak": 6044,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Kamberi Šaip",
@@ -325,8 +353,9 @@
    "od": 1795006020,
    "do": 1795006430,
    "okvira": 42,
-   "video": "CUkNRQE7PfU",
-   "snimak": 13797
+   "video": "",
+   "snimak": 6754,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Vučić Aleksandar",
@@ -336,8 +365,9 @@
    "od": 1795006440,
    "do": 1795006690,
    "okvira": 26,
-   "video": "CUkNRQE7PfU",
-   "snimak": 14217
+   "video": "",
+   "snimak": 7174,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4"
   },
   {
    "ime": "Pantić Pilja Biljana",
@@ -347,8 +377,8 @@
    "od": 1795010470,
    "do": 1795010540,
    "okvira": 8,
-   "video": "CUkNRQE7PfU",
-   "snimak": 18247
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Mitov Petar",
@@ -358,8 +388,8 @@
    "od": 1795010570,
    "do": 1795010610,
    "okvira": 5,
-   "video": "CUkNRQE7PfU",
-   "snimak": 18347
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Šešelj Aleksandar",
@@ -369,8 +399,8 @@
    "od": 1795010630,
    "do": 1795011115,
    "okvira": 87,
-   "video": "CUkNRQE7PfU",
-   "snimak": 18407
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vasiljević Blagojević Milica",
@@ -380,8 +410,8 @@
    "od": 1795011270,
    "do": 1795011590,
    "okvira": 29,
-   "video": "CUkNRQE7PfU",
-   "snimak": 19047
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vučić Aleksandar",
@@ -391,8 +421,8 @@
    "od": 1795011629,
    "do": 1795012339,
    "okvira": 128,
-   "video": "CUkNRQE7PfU",
-   "snimak": 19406
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Šoškić Dejan",
@@ -402,8 +432,8 @@
    "od": 1795012389,
    "do": 1795012499,
    "okvira": 14,
-   "video": "CUkNRQE7PfU",
-   "snimak": 20166
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vučić Aleksandar",
@@ -413,8 +443,8 @@
    "od": 1795012609,
    "do": 1795013098,
    "okvira": 92,
-   "video": "CUkNRQE7PfU",
-   "snimak": 20386
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Gašić Jugoslav",
@@ -424,8 +454,8 @@
    "od": 1795013161,
    "do": 1795013215,
    "okvira": 5,
-   "video": "CUkNRQE7PfU",
-   "snimak": 20938
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vučić Aleksandar",
@@ -435,8 +465,8 @@
    "od": 1795013219,
    "do": 1795013604,
    "okvira": 73,
-   "video": "CUkNRQE7PfU",
-   "snimak": 20996
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Mirković Aleksandar",
@@ -446,8 +476,8 @@
    "od": 1795013674,
    "do": 1795014375,
    "okvira": 116,
-   "video": "CUkNRQE7PfU",
-   "snimak": 21451
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Fric Sanja",
@@ -457,8 +487,8 @@
    "od": 1795014420,
    "do": 1795014620,
    "okvira": 31,
-   "video": "CUkNRQE7PfU",
-   "snimak": 22197
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vučić Aleksandar",
@@ -468,8 +498,8 @@
    "od": 1795014759,
    "do": 1795015699,
    "okvira": 190,
-   "video": "CUkNRQE7PfU",
-   "snimak": 22536
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Mitov Petar",
@@ -479,8 +509,8 @@
    "od": 1795015820,
    "do": 1795015830,
    "okvira": 3,
-   "video": "CUkNRQE7PfU",
-   "snimak": 23597
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vukelić Nikola",
@@ -490,8 +520,8 @@
    "od": 1795015904,
    "do": 1795016479,
    "okvira": 104,
-   "video": "CUkNRQE7PfU",
-   "snimak": 23681
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Bubnjević Slobodan",
@@ -501,8 +531,8 @@
    "od": 1795016509,
    "do": 1795016911,
    "okvira": 61,
-   "video": "CUkNRQE7PfU",
-   "snimak": 24286
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vučić Aleksandar",
@@ -512,8 +542,8 @@
    "od": 1795017139,
    "do": 1795017915,
    "okvira": 148,
-   "video": "CUkNRQE7PfU",
-   "snimak": 24916
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Brnabić Ana",
@@ -523,8 +553,8 @@
    "od": 1795017945,
    "do": 1795018075,
    "okvira": 17,
-   "video": "CUkNRQE7PfU",
-   "snimak": 25722
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Bakarec Nebojša",
@@ -534,8 +564,8 @@
    "od": 1795018099,
    "do": 1795019019,
    "okvira": 175,
-   "video": "CUkNRQE7PfU",
-   "snimak": 25876
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Gašić Jugoslav",
@@ -545,8 +575,8 @@
    "od": 1795019089,
    "do": 1795019194,
    "okvira": 14,
-   "video": "CUkNRQE7PfU",
-   "snimak": 26866
+   "video": "",
+   "snimak": null
   },
   {
    "ime": "Vučić Aleksandar",
@@ -556,8 +586,20 @@
    "od": 1795019230,
    "do": 1795021134,
    "okvira": 368,
-   "video": "CUkNRQE7PfU",
-   "snimak": 27007
+   "video": "",
+   "snimak": null
+  }
+ ],
+ "datoteke": [
+  {
+   "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4",
+   "od": 1794992595,
+   "trajanje": 6665
+  },
+  {
+   "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4",
+   "od": 1794999261,
+   "trajanje": 7471
   }
  ]
 }
