@@ -110,6 +110,16 @@ def uzivo_pull(args) -> int:
     return 0
 
 
+def arhiva_cmd(args) -> int:
+    """The archive's recordings lined up with the live page's records (arhiva.py): each new file placed on the clock
+    by the captions read in a few of its frames, and each sitting day's file in data/<N>/snimak/ written or given the
+    places it lacked. Needs ffmpeg, Tesseract's Serbian, numpy and pytesseract; a day without them changes nothing."""
+    from zailiprotiv import arhiva
+    changed = arhiva.run(ROOT, CONVOCATION)
+    print(f"archive: {', '.join(changed) or 'nothing new'}")
+    return 0
+
+
 def in_procedure(args) -> int:
     """The bills waiting in the Assembly now, from its page "Zakoni u proceduri", into data/<N>/procedure.json, which
     also remembers the bills no longer listed and when each was first and last seen."""
@@ -1313,6 +1323,8 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=videos_cmd)
     p = commands.add_parser("uzivo-pull", help="the live page's records of who spoke when → data/<N>/uzivo/")
     p.set_defaults(run=uzivo_pull)
+    p = commands.add_parser("arhiva", help="the archive's recordings lined up with the live records → data/<N>/snimak/")
+    p.set_defaults(run=arhiva_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("members", help="the sitting MPs from the Assembly's list → data/<N>/members.json")

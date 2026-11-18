@@ -62,6 +62,10 @@ jobs:
           # The bills in procedure are the current convocation's only.
           if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
           uv run zailiprotiv uzivo-pull  # who spoke when, from the live page (live/); its computer may be off
+          # Each new recording in the archive placed on the clock by its captions, and the day's turns linked into it
+          # (arhiva.py); ffmpeg reads only a few frames of each file over the network. The newest convocation below.
+          command -v ffmpeg >/dev/null || sudo apt-get install -y -qq ffmpeg >/dev/null
+          uv run --with numpy --with pytesseract zailiprotiv $c arhiva || true
           uv run zailiprotiv $c votes ${IN_AGAIN_FLAG} --reread "${IN_REREAD}"
           uv run zailiprotiv $c link
           uv run zailiprotiv $c bills
@@ -73,6 +77,7 @@ jobs:
             uv run zailiprotiv $n index && uv run zailiprotiv $n laws && uv run zailiprotiv $n votes && uv run zailiprotiv $n link || true
             uv run zailiprotiv $n videos || true
             uv run zailiprotiv members || true  # its MPs before its first roll call (members.py)
+            uv run --with numpy --with pytesseract zailiprotiv $n arhiva || true
           fi
       - name: Commit
         if: always()  # keep what was read even when a later step failed
