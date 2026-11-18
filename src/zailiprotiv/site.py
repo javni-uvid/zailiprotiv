@@ -753,6 +753,17 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             for sp in own:
                 speech_url[(k, sp["date"])] = sp["url"]
     env.globals["photo_for"] = lambda mp: photo_of.get(mp.key, "")
+    # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
+    # year of birth; their own pages say they sit in it.
+    from zailiprotiv import pages_members
+    members_conv, members_listed = pages_members.load(root)
+    member_rows, member_now = [], {}
+    if members_conv and members_listed:
+        years_file = root / "mp_years.json"
+        years_listed = json.loads(years_file.read_text(encoding="utf-8")).get("listed", {}) if years_file.exists() else {}
+        member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
+                                          title_case=title_case, slug=slug)
+        member_now = pages_members.now_of(member_rows)
     rows_mp = []
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
@@ -849,7 +860,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             **page_args, facts=card_facts,
             timeline=timeline, key_votes=keys_, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
-            floor=floor_mp,
+            floor=floor_mp, member_now=member_now.get(mp.key),
+            member_conv=ORDINAL_NAME.get(members_conv, members_conv) if members_conv else "",
+            member_page=pages_members.PAGE.format(conv=members_conv) if members_conv else "",
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True)),
             encoding="utf-8")
         # Every vote, by period, area and kind, on a page of its own: the lists that grow with every sitting.
@@ -892,7 +905,18 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         groups = Counter(g for r in rows for g in r["in"]["groups"][:1])
         (out / mps_page(conv, current)).write_text(env.get_template("mps.html").render(
             **common, rows=rows, boards=[b for b in boards if b["rows"]], conv=conv, conv_name=ORDINAL_NAME.get(conv, conv), root="",
+            members_page=pages_members.PAGE.format(conv=members_conv) if member_rows else "",
+            members_name=ORDINAL_NAME.get(members_conv, "") if member_rows else "", members_n=len(member_rows),
             groups=sorted(groups.items(), key=lambda kv: (-kv[1], collate(kv[0])))), encoding="utf-8")
+
+    if member_rows:
+        # The convocations each MP is on a roll call of, any vote (not only laws'), newest first.
+        conv_of_vote = {k: c for c, (_, votes_, _) in loaded.items() for k in votes_}
+        convs_seen = {mp.slug: sorted({conv_of_vote[k] for k in mp.votes if k in conv_of_vote}, key=int, reverse=True)
+                      for mp in people.values()}
+        pages_members.render(env=env, common=common, out=out, conv=members_conv, listed=members_listed, rows=member_rows,
+                             convs_of=convs_seen, photo_of=photo_of,
+                             conv_name=ORDINAL_NAME.get(members_conv, members_conv))
 
     from zailiprotiv import pages_groups
     group_rows, numbers = pages_groups.render(common=common, conv_list=conv_list, env=env, finals=finals,
@@ -923,7 +947,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                        "n": sum(it["final"]["counts"].values()) if it["final"] else None,
                        "sh": round(it.get("share") or 0, 4), "u": int(bool(it["urgent"])), "k": it["law"].get("kind", "other"),
                        "c": it["conv"]} for its in items_by_conv.values() for it in its],
-             "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": r["mp"].group or ""} for r in rows_mp]}
+             "mps": [{"n": r["mp"].name, "s": r["mp"].slug, "g": r["mp"].group or ""} for r in rows_mp]
+             + [{"n": r["name"], "s": r["slug"], "g": ""} for r in member_rows if r["new"]]}
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     items = items_by_conv[active]

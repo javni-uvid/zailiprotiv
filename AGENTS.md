@@ -290,7 +290,16 @@ law, and the site never opens on a convocation with no MPs (17 Nov). Until then 
 beside the current one each hour (no bills in procedure, no notes), and the "no roll calls" check applies to the
 current one only. On 17 Nov the Assembly's listings of sittings and laws and its page of bills in procedure began
 showing the Fifteenth only (the Fourteenth's 91 waiting bills are no longer listed); the files keep the Fourteenth's
-data. Left to do: give the Fourteenth its "archive" and archived "laws" pages once the Assembly publishes them; close
+data. **Its MPs before its first roll call** (18 Nov 2026, the maintainer's request; `members.py`, `pages_members.py`):
+**votes** reads the Assembly's list of sitting MPs ("Aktuelni saziv", the Cyrillic page: the Latin one misspells some
+names) into `data/<N>/members.json` for the newest convocation (`zailiprotiv members`; a page with far fewer rows keeps
+the file). The site lists them on `poslanici-<N>.html` (party that put them forward, place, year of birth, the
+convocations they were on a roll call of), linked from `poslanici.html`. One already on the site by roll calls is the
+same MP unless the archive gives another year of birth (mp_years; one year off counts as a typo): their page says
+they sit in the new convocation. A new one gets a page of their own (noindex, as any MP's page with no vote) under
+the name written as the roll calls write names, a namesake's address getting the year after it; their search entry
+is in `podaci.json`, so "Ko sada govori" matches them too. The parliamentary groups are not on that list: to add.
+Left to do: give the Fourteenth its "archive" and archived "laws" pages once the Assembly publishes them; close
 issue #7 once the Fifteenth is current.
 
 ## Broadcasts and recordings
@@ -406,6 +415,7 @@ its minute.
   broadcast's caption, every speaker by one rule, run at the maintainer's home behind a Cloudflare tunnel.
 - **17 Nov 2026:** while "Ko sada govori" is down, `mikrofon.zailiprotiv.rs` shows the site's `mikrofon` page (a worker
   in front of the tunnel, `live/edge/`) instead of Cloudflare's error.
+- **18 Nov 2026:** the Fifteenth's MPs listed before its first roll call (`members.json`, `poslanici-15.html`).
 - **18 Nov 2026:** the first sitting day of the Fifteenth read afterwards from the whole recording
   (`data/15/snimak/2026-11-17.json`), shown on `mikrofon.zailiprotiv.rs` as the last sitting day; "Dok čekate" (a
   quiz and the facts) on both versions of that page.

@@ -60,7 +60,7 @@ def parse(html: str) -> tuple[list[dict], list[str]]:
     p.feed(html)
     mps_ = []
     for row in p.rows:
-        if len(row) == 4 and (m := re.fullmatch(r"(1[89]\d\d)\.?", row[3])):
+        if len(row) == 4 and (m := re.fullmatch(r"((?:19|20)\d\d)\.?", row[3])):
             mps_.append({"name": row[0], "party": row[1], "place": row[2], "year": int(m.group(1))})
     return mps_, sorted(set(p.links))
 

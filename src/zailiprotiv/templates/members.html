@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{# The newest convocation's MPs before its first roll call (pages_members.py). #}
+{% block title %}Poslanici, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
+{% block description %}Svih {{ rows|length }} poslanika u {{ conv_name|locative }} sazivu Narodne skupštine Srbije, od {{ since|day_of }}: stranka na čiji su predlog izabrani, mesto, godište, i ko je već bio poslanik.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="poslanici.html">Poslanici</a></p>
+<h1>Poslanici, {{ conv_name|lower }} saziv</h1>
+<p class="lead">{{ conv_name }} saziv Narodne skupštine konstituisan je {{ since|day_of }}. Ovde je svih {{ rows|length }} poslanika sa spiska Skupštine; {{ new }} {{ "je" if new % 10 == 1 and new % 100 != 11 else "su" }} prvi put u Skupštini od 2012. godine, a ostali vode na svoje stranice sa glasanjima i govorima iz ranijih saziva.</p>
+<p class="meta">Poslaničke grupe još nisu na ovoj strani. Glasanja i govori ovog saziva biće na stranicama poslanika od prve sednice na kojoj se glasa.</p>
+<div class="finder js-only" hidden data-filter="f-rows">
+  <label class="sr" for="f-q">Pretraži poslanike</label>
+  <input id="f-q" type="search" placeholder="Ime, prezime ili mesto, {{ rows|length }} poslanika" autocomplete="off">
+  <div class="chips">
+    <label class="sr" for="f-g">Stranka</label>
+    <select id="f-g" class="wide"><option value="">Sve stranke i bez stranke</option>{% for p, n in parties %}<option value="{{ p|latin }}">{{ p|latin }} ({{ n }})</option>{% endfor %}</select>
+  </div>
+</div>
+<p id="f-n" class="row-meta" aria-live="polite"></p>
+<ol class="rows compact" id="f-rows" data-more="60">
+{% for r in rows %}
+  <li class="row" data-g="{{ (r.party_ or "bez stranke")|latin }}" data-i="{{ loop.index }}">
+    <img class="row-face" src="{{ "foto/" ~ r.photo if r.photo else "bez-slike.svg" }}" alt="" width="42" height="56" loading="lazy">
+    <div class="row-main">
+      <a class="row-title" href="poslanik/{{ r.slug }}.html">{{ r.name }}</a>
+      <p class="row-meta">{{ (r.party_ or "bez stranke")|latin }} · {{ r.place|latin }} · {{ r.year }}.</p>
+    </div>
+    <p class="row-meta members-when">{% if r.before %}poslanik i u {% for c in r.before %}{{ c }}.{% if not loop.last %}, {% endif %}{% endfor %} sazivu{% else %}prvi put{% endif %}</p>
+  </li>
+{% endfor %}
+</ol>
+<p class="meta foot-note">Izvor: <a href="{{ source }}">spisak poslanika na sajtu Narodne skupštine</a>{% if listed_on %}, preuzet {{ listed_on[:10]|day }}{% endif %}. Stranka je ona na čiji je predlog poslanik izabran, kako je Skupština navodi („bez stranke“: navedena nije nijedna). „Prvi put“: nije na poimeničnim glasanjima od 2012, pa je moguće da je poslanik bio ranije. Ko je već bio poslanik prepoznato je po imenu i godištu iz arhive Skupštine.</p>
+{% endblock %}

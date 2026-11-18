@@ -293,6 +293,25 @@ def files_purge_cmd(args) -> int:
     return 0 if said.startswith("cache purged") else 1
 
 
+def members_cmd(args) -> int:
+    """The sitting MPs from the Assembly's list → data/<N>/members.json (members.py), for the newest convocation
+    before its first roll call. A page with far fewer MPs than the file keeps the file."""
+    from zailiprotiv import members
+    from zailiprotiv.config import NEWEST
+    conv = NEWEST
+    found = members.read(skupstina.fetch(members.URL).decode("utf-8", "replace"))
+    path = ROOT / conv / "members.json"
+    old = json.loads(path.read_text(encoding="utf-8"))["members"] if path.exists() else []
+    if len(found) < 200 or (old and len(found) < len(old) * 0.8):
+        print(f"members: {len(found)} read, {len(old)} kept; the file stays")
+        return 0 if old else 1
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(members.dumps(dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), found),
+                    encoding="utf-8")
+    print(f"members: {len(found)} MPs of convocation {conv}")
+    return 0
+
+
 def mp_years_cmd(args) -> int:
     """The year of birth of every MP from the Assembly's archive of convocations → data/mp_years.json, and the check:
     a name whose year differs between convocations is two people (split by hand in data/mp_splits.json)."""
@@ -1288,6 +1307,8 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=uzivo_pull)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
+    p = commands.add_parser("members", help="the sitting MPs from the Assembly's list → data/<N>/members.json")
+    p.set_defaults(run=members_cmd)
     p = commands.add_parser("mp-years", help="MPs' years of birth from the Assembly's archive, and names that are two people")
     p.set_defaults(run=mp_years_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")

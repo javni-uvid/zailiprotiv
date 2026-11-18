@@ -72,6 +72,7 @@ jobs:
             n="--convocation $newest"
             uv run zailiprotiv $n index && uv run zailiprotiv $n laws && uv run zailiprotiv $n votes && uv run zailiprotiv $n link || true
             uv run zailiprotiv $n videos || true
+            uv run zailiprotiv members || true  # its MPs before its first roll call (members.py)
           fi
       - name: Commit
         if: always()  # keep what was read even when a later step failed

@@ -540,3 +540,30 @@ def test_the_bar_shows_while_the_live_page_reads_a_sitting(tmp_path):
     out = tmp_path / "_site"
     site.build(root, out, "zailiprotiv.rs")
     assert "Skupština sada zaseda" in (out / "index.html").read_text()
+
+
+def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
+    from zailiprotiv import members, pages_members
+    out, root = tmp_path / "_site", data(tmp_path)
+    page = "<table>" + "".join(f"<tr><td>{n}</td><td>{p}</td><td>{pl}</td><td>{y}.</td></tr>" for n, p, pl, y in [
+        ("ПЕТРОВИЋ ПЕТАР", "СНС", "Ниш", 1970),
+        ("ПАСТОР проф. др БАЛИНТ (PÁSZTOR Prof. Dr BÁLINT)", "-", "Суботица", 1979),
+        ("ЖИВКОВИЋ - ОБРАДОВИЋ ДРАГАНА", "-", "Бор", 1964)]) + "</table>"
+    found = members.read(page)
+    assert [m["name"] for m in found] == ["ПЕТРОВИЋ ПЕТАР", "ПАСТОР проф. др БАЛИНТ", "ЖИВКОВИЋ-ОБРАДОВИЋ ДРАГАНА"]
+    assert members.read("<table><tr><td>НОВИ НИКОЛА</td><td>-</td><td>Бор</td><td>2003.</td></tr></table>")[0]["year"] == 2003
+    (root / "15").mkdir(exist_ok=True)
+    (root / "15" / "members.json").write_text(members.dumps("2026-11-18T10:00:00+00:00", found))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    listing = (out / "poslanici-15.html").read_text()
+    assert listing.count('class="row"') == 3 and "konstituisan je 17. novembra 2026." in listing
+    assert "Pastor Balint" in listing and "prvi put" in listing and "Suboti" in listing
+    new = (out / "poslanik" / "pastor-balint.html").read_text()
+    assert 'content="noindex"' in new and "Godište: 1979." in new and "nije navedena" in new
+    assert (out / "cir" / "poslanici-15.html").exists() and "poslanici-15.html" in (out / "poslanici.html").read_text()
+    assert any(m["s"] == "pastor-balint" for m in json.loads((out / "podaci.json").read_text())["mps"])
+    assert site.check(out) == []
+    # A namesake of an earlier MP whose year of birth the archive gives otherwise is another person.
+    assert not members.same_person("петар петровић", 1970, {"петар петровић": {1951}})
+    assert members.same_person("петар петровић", 1970, {"петар петровић": {1971}})  # a year off: a typo
+    assert pages_members.party("-") == "" and pages_members.party(" СНС ") == "СНС"

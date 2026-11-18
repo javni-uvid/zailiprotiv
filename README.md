@@ -33,6 +33,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Zakoni:** laws by convocation, kind and area; bills in procedure and convened sittings. A law's page: the final
   vote by group and MP, the summary of the memorandum, the debate with verbatim quotes, the sparks in it, outside
   views, downloads, and the visitor's own vote.
+- **A new convocation's MPs** before its first roll call: `poslanici-<N>.html`, from the Assembly's list (party, place, year of birth; who was an MP before), a page for each new one.
 - **Poslanici:** a page per MP, opening with a card of facts by one rule for all (presence, votes unlike the group,
   hours spoken, the longest speech, exchange partners, the most alike group), then key votes, votes against the
   group, activity on the floor, what they say and every speech linked to its notes; every vote on a page of its own;
