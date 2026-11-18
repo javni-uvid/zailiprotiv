@@ -50,6 +50,27 @@ def pull(root: Path, base: str, today: str | None = None, get=_get) -> list[str]
     return written
 
 
+def live_now(state: dict, now: float) -> bool:
+    """Is a sitting on, by the live page's own reading (18 Nov 2026: the Assembly marked no sitting "(у току)" while
+    one was on)? The broadcast read in the last quarter hour, and someone read in it within the last two hours."""
+    if state.get("ranije") or now - state.get("provereno", 0) > 900:
+        return False
+    return bool(state.get("sada")) or any(now - t.get("do", 0) < 7200 for t in state.get("danas", []))
+
+
+def live_mark(root: Path, base: str, now: float | None = None, get=_get) -> bool:
+    """data/live.json while the live page reads a sitting, removed after: a change of it starts the site's build, so
+    the bar "Skupština sada zaseda" appears and goes within the hour."""
+    import time
+    on = live_now(get(base.rstrip("/") + "/stanje.json"), time.time() if now is None else now)
+    path = root / "live.json"
+    if on and not path.exists():
+        path.write_text('{"live": true}\n', encoding="utf-8")
+    elif not on and path.exists():
+        path.unlink()
+    return on
+
+
 # --- the notes' speeches matched to the record ---------------------------------------------------------------------
 
 def _key(name: str) -> str:

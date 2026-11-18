@@ -488,6 +488,13 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     for s in listed:
         if "(у току)" in s["title"] and "седниц" in s["title"].lower():
             common["live"].append(latin(s["title"].replace("(у току)", "").strip()))
+    # Or the live page reads a sitting now (data/live.json, from the votes run): the Assembly doesn't always mark
+    # one "(у току)". Then the newest sitting listed is the one on.
+    if not common["live"] and (root / "live.json").exists():
+        # "седница", a sitting's own title: the listing also carries news "… уочи конститутивне седнице".
+        newest = max((s for s in listed if "седница" in s["title"].lower()), key=lambda s: s.get("starts") or "",
+                     default=None)
+        common["live"].append(latin(newest["title"]) if newest else "sednica Narodne skupštine")
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).

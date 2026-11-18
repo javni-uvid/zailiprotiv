@@ -99,8 +99,14 @@ def uzivo_pull(args) -> int:
         days = uzivo.pull(ROOT, base)
     except Exception as exc:  # the computer is off, or the page is down
         print(f"::notice::live records not taken: {exc}")
-        return 0
-    print(f"live records: {', '.join(days) or 'nothing new'}")
+        days = None
+    if days is not None:
+        print(f"live records: {', '.join(days) or 'nothing new'}")
+    try:  # a sitting on now, by the live page's reading: the site's bar (data/live.json)
+        print(f"sitting on now (live page): {uzivo.live_mark(ROOT, base)}")
+    except Exception as exc:
+        (ROOT / "live.json").unlink(missing_ok=True)  # the page down says nothing of a sitting: the bar goes
+        print(f"::notice::live state not read: {exc}")
     return 0
 
 

@@ -47,3 +47,17 @@ def test_speeches_are_lined_up_with_the_record_by_the_order_of_names():
     assert got["01"] == {"video": "v1", "t": 495, "at": 1794920500}     # (100 - 1) segments of 5 s
     assert set(got) == {"01", "04", "06"}                               # no guess for Nina, none for day 2
     assert "03" not in got                                              # within Petar's turn
+
+
+def test_a_sitting_is_on_while_the_live_page_reads_someone(tmp_path):
+    from zailiprotiv import uzivo
+    now = 1_795_000_000
+    reading = {"stanje": "nepoznato", "provereno": now - 60, "sada": None, "ranije": False,
+               "danas": [{"ime": "A", "do": now - 600}]}
+    assert uzivo.live_now(reading, now)
+    assert not uzivo.live_now({**reading, "provereno": now - 3600}, now)  # the page stopped reading
+    assert not uzivo.live_now({**reading, "danas": [{"do": now - 3 * 3600}]}, now)  # a broadcast with nobody in it
+    assert not uzivo.live_now({**reading, "ranije": True}, now)  # the list of an earlier day
+    assert uzivo.live_mark(tmp_path, "https://m/", now, get=lambda url: reading) and (tmp_path / "live.json").exists()
+    assert not uzivo.live_mark(tmp_path, "https://m/", now + 4 * 3600, get=lambda url: reading)
+    assert not (tmp_path / "live.json").exists()

@@ -529,3 +529,11 @@ def test_static_patch_moves_every_page_to_the_new_version(tmp_path, monkeypatch)
     assert "style.css?v=0123456789" in law and 'data-v="0123456789"' in law and old not in law
     assert (out / "cir" / "zakon" / "zakon-o-oruzju.html").read_text().count("?v=0123456789") >= 2
     assert (out / "site.js").read_text() != "stale" and ' + ".html"' not in (out / "site.js").read_text()
+
+
+def test_the_bar_shows_while_the_live_page_reads_a_sitting(tmp_path):
+    root = data(tmp_path)
+    (root / "live.json").write_text('{"live": true}', encoding="utf-8")
+    out = tmp_path / "_site"
+    site.build(root, out, "zailiprotiv.rs")
+    assert "Skupština sada zaseda" in (out / "index.html").read_text()
