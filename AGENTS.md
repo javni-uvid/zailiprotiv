@@ -356,7 +356,9 @@ its minute.
   run only, and where the record has a gap or the order disagrees it gets nothing. The link is the YouTube video at
   (first segment − 1) × segment length, labelled as found automatically. **Off until checked:** the notes show the
   links only with `recording_links` in `data/settings.json`, to be set once a few links from a real sitting have
-  been opened by hand and land on the speaker (that a live video's time is its segment number × length is assumed).
+  been opened by hand and land on the speaker. The time is right (checked 18 Nov 2026 against that day read from the
+  recording: 19 morning turns land within 25 s of the speaker's first caption, most of them 7 s before it), but the
+  YouTube video went private the evening of the same day, so the links wait for the archive's files (below).
 - **A sitting day read afterwards from the recording** (18 Nov 2026, the maintainer's request): the live service read
   only the end of 17 Nov (it was started late, and the caption has a second layout, one line in the middle, that it
   does not read). The day was read again from the whole YouTube recording, a frame every 5 s, the name line of the
