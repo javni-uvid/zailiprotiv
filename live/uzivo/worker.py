@@ -55,6 +55,10 @@ class RosterKeeper:
                             use(json.loads(resp.read().decode("utf-8")))
                     except Exception as exc:  # the last good copy stays
                         log.warning("%s not fetched (%s)", url, exc)
+            if self.tracker:
+                self.tracker.roster = self.roster
+        if self.tracker and self.tracker.facts:  # the sitting convocation's MPs first, when a caption is matched
+            self.roster.current = frozenset(self.tracker.facts)
         return self.roster
 
 

@@ -100,19 +100,59 @@ class Roster:
         return cls([Person(person_key(m["n"]), m["n"], m.get("s", ""), m.get("g", "")) for m in data.get("mps", [])
                     if words(m.get("n", ""))])
 
+    current: frozenset = frozenset()  # the slugs of the sitting convocation's MPs (mikrofon-poslanici.json)
+
     def match(self, line: str, threshold: float) -> Person | None:
-        """The one MP whose every name word is on the line, each read closely enough; at most one word of noise
-        beside them. Two MPs equally close: none (a guess would put words in someone's mouth)."""
+        """The MP the line names. First among the sitting convocation's MPs, then among all: every word of the MP's
+        name on the line, each read closely enough, at most one word of noise beside them; failing that, among the
+        sitting convocation's MPs only, the clearly nearest name (OCR drops or blurs letters: "Blagoj Milica
+        Vasiljević" for Milica Vasiljević Blagojević, 18 Nov 2026). Two MPs equally close: none (a guess would put
+        words in someone's mouth)."""
         got = words(line)
+        if not got:
+            return None
+        now = [p for p in self.people if p.slug in self.current] if self.current else []
+        for pool in ([now] if now else []) + [self.people]:
+            hit = self._strict(got, pool, threshold)
+            if hit:
+                return hit
+        return self._nearest(got, now) if now else None
+
+    @staticmethod
+    def _score(want: list[str], got: list[str]) -> list[float]:
+        def one(w: str, g: str) -> float:
+            if len(g) >= 4 and (w.startswith(g) or g.startswith(w)):  # a word cut short at the caption's edge
+                return 0.9
+            return difflib.SequenceMatcher(None, w, g).ratio()
+        return [max(one(w, g) for g in got) for w in want]
+
+    def _strict(self, got: list[str], pool: list[Person], threshold: float) -> Person | None:
         best: list[tuple[float, Person]] = []
-        for n in (len(got), len(got) - 1):
-            for want, p in self._by_len.get(n, []):
-                scores = [max(difflib.SequenceMatcher(None, w, g).ratio() for g in got) for w in want]
-                if min(scores) >= threshold:
-                    best.append((sum(scores) / len(scores), p))
+        for p in pool:
+            want = sorted(words(p.name))
+            if len(want) not in (len(got), len(got) - 1):
+                continue
+            scores = [max(difflib.SequenceMatcher(None, w, g).ratio() for g in got) for w in want]
+            if min(scores) >= threshold:
+                best.append((sum(scores) / len(scores), p))
+        return self._one(best, 0.02)
+
+    def _nearest(self, got: list[str], pool: list[Person]) -> Person | None:
+        best: list[tuple[float, Person]] = []
+        for p in pool:
+            want = sorted(words(p.name))
+            if abs(len(want) - len(got)) > 1:
+                continue
+            scores = self._score(want, got)
+            if min(scores) >= 0.6 and sum(scores) / len(scores) >= 0.75:
+                best.append((sum(scores) / len(scores), p))
+        return self._one(best, 0.08)
+
+    @staticmethod
+    def _one(best: list[tuple[float, Person]], margin: float) -> Person | None:
         if not best:
             return None
         best.sort(key=lambda b: -b[0])
-        if len(best) > 1 and best[1][0] >= best[0][0] - 0.02 and best[1][1].key != best[0][1].key:
+        if len(best) > 1 and best[1][0] >= best[0][0] - margin and best[1][1].key != best[0][1].key:
             return None
         return best[0][1]

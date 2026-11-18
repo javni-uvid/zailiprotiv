@@ -24,7 +24,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import config
-from .names import Person
+from .names import Person, Roster
 
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 
@@ -49,6 +49,7 @@ class Tracker:
         self.waiting: dict = {}  # "Dok čekate": the site's quiz and facts (mikrofon-cekanje.json)
         self.facts_file = Path(path).with_name("poslanici.json") if path else None
         self.facts: dict = {}  # the speaker's votes and facts from their page (mikrofon-poslanici.json)
+        self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
         self._migrate()
         self._load()
         for f, attr in ((self.recording_file, "recording"), (self.waiting_file, "waiting"), (self.facts_file, "facts")):
@@ -243,17 +244,42 @@ class Tracker:
                 "od": int(t["od"]), "do": int(t["do"]), "sekundi": int(t["do"] - t["od"]),
                 "video": t.get("video") or "", "datoteka": t.get("datoteka") or "", "snimak": t.get("snimak")}
 
+    def _named(self, turns: list[dict], merge: bool = True) -> list[dict]:
+        """Turns as shown: a name read before the list knew it (or half read) given the MP's name from the list,
+        the line under it written as the list writes it, and one speaker's turns in a row taken as one (18 Nov
+        2026: "Hubač KU Željko", "2 KE Mo Jugoslav Gašić", a speech cut into five)."""
+        from .caption import role
+        out: list[dict] = []
+        for t in turns:
+            if self.roster:
+                person = Person(t["key"], t["name"], t["slug"], t["group"])
+                if not t["slug"]:
+                    found = self.roster.match(t["name"], config.MATCH)
+                    if found:
+                        person = found
+                        t = {**t, "key": found.key, "name": found.name, "slug": found.slug, "group": found.group}
+                if t.get("role"):
+                    t = {**t, "role": role(t["role"], person, self.roster, config.MATCH)}
+            last = out[-1] if out else None
+            if merge and last and last["key"] == t["key"] and t["start"] - last["seen"] <= config.MERGE_SECONDS:
+                out[-1] = {**last, "seen": t["seen"], "n": last["n"] + t["n"], "role": last["role"] or t["role"],
+                           "sq_seen": t.get("sq_seen", last.get("sq_seen"))}
+            else:
+                out.append(t)
+        return out
+
     def snapshot(self, now: float | None = None) -> dict:
         today = self._day(time.time() if now is None else now)
         with self._lock:
-            current = self._out(self.turns[-1]) if self.open and self.turns else None
+            current = self._out(self._named([self.turns[-1]])[0]) if self.open and self.turns else None
             # A turn read in a single frame is shown while it lasts, and left out of the day's list after.
-            done = [self._out(t) for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])]
+            done = [self._out(t) for t in self._named(
+                [t for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])])]
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
             recorded, parts = False, []
             if not done and not current:
                 day, turns = self._last_day()
-                day, done = (day, [self._out(t) for t in turns]) if turns else (self.day, [])
+                day, done = (day, [self._out(t) for t in self._named(turns)]) if turns else (self.day, [])
                 rec = self.recording
                 if rec and rec["dan"] < today and (not done or rec["dan"] >= day):
                     day, recorded, parts = rec["dan"], True, [p for p in rec.get("datoteke") or []
@@ -286,7 +312,7 @@ class Tracker:
             "govori": [{"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
                         "od": int(t["start"]), "do": int(t["seen"]), "okvira": t["n"], "video": t.get("video", ""),
                         "sq_od": t.get("sq_start"), "sq_do": t.get("sq_seen"), "segment": t.get("seg")}
-                       for t in turns],
+                       for t in (self._named(turns, merge=False) if self.roster else turns)],
         }
 
     def days_kept(self) -> list[str]:

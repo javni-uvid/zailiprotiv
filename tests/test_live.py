@@ -474,3 +474,34 @@ def test_the_speaker_shows_votes_and_facts_from_the_site_and_the_way_to_the_page
     t.observe(marko, now=1794920105.0)
     html = fragment(t.snapshot(), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Нови посланик" in html and "Ниш" in html and "/cir/poslanik/jovanovic-marko" in html
+
+
+def test_a_half_read_name_is_the_sitting_mp_it_is_nearest_to():
+    roster = Roster.from_json(json.dumps({"mps": [
+        {"n": "Vasiljević Blagojević Milica", "s": "vasiljevic-blagojevic-milica", "g": "Studentska lista"},
+        {"n": "Šoškić Dejan", "s": "soskic-dejan", "g": "Studentska lista"},
+        {"n": "Stošić Dejan", "s": "stosic-dejan", "g": "AV-ZND"},
+        {"n": "Hubač Željko", "s": "hubac-zeljko", "g": "Studentska lista"},
+        {"n": "Vasić Milan", "s": "vasic-milan", "g": "SNS"}]}))
+    roster.current = frozenset({"vasiljevic-blagojevic-milica", "soskic-dejan", "hubac-zeljko"})
+    assert roster.match("Blagoj Milica Vasiljević", 0.8).slug == "vasiljevic-blagojevic-milica"
+    assert roster.match("Dejan Šoškić", 0.8).slug == "soskic-dejan"
+    assert roster.match("Hubač KU Željko", 0.8).slug == "hubac-zeljko"
+    assert roster.match("Petar Petrović", 0.8) is None  # nobody near: nobody
+
+
+def test_turns_read_before_the_list_knew_the_mp_are_named_and_joined_on_the_page():
+    t = Tracker(None, "Europe/Belgrade")
+    odd = lambda name: who(read([w(name)], 85), Roster(), 0.8)
+    now = 1794920000.0
+    for s, name in ((0, "Петар Петровић"), (5, "Петар Петровић"), (60, "Петар Петровић"), (65, "Петар Петровић")):
+        person = odd(name)
+        t.observe(person, "c Lista za primer", now=now + s)
+        if s == 5:
+            t.observe(None, now=now + 40)  # the turn closes, the same name comes back within the merge time
+    t.observe(ROSTER.match("Марко Јовановић", 0.8), now=now + 120)
+    t.observe(ROSTER.match("Марко Јовановић", 0.8), now=now + 125)
+    t.roster = ROSTER
+    shown = t.snapshot()["danas"]
+    assert [d["ime"] for d in shown] == ["Petrović Petar"] and shown[0]["adresa"] == "petrovic-petar"
+    assert shown[0]["uloga"] == "Lista za primer"
