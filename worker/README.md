@@ -17,6 +17,13 @@ The **worker** workflow publishes it whenever `worker/` changes. Repository secr
 
 To reset the count: in Cloudflare, D1 → `zailiprotiv-glasovi` → Console: `DELETE FROM votes`.
 
+The totals read `tally` (sums per law and vote that triggers on `ballots` keep), not `ballots` itself: the free D1
+reads 5 million rows a day, and counting every ballot on every quiz page and every vote sent reached 98% of that on
+18 Nov 2026. `GET /` is cached at Cloudflare's edge for a minute, and each copy of the worker keeps the totals a minute,
+reading again only the laws just voted on. Should `tally` ever disagree with `ballots`, rebuild it:
+
+    wrangler d1 execute zailiprotiv-glasovi --remote --command "DELETE FROM tally; INSERT INTO tally (item, vote, n) SELECT item, vote, COUNT(*) FROM ballots GROUP BY item, vote"
+
 ## Votes on a law's page
 
 `POST /z {d, item, v}` is one device's vote on one law (a later one replaces it); `POST /c {d, item, q, on}` marks

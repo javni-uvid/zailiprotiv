@@ -58,7 +58,7 @@ async function one(env, item) {
   const out = { z: 0, p: 0, u: 0, c: {} };
   const [old, now, marks] = await env.DB.batch([
     env.DB.prepare("SELECT vote, n FROM votes WHERE law = ?").bind(item),
-    env.DB.prepare("SELECT vote, COUNT(*) AS n FROM ballots WHERE item = ? GROUP BY vote").bind(item),
+    env.DB.prepare("SELECT vote, n FROM tally WHERE item = ?").bind(item),
     env.DB.prepare("SELECT quote, COUNT(*) AS n FROM marks WHERE item = ? GROUP BY quote").bind(item)]);
   for (const r of old.results.concat(now.results)) if (r.vote in out) out[r.vote] += r.n;
   for (const r of marks.results) out.c[r.quote] = r.n;
@@ -83,15 +83,32 @@ async function overview(env) {
              .sort((a, b) => b.today - a.today).slice(0, 200) };
 }
 
-async function totals(env) {
-  const out = {};
-  const [old, now] = await env.DB.batch([env.DB.prepare("SELECT law, vote, n FROM votes"),
-    env.DB.prepare("SELECT item AS law, vote, COUNT(*) AS n FROM ballots GROUP BY item, vote")]);
-  for (const r of old.results.concat(now.results)) {
+// Every law's totals: the older sums and the devices' votes (`tally`, kept by triggers on `ballots`). Every page of
+// the quiz asks for them, and each law answered sends a vote that answers with them, so they are kept here a minute
+// (in this copy of the worker) and only the laws just voted on are read again.
+let kept = { at: 0, data: null };
+function add(out, rows) {
+  for (const r of rows) {
     const t = out[r.law] = out[r.law] || { z: 0, p: 0, u: 0 };
     if (r.vote in t) t[r.vote] += r.n;
   }
   return out;
+}
+async function totals(env, laws) {
+  if (!kept.data || Date.now() - kept.at > 60e3) {
+    const [old, now] = await env.DB.batch([env.DB.prepare("SELECT law, vote, n FROM votes"),
+      env.DB.prepare("SELECT item AS law, vote, n FROM tally")]);
+    kept = { at: Date.now(), data: add({}, old.results.concat(now.results)) };
+    return kept.data;
+  }
+  if (!laws || !laws.length) return kept.data;
+  const marks = laws.map(() => "?").join(", ");
+  const [old, now] = await env.DB.batch([
+    env.DB.prepare(`SELECT law, vote, n FROM votes WHERE law IN (${marks})`).bind(...laws),
+    env.DB.prepare(`SELECT item AS law, vote, n FROM tally WHERE item IN (${marks})`).bind(...laws)]);
+  const fresh = add({}, old.results.concat(now.results));
+  for (const law of laws) kept.data[law] = fresh[law] || { z: 0, p: 0, u: 0 };
+  return kept.data;
 }
 
 function reply(body, status, origin, keep) {
@@ -121,7 +138,7 @@ export default {
     else await dispatch(env, "votes.yml", { convocation: "14", scheduled: "true" });
   },
 
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const from = request.headers.get("origin") || "";
     const origin = SITE;  // CORS names the site only; a POST from any other page is refused below
     const path = new URL(request.url).pathname;
@@ -132,7 +149,13 @@ export default {
         const item = decodeURIComponent(path.slice(3));
         return (await allowed()).has(item) ? reply(await one(env, item), 200, origin, 30) : reply({ error: "item" }, 404, origin);
       }
-      return reply(await totals(env), 200, origin);
+      // the same for everyone: Cloudflare's cache at the edge answers for a minute
+      const cache = caches.default, key = new Request(new URL("/", request.url).toString());
+      const hit = await cache.match(key);
+      if (hit) return hit;
+      const res = reply(await totals(env), 200, origin, 60);
+      ctx.waitUntil(cache.put(key, res.clone()));
+      return res;
     }
     if (request.method !== "POST") return reply({ error: "method" }, 405, origin);
     if (from !== origin) return reply({ error: "origin" }, 403, origin);
@@ -181,6 +204,6 @@ export default {
       await env.DB.batch(votes.map(([law, v]) => env.DB.prepare(
         "INSERT INTO votes (law, vote, n) VALUES (?, ?, 1) ON CONFLICT (law, vote) DO UPDATE SET n = n + 1").bind(law, v)));
     }
-    return reply(await totals(env), 200, origin);
+    return reply(await totals(env, votes.map(([law]) => law)), 200, origin);
   },
 };
