@@ -59,12 +59,13 @@ _EDGE = "·•\"'“”„«».,;:!|~_*°()[]{}<>"
 
 def tidy(text: str) -> str:
     """A line as read, for showing: Latin, each word as read, without the specks OCR leaves around it; a dash between
-    words stays ("Ime Prezime - Lista"), bits with no letter at either end of the line go."""
+    words stays ("Ime Prezime - Lista"), bits with no letter or a single letter at either end of the line go."""
     parts = [w.strip(_EDGE) for w in latin(text).split()]
     parts = [w for w in parts if w]
-    while parts and not any(ch.isalpha() for ch in parts[0]):
+    speck = lambda w: not any(ch.isalpha() for ch in w) or len(w) == 1  # "2", "c" before "Studentska lista"
+    while parts and speck(parts[0]):
         parts.pop(0)
-    while parts and not any(ch.isalpha() for ch in parts[-1]):
+    while parts and speck(parts[-1]):
         parts.pop()
     return " ".join(parts)
 
@@ -78,7 +79,9 @@ def who(cap: Caption, roster: Roster, threshold: float) -> Person | None:
     if mp:
         return mp
     if cap.name_clean:
-        given_surname = tidy(cap.name_line).split()
+        # only the words of three letters or more: OCR's specks of the picture around the caption ("KE Mo Jugoslav
+        # Gašić 2", 18 Nov 2026) are read too, unsurely, and a clean line lets them through
+        given_surname = [w for w in tidy(cap.name_line).split() if all(_REAL.fullmatch(x) for x in w.split("-"))]
         name = " ".join(given_surname[-1:] + given_surname[:-1])  # "Surname Given", as the site lists names
         return Person(person_key(name), name)
     return None

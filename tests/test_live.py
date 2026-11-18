@@ -421,3 +421,13 @@ def test_the_page_is_counted_as_the_site_is():
     assert config.ANALYTICS_TOKEN.isalnum()  # read from data/settings.json, as the image has it
     ignore = (Path(__file__).parents[1] / "live" / "Dockerfile.dockerignore").read_text()
     assert "!data/settings.json" in ignore  # the image's build is sent the file it copies
+
+
+def test_specks_around_an_unknown_name_are_left_out():
+    from uzivo.caption import Caption, tidy, who
+    from uzivo.names import Roster
+    got = who(Caption(name_line="KE Mo Jugoslav Gašić 2", name_clean=True), Roster(), 0.8)
+    assert got.name == "Gašić Jugoslav"
+    assert who(Caption(name_line="Milica Vasiljević-Blagojević", name_clean=True), Roster(), 0.8).name == \
+        "Vasiljević-Blagojević Milica"
+    assert tidy("c Studentska lista") == "Studentska lista"
