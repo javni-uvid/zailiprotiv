@@ -22,10 +22,10 @@ YTDLP_COOKIES = os.environ.get("YTDLP_COOKIES", "").strip()
 MAX_HEIGHT = _i("MAX_HEIGHT", 480)  # the caption reads well at 480p, and the stream is two to three times lighter
 FRAME_INTERVAL = _f("FRAME_INTERVAL", 2)  # only for a stream that is not HLS; HLS gives one frame per segment
 
-# The site's own list of MPs (name, address, group), fetched at start and every few hours.
+# The site's own list of MPs (name, address, group), fetched at start and every hour: a new convocation's members reach it the hour the site lists them (18 Nov 2026).
 SITE = os.environ.get("SITE", "https://zailiprotiv.rs/").strip()
 ROSTER_URL = os.environ.get("ROSTER_URL", SITE + "podaci.json").strip()
-ROSTER_HOURS = _f("ROSTER_HOURS", 6)
+ROSTER_HOURS = _f("ROSTER_HOURS", 1)
 # The last sitting day read afterwards from the whole recording (the site's pages_mikrofon), fetched with the list:
 # between sittings it is shown in place of this service's own record of that day, which may have gaps.
 DAY_URL = os.environ.get("DAY_URL", SITE + "mikrofon-dan.json").strip()

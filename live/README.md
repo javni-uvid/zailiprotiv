@@ -20,7 +20,7 @@ centres' addresses (GitHub's runners among them), and a home address works.
    caption has two lines: the name, and under it the list or office. A list's name often holds its leader's name, so
    **a name is looked for only on the upper line.**
 4. **Who it is.** The name line is compared with the site's own list of MPs (`zailiprotiv.rs/podaci.json`, fetched
-   every 6 hours, the last copy kept): every word of an MP's name must be on the line, each at least 80 % alike
+   every hour, the last copy kept): every word of an MP's name must be on the line, each at least 80 % alike
    letter by letter, with at most one word of noise; two MPs equally close count for none. A name not on the list (a
    minister, a guest, an MP the list doesn't have yet) is shown only when every word is read surely and in two frames
    in a row.
