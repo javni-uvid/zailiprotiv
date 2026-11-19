@@ -7,9 +7,31 @@ decisions unless said otherwise.
 
 ## How to work here
 
-- **Commit straight to `main`.** No branches or pull requests; Dependabot's monthly pull requests are the one
-  exception: merge them once their checks pass.
-- **Run `uv run pytest -q` before every push.** The **test** workflow runs it again; a red run is fixed first.
+- **A branch and a pull request per task** (20 Nov 2026, the maintainer's decision, as several agents now work at
+  once; until then everything was committed straight to `main`):
+  - **Each agent in an Orca worktree** of its own (`orca worktree create --name <task> --no-parent`, from the main
+    clone): Orca makes the branch, `<the maintainer's GitHub login>/<task>`, from `origin/main`, and the folder under
+    `~/orca/workspaces/zailiprotiv/`. Short-lived: hours, a day at most. A new worktree needs `uv sync` (and on
+    Windows `uv pip install tzdata`).
+  - **Before starting, `gh pr list`:** when an open pull request touches the same files, build on it or wait
+    (19 Nov 2026: two agents added the same setting to the live service in one evening).
+  - **Before pushing,** `git rebase origin/main` and `uv run pytest -q`; then `gh pr create` (the template asks what,
+    why, what was checked, and whether the maintainer must decide); `gh pr checks --watch` until **test** passes on
+    it, then `gh pr merge --squash`: one commit on `main`, the branch deleted. A pull request that needs the
+    maintainer (a principle, something seen from outside, DNS) says so and is left for them to merge.
+  - **The workflows still commit data straight to `main`** (votes, transcripts, notes, summaries…): a branch will
+    lag behind in `data/`, which is fine while a task doesn't change `data/`.
+  - **`main` is guarded on our side:** GitHub's rulesets can't exempt the workflows' own token (GitHub Actions can't
+    be a ruleset's bypass actor), so a ruleset requiring pull requests would stop the hourly data runs. The
+    repository's ruleset only forbids deleting `main` and force-pushes; `tools/hooks/pre-push` refuses a push to
+    `main` from a clone set with `git config core.hooksPath tools/hooks` (its worktrees share it). For the same
+    reason GitHub's auto-merge can't be used (it needs a required check, which would stop the workflows' pushes too),
+    so the agent waits for **test** and merges. Squash is the only merge; merged branches are deleted.
+  - **In `AGENTS.md`,** add a decision at the end of the section it belongs to rather than inside another's
+    paragraph: it is the file every task changes.
+  - Dependabot's monthly pull requests: merge them once their checks pass.
+- **Run `uv run pytest -q` before every push.** The **test** workflow runs it again on every pull request and on
+  `main`; a red run is fixed first.
 - **Explain why in commit messages**: what changed for the site or the data, and the reason.
 - **Update README.md with every feature**, and this file with every decision.
 - **Talk to the maintainer in Serbian** (Latin script), briefly. Code, comments and docs are in English.
