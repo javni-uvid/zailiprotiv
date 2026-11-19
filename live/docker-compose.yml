@@ -1,12 +1,14 @@
-# Run from this folder: docker compose up -d --build
+# The live service at mikrofon.zailiprotiv.rs. It runs the image the test passed (mikrofon:uzivo) and never builds:
+# a change is built and tried with docker-compose.test.yml first, then promoted (mikrofon.ps1 uzivo).
+name: mikrofon
 services:
   uzivo:
-    build:
-      context: ..
-      dockerfile: live/Dockerfile
+    image: mikrofon:uzivo
+    pull_policy: never
     env_file: .env
     volumes:
-      - uzivo-data:/data          # today's turns and the last list of MPs, kept across restarts
+      - podaci:/data              # today's turns and the last list of MPs, kept across restarts
+      - whisper:/data/hf          # Whisper's model, shared with the test
     ports:
       - "127.0.0.1:8000:8000"
     restart: unless-stopped
@@ -20,4 +22,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  uzivo-data:
+  podaci:
+    name: mikrofon-podaci
+  whisper:
+    name: mikrofon-whisper
