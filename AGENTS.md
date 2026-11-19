@@ -575,6 +575,16 @@ its minute.
   read every ten minutes and the Assembly writes after the fact), so it is marked "Zvanično", its hour says
   "objava", and the line says the event was earlier (19 Nov 2026: the Speaker's election stood after the move to
   the next item).
+- **Only the chair's sound is written down, and a heard step is shown only when something else bears it out**
+  (19 Nov 2026, the maintainer's decision). `PREPIS_SAMO_PREDSEDAVAJUCI` (on by default, `config.CHAIR_ONLY`): a
+  speaker's sound is let go unwritten, so a better and slower model (`WHISPER_MODEL=large-v3-turbo`, about real
+  time on the maintainer's computer) keeps up; the second reading is off with it. `page.steps_shown` shows a step
+  from the chair's words only when confirmed: an agenda item the agenda has, with a higher number than the last
+  heard; a break or the day's end when nobody is at the rostrum for `STEP_QUIET` after it; work resumed after a
+  shown break or before anyone spoke; a vote or a debate's opening or closing while an agenda item is under way.
+  Measures and anything else wait for the Assembly's page. Next, once a day of this has been looked at: a model
+  over an API as a judge of the chair's words (a step's kind from the set list, the item's number, till when the
+  break is), never as the writer of what the page says.
 - **Trying another Whisper model** without touching the service: `python -m uzivo.proba <model> [seconds]` in the
   container (`live/uzivo/proba.py`) listens to the kept sound, writes it down with the running model and the named
   one, and prints the time and the text of each. It shares the processor with the service while it runs.

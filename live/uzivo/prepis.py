@@ -73,7 +73,8 @@ CHAIR_PIECE = 20  # seconds of the chair's sound before it is written down (shor
 CHAIR_LEAST = 8  # seconds: less sound than this between two turns is not written down
 
 
-def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: dict | None, now: float):
+def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: dict | None, now: float,
+           chair_only: bool = False):
     """What to do with the kept sound: (files to write down as one piece, files to throw away, whether the piece is
     the chair's). A file belongs to the turn its middle falls in; the oldest turn with sound is written first, a
     finished one whole, the one now on once a piece's worth has gathered. Sound in no turn is the chair's (who has no
@@ -89,7 +90,7 @@ def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: d
         span = next((s for s in spans if s[0] <= mid <= s[1]), None)
         if span is None:
             free.append((start, length, f))
-        elif span[2] < SHORTEST and not span[3]:
+        elif chair_only or (span[2] < SHORTEST and not span[3]):  # chair_only: a speaker's sound is let go unwritten
             drop.append(f)
         else:
             by.setdefault(span, []).append((start, length, f))
@@ -146,7 +147,7 @@ class Writer(threading.Thread):
 
     def _final_model(self):
         """The better model for the second reading of a finished turn (WHISPER_FINAL_MODEL); None when off."""
-        if not config.WHISPER_FINAL_MODEL or config.WHISPER_FINAL_MODEL == config.WHISPER_MODEL:
+        if not config.WHISPER_FINAL_MODEL or config.WHISPER_FINAL_MODEL == config.WHISPER_MODEL or config.CHAIR_ONLY:
             return None
         from faster_whisper import WhisperModel
         import numpy as np
@@ -228,7 +229,7 @@ class Writer(threading.Thread):
         snap = self.tracker.snapshot()
         live = not snap.get("ranije") and not snap.get("snimak")
         current = snap.get("sada") if snap["stanje"] == "govori" else None
-        piece, drop, chair = choose(files, snap["danas"] if live else [], current, now)
+        piece, drop, chair = choose(files, snap["danas"] if live else [], current, now, chair_only=config.CHAIR_ONLY)
         for f in drop:
             f.unlink(missing_ok=True)
         if not piece:
@@ -255,7 +256,8 @@ class Writer(threading.Thread):
         if self.write is None:
             try:
                 self.write = self._model()
-                log.info("transcript on: %s, %d threads", config.WHISPER_MODEL, config.WHISPER_THREADS)
+                log.info("transcript on: %s, %d threads%s", config.WHISPER_MODEL, config.WHISPER_THREADS,
+                         ", the chair's sound only" if config.CHAIR_ONLY else "")
                 try:
                     self.write_whole = self._final_model()
                     if self.write_whole:

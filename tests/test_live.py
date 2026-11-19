@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "live"))
 
 from uzivo import config  # noqa: E402
 config.SHOW_TRANSCRIPT = True  # the tests of the transcript's showing; off on the page by default
+config.CHAIR_ONLY = False  # and of the speakers' sound being written down; by default only the chair's is
 from uzivo.caption import differs, read, tidy, who  # noqa: E402
 from uzivo.names import Roster, cyrillic, given_first, latin, normalize  # noqa: E402
 from uzivo.page import fragment, page  # noqa: E402
@@ -747,6 +748,10 @@ def test_the_days_steps_from_the_chairs_words_and_the_assemblys_page(tmp_path, m
     assert watcher.look(now=now + 300) == 0 and watcher.look(now=now + 900) == 1  # the first reading is the start, the second brings what is new
     html = fragment(t.snapshot(now=now + 901), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Šta se desilo danas" in html and "Narodni poslanici izabrali su predsednika" in html and "sajt Skupštine" in html
+    assert "Prelazak na 2. tačku" not in html  # no agenda to bear the step out: not shown
+    t.use_waiting({"kviz": [], "cinjenice": [], "dnevni_red": [{"naslov": "Prva sednica", "url": "", "tacke": [
+        {"n": 1, "tekst": "Izbor predsednika"}, {"n": 2, "tekst": "Izbor potpredsednika"}]}]})
+    html = fragment(t.snapshot(now=now + 902), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Prelazak na 2. tačku dnevnog reda" in html and "prepoznato automatski" in html
 
 
@@ -876,3 +881,26 @@ def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines
     assert "Rad je nastavljen" in html and "Izbor potpredsednika" in html and "krada" not in html
     cir = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Рад је настављен" in cir and "Прелазак на 2. тачку дневног реда" in cir
+
+
+def test_only_the_chairs_sound_is_written_down_and_a_step_is_shown_when_something_bears_it_out(tmp_path):
+    from uzivo import page as page_, prepis
+    f = lambda at: (at, 5.0, tmp_path / f"{at}.pcm")
+    turn = {"od": 100, "do": 160, "sekundi": 60}
+    piece, drop, chair = prepis.choose([f(110), f(120), f(200), f(205), f(210), f(215)], [turn], None, now=300, chair_only=True)
+    assert chair and [x[0] for x in piece] == [200, 205, 210, 215] and len(drop) == 2  # the speaker's sound is let go
+    now = 1795089600.0
+    ev = lambda at, kind, text="x": {"t": now + at, "vrsta": kind, "tekst": text, "izvor": "prepis", "url": ""}
+    snap = {"provereno": now + 5000, "sada": None, "dnevni_red": None,
+            "danas": [{"od": now + 100, "do": now + 900}, {"od": now + 1000, "do": now + 1500}, {"od": now + 2400, "do": now + 2600}],
+            "hronika": [ev(0, "Sednica otvorena"), ev(950, "Pauza"), ev(1510, "Pauza"), ev(1600, "Nastavak rada"), ev(2390, "Nastavak rada"),
+                        ev(2500, "Glasanje"), ev(2550, "Mera predsedavajućeg"), ev(2560, "Tačka dnevnog reda", "prelazimo na drugu tačku"),
+                        ev(4900, "Kraj rada")]}
+    assert [(int(r["t"] - now), r["naslov"]) for r in page_.steps_shown(snap)][::-1] == [
+        (0, "Sednica je otvorena"), (1510, "Pauza"), (1600, "Rad je nastavljen")]
+    # the break at 950 had a speaker right after it; the vote and the item have no agenda behind them; the measure
+    # waits for the Assembly; the second "resumed" had no break before it; the day's end is too fresh to be sure of
+    snap["dnevni_red"] = {"tacke": [{"n": 1, "tekst": "Prva", "stanje": "gotova"}, {"n": 2, "tekst": "Druga", "stanje": "u_toku"}]}
+    snap["provereno"] = now + 4900 + 300
+    assert [r["naslov"] for r in page_.steps_shown(snap)] == [
+        "Kraj rada za danas", "Prelazak na 2. tačku dnevnog reda", "Glasanje", "Rad je nastavljen", "Pauza", "Sednica je otvorena"]

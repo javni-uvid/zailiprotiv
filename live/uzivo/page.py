@@ -87,7 +87,7 @@ TEXT = {
                "predsedavajući pređe na sledeću; ovo drugo čitamo iz automatskog prepisa i može da pogreši.",
     "steps": "Šta se desilo danas",
     "steps_lead": "Koraci sednice redom, najnoviji prvi.",
-    "steps_said": "po rečima predsedavajućeg, prepoznato automatski sa zvuka prenosa: može da pogreši",
+    "steps_said": "po rečima predsedavajućeg, prepoznato automatski sa zvuka prenosa i provereno uz dnevni red i sliku prenosa; i dalje može da pogreši",
     "steps_site": "sajt Skupštine",
     "steps_site_key": "zvanično: napisala Skupština na stranici sednice; vreme je vreme objave, ne događaja",
     "steps_official": "Zvanično",
@@ -367,36 +367,66 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
 # sentence as the transcript has it (19 Nov 2026: the transcript's wording errs too much to be shown).
 STEP_TITLES = {"Sednica otvorena": "Sednica je otvorena", "Nastavak rada": "Rad je nastavljen", "Pauza": "Pauza",
                "Kraj rada": "Kraj rada za danas", "Glasanje": "Glasanje", "Glasanje zaključeno": "Glasanje je zaključeno",
-               "Pretres otvoren": "Pretres je otvoren", "Pretres zaključen": "Pretres je zaključen",
-               "Mera predsedavajućeg": "Predsedavajući je izrekao meru"}
+               "Pretres otvoren": "Pretres je otvoren", "Pretres zaključen": "Pretres je zaključen"}
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
+STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
+_UNDER_WAY = {"Glasanje", "Glasanje zaključeno", "Pretres otvoren", "Pretres zaključen"}
 
 
 def steps_shown(snap: dict) -> list[dict]:
     """The day's steps as shown, newest first: [{"t", "izvor", "naslov", "opis", "url"}]. From the Assembly's page: its
-    sentence, whole. From the chair's words: the step's name (STEP_TITLES), and for a move to an agenda item its
-    number and the item as the agenda writes it; a step with nothing sure to say (an item with no number, "the
-    chair notes that…") is left out, and one repeated within a quarter of an hour is one line."""
+    sentence, whole. From the chair's words: the step's name (STEP_TITLES), shown only when something else bears it
+    out (19 Nov 2026, the maintainer's decision: what cannot be confirmed is not shown):
+    - a move to an agenda item: the agenda has the item, and its number is higher than the last one heard today;
+    - a break, the day's end: nobody is at the rostrum for STEP_QUIET seconds after it (so it shows that much later);
+    - work resumed: a break shown before it, or nobody had spoken yet today; the sitting opened: nobody had spoken yet;
+    - a vote, a debate opened or closed: an agenda item is under way;
+    - anything else (a measure, "the chair notes that…") waits for the Assembly's own page.
+    The same step within a quarter of an hour is one line."""
     from .hronika import item_no
-    items = {int(x["n"]): x["tekst"] for x in ((snap.get("dnevni_red") or {}).get("tacke") or [])}
+    agenda = (snap.get("dnevni_red") or {}).get("tacke") or []
+    items = {int(x["n"]): x["tekst"] for x in agenda}
+    now = snap.get("provereno") or 0
+    turns = [(d["od"], d["do"]) for d in snap.get("danas") or []]
+    if snap.get("sada"):
+        turns.append((snap["sada"]["od"], now))
+    quiet = lambda t: now >= t + STEP_QUIET and not any(a < t + STEP_QUIET and b > t + 30 for a, b in turns)
+    first = lambda t: not any(b < t - 30 for a, b in turns)
     out: list[dict] = []
     last: dict[str, int] = {}
+    item, paused = 0, False
     for e in sorted(snap.get("hronika") or [], key=lambda e: e["t"]):
         if e.get("izvor") == "sajt":
             out.append({"t": e["t"], "izvor": "sajt", "naslov": "", "opis": e.get("tekst", ""), "url": e.get("url", "")})
             continue
-        kind, more = e.get("vrsta", ""), ""
+        kind, more, t = e.get("vrsta", ""), "", e["t"]
+        title = STEP_TITLES.get(kind, "")
         if kind == "Tačka dnevnog reda":
             n = item_no(e.get("tekst", ""))
-            if not n or (items and n not in items):
+            if not n or n not in items or n <= item:
                 continue
-            title, more = f"Prelazak na {n}. tačku dnevnog reda", items.get(n, "")
+            title, more = f"Prelazak na {n}. tačku dnevnog reda", items[n]
+        elif kind in ("Pauza", "Kraj rada"):
+            if not quiet(t):
+                continue
+        elif kind == "Nastavak rada":
+            if not (paused or first(t)):
+                continue
+        elif kind == "Sednica otvorena":
+            if not first(t):
+                continue
+        elif kind in _UNDER_WAY:
+            if not (item or any(x.get("stanje") == "u_toku" for x in agenda)):
+                continue
         else:
-            title = STEP_TITLES.get(kind, "")
-        if not title or e["t"] - last.get(title, -10 ** 9) < STEP_SAME:
             continue
-        last[title] = e["t"]
-        out.append({"t": e["t"], "izvor": "prepis", "naslov": title, "opis": more, "url": ""})
+        if t - last.get(title, -10 ** 9) < STEP_SAME:
+            continue
+        last[title] = t
+        if kind == "Tačka dnevnog reda":
+            item = n
+        paused = kind in ("Pauza", "Kraj rada") or (paused and kind != "Nastavak rada")
+        out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": more, "url": ""})
     return out[::-1]
 
 
