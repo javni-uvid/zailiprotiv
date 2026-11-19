@@ -472,9 +472,9 @@ its minute.
   "sažetija i zabavnija"): a tile a number with a few words under it (`macros.brief`; `mp_card.facts` gives each fact
   its `short`, `sub` and `href`), the time on the floor in the newest convocation as the first tile, the whole
   sentences and how they are computed folded below; a new MP's tiles are year, occupation and place. Still no rating
-  and the same tiles for everyone. The turns on the floor are a card of days with a pill a turn. **The live page's
-  order** is the name and clock, the broadcast, the box about the speaker, what is
-  being said, the day. **While nobody is on** the summary also names the next sitting convened (`sazvano` in
+  and the same tiles for everyone. The turns on the floor are a card of days with a pill a turn. **The live page's order** (changed the same evening at the maintainer's request) is a short head (what
+  the page is in a line, and one button to the site), the newest notice alone, the broadcast, the name and clock,
+  the box about the speaker, what is being said, the day's steps, the day. **While nobody is on** the summary also names the next sitting convened (`sazvano` in
   `mikrofon-cekanje.json`, as the Assembly lists it) and offers the day in cards. **An upright picture**
   (`/prica.png`, 1080×1920, `picture.render_tall`) for a phone's story. **The Cyrillic page is checked first** when
   anything is added (this time it showed "YоуТубе" and hours as "х": foreign names are written as said, "Jutjub").
