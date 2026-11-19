@@ -5,6 +5,7 @@ Only the standard library, so the repository's tests run it without the service'
 from __future__ import annotations
 
 import difflib
+import itertools
 import json
 import re
 import unicodedata
@@ -119,12 +120,28 @@ class Roster:
         return self._nearest(got, now) if now else None
 
     @staticmethod
-    def _score(want: list[str], got: list[str]) -> list[float]:
+    def _pair(want: list[str], got: list[str], one) -> list[float]:
+        """How well each word of a name is read on the line, each by a word of its own: one word read cannot stand
+        for two of the name (19 Nov 2026: "Сара" alone was both "Sarag" and "Sarah", so any Sara on the screen, and
+        any misreading of one, came out as Sarah El Sarag). The pairing with the best sum; a word of the name with no
+        word left for it scores nothing."""
+        if not want or not got:
+            return [0.0] * len(want)
+        table = [[one(w, g) for g in got] for w in want]
+        best: tuple[float, list[float]] = (-1.0, [])
+        for order in itertools.permutations(range(len(got)), min(len(want), len(got))):
+            scores = [table[i][j] for i, j in enumerate(order)] + [0.0] * (len(want) - len(order))
+            if sum(scores) > best[0]:
+                best = (sum(scores), scores)
+        return best[1]
+
+    @classmethod
+    def _score(cls, want: list[str], got: list[str]) -> list[float]:
         def one(w: str, g: str) -> float:
             if len(g) >= 4 and (w.startswith(g) or g.startswith(w)):  # a word cut short at the caption's edge
                 return 0.9
             return difflib.SequenceMatcher(None, w, g).ratio()
-        return [max(one(w, g) for g in got) for w in want]
+        return cls._pair(want, got, one)
 
     def _strict(self, got: list[str], pool: list[Person], threshold: float) -> Person | None:
         best: list[tuple[float, Person]] = []
@@ -132,7 +149,7 @@ class Roster:
             want = sorted(words(p.name))
             if len(want) not in (len(got), len(got) - 1):
                 continue
-            scores = [max(difflib.SequenceMatcher(None, w, g).ratio() for g in got) for w in want]
+            scores = self._pair(want, got, lambda w, g: difflib.SequenceMatcher(None, w, g).ratio())
             if min(scores) >= threshold:
                 best.append((sum(scores) / len(scores), p))
         return self._one(best, 0.02)

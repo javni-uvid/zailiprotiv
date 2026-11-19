@@ -763,3 +763,13 @@ def test_the_agenda_under_the_broadcast_says_which_items_are_done_and_by_whose_w
     html = fragment(t.snapshot(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert 'class="agenda"' in html and "2 od 4 tačaka gotovo" in html and "u toku: Izbor potpredsednika" in html
     assert "po sajtu Skupštine" in html and "Mandati su potvrđeni." in html and "po rečima predsedavajućeg" in html
+
+
+def test_one_word_read_cannot_stand_for_two_words_of_a_name():
+    roster = Roster.from_json(json.dumps({"mps": [{"n": "El Sarag Sarah", "s": "el-sarag-sarah", "g": "L"},
+                                                  {"n": "Valentik Sara", "s": "valentik-sara", "g": "L"}]}))
+    roster.current = frozenset({"el-sarag-sarah", "valentik-sara"})
+    assert roster.match("Сара", 0.8) is None and roster.match("Сара Павловић", 0.8) is None
+    assert roster.match("Сара Валентик", 0.8).slug == "valentik-sara"
+    assert roster.match("Сара Валентнк", 0.8).slug == "valentik-sara"  # a letter misread: still her, not the other Sara
+    assert roster.match("Sarah El Sarag", 0.8).slug == "el-sarag-sarah" and roster.match("Сарах Ел Сараг", 0.8).slug == "el-sarag-sarah"
