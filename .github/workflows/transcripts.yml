@@ -80,6 +80,10 @@ jobs:
           # Of every sitting's notes only those already in the repository are committed (the contested laws');
           # the rest live in the bucket.
           if [ "${IN_ALL}" = "true" ]; then git add -u data; else git add data; fi
+          # The newest convocation's notes are few yet and are kept in the repository whole, so that what the counts
+          # make of them can be looked at (19 Nov 2026: its "Varnice" came out empty and the notes were only in the bucket).
+          newest=$(uv run python -c 'from zailiprotiv.config import NEWEST, CURRENT; print(NEWEST if str(NEWEST) != str(CURRENT) else "")')
+          if [ -n "$newest" ] && [ -d "data/$newest/transcripts" ]; then git add "data/$newest/transcripts"; fi
           if ! git diff --cached --quiet; then
             git commit -m "Stenographic notes of the debates (convocation ${IN_CONVOCATION})"
             for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
