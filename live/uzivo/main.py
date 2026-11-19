@@ -110,26 +110,32 @@ def cyrillic_story() -> Response:
 _said: dict[bool, tuple[float, str]] = {}
 
 
-def _transcript(cyr: bool) -> HTMLResponse:
-    """The day's automatic transcript (prepis.py), put together at most once in twenty seconds per script."""
-    if not config.SHOW_TRANSCRIPT:  # written down, not shown: the address leads back to the page
-        return RedirectResponse("/cir/" if cyr else "/", status_code=302)
+def _transcript(cyr: bool, key: str = "") -> HTMLResponse:
+    """The day's automatic transcript (prepis.py), put together at most once in twenty seconds per script. With the
+    transcript off the page (config.SHOW_TRANSCRIPT) only for whoever has the key (config.TRANSCRIPT_KEY, as ?k=):
+    anyone else is led back to the page, and the keyed answer is kept by nobody and sends no address on."""
+    private = not config.SHOW_TRANSCRIPT
+    if not config.transcript_open(key):
+        return RedirectResponse("/cir/" if cyr else "/", status_code=302, headers=NO_STORE)
     now = time.monotonic()
     kept = _said.get(cyr)
     if not kept or now - kept[0] > PICTURE_KEEP:
         kept = (now, transcript_page(tracker.transcript(), cyr=cyr, site=config.SITE, tz=_tz, url=URL))
         _said[cyr] = kept
+    if private:
+        return HTMLResponse(kept[1], headers={"Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer",
+                                              "X-Robots-Tag": "noindex, nofollow"})
     return HTMLResponse(kept[1], headers={"Cache-Control": f"public, max-age={PICTURE_KEEP}"})
 
 
 @app.get("/prepis")
-def latin_transcript() -> HTMLResponse:
-    return _transcript(False)
+def latin_transcript(k: str = "") -> HTMLResponse:
+    return _transcript(False, k)
 
 
 @app.get("/cir/prepis")
-def cyrillic_transcript() -> HTMLResponse:
-    return _transcript(True)
+def cyrillic_transcript(k: str = "") -> HTMLResponse:
+    return _transcript(True, k)
 
 
 @app.get("/stanje.json")

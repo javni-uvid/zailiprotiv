@@ -586,7 +586,7 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
 // The page as it is now, asked for again every twenty seconds while it is looked at; what is read stays in place.
 setInterval(function () {{
   if (document.hidden) return;
-  fetch(location.pathname, {{ cache: "no-store" }}).then(function (r) {{ return r.ok ? r.text() : null; }}).then(function (html) {{
+  fetch(location.pathname + location.search, {{ cache: "no-store" }}).then(function (r) {{ return r.ok ? r.text() : null; }}).then(function (html) {{
     if (!html) return;
     var now = new DOMParser().parseFromString(html, "text/html").querySelector("main");
     var main = document.querySelector("main");

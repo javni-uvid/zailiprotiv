@@ -62,6 +62,15 @@ WHISPER_FINAL_MODEL = os.environ.get("WHISPER_FINAL_MODEL", "").strip()
 # Whether the transcript is shown on the page (19 Nov 2026, the maintainer's decision: no, it errs too much and does
 # more harm than good; it is still written down, for the day's steps and the agenda). "1" shows it again.
 SHOW_TRANSCRIPT = os.environ.get("PREPIS_PRIKAZ", "0").strip() == "1"
+# With the transcript off the page, /prepis?k=<this> still shows it to whoever has the key (the maintainer, to see
+# what is being written down). Empty: nobody. At least 12 characters, so that it cannot be guessed.
+TRANSCRIPT_KEY = os.environ.get("PREPIS_KLJUC", "").strip()
+
+
+def transcript_open(key: str = "") -> bool:
+    """Whether the transcript page may be shown to this asker: to all when it is on the page, else to the key only."""
+    import hmac
+    return SHOW_TRANSCRIPT or (len(TRANSCRIPT_KEY) >= 12 and hmac.compare_digest(key.encode(), TRANSCRIPT_KEY.encode()))
 # Only the sound in no turn (the chair's) is written down, the speakers' is let go (19 Nov 2026, the maintainer's
 # decision: with the transcript off the page, the day's steps are all it is for, and a better, slower model then
 # keeps up). "0" writes everything down again.

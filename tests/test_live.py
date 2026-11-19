@@ -952,3 +952,15 @@ def test_the_floor_given_by_the_chairs_word_when_the_picture_names_nobody():
     assert [r["naslov"] for r in page_.steps_shown(snap)] == ["Reč ima: Nataša Jovanović", "Reč ima: Jovo Bakić"]  # once in a quarter of an hour; not where the picture named the speaker
     html = page_._steps(snap, cyr=True, tz=TZ, site="https://zailiprotiv.rs/")
     assert 'Реч има: <b><a href="https://zailiprotiv.rs/cir/poslanik/jovanovic-natasa">Наташа Јовановић</a></b>' in html
+
+
+def test_the_transcript_behind_a_key_while_it_is_off_the_page(monkeypatch):
+    monkeypatch.setattr(config, "SHOW_TRANSCRIPT", False)
+    monkeypatch.setattr(config, "TRANSCRIPT_KEY", "")
+    assert not config.transcript_open("")  # no key set: nobody
+    monkeypatch.setattr(config, "TRANSCRIPT_KEY", "kratak")
+    assert not config.transcript_open("kratak")  # too short to be a key
+    monkeypatch.setattr(config, "TRANSCRIPT_KEY", "dug-kljuc-za-prepis")
+    assert not config.transcript_open("pogresan") and not config.transcript_open("") and config.transcript_open("dug-kljuc-za-prepis")
+    monkeypatch.setattr(config, "SHOW_TRANSCRIPT", True)
+    assert config.transcript_open("")  # on the page: open to all

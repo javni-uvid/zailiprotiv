@@ -565,6 +565,9 @@ its minute.
   does more harm than good). `PREPIS_PRIKAZ=1` shows it again (`config.SHOW_TRANSCRIPT`); off, the page has no
   "Šta govori", no "Bez potpisa", no words tile, no links to `/prepis`, and `/prepis` leads back to the page. The
   writing goes on: the day's steps and the agenda's progress are read from it.
+  With it off, `/prepis?k=<PREPIS_KLJUC>` still shows it to whoever has the key from `live/.env` (the maintainer,
+  to see what is being written down): at least 12 characters, answered with no-store and no referrer; without the
+  key the address leads back to the page.
 - **"Šta se desilo danas" never shows the transcript's wording** (`page.steps_shown`). A step heard in the chair's
   words is our own short line for its kind (`STEP_TITLES`: "Rad je nastavljen", "Pauza"…), a move to an agenda item
   with its number and the item as the agenda writes it; a step with nothing sure to say (an item with no number or
