@@ -71,10 +71,10 @@ def transcript_open(key: str = "") -> bool:
     """Whether the transcript page may be shown to this asker: to all when it is on the page, else to the key only."""
     import hmac
     return SHOW_TRANSCRIPT or (len(TRANSCRIPT_KEY) >= 12 and hmac.compare_digest(key.encode(), TRANSCRIPT_KEY.encode()))
-# Only the sound in no turn (the chair's) is written down, the speakers' is let go (19 Nov 2026, the maintainer's
-# decision: with the transcript off the page, the day's steps are all it is for, and a better, slower model then
-# keeps up). "0" writes everything down again.
-CHAIR_ONLY = os.environ.get("PREPIS_SAMO_PREDSEDAVAJUCI", "1").strip() != "0"
+# The speakers' sound is written down and kept too (19 Nov 2026, the maintainer's decision, the same evening after
+# a few hours of the chair's sound only); the chair's is written first, so the day's steps keep up. "1" writes only
+# the chair's sound down and lets the speakers' go.
+CHAIR_ONLY = os.environ.get("PREPIS_SAMO_PREDSEDAVAJUCI", "0").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
 WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
 WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()

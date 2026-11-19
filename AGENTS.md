@@ -584,10 +584,13 @@ its minute.
   read every ten minutes and the Assembly writes after the fact), so it is marked "Zvanično", its hour says
   "objava", and the line says the event was earlier (19 Nov 2026: the Speaker's election stood after the move to
   the next item).
-- **Only the chair's sound is written down, and a heard step is shown only when something else bears it out**
-  (19 Nov 2026, the maintainer's decision). `PREPIS_SAMO_PREDSEDAVAJUCI` (on by default, `config.CHAIR_ONLY`): a
-  speaker's sound is let go unwritten, so a better and slower model (`WHISPER_MODEL=large-v3-turbo`, about real
-  time on the maintainer's computer) keeps up; the second reading is off with it. `page.steps_shown` shows a step
+- **The speakers' sound is written down too, and a heard step is shown only when something else bears it out**
+  (19 Nov 2026, the maintainer's decision). For a few hours only the chair's sound was written down, so that a
+  slower model (`WHISPER_MODEL=large-v3-turbo`, about real time on the maintainer's computer) kept up; the same
+  evening the maintainer asked for the MPs' speeches to be kept as well. Now everything is written down and kept
+  (off the page, as above), the chair's sound first (`prepis.choose`), so the day's steps keep up while the
+  speakers' waits; the computer may fall behind during a sitting and catch up after. `PREPIS_SAMO_PREDSEDAVAJUCI=1`
+  (`config.CHAIR_ONLY`) writes only the chair's again, with the second reading off. `page.steps_shown` shows a step
   from the chair's words only when confirmed: an agenda item the agenda has, with a higher number than the last
   heard; a break or the day's end when nobody is at the rostrum for `STEP_QUIET` after it; work resumed after a
   shown break, before anyone spoke, or (once) after ten minutes with nobody at the rostrum (`STEP_IDLE`: a break

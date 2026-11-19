@@ -889,6 +889,10 @@ def test_only_the_chairs_sound_is_written_down_and_a_step_is_shown_when_somethin
     turn = {"od": 100, "do": 160, "sekundi": 60}
     piece, drop, chair = prepis.choose([f(110), f(120), f(200), f(205), f(210), f(215)], [turn], None, now=300, chair_only=True)
     assert chair and [x[0] for x in piece] == [200, 205, 210, 215] and len(drop) == 2  # the speaker's sound is let go
+    piece, drop, chair = prepis.choose([f(110), f(120), f(200), f(205), f(210), f(215)], [turn], None, now=300)
+    assert chair and [x[0] for x in piece] == [200, 205, 210, 215] and not drop  # the chair's first, the speaker's kept
+    piece, drop, chair = prepis.choose([f(110), f(120)], [turn], None, now=300)
+    assert not chair and [x[0] for x in piece] == [110, 120] and not drop  # then the speaker's
     now = 1795089600.0
     said = {"Sednica otvorena": "Otvaram sednicu.", "Pauza": "Određujem pauzu.", "Nastavak rada": "Nastavljamo sa radom.",
             "Glasanje": "Stavljam na glasanje.", "Mera predsedavajućeg": "Izričem opomenu.", "Kraj rada": "Zaključujem današnji rad."}

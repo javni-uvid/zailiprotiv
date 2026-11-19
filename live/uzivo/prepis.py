@@ -94,17 +94,8 @@ def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: d
             drop.append(f)
         else:
             by.setdefault(span, []).append((start, length, f))
-    for span in sorted(by):
-        mine = by[span]
-        if not span[3] or (sum(x[1] for x in mine) >= PIECE and span[2] >= SHORTEST):
-            piece, total = [], 0.0
-            for x in mine:  # a long wait (a finished turn, or the computer behind) goes in pieces, so text keeps coming
-                piece.append(x)
-                total += x[1]
-                if total >= LONGEST:
-                    break
-            return piece, drop, False
-    # the chair's: the oldest run of sound in no turn, files one after another, old enough to be no turn's beginning
+    # the chair's first, so the day's steps keep up while the speakers' sound waits: the oldest run of sound in no
+    # turn, files one after another, old enough to be no turn's beginning
     run: list = []
     for x in free:
         if now - x[0] <= CHAIR_WAIT:
@@ -119,6 +110,16 @@ def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: d
             return run, drop, True
         if ended or now - run[0][0] > LOST:
             drop += [y[2] for y in run]
+    for span in sorted(by):
+        mine = by[span]
+        if not span[3] or (sum(x[1] for x in mine) >= PIECE and span[2] >= SHORTEST):
+            piece, total = [], 0.0
+            for x in mine:  # a long wait (a finished turn, or the computer behind) goes in pieces, so text keeps coming
+                piece.append(x)
+                total += x[1]
+                if total >= LONGEST:
+                    break
+            return piece, drop, False
     return [], drop, False
 
 
