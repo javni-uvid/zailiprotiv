@@ -4,7 +4,7 @@
  "pokriveno": [
   {
    "od": 1795078236,
-   "do": 1795081920
+   "do": 1795088754
   }
  ],
  "govori": [
@@ -66,11 +66,102 @@
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795081775,
-   "do": 1795081920,
-   "okvira": 21,
+   "do": 1795082074,
+   "okvira": 52,
    "video": "Hdk3ahufa64",
    "sq_od": 711,
-   "sq_do": 740,
+   "sq_do": 771,
+   "segment": 5.0
+  },
+  {
+   "ime": "Krkobabić Stefan",
+   "adresa": "krkobabic-stefan",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795082135,
+   "do": 1795082385,
+   "okvira": 47,
+   "video": "Hdk3ahufa64",
+   "sq_od": 783,
+   "sq_do": 833,
+   "segment": 5.0
+  },
+  {
+   "ime": "Jovanović Nataša",
+   "adresa": "jovanovic-natasa",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795082405,
+   "do": 1795082710,
+   "okvira": 59,
+   "video": "Hdk3ahufa64",
+   "sq_od": 837,
+   "sq_do": 898,
+   "segment": 5.0
+  },
+  {
+   "ime": "Brnabić Ana",
+   "adresa": "brnabic-ana",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795082854,
+   "do": 1795083014,
+   "okvira": 32,
+   "video": "Hdk3ahufa64",
+   "sq_od": 927,
+   "sq_do": 959,
+   "segment": 5.0
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795083129,
+   "do": 1795083350,
+   "okvira": 41,
+   "video": "Hdk3ahufa64",
+   "sq_od": 982,
+   "sq_do": 1026,
+   "segment": 5.0
+  },
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "bakic-jovo",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795083489,
+   "do": 1795084630,
+   "okvira": 229,
+   "video": "Hdk3ahufa64",
+   "sq_od": 1054,
+   "sq_do": 1282,
+   "segment": 5.0
+  },
+  {
+   "ime": "Miletić Milija",
+   "adresa": "miletic-milija",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795084665,
+   "do": 1795084665,
+   "okvira": 1,
+   "video": "Hdk3ahufa64",
+   "sq_od": 1289,
+   "sq_do": 1289,
+   "segment": 5.0
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795084675,
+   "do": 1795088310,
+   "okvira": 718,
+   "video": "Hdk3ahufa64",
+   "sq_od": 1291,
+   "sq_do": 2018,
    "segment": 5.0
   }
  ]
