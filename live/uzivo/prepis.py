@@ -68,7 +68,8 @@ def waiting() -> list[tuple[float, float, Path]]:
     return sorted(out)
 
 
-CHAIR_WAIT = 45  # seconds: sound in no turn this old will not turn out to be a turn's beginning; it is the chair's
+CHAIR_WAIT = 25  # seconds: sound in no turn this old will not turn out to be a turn's beginning; it is the chair's
+CHAIR_PIECE = 20  # seconds of the chair's sound before it is written down (shorter than a speaker's: the chair speaks briefly)
 CHAIR_LEAST = 8  # seconds: less sound than this between two turns is not written down
 
 
@@ -113,7 +114,7 @@ def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: d
     if run:
         ended = len(run) < len([x for x in free if now - x[0] > CHAIR_WAIT]) or now - (run[-1][0] + run[-1][1]) > CHAIR_WAIT
         total = sum(y[1] for y in run)
-        if total >= PIECE or (ended and total >= CHAIR_LEAST):
+        if total >= CHAIR_PIECE or (ended and total >= CHAIR_LEAST):
             return run, drop, True
         if ended or now - run[0][0] > LOST:
             drop += [y[2] for y in run]
@@ -236,8 +237,7 @@ class Writer(threading.Thread):
         started = time.time()
         self.hint = self.hint_for(snap)
         text = latin(self.write(raw))
-        if not chair:
-            self.tracker.say(piece[0][0], text)
+        self.tracker.say(piece[0][0], text, chair=chair)
         from . import hronika  # the steps said in the piece, the chair's or a speaker's, by the same rules
         for what, sentence in hronika.find(text):
             self.tracker.note(piece[0][0], what, sentence, "prepis")

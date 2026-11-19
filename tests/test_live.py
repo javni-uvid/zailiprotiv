@@ -731,10 +731,13 @@ def test_the_days_steps_from_the_chairs_words_and_the_assemblys_page(tmp_path, m
     for s_ in range(100, 141, 5):  # nobody's caption: the chair speaks
         (tmp_path / "zvuk" / f"{int((now + s_) * 1000)}-5000.pcm").write_bytes(b"\0" * 100)
     w = prepis.Writer(t, threading.Event(), write=lambda raw: "Прелазимо на другу тачку дневног реда.")
-    assert w.step(now=now + 150) is False  # too new: it may yet be a turn's beginning
+    assert w.step(now=now + 118) is False  # too new: it may yet be a turn's beginning
     assert w.step(now=now + 260) is True
-    assert not t.said  # the chair's words are no one's speech on the page
+    assert list(t.said) == [f"p{int(now + 95)}"]  # the chair's words are kept apart, no one's speech by name
     snap = t.snapshot(now=now + 261)
+    assert snap["bez_potpisa"]["tekst"] == "Prelazimo na drugu tačku dnevnog reda."
+    shown_ = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Bez potpisa: predsedavajući ili sala" in shown_ and "Prelazimo na drugu tačku dnevnog reda." in shown_
     assert [(e["vrsta"], e["izvor"]) for e in snap["hronika"]] == [("Tačka dnevnog reda", "prepis")]
     page_ = "<html><body>Претрага сајта <h1>Прва седница</h1><p>Седница је почела у 10 часова у Дому Народне скупштине.</p>{more}<h3>Фото галерија</h3></body></html>"
     t.use_waiting({"kviz": [], "cinjenice": [], "sednice": ["https://www.parlament.gov.rs/Прва_седница.1.43.html"]})

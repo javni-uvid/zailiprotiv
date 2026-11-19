@@ -54,6 +54,8 @@ TEXT = {
                  "citat: za citat služe stenografske beleške Skupštine, koje sajt objavljuje kad stignu. Ništa nije "
                  "prepričano ni skraćeno.",
     "said_none": "Za ovaj dan još nema prepisa.",
+    "said_unsigned": "Bez potpisa: predsedavajući ili sala · automatski prepis, može da pogreši",
+    "said_nobody": "Bez potpisa: predsedavajući ili sala",
     "said_report": "Prijavi grešku u prepisu",
     "said_second": "drugo, tačnije čitanje",
     "said_fix": "Prepis prvo objavimo, pa ispravljamo: poznate greške u pravopisu i imenima popravljamo po spisku, a "
@@ -267,6 +269,12 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
+    if not said and snap.get("bez_potpisa"):  # nobody's caption on: the chair's words (or the hall's), named as no one's
+        u = snap["bez_potpisa"]
+        tail = u["tekst"]
+        tail = ("… " + tail.split(" ", 1)[-1]) if len(tail) >= 400 else tail
+        said = (f'<div class="said-now"><p class="src">{t("said_unsigned")}</p><p>{escape(_name(tail, cyr))}</p>'
+                f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis">{t("said_all")} →</a></p></div>')
     out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
@@ -440,11 +448,11 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
     when = _date(data["dan"]) if data.get("dan") else ""
     rows = []
     for d in data["govori"]:
-        nm = escape(_name(given_first(d["ime"]), cyr))
+        nm = escape(_name(given_first(d["ime"]), cyr)) if not d.get("bez") else f'<i>{t("said_nobody")}</i>'
         if d["adresa"]:
             nm = f'<a href="{escape(home + "poslanik/" + d["adresa"])}">{nm}</a>'
         text = escape(cyrillic(d["tekst"]) if cyr else d["tekst"])
-        subject = f'Ispravka prepisa: {given_first(d["ime"])}, {data.get("dan", "")} {_clock(d["od"], tz)}'
+        subject = f'Ispravka prepisa: {given_first(d["ime"]) or "bez potpisa"}, {data.get("dan", "")} {_clock(d["od"], tz)}'
         body = "Pogrešno napisano:\n\nTreba da piše:\n\n(Ispravljamo pravopis i imena, ne ono što je rečeno.)"
         mail = f'mailto:kontakt@zailiprotiv.rs?subject={quote(subject)}&body={quote(body)}'
         second = f' · {t("said_second")}' if d.get("ceo") else ""

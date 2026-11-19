@@ -176,8 +176,9 @@ class Tracker:
             pass
         return {}
 
-    def say(self, ts: float, text: str) -> None:
-        """A piece of the transcript: the sound from second `ts` on, written down. Kept with the day."""
+    def say(self, ts: float, text: str, chair: bool = False) -> None:
+        """A piece of the transcript: the sound from second `ts` on, written down. Kept with the day. `chair`: sound
+        in no turn, the chair's or the hall's, kept apart (a key "p<second>") and shown as nobody's by name."""
         text = " ".join(text.split())
         if not text:
             return
@@ -185,7 +186,7 @@ class Tracker:
             day = self._day(ts)
             if day != self.day:
                 return
-            self.said[str(int(ts))] = text
+            self.said[("p" if chair else "") + str(int(ts))] = text
             self._snap = None
             f = self._said_file(day)
             if f:
@@ -304,7 +305,20 @@ class Tracker:
         whole = [said[k] for k in said if k[:1] == "k" and start - SAID_LEAD - 1 <= int(k[1:]) <= start + SAID_LEAD + 1]
         if whole:
             return whole[0]
-        return " ".join(said[k] for k in sorted((k for k in said if k[:1] != "k"), key=int) if start - SAID_LEAD - 1 <= int(k) <= end)
+        return " ".join(said[k] for k in sorted((k for k in said if k.isdigit()), key=int) if start - SAID_LEAD - 1 <= int(k) <= end)
+
+    @staticmethod
+    def _unsigned(said: dict[str, str]) -> list[dict]:
+        """The sound with no caption (the chair's, or the hall's) as written down, in runs: pieces less than a minute
+        and a half apart are one. [{"od", "do", "tekst"}], oldest first."""
+        out: list[dict] = []
+        for k in sorted((k for k in said if k[:1] == "p" and k[1:].isdigit()), key=lambda k: int(k[1:])):
+            at = int(k[1:])
+            if out and at - out[-1]["do"] <= 90:
+                out[-1]["do"], out[-1]["tekst"] = at, out[-1]["tekst"] + " " + said[k]
+            else:
+                out.append({"od": at, "do": at, "tekst": said[k]})
+        return out
 
     def shown(self, text: str) -> str:
         """The transcript as shown: as written down, with the corrections (ispravke.py)."""
@@ -340,6 +354,9 @@ class Tracker:
         turns = ([snap["sada"]] if snap["stanje"] == "govori" and snap.get("sada") else []) + snap["danas"]
         out = [{**{k: d[k] for k in ("ime", "adresa", "od", "do", "sekundi")}, "lista": d.get("lista", ""),
                 "tekst": self.shown(self._text(said, d["od"], d["do"])), "ceo": bool(d.get("prepis_ceo"))} for d in turns]
+        out += [{"ime": "", "adresa": "", "od": r["od"], "do": r["do"], "sekundi": r["do"] - r["od"], "lista": "",
+                 "tekst": self.shown(r["tekst"]), "ceo": False, "bez": True} for r in self._unsigned(said)]
+        out.sort(key=lambda d: -d["od"])
         return {"dan": snap["dan"], "ranije": snap["ranije"], "govori": [d for d in out if d["tekst"]]}
 
     def _save(self) -> None:
@@ -545,12 +562,18 @@ class Tracker:
             if current:
                 self._today(done, current, day)
             said = self._said_of(day)
+            unsigned = None
             if said:  # how many words were written down of each turn, and the end of what the speaker is saying
                 for d in done + ([current] if current else []):
                     text = self._text(said, d["od"], d["do"])
                     d["reci"] = len(text.split())
                     if d is current and text:
                         d["prepis"] = self.shown(text[-SAID_TAIL:])
+                if not current:  # nobody's caption on: what the chair (or the hall) is saying, when it is fresh
+                    runs = self._unsigned(said)
+                    if runs and self.last_frame - runs[-1]["do"] < 240 and day == self.day:
+                        unsigned = {"od": runs[-1]["od"], "tekst": self.shown(runs[-1]["tekst"][-SAID_TAIL:])}
+                for d in done + ([current] if current else []):
                     d["prepis_ceo"] = any(k[:1] == "k" and abs(int(k[1:]) - d["od"]) <= SAID_LEAD + 1 for k in said)
             coming = self.waiting.get("sazvano") if isinstance(self.waiting, dict) else None
             if not (isinstance(coming, dict) and str(coming.get("pocinje", ""))[:10] >= today and not current):
@@ -558,7 +581,7 @@ class Tracker:
             news = [n for n in (self.waiting.get("obavestenja") or []) if isinstance(n, dict) and n.get("tekst")
                     and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
-                    "obavestenja": news[:3], "dnevni_red": self._agenda(), "hronika": self.events[-40:][::-1] if day == self.day else [],
+                    "obavestenja": news[:3], "dnevni_red": self._agenda(), "bez_potpisa": unsigned, "hronika": self.events[-40:][::-1] if day == self.day else [],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
 

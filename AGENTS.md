@@ -556,6 +556,11 @@ its minute.
   the first reading, marked as such (`WHISPER_FINAL_MODEL`, off by default: it runs only while the first reading
   has nothing to do, and still keeps the computer busy long after a sitting). When the Assembly's notes of the day
   come, they are what the site quotes; the transcript stays with the recording as what it is.
+- **The chair's words are shown too, as no one's by name** (19 Nov 2026, the maintainer's remark that the transcript
+  stops while the chair speaks). Sound in no turn is written down in shorter pieces (`CHAIR_PIECE`, after
+  `CHAIR_WAIT`), kept apart in the day's record (keys `p<second>`), shown under "Bez potpisa: predsedavajući ili
+  sala" while nobody's caption is on (snapshot `bez_potpisa`) and on `/prepis` in its place in time. It is never put
+  to an MP, never counted in anyone's time, and the day's steps are still read from it.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
