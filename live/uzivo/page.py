@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
+from . import config
 from .names import cyrillic, given_first
 
 LIVE = "https://www.parlament.gov.rs/prenosi/sednice-narodne-skupstine.2083.html"
@@ -85,11 +86,10 @@ TEXT = {
     "ag_note": "Dnevni red je sa sajta Skupštine. Tačka je gotova kad to napiše Skupština na stranici sednice ili kad "
                "predsedavajući pređe na sledeću; ovo drugo čitamo iz automatskog prepisa i može da pogreši.",
     "steps": "Šta se desilo danas",
-    "steps_lead": "Koraci sednice kako ih izgovara predsedavajući, nađeni pravilom u automatskom prepisu, i ono što "
-                  "Skupština dopiše na stranici sednice. Red iz prepisa pokazuje trenutak; imena i brojevi u njemu "
-                  "mogu biti pogrešni dok ih Skupština ne objavi.",
-    "steps_said": "automatski prepis",
+    "steps_lead": "Koraci sednice redom, najnoviji prvi.",
+    "steps_said": "po rečima predsedavajućeg, prepoznato automatski sa zvuka prenosa: može da pogreši",
     "steps_site": "sajt Skupštine",
+    "steps_site_key": "napisala Skupština na stranici sednice",
     "steps_more": "Svi koraci",
     "news": "Novo:",
     "news_page": "stranica poslanika",
@@ -246,6 +246,10 @@ def _recording(d: dict, cyr: bool) -> str:
 def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     """The part of the page that changes: who speaks now, and today's turns."""
     t = lambda k: escape(_t(k, cyr))
+    if not config.SHOW_TRANSCRIPT:  # the transcript is written down but not shown (config.SHOW_TRANSCRIPT)
+        bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci", "prepis_ceo")}
+        snap = {**snap, "bez_potpisa": None, "sada": bare(snap["sada"]) if snap.get("sada") else snap.get("sada"),
+                "danas": [bare(d) for d in snap.get("danas") or []]}
     out = [f'<div id="deo" data-checked="{snap["provereno"]}">']
     cur = snap.get("sada")
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
@@ -356,29 +360,70 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
             f'<ol>{"".join(rows)}</ol><p class="meta">{t("ag_note")}</p></details>')
 
 
+# A step heard in the chair's words, as the page writes it: our own short line for the kind of step, never the
+# sentence as the transcript has it (19 Nov 2026: the transcript's wording errs too much to be shown).
+STEP_TITLES = {"Sednica otvorena": "Sednica je otvorena", "Nastavak rada": "Rad je nastavljen", "Pauza": "Pauza",
+               "Kraj rada": "Kraj rada za danas", "Glasanje": "Glasanje", "Glasanje zaključeno": "Glasanje je zaključeno",
+               "Pretres otvoren": "Pretres je otvoren", "Pretres zaključen": "Pretres je zaključen",
+               "Mera predsedavajućeg": "Predsedavajući je izrekao meru"}
+STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
+
+
+def steps_shown(snap: dict) -> list[dict]:
+    """The day's steps as shown, newest first: [{"t", "izvor", "naslov", "opis", "url"}]. From the Assembly's page: its
+    sentence, whole. From the chair's words: the step's name (STEP_TITLES), and for a move to an agenda item its
+    number and the item as the agenda writes it; a step with nothing sure to say (an item with no number, "the
+    chair notes that…") is left out, and one repeated within a quarter of an hour is one line."""
+    from .hronika import item_no
+    items = {int(x["n"]): x["tekst"] for x in ((snap.get("dnevni_red") or {}).get("tacke") or [])}
+    out: list[dict] = []
+    last: dict[str, int] = {}
+    for e in sorted(snap.get("hronika") or [], key=lambda e: e["t"]):
+        if e.get("izvor") == "sajt":
+            out.append({"t": e["t"], "izvor": "sajt", "naslov": "", "opis": e.get("tekst", ""), "url": e.get("url", "")})
+            continue
+        kind, more = e.get("vrsta", ""), ""
+        if kind == "Tačka dnevnog reda":
+            n = item_no(e.get("tekst", ""))
+            if not n or (items and n not in items):
+                continue
+            title, more = f"Prelazak na {n}. tačku dnevnog reda", items.get(n, "")
+        else:
+            title = STEP_TITLES.get(kind, "")
+        if not title or e["t"] - last.get(title, -10 ** 9) < STEP_SAME:
+            continue
+        last[title] = e["t"]
+        out.append({"t": e["t"], "izvor": "prepis", "naslov": title, "opis": more, "url": ""})
+    return out[::-1]
+
+
 def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
-    """The day's steps, newest first (hronika.py): the time, what the step is, the sentence it was found in, and where
-    the line is from. The first eight shown, the rest folded."""
-    rows = snap.get("hronika") or []
+    """The day's steps as a line of time, newest first (steps_shown): the hour, a mark for where the line is from
+    (a ring: heard in the chair's words; a full dot: written by the Assembly), and the line. The first six shown,
+    the rest folded."""
+    rows = steps_shown(snap)
     if not rows:
         return ""
     t = lambda k: escape(_t(k, cyr))
+    s = lambda x: escape(_name(x, cyr))
 
     def line(e: dict) -> str:
-        if e.get("izvor") == "sajt":
+        if e["izvor"] == "sajt":
             src = t("steps_site")
-            if str(e.get("url", "")).startswith("https://"):
-                src = f'<a href="{escape(e["url"])}">{src}</a>'
-            head = ""
+            if str(e["url"]).startswith("https://"):
+                src = f'<a href="{escape(e["url"])}">{src} ↗</a>'
+            body = f'<p class="st-text">{s(e["opis"])}</p><p class="st-src">{src}</p>'
         else:
-            src, head = t("steps_said"), f'<b>{escape(_name(e.get("vrsta", ""), cyr))}</b> '
-        return (f'<li><span class="time">{_clock(e["t"], tz)}</span><span>{head}{escape(_name(e["tekst"], cyr))} '
-                f'<span class="src">{src}</span></span></li>')
-    first, rest = rows[:8], rows[8:]
+            body = f'<p class="st-title">{s(e["naslov"])}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
+        return (f'<li class="st-{e["izvor"]}"><span class="time">{_clock(e["t"], tz)}</span><i aria-hidden="true"></i>'
+                f'<div>{body}</div></li>')
+    first, rest = rows[:6], rows[6:]
     more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
             if rest else "")
+    key = (f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t("steps_said")}</span>'
+           f'<span class="st-sajt"><i aria-hidden="true"></i>{t("steps_site_key")}</span></p>')
     return (f'<section class="steps-sec"><h2>{t("steps")}</h2><p class="meta">{t("steps_lead")}</p>'
-            f'<ol class="steps">{"".join(line(e) for e in first)}</ol>{more}</section>')
+            f'<ol class="steps">{"".join(line(e) for e in first)}</ol>{more}{key}</section>')
 
 
 def _tiles(turns: list[dict], *, cyr: bool) -> str:
@@ -827,9 +872,19 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .agenda li i { font-style: normal; font-weight: 700; } .agenda li .src { display: block; margin: .15rem 0 0; } .ag-what { display: block; color: var(--muted); font-size: .9rem; }
 .ag-gotova > span > b, .ag-gotova { color: var(--muted); } .ag-gotova i { color: var(--za); } .ag-u_toku i { color: var(--protiv); } .ag-u_toku, .ag-na_redu { font-weight: 600; } .agenda li .src, .ag-what { font-weight: 400; }
 .steps-sec { order: 4; } .steps-sec h2 { margin-bottom: .2rem; }
-.steps { list-style: none; margin: .6rem 0 0; padding: 0; } .steps li { display: grid; grid-template-columns: 3.2rem 1fr; gap: .6rem; padding: .5rem 0; border-top: 1px solid var(--line); line-height: 1.45; }
-.steps .time { color: var(--muted); font-variant-numeric: tabular-nums; } .steps .src { display: inline-block; margin: 0 0 0 .3rem; font-size: .68rem; }
-.steps-sec details { margin-top: .5rem; } .steps-sec summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
+.steps { list-style: none; margin: .9rem 0 0; padding: 0; }
+.steps li { display: grid; grid-template-columns: 2.9rem 1.1rem 1fr; gap: 0 .55rem; position: relative; padding: 0 0 1.05rem; line-height: 1.45; }
+.steps li::before { content: ""; position: absolute; left: calc(2.9rem + .55rem + .55rem - 1px); top: 1.1rem; bottom: -.3rem; width: 2px; background: var(--line); }
+.steps li:last-child::before { display: none; } .steps li:last-child { padding-bottom: .2rem; }
+.steps .time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .9rem; padding-top: .08rem; text-align: right; }
+.steps li > i, .st-key i { box-sizing: border-box; width: .7rem; height: .7rem; border-radius: 50%; border: 2px solid var(--fg); background: var(--bg); }
+.steps li > i { margin: .38rem auto 0; position: relative; z-index: 1; } .steps li.st-sajt > i { background: var(--fg); }
+.steps p { margin: 0; } .st-title { font-weight: 650; } .st-what { color: var(--muted); font-size: .92rem; margin-top: .1rem; }
+.st-text { max-width: 42rem; font-size: .97rem; } .st-src { font-size: .8rem; color: var(--muted); margin-top: .2rem; } .st-src a { color: inherit; }
+.st-key { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; margin: .9rem 0 0; padding-top: .6rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); }
+.st-key span { display: inline-flex; align-items: baseline; gap: .4rem; } .st-key i { flex: none; width: .6rem; height: .6rem; border-color: var(--muted); align-self: center; } .st-key .st-sajt i { background: var(--muted); }
+.steps-sec { border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; margin-top: 1rem; } .steps-sec h2 { margin-top: 0; }
+.steps-sec details { margin-top: .2rem; } .steps-sec details[open] summary { margin-bottom: .2rem; } .steps-sec summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
 .said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
 .pz-next { margin: 0 0 .9rem; }
 /* The top of the page (19 Nov 2026, the maintainer's request: the old line of text was cramped): what the page is in

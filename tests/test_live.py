@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "live"))
 
 from uzivo import config  # noqa: E402
+config.SHOW_TRANSCRIPT = True  # the tests of the transcript's showing; off on the page by default
 from uzivo.caption import differs, read, tidy, who  # noqa: E402
 from uzivo.names import Roster, cyrillic, given_first, latin, normalize  # noqa: E402
 from uzivo.page import fragment, page  # noqa: E402
@@ -746,7 +747,7 @@ def test_the_days_steps_from_the_chairs_words_and_the_assemblys_page(tmp_path, m
     assert watcher.look(now=now + 300) == 0 and watcher.look(now=now + 900) == 1  # the first reading is the start, the second brings what is new
     html = fragment(t.snapshot(now=now + 901), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Šta se desilo danas" in html and "Narodni poslanici izabrali su predsednika" in html and "sajt Skupštine" in html
-    assert "<b>Tačka dnevnog reda</b> Prelazimo na drugu tačku dnevnog reda." in html and "automatski prepis" in html
+    assert "Prelazak na 2. tačku dnevnog reda" in html and "prepoznato automatski" in html
 
 
 def test_the_agenda_under_the_broadcast_says_which_items_are_done_and_by_whose_word():
@@ -848,3 +849,30 @@ def test_the_days_steps_wear_the_corrections_too(tmp_path):
     rows = t.snapshot(now=now + 1)["hronika"]
     assert rows[1]["tekst"] == "Dobar dan, poštovane, pre nego što nastavim." and rows[0]["tekst"] == "prenego"  # the Assembly's own words are left as they are
     assert t.events[0]["tekst"].startswith("Dobar dan, pošto vene")  # kept as written
+
+
+def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines(monkeypatch):
+    from uzivo import page as page_
+    now = 1795089600.0
+    snap = {"provereno": 0, "stanje": "nepoznato", "sada": None, "danas": [], "dan": "2026-11-19", "ranije": False,
+            "bez_potpisa": {"od": now, "tekst": "pošto vene postanici"},
+            "dnevni_red": {"naslov": "Prva sednica", "url": "", "tacke": [
+                {"n": 1, "tekst": "Izbor predsednika", "stanje": "gotova", "izvor": "sajt", "kada": "", "sta": ""},
+                {"n": 2, "tekst": "Izbor potpredsednika", "stanje": "u_toku", "izvor": "prepis", "kada": "", "sta": ""}]},
+            "hronika": [
+                {"t": now + 900, "vrsta": "Sajt Skupštine", "tekst": "Narodna skupština je izabrala potpredsednike.", "izvor": "sajt", "url": "https://www.parlament.gov.rs/x"},
+                {"t": now + 400, "vrsta": "Predsedavajući konstatuje", "tekst": "Konstatujem da je krada.", "izvor": "prepis", "url": ""},
+                {"t": now + 300, "vrsta": "Tačka dnevnog reda", "tekst": "Prelazimo na drugu tačku dnevnog reda.", "izvor": "prepis", "url": ""},
+                {"t": now + 200, "vrsta": "Tačka dnevnog reda", "tekst": "po tački dnevnog reda", "izvor": "prepis", "url": ""},
+                {"t": now + 60, "vrsta": "Nastavak rada", "tekst": "nastavljamo sa radom", "izvor": "prepis", "url": ""},
+                {"t": now, "vrsta": "Nastavak rada", "tekst": "pošto vene postanici, nastavljamo sednicu prenego", "izvor": "prepis", "url": ""}]}
+    rows = page_.steps_shown(snap)
+    assert [(r["naslov"], r["opis"]) for r in rows] == [
+        ("", "Narodna skupština je izabrala potpredsednike."), ("Prelazak na 2. tačku dnevnog reda", "Izbor potpredsednika"),
+        ("Rad je nastavljen", "")]  # the Assembly's sentence whole; ours by rule; the repeated and the unsure left out
+    monkeypatch.setattr(config, "SHOW_TRANSCRIPT", False)
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "pošto vene" not in html and "/prepis" not in html and "Bez potpisa" not in html
+    assert "Rad je nastavljen" in html and "Izbor potpredsednika" in html and "krada" not in html
+    cir = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Рад је настављен" in cir and "Прелазак на 2. тачку дневног реда" in cir

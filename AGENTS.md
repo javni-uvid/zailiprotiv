@@ -561,6 +561,16 @@ its minute.
   `CHAIR_WAIT`), kept apart in the day's record (keys `p<second>`), shown under "Bez potpisa: predsedavajući ili
   sala" while nobody's caption is on (snapshot `bez_potpisa`) and on `/prepis` in its place in time. It is never put
   to an MP, never counted in anyone's time, and the day's steps are still read from it.
+- **The transcript is written down but not shown** (19 Nov 2026, the maintainer's decision: it errs too much and
+  does more harm than good). `PREPIS_PRIKAZ=1` shows it again (`config.SHOW_TRANSCRIPT`); off, the page has no
+  "Šta govori", no "Bez potpisa", no words tile, no links to `/prepis`, and `/prepis` leads back to the page. The
+  writing goes on: the day's steps and the agenda's progress are read from it.
+- **"Šta se desilo danas" never shows the transcript's wording** (`page.steps_shown`). A step heard in the chair's
+  words is our own short line for its kind (`STEP_TITLES`: "Rad je nastavljen", "Pauza"…), a move to an agenda item
+  with its number and the item as the agenda writes it; a step with nothing sure to say (an item with no number or
+  one the agenda lacks, "konstatujem da…") is left out, and the same step within a quarter of an hour is one line.
+  The Assembly's own sentences from the sitting's page are shown whole, with the link. Drawn as a line of time: a
+  ring for what was heard (automatic, may err), a full dot for what the Assembly wrote; the key is under the list.
 - **Trying another Whisper model** without touching the service: `python -m uzivo.proba <model> [seconds]` in the
   container (`live/uzivo/proba.py`) listens to the kept sound, writes it down with the running model and the named
   one, and prints the time and the text of each. It shares the processor with the service while it runs.

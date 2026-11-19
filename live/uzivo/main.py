@@ -11,7 +11,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
 from . import config, hronika, picture, prepis, worker
 from .stream import VIDEO
@@ -112,6 +112,8 @@ _said: dict[bool, tuple[float, str]] = {}
 
 def _transcript(cyr: bool) -> HTMLResponse:
     """The day's automatic transcript (prepis.py), put together at most once in twenty seconds per script."""
+    if not config.SHOW_TRANSCRIPT:  # written down, not shown: the address leads back to the page
+        return RedirectResponse("/cir/" if cyr else "/", status_code=302)
     now = time.monotonic()
     kept = _said.get(cyr)
     if not kept or now - kept[0] > PICTURE_KEEP:

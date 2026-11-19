@@ -59,6 +59,9 @@ WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "small").strip()
 # A finished turn read again by a better model, shown in place of the first reading (prepis.Writer.step_whole).
 # Off unless named ("medium"): it keeps the computer busy for hours after a long sitting.
 WHISPER_FINAL_MODEL = os.environ.get("WHISPER_FINAL_MODEL", "").strip()
+# Whether the transcript is shown on the page (19 Nov 2026, the maintainer's decision: no, it errs too much and does
+# more harm than good; it is still written down, for the day's steps and the agenda). "1" shows it again.
+SHOW_TRANSCRIPT = os.environ.get("PREPIS_PRIKAZ", "0").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
 WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
 WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()
