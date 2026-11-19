@@ -72,7 +72,9 @@ jobs:
           # A newer convocation with no law yet is read beside the current one; with its first law it becomes the
           # current one (config.CURRENT).
           newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
-          if { [ -z "${IN_CONVOCATION}" ] || [ "${IN_CONVOCATION}" = "tekući" ]; } && [ "$newest" != "$conv" ]; then
+          # Whenever the current one is read, however it was named: the clock's runs name it by number (19 Nov 2026:
+          # for that the newer convocation's MPs, their occupations and its recordings went unread for a day).
+          if [ "$conv" = "$current" ] && [ "$newest" != "$conv" ]; then
             n="--convocation $newest"
             uv run zailiprotiv $n index && uv run zailiprotiv $n laws && uv run zailiprotiv $n votes && uv run zailiprotiv $n link || true
             uv run zailiprotiv $n videos || true
