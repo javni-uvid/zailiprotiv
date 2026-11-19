@@ -76,19 +76,47 @@ def find(text: str) -> list[tuple[str, str]]:
 _FLOOR = re.compile(r"(?=\b(?:reč ima|ima reč)\b([^.!?]{0,90}))")  # a look ahead: two in one sentence are both found
 
 
+FLOOR_NEAR = 0.74  # how alike a heard word and a name's word must be at the least ("Jova" for Jovo)
+FLOOR_CLEAR = 0.08  # and how far ahead of the next nearest MP the nearest must be
+_TITLES = {"poslanik", "poslanica", "poslanice", "kolega", "koleginica", "gospodin", "gospodja", "profesor", "profesorka",
+           "doktor", "doktorka", "dr", "prof", "ima", "rec", "narodni", "narodna"}
+
+
 def floor(text: str, people: list) -> list:
     """Whom the chair gave the floor to in a piece of text ("Reč ima narodni poslanik Jovo Bakić"): the sitting MPs
-    (names.Person) named right after the phrase. Strict, since Whisper errs in names and a wrong one would put a
-    speech in someone's mouth: every word of the MP's name, whole (but for diacritics), among the seven words after
-    the phrase, and exactly one MP fitting. Anything less names nobody."""
+    (names.Person) named in the seven words after the phrase. Whisper errs in names, so after that phrase a name is
+    also guessed (19 Nov 2026, the maintainer's decision; the line gives the floor, it puts no words in anyone's
+    mouth), in this order:
+    1. every word of one MP's name, whole but for diacritics;
+    2. the nearest MP by every word of the name (a heard word, or two heard words joined: "Krko Babić"), each at
+       least FLOOR_NEAR alike, and clearly nearer than the next MP (FLOOR_CLEAR);
+    3. a surname alone, whole, that only one sitting MP has, right after a title ("kolega Bakić"), not after a
+       given name we do not know (a minister or a guest of the same surname is not that MP).
+    Two MPs fitting equally: nobody."""
+    from difflib import SequenceMatcher
     from .ispravke import fold
-    names = [({fold(w) for w in p.name.split()}, p) for p in people if len(p.name.split()) >= 2]
+    names = [([fold(w) for w in p.name.split()], p) for p in people if len(p.name.split()) >= 2]
+    alike = lambda a, b: 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
     out = []
     for m in _FLOOR.finditer(" ".join(latin(text).split()).lower()):
-        said = {fold(w) for w in re.findall(r"[^\W\d_]+", m.group(1))[:7]}
-        hits = [p for ws, p in names if ws <= said]
-        if len(hits) == 1 and hits[0] not in out:
-            out.append(hits[0])
+        said = [fold(w) for w in re.findall(r"[^\W\d_]+", m.group(1))[:7]]
+        if not said:
+            continue
+        heard = said + [a + b for a, b in zip(said, said[1:])]
+        hits = [p for ws, p in names if set(ws) <= set(said)]
+        hit = hits[0] if len(hits) == 1 else None
+        if hit is None and not hits:
+            scored = sorted(((min(max(alike(w, h) for h in heard) for w in ws), p) for ws, p in names), key=lambda x: -x[0])
+            if scored and scored[0][0] >= FLOOR_NEAR and (len(scored) == 1 or scored[0][0] - scored[1][0] >= FLOOR_CLEAR):
+                hit = scored[0][1]
+        if hit is None and not hits:
+            for i, w in enumerate(said):
+                mine = [p for ws, p in names if w in ws[:-1] and len(w) >= 5]  # the site writes the surname first
+                if len(mine) == 1 and len(mine[0].name.split()) == 2 and (i == 0 or said[i - 1] in _TITLES):
+                    hit = mine[0]
+                    break
+        if hit is not None and hit not in out:
+            out.append(hit)
     return out
 
 

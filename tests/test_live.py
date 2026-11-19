@@ -938,7 +938,10 @@ def test_the_floor_given_by_the_chairs_word_when_the_picture_names_nobody():
     assert got("Hvala. Reč ima narodni poslanik Jovo Bakić. Izvolite.") == ["bakic-jovo"]
     assert got("Реч има народна посланица Наташа Јовановић.") == ["jovanovic-natasa"]
     assert got("Reč ima Jovo Bakic, a posle njega ima reč Milenko Jovanov.") == ["bakic-jovo", "jovanov-milenko"]  # diacritics lost: still whole
-    assert got("Reč ima narodni poslanik Jova Bakič.") == []  # a letter off: nobody
+    assert got("Reč ima narodni poslanik Jova Bakič.") == ["bakic-jovo"]  # a letter off after "reč ima": the nearest, clearly
+    assert got("Reč ima Milenko Jovanof.") == ["jovanov-milenko"] and got("Reč ima Nataša Jovano Vić.") == ["jovanovic-natasa"]
+    assert got("Reč ima kolega Bakić.") == ["bakic-jovo"] and got("Reč ima ministar Marko Bakić.") == []  # a surname alone after a title, not after a name we do not know
+    assert got("Reč ima koleginica Petrović.") == [] and got("Reč ima Zoran Lutovac.") == []  # two of that surname; nobody near
     assert got("Reč ima Ana Petrović.") == ["petrovic-ana"] and got("Reč ima Ana Marija Petrović.") == []  # two fit: nobody
     assert got("Jovo Bakić je to rekao. Reč ima predstavnik predlagača.") == []  # named elsewhere, not after the phrase
     now = 1795089600.0

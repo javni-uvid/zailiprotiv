@@ -589,8 +589,10 @@ its minute.
   break is), never as the writer of what the page says.
 - **"Reč ima: …" from the chair's words, while the picture names nobody** (19 Nov 2026: that afternoon the
   broadcast showed no captions at all, the frame checked). `hronika.floor`: after "reč ima" / "ima reč" the next
-  seven words must hold every word of exactly one sitting MP's name, whole but for diacritics; anything less names
-  nobody. Shown in the day's steps as a lighter line with a link to the MP's page, and not where a turn read from
+  seven words must name one sitting MP: every word of the name whole but for diacritics, or, as a guess the
+  maintainer allowed after that phrase, the clearly nearest MP by every word of the name (`FLOOR_NEAR`,
+  `FLOOR_CLEAR`; "Jova Bakič", "Krko Babić"), or a surname alone that only one MP has, right after a title
+  ("kolega Jovanov") and never after a given name we do not know. Two MPs fitting: nobody. Shown in the day's steps as a lighter line with a link to the MP's page, and not where a turn read from
   the picture stands. No time at the rostrum is counted from it (the end of the speech is not known), and nobody
   is ever named from a face.
 - **Trying another Whisper model** without touching the service: `python -m uzivo.proba <model> [seconds]` in the
