@@ -29,6 +29,17 @@ from .names import Person, Roster
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 
 
+SURE_FRAMES = 4  # a turn with no line under the name read in any frame is kept only from this many frames on
+
+
+def counted(t: dict) -> bool:
+    """Whether a turn goes into the day's list: read in two frames or more, and either with the line under the name
+    (the list or office, which every real caption has) read at least once, or long enough to be no chance reading.
+    19 Nov 2026: two turns of two frames each, no second line, named an MP who had not spoken; something else on the
+    screen had been read as a name. The same rule for every name."""
+    return t.get("n", 0) >= 2 and bool(t.get("role") or t.get("n", 0) >= SURE_FRAMES)
+
+
 SAID_LEAD = 6  # seconds: a turn's sound begins this long before its first frame (the caption comes up late)
 SAID_TAIL = 420  # characters of the newest transcript shown with the speaker
 
@@ -301,7 +312,7 @@ class Tracker:
             if f.stem >= self.day:
                 continue
             try:
-                turns = [t for t in json.loads(f.read_text(encoding="utf-8")).get("turns", []) if t["n"] >= 2]
+                turns = [t for t in json.loads(f.read_text(encoding="utf-8")).get("turns", []) if counted(t)]
             except (OSError, ValueError, KeyError):
                 continue
             if turns:
@@ -364,7 +375,7 @@ class Tracker:
             current = self._out(self._named([self.turns[-1]])[0]) if self.open and self.turns else None
             # A turn read in a single frame is shown while it lasts, and left out of the day's list after.
             done = [self._out(t) for t in self._named(
-                [t for t in self.turns if t["n"] >= 2 and not (self.open and t is self.turns[-1])])]
+                [t for t in self.turns if counted(t) and not (self.open and t is self.turns[-1])])]
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
             recorded, parts = False, []
             rec = self.recording
@@ -452,7 +463,8 @@ class Tracker:
                         "servis prenos nije video.",
             "pokriveno": [{"od": int(a), "do": int(b)} for a, b in cover],
             "govori": [{"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
-                        "od": int(t["start"]), "do": int(t["seen"]), "okvira": t["n"], "video": t.get("video", ""),
+                        "od": int(t["start"]), "do": int(t["seen"]), "okvira": t["n"] if counted(t) or t["n"] < 2 else 1,  # a turn not kept reads as a single frame to the site, which drops those
+                        "video": t.get("video", ""),
                         "sq_od": t.get("sq_start"), "sq_do": t.get("sq_seen"), "segment": t.get("seg")}
                        for t in (self._named(turns, merge=False) if self.roster else turns)],
         }

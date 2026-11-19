@@ -29,6 +29,19 @@ def w(text, conf=95):
     return [(x, conf) for x in text.split()]
 
 
+
+import pytest  # noqa: E402
+from uzivo import state as _state  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _short_turns_without_a_second_line(request, monkeypatch):
+    """These tests read turns of a few frames with no line under the name, to test other things; the rule that such
+    a turn needs more frames (state.counted) has its own test, marked to keep the real number."""
+    if "real_frames" not in request.keywords:
+        monkeypatch.setattr(_state, "SURE_FRAMES", 2)
+
+
 def test_scripts():
     assert latin("Љиљана Ђорђевић") == "Ljiljana Đorđević"
     assert cyrillic("Ljiljana Đorđević") == "Љиљана Ђорђевић"
@@ -660,3 +673,23 @@ def test_the_sound_is_found_in_a_format_of_its_own_when_the_picture_has_none():
     assert sound_format(formats) == "a-low" and sound_format(formats[:1]) == ""
     unsaid = [formats[0], {"format_id": "233-0", "protocol": "m3u8_native", "vcodec": "none", "url": "a"}]
     assert sound_format(unsaid) == "a"  # the sound track's codec left unsaid, as yt-dlp does for a playlist's tracks
+
+
+@pytest.mark.real_frames
+def test_a_name_read_in_two_frames_with_no_line_under_it_is_not_a_turn():
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    for s_ in (0, 5, 10):
+        t.observe(petar, "Lista za primer", now=now + s_)  # a real caption: the list under the name
+    for s_ in (60, 75):
+        t.observe(marko, now=now + s_)  # something read as a name, twice, nothing under it
+    for s_ in (120, 180, 240):
+        t.observe(None, now=now + s_)  # nothing read: the reading ends
+    for s_ in (500, 505, 510, 515):
+        t.observe(marko, now=now + s_)  # no second line either, but long enough
+    t.observe(None, now=now + 600)
+    t.observe(None, now=now + 660)
+    snap = t.snapshot(now=now + 661)
+    assert [(d["ime"], d["od"]) for d in snap["danas"]] == [("Jovanović Marko", int(now + 500)), ("Petrović Petar", int(now))]

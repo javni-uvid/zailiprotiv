@@ -39,10 +39,14 @@ def _plain(text: str) -> str:
     return text.translate(_TABLE).replace("‌", "")
 
 
+_HOURS = re.compile(r"(?<=\d)(\s?)h\b")  # "5 h 52 min": the hour's sign is "ч" (час), not the letter "х"
+
+
 def cyr(text: str) -> str:
     """Latin Serbian text in Cyrillic."""
     if not _LATIN.search(text):
         return text
+    text = _HOURS.sub(lambda m: m.group(1) + "ч", text)
     out, last = [], 0
     for m in _PROTECT.finditer(text):
         out += [_plain(text[last:m.start()]), m.group()]

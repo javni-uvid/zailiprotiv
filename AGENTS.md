@@ -480,6 +480,11 @@ its minute.
   anything is added (this time it showed "YоуТубе" and hours as "х": foreign names are written as said, "Jutjub").
   The clock's hourly run named the current convocation by number, so the newer one's MPs, occupations and recordings
   went unread for a day: `votes.yml` now reads the newer one whenever the current one is read.
+- **A name with nothing under it** (19 Nov 2026): the live page listed two turns of an MP who had not spoken, each
+  read in two frames with no second line. `state.counted`: a turn goes into the day's list when read in two frames
+  or more and either the line under the name (the list or office, which every real caption has) was read at least
+  once, or it lasted four frames or more; the day's record gives a turn not counted as one frame, which the site
+  drops. The same rule for every name.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

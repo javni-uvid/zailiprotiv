@@ -29,3 +29,4 @@ artifacts = ["src/zailiprotiv/templates/*", "src/zailiprotiv/static/*", "src/zai
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["real_frames: a live-page test that keeps the real number of frames a turn without a second line needs"]
