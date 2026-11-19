@@ -1074,6 +1074,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                  "days": len(_days_now), "sitting": sitting}
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, divisive=divisive, newer=newer,
+        notices_now=[n for n in pages_mikrofon.notices(root) if n["od"] <= built[:10] <= (n["do"] or "9999")],
         quiz_laws=getattr(pages_quiz.render, "laws", []), floor_top=getattr(pages_floor.render, "top", {}).get(active),
         last_sitting=last_sitting, last_sitting_slug=sitting_page(last_sitting[0]["final"]["sitting"], last_sitting[0]["final"]["sitting_title"]) if last_sitting else "",
         stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",

@@ -153,6 +153,20 @@ TEXT = {
 }
 
 
+# The site's mark (the chamber as one arc, "za" blue and "protiv" orange), and this page's own beside it: a microphone
+# drawn the same way, its capsule in the one colour and its cradle and stand in the other (19 Nov 2026).
+ARC = ('<svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/>'
+       '<path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg>')
+MIC = ('<svg class="mic-mark" viewBox="0 0 76 84" role="img" aria-label="Mikrofon"><rect class="m-za" x="26" y="6" width="24" height="40" rx="12"/>'
+       '<path class="m-protiv" d="M 12 36 A 26 26 0 0 0 64 36"/><path class="m-protiv" d="M 38 62 V 78"/></svg>')
+
+
+def _brand(cyr: bool) -> str:
+    words = ('<span class="w-za">За</span> или <span class="w-protiv">Против</span>' if cyr
+             else '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>')
+    return ARC + f"<span>{words}</span>"
+
+
 def _fill(text: str, *values) -> str:
     """A text with %1, %2… filled in (the marks survive Cyrillic, which braces' names would not)."""
     for i, v in enumerate(values, 1):
@@ -347,8 +361,7 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
         rows.append(f'<article id="t{int(d["od"])}"><h2>{nm} <span class="meta">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}'
                     f' · {_minutes(d["sekundi"])} {t("min")}</span></h2><p>{text}</p></article>')
     body = "".join(rows) or f'<p class="meta">{t("said_none")}</p>'
-    brand = ('<span class="w-za">За</span> или <span class="w-protiv">Против</span>' if cyr
-             else '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>')
+    brand = _brand(cyr)
     return f"""<!doctype html>
 <html lang="{"sr-Cyrl" if cyr else "sr-Latn"}">
 <head>
@@ -360,7 +373,7 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
 <style>{CSS}</style>
 </head>
 <body>
-<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><a href="{base}">{t("said_back")}</a></header>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{base}">{t("said_back")}</a></span></header>
 <main class="said-page">
 <h1>{t("said_title")}{", " + escape(cyrillic(when) if cyr else when) if when else ""}</h1>
 <p class="lead">{t("said_lead")}</p>
@@ -656,7 +669,11 @@ CSS = """
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 a { color: var(--fg); text-underline-offset: 2px; } a:hover { color: var(--za); }
 .top { display: flex; flex-wrap: wrap; gap: 0 2rem; align-items: baseline; justify-content: space-between; max-width: 760px; margin: 0 auto; padding: 1rem 20px .6rem; border-bottom: 3px solid var(--fg); }
-.brand { font-family: var(--serif); font-weight: 700; font-size: 1.5rem; text-decoration: none; letter-spacing: -.01em; }
+.brand { font-family: var(--serif); font-weight: 700; font-size: 1.5rem; text-decoration: none; letter-spacing: -.01em; display: inline-flex; align-items: center; gap: .5rem; }
+.brand-mark { width: 2.1rem; height: auto; flex: none; } .brand-mark path, .mic-mark path, .mic-mark rect { fill: none; stroke-width: 16; }
+.mic-mark { width: 1.35rem; height: auto; display: block; } .mic-mark path, .mic-mark rect { stroke-width: 9; }
+.m-za { stroke: var(--za); } .m-protiv { stroke: var(--protiv); }
+.top { align-items: center; } .top-r { display: inline-flex; align-items: center; gap: .9rem; } .top-r .mic { display: block; }
 .brand .w-za { color: var(--za); } .brand .w-protiv { color: var(--protiv); }
 main { max-width: 760px; margin: 0 auto; padding: 0 20px 3rem; }
 h1, h2 { font-family: var(--serif); font-weight: 700; letter-spacing: -.015em; }
@@ -1062,8 +1079,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     alt = (f'<link rel="canonical" href="{escape(url + base[1:])}">'
            f'<link rel="alternate" hreflang="sr-Latn" href="{escape(url)}">'
            f'<link rel="alternate" hreflang="sr-Cyrl" href="{escape(url + "cir/")}">') if url else ""
-    brand = ('<span class="w-za">За</span> или <span class="w-protiv">Против</span>' if cyr
-             else '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>')
+    brand = _brand(cyr)
     return f"""<!doctype html>
 <html lang="{lang}">
 <head>
@@ -1077,7 +1093,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <style>{CSS}</style>
 </head>
 <body data-base="{base}">
-<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></header>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
 <main>
 <h1>{t("title")}</h1>
 <p class="lead">{t("intro")} <a href="{escape(home)}">{"За или Против" if cyr else "Za ili Protiv"}</a>{t("intro_end")}</p>

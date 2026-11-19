@@ -2,7 +2,8 @@
 {% from "macros.html" import bar, chamber, plural, how with context %}
 {% block title %}Za ili Protiv: svako glasanje u Skupštini Srbije od 2012.{% endblock %}
 {% block main %}
-{% from "macros.html" import live_bar with context %}{{ live_bar() }}
+{# On the home page the bar leads to "Ko sada govori" alone, which has the broadcast on it (19 Nov 2026, the maintainer's decision). #}
+{% from "macros.html" import live_bar with context %}{{ live_bar(false) }}
 <section class="home-hero">
   <div class="hero-text">
     <h1>Svaki glas i svaka reč iz Skupštine</h1>
@@ -40,6 +41,7 @@
 {# The newest convocation before its first law: who sits in it, who has spoken, what its first sitting decides (site.py). #}
 <section class="home-conv" aria-labelledby="hc">
   <p class="kicker">Novi saziv · od {{ newer.since|day_of }}</p>
+  {% for n in notices_now %}<p class="hc-news"><b>Novo:</b> {{ n.tekst }} <a href="{{ n.url }}">{{ n.izvor or "izvor" }}</a>{% if n.adresa %} · <a href="poslanik/{{ n.adresa }}.html">stranica poslanika</a>{% endif %}</p>{% endfor %}
   <h2 id="hc"><a href="{{ newer.page }}">{{ newer.name }} saziv: {{ newer.n }} poslanika, {{ newer.new }} bez ijednog glasanja od 2012.</a></h2>
   <div class="hc-seats" role="img" aria-label="Mandati po poslaničkim grupama">{% for g in newer.seats %}<i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}" style="flex-grow:{{ g.n }}"></i>{% endfor %}</div>
   <ul class="hc-key">{% for g in newer.seats %}<li><i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}"></i><span>{{ g.name }}</span><b>{{ g.n }}</b></li>{% endfor %}</ul>
