@@ -1113,6 +1113,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     floor_totals = getattr(pages_floor.render, "totals", {})
     pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),
                           notices_=pages_mikrofon.notices(root),
+                          sittings_=[x["url"] for x in (env.globals.get("newer15") or {}).get("sittings", [])],
                           quiz_=pages_mikrofon.quiz(numbers=numbers, totals=floor_totals, active=active, items=items),
                           facts_=pages_mikrofon.facts(
         stats=stats, numbers=numbers, items=items, most_against=most_against, active=active, totals=floor_totals))

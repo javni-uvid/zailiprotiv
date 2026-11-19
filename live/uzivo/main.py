@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 
-from . import config, picture, prepis, worker
+from . import config, hronika, picture, prepis, worker
 from .stream import VIDEO
 from .page import fragment, page, transcript_page
 from .state import Tracker
@@ -32,6 +32,7 @@ async def lifespan(_: FastAPI):
     threading.Thread(target=worker.run, args=(tracker, _stop), daemon=True).start()
     if prepis.on():
         prepis.Writer(tracker, _stop).start()
+    hronika.Watcher(tracker, _stop).start()
     yield
     _stop.set()
 

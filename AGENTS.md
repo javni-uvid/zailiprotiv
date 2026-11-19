@@ -516,6 +516,16 @@ its minute.
   once its notes hold a reply or a measure; its new MPs, on no roll call yet, get their names and pages from the
   Assembly's list (`extra`). The home page shows its counts in place of the dashed box, and a new MP's "Ukratko"
   has a tile of speeches in the notes. Tested with made-up notes; the real ones are only in the bucket.
+- **"Šta se desilo danas"** (19 Nov 2026, the maintainer's decision; `live/uzivo/hronika.py`). The chair has no
+  caption, so the chair's sound used to be thrown away; now sound in no turn, once 45 s old (no turn begins
+  there), is written down too, never shown as anyone's speech, and searched with every other piece for the set
+  phrases of the procedure (`hronika.RULES`: an agenda item, a debate opened or closed, a vote, a break, a measure,
+  what the chair "konstatuje"): each hit is a line of the day with the sentence it was found in. A second source,
+  named beside its lines: the sitting's page at the Assembly (`sednice` in `mikrofon-cekanje.json`), read every ten
+  minutes while a broadcast is on, each sentence new since the last reading a line in the Assembly's words (the
+  first reading is the start, not news). The notices and that list are fetched every ten minutes as well. Nothing
+  is summed up; a line from the transcript points at the moment and is no result (Whisper errs in names and
+  numbers), which the page says. Kept per day in `/data/hronika/`.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

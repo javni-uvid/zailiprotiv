@@ -66,6 +66,13 @@ TEXT = {
     "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
     "share_day": "Podeli presek dana",
     "share_tall": "Uspravna slika za priču",
+    "steps": "Šta se desilo danas",
+    "steps_lead": "Koraci sednice kako ih izgovara predsedavajući, nađeni pravilom u automatskom prepisu, i ono što "
+                  "Skupština dopiše na stranici sednice. Red iz prepisa pokazuje trenutak; imena i brojevi u njemu "
+                  "mogu biti pogrešni dok ih Skupština ne objavi.",
+    "steps_said": "automatski prepis",
+    "steps_site": "sajt Skupštine",
+    "steps_more": "Svi koraci",
     "news": "Novo:",
     "news_page": "stranica poslanika",
     "coming": "Sledeća sednica",
@@ -243,7 +250,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
-    out.append(f'</section><section class="said-sec">{said}</section><section class="day">')
+    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
@@ -285,6 +292,31 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append("</section></div>")
     return "\n".join(out)
 
+
+
+def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
+    """The day's steps, newest first (hronika.py): the time, what the step is, the sentence it was found in, and where
+    the line is from. The first eight shown, the rest folded."""
+    rows = snap.get("hronika") or []
+    if not rows:
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+
+    def line(e: dict) -> str:
+        if e.get("izvor") == "sajt":
+            src = t("steps_site")
+            if str(e.get("url", "")).startswith("https://"):
+                src = f'<a href="{escape(e["url"])}">{src}</a>'
+            head = ""
+        else:
+            src, head = t("steps_said"), f'<b>{escape(_name(e.get("vrsta", ""), cyr))}</b> '
+        return (f'<li><span class="time">{_clock(e["t"], tz)}</span><span>{head}{escape(_name(e["tekst"], cyr))} '
+                f'<span class="src">{src}</span></span></li>')
+    first, rest = rows[:8], rows[8:]
+    more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
+            if rest else "")
+    return (f'<section class="steps-sec"><h2>{t("steps")}</h2><p class="meta">{t("steps_lead")}</p>'
+            f'<ol class="steps">{"".join(line(e) for e in first)}</ol>{more}</section>')
 
 
 def _tiles(turns: list[dict], *, cyr: bool) -> str:
@@ -719,6 +751,10 @@ main > h1, main > .lead { order: 0; }
 #deo { display: contents; }
 .news { order: 0; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: .98rem; line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--protiv); margin-right: .3rem; }
 .sp-top { order: 1; } main > .player { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
+.steps-sec { order: 4; } .steps-sec h2 { margin-bottom: .2rem; }
+.steps { list-style: none; margin: .6rem 0 0; padding: 0; } .steps li { display: grid; grid-template-columns: 3.2rem 1fr; gap: .6rem; padding: .5rem 0; border-top: 1px solid var(--line); line-height: 1.45; }
+.steps .time { color: var(--muted); font-variant-numeric: tabular-nums; } .steps .src { display: inline-block; margin: 0 0 0 .3rem; font-size: .68rem; }
+.steps-sec details { margin-top: .5rem; } .steps-sec summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
 .said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
 .pz-next { margin: 0 0 .9rem; }
 h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-transform: uppercase; margin: 1.1rem 0 .2rem; }

@@ -65,6 +65,7 @@ class Tracker:
         self.facts_file = Path(path).with_name("poslanici.json") if path else None
         self.facts: dict = {}  # the speaker's votes and facts from their page (mikrofon-poslanici.json)
         self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
+        self.events: list[dict] = []  # the day's steps, a line each (hronika.py)
         self.said: dict[str, str] = {}  # the day's automatic transcript in pieces, by each piece's first second (prepis.py)
         self._said_other: tuple[str, dict] = ("", {})  # an earlier day's, read when the page shows that day
         self._snap: tuple[float, dict] | None = None  # the last snapshot and when: every visitor asks every few seconds
@@ -140,6 +141,7 @@ class Tracker:
         self.day = day or self._day(time.time())
         self.turns, self.cover, self.open = [], [], False
         self.said = self._said_load(self.day)
+        self.events = self._events_load(self.day)
         f = self._file(self.day)
         try:
             if f and f.exists():
@@ -185,6 +187,59 @@ class Tracker:
                     tmp.replace(f)
                 except OSError:
                     pass
+
+    # --- what happened in the sitting, a line a step (hronika.py) ---
+    def _events_file(self, day: str) -> Path | None:
+        return self.days.parent / "hronika" / f"{day}.json" if self.days else None
+
+    def _events_load(self, day: str) -> list[dict]:
+        f = self._events_file(day)
+        try:
+            if f and f.exists():
+                rows = json.loads(f.read_text(encoding="utf-8"))
+                return [r for r in rows if isinstance(r, dict) and r.get("tekst")] if isinstance(rows, list) else []
+        except (OSError, ValueError):
+            pass
+        return []
+
+    def note(self, ts: float, kind: str, text: str, source: str, url: str = "") -> bool:
+        """A line of the day: when, what it is called, the sentence, where it is from ("prepis" or "sajt"). The same
+        sentence twice within ten minutes is one line (a piece of sound may be heard again at a seam)."""
+        text = " ".join(str(text).split())
+        with self._lock:
+            if not text or self._day(ts) != self.day:
+                return False
+            if any(e["tekst"] == text and abs(e["t"] - ts) < 600 for e in self.events[-40:]):
+                return False
+            self.events.append({"t": int(ts), "vrsta": kind, "tekst": text, "izvor": source, "url": url})
+            self.events.sort(key=lambda e: e["t"])
+            self._snap = None
+            f = self._events_file(self.day)
+            if f:
+                try:
+                    f.parent.mkdir(parents=True, exist_ok=True)
+                    tmp = f.with_suffix(".tmp")
+                    tmp.write_text(json.dumps(self.events, ensure_ascii=False), encoding="utf-8")
+                    tmp.replace(f)
+                except OSError:
+                    pass
+            return True
+
+    def page_seen(self, url: str, sentences: list[str] | None = None) -> list[str]:
+        """The sentences already read on a page of the Assembly, kept across restarts (hronika.Watcher)."""
+        f = self.days.parent / "strane.json" if self.days else None
+        try:
+            kept = json.loads(f.read_text(encoding="utf-8")) if f and f.exists() else {}
+        except (OSError, ValueError):
+            kept = {}
+        if sentences is not None and f:
+            kept[url] = sentences
+            try:
+                f.parent.mkdir(parents=True, exist_ok=True)
+                f.write_text(json.dumps(kept, ensure_ascii=False), encoding="utf-8")
+            except OSError:
+                pass
+        return list(kept.get(url) or [])
 
     def _said_of(self, day: str) -> dict[str, str]:
         if day == self.day:
@@ -413,7 +468,7 @@ class Tracker:
             news = [n for n in (self.waiting.get("obavestenja") or []) if isinstance(n, dict) and n.get("tekst")
                     and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
-                    "obavestenja": news[:3],
+                    "obavestenja": news[:3], "hronika": self.events[-40:][::-1] if day == self.day else [],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
 

@@ -707,3 +707,40 @@ def test_a_notice_from_the_site_stands_on_top_from_its_day_until_its_last():
     html = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert 'class="news"' in html and "Петар Петровић изабран је за председника" in html and "Старо" not in html
     assert 'href="https://www.parlament.gov.rs/x"' in html and "/cir/poslanik/petrovic-petar" in html
+
+
+def test_the_days_steps_from_the_chairs_words_and_the_assemblys_page(tmp_path, monkeypatch):
+    from uzivo import config, hronika, prepis
+    assert hronika.find("Хвала. Прелазимо на другу тачку дневног реда. Реч има народни посланик.") == [
+        ("Tačka dnevnog reda", "Prelazimo na drugu tačku dnevnog reda.")]
+    assert [w for w, _ in hronika.find("Zaključujem pretres. Stavljam na glasanje predlog. Određujem pauzu do 15 časova.")] == [
+        "Pretres zaključen", "Glasanje", "Pauza"]
+    assert hronika.find("Poštovani narodni poslanici, hvala vam.") == []
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path / "zvuk"))
+    monkeypatch.setattr(config, "WHISPER_MODEL", "test")
+    (tmp_path / "zvuk").mkdir()
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    t.roster = ROSTER
+    petar = ROSTER.match("Петар Петровић", 0.8)
+    now = float(int(time.time()) // 86400 * 86400 + 12 * 3600)
+    t._load(t._day(now))
+    for s_ in range(0, 31, 5):
+        t.observe(petar, now=now + s_)
+    t.observe(None, now=now + 60)
+    t.observe(None, now=now + 90)
+    for s_ in range(100, 141, 5):  # nobody's caption: the chair speaks
+        (tmp_path / "zvuk" / f"{int((now + s_) * 1000)}-5000.pcm").write_bytes(b"\0" * 100)
+    w = prepis.Writer(t, threading.Event(), write=lambda raw: "Прелазимо на другу тачку дневног реда.")
+    assert w.step(now=now + 150) is False  # too new: it may yet be a turn's beginning
+    assert w.step(now=now + 260) is True
+    assert not t.said  # the chair's words are no one's speech on the page
+    snap = t.snapshot(now=now + 261)
+    assert [(e["vrsta"], e["izvor"]) for e in snap["hronika"]] == [("Tačka dnevnog reda", "prepis")]
+    page_ = "<html><body>Претрага сајта <h1>Прва седница</h1><p>Седница је почела у 10 часова у Дому Народне скупштине.</p>{more}<h3>Фото галерија</h3></body></html>"
+    t.use_waiting({"kviz": [], "cinjenice": [], "sednice": ["https://www.parlament.gov.rs/Прва_седница.1.43.html"]})
+    pages = [page_.format(more=""), page_.format(more="<p>Народни посланици изабрали су председника Народне скупштине јавним гласањем.</p>")]
+    watcher = hronika.Watcher(t, threading.Event(), fetch=lambda url: pages.pop(0))
+    assert watcher.look(now=now + 300) == 0 and watcher.look(now=now + 900) == 1  # the first reading is the start, the second brings what is new
+    html = fragment(t.snapshot(now=now + 901), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Šta se desilo danas" in html and "Narodni poslanici izabrali su predsednika" in html and "sajt Skupštine" in html
+    assert "<b>Tačka dnevnog reda</b> Prelazimo na drugu tačku dnevnog reda." in html and "automatski prepis" in html

@@ -68,21 +68,26 @@ def waiting() -> list[tuple[float, float, Path]]:
     return sorted(out)
 
 
+CHAIR_WAIT = 45  # seconds: sound in no turn this old will not turn out to be a turn's beginning; it is the chair's
+CHAIR_LEAST = 8  # seconds: less sound than this between two turns is not written down
+
+
 def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: dict | None, now: float):
-    """What to do with the kept sound: (files to write down as one piece, files to throw away). A file belongs to
-    the turn its middle falls in; the oldest turn with sound is written first, a finished one whole, the one now on
-    once a piece's worth has gathered. Pure, for tests."""
+    """What to do with the kept sound: (files to write down as one piece, files to throw away, whether the piece is
+    the chair's). A file belongs to the turn its middle falls in; the oldest turn with sound is written first, a
+    finished one whole, the one now on once a piece's worth has gathered. Sound in no turn is the chair's (who has no
+    caption) or the hall's: once it is clear no turn begins there it is written down too, for the day's steps
+    (hronika.py), never shown as anyone's speech. Pure, for tests."""
     spans = [(d["od"] - SAID_LEAD, d["do"] + TAIL, d["sekundi"], False) for d in turns]
     if current:
         spans.append((current["od"] - SAID_LEAD, now + TAIL, current["sekundi"], True))
     spans.sort()
-    drop, by = [], {}
+    drop, by, free = [], {}, []
     for start, length, f in files:
         mid = start + length / 2
         span = next((s for s in spans if s[0] <= mid <= s[1]), None)
         if span is None:
-            if now - start > LOST:
-                drop.append(f)
+            free.append((start, length, f))
         elif span[2] < SHORTEST and not span[3]:
             drop.append(f)
         else:
@@ -96,8 +101,23 @@ def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: d
                 total += x[1]
                 if total >= LONGEST:
                     break
-            return piece, drop
-    return [], drop
+            return piece, drop, False
+    # the chair's: the oldest run of sound in no turn, files one after another, old enough to be no turn's beginning
+    run: list = []
+    for x in free:
+        if now - x[0] <= CHAIR_WAIT:
+            break
+        if run and (x[0] - (run[-1][0] + run[-1][1]) > 3 or sum(y[1] for y in run) >= LONGEST):
+            break
+        run.append(x)
+    if run:
+        ended = len(run) < len([x for x in free if now - x[0] > CHAIR_WAIT]) or now - (run[-1][0] + run[-1][1]) > CHAIR_WAIT
+        total = sum(y[1] for y in run)
+        if total >= PIECE or (ended and total >= CHAIR_LEAST):
+            return run, drop, True
+        if ended or now - run[0][0] > LOST:
+            drop += [y[2] for y in run]
+    return [], drop, False
 
 
 class Writer(threading.Thread):
@@ -131,7 +151,7 @@ class Writer(threading.Thread):
         snap = self.tracker.snapshot()
         live = not snap.get("ranije") and not snap.get("snimak")
         current = snap.get("sada") if snap["stanje"] == "govori" else None
-        piece, drop = choose(files, snap["danas"] if live else [], current, now)
+        piece, drop, chair = choose(files, snap["danas"] if live else [], current, now)
         for f in drop:
             f.unlink(missing_ok=True)
         if not piece:
@@ -139,10 +159,14 @@ class Writer(threading.Thread):
         raw = b"".join(f.read_bytes() for _, _, f in piece)
         started = time.time()
         text = latin(self.write(raw))
-        self.tracker.say(piece[0][0], text)
+        if not chair:
+            self.tracker.say(piece[0][0], text)
+        from . import hronika  # the steps said in the piece, the chair's or a speaker's, by the same rules
+        for what, sentence in hronika.find(text):
+            self.tracker.note(piece[0][0], what, sentence, "prepis")
         for _, _, f in piece:
             f.unlink(missing_ok=True)
-        log.info("%.0f s of sound written down in %.0f s (%d words)", sum(x[1] for x in piece),
+        log.info("%.0f s of %s written down in %.0f s (%d words)", sum(x[1] for x in piece), "the chair's sound" if chair else "sound",
                  time.time() - started, len(text.split()))
         return True
 
