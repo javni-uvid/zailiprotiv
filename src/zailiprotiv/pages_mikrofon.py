@@ -248,7 +248,10 @@ def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: di
             if e["za"] + e["protiv"] + e["uzdrzan"]:
                 lines.append({"t": f"{e['za']} za · {e['protiv']} protiv · {e['uzdrzan']} uzdržan na konačnim "
                                    "glasanjima o zakonima.", "iz": where})
-            lines += [{"t": plain(f), "iz": where} for f in k["facts"]]
+            # a line about speeches says the convocations the speeches are from, which may be other than the votes'
+            # (19 Nov 2026: a minister's and a president's speeches stood under the one convocation he voted in)
+            said = span(k.get("floor_convs") or k["convs"])
+            lines += [{"t": x, "iz": where if "glas" in x else said} for x in (plain(f) for f in k["facts"])]
             if k.get("quote"):
                 lines.append({"t": f"„{latin(k['quote']['tekst'])}“", "iz": f"stenogram, {day(k['quote']['date'])}"})
             if bio:

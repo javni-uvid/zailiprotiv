@@ -18,6 +18,7 @@ TEXT = {
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
     "speaks": "govori",
     "longer": "duže od {p}% današnjih govora",
+    "longest": "najduži govor danas",
     "d_today": "Danas",
     "d_conv": "saziv",
     "d_turn": "{n}. put za govornicom",
@@ -41,7 +42,7 @@ TEXT = {
     "n_turns": "govora",
     "n_people": "govornika",
     "n_words": "reči u prepisu",
-    "said_now": "Šta govori · automatski prepis, kasni oko dva minuta, može da pogreši",
+    "said_now": "Šta govori · automatski prepis, kasni oko minut, može da pogreši",
     "said_all": "Ceo prepis dana",
     "said_link": "prepis",
     "said_title": "Automatski prepis dana",
@@ -347,6 +348,18 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
 {body}
 <p><a href="{base}">← {t("said_back")}</a></p>
 </main>
+<script>
+// The page as it is now, asked for again every twenty seconds while it is looked at; what is read stays in place.
+setInterval(function () {{
+  if (document.hidden) return;
+  fetch(location.pathname, {{ cache: "no-store" }}).then(function (r) {{ return r.ok ? r.text() : null; }}).then(function (html) {{
+    if (!html) return;
+    var now = new DOMParser().parseFromString(html, "text/html").querySelector("main");
+    var main = document.querySelector("main");
+    if (now && main && now.innerHTML !== main.innerHTML) main.innerHTML = now.innerHTML;
+  }}).catch(function () {{}});
+}}, 20000);
+</script>
 </body>
 </html>"""
 
@@ -444,7 +457,7 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(f'<p class="side">{s(side)}</p>')
     if not cur["adresa"]:
         out.append(f'<p class="meta">({t("not_listed")})</p>')
-    longer = (" · " + s(TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
+    longer = (" · " + s(TEXT["longest"] if cur["duze"] >= 100 else TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
                f'{_hms(max(0, cur["sekundi"]))}</b> <span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
     out.append('<div class="o">')

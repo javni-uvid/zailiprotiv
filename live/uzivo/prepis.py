@@ -25,7 +25,7 @@ from .state import SAID_LEAD, Tracker
 
 log = logging.getLogger("prepis")
 RATE = 16000
-PIECE = 50  # seconds of unwritten sound of the speaker now on before a piece is written down
+PIECE = 30  # seconds of unwritten sound of the speaker now on before a piece is written down
 LONGEST = 120  # seconds: the most sound written down at once
 SHORTEST = 20  # seconds: a shorter turn (a reply, a point of order) is not written down
 TAIL = 3  # seconds after a turn's last frame that still count as its sound

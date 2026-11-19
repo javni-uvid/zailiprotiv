@@ -869,6 +869,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                                    day=env.filters["day"], given_first=env.filters["given_first"])
         if mp.key in member_now:  # for the live page (pages_mikrofon.speakers): the speaker's votes, card and a quote
             live_facts[mp.slug] = {"tally": tally, "facts": card_facts, "convs": [c["conv"] for c in by_conv],
+                                   "floor_convs": [x["conv"] for x in floor_mp],
                                    "quote": pages_mikrofon.quote(profiles.get(mp.key))}
         page_args = dict(**common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
                          areas_table=areas_table, periods=periods, group_slug=group_slug, photo=photo_of.get(mp.key, ""),
