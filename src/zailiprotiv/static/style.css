@@ -1039,3 +1039,4 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 @media (max-width: 560px) { .gv-r { grid-template-columns: 1fr 7rem; } .gv-b { grid-column: 1 / -1; order: 3; height: .6rem; } }
 .turns li:target { background: color-mix(in srgb, var(--za) 10%, transparent); }
 .share-turn { border: 0; background: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.prepis { margin: .3rem 0 .6rem; } .prepis p { max-width: 46rem; }

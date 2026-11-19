@@ -1,0 +1,60 @@
+# By hand (or after a sitting day): an automatic transcript of the day's speeches from the archive's recording
+# (prepis.py, Whisper on the runner's CPU). Slow: a run stops after `minutes` and keeps what it wrote; run it again to
+# go on. The site shows it under each speech as an automatic transcript that may err, until the notes are read.
+name: prepis
+
+on:
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "Sitting day, YYYY-MM-DD (a file in data/<N>/snimak/)"
+        required: true
+      convocation:
+        description: "Convocation"
+        default: "15"
+      model:
+        description: "Whisper model (small, medium, large-v3)"
+        default: "medium"
+      minutes:
+        description: "Stop after this many minutes"
+        default: "300"
+
+permissions:
+  contents: write
+  actions: write  # to start pages, which publishes the site with the transcript
+
+concurrency:
+  group: prepis
+  cancel-in-progress: false
+
+jobs:
+  prepis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Write down the day's speeches
+        env:
+          IN_DAY: ${{ inputs.day }}
+          IN_CONV: ${{ inputs.convocation }}
+          IN_MODEL: ${{ inputs.model }}
+          IN_MINUTES: ${{ inputs.minutes }}
+        run: |
+          command -v ffmpeg >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null; }
+          pip install uv && uv sync --frozen
+          uv run --with faster-whisper zailiprotiv --convocation "$IN_CONV" prepis "$IN_DAY" --model "$IN_MODEL" --minutes "$IN_MINUTES"
+      - name: Keep it
+        env:
+          IN_DAY: ${{ inputs.day }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- 'data/*/prepis/**'
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Automatic transcript of $IN_DAY's speeches (Whisper)"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          gh workflow run pages.yml

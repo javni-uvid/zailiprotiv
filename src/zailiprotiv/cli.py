@@ -120,6 +120,13 @@ def arhiva_cmd(args) -> int:
     return 0
 
 
+def prepis_cmd(args) -> int:
+    """An automatic transcript of a sitting day's speeches from the archive's recording (prepis.py; Whisper)."""
+    from zailiprotiv import prepis
+    prepis.run(ROOT, CONVOCATION, args.day, model=args.model, minutes=args.minutes)
+    return 0
+
+
 def in_procedure(args) -> int:
     """The bills waiting in the Assembly now, from its page "Zakoni u proceduri", into data/<N>/procedure.json, which
     also remembers the bills no longer listed and when each was first and last seen."""
@@ -1325,6 +1332,11 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=uzivo_pull)
     p = commands.add_parser("arhiva", help="the archive's recordings lined up with the live records → data/<N>/snimak/")
     p.set_defaults(run=arhiva_cmd)
+    p = commands.add_parser("prepis", help="an automatic transcript of a day's speeches (Whisper) → data/<N>/prepis/")
+    p.add_argument("day", help="YYYY-MM-DD, a day in data/<N>/snimak/")
+    p.add_argument("--model", default="medium")
+    p.add_argument("--minutes", type=float, default=300, help="stop after this long; the next run goes on")
+    p.set_defaults(run=prepis_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("members", help="the sitting MPs from the Assembly's list → data/<N>/members.json")

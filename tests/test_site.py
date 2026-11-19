@@ -539,6 +539,12 @@ def test_who_spoke_how_long_a_page_per_day_and_the_convocations_sum(tmp_path):
     assert "Jova" not in page  # read in one frame: not counted
     assert page.index("Petar Petrović") < page.index("Nina Nikolić") and "66,7 %" in page and "Lista B" in page
     assert f'id="g{start}"' in page and 'data-share="#g' in page and (out / "govornici" / "2026-11-17.png").exists()
+    (root / "15" / "prepis").mkdir()
+    (root / "15" / "prepis" / "2026-11-17.json").write_text(json.dumps({"model": "medium", "govori": {
+        str(start): {"ime": "Petrović Petar", "od": start, "do": start + 600, "tekst": "Поштовани председниче, даме и господо"}}}))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    page = (out / "govornici" / "2026-11-17.html").read_text()
+    assert "Automatski prepis" in page and "Poštovani predsedniče" in page and "nije citat" in page
     total = (out / "govornici.html").read_text()
     assert "Ko koliko govori u 15. sazivu" in total and "govornici/2026-11-17.html" in total
     assert "Петар Петровић" in (out / "cir" / "govornici" / "2026-11-17.html").read_text()
@@ -635,3 +641,29 @@ def test_the_new_convocations_members_by_parliamentary_group(tmp_path):
     index = {m["s"]: m["g"] for m in json.loads((out / "podaci.json").read_text())["mps"]}
     assert index["jovic-jova"] == "Studentska lista" and index["nikolic-nina"] == ""
     assert site.check(out) == []
+
+
+def test_a_transcript_is_written_turn_by_turn_and_goes_on_where_it_stopped(tmp_path, monkeypatch):
+    from zailiprotiv import prepis
+    (tmp_path / "15" / "snimak").mkdir(parents=True)
+    day = {"dan": "2026-11-19", "govori": [
+        {"ime": "A", "od": 100, "do": 400, "okvira": 60, "datoteka": "https://a/f.mp4", "snimak": 95},
+        {"ime": "B", "od": 500, "do": 510, "okvira": 3, "datoteka": "https://a/f.mp4", "snimak": 495},  # too short
+        {"ime": "C", "od": 600, "do": 900, "okvira": 60, "datoteka": "https://a/f.mp4", "snimak": 595}]}
+    (tmp_path / "15" / "snimak" / "2026-11-19.json").write_text(json.dumps(day))
+    cut = []
+    monkeypatch.setattr(prepis, "sound", lambda url, start, secs, path: cut.append((start, secs)) or path.write_bytes(b"x" * 2000) or True)
+    assert prepis.run(tmp_path, "15", "2026-11-19", transcribe=lambda p: "tekst", minutes=0) == 0  # out of time at once
+    assert prepis.run(tmp_path, "15", "2026-11-19", transcribe=lambda p: "tekst") == 2
+    kept = json.loads((tmp_path / "15" / "prepis" / "2026-11-19.json").read_text())
+    assert set(kept["govori"]) == {"100", "600"} and cut[0] == (95, 300 + prepis.LEAD + prepis.TAIL)
+    assert prepis.run(tmp_path, "15", "2026-11-19", transcribe=lambda p: "tekst") == 0
+
+
+def test_the_time_between_turns_and_quick_exchanges_by_rule():
+    from zailiprotiv import pages_govornici as g
+    t = lambda name, a, b: {"ime": name, "od": a, "do": b}
+    day = [t("A", 0, 100), t("B", 130, 200), t("A", 220, 260), t("B", 300, 320), t("C", 1000, 1500), t("A", 1520, 1600)]
+    assert g.between(day) == 30 + 20 + 40 + 20  # the 680 s stretch before C is a break
+    quick = g.exchanges(day)
+    assert [(x["a"], x["b"], x["n"]) for x in quick] == [("A", "B", 4)]

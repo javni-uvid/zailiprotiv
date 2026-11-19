@@ -41,6 +41,9 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.
+- **Ko koliko govori:** per sitting day read from the recording (`govornici/<date>`), each speaker's time and the
+  time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a
+  link to share it and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`).
 - **Glasaj i ti:** the visitor's ballot ("Moj listić", kept in the browser) beside the Assembly's results and the
   MPs and groups that voted the same; a quiz on the laws that divided the chamber and one per area; the newest bills
   to vote on before the Assembly does.
@@ -74,6 +77,8 @@ uv run zailiprotiv bills               # each bill's memorandum → bills/ (scan
 uv run zailiprotiv link                # each law's kind, area, roll calls and final vote
 uv run zailiprotiv transcripts         # the stenographic notes → transcripts/
 uv run zailiprotiv uzivo-pull          # who spoke when, from the live page's day records → data/<N>/uzivo/
+uv run zailiprotiv arhiva              # the archive's recordings placed by their captions → arhiva.json, snimak/ (ffmpeg, OCR)
+uv run --with faster-whisper zailiprotiv prepis 2026-11-18   # an automatic transcript of a day's speeches → prepis/
 uv run zailiprotiv summaries --batch   # the model's summaries of the memoranda (Batch API)
 uv run zailiprotiv debates-batch       # the model's summaries of the debates
 uv run zailiprotiv profiles-batch      # the model's overviews of what an MP says → data/profiles/
@@ -89,10 +94,11 @@ Assembly's site runs through the workflows.
 
 | Workflow | When | What |
 |---|---|---|
-| votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links; commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |
+| votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links; the archive's new recordings placed and each day's speeches linked into them; commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |
 | transcripts | after votes, and by hand | the stenographic notes; the raw notes go to the bucket |
 | summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API; the cheapest model first, a stronger one only by hand |
 | pages | on push, and after each data run | build the site and its search index, send downloads to the bucket, publish, purge the cache, tell search engines what changed (about seven minutes); a push that changes only `static/` puts it into the site published last instead (`static-patch`, about two) |
+| prepis | by hand, per sitting day | an automatic transcript of the day's speeches from the archive's recording (Whisper); stops after a set time, the next run goes on |
 | notes | after transcripts, and by hand | the notes' pages and their search index; send what changed to the bucket |
 | worker | on push to `worker/` | deploy the votes counter and its schema |
 | health | hourly | ask the site, the buckets and the counter from outside; an issue when one does not answer |

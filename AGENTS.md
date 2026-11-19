@@ -375,6 +375,28 @@ its minute.
   begins in the day was found by lining up a caption's first frame in the file and in the video. The live record's
   links (`video`, YouTube) will go private the same way: moving them to the archive's files is to do, and
   `recording_links` stays off until then.
+- **The archive's files placed by their captions** (18 Nov 2026, the maintainer's request; `arhiva.py`, run by
+  **votes** each hour): for every new file in `videos.json` of a day with a live record, ffmpeg reads a frame every
+  30 s (over the network, only those bytes), the live page's own OCR reads the caption, and the start that puts the
+  most names inside their speakers' turns is the file's (then to a few seconds where two names change); frames that
+  fit a wide range of starts (one long speech) or disagree place nothing, tried again up to three times. Kept in
+  `data/<N>/arhiva.json`. A day with no file in `snimak/` gets one written from the live record (`"izvor": "uzivo"`:
+  turns in one frame left out, one speaker's turns within two minutes joined), written again while the record grows;
+  a day read by hand only gets the places it lacks. The record's clock is the service's, some 15–20 s behind the
+  broadcast, and turns and files share it; 17 and 18 Nov were lined up by hand on YouTube's clock
+  (`"rucno": true`). Needs ffmpeg, Tesseract's Serbian, numpy and pytesseract on the runner.
+- **Who spoke how long** (18 Nov 2026, the maintainer's request; `pages_govornici.py`): `govornici/<date>` per day in
+  `snimak/` (each speaker's time and speeches, the time per list, the time between turns, quick exchanges, every
+  turn with its place in the archive and "podeli", a picture of the day as the share picture) and `govornici.html`
+  (the newest convocation's days summed). Ordered by time, ties by name. The time between turns counts stretches up
+  to five minutes (mostly the chair, who has no caption); quick exchanges are two speakers taking turns three times
+  or more, each within two minutes: by order only, the page claims nothing about what was said. Method:
+  `kako-racunamo#govornici`.
+- **An automatic transcript until the notes** (18 Nov 2026, the maintainer's request; `prepis.py`, the **prepis**
+  workflow, by hand per day): each turn of 30 s or more cut out of the archive's file as sound and written down by
+  Whisper (faster-whisper on the runner's CPU, `medium` by default; a run stops after `minutes` and the next goes on).
+  Shown under the turn on the day's page, folded, as an automatic transcript that may err and is not a quote
+  (principle 6 is about the notes, which the site quotes); not shown once the day's notes are read.
 - **"Dok čekate"** (18 Nov 2026, the maintainer's request: "more fun", on both pages, "like the voting quiz"):
   between sittings the live page, and the site's `mikrofon` page, carry a quiz and the facts
   (`pages_mikrofon.quiz`, `facts`), published for the service as `mikrofon-cekanje.json` (so a change needs no rebuild
@@ -421,6 +443,9 @@ its minute.
 - **17 Nov 2026:** while "Ko sada govori" is down, `mikrofon.zailiprotiv.rs` shows the site's `mikrofon` page (a worker
   in front of the tunnel, `live/edge/`) instead of Cloudflare's error.
 - **18 Nov 2026:** the Fifteenth's MPs listed before its first roll call (`members.json`, `poslanici-15.html`).
+- **18 Nov 2026:** the archive's files placed by their captions (`arhiva.py`); who spoke how long per day and per
+  convocation (`govornici`); an automatic transcript (Whisper) until the notes; the live page kept a few seconds at
+  the edge and in the service after it stopped answering under the day's visits.
 - **18 Nov 2026:** the first sitting day of the Fifteenth read afterwards from the whole recording
   (`data/15/snimak/2026-11-17.json`), shown on `mikrofon.zailiprotiv.rs` as the last sitting day; "Dok čekate" (a
   quiz and the facts) on both versions of that page.

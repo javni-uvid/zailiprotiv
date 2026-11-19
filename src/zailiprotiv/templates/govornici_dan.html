@@ -14,6 +14,10 @@
 <h2>Po listi</h2>
 <p class="label">Lista je donji red potpisa ili poslanička lista sa spiska poslanika Skupštine.</p>
 {{ bars(lists, false) }}
+<h2>Između govora</h2>
+<p>{{ gap }} između govora s potpisom, računajući samo razmake do pet minuta: tada uglavnom govori predsedavajući, koji nema potpis, ili se proziva i glasa. Duži razmaci su pauze i nisu uračunati.</p>
+{% if quick %}<p>Brze smene dva govornika (tri ili više govora naizmenično, svaki počinje do dva minuta posle prethodnog): {{ quick|length }}.</p>
+<ul class="plain">{% for x in quick %}<li><a href="#g{{ x.od }}">{{ x.at }}</a> · {{ x.a|given_first }} i {{ x.b|given_first }}, {{ x.n }} govora</li>{% endfor %}</ul>{% endif %}
 <h2>Svi govori, redom</h2>
 {% set first = turns|selectattr("file")|first %}
 {% if day_parts or first %}
@@ -22,7 +26,8 @@
 <p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
 {% endif %}
 <ol class="plain turns">
-  {% for t in turns %}<li id="{{ t.id }}"><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %} <button type="button" class="share-turn label" data-share="#{{ t.id }}" data-text="{{ t.name }}, {{ when }} u {{ t.from }}, Narodna skupština">podeli</button></li>
+  {% for t in turns %}<li id="{{ t.id }}"><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %} <button type="button" class="share-turn label" data-share="#{{ t.id }}" data-text="{{ t.name }}, {{ when }} u {{ t.from }}, Narodna skupština">podeli</button>{% if t.said %}
+    <details class="prepis"><summary class="label">Automatski prepis</summary><p>{{ t.said|latin }}</p><p class="label">Zapisao AI model za prepoznavanje govora (Whisper{% if model %}, {{ model }}{% endif %}) sa snimka; može da sadrži greške i nije citat. Zvaničan tekst je stenogram Skupštine, koji ovde zamenjuje prepis kad bude objavljen.</p></details>{% endif %}</li>
   {% endfor %}
 </ol>
 <p class="label share-done" hidden>Link je kopiran.</p>

@@ -75,6 +75,38 @@ def sums(turns: list[dict]) -> tuple[list[dict], list[dict], int]:
     return people, lists_, whole
 
 
+UNSIGNED_GAP = 300  # seconds: a stretch between two turns no longer than this is the chair's or the floor's time
+QUICK = 120  # seconds: turns this close, taking turns between two speakers, are a quick exchange
+
+
+def between(turns: list[dict]) -> int:
+    """The time between turns, no stretch longer than UNSIGNED_GAP: the chair (who has no caption), roll calls, short
+    stops. A longer stretch is a break and is not counted."""
+    ordered = sorted(turns, key=lambda t: t["od"])
+    return sum(g for a, b in zip(ordered, ordered[1:]) if 0 < (g := b["od"] - a["do"]) <= UNSIGNED_GAP)
+
+
+def exchanges(turns: list[dict]) -> list[dict]:
+    """Two speakers taking turns three times or more in a row, each turn starting within QUICK seconds of the last:
+    {"a", "b", "n", "od"}. By the order of turns only; nothing about what was said."""
+    ordered = sorted(turns, key=lambda t: t["od"])
+    out: list[dict] = []
+    run: list[dict] = []
+    def close() -> None:
+        if len(run) >= 3:
+            out.append({"a": run[0]["ime"], "b": run[1]["ime"], "n": len(run), "od": run[0]["od"]})
+    for t in ordered:
+        if run and t["od"] - run[-1]["do"] <= QUICK and t["ime"] != run[-1]["ime"] and (
+                len(run) < 2 or t["ime"] == run[-2]["ime"]):
+            run.append(t)
+            continue
+        close()
+        prev = run[-1] if run else None
+        run = [prev, t] if prev and t["od"] - prev["do"] <= QUICK and t["ime"] != prev["ime"] else [t]
+    close()
+    return out
+
+
 def picture(path: Path, title: str, when: str, people: list[dict], whole: int) -> None:
     """The day's time as a picture to share: the ten longest, then the rest summed."""
     from PIL import Image, ImageDraw, ImageFont
@@ -117,6 +149,26 @@ def picture(path: Path, title: str, when: str, people: list[dict], whole: int) -
     im.quantize(32).save(path)
 
 
+def noted_days(root: Path, conv: str) -> set[str]:
+    """The days whose stenographic notes are read: their transcripts give way to the notes."""
+    days: set[str] = set()
+    for f in (root / conv / "transcripts").glob("*.json"):
+        try:
+            for d in json.loads(f.read_text(encoding="utf-8")).get("days") or []:
+                days.add(d if isinstance(d, str) else d.get("date", "") if isinstance(d, dict) else "")
+        except (OSError, ValueError, AttributeError):
+            continue
+    return days
+
+
+def transcript(root: Path, conv: str, day: str) -> tuple[dict, str]:
+    path = root / conv / "prepis" / f"{day}.json"
+    if not path.exists():
+        return {}, ""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {k: v.get("tekst", "") for k, v in data.get("govori", {}).items()}, data.get("model", "")
+
+
 def render(*, common: dict, env, out: Path, root: Path) -> list[dict]:
     """govornici/<date>.html per day read, govornici.html for each convocation's sum. Returns the days, newest first,
     for the pages that link them."""
@@ -126,16 +178,24 @@ def render(*, common: dict, env, out: Path, root: Path) -> list[dict]:
     (out / DIR).mkdir(exist_ok=True)
     listed = []
     for conv, days in convs.items():
+        noted = noted_days(root, conv)
         for day in days:
             people, lists, whole = sums(day["govori"])
             turns = day_turns(day)
+            said, model = transcript(root, conv, day["dan"]) if day["dan"] not in noted else ({}, "")
             for t, raw in zip(turns, day["govori"]):
                 t["id"] = f"g{raw['od']}"
+                t["said"] = said.get(str(raw["od"]), "")
             when = day_name(day["dan"])
             picture(out / DIR / f"{day['dan']}.png", "Ko je koliko govorio u Skupštini", when, people, whole)
+            quick = exchanges(day["govori"])
+            for x in quick:
+                x["at"] = datetime.fromtimestamp(x["od"], TZ).strftime("%H:%M")
             (out / DIR / f"{day['dan']}.html").write_text(env.get_template("govornici_dan.html").render(
+                gap=dur(between(day["govori"])), quick=quick,
                 **common, root="../", day=day["dan"], when=when, people=people, lists=lists, whole=dur(whole),
-                turns=turns, day_parts=parts(day), source=day.get("izvor", "snimak"), conv=conv), encoding="utf-8")
+                turns=turns, day_parts=parts(day), source=day.get("izvor", "snimak"), conv=conv, model=model),
+                encoding="utf-8")
             listed.append({"day": day["dan"], "when": when, "conv": conv, "whole": dur(whole), "people": len(people)})
     newest = max(convs, key=int)
     every = [t for day in convs[newest] for t in day["govori"]]
