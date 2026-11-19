@@ -4,7 +4,7 @@
  "pokriveno": [
   {
    "od": 1795078236,
-   "do": 1795096366
+   "do": 1795098435
   }
  ],
  "govori": [
@@ -253,6 +253,32 @@
    "video": "Hdk3ahufa64",
    "sq_od": 3372,
    "sq_do": 3376,
+   "segment": 5.0
+  },
+  {
+   "ime": "El Sarag Sarah",
+   "adresa": "el-sarag-sarah",
+   "grupa": "Studentska lista",
+   "uloga": "",
+   "od": 1795098071,
+   "do": 1795098071,
+   "okvira": 1,
+   "video": "Hdk3ahufa64",
+   "sq_od": 3970,
+   "sq_do": 3970,
+   "segment": 5.0
+  },
+  {
+   "ime": "El Sarag Sarah",
+   "adresa": "el-sarag-sarah",
+   "grupa": "Studentska lista",
+   "uloga": "",
+   "od": 1795098411,
+   "do": 1795098411,
+   "okvira": 1,
+   "video": "Hdk3ahufa64",
+   "sq_od": 4038,
+   "sq_do": 4038,
    "segment": 5.0
   }
  ]
