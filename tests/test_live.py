@@ -674,6 +674,7 @@ def test_the_sound_is_written_down_turn_by_turn_and_shown_as_an_automatic_transc
     page_ = transcript_page(t.transcript(), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Поштовани председниче, хвала." in page_ and "Петар Петровић" in page_ and "није" in page_
     again = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")  # kept across a restart
+    again._load(t.day)  # on the test's day: a restart reads the real day's, which is another after midnight
     assert again.said == t.said
 
 
