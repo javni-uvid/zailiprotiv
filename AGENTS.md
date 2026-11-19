@@ -515,7 +515,12 @@ its minute.
   the newest convocation's notes (brought from the bucket at build) ahead of the others', so "Varnice" opens on it
   once its notes hold a reply or a measure; its new MPs, on no roll call yet, get their names and pages from the
   Assembly's list (`extra`). The home page shows its counts in place of the dashed box, and a new MP's "Ukratko"
-  has a tile of speeches in the notes. Tested with made-up notes; the real ones are only in the bucket.
+  has a tile of speeches in the notes. The newest convocation's notes are kept in the repository whole while it is not
+  the current one (`transcripts.yml`), so the counts can be checked against them: the first sitting's two days hold
+  no measure and no exchange of replies (read through: the reprimands in them are spoken of, none pronounced), so
+  "Varnice" has no page of its own for it yet, and its panel there and the home page give what the notes do count
+  (speeches, points of order, harsh words, who leads in each; `newer15.counted`, put into the panel's mark after
+  the counting, since those pages are made during it).
 - **"Šta se desilo danas"** (19 Nov 2026, the maintainer's decision; `live/uzivo/hronika.py`). The chair has no
   caption, so the chair's sound used to be thrown away; now sound in no turn, once 45 s old (no turn begins
   there), is written down too, never shown as anyone's speech, and searched with every other piece for the set

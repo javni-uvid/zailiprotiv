@@ -1117,3 +1117,7 @@ em.prev { font-style: normal; font-family: system-ui, -apple-system, "Segoe UI",
 @media (max-width: 640px) { .np-table th:nth-child(5), .np-table td:nth-child(5), .np-table th:nth-child(3), .np-table td:nth-child(3) { display: none; } .np-table td:first-child { min-width: 0; } .np-table { font-size: .88rem; } .np-table th, .np-table td { padding: .45rem .3rem; } }
 .hc-news { margin: 0 0 1rem; padding: .7rem .9rem; border-radius: 8px; background: color-mix(in srgb, var(--fg) 6%, transparent); line-height: 1.45; } .hc-news b { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--protiv); margin-right: .3rem; }
 em.prev.now { color: var(--protiv); border-color: var(--protiv); }
+.np-tiles { list-style: none; margin: .4rem 0 .8rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: .5rem; }
+.np-tiles li { margin: 0; } .np-tiles li > div { display: flex; flex-direction: column; height: 100%; box-sizing: border-box; padding: .6rem .7rem; border: 1px solid var(--line); border-radius: 10px; }
+.np-tiles b { font-family: var(--serif); font-size: 1.6rem; line-height: 1.1; } .np-tiles span { font-size: .88rem; line-height: 1.3; margin-top: .2rem; }
+.np-lead { margin: .3rem 0; } .ph-has { border-style: solid; }

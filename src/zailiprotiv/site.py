@@ -800,6 +800,29 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     env.globals["floor_notes_now"] = {sl: next((x for x in xs if x["conv"] == members_conv), None) for sl, xs in _per.items()} if members_conv else {}
     if newer15 is not None:
         newer15["notes"] = getattr(pages_floor.render, "top", {}).get(members_conv)
+        # What the notes of its sittings count so far, whether or not they hold a reply or a measure (the first
+        # sitting's held neither): speeches, points of order and harsh words, with the three who lead in each.
+        _mine = {sl: x for sl, x in env.globals["floor_notes_now"].items() if x}
+        _name = {r["slug"]: r["name"] for r in member_rows}
+        def _lead(key):
+            val = lambda x: len(x[key]) if isinstance(x[key], list) else x[key]
+            rows_ = sorted(((val(x), sl) for sl, x in _mine.items() if val(x)), key=lambda r: (-r[0], r[1]))[:3]
+            return [{"n": n, "slug": sl, "name": _name.get(sl, sl)} for n, sl in rows_]
+        if _mine:
+            newer15["counted"] = {
+                "speakers": len(_mine), "speeches": sum(x["speeches"] for x in _mine.values()),
+                "points": sum(x["points"] for x in _mine.values()),
+                "harsh": sum(len(x["harsh"]) if isinstance(x["harsh"], list) else x["harsh"] for x in _mine.values()),
+                "measures": sum(x["measures"] + x["measures_likely"] for x in _mine.values()),
+                "exchanges": sum(x["exchanges"] for x in _mine.values()) // 2,
+                "lead": {k: _lead(k) for k in ("speeches", "points", "harsh")},
+                "days": sum(len(n.get("days", [])) for n in debates.get(members_conv, {}).values())}
+        # the pages of "Varnice" were made before these counts: their panel's mark gets the counts now
+        _filled = env.from_string('{% from "macros.html" import newer_counted with context %}{{ newer_counted() }}').render(root="")
+        for _f in out.glob("*.html"):
+            _t = _f.read_text(encoding="utf-8")
+            if "<!--np-counted-->" in _t:
+                _f.write_text(_t.replace("<!--np-counted-->", _filled), encoding="utf-8")
     from zailiprotiv import card, mp_card
     import os
     cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"

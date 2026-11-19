@@ -71,7 +71,8 @@
   <ul class="plain np-days">{% for x in d.exchanges %}<li><a href="govornici/{{ d.day }}.html#{{ x.id }}">{{ x.a|given_first }} i {{ x.b|given_first }}</a> <span class="label">· {{ x.n }} javljanja zaredom</span></li>{% endfor %}</ul>
   {% endfor %}
   {% else %}<p>Još nema brzih razmena između dva govornika na danima koje smo pročitali.</p>{% endif %}
-  <p class="label">Ovo je po redosledu javljanja sa snimka, ne po sadržaju. Replike, opomene i teške reči brojimo iz stenografskih beleški, kao za ranije sazive, čim ih obradimo.</p>
+  <p class="label">Ovo je po redosledu javljanja sa snimka, ne po sadržaju.</p>
+  <!--np-counted-->
   {% else %}
   <h2>{{ v.name }} saziv: {{ v.n }} poslanika, {{ v.new }} prvi put</h2>
   <p>Još nema usvojenih zakona ni glasanja. {% if v.days %}Do sada {{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }} sednice pročitano sa snimka.{% endif %}</p>
@@ -79,6 +80,24 @@
   <p class="np-links"><a href="{{ v.mps_page }}">Poslanici</a><a href="{{ v.groups_page }}">Grupe</a><a href="{{ v.sittings_page }}">Sednice</a><a href="govornici.html">Ko koliko govori</a><a href="{{ v.floor_page }}">Varnice</a>{% if live_page %}<a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Uživo</a>{% endif %}</p>
 </section>
 {% endif %}
+{%- endmacro %}
+
+{# What the newest convocation's notes count, for its panel on "Varnice": those pages are made while the notes are
+   being counted, so the panel holds a mark there and site.py puts this in its place once the counts are done. #}
+{% macro newer_counted() -%}
+{% set v = newer15 %}
+{% if v and v.counted %}{% set k = v.counted %}
+  <h3>Iz stenografskih beleški ({{ k.days }} {{ "dan" if k.days == 1 else "dana" }})</h3>
+  <ul class="tiles np-tiles">
+    <li><div><b>{{ k.speeches }}</b><span>govora, {{ k.speakers }} govornika</span></div></li>
+    <li><div><b>{{ k.points }}</b><span>ukazivanja na povredu Poslovnika</span></div></li>
+    <li><div><b>{{ k.harsh }}</b><span>teških reči sa našeg spiska</span></div></li>
+    <li><div><b>{{ k.measures }}</b><span>mera predsedavajućeg</span></div></li>
+  </ul>
+  {% for key, label in [("speeches", "Najviše govora"), ("points", "Najviše ukazivanja na Poslovnik"), ("harsh", "Najviše teških reči")] %}{% if k.lead[key] %}
+  <p class="np-lead"><b>{{ label }}:</b> {% for r in k.lead[key] %}<a href="poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a> ({{ r.n }}){% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}{% endfor %}
+  <p class="label">Brojano istim pravilima kao za ranije sazive, doslovno iz beleški. {% if not k.measures and not k.exchanges %}U ovim danima predsedavajući nije izrekao nijednu meru i nije bilo razmena replika po Poslovniku.{% endif %}</p>
+  {% else %}<p class="label">Replike, opomene i teške reči brojimo iz stenografskih beleški, kao za ranije sazive, čim ih obradimo.</p>{% endif %}
 {%- endmacro %}
 
 {# The visitor's own vote (glas.js): on a law's page with the Assembly's result to compare with, on a bill's page

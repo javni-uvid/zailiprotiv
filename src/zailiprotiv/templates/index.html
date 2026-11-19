@@ -150,6 +150,9 @@
     </a></li>{% endif %}{% endfor %}
   </ol>
   <p class="hook-more"><a href="{{ nt.page }}">Ko najviše govori, replicira i dobija opomene u novom sazivu</a></p>
+  {% elif newer and newer15 and newer15.counted %}{% set k = newer15.counted %}
+  <div class="ph-new ph-has"><p class="kicker">{{ newer.name }} saziv · iz stenografskih beleški</p>
+  <p><b>{{ k.speeches }}</b> govora, <b>{{ k.points }}</b> ukazivanja na povredu Poslovnika, <b>{{ k.harsh }}</b> teških reči sa našeg spiska, <b>{{ k.measures }}</b> mera predsedavajućeg, za {{ k.days }} {{ "dan" if k.days == 1 else "dana" }}.{% if k.lead.points %} Najviše ukazivanja: {% for r in k.lead.points[:1] %}<a href="poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a> ({{ r.n }}){% endfor %}.{% endif %} <a href="{{ newer15.floor_page }}">Varnice u novom sazivu</a></p></div>
   {% elif newer %}<div class="ph-new"><p class="kicker">{{ newer.name }} saziv</p><p><b>Replike, opomene i teške reči novog saziva</b> stižu kad obradimo stenografske beleške prve sednice. Do tada: <a href="govornici.html">ko je koliko govorio</a>, mereno sa snimka.</p></div>{% endif %}
   <div class="home-floor-head">
     <h2 id="hf"><a href="{{ floor_top.page }}">Varnice u sali</a>{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</h2>
