@@ -4,7 +4,7 @@
  "pokriveno": [
   {
    "od": 1795078236,
-   "do": 1795121312
+   "do": 1795124900
   }
  ],
  "govori": [
@@ -357,6 +357,19 @@
    "video": "Hdk3ahufa64",
    "sq_od": 8358,
    "sq_do": 8359,
+   "segment": 5.0
+  },
+  {
+   "ime": "Pastor Balint",
+   "adresa": "pastor-balint",
+   "grupa": "",
+   "uloga": "",
+   "od": 1795123012,
+   "do": 1795123016,
+   "okvira": 1,
+   "video": "Hdk3ahufa64",
+   "sq_od": 8958,
+   "sq_do": 8959,
    "segment": 5.0
   }
  ]
