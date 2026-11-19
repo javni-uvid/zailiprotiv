@@ -370,6 +370,7 @@ STEP_TITLES = {"Sednica otvorena": "Sednica je otvorena", "Nastavak rada": "Rad 
                "Pretres otvoren": "Pretres je otvoren", "Pretres zaključen": "Pretres je zaključen"}
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
+STEP_IDLE = 600  # work is resumed when nobody was at the rostrum for this long before the chair says so
 _UNDER_WAY = {"Glasanje", "Glasanje zaključeno", "Pretres otvoren", "Pretres zaključen"}
 
 
@@ -379,11 +380,13 @@ def steps_shown(snap: dict) -> list[dict]:
     out (19 Nov 2026, the maintainer's decision: what cannot be confirmed is not shown):
     - a move to an agenda item: the agenda has the item, and its number is higher than the last one heard today;
     - a break, the day's end: nobody is at the rostrum for STEP_QUIET seconds after it (so it shows that much later);
-    - work resumed: a break shown before it, or nobody had spoken yet today; the sitting opened: nobody had spoken yet;
+    - work resumed: a break shown before it, nobody had spoken yet today, or nobody was at the rostrum for
+      STEP_IDLE before it (once: a second "we go on" with no break between is the chair's turn of phrase);
+      the sitting opened: nobody had spoken yet;
     - a vote, a debate opened or closed: an agenda item is under way;
     - anything else (a measure, "the chair notes that…") waits for the Assembly's own page.
     The same step within a quarter of an hour is one line."""
-    from .hronika import item_no
+    from .hronika import find, item_no
     agenda = (snap.get("dnevni_red") or {}).get("tacke") or []
     items = {int(x["n"]): x["tekst"] for x in agenda}
     now = snap.get("provereno") or 0
@@ -392,14 +395,17 @@ def steps_shown(snap: dict) -> list[dict]:
         turns.append((snap["sada"]["od"], now))
     quiet = lambda t: now >= t + STEP_QUIET and not any(a < t + STEP_QUIET and b > t + 30 for a, b in turns)
     first = lambda t: not any(b < t - 30 for a, b in turns)
+    idle = lambda t: not any(a < t and b > t - STEP_IDLE for a, b in turns)  # nobody at the rostrum just before
     out: list[dict] = []
     last: dict[str, int] = {}
-    item, paused = 0, False
+    item, paused, resumed = 0, False, ""
     for e in sorted(snap.get("hronika") or [], key=lambda e: e["t"]):
         if e.get("izvor") == "sajt":
             out.append({"t": e["t"], "izvor": "sajt", "naslov": "", "opis": e.get("tekst", ""), "url": e.get("url", "")})
             continue
         kind, more, t = e.get("vrsta", ""), "", e["t"]
+        if kind not in {k for k, _ in find(e.get("tekst", ""))}:
+            continue  # kept by a rule since mended: today's rules no longer find it in the sentence
         title = STEP_TITLES.get(kind, "")
         if kind == "Tačka dnevnog reda":
             n = item_no(e.get("tekst", ""))
@@ -410,7 +416,7 @@ def steps_shown(snap: dict) -> list[dict]:
             if not quiet(t):
                 continue
         elif kind == "Nastavak rada":
-            if not (paused or first(t)):
+            if not (paused or first(t) or (idle(t) and resumed != "on")):
                 continue
         elif kind == "Sednica otvorena":
             if not first(t):
@@ -426,6 +432,7 @@ def steps_shown(snap: dict) -> list[dict]:
         if kind == "Tačka dnevnog reda":
             item = n
         paused = kind in ("Pauza", "Kraj rada") or (paused and kind != "Nastavak rada")
+        resumed = "on" if kind == "Nastavak rada" else ("" if paused else resumed)
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": more, "url": ""})
     return out[::-1]
 

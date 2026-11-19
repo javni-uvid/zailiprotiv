@@ -890,11 +890,13 @@ def test_only_the_chairs_sound_is_written_down_and_a_step_is_shown_when_somethin
     piece, drop, chair = prepis.choose([f(110), f(120), f(200), f(205), f(210), f(215)], [turn], None, now=300, chair_only=True)
     assert chair and [x[0] for x in piece] == [200, 205, 210, 215] and len(drop) == 2  # the speaker's sound is let go
     now = 1795089600.0
-    ev = lambda at, kind, text="x": {"t": now + at, "vrsta": kind, "tekst": text, "izvor": "prepis", "url": ""}
+    said = {"Sednica otvorena": "Otvaram sednicu.", "Pauza": "Određujem pauzu.", "Nastavak rada": "Nastavljamo sa radom.",
+            "Glasanje": "Stavljam na glasanje.", "Mera predsedavajućeg": "Izričem opomenu.", "Kraj rada": "Zaključujem današnji rad."}
+    ev = lambda at, kind, text="": {"t": now + at, "vrsta": kind, "tekst": text or said[kind], "izvor": "prepis", "url": ""}
     snap = {"provereno": now + 5000, "sada": None, "dnevni_red": None,
             "danas": [{"od": now + 100, "do": now + 900}, {"od": now + 1000, "do": now + 1500}, {"od": now + 2400, "do": now + 2600}],
             "hronika": [ev(0, "Sednica otvorena"), ev(950, "Pauza"), ev(1510, "Pauza"), ev(1600, "Nastavak rada"), ev(2390, "Nastavak rada"),
-                        ev(2500, "Glasanje"), ev(2550, "Mera predsedavajućeg"), ev(2560, "Tačka dnevnog reda", "prelazimo na drugu tačku"),
+                        ev(2500, "Glasanje"), ev(2550, "Mera predsedavajućeg"), ev(2560, "Tačka dnevnog reda", "Prelazimo na drugu tačku dnevnog reda."),
                         ev(4900, "Kraj rada")]}
     assert [(int(r["t"] - now), r["naslov"]) for r in page_.steps_shown(snap)][::-1] == [
         (0, "Sednica je otvorena"), (1510, "Pauza"), (1600, "Rad je nastavljen")]
@@ -904,3 +906,23 @@ def test_only_the_chairs_sound_is_written_down_and_a_step_is_shown_when_somethin
     snap["provereno"] = now + 4900 + 300
     assert [r["naslov"] for r in page_.steps_shown(snap)] == [
         "Kraj rada za danas", "Prelazak na 2. tačku dnevnog reda", "Glasanje", "Rad je nastavljen", "Pauza", "Sednica je otvorena"]
+
+
+def test_the_afternoon_of_19_november_as_the_service_kept_it():
+    """What stood in the day's record when the steps vanished from the page: work resumed after a three-hour break
+    nobody had announced in our hearing, the third item named without "prelazimo na", and a rule's false find."""
+    from uzivo import hronika, page as page_
+    assert hronika.item_no("Treća tačka dnevnog reda, izbor potpredsednika narodne skupštine.") == 3
+    assert not hronika.find("Prema članu poslovnika do otvaranja pretresa prijave za reč podnose se u pisanom obliku.")
+    assert hronika.find("Otvaram jedinstveni pretres.")[0][0] == "Pretres otvoren"
+    day = 1795046400.0  # 19 Nov 2026, 00:00 in Belgrade
+    at = lambda h, m: day + h * 3600 + m * 60
+    ev = lambda h, m, kind, text: {"t": at(h, m), "vrsta": kind, "tekst": text, "izvor": "prepis", "url": ""}
+    snap = {"provereno": at(17, 0), "sada": None, "danas": [{"od": at(10, 7), "do": at(11, 0)}, {"od": at(11, 37), "do": at(12, 38)}],
+            "dnevni_red": {"tacke": [{"n": n, "tekst": f"Tačka {n}", "stanje": "gotova" if n < 3 else ""} for n in range(1, 7)]},
+            "hronika": [ev(15, 41, "Nastavak rada", "Dobar dan, nastavljamo sednicu pre nego što nastavim."),
+                        ev(15, 41, "Tačka dnevnog reda", "Treća tačka dnevnog reda, izbor potpredsednika narodne skupštine."),
+                        ev(16, 24, "Predsedavajući konstatuje", "samo konstatujem da je pretres otpočeo"),
+                        ev(16, 41, "Nastavak rada", "Nastavljamo, nastavljamo sa radom."),
+                        ev(16, 43, "Pretres otvoren", "poslovnika do otvaranja pretresa prijave za reč")]}
+    assert [r["naslov"] for r in page_.steps_shown(snap)] == ["Prelazak na 3. tačku dnevnog reda", "Rad je nastavljen"]

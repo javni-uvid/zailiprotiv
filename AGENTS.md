@@ -581,7 +581,9 @@ its minute.
   time on the maintainer's computer) keeps up; the second reading is off with it. `page.steps_shown` shows a step
   from the chair's words only when confirmed: an agenda item the agenda has, with a higher number than the last
   heard; a break or the day's end when nobody is at the rostrum for `STEP_QUIET` after it; work resumed after a
-  shown break or before anyone spoke; a vote or a debate's opening or closing while an agenda item is under way.
+  shown break, before anyone spoke, or (once) after ten minutes with nobody at the rostrum (`STEP_IDLE`: a break
+  need not have been heard); a vote or a debate's opening or closing while an agenda item is under way. A kept
+  step is checked against today's rules again when shown, so a mended rule also clears what it had found.
   Measures and anything else wait for the Assembly's page. Next, once a day of this has been looked at: a model
   over an API as a judge of the chair's words (a step's kind from the set list, the item's number, till when the
   break is), never as the writer of what the page says.

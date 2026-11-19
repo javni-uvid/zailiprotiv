@@ -32,17 +32,17 @@ RULES: list[tuple[str, re.Pattern]] = [(label, re.compile(rx)) for label, rx in 
     ("Glasanje", r"stavlj\w* na glasanj|prelaz\w* na glasanj|pristup\w* glasanj|molim\w* da se izjasn|dan za glasanj"),
     ("Tačka dnevnog reda", r"prelaz\w* na \w*\s*\w*\s*tačk|prelaz\w* na dnevn\w* red|tačk\w* dnevnog reda"),
     ("Pretres zaključen", r"zaključuj\w* \w*\s*\w*\s*(pretres|rasprav)"),
-    ("Pretres otvoren", r"otvara\w* \w*\s*\w*\s*(pretres|rasprav)"),
+    ("Pretres otvoren", r"otvaram\w* \w*\s*\w*\s*(pretres|rasprav)"),  # the chair's own verb, not "do otvaranja pretresa"
     ("Pauza", r"određuj\w* pauz|pravimo pauz|pauz\w* u trajanju|nastavljamo u \d|nastavljamo sutra|nastavak sednice"),
     ("Nastavak rada", r"nastavlja\w* (sa )?rad|nastavljamo sednic"),
     ("Mera predsedavajućeg", r"izrič\w* \w*\s*(opomen|mer)|oduzima\w* \w*\s*reč|udaljenj\w* sa sednic"),
-    ("Sednica otvorena", r"otvara\w* \w*\s*\w*\s*sednic"),
+    ("Sednica otvorena", r"otvaram\w* \w*\s*\w*\s*sednic"),
     ("Kraj rada", r"zaključuj\w* \w*\s*\w*\s*sednic|završ\w* rad za danas|zaključuj\w* današnj"),
     ("Predsedavajući konstatuje", r"konstatuj\w* da (je|su|nije)"),
 ]]
 _ORDINALS = {"prv": 1, "drug": 2, "treć": 3, "trec": 3, "četvrt": 4, "cetvrt": 4, "pet": 5, "šest": 6, "sest": 6, "sedm": 7,
              "osm": 8, "devet": 9, "deset": 10}
-_ITEM = re.compile(r"(?:na|po)\s+(\w+)\s+tačk|tačk\w*\s+(\d{1,2})\b|(\d{1,2})\.?\s+tačk")
+_ITEM = re.compile(r"(?:na|po)\s+(\w+)\s+tačk|tačk\w*\s+(\d{1,2})\b|(\d{1,2})\.?\s+tačk|(\w+)\s+tačk\w*\s+dnevnog\s+reda")
 
 
 def item_no(sentence: str) -> int:
@@ -52,7 +52,7 @@ def item_no(sentence: str) -> int:
         return 0
     if m.group(2) or m.group(3):
         return int(m.group(2) or m.group(3))
-    word = m.group(1)
+    word = m.group(1) or m.group(4)  # "na treću tačku", or the chair naming it: "Treća tačka dnevnog reda, izbor…"
     return next((n for stem, n in _ORDINALS.items() if word.startswith(stem)), 0)
 
 
