@@ -4,7 +4,8 @@
 {% block description %}Koliko je koji poslanik bio prisutan na konačnim glasanjima o zakonima, {{ conv_name|lower }} saziv: rang lista svih poslanika i poslaničkih grupa, iz listinga glasanja Skupštine.{% endblock %}
 {% block main %}
 <h1>Poslanici</h1>
-<nav class="subtabs law-kinds three" aria-label="Poslanici, poslaničke grupe ili prisustvo"><a href="poslanici.html">Poslanici</a><a href="grupe.html"><span class="w">Poslaničke grupe</span><span class="n">Grupe</span></a><a href="prisustvo.html" aria-current="page">Prisustvo</a></nav>
+<nav class="subtabs law-kinds three" aria-label="Poslanici, poslaničke grupe ili prisustvo"><a href="{{ newer15.mps_page if newer15 else "poslanici.html" }}">Poslanici</a><a href="grupe.html"><span class="w">Poslaničke grupe</span><span class="n">Grupe</span></a><a href="prisustvo.html" aria-current="page">Prisustvo</a></nav>
+{% from "macros.html" import newer_panel with context %}{{ newer_panel("prisustvo") }}
 <div class="lead-nums">
   <p><b>{{ votes }}</b><span>{{ plural(votes, "konačno glasanje", "konačna glasanja", "konačnih glasanja") }} o zakonima, {{ first|day }} – {{ last|day }}</span></p>
   {% if median %}<p><b>{{ (100 * median)|round|int }}%</b><span>prisustvo poslanika na sredini liste (medijana)</span></p>{% endif %}

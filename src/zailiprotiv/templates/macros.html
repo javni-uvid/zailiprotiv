@@ -23,7 +23,7 @@
 {%- endmacro %}
 
 {% macro tabs(convs, conv, key) -%}
-{% if convs|length > 1 %}<nav class="tabs" aria-label="Saziv">{% for c in convs %}<a href="{{ c[key] }}"{% if c.n == conv %} aria-current="page"{% endif %}>{{ c.years }}<span>{{ c.name }} saziv</span></a>{% endfor %}</nav>{% endif %}
+{% if convs|length > 1 or (newer15 and newer15[key]) %}<nav class="tabs" aria-label="Saziv">{% if newer15 and newer15[key] %}<a href="{{ newer15[key] }}"{% if conv == newer15.conv %} aria-current="page"{% endif %}>{{ newer15.years }}<span>{{ newer15.name }} saziv</span></a>{% endif %}{% for c in convs %}<a href="{{ c[key] }}"{% if c.n == conv %} aria-current="page"{% endif %}>{{ c.years }}<span>{{ c.name }} saziv</span></a>{% endfor %}</nav>{% endif %}
 {%- endmacro %}
 
 {% macro how(anchor) %}<a class="how" href="{{ root }}kako-racunamo.html#{{ anchor }}">Kako računamo</a>{% endmacro %}
@@ -36,6 +36,49 @@
 {# The Assembly's own pages share one heading and these buttons, as the laws' and the MPs' pages do. #}
 {% macro assembly_tabs(now) -%}
 <nav class="subtabs law-kinds four" aria-label="Skupština">{% for key, page, label in [("nedelje", "nedelje.html", "Nedelje"), ("sednice", "sednice.html", "Sednice"), ("sazivi", "saziv-" ~ current ~ ".html", "Sazivi"), ("brojke", "brojke.html", "U brojkama")] %}<a href="{{ page }}"{% if key == now %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}</nav>
+{{ newer_panel(now) }}
+{%- endmacro %}
+
+{# The newest convocation before its first law, on every page that has a place for it (site.py, `newer15`): what the
+   site has of it for that page, and the ways to the rest. `part` says which page: the sittings, "Varnice", the
+   groups, or any other (a line and the links). Gone when the convocation becomes the current one. #}
+{% macro newer_panel(part) -%}
+{% if newer15 %}{% set v = newer15 %}
+<section class="newer-panel" id="saziv-{{ v.conv }}">
+  <p class="kicker">{{ v.name }} saziv · od {{ v.since|day_of }}</p>
+  {% if part == "grupe" %}
+  <h2>Poslaničke grupe u {{ v.name|locative }} sazivu</h2>
+  <div class="hc-seats" role="img" aria-label="Mandati po poslaničkim grupama">{% for g in v.groups %}<i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}" style="flex-grow:{{ g.n }}"></i>{% endfor %}</div>
+  <div class="scroll"><table class="groups np-table">
+    <thead><tr><th>Grupa</th><th class="num">Poslanika</th><th class="num">Prvi put</th><th class="num">Za govornicom</th><th class="num">Udeo vremena</th></tr></thead>
+    <tbody>{% for g in v.groups %}<tr><td><i class="hc-dot {{ g.cls }}"></i><a href="{{ v.mps_page }}#g{{ loop.index }}">{{ g.name }}</a></td><td class="num">{{ g.n }}</td><td class="num">{{ g.new }}</td><td class="num">{{ g.time or "—" }}</td><td class="num">{% if g.sec %}{{ g.share }}%{% else %}—{% endif %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <p class="label">Mandati sa spiska Skupštine. „Prvi put“: bez ijednog glasanja u sazivima od 2012. Vreme za govornicom je mereno sa snimka prenosa ({{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }}), isto za svakog govornika. Kako grupe glasaju biće ovde od prvog glasanja.</p>
+  {% elif part == "sednice" %}
+  <h2>Sednice u {{ v.name|locative }} sazivu</h2>
+  {% for st in v.sittings %}
+  <h3><a href="{{ st.url }}">{{ st.title }}</a></h3>
+  <ol class="hc-agenda">{% for a in st.agenda %}<li>{{ a }}</li>{% endfor %}</ol>
+  {% endfor %}
+  {% if v.days %}<ul class="plain np-days">{% for d in v.days %}<li><a href="govornici/{{ d.day }}.html">{{ d.when }}</a> <span class="label">· {{ d.time }} za govornicom · {{ d.people }} govornika · snimak i prepis</span></li>{% endfor %}</ul>{% endif %}
+  <p class="label">Dnevni red je sa sajta Skupštine; dani su pročitani sa snimka prenosa. Glasanja će biti ovde čim Skupština objavi rezultate.</p>
+  {% elif part == "varnice" %}
+  <h2>Varnice u {{ v.name|locative }} sazivu</h2>
+  {% if v.exchanges %}
+  <p><b class="np-big">{{ v.exchanges }}</b> {{ "brza razmena" if v.exchanges == 1 else "brzih razmena" }} između dva govornika za {{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }}: tri ili više javljanja zaredom, naizmenično, u razmaku do dva minuta.</p>
+  {% for d in v.days if d.exchanges %}
+  <h3><a href="govornici/{{ d.day }}.html">{{ d.when }}</a></h3>
+  <ul class="plain np-days">{% for x in d.exchanges %}<li><a href="govornici/{{ d.day }}.html#{{ x.id }}">{{ x.a|given_first }} i {{ x.b|given_first }}</a> <span class="label">· {{ x.n }} javljanja zaredom</span></li>{% endfor %}</ul>
+  {% endfor %}
+  {% else %}<p>Još nema brzih razmena između dva govornika na danima koje smo pročitali.</p>{% endif %}
+  <p class="label">Ovo je po redosledu javljanja sa snimka, ne po sadržaju. Replike, opomene i teške reči brojimo iz stenografskih beleški, kao za ranije sazive, čim ih obradimo.</p>
+  {% else %}
+  <h2>{{ v.name }} saziv: {{ v.n }} poslanika, {{ v.new }} prvi put</h2>
+  <p>Još nema usvojenih zakona ni glasanja. {% if v.days %}Do sada {{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }} sednice pročitano sa snimka.{% endif %}</p>
+  {% endif %}
+  <p class="np-links"><a href="{{ v.mps_page }}">Poslanici</a><a href="{{ v.groups_page }}">Grupe</a><a href="{{ v.sittings_page }}">Sednice</a><a href="govornici.html">Ko koliko govori</a><a href="{{ v.floor_page }}">Varnice</a>{% if live_page %}<a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Uživo</a>{% endif %}</p>
+</section>
+{% endif %}
 {%- endmacro %}
 
 {# The visitor's own vote (glas.js): on a law's page with the Assembly's result to compare with, on a bill's page

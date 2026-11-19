@@ -495,6 +495,17 @@ its minute.
   the last adopted, the picked votes, "Varnice u sali", which moved below them), and a dashed box holds the place of
   the new one's first laws and of its replies and measures. All by rule; the block goes when the new convocation
   becomes the current one.
+- **The new convocation on every page with a place for it** (19 Nov 2026, the maintainer's request). `newer15` in
+  `site.py` (computed before any of these pages is rendered, and a global): the groups with seats, new MPs and time
+  on the floor, the sittings as the Assembly lists them with their agenda, the days read from the recordings and the
+  quick exchanges on them. The MPs' pages have its **tab first** (`macros.tabs`; a template that uses it imports it
+  `with context`, since a macro imported without sees the globals as they were when first imported), the new
+  convocation's list page wears the section's head and tabs, and **the menu's "Poslanici" leads to it** while it is
+  the sitting one. `macros.newer_panel(part)`: on "Grupe" the groups' table and seats bar, on "Sednice" the agenda
+  and the days, on "Varnice" the quick exchanges by the order of turns (the notes' replies, measures and harsh words
+  come when the notes are counted for it: `pages_floor` still counts only convocations with laws), elsewhere in the
+  Assembly's pages and on "Prisustvo" a line and the links. It rides in `assembly_tabs`, so every page of that
+  section has it. Gone when the convocation becomes the current one.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

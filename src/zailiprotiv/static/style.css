@@ -1105,3 +1105,13 @@ em.prev { font-style: normal; font-family: system-ui, -apple-system, "Segoe UI",
 /* On a phone the new convocation's block comes right under the search, before the quiz and the earlier convocation's law. */
 @media (max-width: 760px) { main:has(> .home-hero) > .home-conv { order: 1; margin-top: .4rem; } }
 @media (max-width: 640px) { .hc-top li:nth-child(n+4) { display: none; } .home-conv { padding: 1rem 1rem .8rem; } }
+
+/* The newest convocation's panel on the pages that have a place for it (macros.newer_panel) */
+.newer-panel { margin: 1.2rem 0 2rem; padding: 1.1rem 1.2rem .9rem; border: 2px solid var(--fg); border-radius: 12px; }
+.newer-panel h2 { margin: 0 0 .8rem; font-size: clamp(1.2rem, 3vw, 1.5rem); line-height: 1.25; } .newer-panel h3 { margin: 1rem 0 .4rem; font-size: 1rem; }
+.newer-panel .hc-seats { margin-bottom: .9rem; } .np-table td:first-child { white-space: normal; } .np-big { font-family: var(--serif); font-size: 1.7rem; margin-right: .2rem; }
+.np-days li { margin: .3rem 0; }
+.np-links { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 0; } .np-links a { padding: .25rem .7rem; border: 1px solid var(--line); border-radius: 999px; font-size: .88rem; text-decoration: none; color: var(--fg); white-space: nowrap; } .np-links a:hover { border-color: var(--fg); }
+.members-h { margin: 1.2rem 0 .6rem; font-size: 1.3rem; }
+.np-table td:first-child { min-width: 9.5rem; } .np-table .hc-dot { margin-right: .45rem; }
+@media (max-width: 640px) { .np-table th:nth-child(5), .np-table td:nth-child(5), .np-table th:nth-child(3), .np-table td:nth-child(3) { display: none; } .np-table td:first-child { min-width: 0; } .np-table { font-size: .88rem; } .np-table th, .np-table td { padding: .45rem .3rem; } }

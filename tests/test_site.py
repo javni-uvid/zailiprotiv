@@ -608,6 +608,12 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     new = (out / "poslanik" / "pastor-balint.html").read_text()
     assert 'content="noindex"' in new and "1979.</b><span>godište</span>" in new and "nije navedena" in new
     assert (out / "cir" / "poslanici-15.html").exists() and "poslanici-15.html" in (out / "poslanici.html").read_text()
+    # the newest convocation has its tab on the MPs' pages, the menu leads to it, and the groups' page lists its groups
+    assert '<a href="poslanici-15.html">2026–<span>Petnaesti saziv</span></a>' in (out / "poslanici.html").read_text()
+    assert 'aria-current="page">2026–<span>Petnaesti saziv</span>' in listing and '<a href="poslanici-15.html">Poslanici</a>' in listing
+    groups_page = (out / "grupe.html").read_text()
+    assert 'id="saziv-15"' in groups_page and "Poslaničke grupe u petnaestom sazivu" in groups_page
+    assert 'id="saziv-15"' in (out / "sednice.html").read_text()
     assert any(m["s"] == "pastor-balint" for m in json.loads((out / "podaci.json").read_text())["mps"])
     assert site.check(out) == []
     # A namesake of an earlier MP whose year of birth the archive gives otherwise is another person.

@@ -1,12 +1,11 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, tabs %}
+{% from "macros.html" import bar, plural, tabs with context %}
 {% block title %}Poslanici, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block description %}Svi poslanici u {{ conv_name|locative }} sazivu Narodne skupštine Srbije: kako je ko glasao o zakonima, koliko je bio prisutan i u kojoj je grupi.{% endblock %}
 {% block main %}
 <h1>Poslanici</h1>
-<nav class="subtabs law-kinds{% if presence_page %} three{% endif %}" aria-label="Poslanici ili poslaničke grupe"><a href="poslanici.html" aria-current="page">Poslanici</a><a href="grupe.html"><span class="w">Poslaničke grupe</span><span class="n">Grupe</span></a>{% if presence_page %}<a href="prisustvo.html">Prisustvo</a>{% endif %}</nav>
+<nav class="subtabs law-kinds{% if presence_page %} three{% endif %}" aria-label="Poslanici ili poslaničke grupe"><a href="{{ newer15.mps_page if newer15 else "poslanici.html" }}" aria-current="page">Poslanici</a><a href="grupe.html"><span class="w">Poslaničke grupe</span><span class="n">Grupe</span></a>{% if presence_page %}<a href="prisustvo.html">Prisustvo</a>{% endif %}</nav>
 {{ tabs(convs, conv, "mps_page") }}
-{% if members_page %}<p class="note members-note"><a href="{{ members_page }}"><b>{{ members_name }} saziv:</b> svih {{ members_n }} poslanika, ko je nov, a ko je već bio u Skupštini</a></p>{% endif %}
 <div class="finder js-only" hidden data-filter="f-rows">
   <label class="sr" for="f-q">Pretraži poslanike</label>
   <input id="f-q" type="search" placeholder="Ime ili prezime, {{ rows|length }} poslanika ovog saziva" autocomplete="off">

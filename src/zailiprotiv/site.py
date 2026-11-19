@@ -723,6 +723,63 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_floor
     sent = root / "notes_manifest.json"  # what notes-upload has put in the bucket
     notes_pages = set(json.loads(sent.read_text(encoding="utf-8"))) if sent.exists() else set()
+    # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
+    # year of birth; their own pages say they sit in it.
+    from zailiprotiv import pages_members
+    from zailiprotiv import pages_mikrofon
+    members_conv, members_listed = pages_members.load(root)
+    member_rows, member_now = [], {}
+    if members_conv and members_listed:
+        years_file = root / "mp_years.json"
+        years_listed = json.loads(years_file.read_text(encoding="utf-8")).get("listed", {}) if years_file.exists() else {}
+        member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
+                                          title_case=title_case, slug=slug)
+        member_now = pages_members.now_of(member_rows)
+    # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
+    # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
+    # MPs' pages and found nothing there).
+    from zailiprotiv import pages_govornici as _gv
+    _days_now = _gv.load(root).get(members_conv or NEWEST_, [])
+    env.globals["floor_now"] = _gv.per_speaker(_days_now)
+    env.globals["floor_now_conv"] = members_conv or NEWEST_
+    env.globals["floor_now_last"] = max((d["dan"] for d in _days_now), default="")
+    # What the site has of the newest convocation before its first law, for every page with a place for it (19 Nov
+    # 2026, the maintainer's request: the MPs' tabs, the groups, the sittings, "Varnice", the Assembly's pages): its
+    # groups with seats, new MPs and time on the floor, its sittings as the Assembly lists them with the days read
+    # from the recordings, and the quick exchanges on those days (by the order of turns only). All by rule.
+    newer15 = None
+    if members_conv and member_rows and str(members_conv) != str(current):
+        from zailiprotiv.translit import latin as _lat15
+        _spoke = env.globals["floor_now"]
+        _groups = []
+        for sec in pages_members.by_group(member_rows):
+            if not sec["rows"]:
+                continue
+            sec_time = sum(_spoke.get(r["slug"], {}).get("sec", 0) for r in sec["rows"])
+            _groups.append({"name": sec["name"], "n": len(sec["rows"]), "new": sum(1 for r in sec["rows"] if r["new"]),
+                            "time": _gv.dur(sec_time) if sec_time else "", "sec": sec_time,
+                            "speakers": sum(1 for r in sec["rows"] if r["slug"] in _spoke),
+                            "cls": GROUP_COLOURS.get(sec["name"], "g-mn" if sec.get("none") else "")})
+        _whole = sum(g["sec"] for g in _groups) or 1
+        for g in _groups:
+            g["share"] = round(100 * g["sec"] / _whole)
+        _idx = root / members_conv / "index.json"
+        _sit = []
+        if _idx.exists():
+            for u, v in json.loads(_idx.read_text(encoding="utf-8")).get("sittings", {}).items():
+                if v.get("agenda"):
+                    _sit.append({"title": _lat15(v["title"]), "url": u, "agenda": [_lat15(x).removesuffix(" i") for x in v["agenda"]]})
+        _daysv = [{"day": d["dan"], "when": _gv.day_name(d["dan"]), "time": _gv.dur(sum(max(0, t["do"] - t["od"]) for t in d["govori"])),
+                   "people": len({t["ime"] for t in d["govori"]}),
+                   "exchanges": [{"a": x["a"], "b": x["b"], "n": x["n"], "id": f"g{x['od']}"} for x in _gv.exchanges(d["govori"])]}
+                  for d in sorted(_days_now, key=lambda d: d["dan"], reverse=True)]
+        newer15 = {"conv": members_conv, "name": ORDINAL_NAME.get(members_conv, members_conv),
+                   "since": pages_members.since(members_conv), "years": pages_members.since(members_conv)[:4] + "–",
+                   "mps_page": pages_members.PAGE.format(conv=members_conv), "groups_page": "grupe.html#saziv-" + members_conv,
+                   "floor_page": "replike.html#saziv-" + members_conv, "sittings_page": "sednice.html#saziv-" + members_conv,
+                   "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "groups": _groups,
+                   "sittings": _sit, "days": _daysv, "exchanges": sum(len(d["exchanges"]) for d in _daysv)}
+    env.globals["newer15"] = newer15
     exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
                                                 convs=convs, items_by_conv=items_by_conv)
     from zailiprotiv import card, mp_card
@@ -772,26 +829,6 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             for sp in own:
                 speech_url[(k, sp["date"])] = sp["url"]
     env.globals["photo_for"] = lambda mp: photo_of.get(mp.key, "")
-    # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
-    # year of birth; their own pages say they sit in it.
-    from zailiprotiv import pages_members
-    from zailiprotiv import pages_mikrofon
-    members_conv, members_listed = pages_members.load(root)
-    member_rows, member_now = [], {}
-    if members_conv and members_listed:
-        years_file = root / "mp_years.json"
-        years_listed = json.loads(years_file.read_text(encoding="utf-8")).get("listed", {}) if years_file.exists() else {}
-        member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
-                                          title_case=title_case, slug=slug)
-        member_now = pages_members.now_of(member_rows)
-    # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
-    # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
-    # MPs' pages and found nothing there).
-    from zailiprotiv import pages_govornici as _gv
-    _days_now = _gv.load(root).get(members_conv or NEWEST_, [])
-    env.globals["floor_now"] = _gv.per_speaker(_days_now)
-    env.globals["floor_now_conv"] = members_conv or NEWEST_
-    env.globals["floor_now_last"] = max((d["dan"] for d in _days_now), default="")
     rows_mp, live_facts = [], {}
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
