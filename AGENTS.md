@@ -14,7 +14,8 @@ decisions unless said otherwise.
 - **Update README.md with every feature**, and this file with every decision.
 - **Talk to the maintainer in Serbian** (Latin script), briefly. Code, comments and docs are in English.
 - **A development environment may not reach parlament.gov.rs, the subdomains or the buckets; GitHub's runners can.**
-  Read the outside through workflows: **peek** (a page's text), **health**, **visits** (Cloudflare's counts, what
+  Read the outside through workflows: **peek** (a page's text), **health**, **visits** (Cloudflare's counts, how long
+  the live page is in view (`tools/watching.py`: its part asked every 5 s while in view, summed per hour), what
   Cloudflare stopped, Google Search), **dns-check**, **probe**. Never ask the maintainer to paste secrets in chat.
 - **Ask the Assembly little.** Requests name the project in the User-Agent and wait a second between pages;
   recurring reads are incremental.
@@ -325,6 +326,11 @@ its minute.
   computer behind a Cloudflare tunnel, because YouTube often refuses data centres' addresses (GitHub's runners
   among them) and a home address works. When the computer is off the page is down; **health** does not ask it.
   The tunnel's token lives in `live/.tunnel.env` (never committed) and in Cloudflare.
+- **Test first, then live** (19 Nov 2026, the maintainer's decision): two images. `live/mikrofon.ps1 test` builds
+  the working tree as `mikrofon:test` and runs it at `127.0.0.1:8001` (`docker-compose.test.yml`: no tunnel, no
+  visits counted, its own data); only after the maintainer has looked at it does `mikrofon.ps1 uzivo` tag that same
+  image `mikrofon:uzivo` and run it with the tunnel (`docker-compose.yml`, which never builds); the image it
+  replaces stays as `mikrofon:prethodni` (`nazad`). A change to `live/` is never put live without the test.
 - **While it is down** (17 Nov 2026): a worker in front of the hostname (`live/edge/`, a route on the zone, published
   by the `worker` workflow) passes every request to the tunnel; on a 5xx (530 when the tunnel is down) it shows the
   site's `mikrofon` page (`pages_mikrofon.py`, noindex) under a `<base>` pointing to zailiprotiv.rs, and the live
