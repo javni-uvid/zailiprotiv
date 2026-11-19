@@ -72,13 +72,27 @@ loads before a click (AGENTS.md, principle 5); without the script the links open
 
 ## Running it
 
-```sh
+Two images, **test first, then live** (19 Nov 2026, the maintainer's decision): a change is built and tried
+locally, and only the image the test ran goes live, never one built afresh for it.
+
+```powershell
 cd live
 cp .env.example .env
-printf 'TUNNEL_TOKEN=%s\n' '<token from Cloudflare>' > .tunnel.env   # never committed
-docker compose up -d --build
-docker compose logs -f uzivo
+Set-Content -Encoding ascii .tunnel.env "TUNNEL_TOKEN=<token from Cloudflare>"   # never committed
+.\mikrofon.ps1 test      # the working tree as mikrofon:test, at http://127.0.0.1:8001/ (-Novo: the newest yt-dlp)
+.\mikrofon.ps1 uzivo     # once it looks right: that image becomes mikrofon:uzivo, live, and the test stops
+.\mikrofon.ps1 nazad     # the image that was live before, live again
+.\mikrofon.ps1 stanje    # what runs
+docker compose logs -f uzivo                              # the live service
+docker compose -f docker-compose.test.yml logs -f uzivo   # the test
 ```
+
+- **Live** (`docker-compose.yml`, project `mikrofon`): `mikrofon:uzivo` on port 8000 and the tunnel; it never
+  builds. Its data are in the volume `mikrofon-podaci`.
+- **Test** (`docker-compose.test.yml`, project `mikrofon-test`): built from the working tree, port 8001, no tunnel,
+  no visits counted, four Whisper threads, its own volume `mikrofon-test-podaci`. It reads the same broadcast as
+  the live service, so both can run side by side during a sitting.
+- Both keep Whisper's model in `mikrofon-whisper`, fetched once.
 
 In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostname `mikrofon.zailiprotiv.rs` points to
 `http://uzivo:8000`. A log line per frame: `name matched | name line | list line -> state`.
@@ -89,7 +103,7 @@ page for that instead (zailiprotiv.rs/mikrofon: why it is down, the broadcast, t
 site). Nothing changes in the tunnel or the DNS.
 
 When YouTube asks to sign in, put a `cookies.txt` in the volume and set `YTDLP_COOKIES=/data/cookies.txt`; when
-yt-dlp stops working, `docker compose build --pull --no-cache uzivo` takes the newest.
+yt-dlp stops working, `.\mikrofon.ps1 test -Novo` takes the newest, then `.\mikrofon.ps1 uzivo`.
 
 Settings are in `uzivo/config.py`, each overridable from `.env`.
 

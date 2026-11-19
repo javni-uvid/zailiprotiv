@@ -1,0 +1,25 @@
+# The test: the working tree built as mikrofon:test, at http://127.0.0.1:8001/, beside the live service and apart
+# from it. It reads the same broadcast but keeps its own data, counts no visits and has no tunnel.
+name: mikrofon-test
+services:
+  uzivo:
+    image: mikrofon:test
+    build:
+      context: ..
+      dockerfile: live/Dockerfile
+    env_file: .env
+    environment:
+      PUBLIC_URL: http://127.0.0.1:8001/
+      ANALYTICS_TOKEN: ""         # the test's visits are not the site's
+      WHISPER_THREADS: "4"        # leaves the live service its cores
+    volumes:
+      - podaci:/data
+      - whisper:/data/hf          # the live service's model, not fetched again
+    ports:
+      - "127.0.0.1:8001:8000"
+
+volumes:
+  podaci:
+    name: mikrofon-test-podaci
+  whisper:
+    name: mikrofon-whisper
