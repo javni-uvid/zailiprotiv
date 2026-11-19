@@ -66,6 +66,8 @@ TEXT = {
     "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
     "share_day": "Podeli presek dana",
     "share_tall": "Uspravna slika za priču",
+    "news": "Novo:",
+    "news_page": "stranica poslanika",
     "coming": "Sledeća sednica",
     "at": "u",
     "sd_text": "Ko je koliko govorio u Skupštini:",
@@ -209,6 +211,14 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     cur = snap.get("sada")
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
+    for n in snap.get("obavestenja") or []:  # what the Assembly has decided, as its own site says it (the site's data/obavestenja.json)
+        text = escape(_name(n["tekst"], cyr))
+        more = ""
+        if str(n.get("url", "")).startswith("https://"):
+            more += f' <a href="{escape(n["url"])}">{escape(_name(n.get("izvor") or "izvor", cyr))}</a>'
+        if n.get("adresa") and str(n["adresa"]).replace("-", "").isalnum():
+            more += f' · <a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + n["adresa"])}">{t("news_page")}</a>'
+        out.append(f'<p class="news"><b>{t("news")}</b> {text}{more}</p>')
     out.append('<section class="sp-top">')
     said = ""
     if snap["stanje"] == "govori" and cur:
@@ -690,6 +700,7 @@ main { display: flex; flex-direction: column; }
 main > * { order: 6; }
 main > h1, main > .lead { order: 0; }
 #deo { display: contents; }
+.news { order: 0; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: .98rem; line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--protiv); margin-right: .3rem; }
 .sp-top { order: 1; } main > .player { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
 .said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
 .pz-next { margin: 0 0 .9rem; }

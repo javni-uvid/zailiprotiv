@@ -410,7 +410,10 @@ class Tracker:
             coming = self.waiting.get("sazvano") if isinstance(self.waiting, dict) else None
             if not (isinstance(coming, dict) and str(coming.get("pocinje", ""))[:10] >= today and not current):
                 coming = None  # shown only while nobody is on, and not once its day has passed
+            news = [n for n in (self.waiting.get("obavestenja") or []) if isinstance(n, dict) and n.get("tekst")
+                    and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
+                    "obavestenja": news[:3],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
 

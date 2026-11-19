@@ -693,3 +693,17 @@ def test_a_name_read_in_two_frames_with_no_line_under_it_is_not_a_turn():
     t.observe(None, now=now + 660)
     snap = t.snapshot(now=now + 661)
     assert [(d["ime"], d["od"]) for d in snap["danas"]] == [("Jovanović Marko", int(now + 500)), ("Petrović Petar", int(now))]
+
+
+def test_a_notice_from_the_site_stands_on_top_from_its_day_until_its_last():
+    t = Tracker(None, "Europe/Belgrade")
+    day = t._day(time.time())
+    t.use_waiting({"kviz": [], "cinjenice": [], "obavestenja": [
+        {"od": day, "do": day, "tekst": "Petar Petrović izabran je za predsednika Narodne skupštine.", "izvor": "sajt Narodne skupštine",
+         "url": "https://www.parlament.gov.rs/x", "adresa": "petrovic-petar"},
+        {"od": "2000-01-01", "do": "2000-01-02", "tekst": "Staro.", "izvor": "", "url": "https://www.parlament.gov.rs/y", "adresa": ""}]})
+    snap = t.snapshot()
+    assert [n["tekst"] for n in snap["obavestenja"]] == ["Petar Petrović izabran je za predsednika Narodne skupštine."]
+    html = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'class="news"' in html and "Петар Петровић изабран је за председника" in html and "Старо" not in html
+    assert 'href="https://www.parlament.gov.rs/x"' in html and "/cir/poslanik/petrovic-petar" in html

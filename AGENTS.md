@@ -506,6 +506,11 @@ its minute.
   come when the notes are counted for it: `pages_floor` still counts only convocations with laws), elsewhere in the
   Assembly's pages and on "Prisustvo" a line and the links. It rides in `assembly_tabs`, so every page of that
   section has it. Gone when the convocation becomes the current one.
+- **A notice on top of the live page** (19 Nov 2026, the maintainer's request: the Speaker's election). What the
+  Assembly has decided is written by hand into `data/obavestenja.json` (a sentence of fact as the Assembly's site
+  says it, its source's address, the days it stands, the MP's page), published in `mikrofon-cekanje.json` and shown
+  above the speaker from "od" until "do"; the service reads it with the hour's fetch, so a new notice needs no
+  rebuild. No comment and nothing the source does not say.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

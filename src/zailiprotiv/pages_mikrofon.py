@@ -285,7 +285,26 @@ def besides(facts_: list[dict], quiz_: list[dict]) -> list[dict]:
     return [f for f in facts_ if f.get("key") not in asked]
 
 
-def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = None) -> dict:
+NOTICES_FILE = "obavestenja.json"  # data/obavestenja.json
+
+
+def notices(root) -> list[dict]:
+    """What the Assembly has decided that the live page should say on top (19 Nov 2026: a Speaker elected), written
+    by hand into data/obavestenja.json, each a sentence of fact with its source: [{"od", "do", "tekst", "izvor",
+    "url", "adresa"}]. Only what the source says, no comment; shown from "od" until "do"."""
+    path = Path(root) / NOTICES_FILE
+    if not path.exists():
+        return []
+    try:
+        rows = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError:
+        return []
+    return [{k: str(r.get(k, "")) for k in ("od", "do", "tekst", "izvor", "url", "adresa")}
+            for r in rows if isinstance(r, dict) and r.get("tekst") and str(r.get("url", "")).startswith("https://")]
+
+
+def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = None,
+            notices_: list[dict] | None = None) -> dict:
     """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own); and the
     next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts)."""
     plain = lambda h: h if h.startswith("http") else h.removesuffix(".html")
@@ -294,11 +313,13 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
     if coming:
         c = coming[0]
         out["sazvano"] = {"naslov": latin(c.get("title", "")), "url": c.get("url", ""), "pocinje": c.get("starts", "")}
+    if notices_:
+        out["obavestenja"] = notices_
     return out
 
 
 def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None,
-           quiz_: list[dict] | None = None) -> None:
+           quiz_: list[dict] | None = None, notices_: list[dict] | None = None) -> None:
     """mikrofon.html: an ordinary page of the site (its links relative), which the edge worker (live/edge) shows at
     mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap. With the
     last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
@@ -306,6 +327,6 @@ def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], da
         **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
         day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
         encoding="utf-8")
-    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming), ensure_ascii=False), encoding="utf-8")
+    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming, notices_), ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
