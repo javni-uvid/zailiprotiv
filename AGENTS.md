@@ -561,6 +561,9 @@ its minute.
   `CHAIR_WAIT`), kept apart in the day's record (keys `p<second>`), shown under "Bez potpisa: predsedavajući ili
   sala" while nobody's caption is on (snapshot `bez_potpisa`) and on `/prepis` in its place in time. It is never put
   to an MP, never counted in anyone's time, and the day's steps are still read from it.
+- **Trying another Whisper model** without touching the service: `python -m uzivo.proba <model> [seconds]` in the
+  container (`live/uzivo/proba.py`) listens to the kept sound, writes it down with the running model and the named
+  one, and prints the time and the text of each. It shares the processor with the service while it runs.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

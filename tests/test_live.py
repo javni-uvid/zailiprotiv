@@ -827,3 +827,12 @@ def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read
     page_ = transcript_page(t.transcript(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Petrović je rekao: oktobar, tačno." in page_ and "drugo, tačnije čitanje" in page_  # the second reading took its place
     assert "mailto:kontakt@zailiprotiv.rs?subject=Ispravka%20prepisa" in page_ and "Prijavi grešku u prepisu" in page_
+
+
+def test_trying_another_model_listens_to_the_kept_sound(tmp_path, monkeypatch):
+    from uzivo import config, proba
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path))
+    (tmp_path / "2000-1000.pcm").write_bytes(b"\1\0" * 16000)
+    (tmp_path / "1000-1000.pcm").write_bytes(b"\2\0" * 16000)
+    raw, length = proba.collect(0)
+    assert length == 2 and raw[:2] == b"\2\0" and raw[-2:] == b"\1\0"  # in the order of time, whole
