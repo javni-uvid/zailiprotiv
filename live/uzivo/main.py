@@ -42,7 +42,8 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 
 def _page(cyr: bool) -> HTMLResponse:
     return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
-                             live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN), headers=NO_STORE)
+                             live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API),
+                        headers=NO_STORE)
 
 
 def _part(cyr: bool) -> HTMLResponse:

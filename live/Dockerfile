@@ -11,7 +11,7 @@ COPY live/uzivo ./uzivo
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
 # The script and styles shared with the site's mikrofon page (page._shared)
 COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
-# The site's analytics token (config.ANALYTICS_TOKEN): visits counted as on the site
+# The site's analytics token and counter (config.ANALYTICS_TOKEN, VOTES_API): visits and presses counted as on the site
 COPY data/settings.json ./uzivo/static/settings.json
 # Whisper's model is fetched once and kept with the data (prepis.py)
 ENV HF_HOME=/data/hf

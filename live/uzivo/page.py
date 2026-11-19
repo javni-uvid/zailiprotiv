@@ -131,7 +131,8 @@ TEXT = {
     "play_day": "Pusti snimak dana",
     "part": "Deo",
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
-    "yt_live_note": "Prenos Skupštine sa Jutjuba (Gugl), u režimu bez kolačića dok ne pustite snimak.",
+    "yt_live_note": "Prenos Skupštine sa Jutjuba (Gugl) učitava se tek kad ga pustite, u režimu bez kolačića.",
+    "play_live": "Gledaj prenos",
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
@@ -1242,11 +1243,13 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
     the broadcaster's archive, from its first turn. Only a button until clicked (AGENTS.md, principle 5)."""
     t = lambda k: escape(_t(k, cyr))
     if snap["stanje"] != "nema_prenosa" and live:
-        # The broadcast is on the page as soon as it opens (19 Nov 2026, the maintainer's decision, an exception to
-        # "nothing of a third party until a click", for this page while a sitting is on): YouTube's player in its
-        # no-cookie mode, not playing until pressed.
-        button = (f'<iframe src="https://www.youtube-nocookie.com/embed/{escape(live)}" title="YouTube" loading="lazy" '
-                  f'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>')
+        # A facade (19 Nov 2026, the maintainer's decision, in place of YouTube's player on the page from the start):
+        # our own picture of the moment (picture.py) with ▶; a press loads the player, playing, and is counted.
+        # Nothing from YouTube loads before it: the page opens faster on a phone.
+        img = ("/cir" if cyr else "") + "/slika.png"
+        button = (f'<button type="button" class="play facade" data-yt="{escape(live)}" data-t="0" data-e="mikrofon.pusti">'
+                  f'<img src="{img}" alt="" width="1200" height="630" decoding="async">'
+                  f'<span>▶ {t("play_live")}</span></button>')
         note = t("yt_live_note")
     else:
         parts = snap.get("datoteke") or []
@@ -1310,7 +1313,7 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
 
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
-         live: str = "", analytics: str = "") -> str:
+         live: str = "", analytics: str = "", api: str = "") -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -1333,7 +1336,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
 <style>{CSS}</style>
 </head>
-<body data-base="{base}">
+<body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
 <header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
 <main>
 <section class="hero">

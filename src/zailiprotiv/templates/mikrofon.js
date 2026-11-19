@@ -5,6 +5,14 @@
   if (!screen) return;
   var ARCHIVE = /^https:\/\/arhiva\.videonet\.co\.rs\//, ID = /^[\w-]{6,20}$/;
   function put(el) { screen.textContent = ""; screen.appendChild(el); }
+  // A press on the broadcast's ▶ told to the site's counter, once per page: a sum per day, nothing with it.
+  var told = {};
+  function count(what) {
+    var api = (document.body.getAttribute("data-api") || "").replace(/\/$/, "");
+    if (!what || !/^https:\/\//.test(api) || told[what]) return;
+    told[what] = 1;
+    try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
+  }
   function yt(id, t) {
     var f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1" + (t > 0 ? "&start=" + t : "");
@@ -37,6 +45,7 @@
     if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
     e.preventDefault();
     if (url) file(url, t); else yt(id, t);
+    count(a.getAttribute("data-e"));
     if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 })();

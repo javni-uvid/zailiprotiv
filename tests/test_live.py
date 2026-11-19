@@ -404,13 +404,18 @@ def test_the_player_is_a_button_until_clicked():
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in html and "Pusti snimak dana" in html
     assert "<iframe" not in html and "<video" not in html and " src=" not in html  # nothing loads before a click
     live = player({**day, "stanje": SPEAKING}, cyr=False, live="abcdefghijk")
-    # while a sitting is on, the broadcast is on the page (the maintainer's decision), in YouTube's no-cookie mode
-    assert '<iframe src="https://www.youtube-nocookie.com/embed/abcdefghijk"' in live and "autoplay=1" not in live
+    # while a sitting is on, a facade: our picture of the moment and ▶; YouTube loads only on the press, counted
+    assert 'data-yt="abcdefghijk"' in live and 'data-e="mikrofon.pusti"' in live and 'src="/slika.png"' in live
+    assert "<iframe" not in live and "youtube" not in live
+    assert 'src="/cir/slika.png"' in player({**day, "stanje": SPEAKING}, cyr=True, live="abcdefghijk")
     assert player({**day, "danas": []}, cyr=False) == ""
     frag = fragment(day, cyr=False, site="", tz=TZ)
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in frag  # each turn opens in the player
     page_ = page(day, cyr=False, site="", tz=TZ, live="")
     assert 'id="screen"' in page_ and "youtube-nocookie.com/embed/" in page_  # the address is only in the script
+    assert " data-api=" not in page_
+    assert 'data-api="https://glasovi.zailiprotiv.rs"' in page(day, cyr=False, site="", tz=TZ, api="https://glasovi.zailiprotiv.rs")
+    assert " data-api=" not in page(day, cyr=False, site="", tz=TZ, api='x" onload="y')
 
 
 def test_a_day_in_several_files_plays_from_the_first_with_each_part_listed():

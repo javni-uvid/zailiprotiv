@@ -463,9 +463,14 @@ its minute.
   changing part carries only the tail and word counts, so it stays small. **Four numbers** of the day above the
   bars (time, turns, speakers, words written down). **"Dan u karticama"**: the day in cards to tap through, each by
   a rule (whole time, most time, time by list, longest turn, most turns from three on, the way to the site).
-  **The broadcast is on the page while a sitting is on**, YouTube's player in its no-cookie mode, not playing until
-  pressed: an exception to principle 5 for this page, said on the site's "O sajtu"; the archive's recordings still
-  load on a click. **The site's live bar names the speaker** and since when (`site.js` reads the service's
+  **The broadcast is on the page while a sitting is on**, YouTube's player in its no-cookie mode, playing when
+  pressed. Since the evening of 19 Nov 2026 (the maintainer's decision, point 4 of the analysis of how long visits
+  last: 86% of them on phones, and no way to see whether anyone plays it) it is behind a **facade**: our own picture
+  of the moment (`/slika.png`) with "▶ Gledaj prenos", and only the press loads YouTube's player, playing, so
+  principle 5's "only on a click" holds again on this page. The press adds one to the counter's sum of the day
+  (`mikrofon.pusti`, `POST /e`; the counter takes uses from `mikrofon.zailiprotiv.rs` too, only `mikrofon.` ones;
+  the service reads `votes_api` from `data/settings.json`, `VOTES_API=` empty turns it off). The archive's
+  recordings load on a click as before. **The site's live bar names the speaker** and since when (`site.js` reads the service's
   `stanje.js` every half a minute while the bar is on the page).
 - **After a day of visits** (19 Nov 2026; 28,000 visits to the live page in a day, 86% on phones, 77% of them the
   Cyrillic page, one in nine going on to the site, most to the page of the MP then speaking, where a new MP's page

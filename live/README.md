@@ -64,8 +64,9 @@ counts (`zailiprotiv.rs/mikrofon-cekanje.json`, fetched with the list and kept a
 to the page that says how it is computed. The quiz works by the page's one inline script; without it each answer is
 under "Odgovor".
 
-**The player.** Above the list, a button: while the broadcast is on it loads the YouTube video of it
-(`youtube-nocookie.com`), between sittings the last day's recording from the broadcaster's archive (a plain
+**The player.** Above the list, a button: while the broadcast is on, our own picture of the moment with
+"▶ Gledaj prenos", whose press loads the YouTube video of it (`youtube-nocookie.com`), playing, and adds one to the
+site's counter (`mikrofon.pusti`, a sum per day; `VOTES_API=` empty turns it off); between sittings the last day's recording from the broadcaster's archive (a plain
 `<video>`), and each turn's "▶ snimak" plays that file from the turn's second. Nothing from YouTube or the archive
 loads before a click (AGENTS.md, principle 5); without the script the links open the recording.
 

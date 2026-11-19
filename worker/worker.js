@@ -18,6 +18,7 @@
 // Only laws (and quotes) the site itself lists are counted (glasanje.json, read from the site and kept for an hour),
 // and one address can send only so often (Cloudflare's rate limiter; the address is not stored by us).
 const SITE = "https://zailiprotiv.rs";
+const LIVE = "https://mikrofon.zailiprotiv.rs";
 let laws = { at: 0, map: new Map() };  // law → the quotes of its page that may be marked
 
 async function allowed() {
@@ -37,7 +38,9 @@ async function allowed() {
 // What the quiz and the ballot count when it happens (a sum per day, nothing with it): the quiz's result shown, and
 // for each picture to share, opened, the share sheet opened, shared, the text copied, the picture saved.
 const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopiraj", "kviz.sacuvaj",
-  "listic.otvori", "listic.podeli", "listic.podeljeno", "listic.kopiraj", "listic.sacuvaj"]);
+  "listic.otvori", "listic.podeli", "listic.podeljeno", "listic.kopiraj", "listic.sacuvaj",
+  // the live page (mikrofon.zailiprotiv.rs): its ▶ on the broadcast pressed
+  "mikrofon.pusti"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {
@@ -158,7 +161,8 @@ export default {
       return res;
     }
     if (request.method !== "POST") return reply({ error: "method" }, 405, origin);
-    if (from !== origin) return reply({ error: "origin" }, 403, origin);
+    const uses = path === "/e" && from === LIVE;  // the live page may only add to the sums of uses
+    if (from !== origin && !uses) return reply({ error: "origin" }, 403, origin);
     const single = path === "/z" || path === "/c" || path === "/e";
     const limiter = single ? env.VLIMIT : env.LIMIT;
     if (limiter) {
@@ -169,7 +173,7 @@ export default {
     try { body = JSON.parse((await request.text()).slice(0, 8000)); } catch (e) { return reply({ error: "json" }, 400, origin); }
     body = body || {};
     if (path === "/e") {
-      if (!EVENTS.has(body.e)) return reply({ error: "event" }, 400, origin);
+      if (!EVENTS.has(body.e) || (uses && !body.e.startsWith("mikrofon."))) return reply({ error: "event" }, 400, origin);
       await env.DB.prepare("INSERT INTO events (day, what, n) VALUES (?, ?, 1) ON CONFLICT (day, what) DO UPDATE SET n = n + 1")
         .bind(today(), body.e).run();
       return reply({}, 204, origin);
