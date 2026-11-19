@@ -445,6 +445,22 @@ its minute.
   link's card for days whatever we do. On the site, `govornici.html` has **"Po danima"** (`pages_govornici.trend`):
   per list and day, the number of turns, their mean length and sum, the four lists with the most time and the rest
   together.
+- **What is being said, the day in numbers and cards, the broadcast on the page** (19 Nov 2026, the maintainer's
+  choices after a look at skupstina.live; its chat, muting and model-written summaries were left out).
+  **Automatic transcript** (`live/uzivo/prepis.py`): each segment read for its frame leaves its sound (16 kHz), a
+  thread gives the sound to the turn it falls in and has Whisper (faster-whisper on the maintainer's CPU,
+  `WHISPER_MODEL`, "small" by default, empty for off; the model is kept in `/data/hf`) write it down about a minute
+  at a time while the speaker is on, the rest when the turn ends; turns under 20 s and sound in no turn (the chair)
+  are thrown away unread. The text is kept per day (`/data/prepis/<day>.json`, `Tracker.say`), shown with the speaker
+  as its last 400 characters and whole at `/prepis` (and `/cir/prepis`), always labelled automatic, may err, **not a
+  quote**; nothing is summed up or reworded by a model (principle 6 stays: the site quotes the notes). The page's
+  changing part carries only the tail and word counts, so it stays small. **Four numbers** of the day above the
+  bars (time, turns, speakers, words written down). **"Dan u karticama"**: the day in cards to tap through, each by
+  a rule (whole time, most time, time by list, longest turn, most turns from three on, the way to the site).
+  **The broadcast is on the page while a sitting is on**, YouTube's player in its no-cookie mode, not playing until
+  pressed: an exception to principle 5 for this page, said on the site's "O sajtu"; the archive's recordings still
+  load on a click. **The site's live bar names the speaker** and since when (`site.js` reads the service's
+  `stanje.js` every half a minute while the bar is on the page).
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

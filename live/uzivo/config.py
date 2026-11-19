@@ -53,6 +53,15 @@ MERGE_SECONDS = _f("MERGE_SECONDS", 120)  # the same speaker again within this: 
 # after the speaker begins, times the segment's length (the YouTube video keeps the broadcast's numbering).
 RECORDING_LEAD = _i("RECORDING_LEAD", 1)
 
+# The automatic transcript (prepis.py): Whisper on this computer writes down what is said, a minute at a time.
+# "small" keeps up on four cores; "medium" errs less and needs about three times as long; empty turns it off.
+WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "small").strip()
+WHISPER_THREADS = _i("WHISPER_THREADS", 4)
+WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
+WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()
+WHISPER_BEAM = _i("WHISPER_BEAM", 3)
+SOUND_PATH = os.environ.get("SOUND_PATH", "/tmp/uzivo/zvuk")  # the segments' sound until it is written down
+
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 FRAME_PATH = os.environ.get("FRAME_PATH", "/tmp/uzivo/frame.jpg")
 STATE_PATH = os.environ.get("STATE_PATH", "/data/stanje.json")  # today's turns, kept across restarts

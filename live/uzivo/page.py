@@ -37,6 +37,30 @@ TEXT = {
     "h_today": "danas",
     "h_share": "%1% vremena svih govornika",
     "h_more": "više nego svi govornici liste „%1“ zajedno (%2)",
+    "n_time": "vreme govora",
+    "n_turns": "govora",
+    "n_people": "govornika",
+    "n_words": "reči u prepisu",
+    "said_now": "Šta govori · automatski prepis, kasni oko dva minuta, može da pogreši",
+    "said_all": "Ceo prepis dana",
+    "said_link": "prepis",
+    "said_title": "Automatski prepis dana",
+    "said_lead": "Šta je ko rekao za govornicom, zapisano automatski (Whisper) sa zvuka prenosa, komad po komad dok "
+                 "govor traje. Prepis greši u imenima, brojevima i na mestima gde se govornici smenjuju, pa nije "
+                 "citat: za citat služe stenografske beleške Skupštine, koje sajt objavljuje kad stignu. Ništa nije "
+                 "prepričano ni skraćeno.",
+    "said_none": "Za ovaj dan još nema prepisa.",
+    "said_back": "Nazad na „Ko sada govori“",
+    "st_open": "Dan u karticama",
+    "st_total": "ukupno vreme za govornicom",
+    "st_most": "Najviše vremena za govornicom",
+    "st_longest": "Najduži govor bez prekida",
+    "st_often": "Najviše puta za govornicom",
+    "st_times": "puta",
+    "st_end": "Ko su ljudi koji govore i kako glasaju?",
+    "st_site": "Svaki zakon i svaki glas",
+    "st_close": "Zatvori",
+    "st_hint": "Dodir desno: dalje · levo: nazad",
     "so_far": "Dosad danas",
     "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
     "share_day": "Podeli presek dana",
@@ -73,6 +97,7 @@ TEXT = {
     "play_day": "Pusti snimak dana",
     "part": "Deo",
     "yt_note": "Klik učitava plejer sa YouTube-a (Google). Dok ne kliknete, sa YouTube-a se ništa ne učitava.",
+    "yt_live_note": "Prenos Skupštine sa YouTube-a (Google), u režimu bez kolačića dok ne pustite snimak.",
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
@@ -198,8 +223,10 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         every = snap["danas"] + ([cur] if snap["stanje"] == "govori" and cur else [])
         shade = _shades(every)
         line = headline(every, cyr=cyr, when=_when(snap, cyr))
+        out.append(_tiles(every, cyr=cyr))
         if line and (snap["stanje"] == "govori" and cur):  # otherwise the summary above already says it
             out.append(f'<p class="hl">{escape(line)}</p>')
+        out.append(_cards(snap, every, shade, cyr=cyr, site=site, tz=tz))
         out.append(_lists(every, shade, cyr=cyr))
         out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
         out.append(_totals(every, cyr=cyr, site=site, shade=shade))
@@ -216,6 +243,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
                 nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + d["adresa"])}">{nm}</a>'
             side = d["uloga"] or d["grupa"]
             side = f' <span class="meta">{escape(_name(side, cyr))}</span>' if side else ""
+            if d.get("reci"):
+                side += (f' <a class="meta said" href="{"/cir" if cyr else ""}/prepis#t{int(d["od"])}">{t("said_link")}</a>')
             out.append(f'<li id="t{int(d["od"])}"><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
                        f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span>{_recording(d, cyr)}</li>')
         out.append("</ol>")
@@ -224,6 +253,102 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append("</section></div>")
     return "\n".join(out)
 
+
+
+def _tiles(turns: list[dict], *, cyr: bool) -> str:
+    """The day in four numbers: time on the floor, turns, speakers, and the words written down so far (when the
+    transcript is on)."""
+    t = lambda k: escape(_t(k, cyr))
+    if len(turns) < 2:
+        return ""
+    words = sum(d.get("reci", 0) for d in turns)
+    cells = [(_dur(sum(max(0, d["sekundi"]) for d in turns), cyr), t("n_time")), (len(turns), t("n_turns")),
+             (len({d["ime"] for d in turns}), t("n_people"))]
+    if words:
+        cells.append((f"{words:,}".replace(",", "."), t("n_words")))
+    return '<dl class="tiles">' + "".join(f'<div><dd>{escape(str(v))}</dd><dt>{k}</dt></div>' for v, k in cells) + "</dl>"
+
+
+def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, site: str, tz: ZoneInfo) -> str:
+    """The day in a few cards to tap through (19 Nov 2026, the maintainer's choice): the whole time, who had the
+    most, the time by list, the longest turn, who came up most often, and the way to the site. Every card by a rule,
+    the same whoever it names. The cards wait hidden in the page; the script shows them full screen on a tap."""
+    rows = leaders(turns)
+    if len(rows) < 2:
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    n = lambda x: escape(_name(x, cyr))
+    if snap.get("ranije") and snap.get("dan"):
+        when = _date(snap["dan"])
+        when = cyrillic(when) if cyr else when
+    else:
+        when = _t("h_today", cyr).capitalize() + ", " + (cyrillic(_date(snap["dan"])) if cyr else _date(snap["dan"]))
+    whole = sum(r[1] for r in rows)
+    card = lambda kicker, body: f'<section class="st-c"><p class="st-k">{kicker}</p>{body}</section>'
+    out = [card(escape(when), f'<p class="st-big">{_dur(whole, cyr)}</p><p class="st-s">{t("st_total")}</p>'
+                              f'<p class="st-row"><b>{len(turns)}</b> {t("n_turns")} · <b>{len(rows)}</b> {t("n_people")}</p>')]
+    name, sec, _ = rows[0]
+    out.append(card(t("st_most"), f'<p class="st-name">{n(given_first(name))}</p><p class="st-big">{_dur(sec, cyr)}</p>'
+                                  f'<p class="st-s">{escape(headline(turns, cyr=cyr, when=_when(snap, cyr)))}</p>'))
+    lists = _lists(turns, shade, cyr=cyr)
+    if lists:
+        out.append(f'<section class="st-c">{lists.replace("<h3 class=\"sub\">", "<p class=\"st-k\">").replace("</h3>", "</p>")}</section>')
+    longest = max(turns, key=lambda d: (d["sekundi"], -d["od"]))
+    out.append(card(t("st_longest"), f'<p class="st-name">{n(given_first(longest["ime"]))}</p>'
+                                     f'<p class="st-big">{_dur(longest["sekundi"], cyr)}</p>'
+                                     f'<p class="st-s">{_clock(longest["od"], tz)}–{_clock(longest["do"], tz)}</p>'))
+    count: dict[str, int] = {}
+    for d in turns:
+        count[d["ime"]] = count.get(d["ime"], 0) + 1
+    often = max(count, key=lambda k: (count[k], k))
+    if count[often] >= 3:
+        out.append(card(t("st_often"), f'<p class="st-name">{n(given_first(often))}</p>'
+                                       f'<p class="st-big">{count[often]} <small>{t("st_times")}</small></p>'))
+    home = site + ("cir/" if cyr else "")
+    out.append(card(t("st_end"), f'<p class="st-name">{t("st_site")}</p>'
+                                 f'<p><a class="cta" href="{escape(home)}">zailiprotiv.rs →</a></p>'))
+    return (f'<p class="acts st-go"><button type="button" class="share-now st-open">▶ {t("st_open")}</button></p>'
+            f'<div class="st-data" hidden data-close="{t("st_close")}" data-hint="{t("st_hint")}">{"".join(out)}</div>')
+
+
+def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "") -> str:
+    """The day's automatic transcript, turn by turn, newest first: a page of its own, so that the part of the main
+    page every visitor asks for every few seconds stays small."""
+    t = lambda k: escape(_t(k, cyr))
+    base = "/cir/" if cyr else "/"
+    home = site + ("cir/" if cyr else "")
+    when = _date(data["dan"]) if data.get("dan") else ""
+    rows = []
+    for d in data["govori"]:
+        nm = escape(_name(given_first(d["ime"]), cyr))
+        if d["adresa"]:
+            nm = f'<a href="{escape(home + "poslanik/" + d["adresa"])}">{nm}</a>'
+        text = escape(cyrillic(d["tekst"]) if cyr else d["tekst"])
+        rows.append(f'<article id="t{int(d["od"])}"><h2>{nm} <span class="meta">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}'
+                    f' · {_minutes(d["sekundi"])} {t("min")}</span></h2><p>{text}</p></article>')
+    body = "".join(rows) or f'<p class="meta">{t("said_none")}</p>'
+    brand = ('<span class="w-za">За</span> или <span class="w-protiv">Против</span>' if cyr
+             else '<span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span>')
+    return f"""<!doctype html>
+<html lang="{"sr-Cyrl" if cyr else "sr-Latn"}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{t("said_title")}{", " + escape(cyrillic(when) if cyr else when) if when else ""} · {"За или Против" if cyr else "Za ili Protiv"}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
+<style>{CSS}</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><a href="{base}">{t("said_back")}</a></header>
+<main class="said-page">
+<h1>{t("said_title")}{", " + escape(cyrillic(when) if cyr else when) if when else ""}</h1>
+<p class="lead">{t("said_lead")}</p>
+{body}
+<p><a href="{base}">← {t("said_back")}</a></p>
+</main>
+</body>
+</html>"""
 
 
 def _when(snap: dict, cyr: bool) -> str:
@@ -345,6 +470,11 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         more = (f'<button type="button" class="rot-next" aria-label="{t("next_fact")}"><span class="rot-n">1/{len(lines)}'
                 f'</span> ›</button>') if len(lines) > 1 else ""
         out.append(f'<div class="rot-w"><ul class="rot">{items}</ul>{more}</div>')
+    if cur.get("prepis"):
+        tail = cur["prepis"]
+        tail = ("… " + tail.split(" ", 1)[-1]) if len(tail) >= 400 else tail  # cut at a word, not inside one
+        out.append(f'<div class="said-now"><p class="src">{t("said_now")}</p><p>{s(tail)}</p>'
+                   f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis#t{int(cur["od"])}">{t("said_all")} →</a></p></div>')
     when = _date(datetime.fromtimestamp(cur["do"], tz).strftime("%Y-%m-%d")) + f' u {_clock(cur["do"], tz)}'
     data = {"head": _t("sh_head", cyr), "name": _name(given_first(cur["ime"]), cyr), "side": _name(side, cyr),
             "already": _t("sh_already", cyr), "min": _t("min", cyr), "line": _name(line, cyr), "when": _name(when, cyr),
@@ -550,6 +680,31 @@ h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-trans
 .acts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
 .share-now { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg);
   background: none; color: var(--fg); cursor: pointer; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: .6rem; margin: .4rem 0 1.2rem; }
+.tiles div { border: 1px solid var(--line); border-radius: 8px; padding: .6rem .8rem; }
+.tiles dd { margin: 0; font-family: var(--serif); font-weight: 700; font-size: 1.5rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.tiles dt { color: var(--muted); font-size: .82rem; }
+.said-now { border-top: 1px solid var(--line); margin: .9rem 0; padding-top: .7rem; }
+.said-now p { margin: .2rem 0; } .said-now > p:nth-child(2) { font-size: 1rem; line-height: 1.5; }
+a.said { margin-left: .3rem; }
+.said-page article { border-top: 1px solid var(--line); padding: .9rem 0; } .said-page article:target { background: color-mix(in srgb, var(--za) 8%, transparent); }
+.said-page h2 { font-size: 1.15rem; margin: 0 0 .3rem; } .said-page h2 .meta { font-family: system-ui, sans-serif; font-weight: 400; font-size: .85rem; }
+.said-page article p { margin: 0; max-width: 44rem; }
+.st-go { margin: 0 0 1.2rem; }
+.st { position: fixed; inset: 0; z-index: 50; background: #0b0d12; color: #f4f4f1; display: flex; flex-direction: column; }
+.st-bar { display: flex; gap: 4px; padding: 12px 14px 0; } .st-bar i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.25); overflow: hidden; }
+.st-bar i b { display: block; height: 100%; width: 0; background: #fff; } .st-bar i.done b { width: 100%; }
+.st-bar i.on b { animation: st-run var(--st-t, 6s) linear forwards; } @keyframes st-run { to { width: 100%; } }
+.st-x { position: absolute; top: 22px; right: 10px; z-index: 2; background: none; border: 0; color: #fff; font-size: 1.8rem; line-height: 1; padding: .3rem .6rem; cursor: pointer; }
+.st-stage { flex: 1; display: grid; place-items: center; padding: 1.5rem; }
+.st-c { width: 100%; max-width: 26rem; } .st-c a { color: #fff; }
+.st-k { text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; font-weight: 700; color: #ffb37a; margin: 0 0 1rem; }
+.st-big { font-family: var(--serif); font-weight: 700; font-size: clamp(3rem, 16vw, 5rem); line-height: 1; margin: .2rem 0 .6rem; } .st-big small { font-size: 40%; }
+.st-name { font-family: var(--serif); font-weight: 700; font-size: clamp(1.6rem, 7vw, 2.4rem); line-height: 1.15; margin: 0 0 .6rem; }
+.st-s { color: #c9ccd3; font-size: 1.05rem; line-height: 1.45; margin: 0 0 .8rem; } .st-row { font-size: 1.1rem; margin: 1rem 0 0; }
+.st .lk { font-size: 1rem; } .st .lk em { color: #c9ccd3; } .st .lk i { border-color: transparent; } .st .lb { height: 2rem; }
+.st .cta { display: inline-block; background: #fff; color: #111; padding: .6rem 1rem; border-radius: 6px; font-weight: 700; text-decoration: none; }
+.st-hint { text-align: center; color: #8d919b; font-size: .8rem; margin: 0; padding: 0 0 1rem; }
 .hl { font-family: var(--serif, Georgia, serif); font-size: 1.25rem; line-height: 1.35; font-weight: 700; margin: .2rem 0 1rem; max-width: 40rem; }
 .pz .hl { margin: .3rem 0 .6rem; } .pz-top { margin: 0 0 .9rem; padding-left: 1.3rem; } .pz-top span { color: var(--muted); margin-left: .4rem; }
 .lb { display: flex; height: 1.5rem; border-radius: 4px; overflow: hidden; gap: 2px; }
@@ -653,6 +808,37 @@ SCRIPT = _shared("mikrofon.js") + """
     g.fillText(d("when") + " · " + d("note"), P, 622);
     return c;
   }
+  var story = null;
+  function stories() {
+    var data = document.querySelector(".st-data");
+    if (!data || story) return;
+    var cards = [].slice.call(data.children).map(function (c) { return c.outerHTML; }), i = -1, timer = null;
+    var el = document.createElement("div");
+    el.className = "st"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
+    el.innerHTML = '<div class="st-bar">' + cards.map(function () { return "<i><b></b></i>"; }).join("") + '</div>' +
+      '<button type="button" class="st-x" aria-label="' + data.getAttribute("data-close") + '">×</button>' +
+      '<div class="st-stage"></div><p class="st-hint">' + data.getAttribute("data-hint") + '</p>';
+    document.body.appendChild(el);
+    var stage = el.querySelector(".st-stage"), bars = el.querySelectorAll(".st-bar i");
+    function close() { clearTimeout(timer); el.remove(); story = null; document.removeEventListener("keydown", key); }
+    function show(k) {
+      if (k >= cards.length) { close(); return; }
+      i = Math.max(0, k);
+      stage.innerHTML = cards[i];
+      for (var j = 0; j < bars.length; j++) { bars[j].className = j < i ? "done" : ""; }
+      void bars[i].offsetWidth; bars[i].className = "on";
+      clearTimeout(timer);
+      if (i < cards.length - 1) timer = setTimeout(function () { show(i + 1); }, 6000);
+    }
+    function key(e) { if (e.key === "Escape") close(); else if (e.key === "ArrowRight") show(i + 1); else if (e.key === "ArrowLeft") show(i - 1); }
+    el.addEventListener("click", function (e) {
+      if (e.target.closest(".st-x")) { close(); return; }
+      if (e.target.closest("a")) return;
+      show(e.clientX < window.innerWidth / 3 ? i - 1 : i + 1);
+    });
+    document.addEventListener("keydown", key);
+    story = el; show(0);
+  }
   function shareDay(b) {
     var url = location.origin + location.pathname, text = b.getAttribute("data-text") + " " + url;
     var said = b.parentNode.parentNode.querySelector(".share-said");
@@ -677,6 +863,7 @@ SCRIPT = _shared("mikrofon.js") + """
     if (t && t.closest(".rot-next, .rot")) { turn.skip++; rotate(); return; }
     var b = t && t.closest(".share-now");
     if (!b) return;
+    if (b.classList.contains("st-open")) { stories(); return; }
     if (b.classList.contains("share-day")) { shareDay(b); return; }
     var k = document.querySelector(".clk"), minutes = Math.max(1, Math.floor((k ? seconds(k) : 0) / 60));
     var url = location.origin + location.pathname;
@@ -745,7 +932,12 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
     the broadcaster's archive, from its first turn. Only a button until clicked (AGENTS.md, principle 5)."""
     t = lambda k: escape(_t(k, cyr))
     if snap["stanje"] != "nema_prenosa" and live:
-        button, note = f'<button type="button" class="play" data-yt="{escape(live)}">▶ {t("play_live")}</button>', t("yt_note")
+        # The broadcast is on the page as soon as it opens (19 Nov 2026, the maintainer's decision, an exception to
+        # "nothing of a third party until a click", for this page while a sitting is on): YouTube's player in its
+        # no-cookie mode, not playing until pressed.
+        button = (f'<iframe src="https://www.youtube-nocookie.com/embed/{escape(live)}" title="YouTube" loading="lazy" '
+                  f'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>')
+        note = t("yt_live_note")
     else:
         parts = snap.get("datoteke") or []
         first = next((d for d in reversed(snap["danas"]) if d.get("datoteka") and d.get("snimak") is not None), None)

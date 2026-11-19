@@ -13,5 +13,7 @@ COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
 COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
 # The site's analytics token (config.ANALYTICS_TOKEN): visits counted as on the site
 COPY data/settings.json ./uzivo/static/settings.json
+# Whisper's model is fetched once and kept with the data (prepis.py)
+ENV HF_HOME=/data/hf
 EXPOSE 8000
 CMD ["uvicorn", "uzivo.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

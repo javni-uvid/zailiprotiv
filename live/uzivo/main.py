@@ -13,9 +13,9 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 
-from . import config, picture, worker
+from . import config, picture, prepis, worker
 from .stream import VIDEO
-from .page import fragment, page
+from .page import fragment, page, transcript_page
 from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
@@ -30,6 +30,8 @@ NO_STORE = {"Cache-Control": "no-store"}
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     threading.Thread(target=worker.run, args=(tracker, _stop), daemon=True).start()
+    if prepis.on():
+        prepis.Writer(tracker, _stop).start()
     yield
     _stop.set()
 
@@ -90,6 +92,29 @@ def latin_picture() -> Response:
 @app.get("/cir/slika.png")
 def cyrillic_picture() -> Response:
     return _picture(True)
+
+
+_said: dict[bool, tuple[float, str]] = {}
+
+
+def _transcript(cyr: bool) -> HTMLResponse:
+    """The day's automatic transcript (prepis.py), put together at most once in twenty seconds per script."""
+    now = time.monotonic()
+    kept = _said.get(cyr)
+    if not kept or now - kept[0] > PICTURE_KEEP:
+        kept = (now, transcript_page(tracker.transcript(), cyr=cyr, site=config.SITE, tz=_tz, url=URL))
+        _said[cyr] = kept
+    return HTMLResponse(kept[1], headers={"Cache-Control": f"public, max-age={PICTURE_KEEP}"})
+
+
+@app.get("/prepis")
+def latin_transcript() -> HTMLResponse:
+    return _transcript(False)
+
+
+@app.get("/cir/prepis")
+def cyrillic_transcript() -> HTMLResponse:
+    return _transcript(True)
 
 
 @app.get("/stanje.json")

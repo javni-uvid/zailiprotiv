@@ -19,7 +19,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from . import config
+from . import config, prepis
 
 log = logging.getLogger("stream")
 _YT_ID = re.compile(r"youtube(?:-nocookie)?\.com/embed/([\w-]{11})")
@@ -80,7 +80,8 @@ def _resolve_youtube(url: str) -> str:
         "quiet": True,
         "no_warnings": True,
         "logger": _Quiet(),
-        # Only the picture is needed, so a format without sound will do. HLS (m3u8) first: it is read below.
+        # The picture is what is needed; a format with sound first, for the automatic transcript (prepis.py), one
+        # without will do. HLS (m3u8) first: it is read below.
         "format": (
             f"b[protocol^=m3u8][height<={h}]/bv*[protocol^=m3u8][height<={h}]/"
             f"b[height<={h}]/bv*[height<={h}]/b/bv*"
@@ -301,6 +302,7 @@ class HlsPoller(threading.Thread):
                     self.frame_seq, self.seg_dur = nxt, dur  # read with the frame: where it is in the broadcast
                     _ffmpeg_last_frame(path)
                     t2 = time.time()
+                    prepis.keep(path, t2, dur)  # the segment's sound, for the automatic transcript
                     if t2 - last_new > 2.5 * dur:
                         log.info(
                             "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",

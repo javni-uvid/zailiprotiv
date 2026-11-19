@@ -29,6 +29,10 @@ from .names import Person, Roster
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 
 
+SAID_LEAD = 6  # seconds: a turn's sound begins this long before its first frame (the caption comes up late)
+SAID_TAIL = 420  # characters of the newest transcript shown with the speaker
+
+
 class Tracker:
     def __init__(self, path: str | None = None, tz: str | None = None) -> None:
         self._lock = threading.Lock()
@@ -50,6 +54,8 @@ class Tracker:
         self.facts_file = Path(path).with_name("poslanici.json") if path else None
         self.facts: dict = {}  # the speaker's votes and facts from their page (mikrofon-poslanici.json)
         self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
+        self.said: dict[str, str] = {}  # the day's automatic transcript in pieces, by each piece's first second (prepis.py)
+        self._said_other: tuple[str, dict] = ("", {})  # an earlier day's, read when the page shows that day
         self._snap: tuple[float, dict] | None = None  # the last snapshot and when: every visitor asks every few seconds
         self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
         self._migrate()
@@ -122,6 +128,7 @@ class Tracker:
     def _load(self, day: str | None = None) -> None:
         self.day = day or self._day(time.time())
         self.turns, self.cover, self.open = [], [], False
+        self.said = self._said_load(self.day)
         f = self._file(self.day)
         try:
             if f and f.exists():
@@ -132,6 +139,63 @@ class Tracker:
                 self.turns = [t for t in turns if self._day(t["start"]) == self.day]
         except (OSError, ValueError):
             pass
+
+    # --- the automatic transcript (prepis.py writes it, a piece at a time) ---
+    def _said_file(self, day: str) -> Path | None:
+        return self.days.parent / "prepis" / f"{day}.json" if self.days else None
+
+    def _said_load(self, day: str) -> dict[str, str]:
+        f = self._said_file(day)
+        try:
+            if f and f.exists():
+                kept = json.loads(f.read_text(encoding="utf-8"))
+                return {str(k): str(v) for k, v in kept.items()} if isinstance(kept, dict) else {}
+        except (OSError, ValueError):
+            pass
+        return {}
+
+    def say(self, ts: float, text: str) -> None:
+        """A piece of the transcript: the sound from second `ts` on, written down. Kept with the day."""
+        text = " ".join(text.split())
+        if not text:
+            return
+        with self._lock:
+            day = self._day(ts)
+            if day != self.day:
+                return
+            self.said[str(int(ts))] = text
+            self._snap = None
+            f = self._said_file(day)
+            if f:
+                try:
+                    f.parent.mkdir(parents=True, exist_ok=True)
+                    tmp = f.with_suffix(".tmp")
+                    tmp.write_text(json.dumps(self.said, ensure_ascii=False), encoding="utf-8")
+                    tmp.replace(f)
+                except OSError:
+                    pass
+
+    def _said_of(self, day: str) -> dict[str, str]:
+        if day == self.day:
+            return self.said
+        if self._said_other[0] != day:
+            self._said_other = (day, self._said_load(day))
+        return self._said_other[1]
+
+    @staticmethod
+    def _text(said: dict[str, str], start: float, end: float) -> str:
+        """What was written down of a turn: the pieces that begin within it (a piece is cut where a turn begins)."""
+        return " ".join(said[k] for k in sorted(said, key=int) if start - SAID_LEAD - 1 <= int(k) <= end)
+
+    def transcript(self) -> dict:
+        """The day on the page, each turn with what was written down of it, newest first: for the transcript's page."""
+        snap = self.snapshot()
+        with self._lock:
+            said = dict(self._said_of(snap["dan"]))
+        turns = ([snap["sada"]] if snap["stanje"] == "govori" and snap.get("sada") else []) + snap["danas"]
+        out = [{**{k: d[k] for k in ("ime", "adresa", "od", "do", "sekundi")}, "lista": d.get("lista", ""),
+                "tekst": self._text(said, d["od"], d["do"])} for d in turns]
+        return {"dan": snap["dan"], "ranije": snap["ranije"], "govori": [d for d in out if d["tekst"]]}
 
     def _save(self) -> None:
         f = self._file(self.day)
@@ -325,6 +389,13 @@ class Tracker:
             self._lists(done, current, recorded)
             if current:
                 self._today(done, current, day)
+            said = self._said_of(day)
+            if said:  # how many words were written down of each turn, and the end of what the speaker is saying
+                for d in done + ([current] if current else []):
+                    text = self._text(said, d["od"], d["do"])
+                    d["reci"] = len(text.split())
+                    if d is current and text:
+                        d["prepis"] = text[-SAID_TAIL:]
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}

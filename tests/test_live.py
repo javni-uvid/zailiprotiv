@@ -2,6 +2,8 @@
 (names, the caption's lines, the turns, the page); OCR and the stream are tried on the broadcast itself."""
 import json
 import sys
+import threading
+import time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -387,7 +389,8 @@ def test_the_player_is_a_button_until_clicked():
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in html and "Pusti snimak dana" in html
     assert "<iframe" not in html and "<video" not in html and " src=" not in html  # nothing loads before a click
     live = player({**day, "stanje": SPEAKING}, cyr=False, live="abcdefghijk")
-    assert 'data-yt="abcdefghijk"' in live and "YouTube" in live and "<iframe" not in live
+    # while a sitting is on, the broadcast is on the page (the maintainer's decision), in YouTube's no-cookie mode
+    assert '<iframe src="https://www.youtube-nocookie.com/embed/abcdefghijk"' in live and "autoplay=1" not in live
     assert player({**day, "danas": []}, cyr=False) == ""
     frag = fragment(day, cyr=False, site="", tz=TZ)
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in frag  # each turn opens in the player
@@ -590,3 +593,59 @@ def test_the_day_in_one_sentence_the_summary_while_nobody_is_on_and_the_link_pre
     for s_ in (snap, paused, Tracker(None, "Europe/Belgrade").snapshot(now=now)):
         png = picture.render(s_, cyr=True, tz=TZ, host="mikrofon.zailiprotiv.rs")
         assert png[:8] == b"\x89PNG\r\n\x1a\n" and len(png) > 2000
+
+
+def test_the_sound_is_written_down_turn_by_turn_and_shown_as_an_automatic_transcript(tmp_path, monkeypatch):
+    from uzivo import config, prepis
+    from uzivo.page import transcript_page
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path / "zvuk"))
+    monkeypatch.setattr(config, "WHISPER_MODEL", "test")
+    (tmp_path / "zvuk").mkdir()
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    t.roster = ROSTER
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = float(int(time.time()) // 86400 * 86400 + 12 * 3600)  # noon today, so the day is the tracker's own
+    t._load(t._day(now))
+
+    def sound(at: float, seconds: float = 5.0) -> None:  # a segment's sound, read at `at`
+        (tmp_path / "zvuk" / f"{int(at * 1000)}-{int(seconds * 1000)}.pcm").write_bytes(b"\0" * 100)
+
+    for s_ in range(0, 121, 5):
+        t.observe(petar, now=now + s_)
+        sound(now + s_)
+    heard = []
+    w = prepis.Writer(t, threading.Event(), write=lambda raw: heard.append(len(raw)) or "Поштовани председниче, хвала.")
+    assert w.step(now=now + 121) is True  # a piece of the speaker now on, once enough has gathered
+    assert heard and t.said and "Poštovani predsedniče" in next(iter(t.said.values()))  # kept in Latin
+    snap = t.snapshot(now=now + 121)
+    assert snap["sada"]["prepis"].startswith("Poštovani") and snap["sada"]["reci"] == 3
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "automatski prepis" in html and "Poštovani predsedniče, hvala." in html and 'href="/prepis#t' in html
+    assert w.step(now=now + 122) is False  # nothing new yet
+    sound(now + 200)  # sound in no turn (the chair): thrown away once old
+    for s_ in range(300, 311, 5):  # a turn too short to write down
+        t.observe(marko, now=now + s_)
+        sound(now + s_)
+    t.observe(None, now=now + 400)
+    t.observe(None, now=now + 460)
+    assert w.step(now=now + 461) is True  # the rest of the finished turn
+    assert w.step(now=now + 462) is False and not list((tmp_path / "zvuk").glob("*.pcm"))
+    assert len(heard) == 2  # the short turn and the chair's sound were never read
+    page_ = transcript_page(t.transcript(), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Поштовани председниче, хвала." in page_ and "Петар Петровић" in page_ and "није" in page_
+    again = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")  # kept across a restart
+    assert again.said == t.said
+
+
+def test_the_day_in_numbers_and_in_cards():
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    for a, b, who_ in ((0, 300, petar), (310, 400, marko), (410, 500, petar), (510, 560, marko), (570, 700, petar)):
+        for s_ in range(a, b + 1, 5):
+            t.observe(who_, now=now + s_)
+    html = fragment(t.snapshot(now=now + 701), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<dl class="tiles">' in html and "<dd>5</dd><dt>govora</dt>" in html and "<dd>2</dd><dt>govornika</dt>" in html
+    assert 'class="share-now st-open"' in html and html.count('<section class="st-c">') >= 5
+    assert "Najduži govor bez prekida" in html and "Najviše puta za govornicom" in html and "3 <small>puta</small>" in html

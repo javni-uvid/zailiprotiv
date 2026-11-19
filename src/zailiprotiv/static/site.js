@@ -408,3 +408,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 })();
+
+// The live bar names who is speaking now and since when, read from "Ko sada govori" (our own service's state, kept
+// two seconds by Cloudflare); asked for only while the bar is on the page, every half a minute, and left empty
+// when the service doesn't answer.
+(function () {
+  var el = document.querySelector(".live-who[data-src]");
+  if (!el || !window.fetch) return;
+  var cyr = document.documentElement.lang === "sr-Cyrl";
+  var MAP = {"lj":"љ","nj":"њ","dž":"џ","Lj":"Љ","Nj":"Њ","Dž":"Џ","a":"а","b":"б","v":"в","g":"г","d":"д","đ":"ђ","e":"е","ž":"ж","z":"з","i":"и","j":"ј","k":"к","l":"л","m":"м","n":"н","o":"о","p":"п","r":"р","s":"с","t":"т","ć":"ћ","u":"у","f":"ф","h":"х","c":"ц","č":"ч","š":"ш","A":"А","B":"Б","V":"В","G":"Г","D":"Д","Đ":"Ђ","E":"Е","Ž":"Ж","Z":"З","I":"И","J":"Ј","K":"К","L":"Л","M":"М","N":"Н","O":"О","P":"П","R":"Р","S":"С","T":"Т","Ć":"Ћ","U":"У","F":"Ф","H":"Х","C":"Ц","Č":"Ч","Š":"Ш"};
+  function script(t) { return cyr ? t.replace(/lj|nj|dž|Lj|Nj|Dž|[a-zA-ZđĐžŽćĆčČšŠ]/g, function (m) { return MAP[m] || m; }) : t; }
+  function first(name) { var p = name.split(" "); return p.slice(-1).concat(p.slice(0, -1)).join(" "); }
+  function ask() {
+    fetch(el.getAttribute("data-src")).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
+      var c = s && s.stanje === "govori" && s.sada;
+      if (!c) { el.hidden = true; return; }
+      var d = new Date(c.od * 1000), at = d.toLocaleTimeString("sr-Latn-RS", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Belgrade" });
+      el.textContent = script(" (" + first(c.ime) + ", od " + at + ")");
+      el.hidden = false;
+    }).catch(function () {});
+  }
+  ask();
+  setInterval(function () { if (!document.hidden) ask(); }, 30000);
+})();
