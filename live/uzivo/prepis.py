@@ -215,19 +215,20 @@ class Writer(threading.Thread):
         return False
 
     def step(self, now: float | None = None) -> bool:
-        """One look at the kept sound; True when a piece was written down."""
-        now = time.time() if now is None else now
+        """One look at the kept sound; True when a piece was written down. A `now` given (the tests' clock) is also
+        the day the state is read for, so that a fixed day is not taken for an earlier one after midnight."""
+        given, now = now, time.time() if now is None else now
         files = waiting()
         if not files:
             if self.write_whole:
-                snap = self.tracker.snapshot()
+                snap = self.tracker.snapshot(given)
                 if not snap.get("ranije") and not snap.get("snimak"):
                     self.hint = self.hint_for(snap)
                     return self.step_whole(snap, now)
             return False
         while sum(x[1] for x in files) > MOST:  # behind by more than the computer will catch up with
             files.pop(0)[2].unlink(missing_ok=True)
-        snap = self.tracker.snapshot()
+        snap = self.tracker.snapshot(given)
         live = not snap.get("ranije") and not snap.get("snimak")
         current = snap.get("sada") if snap["stanje"] == "govori" else None
         piece, drop, chair = choose(files, snap["danas"] if live else [], current, now, chair_only=config.CHAIR_ONLY)
