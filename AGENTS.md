@@ -9,8 +9,10 @@ decisions unless said otherwise.
 
 - **A branch and a pull request per task** (20 Nov 2026, the maintainer's decision, as several agents now work at
   once; until then everything was committed straight to `main`):
-  - **Each agent in an Orca worktree** of its own (`orca worktree create --name <task> --no-parent`), on a branch
-    `<agent>/<task>` (`claude/mikrofon-merenje`) from `origin/main`, short-lived: hours, a day at most.
+  - **Each agent in an Orca worktree** of its own (`orca worktree create --name <task> --no-parent`, from the main
+    clone): Orca makes the branch, `<the maintainer's GitHub login>/<task>`, from `origin/main`, and the folder under
+    `~/orca/workspaces/zailiprotiv/`. Short-lived: hours, a day at most. A new worktree needs `uv sync` (and on
+    Windows `uv pip install tzdata`).
   - **Before starting, `gh pr list`:** when an open pull request touches the same files, build on it or wait
     (19 Nov 2026: two agents added the same setting to the live service in one evening).
   - **Before pushing,** `git rebase origin/main` and `uv run pytest -q`; then `gh pr create` (the template asks what,
