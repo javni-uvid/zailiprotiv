@@ -4,7 +4,7 @@
  "pokriveno": [
   {
    "od": 1795078236,
-   "do": 1795117697
+   "do": 1795121312
   }
  ],
  "govori": [
@@ -331,6 +331,32 @@
    "video": "Hdk3ahufa64",
    "sq_od": 6628,
    "sq_do": 6629,
+   "segment": 5.0
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795118282,
+   "do": 1795118351,
+   "okvira": 4,
+   "video": "Hdk3ahufa64",
+   "sq_od": 8012,
+   "sq_do": 8026,
+   "segment": 5.0
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795120011,
+   "do": 1795120015,
+   "okvira": 1,
+   "video": "Hdk3ahufa64",
+   "sq_od": 8358,
+   "sq_do": 8359,
    "segment": 5.0
   }
  ]
