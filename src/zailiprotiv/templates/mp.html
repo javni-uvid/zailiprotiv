@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, how, floor_now_part, next_steps with context %}
+{% from "macros.html" import bar, plural, how, brief, floor_now_part, next_steps with context %}
 {% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}, poslanik: kako glasa — Za ili Protiv{% endblock %}
 {% block description %}Kako je glasao poslanik {{ mp.name|given_first }} ({{ mp.name }}): zakoni za i protiv, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
@@ -21,6 +21,7 @@
 </div>
 </div>
 
+{{ brief(mp.slug, facts) }}
 <section class="outcome mp-outcome">
   <div class="big"><div class="t-za"><b>{{ tally.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ tally.protiv or 0 }}</b><span>protiv</span></div></div>
   {{ bar({"za": tally.za or 0, "protiv": tally.protiv or 0, "uzdrzan": tally.uzdrzan or 0, "nije_glasao": tally.nije_glasao or 0, "nije_prisutan": tally.nije_prisutan or 0}) }}
@@ -28,13 +29,6 @@
   <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · <a href="{{ mp.slug }}-glasovi.html">Svi glasovi</a> · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 </section>
 {{ floor_now_part(mp.slug) }}
-{% if facts %}
-<section class="mp-card" id="ukratko">
-  <h2>Ukratko</h2>
-  <ul class="mp-facts">{% for f in facts %}<li>{% if f.n %}<b>{{ f.n }}</b> {% endif %}{{ f.text }}</li>{% endfor %}</ul>
-  <p class="label">Izračunato iz poimeničnih glasanja i stenograma, istim pravilom za svakog poslanika; ovo nije ocena rada poslanika. {{ how("ukratko") }}</p>
-</section>
-{% endif %}
 
 {% set shown = by_conv|selectattr("present")|list %}
 {% set menu = [("kljucna", "Izdvojena glasanja", key_votes), ("aktivnost", "Aktivnost", shown or spoke or floor), ("govori", "Govori", floor|selectattr("spoken")|list), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list)] %}

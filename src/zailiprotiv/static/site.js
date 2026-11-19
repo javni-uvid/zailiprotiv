@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.querySelector(".mp-hero")) {
     var folds = Array.prototype.filter.call(document.querySelectorAll("main section"), function (sec) {
       var h = sec.firstElementChild;
-      return h && h.tagName === "H2" && !/^(kljucna|aktivnost)$/.test(sec.id) && !sec.classList.contains("outcome");
+      return h && h.tagName === "H2" && !/^(kljucna|aktivnost)$/.test(sec.id) && !sec.classList.contains("outcome") && !sec.classList.contains("mp-brief");  // "Ukratko" is always open, first on the page
     });
     folds.forEach(function (sec) {
       sec.classList.add("fold");

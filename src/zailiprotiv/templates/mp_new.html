@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {# A new MP of the newest convocation, before their first vote (pages_members.py). #}
-{% from "macros.html" import floor_now_part, next_steps with context %}
+{% from "macros.html" import how, brief, floor_now_part, next_steps with context %}
 {% block title %}{{ m.name|given_first }}, poslanik u {{ conv_name|locative }} sazivu — Za ili Protiv{% endblock %}
 {% block description %}{{ m.name|given_first }}, narodni poslanik od {{ since|day_of }}{% if m.party_ %}, na predlog stranke {{ m.party_|latin }}{% endif %}. Glasanja i govori biće ovde od prve sednice na kojoj se glasa.{% endblock %}
 {% block robots %}<meta name="robots" content="noindex">{% endblock %}{# no vote yet, as any MP's page without one #}
@@ -13,12 +13,10 @@
 <p class="mp-groups">{{ conv_name }} saziv, od {{ since|day_of }}{% if m.group %}: {{ m.group|latin }}{% elif m.group is defined %}: van poslaničkih grupa{% endif %}</p>
 </div>
 </div>
-<ul class="mp-facts">
+{{ brief(m.slug, [], [(m.year ~ "." if m.year else "", "godište"), ((m.occupation or "")|latin|capitalize, "zanimanje"), (m.place|latin, "mesto")]) }}
+<ul class="mp-facts mp-facts-new">
   {% if m.group is defined %}<li>Poslanička grupa: <b>{{ m.group|latin if m.group else "nije član nijedne" }}</b></li>{% endif %}
   <li>Stranka na čiji je predlog izabran(a): <b>{{ (m.party_ or "nije navedena")|latin }}</b></li>
-  <li>Mesto: {{ m.place|latin }}</li>
-  <li>Godište: {{ m.year }}.</li>
-  {% if m.occupation %}<li>Zanimanje: {{ m.occupation|latin }}</li>{% endif %}
 </ul>
 {{ floor_now_part(m.slug) }}
 <p>Prvi put u Skupštini od 2012: nije ni na jednom poimeničnom glasanju koje sajt ima. Kako glasa biće na ovoj strani od prve sednice na kojoj se glasa, a šta govori po stenografskim beleškama čim ih sajt pročita, istim pravilom kao za svakog poslanika.</p>

@@ -1041,9 +1041,33 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .share-turn { border: 0; background: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .prepis { margin: .3rem 0 .6rem; } .prepis p { max-width: 46rem; }
 
-/* An MP's turns on the floor in the newest convocation, the line while they speak, and the way on (macros.html) */
+/* "Ukratko": the MP in tiles, first on the page; the turns on the floor in the newest convocation as a card of
+   days and turns; the line while they speak; the way on (macros.html) */
+.mp-brief { margin: 1.2rem 0 1.6rem; }
+.mp-brief h2 { margin: 0 0 .6rem; font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-family: inherit; }
+.mp-brief .tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: .6rem; }
+.mp-brief .tiles li { margin: 0; }
+.mp-brief .tiles li > * { display: flex; flex-direction: column; height: 100%; box-sizing: border-box; padding: .7rem .8rem .65rem; border: 1px solid var(--line); border-radius: 10px; color: var(--fg); text-decoration: none; background: var(--bg); }
+.mp-brief .tiles a:hover { border-color: var(--fg); }
+.mp-brief .tiles b { font-family: var(--serif); font-size: 1.7rem; line-height: 1.1; font-variant-numeric: lining-nums tabular-nums; overflow-wrap: anywhere; }
+.mp-brief .tiles b.t-text { font-size: 1.15rem; line-height: 1.25; }
+.mp-brief .tiles span { font-size: .9rem; line-height: 1.3; margin-top: .25rem; }
+.mp-brief .tiles small { color: var(--muted); font-size: .78rem; line-height: 1.3; margin-top: .2rem; }
+.mp-brief .tiles li.t-now > * { background: var(--fg); color: var(--bg); border-color: var(--fg); } .mp-brief .tiles li.t-now small { color: color-mix(in srgb, var(--bg) 75%, var(--fg)); }
+.mp-brief .t-words { grid-column: span 2; } .mp-brief .t-words p { margin: .35rem 0 0; display: flex; flex-wrap: wrap; gap: .3rem; }
+.mp-brief .t-words i { font-style: normal; font-family: var(--serif); font-size: 1.05rem; padding: .05rem .5rem; border-radius: 999px; background: color-mix(in srgb, var(--fg) 8%, transparent); }
+.brief-more { margin-top: .7rem; } .brief-more summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
+.mp-facts-new { margin-top: 1rem; }
 .mp-live { display: flex; gap: .6rem; align-items: baseline; margin: 1rem 0; padding: .7rem 1rem; border: 2px solid var(--fg); border-radius: 10px; }
 .mp-live[hidden] { display: none; }
-.mp-floor-now { margin: 1.6rem 0; } .mp-floor-now h3 { font-size: 1rem; margin: 1rem 0 .3rem; }
-.mp-turns { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; } .mp-turns li { margin: 0; }
+.mp-floor-now { margin: 1.6rem 0; padding: 1rem 1.1rem .8rem; border: 1px solid var(--line); border-radius: 12px; }
+.mp-floor-now header { display: flex; flex-wrap: wrap; gap: .4rem 1rem; justify-content: space-between; align-items: baseline; padding-bottom: .7rem; border-bottom: 2px solid var(--fg); }
+.mp-floor-now h2 { margin: 0; font-size: 1.15rem; }
+.fn-sum { margin: 0; } .fn-sum b { font-family: var(--serif); font-size: 1.6rem; margin-right: .5rem; } .fn-sum span { color: var(--muted); font-size: .9rem; }
+.fn-day { padding: .8rem 0 .7rem; border-bottom: 1px solid var(--line); }
+.fn-day h3 { display: flex; justify-content: space-between; gap: 1rem; margin: 0 0 .5rem; font-size: 1rem; font-family: inherit; } .fn-day h3 span { font-weight: 600; white-space: nowrap; }
+.fn-turns { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; } .fn-turns li { margin: 0; }
+.fn-turns a { display: inline-block; padding: .2rem .65rem; border: 1px solid var(--line); border-radius: 999px; font-size: .88rem; text-decoration: none; color: var(--fg); white-space: nowrap; }
+.fn-turns a:hover { border-color: var(--fg); } .fn-turns b { font-variant-numeric: tabular-nums; margin-right: .2rem; }
+.mp-floor-now > .label { margin: .7rem 0 0; }
 .mp-next { margin: 2.4rem 0 1rem; padding-top: 1rem; border-top: 2px solid var(--fg); } .mp-next li { margin: .35rem 0; font-weight: 600; }

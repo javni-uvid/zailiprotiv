@@ -36,11 +36,12 @@ def _a(href: str, text: str, more: bool = True) -> str:
 
 def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[dict], apart: int, voted: int,
           busiest: tuple[int, str, str] | None, words: list[str], day, given_first) -> list[dict]:
-    """[{"n": the number, "text": the rest of the sentence (markup)}], in a fixed order."""
+    """[{"n": the number, "text": the rest of the sentence (markup), "short": a few words for the number's tile,
+    "href": where the tile leads, "sub": a small line under it}], in a fixed order."""
     out = []
 
-    def add(n, text):
-        out.append({"n": n, "text": Markup(text)})
+    def add(n, text, short="", href="", sub=""):
+        out.append({"n": n, "text": Markup(text), "short": short, "href": href, "sub": sub})
 
     # Presence, in the newest convocation where the Assembly lists the absent.
     shown = [c for c in by_conv if c.get("present")]
@@ -49,16 +50,19 @@ def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[
         here, of = c["present"]
         median = f"; polovina poslanika ima više od {round(100 * c['median'])}%" if c.get("median") else ""
         add(f"{round(100 * here / of)}%", f"prisustva na konačnim glasanjima ({escape(c['name'])} saziv: {_n(here)} od "
-            f"{_n(of)}{median}).")
+            f"{_n(of)}{median}).", "prisustva na glasanjima",
+            sub=f"pola poslanika ima više od {round(100 * c['median'])}%" if c.get("median") else f"{c['name']} saziv")
     # Votes unlike the group's majority.
     if voted >= 10 or apart:  # "never" said of one or two votes says nothing
         # worded without a verb in the past, which in Serbian would say whether the MP is a man or a woman
         if apart:
             add(_n(apart), f"{_plural(apart, 'glas drugačiji', 'glasa drugačija', 'glasova drugačijih')} od većine svoje "
-                f"grupe, od {_n(voted)} glasova za, protiv ili uzdržan. {_a('#drugacije', 'Koji su to zakoni')}")
+                f"grupe, od {_n(voted)} glasova za, protiv ili uzdržan. {_a('#drugacije', 'Koji su to zakoni')}",
+                _plural(apart, "glas mimo svoje grupe", "glasa mimo svoje grupe", "glasova mimo svoje grupe"), "#drugacije",
+                f"od {_n(voted)} glasova")
         else:
             add("Nijedan", f"glas drugačiji od većine svoje grupe ({_n(voted)} {_plural(voted, 'glas', 'glasa', 'glasova')} "
-                f"za, protiv ili uzdržan).")
+                f"za, protiv ili uzdržan).", "glas mimo svoje grupe", sub=f"od {_n(voted)} glasova")
     # The floor: speeches, words, the longest speech, the busiest day, exchanges and with whom.
     speeches = sum(x["speeches"] for x in floor)
     words_ = sum(x["words"] for x in floor)
@@ -66,16 +70,20 @@ def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[
         hours = words_ / WORDS_PER_MINUTE / 60
         span = f"oko {round(hours)} {_plural(round(hours), 'sat', 'sata', 'sati')}" if hours >= 1.5 else f"oko {round(hours * 60)} minuta"
         add(_n(speeches), f"{_plural(speeches, 'govor', 'govora', 'govora')} u sali, {_n(words_)} "
-            f"{_plural(words_, 'reč', 'reči', 'reči')}: {span} govora, pri {WORDS_PER_MINUTE} reči u minuti.")
+            f"{_plural(words_, 'reč', 'reči', 'reči')}: {span} govora, pri {WORDS_PER_MINUTE} reči u minuti.",
+            _plural(speeches, "govor u sali", "govora u sali", "govora u sali"), sub=f"{span}, po stenogramima")
     longest = max((x["longest"] for x in floor if x.get("longest")), key=lambda l: l["words"], default=None)
     if longest and speeches > 1:
         when = f", {day(longest['date'])}" if longest.get("date") else ""
         text = escape(_end(f"{_plural(longest['words'], 'reč', 'reči', 'reči')} u najdužem govoru{when}"))
-        add(_n(longest["words"]), f"{text} {_a(longest['url'], 'Pročitaj ga')}" if longest.get("url") else text)
+        add(_n(longest["words"]), f"{text} {_a(longest['url'], 'Pročitaj ga')}" if longest.get("url") else text,
+            _plural(longest["words"], "reč u najdužem govoru", "reči u najdužem govoru", "reči u najdužem govoru"),
+            longest.get("url") or "", day(longest["date"]) if longest.get("date") else "")
     if busiest and busiest[0] > 1:
         n, date, url = busiest
         text = escape(_end(f"{_plural(n, 'govor', 'govora', 'govora')} u jednom danu, najviše: {day(date)}"))
-        add(_n(n), f"{text} {_a(url, 'Ti govori')}" if url else text)
+        add(_n(n), f"{text} {_a(url, 'Ti govori')}" if url else text,
+            _plural(n, "govor u jednom danu", "govora u jednom danu", "govora u jednom danu"), url or "", day(date))
     if exchanges:
         partners = Counter()
         pages = {}
@@ -86,24 +94,29 @@ def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[
         top = sorted(partners.items(), key=lambda kv: (-kv[1], kv[0]))[:3]
         names = ", ".join(f"{_a(f'{pages[n]}.html' if pages[n] else '', given_first(n), more=False)} ({k})" for n, k in top)
         add(_n(len(exchanges)), f"{_plural(len(exchanges), 'razmena', 'razmene', 'razmena')} replika; najviše sa: {names}. "
-            f"{_a('#replike', 'Sve razmene')}")
+            f"{_a('#replike', 'Sve razmene')}", _plural(len(exchanges), "razmena replika", "razmene replika", "razmena replika"),
+            "#replike", "najviše sa: " + given_first(top[0][0]) if top else "")
     measures = sum(x["measures"] + x["measures_likely"] for x in floor)
     harsh = sum(x["harsh"] for x in floor)
     if measures:
         add(_n(measures), f"{_plural(measures, 'mera predsedavajućeg izrečena', 'mere predsedavajućeg izrečene', 'mera predsedavajućeg izrečenih')} ovom poslaniku. "
-            f"{_a('#mere', 'Koje i zašto')}")
+            f"{_a('#mere', 'Koje i zašto')}", _plural(measures, "mera predsedavajućeg", "mere predsedavajućeg", "mera predsedavajućeg"),
+            "#mere")
     if harsh:
         add(_n(harsh), f"{_plural(harsh, 'teška reč sa našeg spiska, izgovorena', 'teške reči sa našeg spiska, izgovorene', 'teških reči sa našeg spiska, izgovorenih')} u sali. "
-            f"{_a('#reci', 'U kojim rečenicama')}")
+            f"{_a('#reci', 'U kojim rečenicama')}", _plural(harsh, "teška reč", "teške reči", "teških reči"), "#reci",
+            "sa našeg spiska")
     # The group, other than the MP's own, voting most alike, in the newest convocation with the count.
     for c in by_conv:
         others = [a for a in c.get("agree", []) if not a["own"]]
         if others:
             a = others[0]
             add(f"{round(100 * a['share'])}%", f"glasova isto kao većina grupe {escape(a['group'])}: od drugih grupa, "
-                f"najsličnije ({escape(c['name'])} saziv). {_a('#slaganje', 'Sve grupe')}")
+                f"najsličnije ({escape(c['name'])} saziv). {_a('#slaganje', 'Sve grupe')}",
+                f"glasova kao grupa {a['group']}", "#slaganje", "najsličnija od drugih grupa")
             break
     if words:
         out.append({"n": "", "text": Markup("Reči koje u raspravama koristi više od drugih poslanika: "
-                                            + ", ".join(f"<i>{escape(w)}</i>" for w in words[:6]) + ".")})
+                                            + ", ".join(f"<i>{escape(w)}</i>" for w in words[:6]) + "."),
+                    "short": "reči češće nego kod drugih", "href": "", "sub": "", "words": words[:6]})
     return out
