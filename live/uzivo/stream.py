@@ -111,6 +111,9 @@ def _resolve_youtube(url: str) -> str:
         # playlist of its own, with the same segment numbers.
         SOUND.update(url=sound_format(info.get("formats") or []))
         log.info("sound: %s", "a playlist of its own" if SOUND.get("url") else "none found, no transcript")
+        if not SOUND.get("url"):  # what there was, to see why
+            log.info("formats: %s", "; ".join(f"{f.get('format_id')} {f.get('protocol')} v={f.get('vcodec')} a={f.get('acodec')}"
+                                              for f in info.get("formats") or []))
     return info["url"], info.get("http_headers") or {}
 
 
@@ -119,8 +122,9 @@ SOUND: dict = {}  # the address of the broadcast's sound, when the picture's for
 
 def sound_format(formats: list[dict]) -> str:
     """The lightest HLS format that is sound only, its address; "" when there is none."""
-    only = [f for f in formats if str(f.get("protocol", "")).startswith("m3u8") and (f.get("vcodec") or "none") == "none"
-            and (f.get("acodec") or "none") != "none" and f.get("url")]
+    # yt-dlp marks a playlist's sound track by "no picture" (vcodec none); its acodec is often not said at all
+    only = [f for f in formats if str(f.get("protocol", "")).startswith("m3u8") and f.get("vcodec") == "none"
+            and f.get("acodec") != "none" and f.get("url")]
     return min(only, key=lambda f: (f.get("abr") or f.get("tbr") or 0, str(f.get("format_id"))))["url"] if only else ""
 
 

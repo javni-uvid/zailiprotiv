@@ -658,3 +658,5 @@ def test_the_sound_is_found_in_a_format_of_its_own_when_the_picture_has_none():
                {"format_id": "233", "protocol": "m3u8_native", "vcodec": "none", "acodec": "mp4a", "abr": 48, "url": "a-low"},
                {"format_id": "140", "protocol": "https", "vcodec": "none", "acodec": "mp4a", "abr": 128, "url": "not-hls"}]
     assert sound_format(formats) == "a-low" and sound_format(formats[:1]) == ""
+    unsaid = [formats[0], {"format_id": "233-0", "protocol": "m3u8_native", "vcodec": "none", "url": "a"}]
+    assert sound_format(unsaid) == "a"  # the sound track's codec left unsaid, as yt-dlp does for a playlist's tracks
