@@ -649,3 +649,12 @@ def test_the_day_in_numbers_and_in_cards():
     assert '<dl class="tiles">' in html and "<dd>5</dd><dt>govora</dt>" in html and "<dd>2</dd><dt>govornika</dt>" in html
     assert 'class="share-now st-open"' in html and html.count('<section class="st-c">') >= 5
     assert "Najduži govor bez prekida" in html and "Najviše puta za govornicom" in html and "3 <small>puta</small>" in html
+
+
+def test_the_sound_is_found_in_a_format_of_its_own_when_the_picture_has_none():
+    from uzivo.stream import sound_format
+    formats = [{"format_id": "231", "protocol": "m3u8_native", "vcodec": "avc1", "acodec": "none", "url": "v"},
+               {"format_id": "234", "protocol": "m3u8_native", "vcodec": "none", "acodec": "mp4a", "abr": 128, "url": "a-high"},
+               {"format_id": "233", "protocol": "m3u8_native", "vcodec": "none", "acodec": "mp4a", "abr": 48, "url": "a-low"},
+               {"format_id": "140", "protocol": "https", "vcodec": "none", "acodec": "mp4a", "abr": 128, "url": "not-hls"}]
+    assert sound_format(formats) == "a-low" and sound_format(formats[:1]) == ""

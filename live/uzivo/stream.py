@@ -105,13 +105,30 @@ def _resolve_youtube(url: str) -> str:
         info.get("format_id"), info.get("height"), info.get("protocol"), info.get("tbr"),
     )
     VIDEO.update(id=info.get("id", ""), started=info.get("release_timestamp"))
+    SOUND.clear()
+    if prepis.on() and (info.get("acodec") or "none") == "none":
+        # YouTube's live formats came without sound in the picture (19 Nov 2026: format 231): the sound is a
+        # playlist of its own, with the same segment numbers.
+        SOUND.update(url=sound_format(info.get("formats") or []))
+        log.info("sound: %s", "a playlist of its own" if SOUND.get("url") else "none found, no transcript")
     return info["url"], info.get("http_headers") or {}
+
+
+SOUND: dict = {}  # the address of the broadcast's sound, when the picture's format has none
+
+
+def sound_format(formats: list[dict]) -> str:
+    """The lightest HLS format that is sound only, its address; "" when there is none."""
+    only = [f for f in formats if str(f.get("protocol", "")).startswith("m3u8") and (f.get("vcodec") or "none") == "none"
+            and (f.get("acodec") or "none") != "none" and f.get("url")]
+    return min(only, key=lambda f: (f.get("abr") or f.get("tbr") or 0, str(f.get("format_id"))))["url"] if only else ""
 
 
 def resolve_input() -> tuple[str, dict]:
     """An address (or a path) to read frames from, and the HTTP headers for it."""
     if config.STREAM_URL:
         VIDEO.clear()
+        SOUND.clear()
         return config.STREAM_URL, {}
     # The broadcaster's page first, read afresh each time: each sitting day is a new YouTube video, and an address
     # fixed in .env would keep pointing at a broadcast that has ended. YOUTUBE_URL only when the page can't be read.
@@ -179,9 +196,11 @@ class HlsPoller(threading.Thread):
     number (/sq/N/ in the address) as soon as it is there.
     """
 
-    def __init__(self, playlist_url: str, headers: dict) -> None:
+    def __init__(self, playlist_url: str, headers: dict, sound_url: str = "") -> None:
         super().__init__(daemon=True)
         self.url = playlist_url
+        self.sound_url = sound_url  # the sound's own playlist, when the picture's segments have none
+        self._sound_segments: dict[int, str] = {}
         self.headers = {"User-Agent": "Mozilla/5.0", **headers}
         self.stderr = io.BytesIO()
         self._halt = threading.Event()
@@ -239,6 +258,52 @@ class HlsPoller(threading.Thread):
                 log.warning("playlist: %s", exc)
             self._halt.wait(1.0)
 
+    def _sound_loop(self) -> None:
+        """The sound's playlist, read now and then for its segments' addresses (the numbers are the picture's)."""
+        while not self._halt.is_set():
+            try:
+                text = self._get(self.sound_url).decode("utf-8", "replace")
+                if "#EXT-X-STREAM-INF" in text:
+                    variant = next(l for l in text.splitlines() if l and not l.startswith("#"))
+                    self.sound_url = urllib.parse.urljoin(self.sound_url, variant.strip())
+                    continue
+                seq, segs = 0, {}
+                for line in text.splitlines():
+                    line = line.strip()
+                    if line.startswith("#EXT-X-MEDIA-SEQUENCE:"):
+                        seq = int(line.split(":", 1)[1])
+                    elif line and not line.startswith("#"):
+                        url = urllib.parse.urljoin(self.sound_url, line)
+                        m = _SQ.search(url)
+                        segs[int(m.group(1)) if m else seq] = url
+                        seq += 1
+                if segs:
+                    with self._lock:
+                        self._sound_segments = segs
+            except Exception as exc:
+                log.debug("sound playlist: %s", exc)
+            self._halt.wait(10.0)
+
+    def _sound(self, n: int) -> bytes | None:
+        """Segment n's sound, or None: never an error, the frame matters more."""
+        with self._lock:
+            url = self._sound_segments.get(n)
+            if not url:
+                url = next((_SQ.sub(f"/sq/{n}/", u) for u in reversed(list(self._sound_segments.values()))
+                            if _SQ.search(u)), None)
+        if not url:
+            return None
+        for _ in range(3):  # the sound's segment may come a moment after the picture's
+            try:
+                data = self._get(url, timeout=10)
+                if len(data) > 512:
+                    return data
+            except Exception:
+                pass
+            if self._halt.wait(0.7):
+                break
+        return None
+
     def _segment_url(self, n: int) -> str | None:
         with self._lock:
             if n in self._segments:
@@ -271,6 +336,8 @@ class HlsPoller(threading.Thread):
     def run(self) -> None:
         os.makedirs(os.path.dirname(config.FRAME_PATH), exist_ok=True)
         threading.Thread(target=self._playlist_loop, daemon=True).start()
+        if self.sound_url:
+            threading.Thread(target=self._sound_loop, daemon=True).start()
         try:
             while self._newest < 0:  # the first playlist
                 if self._halt.wait(0.2):
@@ -302,7 +369,16 @@ class HlsPoller(threading.Thread):
                     self.frame_seq, self.seg_dur = nxt, dur  # read with the frame: where it is in the broadcast
                     _ffmpeg_last_frame(path)
                     t2 = time.time()
-                    prepis.keep(path, t2, dur)  # the segment's sound, for the automatic transcript
+                    if not prepis.on():
+                        pass
+                    elif not self.sound_url:
+                        prepis.keep(path, t2, dur)  # the segment's sound, for the automatic transcript
+                    else:
+                        heard = self._sound(nxt)
+                        if heard:
+                            with open(path + "-zvuk", "wb") as f:
+                                f.write(heard)
+                            prepis.keep(path + "-zvuk", t2, dur)
                     if t2 - last_new > 2.5 * dur:
                         log.info(
                             "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",
@@ -333,7 +409,7 @@ class HlsPoller(threading.Thread):
 def start_ffmpeg(source: str, headers: dict | None = None):
     os.makedirs(os.path.dirname(config.FRAME_PATH), exist_ok=True)
     if _is_hls(source):
-        return HlsPoller(source, headers or {})
+        return HlsPoller(source, headers or {}, SOUND.get("url", "") if prepis.on() else "")
     # A file or another stream: one ffmpeg that keeps running.
     cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-re"]
     if headers and headers.get("User-Agent"):
