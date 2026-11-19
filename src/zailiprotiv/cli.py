@@ -330,6 +330,20 @@ def members_cmd(args) -> int:
     if len(found) < 200 or (old and len(found) < len(old) * 0.8):
         print(f"members: {len(found)} read, {len(old)} kept; the file stays")
         return 0 if old else 1
+    # Each MP's occupation, from the MP's own page at the Assembly: read once, then kept (members.py).
+    had = {(m["name"], m["year"]): m["occupation"] for m in old if "occupation" in m}
+    links, read_now = members.pages(page), 0
+    for m in found:
+        if (m["name"], m["year"]) in had:
+            m["occupation"] = had[(m["name"], m["year"])]
+        elif m["name"] in links:
+            time.sleep(DELAY)
+            try:
+                m["occupation"] = members.occupation(skupstina.fetch(links[m["name"]]).decode("utf-8", "replace"))
+                read_now += 1
+            except skupstina.FetchError as e:  # tried again at the next run
+                print(f"  {m['name']}: {e}")
+    print(f"members: occupations read now: {read_now}, known: {sum('occupation' in m for m in found)}")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(members.dumps(dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), found),
                     encoding="utf-8")

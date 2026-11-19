@@ -197,6 +197,85 @@ def quiz(*, numbers: list[dict], totals: dict, active: str, items: list[dict] | 
     return out
 
 
+SPEAKERS_FILE = "mikrofon-poslanici.json"
+QUOTE_AT_MOST = 240  # characters: a quote is shown whole or not at all (principle 6), and the box is small
+
+
+def span(convs: list[str]) -> str:
+    """Which convocations a number is from, said beside it: "14. saziv", "sazivi 12–14", "sazivi 11, 13, 14"."""
+    ns = sorted({int(c) for c in convs})
+    if not ns:
+        return ""
+    if len(ns) == 1:
+        return f"{ns[0]}. saziv"
+    return f"sazivi {ns[0]}–{ns[-1]}" if ns == list(range(ns[0], ns[-1] + 1)) else "sazivi " + ", ".join(map(str, ns))
+
+
+def spoken(days: list[dict]) -> dict[str, dict]:
+    """Each speaker's time and turns over the convocation's days read from the recording, by the MP's address:
+    {"sek", "n", "do": the last day counted}. The live page adds today's to it."""
+    out: dict[str, dict] = {}
+    last = max((d["dan"] for d in days), default="")
+    for d in days:
+        for t in d.get("govori", []):
+            if t.get("okvira", 0) >= 2 and t.get("adresa"):
+                x = out.setdefault(t["adresa"], {"sek": 0, "n": 0, "do": last})
+                x["sek"] += max(0, t["do"] - t["od"])
+                x["n"] += 1
+    return out
+
+
+def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: dict, plain, latin, day) -> dict:
+    """What the live page says under the speaker, for every MP of the newest convocation, by address. `rows` are its
+    members (pages_members.match, with "photo"); `known` has, for one the site knows from earlier roll calls,
+    {"tally", "facts" (the MP page's card), "convs", "quote"}. Each line of "c" says where it is from ("iz"), by the
+    same rule for every MP; "za"/"protiv"/"uzdrzan"/"f" stay for a service not yet rebuilt."""
+    out = {}
+    for r in rows:
+        k = known.get(r["slug"]) if not r["new"] else None
+        bio = " · ".join(x for x in (
+            (latin(r.get("occupation") or "")[:1].upper() + latin(r.get("occupation") or "")[1:]),
+            latin(r.get("place", "")), f"godište {r['year']}" if r.get("year") else "") if x)
+        lines = []
+        e: dict = {"lista": latin(r.get("group", "") or "")}
+        if r.get("photo"):
+            e["foto"] = r["photo"]
+        if k:
+            where = span(k["convs"])
+            t = k["tally"]
+            e.update(za=t.get("za", 0), protiv=t.get("protiv", 0), uzdrzan=t.get("uzdrzan", 0),
+                     f=[plain(f) for f in k["facts"][:3]])
+            if e["za"] + e["protiv"] + e["uzdrzan"]:
+                lines.append({"t": f"{e['za']} za · {e['protiv']} protiv · {e['uzdrzan']} uzdržan na konačnim "
+                                   "glasanjima o zakonima.", "iz": where})
+            lines += [{"t": plain(f), "iz": where} for f in k["facts"]]
+            if k.get("quote"):
+                lines.append({"t": f"„{latin(k['quote']['tekst'])}“", "iz": f"stenogram, {day(k['quote']['date'])}"})
+            if bio:
+                lines.append({"t": bio + ".", "iz": "sajt Skupštine"})
+        else:
+            e.update(novi=1, f=[bio + "."] if bio else [])
+            if bio:
+                lines.append({"t": bio + ".", "iz": "sajt Skupštine"})
+            lines.append({"t": f"Prvi mandat: nema glasanja u sazivima od 2012. do {conv}. saziva.", "iz": "spiskovi glasanja"})
+            party = (r.get("party") or "").strip()
+            if party not in ("", "-", "–"):
+                lines.append({"t": f"Na predlog stranke: {latin(party)}.", "iz": "sajt Skupštine"})
+        e["c"] = lines
+        if r["slug"] in spoken_:
+            e["sv"] = {**spoken_[r["slug"]], "saziv": conv}
+        out[r["slug"]] = e
+    return out
+
+
+def quote(profile: dict | None) -> dict | None:
+    """One checked quote of the MP's overview for the live page: the latest said, among those short enough to show
+    whole. The same rule for every MP."""
+    quotes = [p["citat"] for p in (profile or {}).get("points", [])
+              if p.get("citat") and p["citat"].get("date") and len(p["citat"].get("tekst", "")) <= QUOTE_AT_MOST]
+    return max(quotes, key=lambda q: q["date"], default=None)
+
+
 def besides(facts_: list[dict], quiz_: list[dict]) -> list[dict]:
     """The facts the quiz does not ask about: listed below it, they would give its answers away."""
     asked = {q["key"] for q in quiz_}

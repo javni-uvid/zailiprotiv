@@ -9,6 +9,9 @@ on the site by the roll calls of earlier convocations links to their page, a new
 The parliamentary groups (18 Nov 2026) are not in the table: the page's form filters it by group ("group" in the
 query, with "submitted=true"), so each group's MPs are read from the page filtered by it, the group named as the
 form's list names it ("Посланичка група „Студентска листа“"), the MPs in none as "" (the form's "not members").
+
+The occupation (19 Nov 2026, for the live page's lines about the speaker) is on each MP's own page at the Assembly,
+linked from the list: read once per MP ("occupation", "" when the Assembly gives none) and kept from run to run.
 """
 from __future__ import annotations
 
@@ -85,6 +88,22 @@ def with_groups(found: list[dict], by_group: dict[str, list[dict]]) -> list[dict
         for r in rows:
             of[clean(r["name"])] = group_name(label)
     return [{**m, **({"group": of[m["name"]]} if m["name"] in of else {})} for m in found]
+
+
+_MP_PAGE = re.compile(r'<a\s+href="(/[^"]+\.\d+\.245\.html)"[^>]*>\s*([^<]+?)\s*</a>')
+_OCCUPATION = re.compile(r"<h4>\s*Занимање\s*</h4>\s*<p>(.*?)</p>", re.S)
+
+
+def pages(html: str) -> dict[str, str]:
+    """Each MP's own page at the Assembly, by the name as the list writes it (cleaned as `read` cleans it)."""
+    return {clean(name): BASE + href for href, name in _MP_PAGE.findall(html)}
+
+
+def occupation(html: str) -> str:
+    """The occupation the Assembly gives on an MP's page ("Занимање": "лекар"); "" when it gives none."""
+    m = _OCCUPATION.search(html)
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1))).strip() if m else ""
+    return "" if text in ("", "-", "–") else text
 
 
 def read(html: str) -> list[dict]:

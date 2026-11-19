@@ -322,9 +322,42 @@ class Tracker:
                 done = [{**d, "snimak": None} if not d.get("datoteka") else d for d in done]
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
+            self._lists(done, current, recorded)
+            if current:
+                self._today(done, current, day)
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
+
+    def _lists(self, done: list[dict], current: dict | None, recorded: bool) -> None:
+        """Each turn's list ("lista"), for the day's time by list: the line under the name, or the MP's group, when it
+        is a list the site names; "*" for a sitting MP of none of those (a smaller list the caption abbreviates, or
+        no group) and "" for anyone else (ministers, guests). A day read from the recording says it itself."""
+        known = set(self.roster.groups) if self.roster and not recorded else None
+        for d in done + ([current] if current else []):
+            mine = [x for x in ((d.get("o") or {}).get("lista"), d.get("uloga"), d.get("grupa")) if x]
+            d["lista"] = next((x for x in mine if known is None or x in known),
+                              "*" if d.get("adresa") in self.facts else "")
+
+    @staticmethod
+    def _today(done: list[dict], current: dict, day: str) -> None:
+        """The speaker's day so far, by the same rule for every speaker: which turn of theirs this is, their time
+        today and its place among today's speakers; how many of today's finished turns this one has outlasted (with
+        five or more to compare with); and their time in the convocation, the site's sum of the days read plus today."""
+        sums: dict[str, int] = {}
+        for d in done + [current]:
+            sums[d["ime"]] = sums.get(d["ime"], 0) + max(0, d["sekundi"])
+        mine = sum(1 for d in done if d["ime"] == current["ime"]) + 1
+        total = sums[current["ime"]]
+        current["danas"] = {"n": mine, "sek": total, "mesto": 1 + sum(1 for v in sums.values() if v > total),
+                            "od": len(sums)}
+        if len(done) >= 5:
+            current["duze"] = round(100 * sum(1 for d in done if d["sekundi"] < current["sekundi"]) / len(done))
+        sv = (current.get("o") or {}).get("sv")
+        if sv:
+            more = sv.get("do", "") < day  # the site's sum doesn't hold today yet
+            current["saziv"] = {"broj": sv.get("saziv", ""), "sek": sv["sek"] + (total if more else 0),
+                                "n": sv["n"] + (mine if more else 0)}
 
     def record(self, day: str) -> dict | None:
         """A day's record, as published at /dan/<date>.json: every turn (with how many frames named the speaker,

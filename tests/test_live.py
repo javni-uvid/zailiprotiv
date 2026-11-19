@@ -466,20 +466,56 @@ def test_one_frame_of_another_name_inside_a_speech_is_not_a_turn():
     assert [x["name"] for x in t.turns] == ["Petrović Petar", "Jovanović Marko"]
 
 
-def test_the_speaker_shows_votes_and_facts_from_the_site_and_the_way_to_the_page():
+def test_the_speaker_shows_the_day_so_far_lines_about_the_mp_and_the_way_to_the_page():
     t = Tracker(None, "Europe/Belgrade")
-    t.use_facts({"petrovic-petar": {"za": 300, "protiv": 12, "uzdrzan": 1, "f": ["87% prisutan na konačnim glasanjima."]},
-                 "jovanovic-marko": {"novi": 1, "f": ["Niš, godište 1980."]}})
+    t.roster = ROSTER
+    t.use_facts({
+        "petrovic-petar": {"lista": "Lista za primer", "foto": "12.jpg", "sv": {"sek": 3600, "n": 4, "do": "2026-11-16", "saziv": "15"},
+                           "c": [{"t": "300 za · 12 protiv · 1 uzdržan na konačnim glasanjima o zakonima.", "iz": "sazivi 13–14"},
+                                 {"t": "87% prisustva na konačnim glasanjima.", "iz": "sazivi 13–14"}]},
+        "jovanovic-marko": {"novi": 1, "lista": "Lista za primer", "c": [{"t": "Lekar · Niš · godište 1980.", "iz": "sajt Skupštine"}]}})
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    for s in range(0, 601, 5):
+        t.observe(petar, now=now + s)
+    for s in range(610, 700, 5):
+        t.observe(marko, now=now + s)
+    for s in range(710, 831, 5):
+        t.observe(petar, now=now + s)
+    snap = t.snapshot(now=now + 831)
+    cur = snap["sada"]
+    assert cur["danas"] == {"n": 2, "sek": 720, "mesto": 1, "od": 2} and cur["lista"] == "Lista za primer"
+    assert cur["saziv"] == {"broj": "15", "sek": 3600 + 720, "n": 6}  # the site's days and today
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'src="https://zailiprotiv.rs/foto/12.jpg"' in html and 'data-sek="120"' in html
+    assert "2. put za govornicom · ukupno 12 min · 1. po vremenu od 2 govornika" in html
+    assert "15. saziv" in html and "1 h 12 min u 6 govora" in html
+    assert '<span class="src">sazivi 13–14</span>300 za · 12 protiv' in html and "87% prisustva" in html
+    assert 'class="cta" href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in html and 'class="share-now"' in html
+    assert "Vreme za govornicom po listama" in html and 'href="#t1794920610"' in html and 'id="t1794920610"' in html
+    assert 'class="l0 on"' in html  # the turn now on, marked in the day's strip
+    t.observe(marko, now=now + 840)
+    t.observe(marko, now=now + 845)
+    html = fragment(t.snapshot(now=now + 846), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Лекар · Ниш · годиште 1980." in html and "/cir/poslanik/jovanovic-marko" in html and "Подели овај тренутак" in html
+
+
+def test_a_speaker_on_no_list_is_counted_apart_in_the_days_time_by_list():
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    guest = who(read([w("Ana Anić")], 85), Roster(), 0.8)
     petar = ROSTER.match("Петар Петровић", 0.8)
-    t.observe(petar, now=1794920000.0)
-    html = fragment(t.snapshot(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "300 za" in html and "12 protiv" in html and "87% prisutan" in html
-    assert 'class="cta" href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in html
-    marko = ROSTER.match("Марко Јовановић", 0.8)
-    t.observe(marko, now=1794920100.0)
-    t.observe(marko, now=1794920105.0)
-    html = fragment(t.snapshot(), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "Нови посланик" in html and "Ниш" in html and "/cir/poslanik/jovanovic-marko" in html
+    now = 1794920000.0
+    for s in (0, 5, 10):
+        t.observe(petar, now=now + s)
+    for s in (20, 25, 30):
+        t.observe(guest, "ministar finansija", now=now + s)
+    for s in (40, 45):
+        t.observe(petar, now=now + s)
+    snap = t.snapshot(now=now + 46)
+    assert [d["lista"] for d in snap["danas"]] == ["", "Lista za primer"]
+    html = fragment(snap, cyr=False, site="", tz=TZ)
+    assert "Vlada i gosti" in html and 'class="lx"' in html
 
 
 def test_a_half_read_name_is_the_sitting_mp_it_is_nearest_to():

@@ -28,8 +28,10 @@ def _end(text: str) -> str:
     return text if text.endswith(".") else text + "."
 
 
-def _a(href: str, text: str) -> str:
-    return f'<a href="{escape(href)}">{escape(text)}</a>' if href else escape(text)
+def _a(href: str, text: str, more: bool = True) -> str:
+    """A link; `more` marks one that leads on from the sentence ("Koji su to zakoni"), which a plain copy of the
+    sentence leaves out (the live page's lines), unlike a name inside it."""
+    return f'<a{" class=\"more\"" if more else ""} href="{escape(href)}">{escape(text)}</a>' if href else escape(text)
 
 
 def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[dict], apart: int, voted: int,
@@ -46,15 +48,16 @@ def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[
         c = shown[0]
         here, of = c["present"]
         median = f"; polovina poslanika ima više od {round(100 * c['median'])}%" if c.get("median") else ""
-        add(f"{round(100 * here / of)}%", f"prisutan na konačnim glasanjima ({escape(c['name'])} saziv: {_n(here)} od "
+        add(f"{round(100 * here / of)}%", f"prisustva na konačnim glasanjima ({escape(c['name'])} saziv: {_n(here)} od "
             f"{_n(of)}{median}).")
     # Votes unlike the group's majority.
     if voted >= 10 or apart:  # "never" said of one or two votes says nothing
+        # worded without a verb in the past, which in Serbian would say whether the MP is a man or a woman
         if apart:
-            add(_n(apart), f"{_plural(apart, 'put', 'puta', 'puta')} glasao drugačije od većine svoje grupe, od "
-                f"{_n(voted)} glasova za, protiv ili uzdržan. {_a('#drugacije', 'Koji su to zakoni')}")
+            add(_n(apart), f"{_plural(apart, 'glas drugačiji', 'glasa drugačija', 'glasova drugačijih')} od većine svoje "
+                f"grupe, od {_n(voted)} glasova za, protiv ili uzdržan. {_a('#drugacije', 'Koji su to zakoni')}")
         else:
-            add("Nijednom", f"nije glasao drugačije od većine svoje grupe ({_n(voted)} {_plural(voted, 'glas', 'glasa', 'glasova')} "
+            add("Nijedan", f"glas drugačiji od većine svoje grupe ({_n(voted)} {_plural(voted, 'glas', 'glasa', 'glasova')} "
                 f"za, protiv ili uzdržan).")
     # The floor: speeches, words, the longest speech, the busiest day, exchanges and with whom.
     speeches = sum(x["speeches"] for x in floor)
@@ -81,16 +84,16 @@ def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[
             partners[other["name"]] += 1
             pages[other["name"]] = other.get("slug", "")
         top = sorted(partners.items(), key=lambda kv: (-kv[1], kv[0]))[:3]
-        names = ", ".join(f"{_a(f'{pages[n]}.html' if pages[n] else '', given_first(n))} ({k})" for n, k in top)
+        names = ", ".join(f"{_a(f'{pages[n]}.html' if pages[n] else '', given_first(n), more=False)} ({k})" for n, k in top)
         add(_n(len(exchanges)), f"{_plural(len(exchanges), 'razmena', 'razmene', 'razmena')} replika; najviše sa: {names}. "
             f"{_a('#replike', 'Sve razmene')}")
     measures = sum(x["measures"] + x["measures_likely"] for x in floor)
     harsh = sum(x["harsh"] for x in floor)
     if measures:
-        add(_n(measures), f"{_plural(measures, 'mera', 'mere', 'mera')} predsedavajućeg izrečena njemu. "
+        add(_n(measures), f"{_plural(measures, 'mera predsedavajućeg izrečena', 'mere predsedavajućeg izrečene', 'mera predsedavajućeg izrečenih')} ovom poslaniku. "
             f"{_a('#mere', 'Koje i zašto')}")
     if harsh:
-        add(_n(harsh), f"{_plural(harsh, 'teška reč', 'teške reči', 'teških reči')} sa našeg spiska, izgovorenih u sali. "
+        add(_n(harsh), f"{_plural(harsh, 'teška reč sa našeg spiska, izgovorena', 'teške reči sa našeg spiska, izgovorene', 'teških reči sa našeg spiska, izgovorenih')} u sali. "
             f"{_a('#reci', 'U kojim rečenicama')}")
     # The group, other than the MP's own, voting most alike, in the newest convocation with the count.
     for c in by_conv:

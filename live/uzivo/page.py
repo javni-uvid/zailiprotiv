@@ -14,6 +14,30 @@ LIVE = "https://www.parlament.gov.rs/prenosi/sednice-narodne-skupstine.2083.html
 TEXT = {
     "title": "Ko sada govori u Skupštini",
     "lead": "Govornik u Narodnoj skupštini u ovom trenutku, pročitan iz potpisa u prenosu uživo.",
+    "intro": "Ko upravo govori u Narodnoj skupštini i koliko dugo, čitano uživo iz potpisa u prenosu. Deo sajta",
+    "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
+    "speaks": "govori",
+    "longer": "duže od {p}% današnjih govora",
+    "d_today": "Danas",
+    "d_conv": "saziv",
+    "d_turn": "{n}. put za govornicom",
+    "d_total": "ukupno {t}",
+    "d_rank": "{m}. po vremenu od {n} govornika",
+    "d_conv_line": "{t} u {n} {w}",
+    "next_fact": "Sledeća činjenica",
+    "share_now": "Podeli ovaj trenutak",
+    "sh_head": "Sada govori u Skupštini",
+    "sh_already": "govori već",
+    "sh_today": "danas ukupno {t} · {n}. put za govornicom",
+    "sh_first": "prvi put danas za govornicom",
+    "sh_note": "Čitano iz potpisa u prenosu, automatski; može da pogreši.",
+    "sh_text": "%1 govori već %2 min u Skupštini (%3). Uživo:",  # filled by the script; digits survive Cyrillic
+    "sh_done": "Slika je sačuvana, a tekst kopiran.",
+    "lists": "Vreme za govornicom po listama",
+    "no_list": "Vlada i gosti",
+    "other_lists": "poslanici manjih lista i van grupa",
+    "timeline": "Tok dana",
+    "timeline_note": "Svaki blok je jedan govor; klik vodi na njega u spisku ispod.",
     "since": "govori od",
     "min": "min",
     "unknown": "Prenos je u toku, ali se ime govornika sada ne vidi u potpisu.",
@@ -137,23 +161,14 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     t = lambda k: escape(_t(k, cyr))
     out = [f'<div id="deo" data-checked="{snap["provereno"]}">']
     cur = snap.get("sada")
+    out.append('<section class="sp">')
     if snap["stanje"] == "govori" and cur:
-        name = escape(_name(given_first(cur["ime"]), cyr))
-        if cur["adresa"]:
-            href = escape(f'{site}{"cir/" if cyr else ""}poslanik/{cur["adresa"]}')
-            name = f'<a href="{href}">{name}</a>'
-        side = cur["uloga"] or cur["grupa"]
-        out.append(f'<p class="now"><span class="dot" aria-hidden="true"></span><span class="who">{name}</span></p>')
-        if side:
-            out.append(f'<p class="side">{escape(_name(side, cyr))}</p>')
-        if not cur["adresa"]:
-            out.append(f'<p class="meta">({t("not_listed")})</p>')
-        out.append(f'<p class="meta">{t("since")} {_clock(cur["od"], tz)}, {_minutes(cur["sekundi"])} {t("min")}</p>')
-        out.append(_about(cur, cyr=cyr, site=site))
+        out.append(_speaker(cur, cyr=cyr, site=site, tz=tz))
     else:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
+    out.append('</section><section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
@@ -162,7 +177,11 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     else:
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
-        out.append(_totals(snap["danas"], cyr=cyr, site=site))
+        every = snap["danas"] + ([cur] if snap["stanje"] == "govori" and cur else [])
+        shade = _shades(every)
+        out.append(_lists(every, shade, cyr=cyr))
+        out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
+        out.append(_totals(every, cyr=cyr, site=site))
         where = f'{site}{"cir/" if cyr else ""}'
         more = [f'<a href="{escape(where)}govornici">{t("conv_page")} →</a>']
         if snap.get("snimak") and snap.get("dan"):  # a day read from the recording has its page on the site
@@ -176,19 +195,20 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
                 nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + d["adresa"])}">{nm}</a>'
             side = d["uloga"] or d["grupa"]
             side = f' <span class="meta">{escape(_name(side, cyr))}</span>' if side else ""
-            out.append(f'<li><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
+            out.append(f'<li id="t{int(d["od"])}"><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
                        f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span>{_recording(d, cyr)}</li>')
         out.append("</ol>")
     else:
         out.append(f'<p class="meta">{t("today_none")}</p>')
-    out.append("</div>")
+    out.append("</section></div>")
     return "\n".join(out)
 
 
 
-def _dur(sec: int) -> str:
+def _dur(sec: int, cyr: bool = False) -> str:
     h, m = divmod(max(60, sec) // 60, 60)
-    return f"{h} h {m} min" if h else f"{m} min"
+    hour, minute = ("ч", "мин") if cyr else ("h", "min")
+    return f"{h} {hour} {m} {minute}" if h else f"{m} {minute}"
 
 
 def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
@@ -196,7 +216,8 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
     t = lambda k: escape(_t(k, cyr))
     by: dict[str, list] = {}
     for d in turns:
-        row = by.setdefault(d["ime"], [0, 0, d.get("adresa", ""), d.get("uloga") or d.get("grupa") or ""])
+        row = by.setdefault(d["ime"], [0, 0, d.get("adresa", ""),
+                                       (d.get("lista") or "").strip("*") or d.get("uloga") or d.get("grupa") or ""])
         row[0] += max(0, d["sekundi"])
         row[1] += 1
     rows = sorted(by.items(), key=lambda kv: -kv[1][0])
@@ -208,9 +229,10 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
     def line(name_html: str, side: str, sec: int, n: int, rest: bool = False) -> str:
         share = f"{100 * sec / whole:.0f}".replace(".", ",")
         word = t("speeches_1") if n == 1 else t("speeches_n")
-        return (f'<div class="tr{" rest" if rest else ""}"><div class="tn">{name_html}</div>'
+        under = f'<span>{escape(_name(side, cyr))}</span>' if side else ""
+        return (f'<div class="tr{" rest" if rest else ""}"><div class="tn">{name_html}{under}</div>'
                 f'<div class="tb"><i style="width:{max(1.5, 100 * sec / most):.1f}%"></i></div>'
-                f'<div class="tv"><b>{_dur(sec)}</b><span>{share}% · {n} {word}</span></div></div>')
+                f'<div class="tv"><b>{_dur(sec, cyr)}</b><span>{share}% · {n} {word}</span></div></div>')
     for name, (sec, n, slug, side) in rows[:top]:
         nm = escape(_name(given_first(name), cyr))
         if slug:
@@ -224,27 +246,119 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
     return "".join(out)
 
 
-def _about(cur: dict, *, cyr: bool, site: str) -> str:
-    """Under the speaker: their final votes on laws and the first facts of their page on the site, or where a new MP
-    comes from, and the way to that page. The site's numbers, by its one rule for all; nothing for a name not listed."""
-    o = cur.get("o")
-    if not o or not cur.get("adresa"):
-        return ""
+def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
+    """The speaker: the portrait (an MP's, from the Assembly, served by the site), the name, the list, a clock that
+    runs, and a box: the day so far and the convocation first (there for every speaker), then one line about the MP
+    at a time, each saying where it is from, the way to the MP's page and the picture to share. The same for every
+    speaker, by rules; a name not on the site's list gets the day's numbers only."""
     t = lambda k: escape(_t(k, cyr))
     s = lambda x: escape(_name(x, cyr))
-    href = escape(f'{site}{"cir/" if cyr else ""}poslanik/{cur["adresa"]}')
-    out = ['<div class="o">']
-    if o.get("novi"):
-        out.append(f'<p><b>{t("o_new")}</b>{(" · " + s(o["f"][0])) if o.get("f") else ""}</p>')
-    else:
-        if o.get("za", 0) + o.get("protiv", 0) + o.get("uzdrzan", 0):
-            out.append(f'<p>{t("o_votes")} <b class="v-za">{int(o.get("za", 0))} {t("v_za")}</b> · '
-                       f'<b class="v-protiv">{int(o.get("protiv", 0))} {t("v_protiv")}</b> · '
-                       f'{int(o.get("uzdrzan", 0))} {t("v_uzdrzan")}</p>')
-        if o.get("f"):
-            out.append('<ul>' + "".join(f"<li>{s(f)}</li>" for f in o["f"][:3]) + '</ul>')
-    out.append(f'<a class="cta" href="{href}">{t("o_more")} →</a></div>')
+    o = cur.get("o") or {}
+    page_ = f'{site}{"cir/" if cyr else ""}poslanik/{cur["adresa"]}' if cur["adresa"] else ""
+    name = s(given_first(cur["ime"]))
+    shown = f'<a href="{escape(page_)}">{name}</a>' if page_ else name
+    side = cur.get("uloga") or cur.get("lista") or cur.get("grupa") or ""
+    out = ['<div class="sp-head">']
+    if o.get("foto") and str(o["foto"]).replace(".", "").replace("-", "").isalnum():
+        out.append(f'<img class="ph" src="{escape(site)}foto/{escape(o["foto"])}" width="72" height="96" alt="">')
+    out.append(f'<div><p class="now"><span class="dot" aria-hidden="true"></span><span class="who">{shown}</span></p>')
+    if side:
+        out.append(f'<p class="side">{s(side)}</p>')
+    if not cur["adresa"]:
+        out.append(f'<p class="meta">({t("not_listed")})</p>')
+    longer = (" · " + s(TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
+    out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
+               f'{_hms(max(0, cur["sekundi"]))}</b> <span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
+    out.append('<div class="o">')
+    today, line = cur.get("danas"), ""
+    if today:
+        bits = [TEXT["d_turn"].format(n=today["n"]), TEXT["d_total"].format(t=_dur(today["sek"], cyr))]
+        if today["od"] >= 2:
+            bits.append(TEXT["d_rank"].format(m=today["mesto"], n=today["od"]))
+        out.append(f'<dl class="nums"><div><dt>{t("d_today")}</dt><dd>{s(" · ".join(bits))}</dd></div>')
+        conv = cur.get("saziv")
+        if conv:
+            words = TEXT["d_conv_line"].format(t=_dur(conv["sek"], cyr), n=conv["n"],
+                                               w=TEXT["speeches_1"] if conv["n"] == 1 else TEXT["speeches_n"])
+            out.append(f'<div><dt>{escape(str(conv["broj"]))}. {t("d_conv")}</dt><dd>{s(words)}</dd></div>')
+        out.append("</dl>")
+        line = TEXT["sh_today"].format(t=_dur(today["sek"], cyr), n=today["n"]) if today["n"] > 1 else TEXT["sh_first"]
+    lines = [c for c in o.get("c") or [] if c.get("t")]
+    if not lines and o.get("f"):  # the site's file as it was before 19 Nov 2026
+        lines = [{"t": f, "iz": ""} for f in o["f"]]
+    if lines:
+        items = "".join(f'<li>{f"""<span class="src">{s(c["iz"])}</span>""" if c.get("iz") else ""}{s(c["t"])}</li>'
+                        for c in lines)
+        more = (f'<button type="button" class="rot-next" aria-label="{t("next_fact")}"><span class="rot-n">1/{len(lines)}'
+                f'</span> ›</button>') if len(lines) > 1 else ""
+        out.append(f'<div class="rot-w"><ul class="rot">{items}</ul>{more}</div>')
+    when = _date(datetime.fromtimestamp(cur["do"], tz).strftime("%Y-%m-%d")) + f' u {_clock(cur["do"], tz)}'
+    data = {"head": _t("sh_head", cyr), "name": _name(given_first(cur["ime"]), cyr), "side": _name(side, cyr),
+            "already": _t("sh_already", cyr), "min": _t("min", cyr), "line": _name(line, cyr), "when": _name(when, cyr),
+            "note": _t("sh_note", cyr), "text": _t("sh_text", cyr), "done": _t("sh_done", cyr)}
+    attrs = " ".join(f'data-{k}="{escape(v)}"' for k, v in data.items())
+    cta = f'<a class="cta" href="{escape(page_)}">{t("o_more")} →</a> ' if page_ else ""
+    out.append(f'<p class="acts">{cta}<button type="button" class="share-now" {attrs}>{t("share_now")}</button></p>'
+               f'<p class="meta share-said" hidden></p></div>')
     return "".join(out)
+
+
+def _shades(turns: list[dict]) -> dict[str, str]:
+    """A shade of grey for each list with time today, the most time the darkest (never a colour: the site keeps
+    colour for "za" and "protiv"); the speakers on no list share the last, hatched one."""
+    by: dict[str, int] = {}
+    for d in turns:
+        by[d.get("lista") or ""] = by.get(d.get("lista") or "", 0) + max(0, d["sekundi"])
+    named = sorted((k for k in by if k and k != "*"), key=lambda k: (-by[k], k))
+    return {**{k: f"l{min(i, 3)}" for i, k in enumerate(named)}, "*": "l4", "": "lx"}
+
+
+def _lists(turns: list[dict], shade: dict[str, str], *, cyr: bool) -> str:
+    """The day's time by list as one bar and its key: the turns summed, by the same rule for every list."""
+    t = lambda k: escape(_t(k, cyr))
+    by: dict[str, list[int]] = {}
+    for d in turns:
+        x = by.setdefault(d.get("lista") or "", [0, 0])
+        x[0] += max(0, d["sekundi"])
+        x[1] += 1
+    whole = sum(x[0] for x in by.values())
+    if not whole or len(turns) < 2:
+        return ""
+    rows = sorted(by.items(), key=lambda kv: (("*", "").index(kv[0]) + 1 if kv[0] in ("*", "") else 0, -kv[1][0], kv[0]))
+    label = lambda k: t("no_list") if not k else t("other_lists") if k == "*" else escape(_name(k, cyr))
+    bar = "".join(f'<i class="{shade[k]}" style="width:{100 * v[0] / whole:.2f}%"></i>' for k, v in rows if v[0])
+    key = "".join(f'<li><i class="{shade[k]}"></i><span>{label(k)}</span>'
+                  f'<b>{_dur(v[0], cyr)}</b><em>{100 * v[0] / whole:.0f}%</em></li>' for k, v in rows if v[0])
+    return f'<h3 class="sub">{t("lists")}</h3><div class="lb">{bar}</div><ul class="lk">{key}</ul>'
+
+
+def _timeline(turns: list[dict], shade: dict[str, str], cur: dict | None, *, cyr: bool, tz: ZoneInfo) -> str:
+    """The day as a strip from its first turn to its last: a block a turn, in its list's shade, the one now on marked;
+    a click leads to the turn in the list below. Breaks show as gaps."""
+    if len(turns) < 3:
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    start, end = min(d["od"] for d in turns), max(d["do"] for d in turns)
+    span = max(60, end - start)
+    blocks = []
+    for d in sorted(turns, key=lambda d: d["od"]):
+        on = cur is not None and d is cur
+        tip = f'{_clock(d["od"], tz)} {_name(given_first(d["ime"]), cyr)} · {_minutes(d["sekundi"])} {_t("min", cyr)}'
+        blocks.append(f'<a class="{shade.get(d.get("lista") or "", "lx")}{" on" if on else ""}" '
+                      f'href="#{"deo" if on else "t" + str(int(d["od"]))}" title="{escape(tip)}" '
+                      f'style="left:{100 * (d["od"] - start) / span:.2f}%;width:{max(0.35, 100 * (d["do"] - d["od"]) / span):.2f}%"></a>')
+    first = datetime.fromtimestamp(start, tz)
+    marks = [f'<span style="left:0">{first.strftime("%H:%M")}</span>']
+    hour = first.replace(minute=0, second=0, microsecond=0)
+    while True:
+        hour = datetime.fromtimestamp(hour.timestamp() + 3600, tz)
+        at = 100 * (hour.timestamp() - start) / span
+        if at > 97:
+            break
+        if at > 13:
+            marks.append(f'<span style="left:{at:.2f}%">{hour.strftime("%H")}</span>')
+    return (f'<h3 class="sub">{t("timeline")}</h3><div class="tl">{"".join(blocks)}</div>'
+            f'<div class="tl-ax" aria-hidden="true">{"".join(marks)}</div><p class="meta">{t("timeline_note")}</p>')
 
 
 def _shared(name: str) -> str:
@@ -311,25 +425,165 @@ h3.sub { font-size: 1.1rem; margin: 1.6rem 0 .6rem; }
 @media (max-width: 520px) { .tr { grid-template-columns: 1fr 6.5rem; } .tb { grid-column: 1 / -1; order: 3; height: .6rem; } }
 .now { padding-top: .2rem; }
 .o { background: color-mix(in srgb, var(--fg) 4%, transparent); }
+/* The order on the page: the speaker, the player, the day. #deo is replaced whole every few seconds and the player must
+   stay, so #deo's two parts are laid out as the page's own (display: contents) and ordered around the player. */
+main { display: flex; flex-direction: column; }
+main > * { order: 4; }
+main > h1, main > .lead { order: 0; }
+#deo { display: contents; }
+.sp { order: 1; } main > .player { order: 2; } .day { order: 3; }
+h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-transform: uppercase; margin: 1.1rem 0 .2rem; }
+.lead { font-size: .92rem; margin: 0 0 .4rem; max-width: 40rem; }
+.sp-head { display: flex; gap: 1rem; align-items: flex-start; margin: 1.2rem 0 0; }
+.sp-head > div { min-width: 0; flex: 1; }
+.ph { flex: none; width: 72px; height: 96px; object-fit: cover; border-radius: 6px; background: var(--line); }
+.sp .now { margin: 0 0 .2rem; } .sp .side { margin: .1rem 0 .2rem; font-size: 1.05rem; }
+.sp .meta { margin-left: 0; }
+.who { font-size: clamp(1.9rem, 7vw, 3.2rem); overflow-wrap: anywhere; }
+.dot { align-self: center; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+.clock { margin: .3rem 0 0; color: var(--muted); font-size: .95rem; }
+.clk { font-family: var(--serif); font-size: 1.9rem; line-height: 1; color: var(--fg); font-variant-numeric: tabular-nums; margin-right: .5rem; }
+.nums { margin: 0 0 .7rem; display: grid; gap: .35rem; }
+.nums div { display: grid; grid-template-columns: 5.4rem 1fr; gap: .6rem; align-items: baseline; }
+.nums dt, .src { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.nums dd { margin: 0; font-weight: 600; }
+.rot-w { display: flex; gap: .8rem; align-items: flex-start; justify-content: space-between; border-top: 1px solid var(--line);
+  padding-top: .7rem; margin-bottom: .8rem; min-height: 5.2rem; }
+.rot { list-style: none; margin: 0; padding: 0; flex: 1; color: var(--fg); font-size: 1rem; }
+.o .rot { padding-left: 0; color: var(--fg); font-size: 1rem; margin: 0; }
+.rot li { display: none; } .rot:not(.js) li:first-child, .rot.js li.on { display: block; }
+.src { display: block; margin-bottom: .15rem; }
+.rot-next { flex: none; border: 1px solid var(--line); background: none; color: var(--muted); border-radius: 999px;
+  padding: .15rem .6rem; font: inherit; font-size: .8rem; cursor: pointer; font-variant-numeric: tabular-nums; }
+.acts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
+.share-now { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg);
+  background: none; color: var(--fg); cursor: pointer; }
+.lb { display: flex; height: 1.5rem; border-radius: 4px; overflow: hidden; gap: 2px; }
+.lb i { display: block; min-width: 3px; }
+.l0 { background: var(--fg); } .l1 { background: color-mix(in srgb, var(--fg) 62%, var(--bg)); }
+.l2 { background: color-mix(in srgb, var(--fg) 38%, var(--bg)); } .l3 { background: color-mix(in srgb, var(--fg) 22%, var(--bg)); }
+.l4 { background: color-mix(in srgb, var(--fg) 12%, var(--bg)); }
+.lx { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 45%, var(--bg)) 0 2px, var(--bg) 2px 5px); }
+.lk { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: .3rem; font-size: .92rem; }
+.lk li { display: grid; grid-template-columns: 1rem 1fr auto 3rem; gap: .6rem; align-items: center; }
+.lk i { width: 1rem; height: 1rem; border-radius: 3px; border: 1px solid var(--line); }
+.lk b, .lk em { font-variant-numeric: tabular-nums; white-space: nowrap; } .lk em { font-style: normal; color: var(--muted); text-align: right; }
+.tl { position: relative; height: 2rem; background: color-mix(in srgb, var(--fg) 5%, transparent); border-radius: 4px; overflow: hidden; }
+.tl a { position: absolute; top: 0; bottom: 0; min-width: 2px; }
+.tl a.on { outline: 2px solid var(--protiv); outline-offset: -2px; background: var(--protiv); }
+.tl a:hover { opacity: .7; }
+.tl-ax { position: relative; height: 1.2rem; font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tl-ax span { position: absolute; top: .15rem; transform: translateX(-50%); } .tl-ax span:first-child { transform: none; }
+.turns li:target { background: color-mix(in srgb, var(--za) 12%, transparent); }
 """ + _shared("mikrofon.css")
 
 SCRIPT = _shared("mikrofon.js") + """
 (function () {
   var base = document.body.getAttribute("data-base");
+  // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
+  // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
+  // The clock beside the speaker: the seconds the page was given, plus those passed since; never back within a turn.
+  var got = Date.now(), last = { od: "", s: 0 };
+  function hms(s) { var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+    return (h ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (x < 10 ? "0" : "") + x; }
+  function seconds(c) {
+    var od = c.getAttribute("data-od"), s = (+c.getAttribute("data-sek")) + Math.round((Date.now() - got) / 1000);
+    if (last.od === od && last.s > s) s = last.s;
+    last = { od: od, s: s };
+    return s;
+  }
+  // One line about the speaker at a time, the next every fifteen seconds or on a tap; from the first for each speaker.
+  var turn = { od: "", t: 0, skip: 0 };
+  function rotate() {
+    var u = document.querySelector(".rot"), c = document.querySelector(".clk");
+    if (!u) return;
+    var od = c ? c.getAttribute("data-od") : "";
+    if (turn.od !== od) turn = { od: od, t: Date.now(), skip: 0 };
+    var n = u.children.length, k = (Math.floor((Date.now() - turn.t) / 15000) + turn.skip) % n;
+    u.classList.add("js");
+    for (var i = 0; i < n; i++) u.children[i].classList.toggle("on", i === k);
+    var no = document.querySelector(".rot-n");
+    if (no) no.textContent = (k + 1) + "/" + n;
+  }
   function tick() {
-    var d = document.getElementById("deo"), c = document.querySelector("#checked span");
+    var d = document.getElementById("deo"), c = document.querySelector("#checked span"), k = document.querySelector(".clk");
     if (d && c) c.textContent = Math.max(0, Math.round(Date.now() / 1000 - (+d.getAttribute("data-checked"))));
+    if (k) k.textContent = hms(seconds(k));
+    rotate();
   }
   // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
   // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
   function load() {
     if (document.hidden) return;
     fetch(base + "deo", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; })
-      .then(function (html) { if (html) { document.getElementById("deo").outerHTML = html; tick(); } })
+      .then(function (html) { if (html) { document.getElementById("deo").outerHTML = html; got = Date.now(); tick(); } })
       .catch(function () {});
   }
   setInterval(load, 5000); setInterval(tick, 1000); tick();
   document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
+
+  // "Podeli ovaj trenutak": a picture drawn here, in the browser, of who speaks and for how long, with the page's
+  // address; handed to the share sheet where there is one, else saved, with the text copied.
+  function fit(g, text, weight, size, family, width) {
+    do { g.font = weight + " " + size + "px " + family; size -= 4; } while (g.measureText(text).width > width && size > 24);
+  }
+  function picture(b, minutes) {
+    var W = 1200, H = 675, P = 64, c = document.createElement("canvas"), g = c.getContext("2d");
+    var serif = '"Literata", Georgia, serif', sans = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    var d = function (k) { return b.getAttribute("data-" + k) || ""; };
+    c.width = W; c.height = H;
+    g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+    g.textBaseline = "alphabetic";
+    var brand = document.querySelector(".brand"), x = P;
+    g.font = "700 40px " + serif;
+    (brand ? brand.textContent : "Za ili Protiv").split(" ").forEach(function (w, i) {
+      g.fillStyle = i === 0 ? "#1f5fa8" : i === 2 ? "#c2410c" : "#111";
+      g.fillText(w, x, 84); x += g.measureText(w + " ").width;
+    });
+    g.fillStyle = "#555"; g.font = "400 26px " + sans; g.textAlign = "right";
+    g.fillText(location.host, W - P, 82); g.textAlign = "left";
+    g.fillStyle = "#111"; g.fillRect(P, 108, W - 2 * P, 4);
+    g.fillStyle = "#c2410c"; g.beginPath(); g.arc(P + 11, 166, 11, 0, 7); g.fill();
+    g.fillStyle = "#555"; g.font = "700 26px " + sans; g.fillText(d("head").toUpperCase(), P + 36, 175);
+    g.fillStyle = "#111"; fit(g, d("name"), 700, 104, serif, W - 2 * P); g.fillText(d("name"), P, 290);
+    g.fillStyle = "#555"; fit(g, d("side"), 400, 36, sans, W - 2 * P); g.fillText(d("side"), P, 344);
+    g.fillStyle = "#555"; g.font = "400 34px " + sans; g.fillText(d("already"), P, 452);
+    var w0 = g.measureText(d("already") + " ").width;
+    g.fillStyle = "#111"; g.font = "700 150px " + serif; g.fillText(String(minutes), P + w0 + 6, 480);
+    var w1 = g.measureText(String(minutes)).width;
+    g.font = "700 56px " + serif; g.fillText(d("min"), P + w0 + w1 + 26, 480);
+    g.fillStyle = "#111"; fit(g, d("line"), 600, 34, sans, W - 2 * P); g.fillText(d("line"), P, 548);
+    g.fillStyle = "#555"; g.font = "400 24px " + sans;
+    g.fillText(d("when") + " · " + d("note"), P, 622);
+    return c;
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target : null;
+    if (t && t.closest(".rot-next, .rot")) { turn.skip++; rotate(); return; }
+    var b = t && t.closest(".share-now");
+    if (!b) return;
+    var k = document.querySelector(".clk"), minutes = Math.max(1, Math.floor((k ? seconds(k) : 0) / 60));
+    var url = location.origin + location.pathname;
+    var text = b.getAttribute("data-text").replace("%1", b.getAttribute("data-name")).replace("%2", minutes)
+      .replace("%3", b.getAttribute("data-line")) + " " + url;
+    var said = document.querySelector(".share-said");
+    try {
+      var c = picture(b, minutes), bin = atob(c.toDataURL("image/png").split(",")[1]), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var file = new File([bytes], "ko-sada-govori.png", { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], text: text }).catch(function () {});
+        return;
+      }
+      if (navigator.share) { navigator.share({ text: text }).catch(function () {}); return; }
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+    } catch (err) { if (navigator.share) { navigator.share({ text: text }).catch(function () {}); return; } }
+    if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {});
+    if (said) { said.textContent = b.getAttribute("data-done"); said.hidden = false; }
+  });
 })();
 """
 
@@ -437,7 +691,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <header class="top"><a class="brand" href="{escape(home)}">{brand}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></header>
 <main>
 <h1>{t("title")}</h1>
-<p class="lead">{t("lead")}</p>
+<p class="lead">{t("intro")} <a href="{escape(home)}">{"За или Против" if cyr else "Za ili Protiv"}</a>{t("intro_end")}</p>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>

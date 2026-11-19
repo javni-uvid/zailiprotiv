@@ -44,8 +44,9 @@ def slug(text: str, limit: int = 80) -> str:
 
 
 def _plain(fact: dict) -> str:
-    """A fact of an MP's card as one plain sentence: its number, then the text without its links."""
-    text = re.sub(r"<a [^>]*>.*?</a>", "", str(fact["text"]))
+    """A fact of an MP's card as one plain sentence: its number, then the text without the links that lead on from
+    it (mp_card._a's "more"); a name that is a link stays as a name."""
+    text = re.sub(r'<a class="more"[^>]*>.*?</a>', "", str(fact["text"]))
     text = html.unescape(re.sub(r"<[^>]+>", "", text)).strip()
     return f"{fact['n']} {text}".strip() if fact["n"] else text
 
@@ -769,6 +770,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
     # year of birth; their own pages say they sit in it.
     from zailiprotiv import pages_members
+    from zailiprotiv import pages_mikrofon
     members_conv, members_listed = pages_members.load(root)
     member_rows, member_now = [], {}
     if members_conv and members_listed:
@@ -865,9 +867,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                                    apart=len(apart_mp), voted=sum(1 for r in record if r["line"] and r["vote"] in ("za", "protiv", "uzdrzan")),
                                    busiest=busiest, words=[latin(w) for w in words.get(mp.key, [])],
                                    day=env.filters["day"], given_first=env.filters["given_first"])
-        if mp.key in member_now:  # for the live page (mikrofon-poslanici.json): the speaker's votes and first facts
-            live_facts[mp.slug] = {"za": tally.get("za", 0), "protiv": tally.get("protiv", 0),
-                                   "uzdrzan": tally.get("uzdrzan", 0), "f": [_plain(f) for f in card_facts[:3]]}
+        if mp.key in member_now:  # for the live page (pages_mikrofon.speakers): the speaker's votes, card and a quote
+            live_facts[mp.slug] = {"tally": tally, "facts": card_facts, "convs": [c["conv"] for c in by_conv],
+                                   "quote": pages_mikrofon.quote(profiles.get(mp.key))}
         page_args = dict(**common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
                          areas_table=areas_table, periods=periods, group_slug=group_slug, photo=photo_of.get(mp.key, ""),
                          against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
@@ -971,12 +973,11 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     # The live page ("Ko sada govori") shows the speaker's final votes and the first facts of their page's card, and
     # for a new MP where they come from: a reason to open the MP's page while they speak. The newest convocation only.
-    for r in member_rows:
-        if r["new"]:
-            where = ", ".join(x for x in (latin(r.get("place", "")), f"godište {r['year']}" if r.get("year") else "") if x)
-            live_facts[r["slug"]] = {"novi": 1, "f": [where + "."] if where else []}
-    (out / "mikrofon-poslanici.json").write_text(json.dumps(live_facts, ensure_ascii=False, separators=(",", ":")),
-                                                 encoding="utf-8")
+    from zailiprotiv import pages_govornici
+    days_read = pages_govornici.load(root).get(members_conv or "", [])
+    (out / pages_mikrofon.SPEAKERS_FILE).write_text(json.dumps(pages_mikrofon.speakers(
+        member_rows, live_facts, conv=members_conv or "", spoken_=pages_mikrofon.spoken(days_read), plain=_plain,
+        latin=latin, day=env.filters["day"]), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     items = items_by_conv[active]
     votes = loaded[active][1]

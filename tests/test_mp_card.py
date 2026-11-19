@@ -22,8 +22,8 @@ def test_the_card_says_each_number_once_with_its_source():
     got = _facts(floor=floor, exchanges=ex, by_conv=conv, apart=2, voted=50, busiest=(3, "2026-11-01", "s.html#g1"),
                  words=["lovci"])
     text = " | ".join(got)
-    assert got[0].startswith("90% prisutan")
-    assert "2 puta glasao drugačije" in text and 'href="#drugacije"' in text
+    assert got[0].startswith("90% prisustva")
+    assert "2 glasa drugačija od većine" in text and 'href="#drugacije"' in text
     assert "oko 2 sata govora" in text  # 15.600 words at 130 a minute
     assert "9.000 reči u najdužem govoru" in text and 'href="s.html#g1"' in text
     assert "3 govora u jednom danu" in text
@@ -33,5 +33,5 @@ def test_the_card_says_each_number_once_with_its_source():
 
 
 def test_no_vote_unlike_the_group_is_said_as_such():
-    assert any(f.startswith("Nijednom nije glasao") and "(10 glasova" in f for f in _facts(voted=10))
+    assert any(f.startswith("Nijedan glas drugačiji") and "(10 glasova" in f for f in _facts(voted=10))
     assert _facts(voted=1) == []  # one vote says nothing of a habit

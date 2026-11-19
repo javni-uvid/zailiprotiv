@@ -410,6 +410,25 @@ its minute.
   most. About no MP in particular; a fact the quiz asks about is not listed beside it. Black and white only, not the
   colours of "za" and "protiv". The script and styles (`templates/mikrofon.js`, `.css`) are one file each, inline in
   both pages; the image copies them.
+- **The speaker's box** (19 Nov 2026, the maintainer's request: the box under the speaker was unclear, the page should
+  draw visitors in). In this order: the MP's portrait from the Assembly's site (when the site has one), the name, the
+  list, a clock that ticks in the browser from the turn's start and "longer than N% of today's turns" (from five
+  finished turns on, shown from 50%); then **today first** (which turn of theirs, their time today, their place by
+  time among today's speakers) and the convocation (the site's days read from recordings plus today), computed by
+  `state._today` by one rule for all; then one line about the MP at a time, changing every 15 s or on a tap, **each
+  labelled with where it is from** ("sazivi 13–14", "sajt Skupštine"), so that a number from an earlier convocation
+  is never read as this one's. The lines are the MP's card facts as plain sentences (`pages_mikrofon.speakers`,
+  published as `mikrofon-poslanici.json`, read hourly), one whole quote with its date when the profile has a checked
+  one (at most 240 characters, never cut), and for everyone place, year of birth and **occupation** as the Assembly's
+  own page of the MP states it (`members.occupation`, read once per MP in `members`). Nothing about private life.
+  The card's wording no longer assumes a gender ("% prisustva", "glas drugačiji"). Under the box: the way to the
+  MP's page and "Podeli ovaj trenutak", which draws a picture in the browser (name, list, minutes so far, the
+  address; nothing is sent to us) and hands it to the phone's share sheet, or downloads it and copies the text.
+  Below, the day: **time by list** as one bar (shades of grey, never a colour; sitting MPs of smaller lists or no
+  group together, the Government and guests hatched; a list is taken from the caption only when the site names it,
+  so a misread makes no list), **the day as a strip** (a block a turn, a click leads to it in the list), and the
+  totals per speaker with the list under each name, the current turn included. One sentence on top says what the
+  page is and links the site, for those who arrive from a shared picture.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
