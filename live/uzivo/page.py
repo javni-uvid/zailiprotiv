@@ -68,6 +68,15 @@ TEXT = {
     "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
     "share_day": "Podeli presek dana",
     "share_tall": "Uspravna slika za priču",
+    "ag": "Dnevni red",
+    "ag_done": "%1 od %2 tačaka gotovo",
+    "ag_now": "u toku",
+    "ag_next": "na redu",
+    "ag_gotova": "gotova",
+    "ag_site": "po sajtu Skupštine",
+    "ag_said": "po rečima predsedavajućeg (automatski prepis)",
+    "ag_note": "Dnevni red je sa sajta Skupštine. Tačka je gotova kad to napiše Skupština na stranici sednice ili kad "
+               "predsedavajući pređe na sledeću; ovo drugo čitamo iz automatskog prepisa i može da pogreši.",
     "steps": "Šta se desilo danas",
     "steps_lead": "Koraci sednice kako ih izgovara predsedavajući, nađeni pravilom u automatskom prepisu, i ono što "
                   "Skupština dopiše na stranici sednice. Red iz prepisa pokazuje trenutak; imena i brojevi u njemu "
@@ -242,6 +251,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         if n.get("adresa") and str(n["adresa"]).replace("-", "").isalnum():
             more += f' · <a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + n["adresa"])}">{t("news_page")}</a>'
         out.append(f'<p class="news"><b>{t("news")}</b> {text}{more}</p>')
+    out.append(_agenda(snap, cyr=cyr))
     out.append('<section class="sp-top">')
     said = ""
     if snap["stanje"] == "govori" and cur:
@@ -294,6 +304,43 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append("</section></div>")
     return "\n".join(out)
 
+
+
+def _agenda(snap: dict, *, cyr: bool) -> str:
+    """The sitting's agenda under the broadcast, folded to one line (how many items are done, which is on), the
+    items with their state when opened: done by the Assembly's page, done or under way by what the chair said, or
+    next in turn (state._agenda). Each state says where it is from."""
+    a = snap.get("dnevni_red")
+    if not a or not a.get("tacke"):
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    s = lambda x: escape(_name(x, cyr))
+    items = a["tacke"]
+    done = sum(1 for x in items if x["stanje"] == "gotova")
+    on = next((x for x in items if x["stanje"] in ("u_toku", "na_redu")), None)
+    head = f'<b>{t("ag")}</b> <span>{escape(_fill(_t("ag_done", cyr), done, len(items)))}</span>'
+    if on:
+        head += f'<span class="ag-on">{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}: {s(on["tekst"])}</span>'
+    rows = []
+    for x in items:
+        mark = {"gotova": "✓", "u_toku": "●", "na_redu": "→"}.get(x["stanje"], "")
+        state = ""
+        if x["stanje"] == "gotova":
+            when = _date(x["kada"]).rsplit(" ", 1)[0] if x.get("kada") else ""
+            src = t("ag_site" if x["izvor"] == "sajt" else "ag_said")
+            state = f'<span class="src">{t("ag_gotova")}{", " + escape(cyrillic(when) if cyr else when) if when else ""} · {src}</span>'
+            if x.get("sta"):
+                state += f'<span class="ag-what">{s(x["sta"])}</span>'
+        elif x["stanje"] == "u_toku":
+            state = f'<span class="src">{t("ag_now")} · {t("ag_said")}</span>'
+        elif x["stanje"] == "na_redu":
+            state = f'<span class="src">{t("ag_next")}</span>'
+        rows.append(f'<li class="ag-{x["stanje"] or "ceka"}"><i aria-hidden="true">{mark}</i><span><b>{x["n"]}.</b> {s(x["tekst"])}{state}</span></li>')
+    title = s(a.get("naslov", ""))
+    if str(a.get("url", "")).startswith("https://"):
+        title = f'<a href="{escape(a["url"])}">{title}</a>'
+    return (f'<details class="agenda" id="dnevni-red"><summary>{head}</summary><p class="meta">{title}</p>'
+            f'<ol>{"".join(rows)}</ol><p class="meta">{t("ag_note")}</p></details>')
 
 
 def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
@@ -753,6 +800,13 @@ main > h1, main > .lead, main > .hero { order: 0; }
 #deo { display: contents; }
 .news { order: 0; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: .98rem; line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--protiv); margin-right: .3rem; }
 main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
+.agenda { order: 1; margin: .9rem 0 0; border: 1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; }
+.agenda summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: .2rem .7rem; align-items: baseline; list-style: none; line-height: 1.4; }
+.agenda summary::-webkit-details-marker { display: none; } .agenda summary { position: relative; padding-right: 1.4rem; } .agenda summary::after { content: "+"; position: absolute; right: 0; top: 0; color: var(--muted); } .agenda[open] summary::after { content: "−"; }
+.agenda summary > span { color: var(--muted); font-size: .92rem; } .agenda .ag-on { flex: 1 1 100%; color: var(--fg); font-size: .98rem; }
+.agenda ol { list-style: none; margin: .5rem 0; padding: 0; } .agenda li { display: grid; grid-template-columns: 1.3rem 1fr; gap: .4rem; padding: .45rem 0; border-top: 1px solid var(--line); line-height: 1.4; }
+.agenda li i { font-style: normal; font-weight: 700; } .agenda li .src { display: block; margin: .15rem 0 0; } .ag-what { display: block; color: var(--muted); font-size: .9rem; }
+.ag-gotova > span > b, .ag-gotova { color: var(--muted); } .ag-gotova i { color: var(--za); } .ag-u_toku i { color: var(--protiv); } .ag-u_toku, .ag-na_redu { font-weight: 600; } .agenda li .src, .ag-what { font-weight: 400; }
 .steps-sec { order: 4; } .steps-sec h2 { margin-bottom: .2rem; }
 .steps { list-style: none; margin: .6rem 0 0; padding: 0; } .steps li { display: grid; grid-template-columns: 3.2rem 1fr; gap: .6rem; padding: .5rem 0; border-top: 1px solid var(--line); line-height: 1.45; }
 .steps .time { color: var(--muted); font-variant-numeric: tabular-nums; } .steps .src { display: inline-block; margin: 0 0 0 .3rem; font-size: .68rem; }
@@ -883,7 +937,14 @@ SCRIPT = _shared("mikrofon.js") + """
   function load() {
     if (document.hidden) return;
     fetch(base + "deo", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; })
-      .then(function (html) { if (html) { document.getElementById("deo").outerHTML = html; got = Date.now(); tick(); } })
+      .then(function (html) {
+        if (!html) return;
+        // what the reader opened (the agenda, the folded steps) stays open when the part is replaced
+        var open = [].map.call(document.querySelectorAll("#deo details[open]"), function (d) { return d.id || d.parentNode.className; });
+        document.getElementById("deo").outerHTML = html;
+        [].forEach.call(document.querySelectorAll("#deo details"), function (d) { if (open.indexOf(d.id || d.parentNode.className) >= 0) d.open = true; });
+        got = Date.now(); tick();
+      })
       .catch(function () {});
   }
   setInterval(load, 5000); setInterval(tick, 1000); tick();

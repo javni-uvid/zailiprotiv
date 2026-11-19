@@ -66,6 +66,13 @@ class Tracker:
         self.facts: dict = {}  # the speaker's votes and facts from their page (mikrofon-poslanici.json)
         self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
         self.events: list[dict] = []  # the day's steps, a line each (hronika.py)
+        self.item: dict = {}  # the agenda item the chair last moved to, as heard: {"n", "t"}
+        try:
+            kept_item = Path(path).parent / "tacka.json" if path else None
+            if kept_item and kept_item.exists():
+                self.item = json.loads(kept_item.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            self.item = {}
         self.said: dict[str, str] = {}  # the day's automatic transcript in pieces, by each piece's first second (prepis.py)
         self._said_other: tuple[str, dict] = ("", {})  # an earlier day's, read when the page shows that day
         self._snap: tuple[float, dict] | None = None  # the last snapshot and when: every visitor asks every few seconds
@@ -212,6 +219,17 @@ class Tracker:
             if any(e["tekst"] == text and abs(e["t"] - ts) < 600 for e in self.events[-40:]):
                 return False
             self.events.append({"t": int(ts), "vrsta": kind, "tekst": text, "izvor": source, "url": url})
+            if kind == "Tačka dnevnog reda" and source == "prepis":  # the item the chair moved to, kept across days
+                from .hronika import item_no
+                n = item_no(text)
+                if n > self.item.get("n", 0):
+                    self.item = {"n": n, "t": int(ts)}
+                    f2 = self.days.parent / "tacka.json" if self.days else None
+                    try:
+                        if f2:
+                            f2.write_text(json.dumps(self.item), encoding="utf-8")
+                    except OSError:
+                        pass
             self.events.sort(key=lambda e: e["t"])
             self._snap = None
             f = self._events_file(self.day)
@@ -224,6 +242,35 @@ class Tracker:
                 except OSError:
                     pass
             return True
+
+    def _agenda(self) -> dict | None:
+        """The sitting's agenda from the site (as the Assembly lists it), each item with where it stands: done by the
+        Assembly's page ("sajt"), done or under way by what the chair said aloud ("prepis": moving to item N says
+        the ones before it are over), or the next in turn."""
+        rows = self.waiting.get("dnevni_red") if isinstance(self.waiting, dict) else None
+        if not rows or not isinstance(rows, list) or not rows[0].get("tacke"):
+            return None
+        s = rows[0]
+        heard = int(self.item.get("n", 0) or 0)
+        if heard > len(s["tacke"]):
+            heard = 0  # a number the agenda does not have: misheard
+        out = []
+        for x in s["tacke"]:
+            n = int(x["n"])
+            if x.get("gotova"):
+                state, src = "gotova", "sajt"
+            elif heard and n < heard:
+                state, src = "gotova", "prepis"
+            elif heard and n == heard:
+                state, src = "u_toku", "prepis"
+            else:
+                state, src = "", ""
+            out.append({"n": n, "tekst": x["tekst"], "stanje": state, "izvor": src, "kada": x.get("kada", ""), "sta": x.get("sta", "")})
+        if not any(x["stanje"] == "u_toku" for x in out):  # nothing heard as under way: the first not done is next
+            first = next((x for x in out if not x["stanje"]), None)
+            if first:
+                first["stanje"] = "na_redu"
+        return {"naslov": s.get("naslov", ""), "url": s.get("url", ""), "tacke": out}
 
     def page_seen(self, url: str, sentences: list[str] | None = None) -> list[str]:
         """The sentences already read on a page of the Assembly, kept across restarts (hronika.Watcher)."""
@@ -468,7 +515,7 @@ class Tracker:
             news = [n for n in (self.waiting.get("obavestenja") or []) if isinstance(n, dict) and n.get("tekst")
                     and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
-                    "obavestenja": news[:3], "hronika": self.events[-40:][::-1] if day == self.day else [],
+                    "obavestenja": news[:3], "dnevni_red": self._agenda(), "hronika": self.events[-40:][::-1] if day == self.day else [],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
 

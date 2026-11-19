@@ -744,3 +744,22 @@ def test_the_days_steps_from_the_chairs_words_and_the_assemblys_page(tmp_path, m
     html = fragment(t.snapshot(now=now + 901), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Šta se desilo danas" in html and "Narodni poslanici izabrali su predsednika" in html and "sajt Skupštine" in html
     assert "<b>Tačka dnevnog reda</b> Prelazimo na drugu tačku dnevnog reda." in html and "automatski prepis" in html
+
+
+def test_the_agenda_under_the_broadcast_says_which_items_are_done_and_by_whose_word():
+    from uzivo import hronika
+    assert hronika.item_no("Прелазимо на трећу тачку дневног реда.") == 3 and hronika.item_no("Prelazimo na tačku 4.") == 4
+    assert hronika.item_no("Hvala, reč ima narodni poslanik.") == 0
+    t = Tracker(None, "Europe/Belgrade")
+    t.use_waiting({"kviz": [], "cinjenice": [], "dnevni_red": [{"naslov": "Prva sednica", "url": "https://www.parlament.gov.rs/x", "tacke": [
+        {"n": 1, "tekst": "Potvrđivanje mandata", "gotova": True, "kada": "2026-11-17", "sta": "Mandati su potvrđeni."},
+        {"n": 2, "tekst": "Izbor predsednika", "gotova": False, "kada": "", "sta": ""},
+        {"n": 3, "tekst": "Izbor potpredsednika", "gotova": False, "kada": "", "sta": ""},
+        {"n": 4, "tekst": "Imenovanje generalnog sekretara", "gotova": False, "kada": "", "sta": ""}]}]})
+    states = lambda: [(x["stanje"], x["izvor"]) for x in t.snapshot()["dnevni_red"]["tacke"]]
+    assert states() == [("gotova", "sajt"), ("na_redu", ""), ("", ""), ("", "")]
+    t.note(time.time(), "Tačka dnevnog reda", "Prelazimo na treću tačku dnevnog reda.", "prepis")
+    assert states() == [("gotova", "sajt"), ("gotova", "prepis"), ("u_toku", "prepis"), ("", "")]
+    html = fragment(t.snapshot(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'class="agenda"' in html and "2 od 4 tačaka gotovo" in html and "u toku: Izbor potpredsednika" in html
+    assert "po sajtu Skupštine" in html and "Mandati su potvrđeni." in html and "po rečima predsedavajućeg" in html

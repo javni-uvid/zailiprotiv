@@ -40,6 +40,22 @@ RULES: list[tuple[str, re.Pattern]] = [(label, re.compile(rx)) for label, rx in 
     ("Kraj rada", r"zaključuj\w* \w*\s*\w*\s*sednic|završ\w* rad za danas|zaključuj\w* današnj"),
     ("Predsedavajući konstatuje", r"konstatuj\w* da (je|su|nije)"),
 ]]
+_ORDINALS = {"prv": 1, "drug": 2, "treć": 3, "trec": 3, "četvrt": 4, "cetvrt": 4, "pet": 5, "šest": 6, "sest": 6, "sedm": 7,
+             "osm": 8, "devet": 9, "deset": 10}
+_ITEM = re.compile(r"(?:na|po)\s+(\w+)\s+tačk|tačk\w*\s+(\d{1,2})\b|(\d{1,2})\.?\s+tačk")
+
+
+def item_no(sentence: str) -> int:
+    """The number of the agenda item a sentence moves to ("prelazimo na drugu tačku", "tačku 3"); 0 when it names none."""
+    m = _ITEM.search(latin(sentence).lower())
+    if not m:
+        return 0
+    if m.group(2) or m.group(3):
+        return int(m.group(2) or m.group(3))
+    word = m.group(1)
+    return next((n for stem, n in _ORDINALS.items() if word.startswith(stem)), 0)
+
+
 _SENTENCE = re.compile(r"(?<=[.!?])\s+")
 LONGEST_LINE = 220
 

@@ -531,6 +531,13 @@ its minute.
   first reading is the start, not news). The notices and that list are fetched every ten minutes as well. Nothing
   is summed up; a line from the transcript points at the moment and is no result (Whisper errs in names and
   numbers), which the page says. Kept per day in `/data/hronika/`.
+- **The agenda under the broadcast** (19 Nov 2026, the maintainer's request). The sitting's agenda as the Assembly
+  lists it (`dnevni_red` in `mikrofon-cekanje.json`, `pages_mikrofon.agenda`), folded to one line: how many items
+  are done and which is on or next. An item is done when the Assembly's page of the sitting says so, written by
+  hand into `data/<N>/tacke.json` with the day and a sentence of what was decided, or when the chair moves to a
+  later item, heard in the automatic transcript (`hronika.item_no`, kept in `/data/tacka.json`; a number the agenda
+  does not have is taken as misheard). Each state names its source, and the note under the list says the second
+  may err. What the reader opened stays open when the page's changing part is replaced.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
