@@ -253,7 +253,7 @@ def run(root: Path, conv: str, *, now: str | None = None, read_frames=None, prob
             continue
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
-        changed.append(str(path.relative_to(root)))
+        changed.append(path.relative_to(root).as_posix())
     if changed:
         kept_path.write_text(json.dumps(kept, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     return changed

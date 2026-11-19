@@ -529,9 +529,10 @@ def memoranda(args) -> int:
                 failed += 1
                 print(f"  failed {urllib.parse.unquote(url)}: {e}")
                 continue
-            with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
+            # closed before pdftotext opens it (Windows won't share an open file), removed when the block ends
+            with tempfile.NamedTemporaryFile(suffix=".pdf", delete_on_close=False) as f:
                 f.write(body)
-                f.flush()
+                f.close()
                 try:
                     memo = bills.read(f.name)
                 except subprocess.CalledProcessError:  # a file pdftotext can't open: the law goes without its bill
@@ -779,9 +780,9 @@ def votes(args) -> int:
                 failed += 1
                 print(f"  failed {urllib.parse.unquote(pdf)}: {e}")
                 continue
-            with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
+            with tempfile.NamedTemporaryFile(suffix=".pdf", delete_on_close=False) as f:  # closed first, as above
                 f.write(body)
-                f.flush()
+                f.close()
                 found = rollcall.read(f.name)
             for key in [k for k in store["votes"] if k.split("#")[0] == pdf]:
                 del store["votes"][key]
