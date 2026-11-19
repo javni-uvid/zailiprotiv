@@ -56,6 +56,9 @@ RECORDING_LEAD = _i("RECORDING_LEAD", 1)
 # The automatic transcript (prepis.py): Whisper on this computer writes down what is said, a minute at a time.
 # "small" keeps up on four cores; "medium" errs less and needs about three times as long; empty turns it off.
 WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "small").strip()
+# A finished turn read again by a better model, shown in place of the first reading (prepis.Writer.step_whole).
+# Off unless named ("medium"): it keeps the computer busy for hours after a long sitting.
+WHISPER_FINAL_MODEL = os.environ.get("WHISPER_FINAL_MODEL", "").strip()
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
 WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
 WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()

@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from html import escape
 from pathlib import Path
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from .names import cyrillic, given_first
@@ -53,6 +54,10 @@ TEXT = {
                  "citat: za citat služe stenografske beleške Skupštine, koje sajt objavljuje kad stignu. Ništa nije "
                  "prepričano ni skraćeno.",
     "said_none": "Za ovaj dan još nema prepisa.",
+    "said_report": "Prijavi grešku u prepisu",
+    "said_second": "drugo, tačnije čitanje",
+    "said_fix": "Prepis prvo objavimo, pa ispravljamo: poznate greške u pravopisu i imenima popravljamo po spisku, a "
+                "grešku koju vidite možete da nam javite uz svaki govor. Ispravljamo kako je napisano, nikad šta je rečeno.",
     "said_back": "Nazad na „Ko sada govori“",
     "st_open": "Dan u karticama",
     "st_total": "ukupno vreme za govornicom",
@@ -439,8 +444,13 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
         if d["adresa"]:
             nm = f'<a href="{escape(home + "poslanik/" + d["adresa"])}">{nm}</a>'
         text = escape(cyrillic(d["tekst"]) if cyr else d["tekst"])
+        subject = f'Ispravka prepisa: {given_first(d["ime"])}, {data.get("dan", "")} {_clock(d["od"], tz)}'
+        body = "Pogrešno napisano:\n\nTreba da piše:\n\n(Ispravljamo pravopis i imena, ne ono što je rečeno.)"
+        mail = f'mailto:kontakt@zailiprotiv.rs?subject={quote(subject)}&body={quote(body)}'
+        second = f' · {t("said_second")}' if d.get("ceo") else ""
         rows.append(f'<article id="t{int(d["od"])}"><h2>{nm} <span class="meta">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}'
-                    f' · {_minutes(d["sekundi"])} {t("min")}</span></h2><p>{text}</p></article>')
+                    f' · {_minutes(d["sekundi"])} {t("min")}{second}</span></h2><p>{text}</p>'
+                    f'<p class="meta"><a href="{escape(mail)}">{t("said_report")}</a></p></article>')
     body = "".join(rows) or f'<p class="meta">{t("said_none")}</p>'
     brand = _brand(cyr)
     return f"""<!doctype html>
@@ -458,6 +468,7 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
 <main class="said-page">
 <h1>{t("said_title")}{", " + escape(cyrillic(when) if cyr else when) if when else ""}</h1>
 <p class="lead">{t("said_lead")}</p>
+<p class="meta">{t("said_fix")}</p>
 {body}
 <p><a href="{base}">← {t("said_back")}</a></p>
 </main>

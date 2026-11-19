@@ -544,6 +544,18 @@ its minute.
   `Tracker.observe` a name with no line read under it, like a name not on the list, is taken only on its second
   frame in a row (within `HOLD_SECONDS`), the turn then counted from the first of the two; a whole caption, with its
   list or office, is taken at once as before.
+- **Corrections to the automatic transcript: first out, then corrected** (19 Nov 2026, the maintainer's decision).
+  Before a piece Whisper is told the Assembly's set terms and today's speakers' names (`prepis.Writer.hint_for`, as
+  the model's `initial_prompt`). The text is kept as written; what is shown is that text with the corrections
+  (`live/uzivo/ispravke.py`, applied when shown, so a new correction mends what is already out): the site's list
+  `data/prepis-ispravke.json` (as Whisper writes it → as it is written, whole words; published as `ispravke`), and a
+  sitting MP's name written without its diacritics, in any case, gets them. Only spellings: nothing is reworded, no
+  model rewrites it, and a word a letter away from a name is left for the list. Each speech on `/prepis` has
+  "Prijavi grešku u prepisu" (a letter to the site's address, filled in with the speaker and the time); what the
+  maintainer accepts goes into the list. A finished turn can be read again by a better model and shown in place of
+  the first reading, marked as such (`WHISPER_FINAL_MODEL`, off by default: it runs only while the first reading
+  has nothing to do, and still keeps the computer busy long after a sitting). When the Assembly's notes of the day
+  come, they are what the site quotes; the transcript stays with the recording as what it is.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

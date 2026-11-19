@@ -58,6 +58,7 @@ class Tracker:
         self.open = False
         self._pending = ""  # a name not on the list, or with nothing under it, read once
         self._held: dict = {}  # when and where that one frame was
+        self._forms: tuple = (None, {})  # the sitting MPs' names in their cases, for the transcript's corrections
         self._others = 0  # frames in a row naming someone other than the current speaker
         self.recording_file = Path(path).with_name("snimak.json") if path else None
         self.recording: dict = {}  # the last sitting day read from the recording (the site's mikrofon-dan.json)
@@ -298,8 +299,38 @@ class Tracker:
 
     @staticmethod
     def _text(said: dict[str, str], start: float, end: float) -> str:
-        """What was written down of a turn: the pieces that begin within it (a piece is cut where a turn begins)."""
-        return " ".join(said[k] for k in sorted(said, key=int) if start - SAID_LEAD - 1 <= int(k) <= end)
+        """What was written down of a turn: the whole turn as the second, better reading wrote it once the turn was
+        over (a key "k<second>", prepis.py), else the pieces that begin within it (a piece is cut where a turn begins)."""
+        whole = [said[k] for k in said if k[:1] == "k" and start - SAID_LEAD - 1 <= int(k[1:]) <= start + SAID_LEAD + 1]
+        if whole:
+            return whole[0]
+        return " ".join(said[k] for k in sorted((k for k in said if k[:1] != "k"), key=int) if start - SAID_LEAD - 1 <= int(k) <= end)
+
+    def shown(self, text: str) -> str:
+        """The transcript as shown: as written down, with the corrections (ispravke.py)."""
+        from . import ispravke
+        rules = self.waiting.get("ispravke") if isinstance(self.waiting, dict) else None
+        if self.roster is not None and self._forms[0] is not self.roster:
+            sitting = [p.name for p in self.roster.people if not self.roster.current or p.slug in self.roster.current]
+            self._forms = (self.roster, ispravke.name_forms(sitting))
+        return ispravke.apply(text, rules if isinstance(rules, dict) else None, self._forms[1])
+
+    def say_whole(self, start: float, text: str) -> None:
+        """A finished turn written down again as a whole by the better model: shown in place of its pieces."""
+        text = " ".join(text.split())
+        if text:
+            with self._lock:
+                if self._day(start) != self.day:
+                    return
+                self.said["k" + str(int(start))] = text
+                self._snap = None
+                f = self._said_file(self.day)
+                if f:
+                    try:
+                        f.parent.mkdir(parents=True, exist_ok=True)
+                        f.write_text(json.dumps(self.said, ensure_ascii=False), encoding="utf-8")
+                    except OSError:
+                        pass
 
     def transcript(self) -> dict:
         """The day on the page, each turn with what was written down of it, newest first: for the transcript's page."""
@@ -308,7 +339,7 @@ class Tracker:
             said = dict(self._said_of(snap["dan"]))
         turns = ([snap["sada"]] if snap["stanje"] == "govori" and snap.get("sada") else []) + snap["danas"]
         out = [{**{k: d[k] for k in ("ime", "adresa", "od", "do", "sekundi")}, "lista": d.get("lista", ""),
-                "tekst": self._text(said, d["od"], d["do"])} for d in turns]
+                "tekst": self.shown(self._text(said, d["od"], d["do"])), "ceo": bool(d.get("prepis_ceo"))} for d in turns]
         return {"dan": snap["dan"], "ranije": snap["ranije"], "govori": [d for d in out if d["tekst"]]}
 
     def _save(self) -> None:
@@ -519,7 +550,8 @@ class Tracker:
                     text = self._text(said, d["od"], d["do"])
                     d["reci"] = len(text.split())
                     if d is current and text:
-                        d["prepis"] = text[-SAID_TAIL:]
+                        d["prepis"] = self.shown(text[-SAID_TAIL:])
+                    d["prepis_ceo"] = any(k[:1] == "k" and abs(int(k[1:]) - d["od"]) <= SAID_LEAD + 1 for k in said)
             coming = self.waiting.get("sazvano") if isinstance(self.waiting, dict) else None
             if not (isinstance(coming, dict) and str(coming.get("pocinje", ""))[:10] >= today and not current):
                 coming = None  # shown only while nobody is on, and not once its day has passed

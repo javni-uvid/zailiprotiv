@@ -303,6 +303,17 @@ def notices(root) -> list[dict]:
             for r in rows if isinstance(r, dict) and r.get("tekst") and str(r.get("url", "")).startswith("https://")]
 
 
+def fixes(root) -> dict:
+    """The corrections to the automatic transcript, written by hand (data/prepis-ispravke.json): {as Whisper writes
+    it: as it is written}, spellings only."""
+    path = Path(root) / "prepis-ispravke.json"
+    try:
+        rows = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    except ValueError:
+        return {}
+    return {str(k): str(v) for k, v in rows.items() if str(k).strip() and str(v).strip()} if isinstance(rows, dict) else {}
+
+
 def agenda(root, conv: str, sittings: list[dict]) -> list[dict]:
     """The agenda of each sitting of the convocation as the Assembly lists it, with the items the Assembly's page of
     the sitting says are done: [{"naslov", "url", "tacke": [{"n", "tekst", "gotova", "kada", "sta"}]}]. What is done
@@ -324,7 +335,7 @@ def agenda(root, conv: str, sittings: list[dict]) -> list[dict]:
 
 def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = None,
             notices_: list[dict] | None = None, sittings_: list[str] | None = None,
-            agenda_: list[dict] | None = None) -> dict:
+            agenda_: list[dict] | None = None, fixes_: dict | None = None) -> dict:
     """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own); and the
     next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts)."""
     plain = lambda h: h if h.startswith("http") else h.removesuffix(".html")
@@ -337,6 +348,8 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
         out["obavestenja"] = notices_
     if agenda_:
         out["dnevni_red"] = agenda_
+    if fixes_:  # corrections to the automatic transcript (live/uzivo/ispravke.py)
+        out["ispravke"] = fixes_
     if sittings_:  # the pages of the sittings going on, which the service reads for what the Assembly adds (hronika.py)
         out["sednice"] = sittings_
     return out
@@ -344,7 +357,7 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
 
 def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None,
            quiz_: list[dict] | None = None, notices_: list[dict] | None = None,
-           sittings_: list[str] | None = None, agenda_: list[dict] | None = None) -> None:
+           sittings_: list[str] | None = None, agenda_: list[dict] | None = None, fixes_: dict | None = None) -> None:
     """mikrofon.html: an ordinary page of the site (its links relative), which the edge worker (live/edge) shows at
     mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap. With the
     last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
@@ -352,6 +365,6 @@ def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], da
         **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
         day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
         encoding="utf-8")
-    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming, notices_, sittings_, agenda_), ensure_ascii=False), encoding="utf-8")
+    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming, notices_, sittings_, agenda_, fixes_), ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
