@@ -489,6 +489,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
     # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
     from zailiprotiv.config import LIVE, NEWEST
+    NEWEST_ = str(NEWEST)
     common["live"], common["live_url"] = [], LIVE
     try:
         listed = json.loads((root / NEWEST / "index.json").read_text(encoding="utf-8"))["sittings"].values()
@@ -779,6 +780,14 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
                                           title_case=title_case, slug=slug)
         member_now = pages_members.now_of(member_rows)
+    # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
+    # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
+    # MPs' pages and found nothing there).
+    from zailiprotiv import pages_govornici as _gv
+    _days_now = _gv.load(root).get(members_conv or NEWEST_, [])
+    env.globals["floor_now"] = _gv.per_speaker(_days_now)
+    env.globals["floor_now_conv"] = members_conv or NEWEST_
+    env.globals["floor_now_last"] = max((d["dan"] for d in _days_now), default="")
     rows_mp, live_facts = [], {}
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []

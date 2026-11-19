@@ -461,6 +461,20 @@ its minute.
   pressed: an exception to principle 5 for this page, said on the site's "O sajtu"; the archive's recordings still
   load on a click. **The site's live bar names the speaker** and since when (`site.js` reads the service's
   `stanje.js` every half a minute while the bar is on the page).
+- **After a day of visits** (19 Nov 2026; 28,000 visits to the live page in a day, 86% on phones, 77% of them the
+  Cyrillic page, one in nine going on to the site, most to the page of the MP then speaking, where a new MP's page
+  was all but empty). **An MP's page, new or returning, lists the MP's turns on the floor in the newest
+  convocation** from the days read from the recordings (`pages_govornici.per_speaker`, `macros.floor_now_part`: the
+  sum, then each turn by day, linked to its place on the day's page with the recording and the automatic
+  transcript), says "Sada je za govornicom" while the live service names them (`site.js`), and ends with the way on
+  (`macros.next_steps`: who else spoke that day, the MPs' list, the quiz, the live page); a new MP's occupation is
+  on the page. **The live page's order** is the name and clock, the broadcast, the box about the speaker, what is
+  being said, the day. **While nobody is on** the summary also names the next sitting convened (`sazvano` in
+  `mikrofon-cekanje.json`, as the Assembly lists it) and offers the day in cards. **An upright picture**
+  (`/prica.png`, 1080×1920, `picture.render_tall`) for a phone's story. **The Cyrillic page is checked first** when
+  anything is added (this time it showed "YоуТубе" and hours as "х": foreign names are written as said, "Jutjub").
+  The clock's hourly run named the current convocation by number, so the newer one's MPs, occupations and recordings
+  went unread for a day: `votes.yml` now reads the newer one whenever the current one is read.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

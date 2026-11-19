@@ -285,11 +285,16 @@ def besides(facts_: list[dict], quiz_: list[dict]) -> list[dict]:
     return [f for f in facts_ if f.get("key") not in asked]
 
 
-def waiting(facts_: list[dict], quiz_: list[dict]) -> dict:
-    """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own)."""
+def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = None) -> dict:
+    """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own); and the
+    next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts)."""
     plain = lambda h: h if h.startswith("http") else h.removesuffix(".html")
-    return {"kviz": [{**q, "href": plain(q["href"])} for q in quiz_],
-            "cinjenice": [{**f, "href": plain(f["href"])} for f in besides(facts_, quiz_)]}
+    out = {"kviz": [{**q, "href": plain(q["href"])} for q in quiz_],
+           "cinjenice": [{**f, "href": plain(f["href"])} for f in besides(facts_, quiz_)]}
+    if coming:
+        c = coming[0]
+        out["sazvano"] = {"naslov": latin(c.get("title", "")), "url": c.get("url", ""), "pocinje": c.get("starts", "")}
+    return out
 
 
 def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None,
@@ -301,6 +306,6 @@ def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], da
         **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
         day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
         encoding="utf-8")
-    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or []), ensure_ascii=False), encoding="utf-8")
+    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming), ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")

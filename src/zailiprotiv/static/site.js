@@ -431,3 +431,17 @@ document.addEventListener("DOMContentLoaded", function () {
   ask();
   setInterval(function () { if (!document.hidden) ask(); }, 30000);
 })();
+
+// An MP's page says when that MP is on the floor now, with the way to the broadcast (the same state the live bar
+// reads; asked for only on an MP's page that has the line, every half a minute).
+(function () {
+  var el = document.querySelector(".mp-live[data-src]");
+  if (!el || !window.fetch || el.getAttribute("data-src").indexOf("http") !== 0) return;
+  function ask() {
+    fetch(el.getAttribute("data-src")).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
+      el.hidden = !(s && s.stanje === "govori" && s.sada && s.sada.adresa === el.getAttribute("data-slug"));
+    }).catch(function () {});
+  }
+  ask();
+  setInterval(function () { if (!document.hidden) ask(); }, 30000);
+})();

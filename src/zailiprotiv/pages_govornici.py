@@ -107,6 +107,29 @@ def exchanges(turns: list[dict]) -> list[dict]:
     return out
 
 
+def per_speaker(days: list[dict]) -> dict[str, dict]:
+    """Each speaker's turns in the convocation's days read from the recording, by the MP's address, for the MP's own
+    page: {"time", "n", "days": [{"day", "when", "time", "turns": [{"id", "at", "dur"}]}]}, the newest day first.
+    The same rule for every MP: a turn is the time the name stood in the caption."""
+    out: dict[str, dict] = {}
+    for day in sorted(days, key=lambda d: d["dan"], reverse=True):
+        mine: dict[str, list[dict]] = {}
+        for t in day["govori"]:
+            if t.get("adresa"):
+                mine.setdefault(t["adresa"], []).append(t)
+        for slug, turns in mine.items():
+            x = out.setdefault(slug, {"sec": 0, "n": 0, "days": []})
+            sec = sum(max(0, t["do"] - t["od"]) for t in turns)
+            x["sec"] += sec
+            x["n"] += len(turns)
+            x["days"].append({"day": day["dan"], "when": day_name(day["dan"]), "time": dur(sec), "turns": [
+                {"id": f"g{t['od']}", "at": datetime.fromtimestamp(t["od"], TZ).strftime("%H:%M"),
+                 "dur": dur(max(0, t["do"] - t["od"]))} for t in sorted(turns, key=lambda t: t["od"])]})
+    for x in out.values():
+        x["time"] = dur(x["sec"])
+    return out
+
+
 TREND_LISTS = 4  # the lists with the most time get a table of their own; the rest are summed
 
 
@@ -240,4 +263,4 @@ def render(*, common: dict, env, out: Path, root: Path) -> list[dict]:
     return sorted(listed, key=lambda x: x["day"], reverse=True)
 
 
-__all__ = ["render", "sums", "load", "dur", "DIR", "INDEX"]
+__all__ = ["render", "sums", "load", "dur", "per_speaker", "DIR", "INDEX"]

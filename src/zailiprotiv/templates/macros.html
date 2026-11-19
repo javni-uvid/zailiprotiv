@@ -65,3 +65,30 @@
 
 {# A plenary sitting in progress: the Assembly's live broadcast, linked, not played here (principle 5). #}
 {% macro live_bar() %}{% if live %}<p class="live"><span class="live-dot" aria-hidden="true"></span><span><b>Skupština sada zaseda:</b> {{ live|join("; ") }}. <a href="{{ live_url }}">Prenos uživo na sajtu Skupštine</a>{% if live_page %} · <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Ko sada govori</a><span class="live-who" data-src="{{ live_page }}stanje.js" hidden></span>{% endif %}</span></p>{% endif %}{% endmacro %}
+
+{# The MP's turns on the floor in the newest convocation, read from the recordings (pages_govornici.per_speaker), and
+   the way on from the page: the same parts for every MP, new or returning. #}
+{% macro floor_now_part(slug) %}{% set f = floor_now.get(slug) %}
+<p class="mp-live" data-slug="{{ slug }}" data-src="{{ live_page }}stanje.js" hidden><span class="live-dot" aria-hidden="true"></span> <b>Sada je za govornicom.</b> <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Prenos i prepis uživo →</a></p>
+{% if f %}
+<section class="mp-floor-now">
+<h2>Za govornicom u {{ floor_now_conv }}. sazivu</h2>
+<p><b>{{ f.time }}</b> u {{ f.n }} {{ "govoru" if f.n == 1 else "govora" }}, mereno sa snimka prenosa: govor je vreme dok je ime u potpisu, isto za svakog. <a href="{{ root }}govornici.html">Ko koliko govori u sazivu</a></p>
+{% for d in f.days %}
+<h3><a href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a> <span class="label">· {{ d.time }}</span></h3>
+<ul class="plain mp-turns">{% for t in d.turns %}<li><a href="{{ root }}govornici/{{ d.day }}.html#{{ t.id }}">{{ t.at }}</a> <span class="label">· {{ t.dur }} · snimak i prepis</span></li>{% endfor %}</ul>
+{% endfor %}
+</section>
+{% endif %}{% endmacro %}
+
+{% macro next_steps(list_page, group) %}
+<nav class="mp-next" aria-label="Dalje">
+<h2>Dalje</h2>
+<ul class="plain">
+{% if floor_now_last %}<li><a href="{{ root }}govornici/{{ floor_now_last }}.html">Ko je još govorio {{ floor_now_last|day }}</a></li>{% endif %}
+{% if list_page %}<li><a href="{{ root }}{{ list_page }}">{% if group %}Poslanici grupe {{ group|latin }} i ostali u sazivu{% else %}Svi poslanici u sazivu{% endif %}</a></li>{% endif %}
+<li><a href="{{ root }}glasaj.html">Kako bi ti glasao? Kviz o zakonima koji su podelili salu</a></li>
+{% if live_page %}<li><a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Ko sada govori u Skupštini</a></li>{% endif %}
+</ul>
+</nav>
+{% endmacro %}

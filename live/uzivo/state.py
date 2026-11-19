@@ -396,7 +396,10 @@ class Tracker:
                     d["reci"] = len(text.split())
                     if d is current and text:
                         d["prepis"] = text[-SAID_TAIL:]
-            return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current,
+            coming = self.waiting.get("sazvano") if isinstance(self.waiting, dict) else None
+            if not (isinstance(coming, dict) and str(coming.get("pocinje", ""))[:10] >= today and not current):
+                coming = None  # shown only while nobody is on, and not once its day has passed
+            return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
 

@@ -68,19 +68,20 @@ def cyrillic_part() -> HTMLResponse:
     return _part(True)
 
 
-_pictures: dict[bool, tuple[float, bytes]] = {}
+_pictures: dict[tuple[bool, bool], tuple[float, bytes]] = {}
 PICTURE_KEEP = 20  # seconds a drawn picture serves everyone
 
 
-def _picture(cyr: bool) -> Response:
+def _picture(cyr: bool, tall: bool = False) -> Response:
     """The picture of the moment (picture.py): the link preview and the share of the day. Drawn at most once in
     twenty seconds per script, and kept as long by Cloudflare and the browser."""
     now = time.monotonic()
-    kept = _pictures.get(cyr)
+    kept = _pictures.get((cyr, tall))
     if not kept or now - kept[0] > PICTURE_KEEP:
         host = URL.split("//")[-1].strip("/")
-        kept = (now, picture.render(tracker.snapshot(), cyr=cyr, tz=_tz, host=host))
-        _pictures[cyr] = kept
+        draw = picture.render_tall if tall else picture.render
+        kept = (now, draw(tracker.snapshot(), cyr=cyr, tz=_tz, host=host))
+        _pictures[(cyr, tall)] = kept
     return Response(kept[1], media_type="image/png", headers={"Cache-Control": f"public, max-age={PICTURE_KEEP}"})
 
 
@@ -92,6 +93,17 @@ def latin_picture() -> Response:
 @app.get("/cir/slika.png")
 def cyrillic_picture() -> Response:
     return _picture(True)
+
+
+@app.get("/prica.png")
+def latin_story() -> Response:
+    """The same moment upright, for a phone's story."""
+    return _picture(False, tall=True)
+
+
+@app.get("/cir/prica.png")
+def cyrillic_story() -> Response:
+    return _picture(True, tall=True)
 
 
 _said: dict[bool, tuple[float, str]] = {}

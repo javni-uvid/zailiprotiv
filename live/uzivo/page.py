@@ -65,6 +65,9 @@ TEXT = {
     "so_far": "Dosad danas",
     "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
     "share_day": "Podeli presek dana",
+    "share_tall": "Uspravna slika za priču",
+    "coming": "Sledeća sednica",
+    "at": "u",
     "sd_text": "Ko je koliko govorio u Skupštini:",
     "og_now": "Sada govori: %1",
     "og_since": "za govornicom od %1",
@@ -97,8 +100,8 @@ TEXT = {
     "play_live": "Pusti prenos uživo",
     "play_day": "Pusti snimak dana",
     "part": "Deo",
-    "yt_note": "Klik učitava plejer sa YouTube-a (Google). Dok ne kliknete, sa YouTube-a se ništa ne učitava.",
-    "yt_live_note": "Prenos Skupštine sa YouTube-a (Google), u režimu bez kolačića dok ne pustite snimak.",
+    "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
+    "yt_live_note": "Prenos Skupštine sa Jutjuba (Gugl), u režimu bez kolačića dok ne pustite snimak.",
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
@@ -204,15 +207,19 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     t = lambda k: escape(_t(k, cyr))
     out = [f'<div id="deo" data-checked="{snap["provereno"]}">']
     cur = snap.get("sada")
-    out.append('<section class="sp">')
+    # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
+    # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
+    out.append('<section class="sp-top">')
+    said = ""
     if snap["stanje"] == "govori" and cur:
-        out.append(_speaker(cur, cyr=cyr, site=site, tz=tz))
+        head, box, said = _speaker(cur, cyr=cyr, site=site, tz=tz)
+        out.append(head + '</section><section class="sp">' + box)
     else:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
-        out.append(_pause(snap, cyr=cyr, tz=tz))
+        out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
-    out.append('</section><section class="day">')
+    out.append(f'</section><section class="said-sec">{said}</section><section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
@@ -308,7 +315,9 @@ def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, s
     home = site + ("cir/" if cyr else "")
     out.append(card(t("st_end"), f'<p class="st-name">{t("st_site")}</p>'
                                  f'<p><a class="cta" href="{escape(home)}">zailiprotiv.rs →</a></p>'))
-    return (f'<p class="acts st-go"><button type="button" class="share-now st-open">▶ {t("st_open")}</button></p>'
+    go = (f'<p class="acts st-go"><button type="button" class="share-now st-open">▶ {t("st_open")}</button></p>'
+          if snap["stanje"] == "govori" and snap.get("sada") else "")
+    return (go +
             f'<div class="st-data" hidden data-close="{t("st_close")}" data-hint="{t("st_hint")}">{"".join(out)}</div>')
 
 
@@ -388,9 +397,22 @@ def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
     top = "".join(f'<li><b>{escape(_name(given_first(n), cyr))}</b> <span>{_dur(sec, cyr)}</span></li>'
                   for n, sec, _ in leaders(turns)[:3])
     src = ("/cir" if cyr else "") + "/slika.png"
-    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p><ol class="pz-top">{top}</ol>'
-            f'<p class="acts"><button type="button" class="share-now share-day" data-src="{src}" '
-            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_day")}</button></p>'
+    tall = ("/cir" if cyr else "") + "/prica.png"
+    coming = snap.get("sazvano")
+    nxt = ""
+    if coming and coming.get("pocinje"):
+        day = _date(coming["pocinje"][:10])
+        hour = f' {t("at")} {escape(coming["pocinje"][11:16])}' if len(coming["pocinje"]) > 10 else ""
+        title = escape(_name(coming.get("naslov", ""), cyr))
+        if str(coming.get("url", "")).startswith("https://"):
+            title = f'<a href="{escape(coming["url"])}">{title}</a>'
+        nxt = f'<p class="pz-next"><b>{t("coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
+    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p><ol class="pz-top">{top}</ol>{nxt}'
+            f'<p class="acts"><button type="button" class="share-now st-open">▶ {t("st_open")}</button> '
+            f'<button type="button" class="share-now share-day" data-src="{src}" '
+            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_day")}</button> '
+            f'<button type="button" class="share-now share-day tall" data-src="{tall}" '
+            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_tall")}</button></p>'
             f'<p class="meta share-said" hidden></p></div>')
 
 
@@ -437,7 +459,7 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8, shade: dic
     return "".join(out)
 
 
-def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
+def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str, str]:
     """The speaker: the portrait (an MP's, from the Assembly, served by the site), the name, the list, a clock that
     runs, and a box: the day so far and the convocation first (there for every speaker), then one line about the MP
     at a time, each saying where it is from, the way to the MP's page and the picture to share. The same for every
@@ -460,6 +482,7 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     longer = (" · " + s(TEXT["longest"] if cur["duze"] >= 100 else TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
                f'{_hms(max(0, cur["sekundi"]))}</b> <span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
+    head, out = "".join(out), []
     out.append('<div class="o">')
     today, line = cur.get("danas"), ""
     if today:
@@ -483,20 +506,23 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         more = (f'<button type="button" class="rot-next" aria-label="{t("next_fact")}"><span class="rot-n">1/{len(lines)}'
                 f'</span> ›</button>') if len(lines) > 1 else ""
         out.append(f'<div class="rot-w"><ul class="rot">{items}</ul>{more}</div>')
+    said = ""
     if cur.get("prepis"):
         tail = cur["prepis"]
         tail = ("… " + tail.split(" ", 1)[-1]) if len(tail) >= 400 else tail  # cut at a word, not inside one
-        out.append(f'<div class="said-now"><p class="src">{t("said_now")}</p><p>{s(tail)}</p>'
-                   f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis#t{int(cur["od"])}">{t("said_all")} →</a></p></div>')
+        said = (f'<div class="said-now"><p class="src">{t("said_now")}</p><p>{s(tail)}</p>'
+                f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis#t{int(cur["od"])}">{t("said_all")} →</a></p></div>')
     when = _date(datetime.fromtimestamp(cur["do"], tz).strftime("%Y-%m-%d")) + f' u {_clock(cur["do"], tz)}'
     data = {"head": _t("sh_head", cyr), "name": _name(given_first(cur["ime"]), cyr), "side": _name(side, cyr),
             "already": _t("sh_already", cyr), "min": _t("min", cyr), "line": _name(line, cyr), "when": _name(when, cyr),
             "note": _t("sh_note", cyr), "text": _t("sh_text", cyr), "done": _t("sh_done", cyr)}
     attrs = " ".join(f'data-{k}="{escape(v)}"' for k, v in data.items())
     cta = f'<a class="cta" href="{escape(page_)}">{t("o_more")} →</a> ' if page_ else ""
-    out.append(f'<p class="acts">{cta}<button type="button" class="share-now" {attrs}>{t("share_now")}</button></p>'
+    tall = (f' <button type="button" class="share-now share-day tall" data-src="{"/cir" if cyr else ""}/prica.png" '
+            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_tall")}</button>')
+    out.append(f'<p class="acts">{cta}<button type="button" class="share-now" {attrs}>{t("share_now")}</button>{tall}</p>'
                f'<p class="meta share-said" hidden></p></div>')
-    return "".join(out)
+    return head, "".join(out), said
 
 
 def leaders(turns: list[dict]) -> list[tuple[str, int, str]]:
@@ -661,10 +687,12 @@ h3.sub { font-size: 1.1rem; margin: 1.6rem 0 .6rem; }
 /* The order on the page: the speaker, the player, the day. #deo is replaced whole every few seconds and the player must
    stay, so #deo's two parts are laid out as the page's own (display: contents) and ordered around the player. */
 main { display: flex; flex-direction: column; }
-main > * { order: 4; }
+main > * { order: 6; }
 main > h1, main > .lead { order: 0; }
 #deo { display: contents; }
-.sp { order: 1; } main > .player { order: 2; } .day { order: 3; }
+.sp-top { order: 1; } main > .player { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
+.said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
+.pz-next { margin: 0 0 .9rem; }
 h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-transform: uppercase; margin: 1.1rem 0 .2rem; }
 .lead { font-size: .92rem; margin: 0 0 .4rem; max-width: 40rem; }
 .sp-head { display: flex; gap: 1rem; align-items: flex-start; margin: 1.2rem 0 0; }

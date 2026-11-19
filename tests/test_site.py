@@ -548,6 +548,9 @@ def test_who_spoke_how_long_a_page_per_day_and_the_convocations_sum(tmp_path):
     total = (out / "govornici.html").read_text()
     assert "Ko koliko govori u 15. sazivu" in total and "govornici/2026-11-17.html" in total
     assert "Po danima" in total and "<th>Prosečno</th>" in total
+    mp_page = (out / "poslanik" / "petrovic-petar.html").read_text() if (out / "poslanik" / "petrovic-petar.html").exists() else ""
+    if mp_page:  # the MP's turns from the recording on the MP's own page, and the way on
+        assert "Za govornicom u 15. sazivu" in mp_page and "govornici/2026-11-17.html#g" in mp_page
     assert "Петар Петровић" in (out / "cir" / "govornici" / "2026-11-17.html").read_text()
     assert site.check(out) == []
 

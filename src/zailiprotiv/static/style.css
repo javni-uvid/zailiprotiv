@@ -1040,3 +1040,10 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .turns li:target { background: color-mix(in srgb, var(--za) 10%, transparent); }
 .share-turn { border: 0; background: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .prepis { margin: .3rem 0 .6rem; } .prepis p { max-width: 46rem; }
+
+/* An MP's turns on the floor in the newest convocation, the line while they speak, and the way on (macros.html) */
+.mp-live { display: flex; gap: .6rem; align-items: baseline; margin: 1rem 0; padding: .7rem 1rem; border: 2px solid var(--fg); border-radius: 10px; }
+.mp-live[hidden] { display: none; }
+.mp-floor-now { margin: 1.6rem 0; } .mp-floor-now h3 { font-size: 1rem; margin: 1rem 0 .3rem; }
+.mp-turns { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; } .mp-turns li { margin: 0; }
+.mp-next { margin: 2.4rem 0 1rem; padding-top: 1rem; border-top: 2px solid var(--fg); } .mp-next li { margin: .35rem 0; font-weight: 600; }
