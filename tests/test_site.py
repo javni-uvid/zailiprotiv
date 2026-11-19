@@ -677,3 +677,30 @@ def test_the_time_between_turns_and_quick_exchanges_by_rule():
     assert g.between(day) == 30 + 20 + 40 + 20  # the 680 s stretch before C is a break
     quick = g.exchanges(day)
     assert [(x["a"], x["b"], x["n"]) for x in quick] == [("A", "B", 4)]
+
+
+def test_a_new_convocations_notes_are_counted_before_it_has_a_law(tmp_path):
+    from zailiprotiv import members
+    out, root = tmp_path / "_site", data(tmp_path)
+    page = "<table>" + "".join(f"<tr><td>{n}</td><td>{p}</td><td>{pl}</td><td>{y}.</td></tr>" for n, p, pl, y in [
+        ("ПЕТРОВИЋ ПЕТАР", "СНС", "Ниш", 1970), ("НОВАК НОВА", "-", "Бор", 1985)]) + "</table>"
+    (root / "15").mkdir(exist_ok=True)
+    (root / "15" / "members.json").write_text(members.dumps("2026-11-18T10:00:00+00:00", members.read(page)))
+    (root / "15" / "transcripts").mkdir()
+    (root / "15" / "transcripts" / "54098.json").write_text(json.dumps({
+        "sitting": "https://www.parlament.gov.rs/Прва_седница.54098.43.html", "agenda": {}, "amendments": [],
+        "days": [{"day": 1, "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/p.docx",
+                  "title": "СТЕНОГРАФСКЕ БЕЛЕШКЕ - Прва седница Народне скупштине Републике Србије у Петнаестом сазиву",
+                  "date": "17 новембар 2026", "listed_date": "2026-11-17"}],
+        "speeches": {"0": {"day": 1, "speaker": "ПРЕДСЕДАВАЈУЋИ", "chair": True, "part": "other", "items": [], "text": "Реч има Нова Новак."},
+                     "1": {"day": 1, "speaker": "НОВА НОВАК", "chair": False, "part": "other", "items": [],
+                           "text": "Поштовани народни посланици, ово је мој први говор у овом дому."},
+                     "2": {"day": 1, "speaker": "ПЕТАР ПЕТРОВИЋ", "chair": False, "part": "other", "items": [],
+                           "text": "Реплика. Не слажем се са претходним говорником."}}}))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    from zailiprotiv import pages_floor
+    counted = pages_floor.render.per_mp  # the new MP's speech is counted and leads to the MP's own page
+    assert counted["novak-nova"][0]["conv"] == "15" and counted["novak-nova"][0]["speeches"] == 1
+    new = (out / "poslanik" / "novak-nova.html").read_text()
+    assert "<b>1</b><span>govor u stenogramima</span>" in new and "15. saziv" in new
+    assert site.check(out) == []

@@ -118,6 +118,7 @@
   <h2>Ukratko</h2>
   <ul class="tiles">
     {% if f %}<li class="t-now"><a href="#govornica"><b>{{ f.time }}</b><span>za govornicom u {{ floor_now_conv }}. sazivu</span><small>{{ f.n }} {{ "govor" if f.n == 1 else "govora" }}, sa snimka</small></a></li>{% endif %}
+    {% set nn = floor_notes_now.get(slug) if (floor_notes_now and not facts) else none %}{% if nn and nn.speeches %}<li>{% if nn.page %}<a href="{{ root }}{{ nn.page }}">{% else %}<div>{% endif %}<b>{{ nn.speeches }}</b><span>{{ "govor" if nn.speeches == 1 else "govora" }} u stenogramima</span><small>{{ nn.words }} reči, {{ floor_now_conv }}. saziv</small>{% if nn.page %}</a>{% else %}</div>{% endif %}</li>{% endif %}
     {% for x in facts %}{% if x.words %}<li class="t-words"><div><span>{{ x.short }}</span><p>{% for w in x.words %}<i>{{ w }}</i>{% endfor %}</p></div></li>
     {% elif x.short %}<li>{% if x.href %}<a href="{{ x.href }}">{% else %}<div>{% endif %}<b>{{ x.n }}</b><span>{{ x.short }}</span>{% if x.sub %}<small>{{ x.sub }}</small>{% endif %}{% if x.href %}</a>{% else %}</div>{% endif %}</li>{% endif %}{% endfor %}
     {% for n, label in extra %}{% if n %}<li><div><b class="t-text">{{ n }}</b><span>{{ label }}</span></div></li>{% endif %}{% endfor %}

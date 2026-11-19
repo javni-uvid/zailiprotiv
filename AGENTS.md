@@ -511,6 +511,11 @@ its minute.
   says it, its source's address, the days it stands, the MP's page), published in `mikrofon-cekanje.json` and shown
   above the speaker from "od" until "do"; the service reads it with the hour's fetch, so a new notice needs no
   rebuild. No comment and nothing the source does not say.
+- **The new convocation's notes are counted before it has a law** (19 Nov 2026). `site.build` gives `pages_floor`
+  the newest convocation's notes (brought from the bucket at build) ahead of the others', so "Varnice" opens on it
+  once its notes hold a reply or a measure; its new MPs, on no roll call yet, get their names and pages from the
+  Assembly's list (`extra`). The home page shows its counts in place of the dashed box, and a new MP's "Ukratko"
+  has a tile of speeches in the notes. Tested with made-up notes; the real ones are only in the bucket.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

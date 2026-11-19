@@ -1116,3 +1116,4 @@ em.prev { font-style: normal; font-family: system-ui, -apple-system, "Segoe UI",
 .np-table td:first-child { min-width: 9.5rem; } .np-table .hc-dot { margin-right: .45rem; }
 @media (max-width: 640px) { .np-table th:nth-child(5), .np-table td:nth-child(5), .np-table th:nth-child(3), .np-table td:nth-child(3) { display: none; } .np-table td:first-child { min-width: 0; } .np-table { font-size: .88rem; } .np-table th, .np-table td { padding: .45rem .3rem; } }
 .hc-news { margin: 0 0 1rem; padding: .7rem .9rem; border-radius: 8px; background: color-mix(in srgb, var(--fg) 6%, transparent); line-height: 1.45; } .hc-news b { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--protiv); margin-right: .3rem; }
+em.prev.now { color: var(--protiv); border-color: var(--protiv); }

@@ -139,9 +139,20 @@
 
 {% if floor_top %}
 <section class="home-floor home-floor-low" aria-labelledby="hf">
-  {% if newer %}<div class="ph-new"><p class="kicker">{{ newer.name }} saziv</p><p><b>Replike, opomene i teške reči novog saziva</b> stižu kad obradimo stenografske beleške prve sednice. Do tada: <a href="govornici.html">ko je koliko govorio</a>, mereno sa snimka.</p></div>{% endif %}
+  {% if newer and newer15 and newer15.notes %}{% set nt = newer15.notes %}
+  <div class="home-floor-head"><h2><a href="{{ nt.page }}">Varnice u sali</a> <em class="prev now">{{ newer.name|lower }} saziv</em></h2><p>Iz stenografskih beleški novog saziva, doslovno.</p></div>
+  <ol class="floor-firsts">
+    {% for key, label, at in [("speeches", "govora, najviše u sazivu", "aktivnost"), ("points", "ukazivanja na Poslovnik", "aktivnost"), ("measures", "mera predsedavajućeg", "mere"), ("harsh", "teških reči", "reci")] %}
+    {% set r = nt[key] %}{% if r %}
+    <li><a href="{% if r.who.slug %}poslanik/{{ r.who.slug }}.html{% else %}{{ nt.page }}{% endif %}">
+      <img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="60" height="80" loading="lazy">
+      <span><b>{{ r.harsh|length if key == "harsh" else r[key] }}</b><span class="ff-what">{{ label }}</span><span class="ff-who">{{ r.who.name }}</span></span>
+    </a></li>{% endif %}{% endfor %}
+  </ol>
+  <p class="hook-more"><a href="{{ nt.page }}">Ko najviše govori, replicira i dobija opomene u novom sazivu</a></p>
+  {% elif newer %}<div class="ph-new"><p class="kicker">{{ newer.name }} saziv</p><p><b>Replike, opomene i teške reči novog saziva</b> stižu kad obradimo stenografske beleške prve sednice. Do tada: <a href="govornici.html">ko je koliko govorio</a>, mereno sa snimka.</p></div>{% endif %}
   <div class="home-floor-head">
-    <h2 id="hf"><a href="replike.html">Varnice u sali</a>{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</h2>
+    <h2 id="hf"><a href="{{ floor_top.page }}">Varnice u sali</a>{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</h2>
     <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
   </div>
   <ol class="floor-firsts">

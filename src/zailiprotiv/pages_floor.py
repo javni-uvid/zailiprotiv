@@ -309,12 +309,17 @@ ALL = "varnice-svi.html"  # every convocation read, counted together
 
 def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
            years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None,
-           seated: dict | None = None) -> tuple[dict, dict]:
+           seated: dict | None = None, extra: dict | None = None) -> tuple[dict, dict]:
+    """`extra`: MPs not on any roll call yet (a new convocation's new members), by their loose name key:
+    {"name", "slug", "photo"}, so that their speeches lead to their pages too."""
     loose = {debates_.loose(k): k for k in people}
     years_of = years_of or {}
+    extra = extra or {}
 
     def who(name: str) -> dict:
         key = loose.get(debates_.loose(mps.key(name)))
+        if not key and debates_.loose(mps.key(name)) in extra:
+            return dict(extra[debates_.loose(mps.key(name))])
         return {"name": people[key].name if key else latin(name).title(), "slug": people[key].slug if key else "",
                 "photo": (photo_of or {}).get(key, "") if key else ""}
 

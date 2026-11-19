@@ -780,8 +780,26 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                    "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "groups": _groups,
                    "sittings": _sit, "days": _daysv, "exchanges": sum(len(d["exchanges"]) for d in _daysv)}
     env.globals["newer15"] = newer15
-    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of={c: years(c) for c, _ in convs}, env=env, common=common, out=out, debates=debates, people=people,
-                                                convs=convs, items_by_conv=items_by_conv)
+    # The newest convocation's notes are counted like any other's as soon as they are read, before it has a law (19
+    # Nov 2026: the first sitting's notes were out and the counts of the floor stopped at the convocation before).
+    # Its new MPs are not in the roll calls yet, so their names and pages come from the Assembly's list.
+    floor_convs, floor_extra = list(convs), {}
+    if members_conv and members_conv not in dict(convs):
+        _notes_new = load_transcripts(root / members_conv)
+        if _notes_new:
+            from zailiprotiv import debates as _deb
+            _deb.mend(_notes_new, {})
+            debates[members_conv] = _notes_new
+            floor_convs = [(members_conv, root / members_conv)] + floor_convs
+            floor_extra = {_deb.loose(r["key"]): {"name": r["name"], "slug": r["slug"],
+                                                  "photo": photo_of.get(r["key"], "")} for r in member_rows if r["new"]}
+    _years = {c: years(c) for c, _ in convs} | ({members_conv: pages_members.since(members_conv)[:4] + "–"} if members_conv else {})
+    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of=_years, extra=floor_extra, env=env, common=common, out=out, debates=debates, people=people,
+                                                convs=floor_convs, items_by_conv=items_by_conv)
+    _per = getattr(pages_floor.render, "per_mp", {})
+    env.globals["floor_notes_now"] = {sl: next((x for x in xs if x["conv"] == members_conv), None) for sl, xs in _per.items()} if members_conv else {}
+    if newer15 is not None:
+        newer15["notes"] = getattr(pages_floor.render, "top", {}).get(members_conv)
     from zailiprotiv import card, mp_card
     import os
     cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
