@@ -77,6 +77,8 @@ TEXT = {
     "o_more": "Svi glasovi i govori na Za ili Protiv",
     "site_cta": "Svaki zakon od 2012. i kako je glasao svaki poslanik",
     "totals": "Ko je koliko govorio",
+    "day_page": "Ceo dan na sajtu: svaki govor sa snimkom i linkom za deljenje",
+    "conv_page": "Ko koliko govori u celom sazivu",
     "totals_rest": "Ostalih",
     "speakers_n": "govornika",
     "all_turns": "Svi govori, redom",
@@ -161,6 +163,11 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
         out.append(_totals(snap["danas"], cyr=cyr, site=site))
+        where = f'{site}{"cir/" if cyr else ""}'
+        more = [f'<a href="{escape(where)}govornici">{t("conv_page")} →</a>']
+        if snap.get("snimak") and snap.get("dan"):  # a day read from the recording has its page on the site
+            more.insert(0, f'<a href="{escape(where)}govornici/{escape(snap["dan"])}">{t("day_page")} →</a>')
+        out.append('<p class="more">' + " · ".join(more) + "</p>")
         out.append(f'<h3 class="sub">{t("all_turns")}</h3>')
         out.append('<ol class="turns">')
         for d in snap["danas"]:

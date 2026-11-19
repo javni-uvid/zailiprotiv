@@ -1009,6 +1009,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
                                          encoding="utf-8")
+    from zailiprotiv import pages_govornici  # who spoke how long, per day read from the recording and in sum
+    pages_govornici.render(common=common, env=env, out=out, root=root)
     from zailiprotiv import pages_mikrofon  # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
     floor_totals = getattr(pages_floor.render, "totals", {})
     pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),

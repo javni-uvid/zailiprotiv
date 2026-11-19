@@ -8,8 +8,11 @@ turn of the day gets its place in a file of the archive (`datoteka`, `snimak`), 
 data/<N>/snimak/ is made from the record, or a day read by hand gets the places it lacked (18 Nov 2026: the YouTube
 video of the broadcast goes private once it is over, so the archive is where a turn can be watched).
 
-The same rule for every file and every speaker; a file whose frames don't agree on one start gets none rather than a
-guess, and is tried again in a later run (at most TRIES times).
+The same rule for every file and every speaker; a file whose frames don't agree on one start, or agree on a wide
+range of them (all in one long speech), gets none rather than a guess, and is tried again in a later run (at most TRIES
+times). The record's clock is the service's: it sees the broadcast some 15-20 seconds late, so a file is placed on that
+clock, which is also the clock of the turns it is linked from; a day read by hand from the YouTube video (17 and 18 Nov
+2026, its own clock) was lined up by hand, and its entries in arhiva.json say so.
 """
 from __future__ import annotations
 
@@ -51,6 +54,8 @@ def offset(samples: list[tuple[float, str]], turns: list[tuple[str, float, float
     if best < SUPPORT or best < SHARE * len(named):
         return None
     tops = [o for n, o in scored if n == best]
+    if max(tops) - min(tops) > 2 * STEP:  # the frames fit a wide range of starts (one long speech): no place
+        return None
     return (min(tops) + max(tops)) / 2, best
 
 

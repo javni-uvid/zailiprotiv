@@ -22,6 +22,7 @@
 <p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
 {% endif %}
 <p class="label">Pročitano posle sednice sa celog snimka prenosa, iz potpisa ispod govornika, isto za svakog: govor traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku. Automatsko čitanje može da pogreši.</p>
+<p><a href="{{ root }}govornici/{{ day }}.html">Ko je koliko govorio tog dana, svaki govor sa snimkom i linkom za deljenje</a> · <a href="{{ root }}govornici.html">Ko koliko govori u celom sazivu</a></p>
 <ol class="plain turns">
   {% for t in day_turns %}<li><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %}</li>
   {% endfor %}

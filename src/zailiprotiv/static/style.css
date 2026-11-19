@@ -1029,3 +1029,13 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .rec-part { border: 1px solid var(--line); border-radius: 999px; padding: .15rem .7rem; text-decoration: none; font-size: .92rem; }
 .rec-part:hover { border-color: var(--za); }
 main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above the home page's reordered parts on a phone */
+
+/* Who spoke how long (pages_govornici.py): a bar per speaker or list, longest first. */
+.gv { display: grid; gap: .5rem; margin: .4rem 0 1rem; }
+.gv-r { display: grid; grid-template-columns: minmax(9rem, 15rem) 1fr 8.5rem; gap: .8rem; align-items: center; }
+.gv-n { font-weight: 600; line-height: 1.2; } .gv-n a { text-decoration: none; }
+.gv-b { height: .9rem; } .gv-b i { display: block; height: 100%; background: var(--fg); opacity: .8; border-radius: 0 3px 3px 0; }
+.gv-v { line-height: 1.15; font-variant-numeric: tabular-nums; } .gv-v b { display: block; } .gv-v span { font-size: .8rem; color: var(--muted); }
+@media (max-width: 560px) { .gv-r { grid-template-columns: 1fr 7rem; } .gv-b { grid-column: 1 / -1; order: 3; height: .6rem; } }
+.turns li:target { background: color-mix(in srgb, var(--za) 10%, transparent); }
+.share-turn { border: 0; background: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }

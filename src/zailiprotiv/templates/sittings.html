@@ -6,6 +6,7 @@
 <h1>Skupština</h1>
 {% from "macros.html" import live_bar with context %}{{ live_bar() }}
 {% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("sednice") }}
+<p><a href="govornici.html">Ko koliko govori u sali</a>: vreme govora svakog govornika, po danima sednica, merenje sa snimka prenosa.</p>
 {% set now = by_conv[0][1] if by_conv else [] %}
 {% if now %}
 {% set most = (now|sort(attribute="against", reverse=true))[0] %}

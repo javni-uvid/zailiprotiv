@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{# A sitting day: who spoke how long, every turn with its place in the recording (pages_govornici.py). #}
+{% block title %}Ko je koliko govorio u Skupštini, {{ when }} — Za ili Protiv{% endblock %}
+{% block description %}Vreme govora svakog govornika u Narodnoj skupštini {{ when }}: ukupno {{ whole }}, {{ people|length }} govornika, po listama, i svaki govor sa snimkom.{% endblock %}
+{% block share %}{% if site_url %}<meta property="og:image" content="{{ site_url }}govornici/{{ day }}.png">
+<meta name="twitter:card" content="summary_large_image">{% endif %}{% endblock %}
+{% macro bars(rows, link) %}<div class="gv">{% for r in rows %}<div class="gv-r"><div class="gv-n">{% if link and r.slug %}<a href="{{ root }}poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a>{% elif link %}{{ r.name|given_first }}{% else %}{{ r.name }}{% endif %}</div><div class="gv-b"><i style="width:{{ r.width }}%"></i></div><div class="gv-v"><b>{{ r.time }}</b><span>{{ r.share }} % · {{ r.n }} {{ "govor" if r.n == 1 else "govora" }}{% if r.people %} · {{ r.people }} {{ "govornik" if r.people == 1 else "govornika" }}{% endif %}</span></div></div>{% endfor %}</div>{% endmacro %}
+{% block main %}
+<p class="kicker"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
+<h1>Ko je koliko govorio u Skupštini, {{ when }}</h1>
+<p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika. Isto pravilo za svakog: govor traje od prvog do poslednjeg kadra s imenom u potpisu. Predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši.</p>
+<h2>Po govorniku</h2>
+{{ bars(people, true) }}
+<h2>Po listi</h2>
+<p class="label">Lista je donji red potpisa ili poslanička lista sa spiska poslanika Skupštine.</p>
+{{ bars(lists, false) }}
+<h2>Svi govori, redom</h2>
+{% set first = turns|selectattr("file")|first %}
+{% if day_parts or first %}
+<section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button></div>
+{% if day_parts|length > 1 %}<ul class="parts">{% for p in day_parts %}<li><button type="button" class="part" data-file="{{ p.url }}" data-t="0">Deo {{ loop.index }} · {{ p.from }}–{{ p.to }}</button></li>{% endfor %}</ul>{% endif %}
+<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
+{% endif %}
+<ol class="plain turns">
+  {% for t in turns %}<li id="{{ t.id }}"><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %} <button type="button" class="share-turn label" data-share="#{{ t.id }}" data-text="{{ t.name }}, {{ when }} u {{ t.from }}, Narodna skupština">podeli</button></li>
+  {% endfor %}
+</ol>
+<p class="label share-done" hidden>Link je kopiran.</p>
+<p class="label">Izvor: {% if source == "uzivo" %}zapis stranice „Ko sada govori“, poravnat sa snimkom u arhivi{% else %}ceo snimak prenosa, pročitan posle sednice{% endif %}. <a href="{{ root }}kako-racunamo.html#govornici">Kako merimo</a></p>
+<style>
+{% include "mikrofon.css" %}
+</style>
+<script>
+{% include "mikrofon.js" %}
+</script>
+{% endblock %}

@@ -107,6 +107,9 @@ def test_site_builds_every_page(tmp_path):
             assert re.findall(r"<script\b[^>]*>", text, re.I)[1:] == ["<script>", f'<script src="listic.js?v={v}" defer>']
             assert text.count("<script>") == 1 and 'getElementById("lb-mine").hidden = false' in text  # opens the ballot before the first paint
             text = text.replace(f'<script src="listic.js?v={v}" defer>', "").replace("<script>", "", 1)
+        if page.parent.name == "govornici" and "<script>" in text:  # a day's turns: the player and the share, inline
+            assert text.count("<script>") == 1
+            text = text.replace("<script>", "", 1)
         if page.name == "mikrofon.html" and "<script>" in text:  # the player and the quiz: one script of its own, inline
             assert text.count("<script>") == 1 and "youtube-nocookie.com/embed/" in text
             text = text.replace("<script>", "", 1)
@@ -516,6 +519,29 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
     page = (out / "mikrofon.html").read_text()
     assert 'class="play" data-file="https://arhiva.videonet.co.rs/f/1.mp4" data-t="0"' in page
     assert "Deo 2 · 13:56–15:52" in page
+    assert site.check(out) == []
+
+
+def test_who_spoke_how_long_a_page_per_day_and_the_convocations_sum(tmp_path):
+    out, root = tmp_path / "_site", data(tmp_path)
+    start = 1794920000
+    day = {"dan": "2026-11-17", "izvor": "snimak", "govori": [
+        {"ime": "Petrović Petar", "adresa": "petrovic-petar", "uloga": "Lista A", "od": start, "do": start + 600, "okvira": 120,
+         "video": "", "datoteka": "https://arhiva.videonet.co.rs/f/zas.mp4", "snimak": 55},
+        {"ime": "Nikolić Nina", "adresa": "", "uloga": "Lista B", "od": start + 700, "do": start + 1000, "okvira": 60,
+         "video": "", "snimak": None},
+        {"ime": "Jović Jova", "adresa": "", "uloga": "", "od": start + 1100, "do": start + 1100, "okvira": 1}]}
+    (root / "15" / "snimak").mkdir(parents=True)
+    (root / "15" / "snimak" / "2026-11-17.json").write_text(json.dumps(day))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    page = (out / "govornici" / "2026-11-17.html").read_text()
+    assert "Ko je koliko govorio u Skupštini, 17. novembar 2026." in page and "Petar Petrović" in page
+    assert "Jova" not in page  # read in one frame: not counted
+    assert page.index("Petar Petrović") < page.index("Nina Nikolić") and "66,7 %" in page and "Lista B" in page
+    assert f'id="g{start}"' in page and 'data-share="#g' in page and (out / "govornici" / "2026-11-17.png").exists()
+    total = (out / "govornici.html").read_text()
+    assert "Ko koliko govori u 15. sazivu" in total and "govornici/2026-11-17.html" in total
+    assert "Петар Петровић" in (out / "cir" / "govornici" / "2026-11-17.html").read_text()
     assert site.check(out) == []
 
 

@@ -17,6 +17,7 @@ def test_a_file_is_placed_where_the_names_read_in_it_fit_the_turns():
 
 
 def test_frames_that_dont_agree_place_nothing():
+    assert arhiva.offset([(t, "a") for t in range(20, 600, 30)], [("a", 1000, 9000)]) is None  # all in one long speech
     turns = [("a", 1000, 1100), ("b", 5000, 5100)]
     assert arhiva.offset([(10, "a"), (20, "b"), (30, "a"), (40, "b")], turns) is None
     assert arhiva.offset([(10, "x")], turns) is None
@@ -56,15 +57,17 @@ def test_a_day_read_by_hand_only_gets_the_places_it_lacks(tmp_path):
         {"part": 1, "title": "", "url": old}, {"part": 2, "title": "", "url": new}]}}))
     (root / "15" / "arhiva.json").write_text(json.dumps({old: {"od": start - 5000, "trajanje": 4000}}))
     rec = {"dan": "2026-11-18", "govori": [{"ime": "Nikolić Nina", "adresa": "nikolic-nina", "od": start + 700,
-                                           "do": start + 1500, "okvira": 160}]}
+                                           "do": start + 1500, "okvira": 160},
+                                          {"ime": "Petrović Petar", "adresa": "", "od": start + 1530,
+                                           "do": start + 2200, "okvira": 130}]}
     (root / "15" / "uzivo" / "2026-11-18.json").write_text(json.dumps(rec))
     by_hand = {"dan": "2026-11-18", "izvor": "snimak", "govori": [
         {"ime": "Petrović Petar", "od": start - 4000, "do": start - 3000, "okvira": 20, "datoteka": old, "snimak": 995},
         {"ime": "Nikolić Nina", "od": start + 700, "do": start + 1500, "okvira": 80, "video": "", "snimak": None}],
         "datoteke": [{"url": old, "od": start - 5000, "trajanje": 4000}]}
     (root / "15" / "snimak" / "2026-11-18.json").write_text(json.dumps(by_hand))
-    arhiva.run(root, "15", read_frames=lambda u, n, d: [(t, arhiva._key("Nikolić Nina")) for t in range(720, 1500, 30)],
-               probe=lambda u: 3000.0)
+    arhiva.run(root, "15", read_frames=lambda u, n, d: [(t, arhiva._key("Nikolić Nina" if t < 1500 else "Petrović Petar"))
+                                                       for t in range(720, 2200, 30)], probe=lambda u: 3000.0)
     day = json.loads((root / "15" / "snimak" / "2026-11-18.json").read_text())
     assert day["izvor"] == "snimak" and day["govori"][0]["snimak"] == 995
     assert day["govori"][1]["datoteka"] == new and abs(day["govori"][1]["snimak"] - 695) <= arhiva.STEP / 2 + arhiva.SLACK

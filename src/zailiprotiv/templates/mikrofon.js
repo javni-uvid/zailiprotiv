@@ -110,3 +110,16 @@
   });
   show(0);
 })();
+
+// "podeli" beside a turn (govornici/<date>): the page's address at that turn, by the share sheet or copied.
+(function () {
+  "use strict";
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".share-turn") : null;
+    if (!b) return;
+    var url = location.href.split("#")[0] + b.getAttribute("data-share"), text = b.getAttribute("data-text") || "";
+    if (navigator.share) { navigator.share({ text: text, url: url }).catch(function () {}); return; }
+    var done = document.querySelector(".share-done");
+    if (navigator.clipboard) navigator.clipboard.writeText(text + " " + url).then(function () { if (done) done.hidden = false; });
+  });
+})();
