@@ -40,7 +40,12 @@ async function allowed() {
 const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopiraj", "kviz.sacuvaj",
   "listic.otvori", "listic.podeli", "listic.podeljeno", "listic.kopiraj", "listic.sacuvaj",
   // the live page (mikrofon.zailiprotiv.rs): its ▶ on the broadcast pressed
-  "mikrofon.pusti"]);
+  "mikrofon.pusti",
+  // and, each at most once per page opened: the page opened; in view after 1, 5, 15, 30 minutes (time out of sight
+  // not counted); a recording of the archive played; the agenda, the speaker's lines, a share of the moment or of
+  // the day, the day in cards opened; a way to the site taken
+  "mikrofon.otvori", "mikrofon.1min", "mikrofon.5min", "mikrofon.15min", "mikrofon.30min", "mikrofon.snimak",
+  "mikrofon.tacke", "mikrofon.redovi", "mikrofon.podeli", "mikrofon.dan", "mikrofon.kartice", "mikrofon.sajt"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {

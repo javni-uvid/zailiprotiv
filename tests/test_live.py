@@ -1,6 +1,7 @@
 """live/uzivo: who is speaking now, read from the broadcast's caption. Only the parts with no outside packages
 (names, the caption's lines, the turns, the page); OCR and the stream are tried on the broadcast itself."""
 import json
+import re
 import sys
 import threading
 import time
@@ -450,6 +451,25 @@ def test_the_page_is_counted_as_the_site_is():
     assert config.ANALYTICS_TOKEN.isalnum()  # read from data/settings.json, as the image has it
     ignore = (Path(__file__).parents[1] / "live" / "Dockerfile.dockerignore").read_text()
     assert "!data/settings.json" in ignore  # the image's build is sent the file it copies
+
+
+def test_the_pages_uses_go_to_the_projects_own_counter_and_say_so():
+    from uzivo import config
+    snap = {"stanje": NO_STREAM, "provereno": 0, "sada": None, "dan": "2026-11-17", "ranije": False, "danas": []}
+    html = page(snap, cyr=False, site="", tz=TZ, api="https://glasovi.zailiprotiv.rs")
+    foot = lambda h: h.split("<footer>")[1].split("</footer>")[0]
+    assert 'data-api="https://glasovi.zailiprotiv.rs"' in html and "zbraja po danu" in foot(html)
+    plain = page(snap, cyr=False, site="", tz=TZ)
+    assert "zbraja" not in foot(plain) and 'data-api="' not in plain
+    assert "zbraja" not in foot(page(snap, cyr=False, site="", tz=TZ, api='x" onload="y'))
+    assert config.VOTES_API == "https://glasovi.zailiprotiv.rs"  # data/settings.json's votes_api, no ending slash
+    # every use the page sends is one the counter takes, and the counter takes the live page's for /e only
+    worker = (Path(__file__).parents[1] / "worker" / "worker.js").read_text(encoding="utf-8")
+    sent = set(re.findall(r'use\("([a-z0-9]+)"\)', html)) | set(re.findall(r'\[\d+, "([a-z0-9]+)"\]', html))
+    assert sent >= {"otvori", "1min", "5min", "15min", "30min", "snimak", "sajt"}
+    for what in sent:
+        assert f'"mikrofon.{what}"' in worker
+    assert 'path === "/e" && from === LIVE' in worker
 
 
 def test_specks_around_an_unknown_name_are_left_out():

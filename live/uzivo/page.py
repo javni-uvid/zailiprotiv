@@ -136,6 +136,9 @@ TEXT = {
     "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
+    "uses_counted": "Brojač sajta zbraja po danu i koliko je puta ova stranica otvorena, koliko puta je gledana duže "
+                    "od 1, 5, 15 i 30 minuta i koliko puta je pušten prenos ili snimak, otvoren dnevni red ili nešto "
+                    "podeljeno; bez oznake uređaja i bez ičega o tome ko je to bio",
     "wait_title": "Dok čekate",
     "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
                  "ste blizu.",
@@ -1197,6 +1200,42 @@ SCRIPT = _shared("mikrofon.js") + """
     if (said) { said.textContent = b.getAttribute("data-done"); said.hidden = false; }
   });
 })();
+// More of the page's uses for the same counter as the broadcast's ▶ (mikrofon.js, "mikrofon.pusti"): a sum per day,
+// nothing with it, each at most once per page opened, so every count is "pages where this happened". Time out of
+// sight is not counted.
+(function () {
+  var api = (document.body.getAttribute("data-api") || "").replace(/\\/$/, "");
+  if (!/^https:\\/\\//.test(api) || !window.fetch) return;
+  var sent = {};
+  function use(what) {
+    if (sent[what]) return;
+    sent[what] = 1;
+    try {
+      fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, keepalive: true,
+                          body: JSON.stringify({ e: "mikrofon." + what }) }).catch(function () {});
+    } catch (err) {}
+  }
+  use("otvori");
+  var seen = 0, marks = [[60, "1min"], [300, "5min"], [900, "15min"], [1800, "30min"]];
+  var clock = setInterval(function () {
+    if (document.hidden) return;
+    seen++;
+    for (var i = 0; i < marks.length; i++) if (seen >= marks[i][0]) use(marks[i][1]);
+    if (seen >= 1800) clearInterval(clock);
+  }, 1000);
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target : null;
+    if (!t) return;
+    if (t.closest(".play:not(.facade), .part")) use("snimak");
+    else if (t.closest("#dnevni-red > summary")) use("tacke");
+    else if (t.closest(".rot-next, .rot")) use("redovi");
+    else if (t.closest(".st-open")) use("kartice");
+    else if (t.closest(".share-day")) use("dan");
+    else if (t.closest(".share-now")) use("podeli");
+    var a = t.closest("a[href]");
+    if (a && a.hostname === "zailiprotiv.rs") use("sajt");
+  }, true);
+})();
 """
 
 
@@ -1351,7 +1390,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p>{t("how")}</p>
 <p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
 </body>

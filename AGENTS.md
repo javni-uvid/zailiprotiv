@@ -257,7 +257,12 @@ The project's promises to its readers. Never change them without the maintainer.
   network. No cookies, no addresses. Only items the site lists (`glasanje.json`). No robot check: **watch** opens an
   issue when one network sends most of a law's votes; removing is the maintainer's decision, written on the method
   page. **Uses** (17 Nov 2026, `POST /e`): a sum per day of the quiz's result reached and the share pictures opened,
-  shared, copied, saved; nothing beside it. `GET /pregled` shows both.
+  shared, copied, saved; nothing beside it. `GET /pregled` shows both. **The live page's uses** (19 Nov 2026,
+  the maintainer's request, to see how long people stay and what keeps them): the same sums from
+  `mikrofon.zailiprotiv.rs` beside the broadcast's ▶ (`mikrofon.pusti`, below): opened; in view 1, 5, 15, 30 min,
+  time out of sight not counted; a recording of the archive played (`mikrofon.snimak`); the agenda, the speaker's
+  lines, a share, the day in cards, a way to the site; each at most once per page opened. Same counter and switch
+  as `mikrofon.pusti` (`config.VOTES_API`); the page's footer and the method page say so.
 - **The page** (`glasaj.html`, `pages_ballot.py`, `listic.js`): the visitor's ballot ("Moj listić", kept in the
   browser only) beside the Assembly's results, the MPs and groups that voted alike, one law picked by a stated rule;
   the newest bill in procedure to vote on, and the next. **The quiz** (`kviz/podelili-salu`, `pages_quiz.py`,
