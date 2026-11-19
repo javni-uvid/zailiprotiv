@@ -1,0 +1,77 @@
+{
+ "dan": "2026-11-19",
+ "napomena": "Pročitano automatski iz potpisa u prenosu Skupštine; može da sadrži greške. Van 'pokriveno' servis prenos nije video.",
+ "pokriveno": [
+  {
+   "od": 1795078236,
+   "do": 1795081920
+  }
+ ],
+ "govori": [
+  {
+   "ime": "Mrdić Uglješa",
+   "adresa": "mrdic-ugljesa",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795079224,
+   "do": 1795079615,
+   "okvira": 72,
+   "video": "Hdk3ahufa64",
+   "sq_od": 201,
+   "sq_do": 279,
+   "segment": 5.0
+  },
+  {
+   "ime": "Rističević Marijan",
+   "adresa": "risticevic-marijan",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795079635,
+   "do": 1795080094,
+   "okvira": 86,
+   "video": "Hdk3ahufa64",
+   "sq_od": 283,
+   "sq_do": 375,
+   "segment": 5.0
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795080114,
+   "do": 1795081400,
+   "okvira": 246,
+   "video": "Hdk3ahufa64",
+   "sq_od": 379,
+   "sq_do": 636,
+   "segment": 5.0
+  },
+  {
+   "ime": "Radin Milan",
+   "adresa": "radin-milan",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795081480,
+   "do": 1795081754,
+   "okvira": 48,
+   "video": "Hdk3ahufa64",
+   "sq_od": 652,
+   "sq_do": 707,
+   "segment": 5.0
+  },
+  {
+   "ime": "Petrašinović Miroslav",
+   "adresa": "petrasinovic-miroslav",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795081775,
+   "do": 1795081920,
+   "okvira": 21,
+   "video": "Hdk3ahufa64",
+   "sq_od": 711,
+   "sq_do": 740,
+   "segment": 5.0
+  }
+ ]
+}
