@@ -73,6 +73,25 @@ def find(text: str) -> list[tuple[str, str]]:
     return out
 
 
+_FLOOR = re.compile(r"(?=\b(?:reč ima|ima reč)\b([^.!?]{0,90}))")  # a look ahead: two in one sentence are both found
+
+
+def floor(text: str, people: list) -> list:
+    """Whom the chair gave the floor to in a piece of text ("Reč ima narodni poslanik Jovo Bakić"): the sitting MPs
+    (names.Person) named right after the phrase. Strict, since Whisper errs in names and a wrong one would put a
+    speech in someone's mouth: every word of the MP's name, whole (but for diacritics), among the seven words after
+    the phrase, and exactly one MP fitting. Anything less names nobody."""
+    from .ispravke import fold
+    names = [({fold(w) for w in p.name.split()}, p) for p in people if len(p.name.split()) >= 2]
+    out = []
+    for m in _FLOOR.finditer(" ".join(latin(text).split()).lower()):
+        said = {fold(w) for w in re.findall(r"[^\W\d_]+", m.group(1))[:7]}
+        hits = [p for ws, p in names if ws <= said]
+        if len(hits) == 1 and hits[0] not in out:
+            out.append(hits[0])
+    return out
+
+
 _TAGS = re.compile(r"<script.*?</script>|<style.*?</style>|<[^>]+>", re.S)
 
 

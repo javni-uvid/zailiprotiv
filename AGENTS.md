@@ -587,6 +587,12 @@ its minute.
   Measures and anything else wait for the Assembly's page. Next, once a day of this has been looked at: a model
   over an API as a judge of the chair's words (a step's kind from the set list, the item's number, till when the
   break is), never as the writer of what the page says.
+- **"Reč ima: …" from the chair's words, while the picture names nobody** (19 Nov 2026: that afternoon the
+  broadcast showed no captions at all, the frame checked). `hronika.floor`: after "reč ima" / "ima reč" the next
+  seven words must hold every word of exactly one sitting MP's name, whole but for diacritics; anything less names
+  nobody. Shown in the day's steps as a lighter line with a link to the MP's page, and not where a turn read from
+  the picture stands. No time at the rostrum is counted from it (the end of the speech is not known), and nobody
+  is ever named from a face.
 - **Trying another Whisper model** without touching the service: `python -m uzivo.proba <model> [seconds]` in the
   container (`live/uzivo/proba.py`) listens to the kept sound, writes it down with the running model and the named
   one, and prints the time and the text of each. It shares the processor with the service while it runs.

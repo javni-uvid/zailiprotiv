@@ -282,7 +282,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         tail = ("… " + tail.split(" ", 1)[-1]) if len(tail) >= 400 else tail
         said = (f'<div class="said-now"><p class="src">{t("said_unsigned")}</p><p>{escape(_name(tail, cyr))}</p>'
                 f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis">{t("said_all")} →</a></p></div>')
-    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz)}<section class="day">')
+    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
@@ -384,6 +384,8 @@ def steps_shown(snap: dict) -> list[dict]:
       STEP_IDLE before it (once: a second "we go on" with no break between is the chair's turn of phrase);
       the sitting opened: nobody had spoken yet;
     - a vote, a debate opened or closed: an agenda item is under way;
+    - the floor given to an MP ("Reč ima: …"): the chair's words name exactly one sitting MP, whole (hronika.floor),
+      and no turn read from the picture stands at that time (with captions on, the captions say who speaks);
     - anything else (a measure, "the chair notes that…") waits for the Assembly's own page.
     The same step within a quarter of an hour is one line."""
     from .hronika import find, item_no
@@ -404,6 +406,13 @@ def steps_shown(snap: dict) -> list[dict]:
             out.append({"t": e["t"], "izvor": "sajt", "naslov": "", "opis": e.get("tekst", ""), "url": e.get("url", "")})
             continue
         kind, more, t = e.get("vrsta", ""), "", e["t"]
+        if kind == "Reč ima":  # the chair named a sitting MP (hronika.floor); only while the picture names nobody
+            title = "Reč ima: " + given_first(e.get("tekst", ""))
+            if any(a < t + 180 and b > t - 60 for a, b in turns) or t - last.get(title, -10 ** 9) < STEP_SAME:
+                continue
+            last[title] = t
+            out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": "", "url": "", "adresa": e.get("url", ""), "rec": True})
+            continue
         if kind not in {k for k, _ in find(e.get("tekst", ""))}:
             continue  # kept by a rule since mended: today's rules no longer find it in the sentence
         title = STEP_TITLES.get(kind, "")
@@ -437,7 +446,7 @@ def steps_shown(snap: dict) -> list[dict]:
     return out[::-1]
 
 
-def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
+def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     """The day's steps as a line of time, newest first (steps_shown): the hour, a mark for where the line is from
     (a ring: heard in the chair's words; a full dot: written by the Assembly), and the line. The first six shown,
     the rest folded."""
@@ -454,12 +463,18 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
                 src = f'<a href="{escape(e["url"])}">{src} ↗</a>'
             body = (f'<p class="st-text"><b class="st-off">{t("steps_official")}</b> {s(e["opis"])}</p>'
                     f'<p class="st-src">{src} · {escape(_fill(_t("steps_published", cyr), _clock(e["t"], tz)))}</p>')
+        elif e.get("rec"):
+            head, _, who = e["naslov"].partition(": ")
+            who = s(who)
+            if e.get("adresa") and str(e["adresa"]).replace("-", "").isalnum():
+                who = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + e["adresa"])}">{who}</a>'
+            body = f'<p class="st-floor">{s(head)}: <b>{who}</b></p>'
         else:
             body = f'<p class="st-title">{s(e["naslov"])}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
         when = _clock(e["t"], tz) + (f'<small>{t("steps_pub")}</small>' if e["izvor"] == "sajt" else "")
-        return (f'<li class="st-{e["izvor"]}"><span class="time">{when}</span><i aria-hidden="true"></i>'
+        return (f'<li class="st-{e["izvor"]}{" st-rec" if e.get("rec") else ""}"><span class="time">{when}</span><i aria-hidden="true"></i>'
                 f'<div>{body}</div></li>')
-    first, rest = rows[:6], rows[6:]
+    first, rest = rows[:8], rows[8:]
     more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
             if rest else "")
     key = (f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t("steps_said")}</span>'
@@ -922,6 +937,7 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .steps li > i, .st-key i { box-sizing: border-box; width: .7rem; height: .7rem; border-radius: 50%; border: 2px solid var(--fg); background: var(--bg); }
 .steps li > i { margin: .38rem auto 0; position: relative; z-index: 1; } .steps li.st-sajt > i { background: var(--fg); }
 .steps .time small { display: block; font-size: .66rem; line-height: 1.1; letter-spacing: .02em; } .st-off { font: 700 .66rem/1 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--fg); border-radius: 4px; padding: .12rem .32rem; margin-right: .25rem; vertical-align: .12em; white-space: nowrap; }
+.st-floor { color: var(--muted); font-size: .95rem; } .st-floor b { color: var(--fg); font-weight: 600; } .steps li.st-rec { padding-bottom: .7rem; } .steps li.st-rec > i { width: .5rem; height: .5rem; margin-top: .48rem; border-color: var(--muted); }
 .steps p { margin: 0; } .st-title { font-weight: 650; } .st-what { color: var(--muted); font-size: .92rem; margin-top: .1rem; }
 .st-text { max-width: 42rem; font-size: .97rem; } .st-src { font-size: .8rem; color: var(--muted); margin-top: .2rem; } .st-src a { color: inherit; }
 .st-key { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; margin: .9rem 0 0; padding-top: .6rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); }

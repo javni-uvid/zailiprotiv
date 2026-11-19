@@ -242,6 +242,11 @@ class Writer(threading.Thread):
         from . import hronika  # the steps said in the piece, the chair's or a speaker's, by the same rules
         for what, sentence in hronika.find(text):
             self.tracker.note(piece[0][0], what, sentence, "prepis")
+        roster = self.tracker.roster
+        if chair and roster:  # no caption on the picture: whom the chair gave the floor to, by name (hronika.floor)
+            sitting = [p for p in roster.people if not roster.current or p.slug in roster.current]
+            for person in hronika.floor(text, sitting):
+                self.tracker.note(piece[0][0], "Reč ima", person.name, "prepis", person.slug)
         for _, _, f in piece:
             if self.write_whole and not chair:  # kept for the second reading, once the turn is over
                 (f.parent / "kraj").mkdir(exist_ok=True)

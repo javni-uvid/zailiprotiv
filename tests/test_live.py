@@ -926,3 +926,26 @@ def test_the_afternoon_of_19_november_as_the_service_kept_it():
                         ev(16, 41, "Nastavak rada", "Nastavljamo, nastavljamo sa radom."),
                         ev(16, 43, "Pretres otvoren", "poslovnika do otvaranja pretresa prijave za reč")]}
     assert [r["naslov"] for r in page_.steps_shown(snap)] == ["Prelazak na 3. tačku dnevnog reda", "Rad je nastavljen"]
+
+
+def test_the_floor_given_by_the_chairs_word_when_the_picture_names_nobody():
+    from uzivo import hronika, page as page_
+    from uzivo.names import Person, person_key
+    mk = lambda n, sl: Person(person_key(n), n, sl, "Lista")
+    people = [mk("Bakić Jovo", "bakic-jovo"), mk("Jovanov Milenko", "jovanov-milenko"), mk("Jovanović Nataša", "jovanovic-natasa"),
+              mk("Petrović Ana", "petrovic-ana"), mk("Petrović Ana Marija", "petrovic-ana-marija")]
+    got = lambda text: [p.slug for p in hronika.floor(text, people)]
+    assert got("Hvala. Reč ima narodni poslanik Jovo Bakić. Izvolite.") == ["bakic-jovo"]
+    assert got("Реч има народна посланица Наташа Јовановић.") == ["jovanovic-natasa"]
+    assert got("Reč ima Jovo Bakic, a posle njega ima reč Milenko Jovanov.") == ["bakic-jovo", "jovanov-milenko"]  # diacritics lost: still whole
+    assert got("Reč ima narodni poslanik Jova Bakič.") == []  # a letter off: nobody
+    assert got("Reč ima Ana Petrović.") == ["petrovic-ana"] and got("Reč ima Ana Marija Petrović.") == []  # two fit: nobody
+    assert got("Jovo Bakić je to rekao. Reč ima predstavnik predlagača.") == []  # named elsewhere, not after the phrase
+    now = 1795089600.0
+    ev = lambda at, name, slug: {"t": now + at, "vrsta": "Reč ima", "tekst": name, "izvor": "prepis", "url": slug}
+    snap = {"provereno": now + 3000, "sada": None, "dnevni_red": None, "danas": [{"od": now + 1000, "do": now + 1400}],
+            "hronika": [ev(100, "Bakić Jovo", "bakic-jovo"), ev(400, "Bakić Jovo", "bakic-jovo"), ev(1050, "Jovanov Milenko", "jovanov-milenko"),
+                        ev(2000, "Jovanović Nataša", "jovanovic-natasa")]}
+    assert [r["naslov"] for r in page_.steps_shown(snap)] == ["Reč ima: Nataša Jovanović", "Reč ima: Jovo Bakić"]  # once in a quarter of an hour; not where the picture named the speaker
+    html = page_._steps(snap, cyr=True, tz=TZ, site="https://zailiprotiv.rs/")
+    assert 'Реч има: <b><a href="https://zailiprotiv.rs/cir/poslanik/jovanovic-natasa">Наташа Јовановић</a></b>' in html

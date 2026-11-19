@@ -582,7 +582,7 @@ class Tracker:
                     and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
                     "obavestenja": news[:3], "dnevni_red": self._agenda(), "bez_potpisa": unsigned, "hronika": [e if e.get("izvor") == "sajt" else {**e, "tekst": self.shown(e.get("tekst", ""))}
-                                for e in self.events[-40:][::-1]] if day == self.day else [],
+                                for e in self.events[-150:][::-1]] if day == self.day else [],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1]}
 
