@@ -56,7 +56,8 @@ class Tracker:
         self.cover: list[list[float]] = []  # [from, to]: frames kept coming
         self.day = ""
         self.open = False
-        self._pending = ""  # a name not on the list, read once
+        self._pending = ""  # a name not on the list, or with nothing under it, read once
+        self._held: dict = {}  # when and where that one frame was
         self._others = 0  # frames in a row naming someone other than the current speaker
         self.recording_file = Path(path).with_name("snimak.json") if path else None
         self.recording: dict = {}  # the last sitting day read from the recording (the site's mikrofon-dan.json)
@@ -350,9 +351,17 @@ class Tracker:
             if self.status == NO_STREAM:
                 self.status = UNKNOWN
             cur = self.turns[-1] if self.turns else None
-            if person and not person.slug and not (self.open and cur["key"] == person.key):
-                if self._pending != person.key:
-                    self._pending, person = person.key, None  # wait for a second frame
+            first = None  # the first of two frames that named this person, when the name had to be read twice
+            back = cur and person and cur["key"] == person.key and now - cur["seen"] <= config.MERGE_SECONDS
+            if person and not (self.open and cur["key"] == person.key) and not back and (not person.slug or not role):
+                # A name not on the list, or with no line read under it (every real caption has one), is taken on
+                # its second frame in a row: during a break something on the screen was read as an MP's name, one
+                # frame at a time, and each time the page showed that MP as speaking (19 Nov 2026).
+                held = self._held if isinstance(self._held, dict) else {}
+                if self._pending == person.key and now - held.get("t", 0) <= config.HOLD_SECONDS:
+                    first = held
+                else:
+                    self._pending, self._held, person = person.key, {"t": now, "at": dict(at)}, None
             self._others = self._others + 1 if (other and not person) else 0
             if person:
                 self._pending = ""
@@ -374,9 +383,11 @@ class Tracker:
                         if at.get("sq") is not None and cur.get("video") == at.get("video"):
                             cur["sq_seen"] = at["sq"]
                     else:
+                        began, at0 = (first["t"], first["at"]) if first else (now, at)  # from the first frame that named them
                         self.turns.append({"key": person.key, "name": person.name, "slug": person.slug,
-                                           "group": person.group, "role": role, "start": now, "seen": now, "n": 1,
-                                           "video": at.get("video", ""), "sq_start": at.get("sq"),
+                                           "group": person.group, "role": role, "start": began, "seen": now,
+                                           "n": 2 if first else 1,
+                                           "video": at.get("video", ""), "sq_start": at0.get("sq"),
                                            "sq_seen": at.get("sq"), "seg": at.get("seg")})
                     self.open = True
                     self._save()

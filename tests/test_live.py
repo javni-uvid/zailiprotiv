@@ -91,11 +91,11 @@ def test_turns(tmp_path):
     assert t.status == NO_STREAM
     t.observe(None, now=now)
     assert t.status == UNKNOWN
-    t.observe(petar, now=now + 5)
+    t.observe(petar, "Lista za primer", now=now + 5)    # a whole caption (the list under the name): taken at once
     assert t.status == SPEAKING and t.snapshot()["sada"]["ime"] == "Petrović Petar"
     t.observe(None, now=now + 10)                       # a frame without a name: still Petar
     t.observe(petar, now=now + 15)
-    t.observe(marko, now=now + 20)                      # another name: Petar's turn ends
+    t.observe(marko, "Lista za primer", now=now + 20)   # another name: Petar's turn ends
     snap = t.snapshot()
     assert snap["sada"]["ime"] == "Jovanović Marko"
     assert [d["ime"] for d in snap["danas"]] == ["Petrović Petar"] and snap["danas"][0]["sekundi"] == 10
@@ -172,7 +172,7 @@ def test_someone_else_unreadably_ends_the_turn():
     t = Tracker(None, "Europe/Belgrade")
     marko = ROSTER.match("Марко Јовановић", 0.8)
     now = 1794920000.0
-    t.observe(marko, now=now)
+    t.observe(marko, "Lista za primer", now=now)
     own = read([w("Марко Јоввновић", 60), w("Листа")], 85)          # his name, badly read: not someone else
     assert who(own, ROSTER, 0.95) is None and not differs(own, t.current(), 0.8)
     odd = read([w("Мина Николић", 60), w("министар финансија")], 85)  # someone not clearly read
@@ -773,3 +773,19 @@ def test_one_word_read_cannot_stand_for_two_words_of_a_name():
     assert roster.match("Сара Валентик", 0.8).slug == "valentik-sara"
     assert roster.match("Сара Валентнк", 0.8).slug == "valentik-sara"  # a letter misread: still her, not the other Sara
     assert roster.match("Sarah El Sarag", 0.8).slug == "el-sarag-sarah" and roster.match("Сарах Ел Сараг", 0.8).slug == "el-sarag-sarah"
+
+
+def test_a_name_with_nothing_under_it_is_taken_on_its_second_frame():
+    t = Tracker(None, "Europe/Belgrade")
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    t.observe(None, now=now)
+    t.observe(marko, now=now + 5)  # a break: something read as a name once, nothing under it
+    assert t.status == UNKNOWN and t.snapshot(now=now + 6)["sada"] is None and not t.turns
+    t.observe(None, now=now + 10)
+    t.observe(marko, now=now + 300)  # the same chance reading minutes later is not a second frame
+    assert t.snapshot(now=now + 301)["sada"] is None and not t.turns
+    t.observe(petar, now=now + 400)
+    t.observe(petar, now=now + 405)  # twice in a row: a speaker, from the first of the two frames
+    cur = t.snapshot(now=now + 406)["sada"]
+    assert cur["ime"] == "Petrović Petar" and cur["od"] == int(now + 400) and t.turns[-1]["n"] == 2

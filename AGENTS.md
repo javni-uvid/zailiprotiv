@@ -538,6 +538,12 @@ its minute.
   later item, heard in the automatic transcript (`hronika.item_no`, kept in `/data/tacka.json`; a number the agenda
   does not have is taken as misheard). Each state names its source, and the note under the list says the second
   may err. What the reader opened stays open when the page's changing part is replaced.
+- **Chance readings during a break** (19 Nov 2026: one MP's name kept flashing as the speaker while nobody was on
+  the screen). Two causes, both mended. In `names.Roster` one word read could stand for two words of a name
+  ("Сара" was both "Sarag" and "Sarah"): each word of the name now needs a word of its own (`_pair`). And in
+  `Tracker.observe` a name with no line read under it, like a name not on the list, is taken only on its second
+  frame in a row (within `HOLD_SECONDS`), the turn then counted from the first of the two; a whole caption, with its
+  list or office, is taken at once as before.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
