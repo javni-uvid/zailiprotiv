@@ -1071,3 +1071,37 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .fn-turns a:hover { border-color: var(--fg); } .fn-turns b { font-variant-numeric: tabular-nums; margin-right: .2rem; }
 .mp-floor-now > .label { margin: .7rem 0 0; }
 .mp-next { margin: 2.4rem 0 1rem; padding-top: 1rem; border-top: 2px solid var(--fg); } .mp-next li { margin: .35rem 0; font-weight: 600; }
+
+/* The home page's block for a new convocation before its first law (index.html, site.py): seats by group in greys
+   (colour stays for za and protiv), the longest on the floor, the first sitting's agenda. */
+.home-conv { margin: 1.6rem 0 2rem; padding: 1.3rem 1.3rem 1rem; border: 2px solid var(--fg); border-radius: 12px; }
+.home-conv h2 { margin: 0 0 1rem; font-size: clamp(1.35rem, 3.4vw, 1.9rem); line-height: 1.2; } .home-conv h2 a { text-decoration: none; } .home-conv h2 a:hover { text-decoration: underline; }
+.hc-seats { display: flex; gap: 2px; height: 1.6rem; border-radius: 5px; overflow: hidden; } .hc-seats i { min-width: 4px; }
+.hc-s0 { background: var(--fg); } .hc-s1 { background: color-mix(in srgb, var(--fg) 58%, var(--bg)); } .hc-s2 { background: color-mix(in srgb, var(--fg) 38%, var(--bg)); }
+.hc-s3 { background: color-mix(in srgb, var(--fg) 24%, var(--bg)); } .hc-s4 { background: color-mix(in srgb, var(--fg) 14%, var(--bg)); }
+.hc-none { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 40%, var(--bg)) 0 2px, var(--bg) 2px 5px); }
+.hc-key { list-style: none; margin: .6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; font-size: .92rem; }
+.hc-key li { display: flex; align-items: center; gap: .45rem; margin: 0; } .hc-key i { width: .9rem; height: .9rem; border-radius: 3px; flex: none; border: 1px solid var(--line); } .hc-key b { font-variant-numeric: tabular-nums; }
+.hc-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.2rem 2.5rem; margin-top: 1.4rem; }
+.hc-cols h3 { margin: 0 0 .6rem; font-size: 1.05rem; }
+.hc-top { list-style: none; margin: 0 0 .6rem; padding: 0; } .hc-top li { margin: 0; border-top: 1px solid var(--line); }
+.hc-top a { display: flex; align-items: center; gap: .7rem; padding: .4rem 0; text-decoration: none; color: var(--fg); }
+.hc-top img { border-radius: 4px; object-fit: cover; flex: none; background: color-mix(in srgb, var(--fg) 8%, transparent); }
+.hc-top span { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; } .hc-top small { color: var(--muted); font-size: .8rem; }
+.hc-top em { font-style: normal; font-family: var(--serif); font-weight: 700; font-size: 1.15rem; white-space: nowrap; }
+.hc-agenda { margin: 0 0 .9rem; padding-left: 1.3rem; } .hc-agenda li { margin: .2rem 0; }
+.hc-links li { margin: .3rem 0; font-weight: 600; }
+.home-conv > .label { margin: 1rem 0 0; }
+
+/* The groups' colours in the newest convocation's bars (site.GROUP_COLOURS; the same hues as the live page), the
+   "prethodni saziv" mark on what is the earlier convocation's, and a place kept for the new one's. */
+:root { --g-av: #1d4ed8; --g-sl: #e11d48; --g-mn: #0f9d8a; }
+@media (prefers-color-scheme: dark) { :root { --g-av: #4a86f0; --g-sl: #ef3a5d; --g-mn: #12a594; } }
+.g-av { background: var(--g-av); } .g-sl { background: var(--g-sl); } .g-mn { background: var(--g-mn); }
+.hc-dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .35rem; }
+em.prev { font-style: normal; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: .12rem .5rem; margin-left: .4rem; vertical-align: middle; white-space: nowrap; }
+.ph-new { margin: 0 0 1.4rem; padding: .8rem 1rem; border: 1px dashed var(--fg); border-radius: 10px; } .ph-new p { margin: 0; } .ph-new .kicker { margin-bottom: .3rem; }
+.home-floor-low { margin: 2.4rem 0; padding-top: 1.6rem; border-top: 1px solid var(--line); }
+/* On a phone the new convocation's block comes right under the search, before the quiz and the earlier convocation's law. */
+@media (max-width: 760px) { main:has(> .home-hero) > .home-conv { order: 1; margin-top: .4rem; } }
+@media (max-width: 640px) { .hc-top li:nth-child(n+4) { display: none; } .home-conv { padding: 1rem 1rem .8rem; } }

@@ -340,6 +340,10 @@ def qid(text: str) -> str:
     return hashlib.sha1(text.encode("utf-8")).hexdigest()[:10]
 
 
+# A group's colour in the newest convocation's bars (19 Nov 2026, the maintainer's decision, as on the live page: an
+# exception to "colour only for za and protiv", in hues apart from those two; the key always names each group). The
+# MPs of no group share the third; a group not named here stays a shade of grey.
+GROUP_COLOURS = {"Aleksandar Vučić - Srbija pobeđuje": "g-av", "Studentska lista": "g-sl"}
 ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", "12": "Dvanaesti", "13": "Trinaesti", "14": "Četrnaesti", "15": "Petnaesti"}
 
 
@@ -1004,8 +1008,35 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     last_sitting = [it for it in items if it["final"] and it["final"]["sitting"] == next(
         (x["final"]["sitting"] for x in items if x["final"]), None)]
     last_sitting.sort(key=lambda it: -(it["final"]["counts"]["protiv"] or 0))
+    # The newest convocation on the home page while it has passed no law yet (19 Nov 2026, the maintainer's request):
+    # its seats by group, how many MPs have no vote in any convocation the site has, who has spoken the most by the
+    # recordings, and its first sitting's agenda as the Assembly lists it. All by rule, nothing chosen by hand.
+    newer = None
+    if members_conv and member_rows and members_conv != active:
+        from zailiprotiv.translit import latin as _lat
+        secs = pages_members.by_group(member_rows)
+        seats = [{"name": x["name"], "n": len(x["rows"]), "none": bool(x.get("none")),
+                  "cls": GROUP_COLOURS.get(x["name"], "g-mn" if x.get("none") else "")} for x in secs if x["rows"]]
+        spoke = env.globals.get("floor_now", {})
+        by_slug = {r["slug"]: r for r in member_rows}
+        top = sorted(((sl, x) for sl, x in spoke.items() if sl in by_slug), key=lambda kv: (-kv[1]["sec"], kv[0]))[:5]
+        idx_file = root / members_conv / "index.json"
+        sitting = None
+        if idx_file.exists():
+            listed_ = json.loads(idx_file.read_text(encoding="utf-8")).get("sittings", {})
+            sitting = next(({"title": _lat(v["title"]), "url": u, "agenda": [_lat(a).rstrip(" i") for a in v["agenda"]]}
+                            for u, v in listed_.items() if v.get("agenda")), None)
+        newer = {"conv": members_conv, "name": ORDINAL_NAME.get(members_conv, members_conv),
+                 "since": pages_members.since(members_conv), "page": pages_members.PAGE.format(conv=members_conv),
+                 "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "seats": seats,
+                 "top": [{"slug": sl, "name": by_slug[sl]["name"], "time": x["time"], "n": x["n"],
+                          "group": _lat(by_slug[sl].get("group", "") or ""),
+                          "cls": GROUP_COLOURS.get(_lat(by_slug[sl].get("group", "") or ""), "g-mn"),
+                          "photo": photo_of.get(by_slug[sl]["key"], "") or (photo_of.get(by_slug[sl]["mp"].key, "") if by_slug[sl]["mp"] else "")}
+                         for sl, x in top],
+                 "days": len(_days_now), "sitting": sitting}
     (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, divisive=divisive,
+        **common, divisive=divisive, newer=newer,
         quiz_laws=getattr(pages_quiz.render, "laws", []), floor_top=getattr(pages_floor.render, "top", {}).get(active),
         last_sitting=last_sitting, last_sitting_slug=sitting_page(last_sitting[0]["final"]["sitting"], last_sitting[0]["final"]["sitting_title"]) if last_sitting else "",
         stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",

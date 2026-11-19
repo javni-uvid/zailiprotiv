@@ -485,6 +485,16 @@ its minute.
   or more and either the line under the name (the list or office, which every real caption has) was read at least
   once, or it lasted four frames or more; the day's record gives a turn not counted as one frame, which the site
   drops. The same rule for every name.
+- **The home page for a new convocation** (19 Nov 2026, shown to the maintainer before it went out). The headline is
+  "Svaki glas i svaka reč iz Skupštine" (his choice of four). While the newest convocation has passed no law
+  (`newer` in `site.py`), a block right under the search, across the page (first on a phone): how many MPs and how
+  many with no vote since 2012, the seats by group in the groups' colours (`site.GROUP_COLOURS`, the live page's
+  hues: the second place the exception to "colour only for za and protiv" holds), the five longest on the floor by
+  the recordings (three on a phone), the first sitting's agenda as the Assembly lists it, the ways to the MPs' list
+  and the live page. What is the earlier convocation's wears "prethodni saziv" (the law that divided the chamber,
+  the last adopted, the picked votes, "Varnice u sali", which moved below them), and a dashed box holds the place of
+  the new one's first laws and of its replies and measures. All by rule; the block goes when the new convocation
+  becomes the current one.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

@@ -5,40 +5,20 @@
 {% from "macros.html" import live_bar with context %}{{ live_bar() }}
 <section class="home-hero">
   <div class="hero-text">
-    <h1>Ko je u Skupštini glasao za, a ko protiv?</h1>
-    <p class="standfirst">Svaki zakon, svaki poslanik, svaki glas. Iz dokumenata same Skupštine.</p>
+    <h1>Svaki glas i svaka reč iz Skupštine</h1>
+    <p class="standfirst">Svaki zakon, svaki poslanik, svaki glas i svaki govor. Iz dokumenata same Skupštine.</p>
     <div class="finder hero-finder js-only" hidden>
       <label class="sr" for="q">Zakon ili poslanik</label>
       <input id="q" type="search" placeholder="Zakon ili poslanik, npr. budžet ili Jovanov" autocomplete="off">
       <ul id="hits" class="hits" hidden></ul>
     </div>
     <p class="masthead">{{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} od {{ convs[-1].years[:4] }}. godine · {{ stats.all_mps }} poslanika · <a href="pretraga.html">pretraga celog teksta</a> · <a href="zakoni.html">svi zakoni</a> · <a href="poslanici.html">svi poslanici</a></p>
-{% if floor_top %}
-<section class="home-floor" aria-labelledby="hf">
-  <div class="home-floor-head">
-    <h2 id="hf"><a href="replike.html">Varnice u sali</a></h2>
-    <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
-  </div>
-  <ol class="floor-firsts">
-    {% for key, label, at in [("speeches", "govora, najviše u sazivu", "aktivnost"), ("points", "ukazivanja na Poslovnik", "aktivnost"), ("measures", "mera predsedavajućeg", "mere"), ("harsh", "teških reči", "reci")] %}
-    {% set r = floor_top[key] %}
-    {% if r %}
-    <li><a href="{% if r.who.slug %}poslanik/{{ r.who.slug }}.html#{{ at }}{% else %}{{ floor_top.page }}{% endif %}">
-      <img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="60" height="80" loading="lazy">
-      <span><b>{{ r.harsh|length if key == "harsh" else r[key] }}</b><span class="ff-what">{{ label }}</span><span class="ff-who">{{ r.who.name }}</span></span>
-    </a></li>
-    {% endif %}
-    {% endfor %}
-  </ol>
-  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a> <span class="label">{% if notes_all %}Brojano u beleškama svih sednica saziva koje je Skupština objavila.{% else %}Brojano u pročitanim beleškama, ne u svim sednicama.{% endif %}</span></p>
-</section>
-{% endif %}
   </div>
   {% if divisive %}
   {% set c = divisive.final.counts %}
   <div class="hero-card">
     <a class="hero-vote" href="zakon/{{ divisive.slug }}.html">
-      <span class="hero-kicker">Zakon koji je najviše podelio salu u poslednjih godinu dana</span>
+      <span class="hero-kicker">Zakon koji je najviše podelio salu u poslednjih godinu dana{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</span>
       {{ chamber(c) }}
       <span class="hero-law">{% if divisive.aka %}{{ divisive.aka[0][:1]|upper }}{{ divisive.aka[0][1:] }}{% else %}{{ divisive.law.short }}{% endif %}</span>
       <span class="hero-meta">{{ divisive.law.passed|day }}{% if divisive.urgent %} · hitan postupak{% endif %}{% if divisive.against %} · protiv: {% for g, n in divisive.against[:3] %}{{ g }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span>
@@ -56,6 +36,31 @@
   </div>
   {% endif %}
 </section>
+{% if newer %}
+{# The newest convocation before its first law: who sits in it, who has spoken, what its first sitting decides (site.py). #}
+<section class="home-conv" aria-labelledby="hc">
+  <p class="kicker">Novi saziv · od {{ newer.since|day_of }}</p>
+  <h2 id="hc"><a href="{{ newer.page }}">{{ newer.name }} saziv: {{ newer.n }} poslanika, {{ newer.new }} bez ijednog glasanja od 2012.</a></h2>
+  <div class="hc-seats" role="img" aria-label="Mandati po poslaničkim grupama">{% for g in newer.seats %}<i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}" style="flex-grow:{{ g.n }}"></i>{% endfor %}</div>
+  <ul class="hc-key">{% for g in newer.seats %}<li><i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}"></i><span>{{ g.name }}</span><b>{{ g.n }}</b></li>{% endfor %}</ul>
+  <div class="hc-cols">
+    {% if newer.top %}<div>
+      <h3><a href="govornici.html">Ko je do sada najviše govorio</a></h3>
+      <ol class="hc-top">{% for t in newer.top %}<li><a href="poslanik/{{ t.slug }}.html">{% if t.photo %}<img src="foto/{{ t.photo }}" alt="" width="42" height="56" loading="lazy">{% else %}<img src="bez-slike.svg" alt="" width="42" height="56" loading="lazy">{% endif %}<span><b>{{ t.name|given_first }}</b><small><i class="hc-dot {{ t.cls }}"></i>{{ t.group or "van poslaničkih grupa" }}</small></span><em>{{ t.time }}</em></a></li>{% endfor %}</ol>
+      <p class="label">Vreme dok je ime u potpisu prenosa, {{ newer.days }} {{ plural(newer.days, "dan", "dana", "dana") }} sednice, isto pravilo za svakog. <a href="govornici.html">Svi govornici i vreme po grupama</a></p>
+    </div>{% endif %}
+    <div>
+      {% if newer.sitting %}<h3><a href="{{ newer.sitting.url }}">Prva sednica: šta se odlučuje</a></h3>
+      <ol class="hc-agenda">{% for a in newer.sitting.agenda %}<li>{{ a }}</li>{% endfor %}</ol>{% endif %}
+      <ul class="plain hc-links">
+        <li><a href="{{ newer.page }}">Svih {{ newer.n }} poslanika, po grupama</a></li>
+        {% if live_page %}<li><a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Ko sada govori, uživo sa prepisom</a></li>{% endif %}
+      </ul>
+    </div>
+  </div>
+  <p class="label">Novi saziv još nije usvojio nijedan zakon; glasanja će biti ovde od prve sednice na kojoj se glasa. Sve označeno sa „prethodni saziv“ je iz prethodnog, četrnaestog saziva.</p>
+</section>
+{% endif %}
 {% if of_conv %}<p class="note">Novi saziv još nije usvojio zakone. Dok ih ne usvoji, ovde su zakoni prethodnog, {{ (of_conv|lower)[:-1] }}og saziva.</p>{% endif %}
 
 {% macro row(it, n) -%}
@@ -85,7 +90,8 @@
 
 <div class="home-now">
 <section>
-  <h2>Poslednje usvojeno</h2>
+  {% if newer %}<div class="ph-new"><p class="kicker">{{ newer.name }} saziv</p><p><b>Još nema usvojenih zakona.</b> Prvo glasanje novog saziva biće ovde, sa glasom svakog poslanika, čim Skupština objavi rezultat.</p></div>{% endif %}
+  <h2>Poslednje usvojeno{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</h2>
   {% if last_sitting %}<p class="meta">{{ last_sitting[0].law.passed|day }} · {{ last_sitting|length }} {{ plural(last_sitting|length, "zakon", "zakona", "zakona") }} na sednici, oni sa najviše glasova protiv prvi</p>{% endif %}
   <ol class="rows compact">
   {% for it in (last_sitting or latest)[:5] %}{{ row(it, none) }}{% endfor %}
@@ -111,8 +117,8 @@
 
 {% if spotlight %}
 <section class="spotlight" aria-labelledby="izdvojeno">
-  <h2 id="izdvojeno">Izdvojena glasanja</h2>
-  <p class="meta">Zakoni koje javnost zna pod drugim imenom i zakoni koji su najviše podelili Skupštinu u ovom sazivu. Bira ih isto pravilo, ne urednik.</p>
+  <h2 id="izdvojeno">Izdvojena glasanja{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</h2>
+  <p class="meta">Zakoni koje javnost zna pod drugim imenom i zakoni koji su najviše podelili Skupštinu u {{ "prethodnom" if newer else "ovom" }} sazivu. Bira ih isto pravilo, ne urednik.</p>
   <ol class="spot">
   {% for it in spotlight %}
     <li>
@@ -126,6 +132,28 @@
   {% endfor %}
   </ol>
   <p class="spot-more"><a class="phone-only" href="zakoni.html">Svi zakoni</a><span class="phone-only"> · </span><a href="grupe.html">Kako glasaju poslaničke grupe</a> · <a href="brojke.html">Skupština u brojkama</a></p>
+</section>
+{% endif %}
+
+{% if floor_top %}
+<section class="home-floor home-floor-low" aria-labelledby="hf">
+  {% if newer %}<div class="ph-new"><p class="kicker">{{ newer.name }} saziv</p><p><b>Replike, opomene i teške reči novog saziva</b> stižu kad obradimo stenografske beleške prve sednice. Do tada: <a href="govornici.html">ko je koliko govorio</a>, mereno sa snimka.</p></div>{% endif %}
+  <div class="home-floor-head">
+    <h2 id="hf"><a href="replike.html">Varnice u sali</a>{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</h2>
+    <p>Replike, opomene i teške reči, doslovno iz stenograma.</p>
+  </div>
+  <ol class="floor-firsts">
+    {% for key, label, at in [("speeches", "govora, najviše u sazivu", "aktivnost"), ("points", "ukazivanja na Poslovnik", "aktivnost"), ("measures", "mera predsedavajućeg", "mere"), ("harsh", "teških reči", "reci")] %}
+    {% set r = floor_top[key] %}
+    {% if r %}
+    <li><a href="{% if r.who.slug %}poslanik/{{ r.who.slug }}.html#{{ at }}{% else %}{{ floor_top.page }}{% endif %}">
+      <img src="{{ "foto/" ~ r.who.photo if r.who.photo else "bez-slike.svg" }}" alt="" width="60" height="80" loading="lazy">
+      <span><b>{{ r.harsh|length if key == "harsh" else r[key] }}</b><span class="ff-what">{{ label }}</span><span class="ff-who">{{ r.who.name }}</span></span>
+    </a></li>
+    {% endif %}
+    {% endfor %}
+  </ol>
+  <p class="hook-more"><a href="{{ floor_top.page }}">Ko najviše govori, replicira i dobija opomene</a> <span class="label">{% if notes_all %}Brojano u beleškama svih sednica saziva koje je Skupština objavila.{% else %}Brojano u pročitanim beleškama, ne u svim sednicama.{% endif %}</span></p>
 </section>
 {% endif %}
 
