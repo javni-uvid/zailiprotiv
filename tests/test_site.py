@@ -606,7 +606,7 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     assert listing.count('class="row"') == 3 and "konstituisan je 17. novembra 2026." in listing
     assert "Pastor Balint" in listing and "prvi put" in listing and "Suboti" in listing
     new = (out / "poslanik" / "pastor-balint.html").read_text()
-    assert 'content="noindex"' in new and "Godište: 1979." in new and "nije navedena" in new
+    assert 'content="noindex"' in new and "1979.</b><span>godište</span>" in new and "nije navedena" in new
     assert (out / "cir" / "poslanici-15.html").exists() and "poslanici-15.html" in (out / "poslanici.html").read_text()
     assert any(m["s"] == "pastor-balint" for m in json.loads((out / "podaci.json").read_text())["mps"])
     assert site.check(out) == []
