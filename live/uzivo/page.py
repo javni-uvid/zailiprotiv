@@ -89,7 +89,10 @@ TEXT = {
     "steps_lead": "Koraci sednice redom, najnoviji prvi.",
     "steps_said": "po rečima predsedavajućeg, prepoznato automatski sa zvuka prenosa: može da pogreši",
     "steps_site": "sajt Skupštine",
-    "steps_site_key": "napisala Skupština na stranici sednice",
+    "steps_site_key": "zvanično: napisala Skupština na stranici sednice; vreme je vreme objave, ne događaja",
+    "steps_official": "Zvanično",
+    "steps_pub": "objava",
+    "steps_published": "objavljeno oko %1, događaj je bio ranije",
     "steps_more": "Svi koraci",
     "news": "Novo:",
     "news_page": "stranica poslanika",
@@ -412,10 +415,12 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
             src = t("steps_site")
             if str(e["url"]).startswith("https://"):
                 src = f'<a href="{escape(e["url"])}">{src} ↗</a>'
-            body = f'<p class="st-text">{s(e["opis"])}</p><p class="st-src">{src}</p>'
+            body = (f'<p class="st-text"><b class="st-off">{t("steps_official")}</b> {s(e["opis"])}</p>'
+                    f'<p class="st-src">{src} · {escape(_fill(_t("steps_published", cyr), _clock(e["t"], tz)))}</p>')
         else:
             body = f'<p class="st-title">{s(e["naslov"])}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
-        return (f'<li class="st-{e["izvor"]}"><span class="time">{_clock(e["t"], tz)}</span><i aria-hidden="true"></i>'
+        when = _clock(e["t"], tz) + (f'<small>{t("steps_pub")}</small>' if e["izvor"] == "sajt" else "")
+        return (f'<li class="st-{e["izvor"]}"><span class="time">{when}</span><i aria-hidden="true"></i>'
                 f'<div>{body}</div></li>')
     first, rest = rows[:6], rows[6:]
     more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
@@ -879,6 +884,7 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .steps .time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .9rem; padding-top: .08rem; text-align: right; }
 .steps li > i, .st-key i { box-sizing: border-box; width: .7rem; height: .7rem; border-radius: 50%; border: 2px solid var(--fg); background: var(--bg); }
 .steps li > i { margin: .38rem auto 0; position: relative; z-index: 1; } .steps li.st-sajt > i { background: var(--fg); }
+.steps .time small { display: block; font-size: .66rem; line-height: 1.1; letter-spacing: .02em; } .st-off { font: 700 .66rem/1 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--fg); border-radius: 4px; padding: .12rem .32rem; margin-right: .25rem; vertical-align: .12em; white-space: nowrap; }
 .steps p { margin: 0; } .st-title { font-weight: 650; } .st-what { color: var(--muted); font-size: .92rem; margin-top: .1rem; }
 .st-text { max-width: 42rem; font-size: .97rem; } .st-src { font-size: .8rem; color: var(--muted); margin-top: .2rem; } .st-src a { color: inherit; }
 .st-key { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; margin: .9rem 0 0; padding-top: .6rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); }

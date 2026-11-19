@@ -571,6 +571,10 @@ its minute.
   one the agenda lacks, "konstatujem da…") is left out, and the same step within a quarter of an hour is one line.
   The Assembly's own sentences from the sitting's page are shown whole, with the link. Drawn as a line of time: a
   ring for what was heard (automatic, may err), a full dot for what the Assembly wrote; the key is under the list.
+  A line from the Assembly's page carries the time we first read it there, not the time of the event (the page is
+  read every ten minutes and the Assembly writes after the fact), so it is marked "Zvanično", its hour says
+  "objava", and the line says the event was earlier (19 Nov 2026: the Speaker's election stood after the move to
+  the next item).
 - **Trying another Whisper model** without touching the service: `python -m uzivo.proba <model> [seconds]` in the
   container (`live/uzivo/proba.py`) listens to the kept sound, writes it down with the running model and the named
   one, and prints the time and the text of each. It shares the processor with the service while it runs.
