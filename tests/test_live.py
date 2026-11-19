@@ -555,3 +555,38 @@ def test_a_list_with_a_colour_of_its_own_wears_it_in_the_days_bars_and_the_rest_
              {"lista": "Lista za primer", "sekundi": 30}, {"lista": "*", "sekundi": 20}, {"lista": "", "sekundi": 10}]
     assert _shades(turns) == {"Studentska lista": "c-sl", "Aleksandar Vučić - Srbija pobeđuje": "c-av",
                               "Lista za primer": "l1", "*": "c-mn", "": "lx"}
+
+
+def test_the_day_in_one_sentence_the_summary_while_nobody_is_on_and_the_link_preview():
+    from uzivo import picture
+    from uzivo.page import headline, og_text, page
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    t.use_facts({"petrovic-petar": {"lista": "Lista za primer"}, "jovanovic-marko": {"lista": "Druga lista"}})
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    for s_ in range(0, 601, 5):
+        t.observe(petar, now=now + s_)
+    for s_ in range(610, 700, 5):
+        t.observe(marko, now=now + s_)
+    for s_ in range(710, 731, 5):
+        t.observe(petar, now=now + s_)
+    snap = t.snapshot(now=now + 731)
+    every = snap["danas"] + [snap["sada"]]
+    line = headline(every, cyr=False)
+    assert line.startswith("Najviše vremena za govornicom danas: Petar Petrović, 10 min")
+    assert "Највише времена за говорницом данас: Петар Петровић, 10 мин" in headline(every, cyr=True)
+    title, text = og_text(snap, cyr=False, tz=TZ)
+    assert title.startswith("Sada govori: Petar Petrović") and "za govornicom od" in text and "Najviše vremena" in text
+    html = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
+    assert 'property="og:image" content="https://mikrofon.zailiprotiv.rs/slika.png?v=' in html and '<p class="hl">' in html
+    assert 'name="twitter:card" content="summary_large_image"' in html
+    t.observe(None, now=now + 800)
+    t.observe(None, now=now + 860)
+    paused = t.snapshot(now=now + 861)
+    html = fragment(paused, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert paused["stanje"] != "govori" and "Dosad danas" in html and 'class="share-now share-day" data-src="/slika.png"' in html
+    assert "<b>Petar Petrović</b>" in html
+    for s_ in (snap, paused, Tracker(None, "Europe/Belgrade").snapshot(now=now)):
+        png = picture.render(s_, cyr=True, tz=TZ, host="mikrofon.zailiprotiv.rs")
+        assert png[:8] == b"\x89PNG\r\n\x1a\n" and len(png) > 2000

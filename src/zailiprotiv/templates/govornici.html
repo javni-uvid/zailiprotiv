@@ -14,4 +14,14 @@
 <h2>Po listi</h2>
 <p class="label">Lista je donji red potpisa ili poslanička lista sa spiska poslanika Skupštine.</p>
 {{ bars(lists, false) }}
+{% if trend %}
+<h2>Po danima</h2>
+<p class="label">Koliko se puta lista javila i koliko je govor prosečno trajao, dan po dan. Isto pravilo za svaku listu; govor je vreme dok je ime u potpisu.</p>
+{% for l in trend %}
+<h3>{{ l.name }}</h3>
+<div class="scroll"><table class="groups"><thead><tr><th>Dan</th><th>Govora</th><th>Prosečno</th><th>Ukupno</th></tr></thead><tbody>
+{% for d in l.days %}<tr><td><a href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a></td><td>{{ d.n }}</td><td>{{ d.mean }}</td><td>{{ d.time }}</td></tr>
+{% endfor %}</tbody></table></div>
+{% endfor %}
+{% endif %}
 {% endblock %}

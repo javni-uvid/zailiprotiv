@@ -33,6 +33,16 @@ TEXT = {
     "sh_note": "Čitano iz potpisa u prenosu, automatski; može da pogreši.",
     "sh_text": "%1 govori već %2 min u Skupštini (%3). Uživo:",  # filled by the script; digits survive Cyrillic
     "sh_done": "Slika je sačuvana, a tekst kopiran.",
+    "h_most": "Najviše vremena za govornicom %1: %2, %3",
+    "h_today": "danas",
+    "h_share": "%1% vremena svih govornika",
+    "h_more": "više nego svi govornici liste „%1“ zajedno (%2)",
+    "so_far": "Dosad danas",
+    "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
+    "share_day": "Podeli presek dana",
+    "sd_text": "Ko je koliko govorio u Skupštini:",
+    "og_now": "Sada govori: %1",
+    "og_since": "za govornicom od %1",
     "lists": "Vreme za govornicom po listama",
     "no_list": "Vlada i gosti",
     "other_lists": "poslanici manjih lista i van grupa",
@@ -112,6 +122,13 @@ TEXT = {
 }
 
 
+def _fill(text: str, *values) -> str:
+    """A text with %1, %2… filled in (the marks survive Cyrillic, which braces' names would not)."""
+    for i, v in enumerate(values, 1):
+        text = text.replace(f"%{i}", str(v), 1)
+    return text
+
+
 def _t(key: str, cyr: bool) -> str:
     return cyrillic(TEXT[key]) if cyr else TEXT[key]
 
@@ -166,6 +183,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(_speaker(cur, cyr=cyr, site=site, tz=tz))
     else:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
+        out.append(_pause(snap, cyr=cyr, tz=tz))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
     out.append('</section><section class="day">')
@@ -179,6 +197,9 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     if snap["danas"]:
         every = snap["danas"] + ([cur] if snap["stanje"] == "govori" and cur else [])
         shade = _shades(every)
+        line = headline(every, cyr=cyr, when=_when(snap, cyr))
+        if line and (snap["stanje"] == "govori" and cur):  # otherwise the summary above already says it
+            out.append(f'<p class="hl">{escape(line)}</p>')
         out.append(_lists(every, shade, cyr=cyr))
         out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
         out.append(_totals(every, cyr=cyr, site=site, shade=shade))
@@ -203,6 +224,36 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append("</section></div>")
     return "\n".join(out)
 
+
+
+def _when(snap: dict, cyr: bool) -> str:
+    """"danas", or the date of the earlier day shown."""
+    if snap.get("ranije") and snap.get("dan"):
+        day = _date(snap["dan"]).rstrip(".")
+        return day.rsplit(" ", 1)[0]  # "18. novembar": the year is in the heading
+    return ""
+
+
+def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
+    """While nobody is on (a break, or between sittings): the day so far in place of an empty box. The sentence of the
+    day, the three with the most time, and the picture of it to share (`picture.py`, the page's link preview too)."""
+    turns = snap.get("danas") or []
+    line = headline(turns, cyr=cyr, when=_when(snap, cyr))
+    if not line:
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    if snap.get("ranije"):
+        when = _date(snap["dan"])
+        head = f'{t("last_day")}, {escape(cyrillic(when) if cyr else when)}'
+    else:
+        head = t("so_far")
+    top = "".join(f'<li><b>{escape(_name(given_first(n), cyr))}</b> <span>{_dur(sec, cyr)}</span></li>'
+                  for n, sec, _ in leaders(turns)[:3])
+    src = ("/cir" if cyr else "") + "/slika.png"
+    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p><ol class="pz-top">{top}</ol>'
+            f'<p class="acts"><button type="button" class="share-now share-day" data-src="{src}" '
+            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_day")}</button></p>'
+            f'<p class="meta share-said" hidden></p></div>')
 
 
 def _dur(sec: int, cyr: bool = False) -> str:
@@ -305,10 +356,40 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     return "".join(out)
 
 
+def leaders(turns: list[dict]) -> list[tuple[str, int, str]]:
+    """Today's speakers by time, longest first: (name, seconds, list)."""
+    by: dict[str, list] = {}
+    for d in turns:
+        x = by.setdefault(d["ime"], [0, d.get("lista") or ""])
+        x[0] += max(0, d["sekundi"])
+    return sorted(((k, v[0], v[1]) for k, v in by.items()), key=lambda r: (-r[1], r[0]))
+
+
+def headline(turns: list[dict], *, cyr: bool, when: str = "") -> str:
+    """The day in one sentence, by one rule whoever leads: the speaker with the most time, their time, and either the
+    largest other list whose speakers together had less, or their share of all the time. With two speakers or more."""
+    rows = leaders(turns)
+    whole = sum(r[1] for r in rows)
+    if len(rows) < 2 or not whole:
+        return ""
+    name, sec, own = rows[0]
+    per: dict[str, int] = {}
+    for _, v, l in rows:
+        if l and l != "*" and l != own:
+            per[l] = per.get(l, 0) + v
+    less = sorted((l for l in per if per[l] < sec), key=lambda l: (-per[l], l))
+    n = lambda x: _name(x, cyr)
+    tail = (_fill(_t("h_more", cyr), n(less[0]), _dur(per[less[0]], cyr)) if less
+            else _fill(_t("h_share", cyr), round(100 * sec / whole)))
+    return _fill(_t("h_most", cyr), n(when or TEXT["h_today"]), n(given_first(name)), _dur(sec, cyr)) + ", " + tail + "."
+
+
 # The colour of a list in the day's bars (19 Nov 2026, the maintainer's decision; an exception to "colour only for
 # za and protiv", kept to this page). Hues apart from those two, checked for colour-blind readers; a list not named
 # here keeps a shade of grey, and the key beside the bar always names each.
 LIST_COLOURS = {"Aleksandar Vučić - Srbija pobeđuje": "c-av", "Studentska lista": "c-sl"}
+HEX = {"c-av": "#1d4ed8", "c-sl": "#e11d48", "c-mn": "#0f9d8a", "l1": "#5c5c5c", "l2": "#9a9a9a", "l3": "#c4c4c4",
+       "lx": "#d8d8d8"}  # the same colours for the picture (picture.py), which has no stylesheet
 
 
 def _shades(turns: list[dict]) -> dict[str, str]:
@@ -469,6 +550,8 @@ h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-trans
 .acts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
 .share-now { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg);
   background: none; color: var(--fg); cursor: pointer; }
+.hl { font-family: var(--serif, Georgia, serif); font-size: 1.25rem; line-height: 1.35; font-weight: 700; margin: .2rem 0 1rem; max-width: 40rem; }
+.pz .hl { margin: .3rem 0 .6rem; } .pz-top { margin: 0 0 .9rem; padding-left: 1.3rem; } .pz-top span { color: var(--muted); margin-left: .4rem; }
 .lb { display: flex; height: 1.5rem; border-radius: 4px; overflow: hidden; gap: 2px; }
 .lb i { display: block; min-width: 3px; }
 .l0 { background: var(--fg); } .l1 { background: color-mix(in srgb, var(--fg) 62%, var(--bg)); }
@@ -570,11 +653,31 @@ SCRIPT = _shared("mikrofon.js") + """
     g.fillText(d("when") + " · " + d("note"), P, 622);
     return c;
   }
+  function shareDay(b) {
+    var url = location.origin + location.pathname, text = b.getAttribute("data-text") + " " + url;
+    var said = b.parentNode.parentNode.querySelector(".share-said");
+    var plain = function () {
+      if (navigator.share) { navigator.share({ text: text }).catch(function () {}); return; }
+      if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {});
+      if (said) { said.textContent = b.getAttribute("data-done"); said.hidden = false; }
+    };
+    fetch(b.getAttribute("data-src") + "?" + Date.now()).then(function (r) { if (!r.ok) throw 0; return r.blob(); }).then(function (blob) {
+      var file = new File([blob], "ko-je-koliko-govorio.png", { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], text: text }).catch(function () {}); return;
+      }
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+      if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {});
+      if (said) { said.textContent = b.getAttribute("data-done"); said.hidden = false; }
+    }).catch(plain);
+  }
   document.addEventListener("click", function (e) {
     var t = e.target.closest ? e.target : null;
     if (t && t.closest(".rot-next, .rot")) { turn.skip++; rotate(); return; }
     var b = t && t.closest(".share-now");
     if (!b) return;
+    if (b.classList.contains("share-day")) { shareDay(b); return; }
     var k = document.querySelector(".clk"), minutes = Math.max(1, Math.floor((k ? seconds(k) : 0) / 60));
     var url = location.origin + location.pathname;
     var text = b.getAttribute("data-text").replace("%1", b.getAttribute("data-name")).replace("%2", minutes)
@@ -597,6 +700,36 @@ SCRIPT = _shared("mikrofon.js") + """
   });
 })();
 """
+
+
+def og_text(snap: dict, *, cyr: bool, tz: ZoneInfo) -> tuple[str, str]:
+    """The link preview's title and line: who is on and since when, or the sentence of the day, or what the page is."""
+    cur = snap.get("sada")
+    turns = (snap.get("danas") or []) + ([cur] if snap["stanje"] == "govori" and cur else [])
+    line = headline(turns, cyr=cyr, when=_when(snap, cyr)) or _t("lead", cyr)
+    if snap["stanje"] == "govori" and cur:
+        side = cur.get("lista", "").strip("*") or cur.get("uloga") or cur.get("grupa") or ""
+        title = _fill(_t("og_now", cyr), _name(given_first(cur["ime"]), cyr)) + (f" ({_name(side, cyr)})" if side else "")
+        return title, _fill(_t("og_since", cyr), _clock(cur["od"], tz)) + ". " + line
+    return _t("title", cyr), line
+
+
+def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
+    """What a pasted link shows (X, Viber, Facebook): the title and line above and the picture of the moment
+    (`picture.py`). The picture's address changes with the turn, since some services keep a picture by its address."""
+    if not url:
+        return ""
+    title, line = og_text(snap, cyr=cyr, tz=tz)
+    cur = snap.get("sada") if snap["stanje"] == "govori" else None
+    mark = int(cur["od"]) if cur else f'{snap.get("dan", "")}-{len(snap.get("danas") or [])}'
+    img = f'{url}{"cir/" if cyr else ""}slika.png?v={mark}'
+    e = escape
+    return (f'<meta property="og:type" content="website"><meta property="og:url" content="{e(url + ("cir/" if cyr else ""))}">'
+            f'<meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(line)}">'
+            f'<meta property="og:image" content="{e(img)}"><meta property="og:image:width" content="1200">'
+            f'<meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">'
+            f'<meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(line)}">'
+            f'<meta name="twitter:image" content="{e(img)}">')
 
 
 def _beacon(token: str) -> str:
@@ -695,6 +828,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <title>{t("title")} · {"За или Против" if cyr else "Za ili Protiv"}</title>
 <meta name="description" content="{t("lead")}">
 {alt}
+{_og(snap, cyr=cyr, url=url, tz=tz)}
 <link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
 <style>{CSS}</style>
 </head>

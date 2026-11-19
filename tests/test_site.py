@@ -547,6 +547,7 @@ def test_who_spoke_how_long_a_page_per_day_and_the_convocations_sum(tmp_path):
     assert "Automatski prepis" in page and "Poštovani predsedniče" in page and "nije citat" in page
     total = (out / "govornici.html").read_text()
     assert "Ko koliko govori u 15. sazivu" in total and "govornici/2026-11-17.html" in total
+    assert "Po danima" in total and "<th>Prosečno</th>" in total
     assert "Петар Петровић" in (out / "cir" / "govornici" / "2026-11-17.html").read_text()
     assert site.check(out) == []
 

@@ -433,6 +433,18 @@ its minute.
   so a misread makes no list), **the day as a strip** (a block a turn, a click leads to it in the list), and the
   totals per speaker with the list under each name, the current turn included. One sentence on top says what the
   page is and links the site, for those who arrive from a shared picture.
+- **The day in one sentence, the summary on a break, the link's picture** (19 Nov 2026, the maintainer's choice among
+  proposals drawn from debate clocks of NPR, NBC and CNN). `page.headline`: the speaker with the most time today,
+  their time, and the largest other list whose speakers together had less, or else their share of all the time; one
+  rule whoever leads, no gendered verb, from two speakers on. Shown above the day's bars; while nobody is on (a break,
+  or between sittings) it stands in the speaker's place with the three longest and "Podeli presek dana". The picture
+  (`picture.py`, `/slika.png` and `/cir/slika.png`, 1200×630, Pillow with the image's DejaVu fonts) shows who is on
+  and since when, or that sentence, over the day's time by list; it is the page's `og:image` (with `og:title` and
+  `og:description` saying the same; `PUBLIC_URL` must be set), drawn at most once in 20 s and kept as long by
+  Cloudflare. Its address carries the turn's start, since some services keep a picture by its address; X keeps a
+  link's card for days whatever we do. On the site, `govornici.html` has **"Po danima"** (`pages_govornici.trend`):
+  per list and day, the number of turns, their mean length and sum, the four lists with the most time and the rest
+  together.
 - **Linked from the live bar** (17 Nov 2026, the maintainer's decision): while a plenary sitting is in progress the
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an

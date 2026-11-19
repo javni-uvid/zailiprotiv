@@ -107,6 +107,39 @@ def exchanges(turns: list[dict]) -> list[dict]:
     return out
 
 
+TREND_LISTS = 4  # the lists with the most time get a table of their own; the rest are summed
+
+
+def trend(days: list[dict]) -> list[dict]:
+    """Day by day, per list: how many turns, their mean length and their sum, by the same rule for every list (a
+    turn's list is its speaker's list that day, as in `sums`). The lists with the most time in all the days, then the
+    rest together. [{"name", "days": [{"day", "when", "n", "mean", "time"}]}], days newest first."""
+    per: dict[str, dict[str, list[int]]] = {}
+    total: dict[str, int] = {}
+    for day in days:
+        people, _, _ = sums(day["govori"])
+        of = {w["name"]: w["list"] or NO_LIST for w in people}
+        for t in day["govori"]:
+            sec = max(0, t["do"] - t["od"])
+            x = per.setdefault(of[t["ime"]], {}).setdefault(day["dan"], [0, 0])
+            x[0] += 1
+            x[1] += sec
+            total[of[t["ime"]]] = total.get(of[t["ime"]], 0) + sec
+    order = sorted(total, key=lambda k: (k == NO_LIST, -total[k], k))
+    top, rest = order[:TREND_LISTS], order[TREND_LISTS:]
+    if rest:
+        merged: dict[str, list[int]] = {}
+        for k in rest:
+            for d, (n, sec) in per[k].items():
+                m = merged.setdefault(d, [0, 0])
+                m[0] += n
+                m[1] += sec
+        per["ostali"] = merged
+        top = top + ["ostali"]
+    return [{"name": k, "days": [{"day": d, "when": day_name(d), "n": n, "mean": dur(round(sec / n)), "time": dur(sec)}
+                                 for d, (n, sec) in sorted(per[k].items(), reverse=True) if n]} for k in top]
+
+
 def picture(path: Path, title: str, when: str, people: list[dict], whole: int) -> None:
     """The day's time as a picture to share: the ten longest, then the rest summed."""
     from PIL import Image, ImageDraw, ImageFont
@@ -202,7 +235,8 @@ def render(*, common: dict, env, out: Path, root: Path) -> list[dict]:
     people, lists, whole = sums(every)
     days_ = sorted([x for x in listed if x["conv"] == newest], key=lambda x: x["day"], reverse=True)
     (out / INDEX).write_text(env.get_template("govornici.html").render(
-        **common, root="", conv=newest, people=people, lists=lists, whole=dur(whole), days=days_), encoding="utf-8")
+        **common, root="", conv=newest, people=people, lists=lists, whole=dur(whole), days=days_,
+        trend=trend(convs[newest])), encoding="utf-8")
     return sorted(listed, key=lambda x: x["day"], reverse=True)
 
 

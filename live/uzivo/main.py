@@ -5,14 +5,15 @@ import logging
 import os
 import re
 import threading
+import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 
-from . import config, worker
+from . import config, picture, worker
 from .stream import VIDEO
 from .page import fragment, page
 from .state import Tracker
@@ -63,6 +64,32 @@ def latin_part() -> HTMLResponse:
 @app.get("/cir/deo")
 def cyrillic_part() -> HTMLResponse:
     return _part(True)
+
+
+_pictures: dict[bool, tuple[float, bytes]] = {}
+PICTURE_KEEP = 20  # seconds a drawn picture serves everyone
+
+
+def _picture(cyr: bool) -> Response:
+    """The picture of the moment (picture.py): the link preview and the share of the day. Drawn at most once in
+    twenty seconds per script, and kept as long by Cloudflare and the browser."""
+    now = time.monotonic()
+    kept = _pictures.get(cyr)
+    if not kept or now - kept[0] > PICTURE_KEEP:
+        host = URL.split("//")[-1].strip("/")
+        kept = (now, picture.render(tracker.snapshot(), cyr=cyr, tz=_tz, host=host))
+        _pictures[cyr] = kept
+    return Response(kept[1], media_type="image/png", headers={"Cache-Control": f"public, max-age={PICTURE_KEEP}"})
+
+
+@app.get("/slika.png")
+def latin_picture() -> Response:
+    return _picture(False)
+
+
+@app.get("/cir/slika.png")
+def cyrillic_picture() -> Response:
+    return _picture(True)
 
 
 @app.get("/stanje.json")
