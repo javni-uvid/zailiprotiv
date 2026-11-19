@@ -493,7 +493,7 @@ def test_the_speaker_shows_the_day_so_far_lines_about_the_mp_and_the_way_to_the_
     assert '<span class="src">sazivi 13–14</span>300 za · 12 protiv' in html and "87% prisustva" in html
     assert 'class="cta" href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in html and 'class="share-now"' in html
     assert "Vreme za govornicom po listama" in html and 'href="#t1794920610"' in html and 'id="t1794920610"' in html
-    assert 'class="l0 on"' in html  # the turn now on, marked in the day's strip
+    assert 'class="l1 on"' in html  # the turn now on, marked in the day's strip
     t.observe(marko, now=now + 840)
     t.observe(marko, now=now + 845)
     html = fragment(t.snapshot(now=now + 846), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
@@ -547,3 +547,11 @@ def test_turns_read_before_the_list_knew_the_mp_are_named_and_joined_on_the_page
     shown = t.snapshot()["danas"]
     assert [d["ime"] for d in shown] == ["Petrović Petar"] and shown[0]["adresa"] == "petrovic-petar"
     assert shown[0]["uloga"] == "Lista za primer"
+
+
+def test_a_list_with_a_colour_of_its_own_wears_it_in_the_days_bars_and_the_rest_stay_grey():
+    from uzivo.page import _shades
+    turns = [{"lista": "Studentska lista", "sekundi": 60}, {"lista": "Aleksandar Vučić - Srbija pobeđuje", "sekundi": 90},
+             {"lista": "Lista za primer", "sekundi": 30}, {"lista": "*", "sekundi": 20}, {"lista": "", "sekundi": 10}]
+    assert _shades(turns) == {"Studentska lista": "c-sl", "Aleksandar Vučić - Srbija pobeđuje": "c-av",
+                              "Lista za primer": "l1", "*": "c-mn", "": "lx"}

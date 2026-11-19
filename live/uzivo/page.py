@@ -181,7 +181,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         shade = _shades(every)
         out.append(_lists(every, shade, cyr=cyr))
         out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
-        out.append(_totals(every, cyr=cyr, site=site))
+        out.append(_totals(every, cyr=cyr, site=site, shade=shade))
         where = f'{site}{"cir/" if cyr else ""}'
         more = [f'<a href="{escape(where)}govornici">{t("conv_page")} →</a>']
         if snap.get("snimak") and snap.get("dan"):  # a day read from the recording has its page on the site
@@ -211,11 +211,13 @@ def _dur(sec: int, cyr: bool = False) -> str:
     return f"{h} {hour} {m} {minute}" if h else f"{m} {minute}"
 
 
-def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
+def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8, shade: dict[str, str] | None = None) -> str:
     """The day's time on the floor per speaker, longest first, as bars: the turns summed, by the same rule for all."""
     t = lambda k: escape(_t(k, cyr))
     by: dict[str, list] = {}
+    tone: dict[str, str] = {}
     for d in turns:
+        tone.setdefault(d["ime"], (shade or {}).get(d.get("lista") or "", ""))
         row = by.setdefault(d["ime"], [0, 0, d.get("adresa", ""),
                                        (d.get("lista") or "").strip("*") or d.get("uloga") or d.get("grupa") or ""])
         row[0] += max(0, d["sekundi"])
@@ -226,18 +228,18 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8) -> str:
     whole = sum(r[0] for _, r in rows) or 1
     most = rows[0][1][0] or 1
     out = [f'<h3 class="sub">{t("totals")}</h3><div class="tot">']
-    def line(name_html: str, side: str, sec: int, n: int, rest: bool = False) -> str:
+    def line(name_html: str, side: str, sec: int, n: int, rest: bool = False, cls: str = "") -> str:
         share = f"{100 * sec / whole:.0f}".replace(".", ",")
         word = t("speeches_1") if n == 1 else t("speeches_n")
         under = f'<span>{escape(_name(side, cyr))}</span>' if side else ""
         return (f'<div class="tr{" rest" if rest else ""}"><div class="tn">{name_html}{under}</div>'
-                f'<div class="tb"><i style="width:{max(1.5, 100 * sec / most):.1f}%"></i></div>'
+                f'<div class="tb"><i{f' class="{cls}"' if cls else ""} style="width:{max(1.5, 100 * sec / most):.1f}%"></i></div>'
                 f'<div class="tv"><b>{_dur(sec, cyr)}</b><span>{share}% · {n} {word}</span></div></div>')
     for name, (sec, n, slug, side) in rows[:top]:
         nm = escape(_name(given_first(name), cyr))
         if slug:
             nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + slug)}">{nm}</a>'
-        out.append(line(nm, side, sec, n))
+        out.append(line(nm, side, sec, n, cls=tone.get(name, "")))
     rest = rows[top:]
     if rest:
         out.append(line(f'{t("totals_rest")} {len(rest)} {t("speakers_n")}', "", sum(r[0] for _, r in rest),
@@ -303,14 +305,20 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     return "".join(out)
 
 
+# The colour of a list in the day's bars (19 Nov 2026, the maintainer's decision; an exception to "colour only for
+# za and protiv", kept to this page). Hues apart from those two, checked for colour-blind readers; a list not named
+# here keeps a shade of grey, and the key beside the bar always names each.
+LIST_COLOURS = {"Aleksandar Vučić - Srbija pobeđuje": "c-av", "Studentska lista": "c-sl"}
+
+
 def _shades(turns: list[dict]) -> dict[str, str]:
-    """A shade of grey for each list with time today, the most time the darkest (never a colour: the site keeps
-    colour for "za" and "protiv"); the speakers on no list share the last, hatched one."""
+    """The class of each list with time today: its colour (LIST_COLOURS), one colour for sitting MPs of smaller lists
+    or no group together, a shade of grey for a list with no colour of its own, hatched grey for the rest."""
     by: dict[str, int] = {}
     for d in turns:
         by[d.get("lista") or ""] = by.get(d.get("lista") or "", 0) + max(0, d["sekundi"])
-    named = sorted((k for k in by if k and k != "*"), key=lambda k: (-by[k], k))
-    return {**{k: f"l{min(i, 3)}" for i, k in enumerate(named)}, "*": "l4", "": "lx"}
+    named = sorted((k for k in by if k and k != "*" and k not in LIST_COLOURS), key=lambda k: (-by[k], k))
+    return {**{k: f"l{min(i + 1, 3)}" for i, k in enumerate(named)}, **LIST_COLOURS, "*": "c-mn", "": "lx"}
 
 
 def _lists(turns: list[dict], shade: dict[str, str], *, cyr: bool) -> str:
@@ -381,8 +389,9 @@ CSS = """
   src: url(/fonts/literata-latin-wght-normal.woff2) format("woff2");
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 :root { --bg: #fff; --fg: #111; --muted: #555; --line: #d9d9d9; --za: #1f5fa8; --protiv: #c2410c;
+  --c-av: #1d4ed8; --c-sl: #e11d48; --c-mn: #0f9d8a;
   --serif: "Literata", Georgia, "Times New Roman", serif; }
-@media (prefers-color-scheme: dark) { :root { --bg: #111318; --fg: #f1f1ee; --muted: #a8adb8; --line: #30343c; --za: #7cc0f5; --protiv: #ff9a52; } }
+@media (prefers-color-scheme: dark) { :root { --bg: #111318; --fg: #f1f1ee; --muted: #a8adb8; --line: #30343c; --za: #7cc0f5; --protiv: #ff9a52; --c-av: #4a86f0; --c-sl: #ef3a5d; --c-mn: #12a594; } }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 a { color: var(--fg); text-underline-offset: 2px; } a:hover { color: var(--za); }
@@ -465,14 +474,16 @@ h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-trans
 .l0 { background: var(--fg); } .l1 { background: color-mix(in srgb, var(--fg) 62%, var(--bg)); }
 .l2 { background: color-mix(in srgb, var(--fg) 38%, var(--bg)); } .l3 { background: color-mix(in srgb, var(--fg) 22%, var(--bg)); }
 .l4 { background: color-mix(in srgb, var(--fg) 12%, var(--bg)); }
+.c-av, .tb i.c-av { background: var(--c-av); } .c-sl, .tb i.c-sl { background: var(--c-sl); } .c-mn, .tb i.c-mn { background: var(--c-mn); }
+.tb i.lx { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 45%, var(--bg)) 0 2px, var(--bg) 2px 5px); }
 .lx { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 45%, var(--bg)) 0 2px, var(--bg) 2px 5px); }
 .lk { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: .3rem; font-size: .92rem; }
 .lk li { display: grid; grid-template-columns: 1rem 1fr auto 3rem; gap: .6rem; align-items: center; }
 .lk i { width: 1rem; height: 1rem; border-radius: 3px; border: 1px solid var(--line); }
 .lk b, .lk em { font-variant-numeric: tabular-nums; white-space: nowrap; } .lk em { font-style: normal; color: var(--muted); text-align: right; }
 .tl { position: relative; height: 2rem; background: color-mix(in srgb, var(--fg) 5%, transparent); border-radius: 4px; overflow: hidden; }
-.tl a { position: absolute; top: 0; bottom: 0; min-width: 2px; }
-.tl a.on { outline: 2px solid var(--protiv); outline-offset: -2px; background: var(--protiv); }
+.tl a { position: absolute; top: 5px; bottom: 5px; min-width: 2px; }
+.tl a.on { top: 0; bottom: 0; min-width: 5px; box-shadow: inset 0 0 0 2px var(--fg); z-index: 1; }
 .tl a:hover { opacity: .7; }
 .tl-ax { position: relative; height: 1.2rem; font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tl-ax span { position: absolute; top: .15rem; transform: translateX(-50%); } .tl-ax span:first-child { transform: none; }

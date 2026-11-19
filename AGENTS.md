@@ -424,7 +424,11 @@ its minute.
   The card's wording no longer assumes a gender ("% prisustva", "glas drugačiji"). Under the box: the way to the
   MP's page and "Podeli ovaj trenutak", which draws a picture in the browser (name, list, minutes so far, the
   address; nothing is sent to us) and hands it to the phone's share sheet, or downloads it and copies the text.
-  Below, the day: **time by list** as one bar (shades of grey, never a colour; sitting MPs of smaller lists or no
+  Below, the day: **time by list** as one bar (**in the list's colour**, 19 Nov 2026, the maintainer's decision and an exception, on this page only, to
+  "colour only for za and protiv": `page.LIST_COLOURS`, blue for "Aleksandar Vučić - Srbija pobeđuje", red for
+  "Studentska lista", green for the smaller lists together, hues apart from the two vote colours and checked for
+  colour-blind readers in both themes; a list with no colour of its own keeps a shade of grey, and the key always
+  names each; the day's strip and the bars per speaker wear the same colours; sitting MPs of smaller lists or no
   group together, the Government and guests hatched; a list is taken from the caption only when the site names it,
   so a misread makes no list), **the day as a strip** (a block a turn, a click leads to it in the list), and the
   totals per speaker with the list under each name, the current turn included. One sentence on top says what the
