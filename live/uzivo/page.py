@@ -16,6 +16,8 @@ TEXT = {
     "lead": "Govornik u Narodnoj skupštini u ovom trenutku, pročitan iz potpisa u prenosu uživo.",
     "intro": "Ko upravo govori u Narodnoj skupštini i koliko dugo, čitano uživo iz potpisa u prenosu. Deo sajta",
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
+    "hero_sub": "Uživo iz prenosa: ko je za govornicom, koliko dugo i šta govori.",
+    "hero_cta": "Kako glasa svaki poslanik",
     "speaks": "govori",
     "longer": "duže od {p}% današnjih govora",
     "longest": "najduži govor danas",
@@ -232,7 +234,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     cur = snap.get("sada")
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
-    for n in snap.get("obavestenja") or []:  # what the Assembly has decided, as its own site says it (the site's data/obavestenja.json)
+    for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:  # the newest of what the Assembly has decided, as its own site says it (the site's data/obavestenja.json)
         text = escape(_name(n["tekst"], cyr))
         more = ""
         if str(n.get("url", "")).startswith("https://"):
@@ -747,17 +749,26 @@ h3.sub { font-size: 1.1rem; margin: 1.6rem 0 .6rem; }
    stay, so #deo's two parts are laid out as the page's own (display: contents) and ordered around the player. */
 main { display: flex; flex-direction: column; }
 main > * { order: 6; }
-main > h1, main > .lead { order: 0; }
+main > h1, main > .lead, main > .hero { order: 0; }
 #deo { display: contents; }
 .news { order: 0; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: .98rem; line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--protiv); margin-right: .3rem; }
-.sp-top { order: 1; } main > .player { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
+main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
 .steps-sec { order: 4; } .steps-sec h2 { margin-bottom: .2rem; }
 .steps { list-style: none; margin: .6rem 0 0; padding: 0; } .steps li { display: grid; grid-template-columns: 3.2rem 1fr; gap: .6rem; padding: .5rem 0; border-top: 1px solid var(--line); line-height: 1.45; }
 .steps .time { color: var(--muted); font-variant-numeric: tabular-nums; } .steps .src { display: inline-block; margin: 0 0 0 .3rem; font-size: .68rem; }
 .steps-sec details { margin-top: .5rem; } .steps-sec summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
 .said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
 .pz-next { margin: 0 0 .9rem; }
-h1 { font-size: 1.05rem; font-family: inherit; letter-spacing: .08em; text-transform: uppercase; margin: 1.1rem 0 .2rem; }
+/* The top of the page (19 Nov 2026, the maintainer's request: the old line of text was cramped): what the page is in
+   a few words, and one clear way to the site. Then the newest notice, then the broadcast. */
+.hero { display: flex; flex-wrap: wrap; gap: .9rem 1.5rem; align-items: center; justify-content: space-between; margin: 1.1rem 0 0; padding: 1rem 1.1rem; border-radius: 12px; background: color-mix(in srgb, var(--fg) 5%, transparent); }
+.hero > div { flex: 1 1 16rem; min-width: 0; }
+.hero h1 { font-family: var(--serif); font-size: clamp(1.45rem, 5vw, 1.9rem); line-height: 1.15; letter-spacing: -.015em; text-transform: none; margin: 0 0 .3rem; }
+.hero-sub { margin: 0; color: var(--muted); font-size: .98rem; line-height: 1.4; }
+.hero-cta { flex: 0 1 auto; display: flex; flex-direction: column; gap: .1rem; padding: .6rem 1rem; border-radius: 10px; background: var(--fg); color: var(--bg); text-decoration: none; line-height: 1.25; }
+.hero-cta:hover { color: var(--bg); opacity: .88; } .hero-cta span { font-size: .82rem; opacity: .8; } .hero-cta b { font-size: 1.05rem; }
+@media (max-width: 520px) { .hero { padding: .9rem; } .hero-cta { flex: 1 1 100%; } .hero-cta b { white-space: nowrap; } }
+main > .player { margin-top: 1rem; }
 .lead { font-size: .92rem; margin: 0 0 .4rem; max-width: 40rem; }
 .sp-head { display: flex; gap: 1rem; align-items: flex-start; margin: 1.2rem 0 0; }
 .sp-head > div { min-width: 0; flex: 1; }
@@ -1131,8 +1142,10 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <body data-base="{base}">
 <header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
 <main>
-<h1>{t("title")}</h1>
-<p class="lead">{t("intro")} <a href="{escape(home)}">{"За или Против" if cyr else "Za ili Protiv"}</a>{t("intro_end")}</p>
+<section class="hero">
+<div><h1>{t("title")}</h1><p class="hero-sub">{t("hero_sub")}</p></div>
+<a class="hero-cta" href="{escape(home)}"><span>{t("hero_cta")}</span><b>zailiprotiv.rs →</b></a>
+</section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
