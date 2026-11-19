@@ -836,3 +836,15 @@ def test_trying_another_model_listens_to_the_kept_sound(tmp_path, monkeypatch):
     (tmp_path / "1000-1000.pcm").write_bytes(b"\2\0" * 16000)
     raw, length = proba.collect(0)
     assert length == 2 and raw[:2] == b"\2\0" and raw[-2:] == b"\1\0"  # in the order of time, whole
+
+
+def test_the_days_steps_wear_the_corrections_too(tmp_path):
+    t = Tracker(None, "Europe/Belgrade")
+    t.waiting = {"ispravke": {"prenego": "pre nego", "pošto vene": "poštovane"}}
+    now = 1795089600.0
+    t.observe(None, now=now)
+    t.events.append({"t": now, "vrsta": "Nastavak rada", "tekst": "Dobar dan, pošto vene, prenego što nastavim.", "izvor": "prepis"})
+    t.events.append({"t": now, "vrsta": "", "tekst": "prenego", "izvor": "sajt"})
+    rows = t.snapshot(now=now + 1)["hronika"]
+    assert rows[1]["tekst"] == "Dobar dan, poštovane, pre nego što nastavim." and rows[0]["tekst"] == "prenego"  # the Assembly's own words are left as they are
+    assert t.events[0]["tekst"].startswith("Dobar dan, pošto vene")  # kept as written
