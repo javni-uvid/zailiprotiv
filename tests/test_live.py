@@ -169,6 +169,23 @@ def test_page_both_scripts():
     assert "<b>" not in fragment(guest.snapshot(), cyr=False, site="", tz=TZ)
 
 
+def test_cyrillic_page_mixes_no_scripts_in_a_word():
+    """20 Nov 2026: the live page's own converter wrote "Цлоудфларе Wеб Аналyтицс" and "иПхонеу". It now uses the
+    site's (names.cyrillic → zailiprotiv.cyrillic.cyr): what is Latin by nature stays Latin, whole, and no word is
+    left half in one script and half in the other."""
+    from uzivo.page import TEXT
+    mixed = re.compile(r"\b(?=\w*[а-шђјљњћџ])(?=\w*[a-zčćžšđ])\w+\b", re.I)
+    for key, text in TEXT.items():
+        assert not mixed.search(cyrillic(text)), (key, cyrillic(text))
+    t = Tracker(None, "Europe/Belgrade")
+    t.observe(ROSTER.match("Петар Петровић", 0.8), "Lista za primer", now=1794920000.0)
+    html = page(t.snapshot(), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    shown = re.sub(r"<(script|style)\b.*?</\1>|<[^>]+>", " ", html, flags=re.S)
+    assert not mixed.findall(shown)
+    assert "Cloudflare Web Analytics" in cyrillic(TEXT["counted"])
+    assert cyrillic("mikrofon.zailiprotiv.rs ne odgovara") == "mikrofon.zailiprotiv.rs не одговара"
+
+
 def test_someone_else_unreadably_ends_the_turn():
     """Two frames naming someone else, even unreadably, end the current speaker's turn; a misread of the speaker's
     own name does not."""

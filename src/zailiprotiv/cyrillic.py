@@ -21,12 +21,14 @@ _APART = re.compile(r"(?i)\b(i)(n)(j)(ekc|unkc)|\b(ko)(n)(j)(unk|ug)|\b(ta)(n)(j
 # Latin by nature. Kept as written.
 KEEP = {"PDF", "RSS", "CSV", "JSON", "HTML", "URL", "API", "AI", "GitHub", "Claude", "Anthropic", "Cloudflare", "Atom",
         "EXPO", "UniCredit", "NLB", "II", "III", "IV", "VI", "VII", "VIII", "IX", "XI", "XII", "XIII", "XIV", "XV",
-        "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "Wikipedia", "Viber", "WhatsApp", "Instagram", "Google", "Worker"}
+        "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "Wikipedia", "Viber", "WhatsApp", "Instagram", "Google", "Worker",
+        "iPhone", "iPad", "Android", "Chrome", "Safari", "Firefox", "Samsung", "Pagefind", "Whisper"}
 _PROTECT = re.compile(
     r"https?://\S+|[\w.+-]+@[\w-]+\.[\w.-]+"                                   # addresses, e-mail
     r"|\b[\w-]+(?:\.[\w-]+)*\.(?:rs|com|org|eu|si|fr|de|ca|uk|dev|json|csv|xml|html|js|pdf|png|md)\b(?:/[\w./#-]*)?"  # domains, files
     r"|\b[a-z]+(?:-[a-z0-9]+)*-\d[\w.-]*"                                      # claude-sonnet-5-5
     r"|&[a-zA-Z]+;|&#\d+;"                                                     # HTML entities
+    r"|\b[A-Za-z]*[WQXYwqxy][A-Za-z]*\b"                                    # w, q, x, y: no Serbian word has them
     r"|\b(?:" + "|".join(sorted(KEEP, key=len, reverse=True)) + r")\b")
 _LATIN = re.compile(r"[A-Za-zČĆŽŠĐčćžšđ]")
 

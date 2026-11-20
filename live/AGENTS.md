@@ -274,3 +274,8 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   steps are no longer cut to one a quarter of an hour: three votes in five minutes (19 Nov, 22:19–22:24) are three.
   A vote's result closes it ("za je glasalo", "glasalo je 97", "dobio je … glasova"), and "pristupili glasanju" in
   a result no longer reads as a vote begun; a kept step is shown under the name today's rules give it.
+- **One Cyrillic for both** (20 Nov 2026, from a look at the project's structure): the live page had its own
+  letter-by-letter converter and wrote "Цлоудфларе Wеб Аналyтицс", "иПхонеу" and the domain in Cyrillic. It now
+  uses the site's (`zailiprotiv.cyrillic.cyr`, copied into the image as `uzivo/cirilica.py`), and both keep a word
+  with w, q, x or y whole in Latin (no Serbian word has them), beside the names in `KEEP`. A test renders the
+  Cyrillic page and finds no word half in one script.

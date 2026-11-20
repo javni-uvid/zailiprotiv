@@ -16,7 +16,6 @@ _CYR = {
     "к": "k", "л": "l", "љ": "lj", "м": "m", "н": "n", "њ": "nj", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t",
     "ћ": "ć", "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "č", "џ": "dž", "ш": "š",
 }
-_LAT = {v: k for k, v in _CYR.items()}
 
 
 def latin(text: str) -> str:
@@ -32,21 +31,17 @@ def latin(text: str) -> str:
     return "".join(out)
 
 
+try:  # the site's own converter, copied into the image beside this module (live/Dockerfile)
+    from .cirilica import cyr as _cyr
+except ImportError:  # run from the repository (the tests)
+    from zailiprotiv.cyrillic import cyr as _cyr
+
+
 def cyrillic(text: str) -> str:
-    """Latin to Serbian Cyrillic for names: lj, nj, dž are one letter each (names like "Injac" are rare enough)."""
-    out, i = [], 0
-    while i < len(text):
-        two = text[i:i + 2]
-        if two.lower() in _LAT:
-            c = _LAT[two.lower()]
-            out.append(c.upper() if two[0].isupper() else c)
-            i += 2
-            continue
-        ch = text[i]
-        c = _LAT.get(ch.lower())
-        out.append((c.upper() if ch.isupper() else c) if c else ch)
-        i += 1
-    return "".join(out)
+    """Latin to Serbian Cyrillic, as the site's Cyrillic edition writes it (`zailiprotiv.cyrillic.cyr`, 20 Nov 2026:
+    this module's own letter-by-letter copy wrote "Цлоудфларе Wеб Аналyтицс" and "иПхонеу" on the live page): what is
+    Latin by nature (names of products, addresses) stays Latin, and lj, nj, dž are one letter each."""
+    return _cyr(text)
 
 
 def normalize(text: str) -> str:
