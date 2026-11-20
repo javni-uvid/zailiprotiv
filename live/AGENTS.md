@@ -1,10 +1,10 @@
 # AGENTS.md for `live/`: "Ko sada govori"
 
-The decisions about the live page `mikrofon.zailiprotiv.rs` and the service behind it. It continues the
-repository's `AGENTS.md` (how to work, the principles, the architecture; "Broadcasts and recordings" there has what
-the site makes of the service's records and of the recordings), which is read first; `README.md` here says how the
-service works. **Keep it current** in the same way: a decision about `live/` is added at the end of this file, in
-the same commit. Dates are the maintainer's decisions unless said otherwise.
+The decisions about the live page `mikrofon.zailiprotiv.rs` and the service behind it. It continues the repository's
+`AGENTS.md` (how to work, the principles, where each part's decisions are), which is read first;
+`docs/decisions/recordings.md` has what the site makes of the service's records and of the recordings; `README.md`
+here says how the service works. **Keep it current** in the same way: a decision about `live/` is added at the end
+of this file, in the same commit. Dates are the maintainer's decisions unless said otherwise.
 
 - **A page of its own at `mikrofon.zailiprotiv.rs`** (17 Nov 2026): who is speaking in the Assembly now, and who spoke
   today, read from the caption under the speaker in the live broadcast (README in `live/`). It grew out of the

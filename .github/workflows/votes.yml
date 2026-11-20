@@ -112,8 +112,8 @@ jobs:
           if git status -sb | grep -q ahead; then exit 1; fi
           gh workflow run pages.yml --ref main
           gh workflow run transcripts.yml --ref main -f convocation=$c
-      # The Assembly lists a later convocation's sitting among the current one's: time to switch (AGENTS.md, "The
-      # Fifteenth convocation"). Said once, in an issue; the current convocation's data stay as they were.
+      # The Assembly lists a later convocation's sitting among the current one's: time to switch (docs/decisions/data.md,
+      # "Changing convocation"). Said once, in an issue; the current convocation's data stay as they were.
       - name: Tell the maintainer a new convocation has begun
         if: always()
         env:

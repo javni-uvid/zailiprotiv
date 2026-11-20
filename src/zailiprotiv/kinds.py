@@ -1,5 +1,5 @@
 """How an act is sorted: its kind, from its title (and the Official Gazette's treaty mark), and its area, from the
-point of Article 97 of the Constitution its bill cites. The same rules for every act (AGENTS.md, "Laws").
+point of Article 97 of the Constitution its bill cites. The same rules for every act (docs/decisions/data.md, "Laws").
 
 Labels are written once in Cyrillic, as the site's Serbian text is; the Latin pages transliterate them.
 """

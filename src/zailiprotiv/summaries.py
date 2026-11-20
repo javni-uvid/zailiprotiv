@@ -1,7 +1,7 @@
 """Claude's summary of a bill's memorandum: what the proposer says the law is for, what it changes and what it costs.
 
 The summary restates the proposer's own memorandum, attributed to the proposer, and adds nothing: no judgement, no
-facts from elsewhere (AGENTS.md, "Laws"). It is written once in Cyrillic, as all Serbian text on the site; the Latin
+facts from elsewhere (docs/decisions/data.md, "Laws"). It is written once in Cyrillic, as all Serbian text on the site; the Latin
 pages transliterate it. A summary is kept with the model that wrote it and a hash of the memorandum it read, and is
 written again only when the memorandum changes.
 """
