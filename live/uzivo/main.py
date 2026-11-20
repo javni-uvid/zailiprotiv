@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import logging
 import os
 import re
@@ -50,8 +51,25 @@ def _page(cyr: bool) -> HTMLResponse:
                         headers=NO_STORE)
 
 
-def _part(cyr: bool) -> HTMLResponse:
-    return HTMLResponse(fragment(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz), headers=NO_STORE)
+_parts: dict[bool, tuple[dict, str, str]] = {}  # per script: the snapshot, the part drawn from it, its mark
+
+
+def _part(cyr: bool, request: Request) -> Response:
+    """The changing part, drawn once per snapshot (every open page asks for it every few seconds), with a mark
+    (ETag) so that a page holding the same part gets a 304 and nothing else (20 Nov 2026)."""
+    snap = tracker.snapshot()
+    kept = _parts.get(cyr)
+    if kept and kept[0] is snap:
+        html, tag = kept[1], kept[2]
+    else:
+        html = fragment(snap, cyr=cyr, site=config.SITE, tz=_tz)
+        tag = '"' + hashlib.blake2s(html.encode(), digest_size=8).hexdigest() + '"'
+        _parts[cyr] = (snap, html, tag)
+    headers = {"Cache-Control": "no-cache", "ETag": tag}
+    asked = [t.strip().removeprefix("W/") for t in request.headers.get("if-none-match", "").split(",")]
+    if tag in asked:  # Cloudflare passes the mark on, made weak ("W/") when it compresses the answer
+        return Response(status_code=304, headers=headers)
+    return HTMLResponse(html, headers=headers)
 
 
 @app.get("/")
@@ -65,13 +83,13 @@ def cyrillic_page() -> HTMLResponse:
 
 
 @app.get("/deo")
-def latin_part() -> HTMLResponse:
-    return _part(False)
+def latin_part(request: Request) -> Response:
+    return _part(False, request)
 
 
 @app.get("/cir/deo")
-def cyrillic_part() -> HTMLResponse:
-    return _part(True)
+def cyrillic_part(request: Request) -> Response:
+    return _part(True, request)
 
 
 _pictures: dict[tuple[bool, bool], tuple[float, bytes]] = {}

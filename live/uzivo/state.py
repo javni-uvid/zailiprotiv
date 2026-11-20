@@ -26,6 +26,15 @@ from zoneinfo import ZoneInfo
 from . import config
 from .names import Person, Roster
 
+
+def _write(f: Path, data) -> None:
+    """A file written whole or not at all: beside it first, then put in its place (a crash mid-write used to
+    leave half a file, read back as nothing, and the next write kept only what came after)."""
+    f.parent.mkdir(parents=True, exist_ok=True)
+    tmp = f.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(f)
+
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 
 
@@ -78,6 +87,8 @@ class Tracker:
         self.said: dict[str, str] = {}  # the day's automatic transcript in pieces, by each piece's first second (prepis.py)
         self._said_other: tuple[str, dict] = ("", {})  # an earlier day's, read when the page shows that day
         self._snap: tuple[float, dict] | None = None  # the last snapshot and when: every visitor asks every few seconds
+        self._snapping = threading.Lock()  # one thread computes a snapshot at a time
+        self._frames = 0  # frames read so far: a snapshot begun before the latest is not kept
         self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
         self._resumed = 0.0  # when this run took up the last one's open turn (a restart; RESUME_SECONDS)
         self._migrate()
@@ -95,9 +106,12 @@ class Tracker:
         if not isinstance(w, dict) or not isinstance(w.get("kviz"), list) or not isinstance(w.get("cinjenice"), list):
             return
         self.waiting = w
+        self._snap = None
         if self.waiting_file:
-            self.waiting_file.parent.mkdir(parents=True, exist_ok=True)
-            self.waiting_file.write_text(json.dumps(w, ensure_ascii=False), encoding="utf-8")
+            try:
+                _write(self.waiting_file, w)
+            except OSError:
+                pass
 
     def use_facts(self, facts: dict) -> None:
         """The site's facts per MP's page (mikrofon-poslanici.json): {slug: {"za", "protiv", "uzdrzan", "f", "novi"}}."""
@@ -107,7 +121,7 @@ class Tracker:
                 self._snap = None
             if self.facts_file:
                 try:
-                    self.facts_file.write_text(json.dumps(facts, ensure_ascii=False), encoding="utf-8")
+                    _write(self.facts_file, facts)
                 except OSError:
                     pass
 
@@ -119,8 +133,10 @@ class Tracker:
             self.recording = day
             self._snap = None
         if self.recording_file:
-            self.recording_file.parent.mkdir(parents=True, exist_ok=True)
-            self.recording_file.write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
+            try:
+                _write(self.recording_file, day)
+            except OSError:
+                pass
 
     # --- keeping today's turns across restarts ---
     def _day(self, ts: float) -> str:
@@ -145,8 +161,7 @@ class Tracker:
         for day, ts in by_day.items():
             f = self._file(day)
             if day < today and f and not f.exists():
-                f.parent.mkdir(parents=True, exist_ok=True)
-                f.write_text(json.dumps({"day": day, "turns": ts, "cover": []}, ensure_ascii=False), encoding="utf-8")
+                _write(f, {"day": day, "turns": ts, "cover": []})
 
     def _load(self, day: str | None = None) -> None:
         self.day = day or self._day(time.time())
@@ -251,7 +266,7 @@ class Tracker:
                     f2 = self.days.parent / "tacka.json" if self.days else None
                     try:
                         if f2:
-                            f2.write_text(json.dumps(self.item), encoding="utf-8")
+                            _write(f2, self.item)
                     except OSError:
                         pass
             self.events.sort(key=lambda e: e["t"])
@@ -306,8 +321,7 @@ class Tracker:
         if sentences is not None and f:
             kept[url] = sentences
             try:
-                f.parent.mkdir(parents=True, exist_ok=True)
-                f.write_text(json.dumps(kept, ensure_ascii=False), encoding="utf-8")
+                _write(f, kept)
             except OSError:
                 pass
         return list(kept.get(url) or [])
@@ -362,8 +376,7 @@ class Tracker:
                 f = self._said_file(self.day)
                 if f:
                     try:
-                        f.parent.mkdir(parents=True, exist_ok=True)
-                        f.write_text(json.dumps(self.said, ensure_ascii=False), encoding="utf-8")
+                        _write(f, self.said)
                     except OSError:
                         pass
 
@@ -409,6 +422,7 @@ class Tracker:
         now = time.time() if now is None else now
         at = at or {}
         self._snap = None
+        self._frames += 1
         with self._lock:
             if self._day(now) != self.day:
                 self._close()
@@ -548,9 +562,21 @@ class Tracker:
             kept = self._snap
             if kept and time.time() - kept[0] < 1.0:
                 return kept[1]
-            snap = self._snapshot(None)
-            self._snap = (time.time(), snap)
-            return snap
+            # One thread computes it; the others take the last one meanwhile rather than queue on the lock and
+            # compute the same again (20 Nov 2026: a day with a long transcript took 0.3 s a snapshot).
+            if not self._snapping.acquire(blocking=kept is None):
+                return kept[1]
+            try:
+                kept = self._snap
+                if kept and time.time() - kept[0] < 1.0:
+                    return kept[1]
+                frames = self._frames
+                snap = self._snapshot(None)
+                if frames == self._frames:  # no frame read meanwhile: it is still the latest
+                    self._snap = (time.time(), snap)
+                return snap
+            finally:
+                self._snapping.release()
         return self._snapshot(now)
 
     def _snapshot(self, now: float | None) -> dict:
@@ -584,7 +610,9 @@ class Tracker:
             self._lists(done, current, recorded)
             if current:
                 self._today(done, current, day)
-            said = self._said_of(day)
+            # Not while the transcript is not shown (config.SHOW_TRANSCRIPT): /stanje.json carried the speaker's
+            # last words and the chair's though the page showed none of them (20 Nov 2026).
+            said = self._said_of(day) if config.SHOW_TRANSCRIPT else {}
             unsigned = None
             if said:  # how many words were written down of each turn, and the end of what the speaker is saying
                 for d in done + ([current] if current else []):

@@ -163,23 +163,30 @@ const PUSH_HOSTS = /^https:\/\/([a-z0-9-]+\.)*(fcm\.googleapis\.com|push\.servic
 const PUSH_BATCH = 30;  // the free plan's 50 requests out per call, less the database's
 const b64u = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const unb64u = (s) => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
+// The key and each push service's header are kept as promises: the 30 sends of a batch run at once, and each used
+// to import the key and sign anew before the first had finished (the free plan's 10 ms of CPU a call).
 let vapid = null;
 async function authorization(env, endpoint) {
   if (!vapid) {
-    const jwk = JSON.parse(env.VAPID_JWK);
-    const key = await crypto.subtle.importKey("jwk", { kty: "EC", crv: "P-256", x: jwk.x, y: jwk.y, d: jwk.d },
-      { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
-    const pub = new Uint8Array(65);
-    pub[0] = 4; pub.set(unb64u(jwk.x), 1); pub.set(unb64u(jwk.y), 33);
-    vapid = { key, pub: b64u(pub), kept: new Map() };
+    vapid = (async () => {
+      const jwk = JSON.parse(env.VAPID_JWK);
+      const key = await crypto.subtle.importKey("jwk", { kty: "EC", crv: "P-256", x: jwk.x, y: jwk.y, d: jwk.d },
+        { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
+      const pub = new Uint8Array(65);
+      pub[0] = 4; pub.set(unb64u(jwk.x), 1); pub.set(unb64u(jwk.y), 33);
+      return { key, pub: b64u(pub), kept: new Map() };
+    })();
+    vapid.catch(() => { vapid = null; });
   }
-  const aud = new URL(endpoint).origin, now = Math.floor(Date.now() / 1000), kept = vapid.kept.get(aud);
+  const v = await vapid;
+  const aud = new URL(endpoint).origin, now = Math.floor(Date.now() / 1000), kept = v.kept.get(aud);
   if (kept && kept.exp - now > 3600) return kept.h;
   const exp = now + 12 * 3600, text = (o) => b64u(new TextEncoder().encode(JSON.stringify(o)));
   const head = text({ typ: "JWT", alg: "ES256" }) + "." + text({ aud, exp, sub: "mailto:kontakt@zailiprotiv.rs" });
-  const sig = await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, vapid.key, new TextEncoder().encode(head));
-  const h = `vapid t=${head}.${b64u(sig)}, k=${vapid.pub}`;
-  vapid.kept.set(aud, { exp, h });
+  const h = crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, v.key, new TextEncoder().encode(head))
+    .then((sig) => `vapid t=${head}.${b64u(sig)}, k=${v.pub}`);
+  v.kept.set(aud, { exp, h });
+  h.catch(() => v.kept.delete(aud));
   return h;
 }
 async function sendPush(env, from) {
