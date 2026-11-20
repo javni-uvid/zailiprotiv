@@ -341,6 +341,50 @@ The project's promises to its readers. Never change them without the maintainer.
   law's page), so it is as tall as the headline beside it; on a phone the first sitting's agenda, the box that
   repeats "no laws yet", the earlier convocation's "Varnice" and the list of laws that divided the chamber are
   left to their own pages, and two picked votes follow the card's one (9.3 screens became 7.2).
+- **Labels are black; blue and orange mean a vote** (20 Nov 2026, the maintainer's "sort out the rest" of the look
+  at the design). The small labels over a block ("Novi saziv", "Novo"), the mark of the new convocation and the
+  accent of "Varnice" on a law's page wore the orange of "protiv"; they are black. Left: a link under the pointer
+  turns blue and the live dot is orange, and the groups keep their colours on the home page and the live page
+  (the maintainer's exception of 19 Nov), where the blue of one list stands near the blue of "za".
+- **The laws' list sooner on a phone** (20 Nov 2026): the convocations are one row that scrolls sideways (the
+  page's own brought into sight by `site.js`), and the line to the quiz follows the laws that divided the
+  convocation, so the list no longer begins at the foot of the first screen.
+- **Who stands behind the site, and its corrections** (20 Nov 2026, after Stanford's credibility guidelines and
+  the Trust Project's indicators): "O projektu" says who makes the site as far as is public (the organisation,
+  the open code and data, no advertising) and lists corrections from `data/ispravke.json` (by hand: `date`,
+  `text`, `url`, `where`; newest first; empty until the first). Who pays for it and the names of people are the
+  maintainer's to write.
+
+### Design rules
+
+What the pages keep to, from the looks at the site against WCAG 2.2, NN/g, GOV.UK, Stanford's credibility
+guidelines, the Trust Project, ProPublica's principles for news graphics and TheyWorkForYou (20 Nov 2026, the
+maintainer's request that they be written down "for now": they are working rules, changed as visits and readers
+show otherwise, unlike the six principles above). A change to a page is checked against them.
+
+1. **One scale of letter sizes.** A size is a step of the scale (`--t-*`); body text is 16 px; grey is for what is
+   secondary. A test refuses a size outside the scale, on the site and on the live page.
+2. **Colour means a vote.** Blue is "za", orange "protiv", and nothing else wears them (the exceptions are
+   listed above). White text only on colours dark in both themes; any text 4.5:1 or more.
+3. **The most important first.** A page says what it is and gives its main fact in the first screen; then the
+   reasons, then the details and documents. The home page shows what the site holds by a few examples and
+   leaves the lists to their own pages ("do less").
+4. **A number never stands alone.** It has what it is counted of, something to compare it with (the convocation
+   before, the half of MPs, how many others the same holds for), and a link to how it is computed. The largest
+   thing on a page is what tells its subject apart, not what is the same for most.
+5. **A trend is drawn, a table is kept.** Where the point is how something changed, columns or bars from zero
+   come first, in black and grey, and the table follows (folded when long). No chart without its numbers.
+6. **Asked after it is shown.** The visitor votes after what the law changes; a question never precedes what is
+   needed to answer it.
+7. **The phone first.** Four visits in five are on phones, most on the Cyrillic pages: every change is looked at
+   at 320 and 390 px in both scripts, no page is wider than its screen, things to press are 44 px high, and a
+   list shows its first rows and a way to the rest.
+8. **Everything can be checked.** Each figure links its source and its rule; what a model wrote says so; what was
+   corrected is listed. No rating of an MP and no ranking by preference (principle 1).
+9. **For every reader.** Keyboard and screen reader reach everything; nothing moves by the clock that the reader
+   cannot stop; the visitor is not addressed as a man or a woman.
+10. **Measured, then changed.** Visits and the pages' speed are read before a change to how a page is laid out,
+    and after it.
 
 ### Visitors' votes ("Glasaj i ti")
 

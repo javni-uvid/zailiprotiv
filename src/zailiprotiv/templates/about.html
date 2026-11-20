@@ -15,6 +15,9 @@
   <li><b>Ništa od trećih strana:</b> bez kolačića, fontova i skripti sa drugih servera{% if analytics %}, uz jedan izuzetak: posete se broje preko Cloudflare Web Analytics, koji ne postavlja kolačiće i ne prati pojedince, samo zbir poseta po stranici{% else %}, bez analitike{% endif %}. Na stranici „Ko sada govori“ prenos Skupštine sa YouTube-a učitava se tek kad ga pustite (do tada je tu naša slika trenutka; YouTube je u režimu bez kolačića), a snimci iz arhive Skupštine puštaju se sa servera videonet.co.rs, takođe tek na klik.{% if votes_api %} Ako glasaš o zakonu, tvoj glas ide našem brojaču uz nasumičnu oznaku uređaja; <a href="kako-racunamo.html#posetioci">šta se tačno čuva</a>.{% endif %}</li>
 </ol>
 
+<h2 id="ko">Ko stoji iza sajta</h2>
+<p>Sajt pravi i održava „Javni uvid“, čiji je ceo rad javan: <a href="https://github.com/javni-uvid/zailiprotiv">kod sajta</a> je otvoren (licenca MIT), a u njemu su i svi podaci, svako pravilo po kome se nešto računa i svaka izmena sa datumom i razlogom. Podaci sa sajta su slobodni za preuzimanje i dalju upotrebu (CC BY 4.0, <a href="podaci.html">Podaci</a>). Na sajtu nema reklama ni plaćenog sadržaja. Pišite na <a href="mailto:kontakt@zailiprotiv.rs">kontakt@zailiprotiv.rs</a>.</p>
+
 <h2>Kako nastaju podaci</h2>
 <ul>
   <li>Spisak sednica i zasedanja Četrnaestog saziva i poimenični rezultati svakog glasanja čitaju se sa sajta Skupštine. Svaki PDF se čuva po svom otisku (SHA-256), pa se vidi ako se promeni.</li>
@@ -29,4 +32,14 @@
   <li>Grupe su prepisane onako kako ih piše Skupština: skraćenice poslaničkih grupa u novijim, nazivi lista u starijim dokumentima.</li>
   <li>Ako primetite grešku, prijavite je na <a href="https://github.com/javni-uvid/zailiprotiv/issues">GitHub-u</a> ili pišite na <a href="mailto:kontakt@zailiprotiv.rs">kontakt@zailiprotiv.rs</a>.</li>
 </ul>
+<h2 id="ispravke">Ispravke</h2>
+{% if corrections %}
+<p>Kad ispravimo grešku u podacima ili u tekstu, upisujemo je ovde: šta je pisalo, šta piše sada i kada je ispravljeno.</p>
+<ul>
+  {% for c in corrections %}<li><b>{{ c.date|day }}</b> {{ c.text }}{% if c.url %} <a href="{{ c.url }}">{{ c.where or "stranica" }}</a>{% endif %}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Još nema upisanih ispravki. Kad ispravimo grešku u podacima ili u tekstu, upisaćemo je ovde: šta je pisalo, šta piše sada i kada je ispravljeno.</p>
+{% endif %}
 {% endblock %}

@@ -494,3 +494,9 @@ document.addEventListener("DOMContentLoaded", function () {
   ask();
   setInterval(function () { if (!document.hidden) ask(); }, 30000);
 })();
+
+// A phone's row of convocations scrolls sideways: the one the page is of is brought into sight.
+(function () {
+  var on = document.querySelector(".tabs a[aria-current]"), row = on && on.parentNode;
+  if (row && row.scrollWidth > row.clientWidth) row.scrollLeft = Math.max(0, on.offsetLeft - row.offsetLeft - 16);
+})();

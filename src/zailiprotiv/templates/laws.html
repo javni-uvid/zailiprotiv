@@ -7,7 +7,6 @@
 <nav class="subtabs law-kinds three" aria-label="Usvojeni, u proceduri ili po oblastima"><a href="zakoni.html" aria-current="page">Usvojeni</a><a href="u-proceduri.html">U proceduri</a><a href="oblasti.html">Oblasti</a></nav>
 <p class="meta follow"><a href="saziv-{{ conv }}.html">O {{ conv_name|locative }} sazivu: brojke, grupe, sednice</a> · <a href="{{ root }}zakoni.xml">Prati nove zakone (RSS)</a></p>
 {{ tabs(convs, conv, "page") }}
-{% if votes_api %}<p class="vote-line"><a class="lb-btn" href="kviz/podelili-salu.html">Kako ti glasaš?</a> <span>Kviz od deset zakona, ili glasaj na strani bilo kog zakona. Tvoji glasovi stoje uz zakone na ovom spisku.</span></p>{% endif %}
 {% if lead %}
 <section class="lead-laws" aria-label="Najviše podeljeni u ovom sazivu">
   <h2>Zakoni koji su najviše podelili ovaj saziv</h2>
@@ -17,6 +16,7 @@
   </ol>
 </section>
 {% endif %}
+{% if votes_api %}<p class="vote-line"><a class="lb-btn" href="kviz/podelili-salu.html">Kako ti glasaš?</a> <span>Kviz od deset zakona, ili glasaj na strani bilo kog zakona. Tvoji glasovi stoje uz zakone na ovom spisku.</span></p>{% endif %}
 <div class="finder js-only" hidden data-filter="f-rows">
   <label class="sr" for="f-q">Pretraži zakone</label>
   <input id="f-q" type="search" placeholder="Pretraži {{ total }} {{ plural(total, "zakon", "zakona", "zakona") }} ovog saziva" autocomplete="off">
