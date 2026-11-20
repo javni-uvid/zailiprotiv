@@ -57,10 +57,10 @@
     <tbody>
     {% for x in floor %}
       <tr><td>{{ x.name }} saziv{% if x.outside %}<span class="meta">ne kao poslanik: kao član Vlade ili gost</span>{% endif %}</td>
-        <td class="num">{{ x.speeches or "" }}</td><td class="num">{% if x.words %}{{ "{:,}".format(x.words).replace(",", ".") }}{% endif %}</td>
-        <td class="num">{% if x.exchanges %}<a href="#replike">{{ x.exchanges }}</a>{% endif %}</td><td class="num">{{ x.points or "" }}</td>
-        <td class="num">{% if x.measures or x.measures_likely %}<a href="#mere">{{ x.measures + x.measures_likely }}</a>{% endif %}</td>
-        <td class="num">{% if x.harsh %}<a href="#reci">{{ x.harsh }}</a>{% if x.harsh_place and x.page %} <a class="meta" href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. u sazivu</a>{% endif %}{% endif %}</td></tr>
+        <td class="num">{% if x.speeches %}<span class="th">Govori</span>{{ x.speeches }}{% endif %}</td><td class="num">{% if x.words %}<span class="th">Reči</span>{{ "{:,}".format(x.words).replace(",", ".") }}{% endif %}</td>
+        <td class="num">{% if x.exchanges %}<span class="th">Replike</span><a href="#replike">{{ x.exchanges }}</a>{% endif %}</td><td class="num">{% if x.points %}<span class="th">Poslovnik</span>{{ x.points }}{% endif %}</td>
+        <td class="num">{% if x.measures or x.measures_likely %}<span class="th">Mere</span><a href="#mere">{{ x.measures + x.measures_likely }}</a>{% endif %}</td>
+        <td class="num">{% if x.harsh %}<span class="th">Teške reči</span><a href="#reci">{{ x.harsh }}</a>{% if x.harsh_place and x.page %} <a class="meta" href="../{{ x.page }}#reci-{{ mp.slug }}">{{ x.harsh_place }}. u sazivu</a>{% endif %}{% endif %}</td></tr>
     {% endfor %}
     </tbody>
   </table></div>
@@ -166,7 +166,7 @@
   {% if by_conv|length > 1 %}<h3>{{ c.name }} saziv</h3>{% endif %}
   <div class="scroll">
   <table class="groups agree">
-    <thead><tr><th>Poslanička grupa</th><th>Glasa</th><th class="vote-cell"></th><th class="num">Isto</th><th class="num">Od</th><th class="num">%</th></tr></thead>
+    <thead><tr><th>Poslanička grupa</th><th>Glasa</th><th class="vote-cell"><span class="sr">Udeo kao traka</span></th><th class="num">Isto</th><th class="num">Od</th><th class="num">%</th></tr></thead>
     <tbody>
     {% for a in c.agree %}
       <tr{% if a.own %} class="own"{% endif %}><td>{{ a.group }}{% if a.own %} <span class="meta">(svoja grupa)</span>{% endif %}</td><td class="lean">{% if a.share >= 0.95 %}skoro uvek isto{% elif a.share >= 0.75 %}uglavnom isto{% elif a.share > 0.25 %}mešovito{% elif a.share > 0.05 %}uglavnom drugačije{% else %}skoro uvek drugačije{% endif %}</td><td class="vote-cell"><span class="meter"><span style="width: {{ (100 * a.share)|round(1) }}%"></span></span></td><td class="num">{{ a.same }}</td><td class="num">{{ a.both }}</td><td class="num">{{ (100 * a.share)|round|int }}</td></tr>

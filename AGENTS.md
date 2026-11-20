@@ -297,6 +297,13 @@ The project's promises to its readers. Never change them without the maintainer.
   page. So the field's list always ends with "Traži u celom tekstu sajta" (the words go to `pretraga.html?q=`),
   Enter with nothing chosen does the same, and "nothing found" says what was looked through. The field is a
   combobox (arrows, Enter, `aria-activedescendant`). The two searches stay two until visits say otherwise.
+- **Smaller things from the same look** (20 Nov 2026): the quiz's clock is stopped by a swipe or the wheel anywhere
+  on the page, not only by a touch of the result (a time limit the reader can turn off, WCAG 2.2.1); on a phone a
+  row of an MP's counts by convocation is a card with each count under its column's name (`.mp-floor`, `.th`),
+  not a table dragged sideways; text is at most 42rem wide (about 88 letters; it was 46rem); a table's column
+  that holds only a bar has a name for a screen reader. Left as they are, on purpose: the pale greys for "did
+  not vote" and "not present" in a vote's bar (the numbers stand beside it in words), law titles as links with
+  no underline in lists, and the home page's order on a phone (its parts stand on their own, so either order reads).
 
 ### Visitors' votes ("Glasaj i ti")
 
