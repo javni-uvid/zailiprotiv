@@ -678,6 +678,13 @@ its minute.
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
   error while the maintainer's computer is off.
+- **The live page for a keyboard and a screen reader** (20 Nov 2026, after the same look the site had). The page's
+  part is replaced whole every five seconds, which took the keyboard's place away each time: the thing that had
+  the focus (the same kind, the same one in order) has it again after the replacement. A line outside that part
+  (`#ko`, `aria-live`, not shown) says the new speaker's name and list once when they change. "Dan u karticama"
+  opens onto its close button, gives the focus back, and does not turn its cards by the clock for a reader who
+  asked for less motion. No letters under 12 px; the "next line" button is 32 px high. The archive is named
+  "Videonet", not by its address, which the Cyrillic page wrote in Cyrillic letters.
 - **Keeping visitors longer** (20 Nov 2026, the maintainer's choice of points 1, 3 and 4 of a plan drawn from the
   visits: 5.2 min a visit, 2.7 min at the peaks, when most arrive from a shared link). On a phone the head is short,
   so the broadcast is in the first screen; the page can go on a phone's home screen (a manifest, icons drawn from

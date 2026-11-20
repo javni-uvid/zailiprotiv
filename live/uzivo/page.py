@@ -162,7 +162,7 @@ TEXT = {
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
     "yt_live_note": "Prenos Skupštine sa Jutjuba (Gugl) učitava se tek kad ga pustite, u režimu bez kolačića.",
     "play_live": "Gledaj prenos",
-    "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
+    "archive_note": "Snimak iz arhive Skupštine (Videonet), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counted": "Brojač sajta zbraja po danu i koliko je puta ova stranica otvorena, koliko puta je gledana duže "
