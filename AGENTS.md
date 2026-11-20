@@ -45,7 +45,8 @@ it. Dates are the maintainer's decisions unless said otherwise.
 - **Run `uv run pytest -q` before every push.** The **test** workflow runs it again on every pull request and on
   `main`; a red run is fixed first. On Windows the roll-call and bill tests need poppler's `pdftotext` (`winget install
   oschwartz10612.Poppler`), named by `PDFTOTEXT` where Git's (xpdf's, whose columns fall elsewhere) is first on the PATH,
-  and `PYTHONUTF8=1`; the maintainer's computer has both set for the user (20 Nov 2026), and then every test passes.
+  and `PYTHONUTF8=1`; the maintainer's computer has both set for the user (20 Nov 2026), and then every test passes. An agent's shell may lack them although they are set: `posalji.sh` reads just these two from the user's Windows
+  settings when unset (20 Nov 2026, PR #79 stopped on 44 failures for it); for `uv run pytest -q` alone, export them.
 - **Explain why in commit messages**: what changed for the site or the data, and the reason.
 - **Update README.md with every feature**, and this file with every decision.
 - **Talk to the maintainer in Serbian** (Latin script), briefly. Code, comments and docs are in English.
