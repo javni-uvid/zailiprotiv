@@ -13,7 +13,6 @@ Off unless the packages are there and WHISPER_MODEL names a model: the service r
 from __future__ import annotations
 
 import logging
-import os
 import subprocess
 import threading
 import time
@@ -21,7 +20,8 @@ from pathlib import Path
 
 from . import config
 from .names import latin
-from .state import SAID_LEAD, Tracker
+from .state import Tracker
+from .state_base import SAID_LEAD
 
 log = logging.getLogger("prepis")
 RATE = 16000

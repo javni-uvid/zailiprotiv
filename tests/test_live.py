@@ -34,7 +34,7 @@ def w(text, conf=95):
 
 
 import pytest  # noqa: E402
-from uzivo import state as _state  # noqa: E402
+from uzivo import state_base as _state  # noqa: E402  (state.counted's rule lives there)
 
 
 @pytest.fixture(autouse=True)
