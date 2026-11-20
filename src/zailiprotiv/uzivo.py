@@ -41,13 +41,28 @@ def pull(root: Path, base: str, today: str | None = None, get=_get) -> list[str]
         path = root / conv / "uzivo" / f"{day}.json"
         if path.exists() and day not in recent:
             continue
-        text = json.dumps(get(f"{base}dan/{day}.json"), ensure_ascii=False, indent=1) + "\n"
+        record = get(f"{base}dan/{day}.json")
+        text = json.dumps(record, ensure_ascii=False, indent=1) + "\n"
         if path.exists() and path.read_text(encoding="utf-8") == text:
+            continue
+        if path.exists() and smaller(record, json.loads(path.read_text(encoding="utf-8"))):
+            print(f"::warning::live record of {day} has less than the one kept; the kept one stays")
             continue
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
         written.append(day)
     return written
+
+
+def _covered(record: dict) -> int:
+    return sum(max(0, p.get("do", 0) - p.get("od", 0)) for p in record.get("pokriveno", []))
+
+
+def smaller(new: dict, kept: dict) -> bool:
+    """A record with fewer turns, or less time the broadcast was seen, than the one kept: the live service lost or
+    restarted its day (20 Nov 2026: a restart served 19 Nov with no turn and three minutes seen, and the hourly run
+    wrote it over the day's 28 turns). A record only grows; such a one never replaces what is kept."""
+    return len(new.get("govori", [])) < len(kept.get("govori", [])) or _covered(new) < _covered(kept)
 
 
 def live_now(state: dict, now: float) -> bool:
