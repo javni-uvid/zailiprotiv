@@ -364,3 +364,15 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
 - **"Sednica po Poslovniku" always on the page** (20 Nov 2026, the maintainer: the new convocation's readers will want
   the Rules): a box above the link to the site, between sittings too, leads to the terms on the site's page of the
   Rules (`rules_cta`, `rules_sub`); the steps' own links are as above.
+- **"Dan u karticama" tells what happened before who spoke** (20 Nov 2026, the maintainer: the cards are to be
+  made better and wider with what we now have from the different sources, the finished items that matter among
+  it). The six cards told only the rostrum's time. After the first card now come, each from one source and saying
+  which: the model's sentence of the day (`sazetak.kratko`, "napisao model … nije citat"); a card for each agenda
+  item the sitting's page has as finished that day, with its sentence of fact (`data/<N>/tacke.json`; three at
+  most, the rest as a list); the chair's measures among the day's shown steps, counted by kind and without names
+  (heard automatically; the names wait for the stenographic notes); then the rostrum's cards as they were; "Šta
+  sledi" (the Assembly's newest notice and the agenda's next item); and the last card also leads to the site's
+  page of that day once the day is over. A card with a text stays longer (six seconds and one for every 22
+  letters, 16 at most; `data-t`). Not on the cards: sentences from the automatic transcript as an MP's words
+  (principle 6: a quote is word for word and checked against the notes, and the transcript errs); the way to
+  the transcript is the day's page, where each is marked automatic.
