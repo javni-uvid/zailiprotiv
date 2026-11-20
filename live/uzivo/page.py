@@ -440,14 +440,22 @@ def summary_box(snap: dict, *, cyr: bool) -> str:
         return ""
     t = lambda k: escape(_t(k, cyr))
     n = lambda x: escape(_name(str(x), cyr))
+    def items(rows) -> str:
+        """Each step as a line: its time, its words, and a vote's figures under it, told the same way each time
+        (`sudija.vote_text`, kept with the summary as `glasovi`; the sum was checked there)."""
+        out = ""
+        for o in rows or []:
+            if isinstance(o, dict) and o.get("sta"):
+                votes = f'<span class="sum-v">{n(o["glasovi"])}</span>' if o.get("glasovi") else ""
+                out += f'<li><b>{escape(str(o.get("vreme", "")))}</b> {n(o["sta"])}{votes}</li>'
+        return f'<ul class="sum-dec">{out}</ul>' if out else ""
+
     if s.get("vrsta") == "dan":
         head = t("sum_day")
-        body = "".join(f'<li><b>{escape(str(o.get("vreme", "")))}</b> {n(o.get("sta", ""))}</li>'
-                       for o in s.get("odluke") or [] if isinstance(o, dict) and o.get("sta"))
-        body = (f'<ul class="sum-dec">{body}</ul>' if body else "") + f'<p>{n(s["ukratko"])}</p>'
+        body = items(s.get("odluke")) + f'<p>{n(s["ukratko"])}</p>'
     else:
         head = escape(_fill(_t("sum_part", cyr), str(s.get("do") or "")))
-        body = f'<p>{n(s["ukratko"])}</p>'
+        body = f'<p>{n(s["ukratko"])}</p>' + items(s.get("tok"))
         if s.get("ranije"):
             body += (f'<details><summary>{t("sum_earlier")}</summary>'
                      + "".join(f"<p>{n(x)}</p>" for x in s["ranije"]) + "</details>")

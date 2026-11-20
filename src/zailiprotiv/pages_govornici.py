@@ -229,7 +229,8 @@ def transcript(root: Path, conv: str, day: str) -> tuple[dict, str]:
 
 def day_summary(root: Path, conv: str, day: str) -> dict | None:
     """The model's summary of the day (data/<N>/sazetak/<day>.json, from the live page; uzivo.summary), when the day's
-    one was written: {"kratko", "ukratko", "odluke", "govornici", "model"}."""
+    one was written: {"kratko", "ukratko", "odluke", "govornici", "model"}; a decision with a vote has `glasovi`, its
+    figures told in one form, which add up (live/uzivo/sudija.py checked them: for + against + abstained = voted)."""
     path = root / conv / "sazetak" / f"{day}.json"
     if not path.exists():
         return None

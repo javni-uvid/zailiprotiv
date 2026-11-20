@@ -331,3 +331,16 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   `"vrsta": "sazetak"`, kept as `s:<day>` in `push_days`, once a day; the service worker writes "Sažetak dana je
   spreman"), only between 7 and 22 h and while the summary is under half a day old, so a day ended at midnight is
   told in the morning. A day ending after midnight is still summed up (`Judge.step`). E-mail may come later.
+- **A vote in the summary adds up, and is told one way** (21 Nov 2026, the maintainer's request: the figures of a
+  vote must make sense, for + against + abstained equal to those who voted, and the summary look right on the page).
+  A step of the summary that reports a vote carries it as `glasanje` (`za`, `protiv`, `uzdrzano`, `nevazece`,
+  `nije_glasalo`, `glasalo`, `prisutno`; only what was said, the rest null) and has no figures of votes in its words
+  (`sudija.SUMMARY` rule 10, `DAY` rule 8; the day takes the votes from the stretches' summaries unchanged).
+  `sudija.vote_errors` checks what was said: za + protiv + uzdržano (+ nevažeći) = glasalo, glasalo + nije glasalo =
+  prisutno, no part above its whole (nothing is guessed when a figure was not said). A summary with a vote that
+  fails is asked once more with what was wrong; after that (`settle_votes`) the vote goes without its figures and
+  the step stays, or is dropped when its own words carry the figures: better a missing line than a wrong one. A vote
+  that adds up gets `glasovi`, one line of words made by the code ("za 136, protiv 0, uzdržano 0, glasalo 136, nije
+  glasalo 98, prisutno 234"), shown under its step on the live page and on the site's day page; the figures are never
+  re-worded by the model. The live page's summary box had no style: it has one now, and shows the latest stretch's
+  steps (`tok`) as well as the day's decisions.
