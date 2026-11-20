@@ -1125,3 +1125,30 @@ def test_a_date_does_not_end_a_sentence_of_the_assemblys_page():
     parts = hronika._SENTENCE.split("Trećeg dana rada, 19. novembra 2026. godine, Skupština je nastavila rad. Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova. Hvala.")
     assert parts == ["Trećeg dana rada, 19. novembra 2026. godine, Skupština je nastavila rad.",
                      "Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova.", "Hvala."]
+
+def test_letter_sizes_are_the_scale():
+    """The live page's letters are the site's scale (the --t- variables in page.CSS and in the shared mikrofon.css);
+    a share of the parent's size is the one exception."""
+    import re
+    from pathlib import Path
+    from uzivo import page
+    shared = (Path(__file__).parent.parent / "src" / "zailiprotiv" / "templates" / "mikrofon.css").read_text(encoding="utf-8")
+    for css in (page.CSS, shared):
+        sizes = {v.strip() for v in re.findall(r"font-size:\s*([^;}]+)", css)}
+        assert {v for v in sizes if not re.fullmatch(r"var\(--t-(\d|h1|d1|d2)\)", v)} <= {"40%", "inherit"}
+        assert not re.search(r"font:\s*\d+\s+[\d.]+rem", css)
+
+
+def test_earlier_turns_are_folded():
+    """A long day's list of turns shows the latest and folds the earlier ones, each still on the page with its id."""
+    from zoneinfo import ZoneInfo
+    from uzivo import page
+    turns = [{"ime": f"Petrović Petar{i}", "adresa": "", "uloga": "", "grupa": "", "lista": "", "od": 1000 + 100 * i,
+              "do": 1060 + 100 * i, "sekundi": 60} for i in reversed(range(20))]  # as the snapshot lists them: newest first
+    snap = {"provereno": 0, "stanje": "nema_prenosa", "sada": None, "danas": turns, "dan": "2026-11-19"}
+    html = page.fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
+    fold = html[html.index('id="raniji-govori"'):html.index("</details>", html.index('id="raniji-govori"'))]
+    assert fold.count("<li id=") == 20 - page.TURNS_SHOWN and "Raniji govori (12)" in fold
+    assert html.count('<li id="t') == 20 and 'id="t2900"' not in fold and 'id="t1000"' in fold  # the newest stands open
+    few = page.fragment({**snap, "danas": turns[:10]}, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
+    assert "raniji-govori" not in few
