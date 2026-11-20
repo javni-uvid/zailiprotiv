@@ -111,7 +111,7 @@ TEXT = {
     "nx_note": "Prenos će biti ovde čim sednica počne, a stranica se sama osvežava.",
     "add_home": "Dodaj na početni ekran",
     "add_sub": "Sledeći put do prenosa jednim dodirom.",
-    "add_ios": "Na iPhoneu: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
+    "add_ios": "Na iPhone-u: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
                "obavesti kad sednica počne.",
     "nt_on": "Obavesti me kad sednica počne",
     "nt_done": "Obaveštenje stiže kad prenos sednice počne.",

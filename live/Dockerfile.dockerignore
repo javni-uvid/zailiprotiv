@@ -5,5 +5,6 @@
 !src/zailiprotiv/static/fonts
 !src/zailiprotiv/templates/mikrofon.js
 !src/zailiprotiv/templates/mikrofon.css
+!src/zailiprotiv/cyrillic.py
 **/__pycache__
 !data/settings.json

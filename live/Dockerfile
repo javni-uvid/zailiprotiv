@@ -11,6 +11,8 @@ COPY live/uzivo ./uzivo
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
 # The script and styles shared with the site's mikrofon page (page._shared)
 COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
+# The site's Cyrillic converter (names.cyrillic), so both editions write Cyrillic alike.
+COPY src/zailiprotiv/cyrillic.py ./uzivo/cirilica.py
 # The site's analytics token and counter (config.ANALYTICS_TOKEN, VOTES_API): visits and presses counted as on the site
 COPY data/settings.json ./uzivo/static/settings.json
 # Whisper's model is fetched once and kept with the data (prepis.py)
