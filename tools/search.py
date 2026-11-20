@@ -82,10 +82,11 @@ def inspect(http, n: int) -> None:
                 print(f"    {page}: {type(e).__name__}", flush=True)
         return None
 
+    from concurrent.futures import ThreadPoolExecutor
+    pool = ThreadPoolExecutor(4)  # each answer takes some 5 s; four at once stay far under 600 a minute
     for k, pages in picked.items():
         states, other_canonical, never = Counter(), [], 0
-        for page in pages:
-            r = ask(page)
+        for page, r in zip(pages, pool.map(ask, pages)):
             if r is None:
                 states["(no answer)"] += 1
                 continue
