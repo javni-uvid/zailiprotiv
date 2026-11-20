@@ -557,6 +557,15 @@ records and recordings stays here:
 - **A day's parts the archive's page does not list yet** (20 Nov 2026: `zas2026111910e.mp4`, the end of 19 Nov, was
   there hours before the page named it): `videos` tries the next letter after each of the latest three days' last
   file (a HEAD request) and keeps what is there, marked `"nenavedeno": true`.
+- **The last sitting day's steps between sittings, and the Assembly's dates kept whole** (20 Nov 2026, the
+  maintainer's report: the agenda was wrong and the day's steps were gone). The steps were kept per day, so after
+  midnight the page had none; now, while it shows the last sitting day, it shows that day's steps under its date
+  ("Šta se desilo, …"). 19 Nov's steps, kept on the computer the service ran on that day, were made again from the
+  day's recording written down (`large-v3-turbo`) by the same rules, and from the Assembly's report of the sitting.
+  `hronika._SENTENCE` no longer ends a sentence at a number followed by a small letter ("19. novembra", "24.
+  novembra"): the Assembly's "Trećeg dana rada, 19. novembra …" had been cut at the date and dropped. Items 3 and 4
+  of the first sitting were added to `data/15/tacke.json` from the Assembly's page, and the next day of work to
+  `data/obavestenja.json`.
 
 ## Open questions
 

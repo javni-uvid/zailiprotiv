@@ -56,7 +56,9 @@ def item_no(sentence: str) -> int:
     return next((n for stem, n in _ORDINALS.items() if word.startswith(stem)), 0)
 
 
-_SENTENCE = re.compile(r"(?<=[.!?])\s+")
+# A sentence ends at . ! ? and a space, but not after a number before a small letter: "19. novembra", "24. novembra",
+# "10.00 časova" (20 Nov 2026: the Assembly's "Trećeg dana rada, 19. novembra …" was cut at the date and dropped).
+_SENTENCE = re.compile(r"(?<=[.!?])(?<!\d\.)\s+|(?<=\d\.)\s+(?=[A-ZČĆŠŽĐА-ЯЂЈЉЊЋЏ])")
 LONGEST_LINE = 220
 
 

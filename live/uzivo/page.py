@@ -88,6 +88,7 @@ TEXT = {
     "ag_note": "Dnevni red je sa sajta Skupštine. Tačka je gotova kad to napiše Skupština na stranici sednice ili kad "
                "predsedavajući pređe na sledeću; ovo drugo čitamo iz automatskog prepisa i može da pogreši.",
     "steps": "Šta se desilo danas",
+    "steps_then": "Šta se desilo",
     "steps_lead": "Koraci sednice redom, najnoviji prvi.",
     "steps_said": "po rečima predsedavajućeg, prepoznato automatski sa zvuka prenosa i provereno uz dnevni red i sliku prenosa; i dalje može da pogreši",
     "steps_site": "sajt Skupštine",
@@ -515,7 +516,12 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
             if rest else "")
     key = (f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t("steps_said")}</span>'
            f'<span class="st-sajt"><i aria-hidden="true"></i>{t("steps_site_key")}</span></p>')
-    return (f'<section class="steps-sec"><h2>{t("steps")}</h2><p class="meta">{t("steps_lead")}</p>'
+    # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
+    head = t("steps")
+    if snap.get("ranije") and snap.get("dan"):
+        when = _date(snap["dan"])
+        head = f'{t("steps_then")}, {escape(cyrillic(when) if cyr else when)}'
+    return (f'<section class="steps-sec"><h2>{head}</h2><p class="meta">{t("steps_lead")}</p>'
             f'<ol class="steps">{"".join(line(e) for e in first)}</ol>{more}{key}</section>')
 
 
