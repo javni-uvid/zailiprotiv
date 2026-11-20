@@ -1,0 +1,796 @@
+{
+ "dan": {
+  "kratko": "Skupština je izabrala Aleksandra Čupića za predsednika Narodne skupštine (140 glasova, Radenović 97), odlučila da ima šest potpredsednika i izabrala ih, te imenovala Mirjanu Radaković za generalnog sekretara (138 glasova za).",
+  "ukratko": "Skupština je nastavila nastavak prve konstitutivne sednice, a kvorum je utvrđen sa 174 prisutna poslanika u sali. Poslanici su pretresali kandidate za predsednika Skupštine, a javnim glasanjem prozivkom izabran je Aleksandar Čupić sa 140 glasova, dok je Stojan Radenović dobio 97. Zatim je Skupština raspravljala o broju i izboru potpredsednika, uz brojne povrede poslovnika, replike i opomene predsedavajućeg. Odlučeno je da ima šest potpredsednika (136 za), a izabrani su Marija Bjelobrk, Sara Valentik, Lidija Dimitrijević, Tibor Lazar, Adem Mavrić i Jelena Petrović. Na kraju je jednoglasno imenovana Mirjana Radaković za generalnog sekretara (138 za).",
+  "odluke": [
+   {
+    "vreme": "12:44",
+    "sta": "Izbor predsednika Skupštine će se obaviti javnim glasanjem prozivkom: 235 za, 1 protiv, 0 uzdržanih, uz tri nevažeća glasa, ukupno 239 glasalo."
+   },
+   {
+    "vreme": "13:27",
+    "sta": "Aleksandar Čupić izabran za predsednika Narodne skupštine sa 140 glasova; za Stojana Radenovića 97 glasova."
+   },
+   {
+    "vreme": "22:20",
+    "sta": "Skupština ima šest potpredsednika: 136 za, 98 nije glasalo, od 234 prisutna."
+   },
+   {
+    "vreme": "22:22",
+    "sta": "Glasanje o načinu izbora potpredsednika: 133 za javno glasanje prozivkom, 100 nije glasalo, od 233 prisutna."
+   },
+   {
+    "vreme": "23:50",
+    "sta": "Za potpredsednike su izabrani Marija Bjelobrk, Sara Valentik, Lidija Dimitrijević, Tibor Lazar, Adem Mavrić i Jelena Petrović."
+   },
+   {
+    "vreme": "23:57",
+    "sta": "Mirjana Radaković imenovana za generalnog sekretara Narodne skupštine: 138 za, niko protiv, niko uzdržan."
+   }
+  ],
+  "tok": [
+   {
+    "vreme": "10:04",
+    "sta": "Otvoren je nastavak prve konstitutivne sednice u 15. sazivu; elektronskim glasanjem utvrđeno je 174 prisutnih u sali."
+   },
+   {
+    "vreme": "10:05",
+    "sta": "Nastavljen je pretres o izboru predsednika Narodne skupštine; poslanici su odustali od prijavljenih reklamiranja povreda poslovnika."
+   },
+   {
+    "vreme": "10:22",
+    "sta": "Aleksandar Vučić je govorio o navodnom napadu na predsednicu opštine Ođaci i kritikovao Čupića zbog nekretnina."
+   },
+   {
+    "vreme": "11:07",
+    "sta": "Ana Brnabić je prijavila povredu poslovnika zbog kandidata studentske liste koji nije govorio u Skupštini."
+   },
+   {
+    "vreme": "11:38",
+    "sta": "Aleksandar Vučić, kao predstavnik predlagača, odgovarao je Jovi Bakiću o medijima i o Čupiću."
+   },
+   {
+    "vreme": "12:39",
+    "sta": "Predsedavajući je zaključio pretres o predlozima kandidata; utvrđena je lista: pod brojem 1 Radenović Stojan, pod brojem 2 Čupić Aleksandar."
+   },
+   {
+    "vreme": "12:44",
+    "sta": "Skupština je odlučila da se izbor predsednika obavi javnim glasanjem prozivkom: 235 za, 1 protiv."
+   },
+   {
+    "vreme": "12:47",
+    "sta": "Sprovedeno je glasanje prozivkom narodnih poslanika između kandidata Radenovića i Čupića."
+   },
+   {
+    "vreme": "13:27",
+    "sta": "Aleksandar Čupić izabran je za predsednika Narodne skupštine sa 140 glasova, Radenović je dobio 97."
+   },
+   {
+    "vreme": "13:30",
+    "sta": "Predsednik Skupštine Čupić preuzeo je predsedavanje i iznео načela dijaloga, tolerancije, kritike i kontrole."
+   },
+   {
+    "vreme": "13:36",
+    "sta": "Čupić se javno izvinio poslaniku Balintu Pastoru zbog netačne izjave i osudio incident prema poslanici Lidiji Vukićević."
+   },
+   {
+    "vreme": "15:42",
+    "sta": "Predsedavajući je najavio treću tačku dnevnog reda, izbor potpredsednika, i predložio da Skupština utvrdi šest potpredsednika."
+   },
+   {
+    "vreme": "15:55",
+    "sta": "Predsedavajući je saopštio predloge kandidata za potpredsednike sa studentske liste i sa liste Aleksandar Vučić - Srbija pobeđuje."
+   },
+   {
+    "vreme": "16:31",
+    "sta": "Predsedavajući je pitao da li studentska lista želi da preda spisak govornika; najavljena je pauza od pet minuta."
+   },
+   {
+    "vreme": "17:54",
+    "sta": "Predsedavajući je zbog prilaska poslanika bez poziva proglasio pauzu od petnaest minuta."
+   },
+   {
+    "vreme": "18:25",
+    "sta": "Poslanička grupa je tražila da se glasa posle rasprave o kandidatima, uz primedbu da SNS nije predložio kandidata nacionalnih manjina."
+   },
+   {
+    "vreme": "22:20",
+    "sta": "Zaključen je pretres; glasanje o predlogu da Skupština ima šest podpredsednika: 136 za, 98 nije glasalo."
+   },
+   {
+    "vreme": "22:23",
+    "sta": "Počela je prozivka poslanika po azbučnom redu za izbor podpredsednika."
+   },
+   {
+    "vreme": "23:50",
+    "sta": "Saopšteni su rezultati glasanja za podpredsednike; izabrani su Bjelobrk, Valentik, Dimitrijević, Lazar, Mavrić i Petrović."
+   },
+   {
+    "vreme": "23:57",
+    "sta": "Mirjana Radaković imenovana je za generalnog sekretara: 138 za, niko protiv, niko uzdržan."
+   }
+  ],
+  "govornici": [
+   {
+    "ime": "Mrdić Uglješa",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Podržao je izbor Radenovića, govorio o tragediji u Novom Sadu i optužio studentsku listu da je zloupotrebila tu tragediju."
+   },
+   {
+    "ime": "Rističević Marijan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorio o slobodi medija, finansiranju stranke, imovini kandidata Čupića i predloženom studentu na listi, uz kritike opoziciji i studentskoj listi."
+   },
+   {
+    "ime": "Vučić Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorio o navodnom napadu na predsednicu opštine Ođaci, kritikovao Čupića zbog nekretnina, o narodnom suverenitetu i raspodeli podpredsedničkih mesta."
+   },
+   {
+    "ime": "Radin Milan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Podržao je Radenovića i kritikovao kandidata Čupića zbog imovine, biografije i odnosa prema poslanicima; govorio je i o studentskoj listi."
+   },
+   {
+    "ime": "Petrašinović Miroslav",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorio o krizi u društvu, stručnosti, odnosu prema Srpskoj pravoslavnoj crkvi, kontroli i dijalogu u Skupštini i predloženom studentu."
+   },
+   {
+    "ime": "Krkobabić Stefan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Zalagao se za dijalog i brigu o penzionerima i tražio da nova većina ispuni obaveze prethodne vlasti."
+   },
+   {
+    "ime": "Jovanović Nataša",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Podržala je Radenovića i kritikovala Čupića zbog imovine i nedostatka odgovora poslanicima, kasnije i metode većine i ulogu plenuma."
+   },
+   {
+    "ime": "Brnabić Ana",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Prijavila je povredu poslovnika zbog kandidata studentske liste, govorila o broju opomena, konsultacijama i predloženim podpredsednicima."
+   },
+   {
+    "ime": "Jovanov Milenko",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorio o obrisanoj svesti, tražio utvrđivanje kvoruma i ukazivao da poslaničke grupe nisu konsultovane o predlogu šest potpredsednika."
+   },
+   {
+    "ime": "Bakić Jovo",
+    "lista": "Studentska lista",
+    "o_cemu": "Govorio o medijima, navodnim vezama vlasti sa kriminalnim grupama, bezbednosti, izbornim rezultatima u manjinskim sredinama i odgovornosti ranijih vlasti."
+   },
+   {
+    "ime": "Štimac Aleksandra",
+    "lista": "Studentska lista",
+    "o_cemu": "Obrazložila je predloge kandidata za potpredsednike, osporavala pojedine rečenice u obrazloženju i tražila objašnjenje o konsultacijama."
+   },
+   {
+    "ime": "Pastor Balint",
+    "lista": "bez liste",
+    "o_cemu": "Rekao je da neće podržati predlog zbog nedostatka opozicije i manjina, tražio mesto za Savez vojvođanskih Mađara i izbor manjinskih predstavnika."
+   },
+   {
+    "ime": "Zukorlić Usame",
+    "lista": "bez liste",
+    "o_cemu": "Rekao je da neće podržati predlog o raspodeli potpredsedničkih mesta, glasaće za Mavrića i čestitao Dan Sanđaka uz obrazloženje po Ustavu."
+   },
+   {
+    "ime": "Tandir Samir",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Postavljao je kandidatima pitanja o imovini predsednika, Radoju Zvicera, Srpskoj pravoslavnoj crkvi, medijima i zakonu o javnim skupovima."
+   },
+   {
+    "ime": "Drecun Milovan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Reklamirao je član 16 stav 4, tražio definiciju pretresa o kandidatima i postavljao pitanja o biografijama i kandidatkinji."
+   },
+   {
+    "ime": "Radeta Vjerica",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorila je o broju podpredsednika prema članu 14, o potrebi rasprave o kandidatima i o sastavu Republičke izborne komisije."
+   },
+   {
+    "ime": "Đukanović Vladimir",
+    "lista": "bez liste",
+    "o_cemu": "Kritikovao je izbor podpredsednika i broj opomena, govorio o finansiranju izborne kampanje i postavljao pitanja o studentskoj listi."
+   },
+   {
+    "ime": "Kostov Risto",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorio je o predlogu šest podpredsednika, konsultacijama, predstavljanju birača i izvinjenju zbog incidenta."
+   },
+   {
+    "ime": "Mirković Aleksandar",
+    "lista": "bez liste",
+    "o_cemu": "Govorio o odboru za prava deteta, sastavu kolegijuma, odnosu 9 prema 1 u odborima i potrebi zastupljenosti različitih birača."
+   },
+   {
+    "ime": "Bakarec Nebojša",
+    "lista": "bez liste",
+    "o_cemu": "Obrazložio je protivljenje pojedinim kandidatima zbog njihovih stavova o blokadama i postavio pitanje o stavu prema studentskoj listi."
+   },
+   {
+    "ime": "Tasić Knežević Nataša",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Govorila je o različitosti među podpredsednicima, pravima manjina, romskoj zajednici i poštovanju različitih mišljenja."
+   }
+  ],
+  "t": 1795130455
+ },
+ "delovi": [
+  {
+   "od": "10:04",
+   "do": "13:37",
+   "ukratko": "Skupština je konstatovala kvorum (174 prisutna u sali), odustala od reklamiranja povreda poslovnika i vodila pretres o kandidatima za predsednika Narodne skupštine, uz duge replike poslanika. Glasanjem prozivkom izabran je Aleksandar Čupić sa 140 glasova, dok je Stojan Radenović dobio 97. Na kraju je predsednik Skupštine najavio pauzu od dva sata.",
+   "tok": [
+    {
+     "vreme": "10:04",
+     "sta": "Otvaranje nastavka prve konstitutivne sednice u 15. sazivu; saopšteno je da je prisutno 214 poslanika, a elektronskim glasanjem utvrđeno 174 prisutnih u sali, što je ispunjavalo uslove za rad (član 88 stav 5 poslovnika)."
+    },
+    {
+     "vreme": "10:05",
+     "sta": "Nastavljen pretres o drugoj tački dnevnog reda, izbor predsednika Narodne skupštine; poslanici su odustali od prijavljenih reklamiranja povreda poslovnika."
+    },
+    {
+     "vreme": "10:06",
+     "sta": "Predsedavajući je pozvao prijavljene kandidate za reč; poslanici Mrdić i Rističević su u raspravi iznosili stavove o kandidatima i događajima u Novom Sadu."
+    },
+    {
+     "vreme": "10:22",
+     "sta": "Aleksandar Vučić je govorio o navodnom napadu na predsednicu opštine Ođaci i njenu ćerku u restoranu, a zatim je kritikovao kandidata Čupića zbog nekretnina i nedostatka odgovora poslanicima."
+    },
+    {
+     "vreme": "10:44",
+     "sta": "Milan Radin je govorio o kandidatu Radenoviću kao boljem izboru i iznosio kritike upućene opoziciji i studentskoj listi."
+    },
+    {
+     "vreme": "10:50",
+     "sta": "Miroslav Petrašinović je govorio o stanju u društvu, o kandidatu Čupiću i o pitanju uskraćivanja odgovora poslanicima."
+    },
+    {
+     "vreme": "10:55",
+     "sta": "Stefan Krkobabić je govorio o potrebi dijaloga, o penzionerima i o podršci kandidatu Radenoviću."
+    },
+    {
+     "vreme": "11:00",
+     "sta": "Nataša Jovanović je govorila o kandidatu Radenoviću i kritikovala kandidata Čupića zbog nekretnina i nedostatka odgovora poslanicima."
+    },
+    {
+     "vreme": "11:07",
+     "sta": "Ana Brnabić je prijavila povredu poslovnika zbog toga što kandidat studentske liste nije govorio u Skupštini i nije odgovarao na pitanja poslanika."
+    },
+    {
+     "vreme": "11:12",
+     "sta": "Milenko Jovanov je govorio o pojmu obrisane svesti, a potom je u ime poslaničke grupe podržao kandidata Radenovića."
+    },
+    {
+     "vreme": "11:17",
+     "sta": "Jovo Bakić, predsednik poslaničke grupe Studentska lista, govorio je o medijima, navodnim vezama i pitanjima bezbednosti, a dao je i kritike rukovodstvu vlasti."
+    },
+    {
+     "vreme": "11:38",
+     "sta": "Aleksandar Vučić, kao predstavnik predlagača, odgovarao je Bakiću, o medijima, o Čupiću i o pitanjima koja su poslanici postavili."
+    },
+    {
+     "vreme": "12:39",
+     "sta": "Predsedavajući je zaključio pretres o predlozima kandidata; utvrđena je lista: pod brojem 1 Radenović Stojan, pod brojem 2 Čupić Aleksandar."
+    },
+    {
+     "vreme": "12:40",
+     "sta": "Radenović, kao kandidat, prenosi predsedavanje Narodnoj poslanici Nadi Macura, dok se bira predsednik Skupštine."
+    },
+    {
+     "vreme": "12:44",
+     "sta": "Skupština je odlučila da se izbor predsednika obavi javnim glasanjem prozivkom; saopšteno je 235 za, 1 protiv, 0 uzdržanih, uz tri nevažeća glasa, ukupno 239 glasalo."
+    },
+    {
+     "vreme": "12:47",
+     "sta": "Sprovedeno je glasanje prozivkom narodnih poslanika između kandidata Radenovića i Čupića."
+    },
+    {
+     "vreme": "13:27",
+     "sta": "Saopšteni su rezultati: za Radenovića 97 glasova, za Čupića 140; Aleksandar Čupić je izabran za predsednika Narodne skupštine."
+    },
+    {
+     "vreme": "13:30",
+     "sta": "Predsednik Skupštine Čupić je čestitao izbor, preuzeo predsedavanje i iznio načela dijaloga, tolerancije, kritike i kontrole."
+    },
+    {
+     "vreme": "13:36",
+     "sta": "Čupić se javno izvinio poslaniku Balintu Pastoru zbog netačne izjave; osudio je incident prema poslanici Lidiji Vukićević i izrazio žaljenje zbog odluke o studentima koji nisu prisustvovali sednici."
+    },
+    {
+     "vreme": "13:37",
+     "sta": "Predsedavajući je najavio pauzu od dva sata."
+    }
+   ],
+   "govornici": [
+    {
+     "ime": "Mrdić Uglješa",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Podržava izbor Radenovića i govorio je o tragediji u Novom Sadu, optužujući studentsku listu da je zloupotrebila tu tragediju i da optužuje nevine."
+    },
+    {
+     "ime": "Rističević Marijan",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o slobodi medija, finansiranju stranke, investitorima i imovini kandidata Čupića, uz kritike upućene opoziciji i studentskoj listi."
+    },
+    {
+     "ime": "Vučić Aleksandar",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o navodnom napadu na predsednicu opštine Ođaci i kritikovao Čupića zbog nekretnina, odgovora poslanicima i izjava o medijima i Kosovu."
+    },
+    {
+     "ime": "Radin Milan",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Podržao je Radenovića i kritikovao kandidata Čupića zbog imovine, biografije i odnosa prema poslanicima; govorio je i o studentskoj listi."
+    },
+    {
+     "ime": "Petrašinović Miroslav",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o krizi u društvu, zahtevima za stručnost i pravdu, odnosu prema Srpskoj pravoslavnoj crkvi i napadima na pripadnike SNS."
+    },
+    {
+     "ime": "Krkobabić Stefan",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Zalagao se za dijalog, za briga o penzionerima i za obavezu nove većine da ispuni obaveze prethodne vlasti."
+    },
+    {
+     "ime": "Jovanović Nataša",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Podržala je Radenovića i kritikovala Čupića zbog imovine, biografije i nedostatka odgovora poslanicima; zalagala se za dijalog."
+    },
+    {
+     "ime": "Brnabić Ana",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Prijavila je povredu poslovnika jer kandidat studentske liste tri dana nije govorio u Skupštini niti odgovarao na pitanja poslanika."
+    },
+    {
+     "ime": "Jovanov Milenko",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o pojmu obrisane svesti i o kritikama upućenim studentskoj listi; u ime poslaničke grupe podržao je Radenovića."
+    },
+    {
+     "ime": "Bakić Jovo",
+     "lista": "Studentska lista",
+     "o_cemu": "Govorio je o medijima, o navodnim vezama vlasti sa kriminalnim grupama i o pitanjima bezbednosti, uz optužbe upućene SNS-u."
+    }
+   ],
+   "t_od": 1795079042,
+   "t_do": 1795091877
+  },
+  {
+   "od": "15:42",
+   "do": "16:32",
+   "ukratko": "Skupština je utvrdila kvorum (137 prisutnih) i dobila predlog predsedavajućeg da ima šest potpredsednika. Predstavljeni su predlozi kandidata za potpredsednike, a predlagači su ih obrazložili. Rasprava je obuhvatila više povreda poslovnika, sumnju u potpise na jednoj saglasnosti i prijave za reč. Na kraju je najavljena pauza od pet minuta.",
+   "tok": [
+    {
+     "vreme": "15:42",
+     "sta": "Predsedavajući najavio moguć produžetak rada posle 18 sati i treću tačku dnevnog reda, izbor potpredsednika; predložio da Skupština utvrdi šest potpredsednika."
+    },
+    {
+     "vreme": "15:43",
+     "sta": "Povreda poslovnika Jovanova: traženje utvrđivanja kvoruma i primedba da poslaničke grupe nisu bile konsultovane."
+    },
+    {
+     "vreme": "15:45",
+     "sta": "Pozvani poslanici da ubace kartice; predsedavajući konstatovao 137 prisutnih, kvorum obezbeđen."
+    },
+    {
+     "vreme": "15:53",
+     "sta": "Ponovljena povreda poslovnika Jovanova; predsedavajući smatra da poslovnik nije povređen. Izrečeno upozorenje (ne mera) zbog dobacivanja i izvinjenje Vukićević zbog incidenta."
+    },
+    {
+     "vreme": "15:55",
+     "sta": "Predsedavajući saopštio predloge kandidata za potpredsednike: sa studentske liste Petrović Jelena, Dimitrijević Lidija, Bjelobrk Marija, Valentik Sara, Lazar Tibor i Mavrić Adem; sa liste Aleksandar Vučić Vučević Miloš, Đukanović Vladimir, Raguš Marina, Gujon Arno, Vukićević Lidija i Stanković Marija."
+    },
+    {
+     "vreme": "15:57",
+     "sta": "Predstavnica predlagača Štimac Aleksandra obrazložila predloge kandidata."
+    },
+    {
+     "vreme": "16:08",
+     "sta": "Povreda poslovnika Dimovića zbog korišćenja mobilnih telefona u sali; predsedavajući rekao da o tome može odlučiti Skupština na dan glasanja. Jovanov se javio u vezi s predlagačima."
+    },
+    {
+     "vreme": "16:09",
+     "sta": "Dimović govorio o predlozima kandidata i o predstavljanju manjina; predsedavajući upozorio da se ne drži dnevnog reda."
+    },
+    {
+     "vreme": "16:25",
+     "sta": "Predsedavajući najavio da je počela rasprava o predlogu kandidata i da će se reči davati redom prijavljivanja. Mitov je u povredi poslovnika iznео sumnju u verodostojnost potpisa na saglasnosti kandidatkinje Vukićević; predsedavajući je zatražio izjašnjenje kandidatkinje."
+    },
+    {
+     "vreme": "16:28",
+     "sta": "Jovanov i Mitov u povredama poslovnika osporavali jedni druge, uz sporove oko toga koji član je povređen i da li je prekršen član 103 stav 5."
+    },
+    {
+     "vreme": "16:31",
+     "sta": "Predsedavajući pitao da li studentska lista želi da preda spisak govornika; predstavnik predlagača nije govorio. Najavljena pauza od pet minuta dok ne stigne lista govornika."
+    }
+   ],
+   "govornici": [
+    {
+     "ime": "Jovanov Milenko",
+     "lista": "bez liste",
+     "o_cemu": "Tražio utvrđivanje kvoruma i ukazivao da poslaničke grupe nisu bile konsultovane o predlogu šest potpredsednika. Više puta isticao povrede poslovnika i tražio odgovor o konsultacijama."
+    },
+    {
+     "ime": "Štimac Aleksandra",
+     "lista": "Studentska lista",
+     "o_cemu": "Kao ovlašćena predstavnica predlagača obrazložila predloge kandidata za potpredsednike, naglašavajući stručnost, raznolikost i zastupljenost različitih krajeva Srbije."
+    }
+   ],
+   "t_od": 1795091877,
+   "t_do": 1795102322
+  },
+  {
+   "od": "16:41",
+   "do": "18:06",
+   "ukratko": "Skupština je nastavila raspravu o predlogu za šest potpredsednika Narodne skupštine. Poslaničke grupe su iznosile primedbe na predlog i na način konsultacija, uz više povreda poslovnika i opomena predsedavajućeg. Glasanja u ovom delu nije bilo, a sednica je prekidana pauzama od petnaest i deset minuta.",
+   "tok": [
+    {
+     "vreme": "16:41",
+     "sta": "Predsedavajući je nastavio rad. Predlagač ispred Studentske liste Štimac govorila je o predlogu za potpredsednike."
+    },
+    {
+     "vreme": "16:44",
+     "sta": "Jovanov je tražio da se imenuju učesnici konsultacija. Predsedavajući je najavio da se prijave za reč podnose u pisanom obliku."
+    },
+    {
+     "vreme": "16:50",
+     "sta": "Brnabić je podnela reklamaciju povrede poslovnika zbog žvakanja žvake i zbog naziva poslaničke grupe. Predsedavajući je rekao da ne vidi ko žvače i pitao da li se Skupština izjašnjava."
+    },
+    {
+     "vreme": "16:52",
+     "sta": "Pastor je rekao da Savez vojvođanskih mađara neće podržati predlog i da neće učestvovati u glasanju zbog jednog od kandidata."
+    },
+    {
+     "vreme": "16:58",
+     "sta": "Zukorlić je rekao da neće podržati predlog, ali će glasati za kandidata Mavrića."
+    },
+    {
+     "vreme": "17:01",
+     "sta": "Tandir je postavljao pitanja kandidatima za potpredsednike o različitim temama. Predsedavajući je zbog toga izrekao opomene, u 17:03 i 17:05."
+    },
+    {
+     "vreme": "17:11",
+     "sta": "Jovanov je podneo reklamaciju i tražio povlačenje opomena izrečenih Tandiru. Predsedavajući je pitao da li se Skupština izjašnjava, a izjašnjavanja nije bilo."
+    },
+    {
+     "vreme": "17:13",
+     "sta": "Drašković i Radović su podneli povrede poslovnika. Predsedavajući je potvrdio da je bilo dobacivanja tokom govora."
+    },
+    {
+     "vreme": "17:18",
+     "sta": "Stojković je postavljao pitanja kandidatima i predsedavajućem o pravoslavnim temama. Predsedavajući mu je izrekao opomenu u 17:21 i drugu opomenu u 17:23."
+    },
+    {
+     "vreme": "17:26",
+     "sta": "Vučić je rekao da konsultacije nisu obavljene i da je predsedavajući izrekao više opomena. Predsedavajući mu je izrekao opomenu u 17:53."
+    },
+    {
+     "vreme": "17:54",
+     "sta": "Predsedavajući je zbog prilaska poslanika bez poziva proglasio pauzu od petnaest minuta."
+    },
+    {
+     "vreme": "17:56",
+     "sta": "Vučić je nastavio izlaganje o institucijama, odborima i podpredsednicima. Predsedavajući je zatražio da se govor vrati na temu."
+    },
+    {
+     "vreme": "18:05",
+     "sta": "Predsedavajući je pitao da li su Jovanov i Brnabić dobili opomene, jer su prišli bez poziva. Zatim je pauzom od deset minuta prekinuo sednicu."
+    }
+   ],
+   "govornici": [
+    {
+     "ime": "Štimac Aleksandra",
+     "lista": "Studentska lista",
+     "o_cemu": "Osporavala je obrazloženje predloga za potpredsednike, tvrdila da su neke rečenice nepouzdane i tražila objašnjenje o konsultacijama."
+    },
+    {
+     "ime": "Jovanov Milenko",
+     "lista": "bez liste",
+     "o_cemu": "Tražio je da mu se kaže ko je učestvovao u konsultacijama i tvrdio da predlog o broju potpredsednika nije bio rezultat razgovora. Na kraju je podneo reklamaciju zbog opomena."
+    },
+    {
+     "ime": "Pastor Balint",
+     "lista": "bez liste",
+     "o_cemu": "Rekao je da njegova grupa neće podržati predlog jer nema predstavnika opozicije i manjina. Predložio je povlačenje predloga i najavio da neće učestvovati u glasanju."
+    },
+    {
+     "ime": "Zukorlić Usame",
+     "lista": "bez liste",
+     "o_cemu": "Rekao je da neće podržati predlog da sva potpredsednička mesta pripadnu jednoj listi, ali će glasati za kandidata Mavrića."
+    },
+    {
+     "ime": "Tandir Samir",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Postavljao je kandidatima pitanja o imovini predsednika, Radoju Zvicera, Srpskoj pravoslavnoj crkvi, medijima i zakonu o javnim skupovima."
+    },
+    {
+     "ime": "Vučić Aleksandar",
+     "lista": "bez liste",
+     "o_cemu": "Tvrdio je da konsultacije nisu obavljene, kritikovao izbor svih potpredsednika iz jedne grupe i predsedavajućeg zbog opomena i rada sednice."
+    }
+   ],
+   "t_od": 1795102322,
+   "t_do": 1795107995
+  },
+  {
+   "od": "18:24",
+   "do": "23:30",
+   "ukratko": "Skupština je nastavila pretres o izboru podpredsednika uz brojne replike, povrede poslovnika i opomene predsedavajućeg. Konstatovano je da ima šest podpredsednika (136 za, 98 nije glasalo, od 234 prisutnih), a zatim je utvrđena lista od dvanaest kandidata. Izbor se obavlja javnim glasanjem prozivkom, koje je počelo, a sednica je prekinuta pauzom od deset minuta pred izbor generalnog sekretara.",
+   "tok": [
+    {
+     "vreme": "18:24",
+     "sta": "Predsedavajući najavio nastavak sednice i rekao da će dve opomene (Ani Brnabić i Milenku Jovanovu) možda biti povučene, zavisno od redosleda pauze."
+    },
+    {
+     "vreme": "18:25",
+     "sta": "Reč predlagaču; poslanička grupa tražila glasanje posle rasprave o kandidatima, uz primedbu da SNS nije predložio kandidata nacionalnih manjina."
+    },
+    {
+     "vreme": "18:26",
+     "sta": "Predlagač Aleksandar Vučić govorio o principu narodnog suvereniteta i o raspodeli podpredsedničkih mesta."
+    },
+    {
+     "vreme": "18:34",
+     "sta": "Milovan Drecun reklamirao član 16 stav 4 i tražio od predsedavajućeg definiciju pretresa o kandidatima."
+    },
+    {
+     "vreme": "18:38",
+     "sta": "Vjerica Radeta govorila o broju podpredsednika prema članu 14 poslovnika i o tome da se o kandidatima mora raspravljati."
+    },
+    {
+     "vreme": "18:47",
+     "sta": "Vučić replicirao da je odlučeno šest podpredsednika i zatražio promenu te odluke."
+    },
+    {
+     "vreme": "19:02",
+     "sta": "Balint Pastor replicirao i tražio mesto podpredsednika za Savez vojvođanskih Mađara."
+    },
+    {
+     "vreme": "19:04",
+     "sta": "Vladimir Đukanović govorio o broju opomena, o izboru podpredsednika i o finansiranju izborne kampanje."
+    },
+    {
+     "vreme": "19:14",
+     "sta": "Predsedavajući saopštio da je finansijski izveštaj grupe građana predat i prihvaćen."
+    },
+    {
+     "vreme": "19:29",
+     "sta": "Feđa Dimović podneo povredu poslovnika; predsedavajući izrekao upozorenje."
+    },
+    {
+     "vreme": "19:40",
+     "sta": "Dejan Šoškić podneo povredu poslovnika u vezi sa opomenama i temom rasprave."
+    },
+    {
+     "vreme": "19:43",
+     "sta": "Milovan Drecun podneo povredu poslovnika i postavio pitanje zašto nije izrečena mera."
+    },
+    {
+     "vreme": "19:44",
+     "sta": "Risto Kostov govorio o predlogu šest podpredsednika, o konsultacijama i o predstavljanju birača."
+    },
+    {
+     "vreme": "19:50",
+     "sta": "Uroš Radulović govorio o odluci plenuma, o broju opomena i o izboru podpredsednika."
+    },
+    {
+     "vreme": "20:02",
+     "sta": "Vera Radović podnela povredu poslovnika u vezi sa temom izlaganja predstavnika predlagača."
+    },
+    {
+     "vreme": "20:04",
+     "sta": "Uglješa Mrdić govorio o kandidatima sa liste, o opomenama i o tvrdnji da su njegova lista i porodice nazvani kriminalcima."
+    },
+    {
+     "vreme": "20:08",
+     "sta": "Ana Brnabić govorila o broju opomena, o konsultacijama i o predloženim podpredsednicima."
+    },
+    {
+     "vreme": "20:21",
+     "sta": "Marijan Rističević govorio o demokratiji, pravima nacionalnih manjina i predloženom studentu na listi."
+    },
+    {
+     "vreme": "20:29",
+     "sta": "Nataša Jovanović govorila o vlasti i većini, o plenumu i o ustavnoj ulozi Skupštine."
+    },
+    {
+     "vreme": "20:36",
+     "sta": "Aleksandar Mirković govorio o odboru za prava deteta, o sastavu kolegijuma i o raspodeli mesta."
+    },
+    {
+     "vreme": "20:43",
+     "sta": "Nebojša Bakarec obrazložio protivljenje pojedinim kandidatima i postavio pitanje o stavu kandidata o studentskoj listi."
+    },
+    {
+     "vreme": "20:51",
+     "sta": "Miroslav Petrašinović govorio o kontroli i dijalogu u Skupštini, o okruzima i o predloženom studentu."
+    },
+    {
+     "vreme": "21:26",
+     "sta": "Nataša Tasić Knežević govorila o različitosti među podpredsednicima, o manjinama i o poštovanju različitih mišljenja."
+    },
+    {
+     "vreme": "21:53",
+     "sta": "Jovo Bakić govorio o izbornim rezultatima u manjinskim sredinama, o crkvi i o stanju u prosveti."
+    },
+    {
+     "vreme": "22:01",
+     "sta": "Vučić replicirao o kritici patrijarha i o zahtevima za podpredsedničko mesto manjina."
+    },
+    {
+     "vreme": "22:16",
+     "sta": "Balint Pastor replicirao o zastupljenosti opozicije i manjina i pozvao na izbor manjinskih predstavnika."
+    },
+    {
+     "vreme": "22:20",
+     "sta": "Zaključen pretres; glasanje o predlogu da Skupština ima šest podpredsednika: 136 za, 98 nije glasalo, od 234 prisutna; konstatovano da je odluka doneta."
+    },
+    {
+     "vreme": "22:21",
+     "sta": "Utvrđena lista od dvanaest kandidata za podpredsednike Narodne skupštine."
+    },
+    {
+     "vreme": "22:22",
+     "sta": "Glasanje o načinu izbora: 133 za javno glasanje prozivkom, 100 nije glasalo, od 233 prisutna; konstatovano da će se glasati javno."
+    },
+    {
+     "vreme": "22:23",
+     "sta": "Počela prozivka poslanika po azbučnom redu za izbor podpredsednika; poslanici izgovarali imena kandidata za koje glasaju, a deo poslanika bio odsutan."
+    },
+    {
+     "vreme": "22:33",
+     "sta": "Jedan poslanik saopštio da neće učestvovati u glasanju, navodeći da je to farsa."
+    },
+    {
+     "vreme": "23:30",
+     "sta": "Predsedavajući najavio da će se sačekati rezultati, da sledi izbor generalnog sekretara i da je pauza deset minuta."
+    }
+   ],
+   "govornici": [
+    {
+     "ime": "Vučić Aleksandar",
+     "lista": "bez liste",
+     "o_cemu": "Govorio o principu narodnog suvereniteta, o raspodeli podpredsedničkih mesta i o tome da opozicija i manjinske stranke treba da budu zastupljene."
+    },
+    {
+     "ime": "Drecun Milovan",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Reklamirao član 16 stav 4 i tražio definiciju pretresa o kandidatima, uz pitanja o biografijama i o pitanjima postavljenim kandidatkinji."
+    },
+    {
+     "ime": "Radeta Vjerica",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorila o broju podpredsednika prema članu 14 poslovnika, o tvrdnjama o studentskoj listi i o sastavu Republičke izborne komisije."
+    },
+    {
+     "ime": "Pastor Balint",
+     "lista": "bez liste",
+     "o_cemu": "Replicirao o tome da opozicija i manjine treba da imaju podpredsednike i naveo prethodne primere iz Skupštine."
+    },
+    {
+     "ime": "Đukanović Vladimir",
+     "lista": "bez liste",
+     "o_cemu": "Kritikovao izbor podpredsednika i broj opomena i postavio pitanja o finansiranju kampanje studentske liste."
+    },
+    {
+     "ime": "Mrdić Uglješa",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio o kandidatima sa liste njegove grupe, o opomenama i o tvrdnji da su njegova grupa i porodice nazvani kriminalcima."
+    },
+    {
+     "ime": "Kostov Risto",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio o predlogu šest podpredsednika, o konsultacijama, o biračima i o izvinjenju zbog incidenta sa jogurtom."
+    },
+    {
+     "ime": "Brnabić Ana",
+     "lista": "bez liste",
+     "o_cemu": "Govorila o broju opomena koje je predsedavajući izrekao, o konsultacijama, o plenumu i o predloženim podpredsednicima."
+    },
+    {
+     "ime": "Rističević Marijan",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio o demokratiji i pravima nacionalnih manjina i zatražio da se glasa za predloženog studenta sa njihove liste."
+    },
+    {
+     "ime": "Jovanović Nataša",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Kritikovala metode većine, govorila o plenumu i o ustavnoj ulozi Skupštine i postavljala pitanja o kandidatima."
+    },
+    {
+     "ime": "Mirković Aleksandar",
+     "lista": "bez liste",
+     "o_cemu": "Govorio o odboru za prava deteta, o odnosu 9 prema 1 u odborima i o potrebi zastupljenosti različitih birača."
+    },
+    {
+     "ime": "Bakarec Nebojša",
+     "lista": "bez liste",
+     "o_cemu": "Obrazložio protivljenje izboru pojedinih kandidata zbog njihovih stavova o blokadama i postavio pitanje o stavu kandidata o studentskoj listi."
+    },
+    {
+     "ime": "Petrašinović Miroslav",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio o kontroli i dijalogu u Skupštini, o okruzima, o predloženom studentu i o primeru britanskog parlamenta."
+    },
+    {
+     "ime": "Tasić Knežević Nataša",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorila o potrebi različitosti među podpredsednicima, o pravima manjina, romskoj zajednici i poštovanju različitih mišljenja."
+    },
+    {
+     "ime": "Bakić Jovo",
+     "lista": "bez liste",
+     "o_cemu": "Govorio o izbornim rezultatima u manjinskim sredinama, o odnosu prema crkvi i o ranijim vlastima i njihovoj odgovornosti."
+    }
+   ],
+   "t_od": 1795107995,
+   "t_do": 1795127433
+  },
+  {
+   "od": "23:49",
+   "do": "23:59",
+   "ukratko": "Skupština je zaključila glasanje za podpredsednike i saopštila da su za podpredsednike izabrani Marija Bjelobrk, Sara Valentik, Lidija Dimitrijević, Tibor Lazar, Adem Mavrić i Jelena Petrović. Zatim je otvorila tačku o imenovanju generalnog sekretara, vodila kratak pretres i jednoglasno imenovala Mirjanu Radaković za generalnog sekretara.",
+   "tok": [
+    {
+     "vreme": "23:49",
+     "sta": "Predsedavajući zaključuje glasanje prozivkom za izbor podpredsednika i prelazi na utvrđivanje rezultata."
+    },
+    {
+     "vreme": "23:50",
+     "sta": "Saopšteni su rezultati glasanja za podpredsednike; izabrani su Marija Bjelobrk, Sara Valentik, Lidija Dimitrijević, Tibor Lazar, Adem Mavrić i Jelena Petrović."
+    },
+    {
+     "vreme": "23:50",
+     "sta": "Predsedavajući čestita novoizabranim podpredsednicima i moli ih da zauzmu mesta pored predsednika Skupštine."
+    },
+    {
+     "vreme": "23:52",
+     "sta": "Otvorena je četvrta tačka dnevnog reda: imenovanje generalnog sekretara Narodne skupštine; predložena je Mirjana Radaković."
+    },
+    {
+     "vreme": "23:52",
+     "sta": "Podsećeno je na vremensko ograničenje rasprave (5 časova za poslaničke grupe) i na prijave za reč po članu 96 stav 4 poslovnika; otvoren je pretres."
+    },
+    {
+     "vreme": "23:53",
+     "sta": "U pretresu se javio Usame Zukorlić (bez liste), koji je čestitao Dan Sanđaka i obrazložio da je čestitka u skladu s Ustavom, pozivajući se na član 79 i odluku Saveta za nacionalne manjine iz 2005. godine."
+    },
+    {
+     "vreme": "23:56",
+     "sta": "Predsedavajući je zatim pitao ko još želi reč; na listama poslaničkih grupa nije bilo više prijavljenih, pa je pretres zaključen."
+    },
+    {
+     "vreme": "23:57",
+     "sta": "Skupština je glasala o predlogu da se za generalnog sekretara imenuje Mirjana Radaković: 138 za, niko protiv, niko uzdržan."
+    },
+    {
+     "vreme": "23:57",
+     "sta": "Konstatovano je da je Narodna skupština jednoglasno imenovala Mirjanu Radaković za generalnog sekretara i predsedavajući joj je čestitao."
+    },
+    {
+     "vreme": "23:59",
+     "sta": "Predsedavajući zaključuje sednicu u ovom delu."
+    }
+   ],
+   "govornici": [
+    {
+     "ime": "Zukorlić Usame",
+     "lista": "bez liste",
+     "o_cemu": "Čestitao je Dan Sanđaka i obrazložio da je čestitka u skladu s Ustavom, pozivajući se na pravo nacionalnih manjina na svoju ličnost. Upozorio je da bi nepoštovanje Sanđaka bilo nepoštovanje prema Bošnjacima i Ustavu."
+    }
+   ],
+   "t_od": 1795127433,
+   "t_do": 1795129142
+  }
+ ],
+ "greske": 0,
+ "model": "claude-haiku-5-5",
+ "javljeno": 1795158851
+}
