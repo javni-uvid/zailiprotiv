@@ -165,6 +165,18 @@
 <p class="label">Mereno sa snimka prenosa: govor je vreme dok je ime u potpisu, isto za svakog. Klik na govor otvara snimak i automatski prepis. <a href="{{ root }}govornici.html">Ko koliko govori u sazivu</a></p>
 </section>
 {% endif %}{% endmacro %}
+{# The MP's offices in the Assembly (offices.py): [(convocation, offices)], newest first, each linked to the page of
+   the Assembly it is read from; the same list for every MP. #}
+{% macro offices_part(by_conv) %}{% if by_conv %}
+<section class="mp-offices" id="funkcije">
+<h2>Funkcije u Skupštini</h2>
+{% for c, rows in by_conv %}
+<h3>{{ c }}. saziv</h3>
+<ul class="plain">{% for o in rows %}<li><a href="{{ o.source }}">{{ o.text }}</a></li>{% endfor %}</ul>
+{% endfor %}
+<p class="label">Prema stranicama sastava na sajtu Narodne skupštine (predsednik, potpredsednici, predsednici poslaničkih grupa, odbori, delegacije), istim pravilom za svakog poslanika. Dan izbora te stranice ne navode.</p>
+</section>
+{% endif %}{% endmacro %}
 {% macro next_steps(list_page, group) %}
 <nav class="mp-next" aria-label="Dalje">
 <h2>Dalje</h2>

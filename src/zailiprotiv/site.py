@@ -735,6 +735,22 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
                                           title_case=title_case, slug=slug)
         member_now = pages_members.now_of(member_rows)
+    # Offices in the Assembly (offices.py, 20 Nov 2026), from its pages of the composition: by MP key, then by
+    # convocation, in one fixed order for everyone. A name two members of the newest convocation share gets none.
+    from zailiprotiv import mp_years, offices as offices_mod
+    offices_by: dict[str, dict[str, list[dict]]] = {}
+    twice = {k for k, n in Counter(r["key"] for r in member_rows).items() if n > 1}
+    for c, rows in offices_mod.load(root).items():
+        for o in rows:
+            k = mp_years.key(o["name"], c)
+            if c == members_conv and k in twice:
+                continue
+            offices_by.setdefault(k, {}).setdefault(c, []).append({**o, "text": offices_mod.say(o, latin)})
+    for by_c in offices_by.values():
+        for c in by_c:
+            by_c[c].sort(key=offices_mod.order)
+    for r in member_rows:
+        r["offices"] = offices_by.get(r["key"], {}).get(members_conv, [])
     # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
     # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
     # MPs' pages and found nothing there).
@@ -971,6 +987,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             timeline=timeline, key_votes=keys_, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             floor=floor_mp, member_now=member_now.get(mp.key),
+            offices=sorted(offices_by.get(mp.key, {}).items(), key=lambda kv: -int(kv[0])),
             member_conv=ORDINAL_NAME.get(members_conv, members_conv) if members_conv else "",
             member_page=pages_members.PAGE.format(conv=members_conv) if members_conv else "",
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True)),

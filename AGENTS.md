@@ -307,6 +307,21 @@ The project's promises to its readers. Never change them without the maintainer.
   that holds only a bar has a name for a screen reader. Left as they are, on purpose: the pale greys for "did
   not vote" and "not present" in a vote's bar (the numbers stand beside it in words), law titles as links with
   no underline in lists, and the home page's order on a phone (its parts stand on their own, so either order reads).
+- **Offices in the Assembly, and its news** (20 Nov 2026, the maintainer's request: "the election of committee
+  members, deputy Speakers and so on", each on the MP's profile; `offices.py`, `zailiprotiv offices`, run by
+  **votes** each hour). Read from the Assembly's pages of its composition, not from the wording of its news: the
+  Speaker (the biography, an MP's page with "Функција"), the deputy Speakers, the groups' chairs, every committee's
+  table (председник, заменик председника, члан, заменик члана) and every standing delegation's (шеф, члан…), into
+  `data/<N>/offices.json` for the newest convocation, each office with its page and the day first seen there (the
+  pages give no day of election, and the site says so); the Fourteenth's committees and delegations once from its
+  archive (`offices.ARCHIVE`). Committees' and delegations' own pages are read when their lists change, when a
+  relevant news item is new, or weekly; the rest (five pages) every run. The news: the list on "Активности" (one
+  page) into `data/vesti.json`, every item kept with the day first seen, `relevant` by a fixed rule on the title
+  (elections, appointments, resignations, mandates, plenary sittings); new relevant ones are named in the run's log
+  and summary. Shown: "Funkcije u Skupštini" on every MP's page, new or returning, by convocation, each linked to
+  its page at the Assembly, in one order for all (the Assembly's own offices, groups, committees, delegations;
+  chairs first); on the live page, the first line about the speaker. A name two MPs of the newest convocation share
+  gets no office. The Assembly's own words, its masculine titles included ("predsednik"), as for every MP.
 
 ### Visitors' votes ("Glasaj i ti")
 
