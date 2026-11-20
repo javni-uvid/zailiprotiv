@@ -443,6 +443,7 @@ class Sources:
     fixes: list  # corrections made on the site (data/ispravke.json)
     recordings: dict  # the plenary recordings by day (videos.py), every convocation's
     rules: dict | None  # the Rules of Procedure (poslovnik)
+    rule_terms: list  # the site's terms explained from the Rules (poslovnik.terms)
 
 
 def read(root: Path) -> Sources:
@@ -488,7 +489,8 @@ def read(root: Path) -> Sources:
         listed_now=listed_now, live_reading=live_reading,
         newest_sittings=jsonfile.load(root / members_conv / "index.json", {}).get("sittings", {}) if members_conv else {},
         moved=jsonfile.load(root / "mp_moved.json", {}), fixes=jsonfile.load(root / "ispravke.json", []),
-        recordings=recordings, rules=poslovnik.load(root / "poslovnik"))
+        recordings=recordings, rules=poslovnik.load(root / "poslovnik"),
+        rule_terms=poslovnik.terms(root / "poslovnik"))
 
 
 def build(root: Path, out: Path, domain: str | None = None, clean: bool = False, cyrillic: bool = False) -> dict:
@@ -523,7 +525,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
-              "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
+              "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic,
+              # The terms explained from the Rules, where they are (macros.term links there; 20 Nov 2026).
+              "rule_terms": {t["id"] for t in src.rule_terms}}
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
     # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
     common["live"], common["live_url"] = [], LIVE
@@ -770,7 +774,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # Replies and the chair's measures, from the notes read; an MP's exchanges go on the MP's page, a law's on its page.
     floor = pages_floor.count(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages,
                               seated=seated, years_of=_years, extra=floor_extra, debates=floor_debates, people=people,
-                              convs=floor_convs, items_by_conv=items_by_conv, rules=src.rules)
+                              convs=floor_convs, items_by_conv=items_by_conv, rules=src.rules,
+                              terms=src.rule_terms)
     exchanges_of, floor_of = floor.by_mp, floor.by_law
     floor_notes_now = {sl: next((x for x in xs if x["conv"] == members_conv), None) for sl, xs in floor.per_mp.items()} if members_conv else {}
     # What the site has of the newest convocation before its first law, for every page with a place for it (19 Nov

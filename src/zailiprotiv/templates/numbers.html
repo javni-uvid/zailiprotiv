@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import plural, how with context %}
+{% from "macros.html" import plural, how, term with context %}
 {% block title %}Skupština u brojkama — Za ili Protiv{% endblock %}
 {% block description %}Kako Narodna skupština Srbije donosi zakone, po sazivima: hitan postupak, dani od predloga do usvajanja, zakoni bez glasa protiv, jedinstvo poslaničkih grupa.{% endblock %}
 {% block main %}
@@ -24,7 +24,7 @@
     </tbody>
   </table>
   </div>
-  <p class="label">Hitan postupak: udeo zakona čiji predlog ima obrazloženje hitnosti, među zakonima čiji predlog imamo. Dani: srednja vrednost (medijana), polovina zakona je usvojena brže. Bez glasa protiv: među zakonima čije konačno glasanje imamo. Sednice: one na kojima je usvojen bar jedan zakon.</p>
+  <p class="label">{{ term("hitni-postupak", "Hitan postupak") }}: udeo zakona čiji predlog ima obrazloženje hitnosti, među zakonima čiji predlog imamo. Dani: srednja vrednost (medijana), polovina zakona je usvojena brže. Bez glasa protiv: među zakonima čije konačno glasanje imamo. Sednice: one na kojima je usvojen bar jedan zakon.</p>
 </section>
 {% for n in numbers if n.groups %}
 {% if not loop.first %}<details class="fold-sec"><summary>Poslaničke grupe, {{ n.conv.name|lower }} saziv <span class="meta">{{ n.conv.years }}</span></summary>{% endif %}

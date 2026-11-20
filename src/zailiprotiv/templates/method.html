@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros.html" import term with context %}
 {% block title %}Kako računamo: izvori i pravila — Za ili Protiv{% endblock %}
 {% block description %}Kako sajt dolazi do svakog broja i pregleda: izvori, pravila i ograničenja.{% endblock %}
 {% block main %}
@@ -7,7 +8,7 @@
 
 <section id="glasanje">
 <h2>Konačno glasanje o zakonu</h2>
-<p>Za svaki zakon uzimamo poimenično glasanje „u celini" sa dana kad je zakon usvojen, iz PDF-a koji Skupština objavljuje uz sednicu. Glasanje vezujemo za zakon po nazivu akta u tom PDF-u. Kad se nazivi ne poklapaju potpuno (slovna greška, reč viška), uzimamo glasanje tog dana koje se poklapa u 90% reči; retke slučajeve povezujemo ručno, uz zapisan razlog.</p>
+<p>Za svaki zakon uzimamo poimenično glasanje {{ term('dan-za-glasanje', '„u celini"') }} sa dana kad je zakon usvojen, iz PDF-a koji Skupština objavljuje uz sednicu. Glasanje vezujemo za zakon po nazivu akta u tom PDF-u. Kad se nazivi ne poklapaju potpuno (slovna greška, reč viška), uzimamo glasanje tog dana koje se poklapa u 90% reči; retke slučajeve povezujemo ručno, uz zapisan razlog.</p>
 <p>Za glasanja iz 2024. i prve polovine 2025, kao i za stare sazive, Skupština je objavljivala samo prisutne poslanike, pa odsutni tu nisu prikazani.</p>
 </section>
 
@@ -33,6 +34,7 @@
 <section id="poslovnik">
 <h2>Pozivanje na Poslovnik</h2>
 <p>Na stranici „Varnice u sali: svi sazivi“ brojimo na koje se članove Poslovnika Narodne skupštine poslanici pozivaju. Član se računa kad je naveden na početku govora kojim poslanik ukazuje na povredu Poslovnika („Povreda Poslovnika, član 103“, „reklamiram član 107“), ili bilo gde u govoru, kad uz broj člana stoji reč „Poslovnik“. Član naveden uz Ustav ili zakon se ne računa. Jedan govor broji se jednom po članu, isto pravilo za svakoga. Tekst člana je iz prečišćenog teksta Poslovnika sa sajta Skupštine; čuvamo svaku verziju od 20. novembra 2026, a ranije verzije ne znamo, pa član u starijim sazivima može da je glasio drugačije. U stenografskim beleškama takav broj člana vodi na tekst člana.</p>
+<p id="pojmovi">Reči kao što su replika, opomena, oduzimanje reči, udaljenje sa sednice, hitni postupak, načelni pretres, pretres u pojedinostima, amandman i Dan za glasanje objašnjavamo po Poslovniku, na strani <a href="poslovnik-clanovi.html#pojmovi">„Poslovnik Narodne skupštine“</a>: naše kratko prepričavanje člana, napisano ručno i provereno prema njegovom tekstu, a uz njega ceo tekst člana. Ne dodajemo ocenu da li se pravilo poštuje. Prepričavanje važi za verziju Poslovnika po kojoj je napisano: kad se neki od njegovih članova izmeni, strana prikazuje samo tekst člana dok ga ne napišemo ponovo. Gde sajt broji nešto po svom pravilu (na primer „razmenu replika“), uz pojam piše i to pravilo.</p>
 </section>
 <section id="govornici">
 <h2>Ko koliko govori</h2>
@@ -54,7 +56,7 @@
 </section>
 <section id="brojke">
 <h2>Skupština u brojkama</h2>
-<p>Hitan postupak: zakoni čiji predlog sadrži obrazloženje hitnosti, kao udeo zakona čiji predlog imamo. Dani od predloga do usvajanja: medijana razlike između datuma podnošenja predloga i datuma usvajanja. Bez glasa protiv: zakoni na čijem konačnom glasanju niko nije glasao protiv. Stubići ispod svakog broja pokazuju isti broj u svakom sazivu, visinom srazmernom broju, od nule. Nema rang-liste poslanika, jer se takve liste lako nameste i ne govore o kvalitetu rada.</p>
+<p>{{ term("hitni-postupak", "Hitan postupak") }}: zakoni čiji predlog sadrži obrazloženje hitnosti, kao udeo zakona čiji predlog imamo. Dani od predloga do usvajanja: medijana razlike između datuma podnošenja predloga i datuma usvajanja. Bez glasa protiv: zakoni na čijem konačnom glasanju niko nije glasao protiv. Stubići ispod svakog broja pokazuju isti broj u svakom sazivu, visinom srazmernom broju, od nule. Nema rang-liste poslanika, jer se takve liste lako nameste i ne govore o kvalitetu rada.</p>
 </section>
 <section id="procedura">
 <h2>Predlozi u proceduri i sazvane sednice</h2>

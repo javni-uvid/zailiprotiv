@@ -331,6 +331,21 @@ def invoked_articles(total: Counter, by_conv: list[dict], rules: dict | None) ->
     return out
 
 
+def rule_terms(terms: list[dict], invoked: list[dict], rules: dict | None) -> list[dict]:
+    """The site's terms explained from the Rules (poslovnik.terms), in Latin script: our sentence (None once an
+    article it rests on has changed), how the site counts it, and each article with its text, its chapter's page at the
+    Assembly and whether it is in the list of invoked articles (then it leads there too)."""
+    if not rules:
+        return []
+    chapters = {c["broj"]: c for c in rules["glave"]}
+    listed = {a["n"] for a in invoked}
+    return [{"id": t["id"], "name": t["pojam"], "explained": None if t["changed"] else t["objasnjenje"],
+             "on_site": t.get("na_sajtu", ""), "method": t.get("kako", ""),
+             "articles": [{"n": a["n"], "label": a["label"], "text": [latin(x) for x in a["text"]],
+                           "url": chapters.get(a["glava"], {}).get("url", ""), "listed": a["n"] in listed}
+                          for a in t["articles"]]} for t in terms]
+
+
 @dataclass
 class Floor:
     """What the notes count, for the pages of "Varnice" and for the pages that show a part of it."""
@@ -338,6 +353,7 @@ class Floor:
     chunks: dict[str, list[tuple[list, str]]]  # a convocation's exchanges, PER_PAGE to a page, with the page's name
     everyone: dict | None  # every convocation together (more than one read)
     invoked: list  # the articles of the Rules invoked, for the page of every convocation
+    terms: list  # the site's terms explained from the Rules (rule_terms), on the same page
     by_mp: dict  # an MP's exchanges, by the MP's address
     by_law: dict  # the events of a law's debate, by the law's key
     by_sitting: dict  # a sitting's row of the table, by its address
@@ -348,8 +364,9 @@ class Floor:
 
 def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
           years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None,
-          seated: dict | None = None, extra: dict | None = None, rules: dict | None = None) -> Floor:
-    """`extra`: MPs not on any roll call yet (a new convocation's new members), by their loose name key:
+          seated: dict | None = None, extra: dict | None = None, rules: dict | None = None,
+          terms: list | None = None) -> Floor:
+    """`terms`: poslovnik.terms. `extra`: MPs not on any roll call yet (a new convocation's new members), by their loose name key:
     {"name", "slug", "photo"}, so that their speeches lead to their pages too."""
     loose = {debates_.loose(k): k for k in people}
     years_of = years_of or {}
@@ -555,7 +572,8 @@ def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, phot
                                              if h.get("date")).most_common(3),
                        "harsh_quote": harsh_quote(c["people"])}
               for c in by_conv}
-    return Floor(by_conv=by_conv, chunks=chunks, everyone=everyone, invoked=invoked, by_mp=by_mp, by_law=by_law,
+    return Floor(by_conv=by_conv, chunks=chunks, everyone=everyone, invoked=invoked,
+                 terms=rule_terms(terms or [], invoked, rules), by_mp=by_mp, by_law=by_law,
                  by_sitting=by_sitting, per_mp=per_mp_, top=top, totals=totals)
 
 
@@ -576,8 +594,9 @@ def render(floor: Floor, *, env, common, out: Path) -> None:
         (out / ALL).write_text(env.get_template("floor.html").render(
             **common, c=floor.everyone, by_conv=by_conv, part="svi", all_page=ALL, root="",
             invoked=floor.invoked), encoding="utf-8")
-    if floor.invoked:  # a page of its own (20 Nov 2026: with the articles' text, varnice-svi grew past 1 MB in Cyrillic)
-        (out / RULES).write_text(env.get_template("rules_cited.html").render(**common, invoked=floor.invoked, root=""),
+    if floor.invoked or floor.terms:  # a page of its own (20 Nov 2026: with the articles' text, varnice-svi grew past 1 MB in Cyrillic)
+        (out / RULES).write_text(env.get_template("rules_cited.html").render(**common, invoked=floor.invoked,
+                                                                             terms=floor.terms, root=""),
                                  encoding="utf-8")
 
 

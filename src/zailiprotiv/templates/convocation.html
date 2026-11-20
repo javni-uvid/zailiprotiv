@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import chamber, bar, plural, tabs, how with context %}
+{% from "macros.html" import chamber, bar, plural, tabs, how, term with context %}
 {% block title %}{{ cv.name }} saziv ({{ cv.years }}) — Za ili Protiv{% endblock %}
 {% block description %}{{ cv.name }} saziv Narodne skupštine Srbije ({{ cv.years }}): zakoni, poslanici, poslaničke grupe, sednice i izdvojena glasanja.{% endblock %}
 {% block main %}
@@ -11,7 +11,7 @@
 <p class="standfirst">{% if first and last %}Od {{ first|day_of }} do {{ last|day_of }}: {% endif %}{{ mps }} {{ plural(mps, "poslanik", "poslanika", "poslanika") }} na spiskovima glasanja, {{ n.sittings }} {{ plural(n.sittings, "sednica", "sednice", "sednica") }} sa usvojenim zakonima.</p>
 <div class="lead-nums">
   <p><b>{{ n.laws }}</b><span>{{ plural(n.laws, "zakon", "zakona", "zakona") }}{% if n.laws %}, od toga {{ (100 * n.treaties / n.laws)|round|int }}% potvrđenih međunarodnih ugovora{% endif %}</span></p>
-  {% if n.with_bill %}<p><b>{{ (100 * n.urgent / n.with_bill)|round|int }}%</b><span>po hitnom postupku</span></p>{% endif %}
+  {% if n.with_bill %}<p><b>{{ (100 * n.urgent / n.with_bill)|round|int }}%</b><span>po {{ term("hitni-postupak", "hitnom postupku") }}</span></p>{% endif %}
   {% if n.voted %}<p><b>{{ (100 * n.unopposed / n.voted)|round|int }}%</b><span>bez ijednog glasa protiv</span></p>{% endif %}
   {% if n.days is not none %}<p><b>{{ n.days }}</b><span>{{ plural(n.days, "dan", "dana", "dana") }} od predloga do usvajanja, za polovinu zakona</span></p>{% endif %}
 </div>

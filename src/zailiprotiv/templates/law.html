@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox with context %}
+{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox, term with context %}
 {% block title %}{{ law.title }}{% if law.title in twice and law.passed %} ({{ law.passed|day }}){% elif law.title|length < 25 %}: kako su glasali poslanici{% endif %} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.short }}{% if law.passed %} (usvojen {{ law.passed|day }}){% endif %}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
@@ -48,8 +48,8 @@
 <section class="law-floor" id="varnice" aria-labelledby="varnice-h">
   <h2 id="varnice-h">Varnice u raspravi o ovom zakonu</h2>
   <div class="lead-nums">
-    {% if fm %}<p><b>{{ fm|length }}</b><span>{{ plural(fm|length, "mera", "mere", "mera") }} predsedavajućeg: opomena, oduzimanje reči ili udaljenje</span></p>{% endif %}
-    {% if fr %}<p><b>{{ fr|length }}</b><span>{{ plural(fr|length, "razmena replika", "razmene replika", "razmena replika") }} između dvoje govornika</span></p>{% endif %}
+    {% if fm %}<p><b>{{ fm|length }}</b><span>{{ plural(fm|length, "mera", "mere", "mera") }} predsedavajućeg: {{ term("opomena", "opomena") }}, {{ term("oduzimanje-reci", "oduzimanje reči") }} ili {{ term("udaljenje", "udaljenje") }}</span></p>{% endif %}
+    {% if fr %}<p><b>{{ fr|length }}</b><span>{{ plural(fr|length, "razmena", "razmene", "razmena") }} {{ term("replika", "replika") }} između dvoje govornika</span></p>{% endif %}
   </div>
   {% if fm %}
   <ul class="floor-list">
@@ -124,7 +124,7 @@
 <section class="debate">
   <h2>Rasprava u Skupštini</h2>
   {% set n = db.joint|length %}
-  <p>{% if db.n_days %}O zakonu se raspravljalo {{ db.n_days }} {{ plural(db.n_days, "dan", "dana", "dana") }}{% if db.first %}, {% if db.first == db.last %}{{ db.first|day_of }}{% else %}od {{ db.first|day_of }} do {{ db.last|day_of }}{% endif %}{% endif %}. {% endif %}{% if db.joint %}U načelu zajedno sa još {{ n }} {{ plural(n, "tačkom", "tačke", "tačaka") }} dnevnog reda{% else %}U načelu posebno{% endif %}{% if db.amendments %}, a zatim o {{ db.amendments }} {{ plural(db.amendments, "amandmanu", "amandmana", "amandmana") }} na ovaj zakon{% elif db.detail %}, a zatim o pojedinostima{% else %}; rasprave o amandmanima nije bilo{% endif %}.</p>
+  <p>{% if db.n_days %}O zakonu se raspravljalo {{ db.n_days }} {{ plural(db.n_days, "dan", "dana", "dana") }}{% if db.first %}, {% if db.first == db.last %}{{ db.first|day_of }}{% else %}od {{ db.first|day_of }} do {{ db.last|day_of }}{% endif %}{% endif %}. {% endif %}{% if db.joint %}{{ term("nacelni-pretres", "U načelu") }} zajedno sa još {{ n }} {{ plural(n, "tačkom", "tačke", "tačaka") }} dnevnog reda{% else %}{{ term("nacelni-pretres", "U načelu") }} posebno{% endif %}{% if db.amendments %}, a zatim o {{ db.amendments }} {{ term("amandman", plural(db.amendments, "amandmanu", "amandmana", "amandmana")) }} na ovaj zakon{% elif db.detail %}, a zatim o {{ term("pretres-u-pojedinostima", "pojedinostima") }}{% else %}; rasprave o amandmanima nije bilo{% endif %}.</p>
   {% if sd %}
   {% for key, heading in [("predlagac", "Predlagač i Vlada"), ("podrska", "Za zakon"), ("zamerke", "Protiv zakona")] %}
   {% if sd[key] %}<h3>{{ heading }}</h3><ul>{% for x in sd[key] %}<li>{{ x|latin }}</li>{% endfor %}</ul>{% endif %}
