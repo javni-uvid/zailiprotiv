@@ -11,6 +11,11 @@ function zipCount(what) {
   zipCounted[what] = 1;
   try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
 }
+// A way taken from the site to the live page (the bar of a sitting, an MP at the rostrum, any link): counted.
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest("a[href]");
+  if (a && a.hostname === "mikrofon.zailiprotiv.rs") zipCount("sajt.mikrofon");
+}, true);
 // An MP's speeches of a day (the MP's page): each one's address among the notes' pages, kept short in the page
 // ("dan-3-2.html#g00527 …" beside the sitting's folder) and made into numbered links here.
 document.addEventListener("DOMContentLoaded", function () {
@@ -281,6 +286,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (kinds.indexOf("law") >= 0) data.laws.forEach(function (l) {
         if (hits.length < n + 8 && has(l.t + " " + l.f)) hits.push({ href: "zakon/" + l.s + ".html", title: l.t, sub: day(l.d) + (l.za != null ? " · " + l.za + " za, " + l.pr + " protiv" : "") });
       });
+      zipCount("pretraga.polje");
+      if (!hits.length) zipCount("pretraga.polje-nema");
       if (!hits.length) hits.push({ title: kinds.indexOf("law") >= 0 ? "Nema zakona ni poslanika sa tim rečima u nazivu ili imenu" : "Nema poslanika sa tim imenom", sub: "" });
       hits.push({ all: true, title: "Traži u celom tekstu sajta", sub: "sažeci zakona, rasprave i stenografske beleške, govor po govor" });
       hits.forEach(function (h, k) {
@@ -293,6 +300,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       list.hidden = false; input.setAttribute("aria-expanded", "true");
     }
+    // What is taken from the list is counted (a sum per day, never the words): a name or title, or the whole text.
+    list.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a");
+      if (a) zipCount(a.classList.contains("hits-all") ? "pretraga.polje-ceo" : "pretraga.polje-izbor");
+    });
     input.addEventListener("focus", function () { load().then(show); });
     input.addEventListener("input", function () { load().then(show); });
     input.addEventListener("keydown", function (e) {
@@ -303,7 +315,9 @@ document.addEventListener("DOMContentLoaded", function () {
         mark(e.key === "ArrowDown" ? (at + 1 >= all.length ? -1 : at + 1) : (at < 0 ? all.length - 1 : at - 1));
       } else if (e.key === "Enter" && input.value.trim().length >= 2) {
         e.preventDefault();
-        location.href = at >= 0 && all[at] ? all[at].href : whole();
+        var pick = at >= 0 && all[at];
+        zipCount(pick && !pick.classList.contains("hits-all") ? "pretraga.polje-izbor" : "pretraga.polje-ceo");
+        location.href = pick ? all[at].href : whole();
       }
     });
   }

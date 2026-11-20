@@ -257,7 +257,8 @@
 // as our button when the browser makes one (Chrome, Edge, Samsung), and on an iPhone, which makes none, a line saying
 // where Safari keeps it. Nothing is installed but the page's address and icon.
 // Notifications (20 Nov 2026): on a press, the browser is asked for leave, the page's service worker (/sw.js) is
-// registered and the browser's push address sent to the site's counter; "Isključi" takes it back there too.
+// registered and the browser's push address sent to the site's counter; "Isključi" takes it back there too. Counted
+// (20 Nov 2026, one device had asked): the offer shown, pressed, refused by the browser's question, failed, and done.
 (function () {
   var use = function (w) { if (window.mikrofonUse) window.mikrofonUse(w); };
   var box = document.querySelector(".add-home");
@@ -291,13 +292,14 @@
       .then(function (r) { if (!r.ok) throw new Error("counter " + r.status); });
   }
   function state(on) { show("nt", !on); show("nt-done", on); show("nt-note", true); show("nt-err", false); }
-  function failed() { show("nt-err", true); }
+  function failed() { show("nt-err", true); use("obavesti-greska"); }
   if (Notification.permission === "denied") { show("nt-blocked", true); return; }
   navigator.serviceWorker.getRegistration("/").then(function (r) { return r ? r.pushManager.getSubscription() : null; })
-    .then(function (s) { state(!!s); }).catch(function () { state(false); });
+    .then(function (s) { state(!!s); if (!s) use("obavesti-moze"); }).catch(function () { state(false); });
   part("nt-on").addEventListener("click", function () {
+    use("obavesti-klik");
     Notification.requestPermission().then(function (p) {
-      if (p !== "granted") { show("nt", false); show("nt-blocked", p === "denied"); return; }
+      if (p !== "granted") { show("nt", false); show("nt-blocked", p === "denied"); use("obavesti-odbijeno"); return; }
       return navigator.serviceWorker.register("/sw.js" + (cir ? "?j=cir" : ""), { scope: "/" })
         .then(function () { return navigator.serviceWorker.ready; })
         .then(function (r) { return r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes(key) }); })

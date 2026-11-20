@@ -40,7 +40,11 @@ for the quiz's picture (`kviz.`) and the ballot's (`listic.`): `otvori` (the bal
 share button), `podeljeno` (the share sheet finished), `kopiraj`, `sacuvaj`; and `mikrofon.pusti` (the live
 page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.zailiprotiv.rs`, which may send only
 `mikrofon.` uses); the site's search: `pretraga.trazi` (a search run), `pretraga.prazno` (one that ended with no
-result), `pretraga.klik` (a result opened), never the words searched for. Nothing else is stored with it, not even
+result), `pretraga.klik` (a result opened), and the field on the home page and "Poslanici": `pretraga.polje` (typed in),
+`polje-nema` (no name or title), `polje-izbor` (one taken), `polje-ceo` (the whole text's search taken), never the
+words searched for; `sajt.snimak` (a recording played on a day page), `sajt.mikrofon` (a link to the live page
+taken); from the live page `mikrofon.obavesti-moze`, `-klik`, `-odbijeno`, `-greska` (the notification's offer
+shown, pressed, refused at the browser's question, failed). Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.
 

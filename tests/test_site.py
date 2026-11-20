@@ -739,3 +739,21 @@ def test_the_search_page_counts_its_use_and_never_its_words():
     events = worker[worker.index("const EVENTS"):worker.index("]);", worker.index("const EVENTS"))]
     for name in {s.strip('"') for s in sent}:
         assert f'"{name}"' in events
+
+
+def test_every_use_a_page_sends_is_one_the_counter_takes():
+    """The site's scripts, the day page's recordings and the live page send only names on the worker's list; a name
+    missing there would be refused (400) and never counted."""
+    import re
+    from pathlib import Path
+    root = Path(__file__).parents[1]
+    worker = (root / "worker/worker.js").read_text(encoding="utf-8")
+    events = set(re.findall(r'"([a-z]+\.[a-z-]+)"', worker[worker.index("const EVENTS"):worker.index("]);", worker.index("const EVENTS"))]))
+    sent = set()
+    for f in ("src/zailiprotiv/static/site.js", "src/zailiprotiv/static/pretraga.js"):
+        sent |= set(re.findall(r'"((?:pretraga|sajt|kviz|listic)\.[a-z-]+)"', (root / f).read_text(encoding="utf-8")))
+    sent |= set(re.findall(r'data-e="([^"{]+)"', (root / "src/zailiprotiv/templates/govornici_dan.html").read_text(encoding="utf-8")))
+    live = (root / "live/uzivo/static/live.js").read_text(encoding="utf-8")
+    sent |= {"mikrofon." + w for w in re.findall(r'use\("([a-z-]+)"\)', live)}
+    assert {"pretraga.polje-ceo", "sajt.snimak", "sajt.mikrofon", "mikrofon.obavesti-odbijeno"} <= sent
+    assert sent <= events, sent - events

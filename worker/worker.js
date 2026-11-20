@@ -62,7 +62,14 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   "mikrofon.obavesti", "mikrofon.odjavi",
   // the site's search (20 Nov 2026, to learn whether a search by meaning is worth building): a search run, a search
   // that found nothing, a result opened. Never the words searched for.
-  "pretraga.trazi", "pretraga.prazno", "pretraga.klik"]);
+  "pretraga.trazi", "pretraga.prazno", "pretraga.klik",
+  // the field on the home page and "Poslanici" (names and titles): typed in, nothing found, a name or title taken,
+  // the whole text's search taken (20 Nov 2026)
+  "pretraga.polje", "pretraga.polje-nema", "pretraga.polje-izbor", "pretraga.polje-ceo",
+  // a recording played on the site's day page; a way taken from the site to the live page (20 Nov 2026)
+  "sajt.snimak", "sajt.mikrofon",
+  // the notification's offer on the live page: shown, pressed, refused at the browser's question, failed (20 Nov 2026)
+  "mikrofon.obavesti-moze", "mikrofon.obavesti-klik", "mikrofon.obavesti-odbijeno", "mikrofon.obavesti-greska"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {

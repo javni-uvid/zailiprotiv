@@ -148,6 +148,11 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   `pretraga.js` adds to the counter's sums per day, each once per page: `pretraga.trazi` (a search run),
   `pretraga.prazno` (still no result two seconds after the last letter) and `pretraga.klik` (a result opened).
   The words searched for never leave the browser; the method page says so. Read in `GET /pregled` (`uses`).
+- **More uses counted, each to answer one question** (20 Nov 2026, the maintainer's choice of four): the field on the
+  home page and "Poslanici" (`pretraga.polje`, `-nema`, `-izbor`, `-ceo`: is the name-and-title search enough, or
+  do people leave it for the whole text), a recording played on a day page (`sajt.snimak`: is "who spoke when" with
+  the recording worth going on with), and a link from the site to the live page (`sajt.mikrofon`). Sums per day,
+  once per page, never the words; the method page lists them.
 
 ## Design rules
 
