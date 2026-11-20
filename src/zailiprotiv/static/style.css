@@ -1009,7 +1009,7 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 /* The strip of numbers is in its place before the script that works it, not put in above the law once it loads. */
 .q-wait .q-strip[hidden] { display: flex; }
 
-/* The home page on a phone, where four visits in five come from: "Kako bi ti glasao?" with its three buttons
+/* The home page on a phone, where four visits in five come from: "Kako ti glasaš?" with its three buttons
    stands on the first screen, right under the search, and the law that divided the chamber follows it. On wider
    screens nothing moves. */
 @media (max-width: 640px) {

@@ -331,6 +331,11 @@ The project's promises to its readers. Never change them without the maintainer.
   gives way to the next by the clock (not on a tap, so the browser counts it), the note under the quiz jumped up,
   0.31 a time on a phone (0.1 is good). The list now holds the screen's height from the first paint and the strip
   of numbers is in its place before the script, so nothing under the quiz is in sight to jump (0.001 after).
+- **The visitor is not addressed as a man** (20 Nov 2026; the MP's card lost its gender on 19 Nov). The question is
+  "Kako ti glasaš?" (it was "Kako bi ti glasao?"), a vote cast is "Tvoj glas: za" ("Glasao si za"), and the
+  counts speak in the present ("Kao većina u sali glasaš na 4 od 10 zakona") or of the vote ("tvoj glas", in the
+  shared text "moj glas"). "Uzdržan" stays: it is the vote's name in the roll calls. New text for the visitor
+  keeps to this: the present tense or "tvoj glas", no past participle.
 
 ### Search engines
 

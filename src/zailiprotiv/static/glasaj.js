@@ -79,7 +79,7 @@
     return { same: same, of: of, lonely: lonely };
   }
   function lonelyText(l) {
-    return !l ? "" : l.n === 0 ? "Jednom si glasao " + WORD[l.a] + " kad niko u sali nije." :
+    return !l ? "" : l.n === 0 ? "Jednom je tvoj glas bio " + WORD[l.a] + " kad ničiji u sali nije." :
       "Najusamljeniji glas: " + WORD[l.a] + ", kao samo " + l.n + " " + plural(l.n, "poslanik", "poslanika", "poslanika") + ".";
   }
 
@@ -94,8 +94,8 @@
     box.hidden = !a;
     if (!a) return;
     var same = a === "z" ? za : a === "p" ? protiv : null;
-    item.querySelector(".q-verdict").textContent = same === null ? "Uzdržao si se. Zakon je usvojen." :
-      "Glasao si " + WORD[a] + ", kao " + same + " " + plural(same, "poslanik", "poslanika", "poslanika") + ". Zakon je usvojen.";
+    item.querySelector(".q-verdict").textContent = same === null ? "Tvoj glas: uzdržan. Zakon je usvojen." :
+      "Tvoj glas: " + WORD[a] + ", kao " + same + " " + plural(same, "poslanik", "poslanika", "poslanika") + ". Zakon je usvojen.";
     // Halfway through, a first look at who votes like the visitor: something of their own for whoever stops here.
     var old = item.querySelector(".q-half");
     if (old) old.remove();
@@ -105,7 +105,7 @@
       if (vs.of) {
         var note = document.createElement("p");
         note.className = "q-half";
-        note.textContent = "Na pola si. Zasad si glasao kao većina u sali na " + vs.same + " od " + vs.of + ". Još " +
+        note.textContent = "Na pola si. Zasad glasaš kao većina u sali na " + vs.same + " od " + vs.of + ". Još " +
           (answers.length - n) + " do celog rezultata.";
         box.insertBefore(note, box.firstChild);
       }
@@ -133,7 +133,7 @@
   var shareText = "";
   function summary() {
     var n = done(), need = Math.max(3, Math.ceil(n / 2));  // one common vote would top the list by chance
-    document.getElementById("q-count").textContent = "Glasao si o " + n + " od " + answers.length + " zakona";
+    document.getElementById("q-count").textContent = "Tvoji glasovi: " + n + " od " + answers.length + " zakona";
     var groups = data.groups.map(function (g) { return { g: g, m: match(g.v) }; }).filter(function (x) { return x.m.both >= need; })
       .sort(function (a, b) { return b.m.share - a.m.share || b.m.both - a.m.both || b.g.m - a.g.m; });
     // The lead: the visitor beside the chamber (17 Nov 2026: no MP or group is named as "like you").
@@ -280,7 +280,7 @@
       var sameTxt = vs.same + " od " + vs.of, sw = ctx.measureText(sameTxt).width;
       ctx.fillText(sameTxt, P, y);
       ctx.font = "400 40px " + sans; ctx.fillText(cr ? " puta kao većina posetilaca" : " puta kao većina u sali", P + sw, y);
-      var alone = cr ? crowdLonely(cr.lonely) : lonelyText(vs.lonely).replace("si glasao", "sam glasao");
+      var alone = cr ? crowdLonely(cr.lonely) : lonelyText(vs.lonely).replace("tvoj glas", "moj glas");
       if (alone) { ctx.fillStyle = SOFT; ctx.font = "400 34px " + sans; ctx.fillText(alone, P, y + 56); }
       ctx.fillStyle = "#ffffff"; ctx.fillRect(P, H - 176, W - 2 * P, 4);
       ctx.font = "700 64px " + serif; ctx.fillText("A ti?", P, H - 86);
@@ -319,11 +319,11 @@
     var line = document.getElementById("q-crowd-fact");
     line.hidden = !card.crowd;
     if (card.crowd) line.textContent = "Na " + card.crowd.same + " od " + card.crowd.of + " " + plural(card.crowd.of, "zakona", "zakona", "zakona") +
-      " glasao si kao većina posetilaca sajta.";
+      " glasaš kao većina posetilaca sajta.";
     // The words that are copied or shared: what would have happened, how often with the others, and the question.
     var vs = card.crowd || card.vs || versus();
     shareText = card.fact.replace(/ zakona\.$/, " ovih zakona.") + (vs.of ? (card.crowd ? " Kao većina posetilaca" : " Kao većina u sali") +
-      " glasao sam na " + vs.same + " od " + vs.of + "." : "") + " Kako bi ti glasao?";
+      " glasam na " + vs.same + " od " + vs.of + "." : "") + " Kako ti glasaš?";
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(drawCard);
   }
   function note(text) { document.getElementById("q-shared").textContent = text; }
@@ -339,7 +339,7 @@
   var shared = function () { used("kviz.podeljeno"); };
   document.getElementById("q-share").addEventListener("click", function () {
     used("kviz.podeli");
-    var file = cardBlob && window.File ? new File([cardBlob], "kako-bih-ja-glasao.png", { type: "image/png" }) : null;
+    var file = cardBlob && window.File ? new File([cardBlob], "kako-ja-glasam.png", { type: "image/png" }) : null;
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
       navigator.share({ files: [file], text: shareText + " " + shareUrl() }).then(shared, function () {});
     } else if (navigator.share) {
