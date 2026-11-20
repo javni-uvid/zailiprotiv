@@ -3,7 +3,8 @@
 LCP (when the largest thing on the first screen is drawn; good up to 2.5 s), INP (how long the page takes to answer
 a tap; good up to 200 ms) and CLS (how much the page jumps while loading; good up to 0.1), each as the share of
 measured page loads that were good, middling and poor, by host and device and for the most opened pages. Google
-judges a page by the 75th percentile, so "good" for three loads in four is the line to hold.
+judges a page by the 75th percentile, so "good" for three loads in four is the line to hold. For a page under that
+line the elements Cloudflare names are listed: which one jumped (CLS), was drawn late (LCP) or answered late (INP).
 
 Asked of Cloudflare's GraphQL analytics by the `visits` workflow, with the account's token. Sums only, and a row
 measured fewer than twenty times is left out: the log is public, and a share of so few says nothing. `schema` as
@@ -17,7 +18,10 @@ from datetime import datetime, timedelta, timezone
 API = "https://api.cloudflare.com/client/v4/graphql"
 DATASET = "rumWebVitalsEventsAdaptiveGroups"
 LEAST = 20
+LINE = 0.75
 METRICS = (("LCP", "lcp"), ("INP", "inp"), ("CLS", "cls"))
+ELEMENT = {"lcp": "largestContentfulPaintElement", "inp": "interactionToNextPaintElement",
+           "cls": "cumulativeLayoutShiftElement"}
 SUMS = " ".join(f"{m}Good {m}NeedsImprovement {m}Poor {m}Total" for _, m in METRICS)
 
 
@@ -33,26 +37,38 @@ def share(part: int, whole: int) -> str:
     return f"{round(100 * part / whole):>3}%" if whole else "   –"
 
 
-def line(sums: dict) -> str:
-    """Good / middling / poor for each metric, and how many loads it was measured on."""
+def line(sums: dict, only: str = "") -> str:
+    """Good / middling / poor for each metric (or `only` one), and how many loads it was measured on."""
     out = []
     for name, m in METRICS:
+        if only and m != only:
+            continue
         whole = sums.get(f"{m}Total") or 0
         out.append(f"{name} {share(sums.get(f'{m}Good') or 0, whole)} {share(sums.get(f'{m}NeedsImprovement') or 0, whole)}"
                    f" {share(sums.get(f'{m}Poor') or 0, whole)} ({whole})")
     return "   ".join(out)
 
 
-def groups(dimensions: str, variables: dict, limit: int) -> list:
-    query = """query($acc: String!, $since: Time!, $until: Time!) { viewer { accounts(filter: {accountTag: $acc}) {
+def groups(dimensions: str, variables: dict, limit: int, page: tuple | None = None) -> list:
+    """Sums by the dimensions named; with `page` (host, path), of that page alone."""
+    query = """query($acc: String!, $since: Time!, $until: Time!%s) { viewer { accounts(filter: {accountTag: $acc}) {
       rows: %s(limit: %d, orderBy: [count_DESC],
-        filter: {datetime_geq: $since, datetime_leq: $until, bot: 0}) { count sum { %s } dimensions { %s } } } } }""" % (
-        DATASET, limit, SUMS, dimensions)
+        filter: {datetime_geq: $since, datetime_leq: $until, bot: 0%s}) { count sum { %s } dimensions { %s } } } } }""" % (
+        ", $host: String!, $path: String!" if page else "", DATASET, limit,
+        ", requestHost: $host, requestPath: $path" if page else "", SUMS, dimensions)
+    if page:
+        variables = dict(variables, host=page[0], path=page[1])
     got = post(query, variables)
     if got.get("errors"):
         print("Cloudflare:", "; ".join(e.get("message", "?") for e in got["errors"])[:600])
         return []
     return got["data"]["viewer"]["accounts"][0]["rows"]
+
+
+def short(sums: dict) -> list:
+    """The metrics a row holds under the line, of those measured often enough to say."""
+    return [(name, m) for name, m in METRICS
+            if (sums.get(f"{m}Total") or 0) >= LEAST and (sums.get(f"{m}Good") or 0) < LINE * sums[f"{m}Total"]]
 
 
 def schema():
@@ -86,6 +102,7 @@ def main(hours: int):
     print(f"Core Web Vitals, last {hours} h, to {variables['until']}: share of loads good / middling / poor, "
           f"(loads measured); rows under {LEAST} left out")
     print("Good: LCP to 2.5 s, INP to 200 ms, CLS to 0.1. The line to hold: good for 75% or more.")
+    pages = []
     for title, dims, limit in (("By host and device", "requestHost deviceType", 12), ("By page", "requestHost requestPath", 30)):
         rows = groups(dims, variables, limit)
         print(f"\n{title}")
@@ -94,6 +111,14 @@ def main(hours: int):
                 d = r["dimensions"]
                 where = f"{d['requestHost']} {d.get('deviceType') or d.get('requestPath') or ''}".strip()
                 print(f"  {line(r['sum'])}   {where}")
+        pages = rows
+    for r in pages:
+        d = r["dimensions"]
+        for name, m in short(r["sum"]):
+            print(f"\n{name} under the line on {d['requestHost']}{d['requestPath']}: by element")
+            for e in groups(ELEMENT[m], variables, 8, (d["requestHost"], d["requestPath"])):
+                if (e["sum"].get(f"{m}Total") or 0) >= LEAST // 4:
+                    print(f"  {line(e['sum'], m)}   {e['dimensions'][ELEMENT[m]] or '(none named)'}")
 
 
 if __name__ == "__main__":
