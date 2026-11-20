@@ -210,7 +210,8 @@ def build(root: Path, out: Path) -> dict[str, int]:
     from zailiprotiv import site
     convs = site.convocations(root)
     mps.load_aliases(root / "mp_aliases.json")
-    votes = {k: v for _, path in convs for k, v in site.load(path)[1].items()}
+    loaded = {conv: site.load(path)[1] for conv, path in convs}  # each convocation's roll calls, read once
+    votes = {k: v for conv, _ in convs for k, v in loaded[conv].items()}
     people = site.registry(votes)
     loose = {debates_.loose(k): k for k in people}
     if out.exists():
@@ -228,7 +229,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
         # checked a few by hand and set `recording_links` (data/settings.json).
         records = uzivo.load(path) if settings.get("recording_links") else {}
         stores = site.load_transcripts(path)
-        debates_.mend(stores, site.load(path)[1])  # the speakers' names mistyped in the notes, set right
+        debates_.mend(stores, loaded[conv])  # the speakers' names mistyped in the notes, set right
         for url, notes in stores.items():
             if not notes.get("speeches"):
                 continue

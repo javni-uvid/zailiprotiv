@@ -373,13 +373,17 @@ def notes_upload_cmd(args) -> int:
             if i % 200 == 0:  # keep what was sent, should the run stop
                 save()
                 print(f"  {i}/{len(order)}", flush=True)
-    for name in gone if not failed else []:  # nothing is removed in a run that did not send everything
-        try:
-            s3.delete_object(Bucket=args.bucket, Key=name)
-            manifest.pop(name, None)
-        except Exception as e:
-            failed.append(name)
-            print(f"  not removed {name}: {e}")
+    # Nothing is removed in a run that did not send everything. Removed as many at once as are sent: one at a time,
+    # the search index's 600 old files took some four minutes a run.
+    with ThreadPoolExecutor(workers) as pool:
+        jobs = {pool.submit(s3.delete_object, Bucket=args.bucket, Key=name): name for name in (gone if not failed else [])}
+        for job in as_completed(jobs):
+            name = jobs[job]
+            if job.exception():
+                failed.append(name)
+                print(f"  not removed {name}: {job.exception()}")
+            else:
+                manifest.pop(name, None)
     save()
     from zailiprotiv import files_site
     print("notes: " + files_site.purge("https://beleske.zailiprotiv.rs/", [n for n in send if n in old and n not in failed] + (gone if not failed else [])))

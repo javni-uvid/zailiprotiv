@@ -72,3 +72,45 @@ def test_a_day_read_by_hand_only_gets_the_places_it_lacks(tmp_path):
     assert day["izvor"] == "snimak" and day["govori"][0]["snimak"] == 995
     assert day["govori"][1]["datoteka"] == new and abs(day["govori"][1]["snimak"] - 695) <= arhiva.STEP / 2 + arhiva.SLACK
     assert [f["url"] for f in day["datoteke"]] == [old, new]
+
+
+def _serial(url, read, dur, grab):
+    """The reading one frame at a time, as it was before the frames were read concurrently."""
+    got, t = [], arhiva.FIRST
+    while t < min(dur, arhiva.LAST) and len(got) < arhiva.ENOUGH:
+        img = grab(url, t)
+        if img is not None:
+            k = read(img)
+            if k:
+                got.append((t, k))
+        t += arhiva.STEP
+    return got
+
+
+def test_samples_concurrent_same_as_serial():
+    import random
+    import time
+    for seed in range(40):
+        rnd = random.Random(seed)
+        named = {t: rnd.choice([None, None, "a", "b"]) for t in range(arhiva.FIRST, arhiva.LAST, arhiva.STEP)}
+        blank = {t for t in named if rnd.random() < 0.1}
+
+        def grab(url, t):
+            time.sleep(rnd.random() / 2000)  # finish out of order
+            return None if t in blank else t
+        dur = rnd.choice([500.0, 2000.0, 5000.0])
+        want = _serial("u", named.get, dur, grab)
+        for workers in (1, 3, 6, 8):
+            assert arhiva.samples("u", named.get, dur, grab=grab, workers=workers) == want
+
+
+def test_samples_error_only_where_serial_meets_it():
+    def grab(url, t):
+        if t >= 20 + 30 * 11:
+            raise TimeoutError(t)
+        return t
+    # ten named frames before the failing one: the serial reading stops before it, so must the concurrent one
+    assert len(arhiva.samples("u", lambda img: "a", 3000.0, grab=grab, workers=8)) == arhiva.ENOUGH
+    import pytest
+    with pytest.raises(TimeoutError):
+        arhiva.samples("u", lambda img: "a" if img < 100 else None, 3000.0, grab=grab, workers=8)
