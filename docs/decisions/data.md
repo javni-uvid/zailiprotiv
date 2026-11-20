@@ -41,6 +41,10 @@ as the change. The principles and the rules of work are in AGENTS.md.
   its chapter at the Assembly (`pages_floor.invoked_articles`, `#clan-<n>`); in the notes' pages each such mention
   leads there. The text shown is the Rules as now consolidated (the page says an older sitting may have known
   another wording). Method: `kako-racunamo#poslovnik`.
+  **On a page of their own** (20 Nov 2026, the same day): with every convocation's notes the list made the
+  Cyrillic `varnice-svi` 1.1 MB, over the pages' limit, and no build was published for two hours. It is
+  `poslovnik-clanovi` (`pages_floor.RULES`, `rules_cited.html`); "Varnice u sali: svi sazivi" names how many
+  articles and the one invoked most, and links there; the notes' pages link `poslovnik-clanovi#clan-<n>`.
 
 ## Laws
 
