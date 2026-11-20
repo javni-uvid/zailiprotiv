@@ -308,6 +308,11 @@ The project's promises to its readers. Never change them without the maintainer.
   the page says so), or by rule without it. **Quizzes by theme** (17 Nov 2026, `kviz/<theme>`): per area of the
   current convocation with five or more laws with votes against, the most divided ten, by the same rule; areas get
   short names (`pages_quiz.THEMES`); Article 97's "other matters" gets none.
+- **The quiz keeps a screen's height** (20 Nov 2026): the first reading of the pages' speed (`tools/vitals.py`)
+  had the quiz as the one page under the line, its layout shift good in half of the loads. The cause: when one law
+  gives way to the next by the clock (not on a tap, so the browser counts it), the note under the quiz jumped up,
+  0.31 a time on a phone (0.1 is good). The list now holds the screen's height from the first paint and the strip
+  of numbers is in its place before the script, so nothing under the quiz is in sight to jump (0.001 after).
 
 ### Search engines
 

@@ -309,8 +309,11 @@ td.lean { white-space: nowrap; }
 .q-strip .q-strip-end { flex: 0 0 auto; padding: 0 .9rem; }
 .q-strip .q-strip-end:disabled { opacity: .4; cursor: default; }
 .quiz { list-style: none; padding: 0; margin: 0; max-width: 46rem; }
-.quiz.q-live { min-height: 24rem; }
-.quiz:not(.q-live) .q-item { padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--line); }
+/* The quiz holds a screen's height from the first paint, so what stands under it (the note, the foot) is out of sight
+   and does not jump when one law gives way to the next by the clock, or when a vote brought from the home page
+   opens its result (measured: tools/vitals.py had CLS good in half of this page's loads). */
+.q-wait .quiz, .quiz.q-live { min-height: calc(100vh - 3rem); }
+html:not(.q-wait) .quiz:not(.q-live) .q-item { padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--line); }
 .q-n { margin: 0 0 .5rem; font-size: .95rem; color: var(--muted); }
 .q-item h2 { font-family: var(--serif); font-size: clamp(1.7rem, 4.6vw, 2.5rem); line-height: 1.12; margin: 0 0 .8rem; letter-spacing: -.015em; }
 .q-gist { font-size: 1.2rem; line-height: 1.5; margin: 0 0 1rem; }
@@ -984,6 +987,8 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .lb-rest-pick, #lb-rest .lb-pick { margin: 0 0 2rem; }
 .lb-top b.big { min-height: 1.85rem; }
 .q-wait .quiz:not(.on) .q-item:not(:first-child) { display: none; }
+/* The strip of numbers is in its place before the script that works it, not put in above the law once it loads. */
+.q-wait .q-strip[hidden] { display: flex; }
 
 /* The home page on a phone, where four visits in five come from: "Kako bi ti glasao?" with its three buttons
    stands on the first screen, right under the search, and the law that divided the chamber follows it. On wider
