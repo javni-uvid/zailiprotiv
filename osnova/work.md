@@ -25,7 +25,8 @@ Several agents work at once, so nothing is committed straight to `main`.
   seen from outside (a domain, DNS, a service's settings, email), money.
 - **A merged task's worktree is removed.** `tools/pocisti.sh`, run by `posalji.sh` after its merge, removes every
   worktree with no changes whose pull request was merged on exactly its commit over ten minutes ago; an agent's
-  own goes in the next agent's run. By hand: `sh tools/pocisti.sh` (`--proba` only lists).
+  own goes in the next agent's run. By hand: `sh tools/pocisti.sh` (`--proba` only lists). Never by
+  `git worktree remove`: Orca keeps the folder open, git forgets the worktree and the folder stays behind.
 - **The data workflows commit straight to `main`.** A branch lags behind in `data/`, which is fine while a task
   doesn't change `data/`; a task that must, rebases just before it merges.
 - **`main` is guarded on our side.** GitHub's rulesets can't exempt the workflows' own token, so a ruleset
@@ -40,6 +41,9 @@ Several agents work at once, so nothing is committed straight to `main`.
 
 - **Run the project's whole test suite before every push.** The **test** workflow runs it again on every pull
   request and on `main`; a red run is fixed before anything else.
+- **Measured, then changed.** Work on speed or size starts from a measurement and says the before and after. A
+  change meant to keep the output (a refactor, a faster count, a module moved) is checked by building the site
+  before and after on the same data and comparing every file; the pull request says how many differed and why.
 - **Explain why in commit messages:** what changed for the site or the data, and the reason.
 - **Write the decision down** in its part's file (the project's AGENTS.md has the map), at the end of the section
   it belongs to, in the same commit as the change. A rule of work or a principle of the project goes in its
