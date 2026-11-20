@@ -56,21 +56,9 @@
   <p class="label">{% if notes_all %}Sazivi nisu jednako dugi i nemaju isti broj sednica, pa se ne mogu porediti po zbiru.{% else %}Sazivi nisu čitani jednako: brojevi zavise od toga koliko je sednica pročitano u kojem, pa se sazivi ne mogu porediti po zbiru.{% endif %}</p>
 </section>
 {% if invoked %}
-<section id="poslovnik">
+<section id="clanovi-poslovnika">
   <h2>Na koje članove Poslovnika se poslanici pozivaju</h2>
-  <p class="label">Članovi Poslovnika Narodne skupštine navedeni u govorima kojima poslanik ukazuje na povredu Poslovnika (na početku govora), i član naveden uz reč „Poslovnik“ bilo gde u govoru; jedan govor broji se jednom po članu. Isto pravilo za svakoga. Tekst je današnji prečišćeni tekst Poslovnika sa sajta Skupštine: član je ranije mogao da glasi drugačije. <a href="kako-racunamo.html#poslovnik">Kako brojimo</a></p>
-  <ol class="plain rules-cited">
-  {% for a in invoked %}
-    <li id="clan-{{ a.n }}">
-      <details>
-        <summary><b>Član {{ a.label }}</b> · {{ a.count }} {{ plural(a.count, "put", "puta", "puta") }}{% if a.section %} <span class="meta">· {{ a.section }}</span>{% endif %}<br><span class="meta">{{ a.short }}</span></summary>
-        {% for s in a.text %}<p>{{ s }}</p>{% endfor %}
-        <p class="meta">{% for x in a.convs %}{{ x.name }} saziv: {{ x.count }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
-        <p class="meta">{{ a.chapter }}{% if a.url %} · <a href="{{ a.url }}">Poslovnik na sajtu Skupštine ↗</a>{% endif %}</p>
-      </details>
-    </li>
-  {% endfor %}
-  </ol>
+  <p><a href="poslovnik-clanovi.html">{{ invoked|length }} {{ plural(invoked|length, "član", "člana", "članova") }} Poslovnika, koliko se puta koji navodi i njihov tekst</a>{% if invoked[0] %}; najčešće član {{ invoked[0].label }} ({{ invoked[0].count }} {{ plural(invoked[0].count, "put", "puta", "puta") }}){% endif %}.</p>
 </section>
 {% endif %}
 {% else %}

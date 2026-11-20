@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "macros.html" import plural with context %}
+{% block title %}Na koje članove Poslovnika se poslanici pozivaju — Za ili Protiv{% endblock %}
+{% block description %}Članovi Poslovnika Narodne skupštine koje poslanici navode u govorima, svi sazivi od 2012: koliko puta koji, po sazivima, i tekst člana.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="varnice-svi.html">Varnice u sali</a></p>
+<h1>Na koje članove Poslovnika se poslanici pozivaju</h1>
+<section id="clanovi">
+  <p class="label">Članovi Poslovnika Narodne skupštine navedeni u govorima kojima poslanik ukazuje na povredu Poslovnika (na početku govora), i član naveden uz reč „Poslovnik“ bilo gde u govoru; jedan govor broji se jednom po članu. Isto pravilo za svakoga. Tekst je današnji prečišćeni tekst Poslovnika sa sajta Skupštine: član je ranije mogao da glasi drugačije. <a href="kako-racunamo.html#poslovnik">Kako brojimo</a></p>
+  <ol class="plain rules-cited">
+  {% for a in invoked %}
+    <li id="clan-{{ a.n }}">
+      <details>
+        <summary><b>Član {{ a.label }}</b> · {{ a.count }} {{ plural(a.count, "put", "puta", "puta") }}{% if a.section %} <span class="meta">· {{ a.section }}</span>{% endif %}<br><span class="meta">{{ a.short }}</span></summary>
+        {% for s in a.text %}<p>{{ s }}</p>{% endfor %}
+        <p class="meta">{% for x in a.convs %}{{ x.name }} saziv: {{ x.count }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+        <p class="meta">{{ a.chapter }}{% if a.url %} · <a href="{{ a.url }}">Poslovnik na sajtu Skupštine ↗</a>{% endif %}</p>
+      </details>
+    </li>
+  {% endfor %}
+  </ol>
+</section>
+{% endblock %}

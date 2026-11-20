@@ -213,7 +213,7 @@ def _speech(k: str, s: dict, who: dict | None, w: dict, script: str, at: dict | 
         out, done = [], 0
         for n, a, b in cites:
             if start <= a and b <= start + len(p):
-                href = f'{MAIN}{"" if script == "lat" else "cir/"}varnice-svi#clan-{n}'
+                href = f'{MAIN}{"" if script == "lat" else "cir/"}poslovnik-clanovi#clan-{n}'
                 out += [html.escape(show(p[done:a - start])),
                         f'<a class="rule" href="{href}">{html.escape(show(p[a - start:b - start]))}</a>']
                 done = b - start
