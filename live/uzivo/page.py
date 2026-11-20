@@ -191,23 +191,20 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
 
 
 def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
-    """The day's steps as a line of time, newest first (steps_shown): the hour, a mark for where the line is from
-    (a ring: heard in the chair's words; a full dot: written by the Assembly), and the line. The first six shown,
-    the rest folded."""
-    rows = steps_shown(snap)
-    if not rows:
+    """The day's steps as a line of time, newest first (steps_shown): the hour and the line, for what was heard in
+    the chair's words; the first eight shown, the rest folded. What the Assembly wrote on the sitting's page is not
+    on the line of time (20 Nov 2026, the maintainer: it mixed with the steps; its hour is when we read it, hours
+    after the event): its sentences stand whole under the line, folded, in the same box."""
+    every = steps_shown(snap)
+    if not every:
         return ""
+    rows = [e for e in every if e["izvor"] != "sajt"]
+    written = [e for e in every if e["izvor"] == "sajt"]
     t = lambda k: escape(_t(k, cyr))
     s = lambda x: escape(_name(x, cyr))
 
     def line(e: dict) -> str:
-        if e["izvor"] == "sajt":
-            src = t("steps_site")
-            if str(e["url"]).startswith("https://"):
-                src = f'<a href="{escape(e["url"])}">{src} ↗</a>'
-            body = (f'<p class="st-text"><b class="st-off">{t("steps_official")}</b> {s(e["opis"])}</p>'
-                    f'<p class="st-src">{src} · {escape(_fill(_t("steps_published", cyr), _clock(e["t"], tz)))}</p>')
-        elif e.get("rec"):
+        if e.get("rec"):
             head, _, who = e["naslov"].partition(": ")
             who = s(who)
             if e.get("adresa") and str(e["adresa"]).replace("-", "").isalnum():
@@ -215,22 +212,28 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
             body = f'<p class="st-floor">{s(head)}: <b>{who}</b></p>'
         else:
             body = f'<p class="st-title">{s(e["naslov"])}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
-        when = _clock(e["t"], tz) + (f'<small>{t("steps_pub")}</small>' if e["izvor"] == "sajt" else "")
-        return (f'<li class="st-{e["izvor"]}{" st-rec" if e.get("rec") else ""}"><span class="time">{when}</span><i aria-hidden="true"></i>'
+        return (f'<li class="st-{e["izvor"]}{" st-rec" if e.get("rec") else ""}"><span class="time">{_clock(e["t"], tz)}</span><i aria-hidden="true"></i>'
                 f'<div>{body}</div></li>')
     first, rest = rows[:8], rows[8:]
     more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
             if rest else "")
     said_key = "steps_model" if any(e.get("model") for e in rows) else "steps_said"
-    key = (f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t(said_key)}</span>'
-           f'<span class="st-sajt"><i aria-hidden="true"></i>{t("steps_site_key")}</span></p>')
+    key = f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t(said_key)}</span></p>' if rows else ""
+    official = ""
+    if written:  # the Assembly's sentences whole, in the order they stood; one line says where from and when read
+        links = "".join(f' <a href="{escape(u)}">{t("steps_site")} ↗</a>' for u in dict.fromkeys(
+            str(e["url"]) for e in written) if u.startswith("https://")) or " " + t("steps_site")
+        read = escape(_fill(_t("steps_published", cyr), _clock(max(e["t"] for e in written), tz)))
+        sentences = "".join("<p>" + s(e["opis"]) + "</p>" for e in written)
+        official = (f'<details class="st-written"{"" if rows else " open"}><summary>{t("steps_written")} ({len(written)})</summary>'
+                    f'{sentences}<p class="st-src">{read}{links}</p></details>')
     # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
     head = t("steps")
     if snap.get("ranije") and snap.get("dan"):
         when = _date(snap["dan"])
         head = f'{t("steps_then")}, {escape(cyrillic(when) if cyr else when)}'
-    return (f'<section class="steps-sec"><h2>{head}</h2><p class="meta">{t("steps_lead")}</p>'
-            f'<ol class="steps">{"".join(line(e) for e in first)}</ol>{more}{key}</section>')
+    line_ = f'<p class="meta">{t("steps_lead")}</p><ol class="steps">{"".join(line(e) for e in first)}</ol>{more}{key}' if rows else ""
+    return f'<section class="steps-sec"><h2>{head}</h2>{line_}{official}</section>'
 
 
 def _tiles(turns: list[dict], *, cyr: bool) -> str:

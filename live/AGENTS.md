@@ -344,3 +344,13 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   glasalo 98, prisutno 234"), shown under its step on the live page and on the site's day page; the figures are never
   re-worded by the model. The live page's summary box had no style: it has one now, and shows the latest stretch's
   steps (`tok`) as well as the day's decisions.
+- **What the Assembly wrote stands under the line of time, not on it** (20 Nov 2026, the maintainer: "ne sviđa mi
+  se kako se zvanično meša sa drugim tačkama reda"; it changes the 'marked "Zvanično"' of "never shows the
+  transcript's wording" above). On 19 Nov eleven of the Assembly's sentences stood on the line at 23:56, the minute
+  we read them, among the steps of 23:50-23:57: paragraphs between one-line steps, telling again, hours late, what
+  the line already had at its own hour. The line of time now holds only what was heard. The Assembly's sentences
+  are in the same box (the maintainer: not too many separate blocks), folded under the line as "Šta je Skupština
+  zapisala o ovom danu (N)": whole and word for word, in the order they stood, with one line saying where they are
+  from, until when they were read, and that the Assembly writes after the event; open when nothing was heard.
+  The mark "Zvanično", the hour's "objava" and the full dot with its key are gone. Not done yet: the same
+  sentences in the day's mail and summary (the maintainer's other thought).

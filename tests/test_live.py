@@ -987,6 +987,14 @@ def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines
     assert "Rad je nastavljen" in html and "Izbor potpredsednika" in html and "krada" not in html
     cir = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Рад је настављен" in cir and "Прелазак на 2. тачку дневног реда" in cir
+    # what the Assembly wrote is not on the line of time: under it, folded, whole, with where it is from
+    line_of_time, written = html.split('<details class="st-written"')
+    assert "izabrala potpredsednike" not in line_of_time and "Zvanično" not in html
+    assert line_of_time.split('<ol class="steps">')[1].count("<li") == 2
+    assert "<summary>Šta je Skupština zapisala o ovom danu (1)</summary><p>Narodna skupština je izabrala potpredsednike.</p>" in written
+    assert 'href="https://www.parlament.gov.rs/x"' in written and "Skupština piše posle događaja" in written
+    only = fragment({**snap, "hronika": snap["hronika"][:1]}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<details class="st-written" open>' in only and '<ol class="steps">' not in only  # nothing heard: shown open
 
 
 def test_only_the_chairs_sound_is_written_down_and_a_step_is_shown_when_something_bears_it_out(tmp_path):
