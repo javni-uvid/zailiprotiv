@@ -143,6 +143,11 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   is no vote), only the article's name is underlined, and an opened row doesn't say its first sentence twice.
   Left as found: on a phone the menu's links are 37-41 px high, the quiz's strip of numbers 34 px and a turn's
   "podeli" 16 px, under rule 7's 44 px.
+- **The search page's use is counted, never its words** (20 Nov 2026, the maintainer's decision, before deciding
+  on a search by meaning over the laws: Pagefind runs in the browser and nobody knew whether the search is used).
+  `pretraga.js` adds to the counter's sums per day, each once per page: `pretraga.trazi` (a search run),
+  `pretraga.prazno` (still no result two seconds after the last letter) and `pretraga.klik` (a result opened).
+  The words searched for never leave the browser; the method page says so. Read in `GET /pregled` (`uses`).
 
 ## Design rules
 

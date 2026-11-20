@@ -9,6 +9,23 @@ window.addEventListener("DOMContentLoaded", function () {
   // "đ" both spellings are counted, and the search runs with the one that finds more. Counting is asked of the same
   // index and takes a moment, so the first search runs as typed and is run again when the count says otherwise.
   var better = {}, asked = {}, ui = null, engine = null;
+  // Counted for the counter's sum per day (site.js, once per page): a search run, one that still has no result two
+  // seconds after the last letter typed, a result opened. Never the words: only that it happened.
+  var quiet = null;
+  function counted(text) {
+    if (!window.zipCount || text.trim().length < 2) return;
+    zipCount("pretraga.trazi");
+    clearTimeout(quiet);
+    quiet = setTimeout(function () {
+      var msg = document.querySelector("#search .pagefind-ui__message");
+      if (msg && msg.textContent.trim() && !document.querySelector("#search .pagefind-ui__result")
+          && !/^Tražim|^Тражим/.test(msg.textContent.trim())) zipCount("pretraga.prazno");
+    }, 2000);
+  }
+  box.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest(".pagefind-ui__result a");
+    if (a && window.zipCount) zipCount("pretraga.klik");
+  });
   function spellings(word) {
     var low = word.toLowerCase(), out = [];
     if (low.indexOf("dj") >= 0) out.push(word.replace(/dj/g, "đ").replace(/Dj|DJ/g, "Đ"));
@@ -39,7 +56,7 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
   function start(merge) {
-    ui = new PagefindUI({ processTerm: function (t) { count(t); return term(t); }, element: "#search", showSubResults: true, showImages: false, resetStyles: false, autofocus: true,
+    ui = new PagefindUI({ processTerm: function (t) { count(t); counted(t); return term(t); }, element: "#search", showSubResults: true, showImages: false, resetStyles: false, autofocus: true,
       mergeIndex: merge ? [{ bundlePath: notes + "pagefind/", baseUrl: notes }] : [],
       // A result from the notes is a whole day's page. Its heading becomes the speaker of the speech with the most
       // hits and leads to that speech, not to the top of the day; the other speeches of the day follow beneath. Every
