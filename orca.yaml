@@ -1,0 +1,3 @@
+# Orca runs this in every new worktree of the repository (AGENTS.md, "How to work here").
+scripts:
+  setup: uv sync
