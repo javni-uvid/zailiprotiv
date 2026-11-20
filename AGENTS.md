@@ -413,6 +413,13 @@ show otherwise, unlike the six principles above). A change to a page is checked 
    cannot stop; the visitor is not addressed as a man or a woman.
 10. **Measured, then changed.** Visits and the pages' speed are read before a change to how a page is laid out,
     and after it.
+11. **What moves a reader stays** (20 Nov 2026, the maintainer: the pages are better with what draws a reader in).
+    Faces, names, a speaker's clock, a sentence said in the hall and the groups' colours are kept where they
+    lead into the page, and a tidier look is no reason to take them out. The groups' colours are an exception to
+    rule 2 on the home page and the live page only: each hue stands apart from blue and orange (the first list's
+    is indigo for that reason), the same hues on both pages, a key always names them, and they differ in
+    lightness for colour-blind readers. They follow the same rules as everything else: the same for every group
+    (principle 1), no judgement in the words beside them, and never the only way a fact is told.
 
 ### Visitors' votes ("Glasaj i ti")
 
