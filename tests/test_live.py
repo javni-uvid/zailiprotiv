@@ -160,6 +160,9 @@ def test_page_both_scripts():
     cyr = page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Петар Петровић" in cyr and "https://zailiprotiv.rs/cir/poslanik/petrovic-petar" in cyr
     assert "Ко сада говори у Скупштини" in cyr
+    # the Rules of Procedure, always under the day (20 Nov 2026: the new convocation's readers asked to find it)
+    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojmovi"' in lat and "Sednica po Poslovniku" in lat
+    assert 'href="https://zailiprotiv.rs/cir/poslovnik-clanovi#pojmovi"' in cyr
     for html in (lat, cyr):  # nothing from elsewhere but links
         assert "<script src" not in html and "googleapis" not in html
     guest = Tracker(None, "Europe/Belgrade")

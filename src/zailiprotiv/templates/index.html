@@ -52,6 +52,10 @@
       </ul>
     </div>
   </div>
+  {% if rule_terms %}<div class="hc-rules">
+    <h3><a href="poslovnik-clanovi.html#pojmovi">Sednica po Poslovniku</a></h3>
+    <p>Šta po Poslovniku Skupštine znače <a href="poslovnik-clanovi.html#pojam-otvaranje-sednice">kvorum</a>, <a href="poslovnik-clanovi.html#pojam-replika">replika</a>, <a href="poslovnik-clanovi.html#pojam-opomena">opomena</a>, <a href="poslovnik-clanovi.html#pojam-hitni-postupak">hitni postupak</a> i <a href="poslovnik-clanovi.html#pojmovi">drugi pojmovi sa sednice</a>, iz teksta članova.{% if live_page %} Dok sednica traje, <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">na strani uživo</a> svaki korak (pauza, pretres, glasanje) vodi na član koji ga uređuje.{% endif %}</p>
+  </div>{% endif %}
   <p class="label">Novi saziv još nije usvojio nijedan zakon; glasanja će biti ovde od prve sednice na kojoj se glasa. Sve označeno sa „prethodni saziv“ je iz prethodnog, četrnaestog saziva.</p>
 </section>
 {% endif %}
