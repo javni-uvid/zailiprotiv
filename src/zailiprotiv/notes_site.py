@@ -16,7 +16,7 @@ import shutil
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import debates as debates_, mps, poslovnik
+from zailiprotiv import debates as debates_, family, mps, poslovnik
 from zailiprotiv.translit import latin
 
 HERE = Path(__file__).parent
@@ -142,6 +142,7 @@ PAGE = """<!doctype html>
 <link rel="stylesheet" href="{root}style.css">
 </head>
 <body>
+{bar}
 <header class="top">
   <a class="brand" href="{main}"><svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/><path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg><span><span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span></span></a>
   <nav><a href="{root}{home}">{t_notes}</a> <a href="{other}" hreflang="{other_lang}">{t_other}</a></nav>
@@ -238,6 +239,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
     out.mkdir(parents=True)
     for name in ("style.css", "favicon.svg", "favicon-96.png"):
         shutil.copy(HERE / "static" / name, out / name)
+    family.write_stylesheet(out)  # the family's look in front of the site's own, as on the site
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     pages = speeches = 0
     listing: dict[str, list] = {}
@@ -299,7 +301,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
                     target.write_text(PAGE.format(
                         lang=w["lang"], title=html.escape(head), description=html.escape(f"{head}. {w['about']}."),
                         here=NOTES + ("" if script == "lat" else "cir/") + page, lat=NOTES + page, cyr=NOTES + "cir/" + page, root="../../" if script == "lat" else "../../../",
-                        main=MAIN if script == "lat" else MAIN + "cir/", home="index.html" if script == "lat" else "cir/index.html",
+                        main=MAIN if script == "lat" else MAIN + "cir/", bar=family.bar("lat" if script == "lat" else "cyr", MAIN if script == "lat" else MAIN + "cir/", twin=False), home="index.html" if script == "lat" else "cir/index.html",
                         t_notes=w["notes"], other=twin, other_lang=w["other_lang"], t_other=w["other"],
                         body="\n".join(body), t_foot=w["foot"]), encoding="utf-8")
                 pages += 1
@@ -318,7 +320,7 @@ def build(root: Path, out: Path) -> dict[str, int]:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(PAGE.format(
             lang=w["lang"], title=w["notes"], description=html.escape(w["about"] + ". " + w["lead"]),
-            here=NOTES + ("" if script == "lat" else "cir/"), lat=NOTES, cyr=NOTES + "cir/", root="" if script == "lat" else "../", main=MAIN if script == "lat" else MAIN + "cir/",
+            here=NOTES + ("" if script == "lat" else "cir/"), lat=NOTES, cyr=NOTES + "cir/", root="" if script == "lat" else "../", main=MAIN if script == "lat" else MAIN + "cir/", bar=family.bar("lat" if script == "lat" else "cyr", MAIN if script == "lat" else MAIN + "cir/", twin=False),
             home="index.html" if script == "lat" else "cir/index.html", t_notes=w["notes"],
             other="cir/index.html" if script == "lat" else "../index.html", other_lang=w["other_lang"], t_other=w["other"],
             body="\n".join(body), t_foot=w["foot"]), encoding="utf-8")

@@ -1,28 +1,20 @@
 /* Za ili Protiv. Colours mean kinds of vote, never a party or group. */
-@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
-  src: url(fonts/literata-latin-ext-wght-normal.woff2) format("woff2");
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
-  src: url(fonts/literata-cyrillic-wght-normal.woff2) format("woff2");
-  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
-@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
-  src: url(fonts/literata-latin-wght-normal.woff2) format("woff2");
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+/* The font, the page's base colours and the scale of letter sizes are the family's (osnova/design/osnova.css,
+   served in front of this file as one stylesheet: family.py); here they get this site's names. */
 :root {
-  --bg: #ffffff; --fg: #111111; --muted: #555555; --line: #d9d9d9; --card: #f3f3f1; --accent: #111111;
+  --bg: var(--ju-bg); --fg: var(--ju-fg); --muted: var(--ju-muted); --line: var(--ju-line); --card: var(--ju-card); --accent: var(--ju-fg);
   --za: #1f5fa8; --protiv: #c2410c; --protiv-bar: #e0782f; --uzdrzan: #8a8f99; --nije_glasao: #c9ccd3; --nije_prisutan: #e8e8e8;
   --za-soft: #e6f0f6; --protiv-soft: #f8ece1; --warn: #9a5b00; --warn-soft: #fbf0dc;
   /* Under white text (the vote buttons, the chips of a vote cast): the same in both themes, dark enough for it. */
   --za-on: #1f5fa8; --protiv-on: #c2410c; --uzdrzan-on: #6b7079; --uzdrzan-text: #6b7079;
-  --serif: "Literata", Georgia, "Times New Roman", serif;
+  --serif: var(--ju-serif);
   /* The one scale of letter sizes: every font-size below is one of these (a test checks it). 12.8, 14, 16, 18, 20,
      24, 30, 36 px; then a page's title, a headline or big number, and the one giant count. */
-  --t-1: .8rem; --t-2: .875rem; --t-3: 1rem; --t-4: 1.125rem; --t-5: 1.25rem; --t-6: 1.5rem; --t-7: 1.875rem; --t-8: 2.25rem;
-  --t-h1: clamp(1.7rem, 4.5vw, 2.6rem); --t-d1: clamp(2.2rem, 6vw, 3.6rem); --t-d2: clamp(3.6rem, 12vw, 5.2rem);
+  --t-1: var(--ju-t-1); --t-2: var(--ju-t-2); --t-3: var(--ju-t-3); --t-4: var(--ju-t-4); --t-5: var(--ju-t-5); --t-6: var(--ju-t-6); --t-7: var(--ju-t-7); --t-8: var(--ju-t-8);
+  --t-h1: var(--ju-t-h1); --t-d1: clamp(2.2rem, 6vw, 3.6rem); --t-d2: clamp(3.6rem, 12vw, 5.2rem);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #111318; --fg: #f1f1ee; --muted: #a8adb8; --line: #30343c; --card: #1b1e25; --accent: #f1f1ee;
     --za: #7cc0f5; --protiv: #ff9a52; --protiv-bar: #ff9a52; --uzdrzan: #7d8390; --nije_glasao: #4a505c; --nije_prisutan: #2a2e36;
     --za-soft: #18293a; --protiv-soft: #33241a; --warn: #e3b25e; --warn-soft: #2f2716; --uzdrzan-text: #9aa0ab;
   }
@@ -232,6 +224,7 @@ button.link { border: 0; background: none; padding: .6rem 0; margin-right: 1rem;
 @media (max-width: 640px) {
   main { padding: 0 16px 3rem; }
   .top { margin: 0 16px; }
+  .ju-bar-in { padding: 0 16px; }
   .row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem .6rem; padding: .9rem 0; }
   .row:has(.row-n) { grid-template-columns: 1.5rem minmax(0, 1fr); }
   .row-n { width: auto; font-size: var(--t-4); line-height: 1.5; }

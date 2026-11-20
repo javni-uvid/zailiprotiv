@@ -153,6 +153,17 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   do people leave it for the whole text), a recording played on a day page (`sajt.snimak`: is "who spoke when" with
   the recording worth going on with), and a link from the site to the live page (`sajt.mikrofon`). Sums per day,
   once per page, never the words; the method page lists them.
+- **The family's look and links** (20 Nov 2026, the maintainer's decision: every site of Javni uvid has the same
+  font and base colours, and links the others). The font, the page's base colours in both themes and the scale
+  of letter sizes are no longer declared here: they come from `osnova/design/osnova.css` (the copy of
+  javni-uvid/osnova's), and `style.css` only gives them this site's names (`--bg: var(--ju-bg)` and the like).
+  They were this site's own values before, which the family took as its base, so no page looks different.
+  The build serves the two as one `style.css`, the family's first (`family.stylesheet`), so a page still asks
+  for one stylesheet; the version in `?v=` counts both. Every page begins with the family's bar (Javni uvid,
+  then its sites, this one marked) and its footer has the family's block (the promise, a line on each site),
+  written by `family.py` from `osnova/design/sites.json`; the notes' pages have the bar. On a Cyrillic page the
+  links lead to the other sites' Cyrillic editions (`data-cir-href`, as for the live page). The live page
+  (`live/`) is not changed here. A new site of the family shows after the next copy of `osnova/` and build.
 
 ## Design rules
 

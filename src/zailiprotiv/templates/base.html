@@ -19,6 +19,7 @@
 </head>
 <body data-root="{{ root }}" data-v="{{ css }}"{% if votes_api %} data-api="{{ votes_api }}"{% endif %}>
 <a class="skip" href="#sadrzaj">Preskoči na sadržaj</a>
+{{ family_bar("lat", root ~ "index.html")|safe }}
 <header class="top">
   <a class="brand" href="{{ root }}index.html"><svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/><path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg><span><span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span></span></a>
   <nav>
@@ -66,6 +67,7 @@
       <a href="https://github.com/javni-uvid/zailiprotiv/issues/new?title={{ ('Greška: ' ~ self.title())|urlencode }}&amp;body={{ ('Strana: ' ~ self.title() ~ '\n\nŠta nije tačno:\n\nIzvor (ako ga imate):\n')|urlencode }}">Prijavi grešku</a>
     </nav>
   </div>
+  {{ family_foot("lat", root ~ "index.html")|safe }}
   <p class="foot-fine">Podaci: <a href="https://www.parlament.gov.rs">Narodna skupština Republike Srbije</a>, poimenični rezultati glasanja i predlozi zakona; preuzeto {{ fetched }}. Sajt izgrađen {{ built }}. {% if analytics %}Bez kolačića. Posete se samo broje (Cloudflare Web Analytics: bez kolačića, bez praćenja pojedinaca); osim toga ništa sa drugih servera.{% else %}Bez kolačića, analitike i ičega sa drugih servera.{% endif %}</p>
 </footer>
 {% if analytics %}<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ analytics }}"}'></script>

@@ -57,6 +57,8 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Glasaj i ti:** the visitor's ballot ("Moj listić", kept in the browser) beside the Assembly's results and the
   MPs and groups that voted the same; a quiz on the laws that divided the chamber and one per area; the newest bills
   to vote on before the Assembly does.
+- **Javni uvid** on every page: the family's bar at the top (its page and its other sites) and its block in the
+  footer, in the family's look (`osnova/design/`, `family.py`).
 - **Search** over the site and every speech; **feeds** (new laws, bills, per area, per MP, weeks); **downloads**
   (CSV, JSON) under CC BY 4.0; **method** ("Kako računamo"): how every figure is made.
 
@@ -136,6 +138,7 @@ src/zailiprotiv/
   pages_ballot.py, pages_quiz.py   "Glasaj i ti": the ballot and the quizzes
   notes_site.py, files_site.py     the notes' pages and the downloads, for the buckets
   cyrillic.py, translit.py    the Cyrillic edition; Cyrillic → Latin
+  family.py                   Javni uvid's look and links from osnova/design/: the stylesheet served, the bar, the footer block
   digest.py, feeds.py, downloads.py, card.py, photos.py, publish.py
   cli/                        commands, by what they work on: assembly, recordings, writing, buckets, build
 tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates)
