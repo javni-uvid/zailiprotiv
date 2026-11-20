@@ -66,16 +66,22 @@ decisions unless said otherwise.
   and poor, by host and device and for the most opened pages; for a page good in fewer than three loads of four,
   the elements that jumped or were drawn late). The first reading, of the site's first week: every page well over
   the line but the quiz, whose note at the foot jumps while the script lays the questions out.
-- **A search of the project's history by meaning, on trial** (20 Nov 2026, the maintainer's decision, to be judged
-  after a day or two of use). On the maintainer's computer an MCP server, `cognee-zailiprotiv`, holds every
-  decision of this file and of `live/AGENTS.md`, every commit message on `main`, and the pull requests and issues
-  (no code, no `data/`; kept outside the repository, nothing sent out). **When the tool is there, ask it first**
-  when looking for why something is as it is or whether something was tried: `recall` with
-  `search_type: "CHUNKS"`, `datasets: "zailiprotiv"`, `top_k` 5 or more, the question in Serbian or English. A
-  hit names its commit, pull request or section: read that in the repository before relying on it, since the
-  store lags behind `main` until refreshed and these files stay the truth. For an exact word or a rare name use
-  `grep` and `git log -S`; it finds by meaning and misses those. Never call its `forget`. Where the tool is
-  missing (another machine, the server off), work as before.
+- **A search by meaning, on trial** (20 Nov 2026, the maintainer's decision, to be judged after a day or two of
+  use). On the maintainer's computer an MCP server, `cognee-zailiprotiv`, holds two sets of texts taken from
+  `origin/main` (kept outside the repository, nothing sent out). **When the tool is there, ask it first**, with
+  `recall`, `search_type: "CHUNKS"`, `top_k` 5 or more, the question in Serbian or English:
+  - `datasets: "zailiprotiv"`, how the project is made: every decision of this file and of `live/AGENTS.md`, every
+    commit message on `main`, the issues, and a map of the code (each module's docstring with its functions' first
+    lines, each workflow's header, the READMEs by section). For why something is as it is, whether something was
+    tried, and where the code for something is.
+  - `datasets: "skupstina"`, what the site holds, in Latin script: every law and bill of every convocation with the
+    summary of its memorandum, the debates' summaries, the other voices' notes, what an MP says. For finding laws
+    by subject when the title doesn't say it (a quiz, public names, notes).
+  A hit begins with where it is from (a commit, a section, a file under `data/`): **read that in the repository
+  before relying on it.** The store lags behind `main` until refreshed, these files stay the truth, and a hit from
+  `skupstina` is a pointer and never a source: a figure, a vote or a quote comes from the document (principles 2
+  and 6). For an exact word or a rare name use `grep` and `git log -S`; it finds by meaning and misses those.
+  Never call its `forget`. Where the tool is missing (another machine, the server off), work as before.
 
 ### The data runs
 
