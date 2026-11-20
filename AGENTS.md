@@ -681,9 +681,12 @@ its minute.
   sent; `mikrofon.obavesti` and `odjavi` are counted as uses.
 - **A new image put live without a break** (20 Nov 2026, the maintainer's choice of three layers; a blue/green pair
   of services was left out: two would read the same broadcast and write the same files). The restart takes some
-  5 s, and finding the stream again 15-30 s more. (1) The edge worker keeps the shared answers (`/`, `/cir/`, the
-  part, `stanje.json`) a second time for two minutes and gives them, marked `x-mikrofon: poslednje`, while the
-  service answers 5xx; the site's page for a service that is off only after that. (2) The service writes with every
+  5 s, and finding the stream again 15-30 s more. (1) The edge worker keeps the shared answers on its routes (`/`,
+  `/cir/`, `stanje.json`) a second time for two minutes and gives them, marked `x-mikrofon: poslednje`, while the
+  service answers 5xx; the site's page for a service that is off only after that. The part an open page asks for
+  (`/deo`) is not on the worker's routes (the free plan's requests) and gets Cloudflare's 502 for those seconds,
+  which the page's script answers by keeping what it shows; an address with a query (`?fbclid=…`) matches no
+  route either and goes straight to the tunnel (checked 20 Nov 2026 by stopping the service at night). (2) The service writes with every
   frame whether a broadcast is on and who is speaking (`state._save`); a new run within `RESUME_SECONDS` (90) of the
   last frame takes that up (`Tracker._resume`), counting the waits for a frame from the restart, so the page does
   not say "no sitting" while the stream is found again, and the same speaker read again is the same turn.
