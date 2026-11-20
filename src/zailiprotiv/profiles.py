@@ -145,13 +145,14 @@ def distinctive(by_mp: dict[str, list[dict]], top: int = 12, min_speeches: int =
     docs: dict[str, Counter] = {}
     for key, own in by_mp.items():
         c, d = Counter(), Counter()
+        said = Counter()  # each word once with its count: the same counts, in the same order, as word by word
         for s in own:
             ws = words_of(s["text"])
-            for w in ws:
-                c[stem(w)] += 1
-                forms[(stem(w), w)] += 1
-            for st in {stem(w) for w in ws}:
-                d[st] += 1
+            said.update(ws)
+            d.update({stem(w) for w in ws})
+        for w, n in said.items():
+            c[stem(w)] += n
+            forms[(stem(w), w)] += n
         per_mp[key], docs[key] = c, d
         total.update(c)
     n_all = sum(total.values())

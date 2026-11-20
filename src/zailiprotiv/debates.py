@@ -254,8 +254,11 @@ def _near(a: str, b: str) -> float:
     import difflib
     if a == b:
         return 1.0
-    ratio = difflib.SequenceMatcher(None, a, b).ratio()
     swapped = len(a) == len(b) and len(a) >= 5 and sorted(a) == sorted(b) and sum(x != y for x, y in zip(a, b)) == 2
+    m = difflib.SequenceMatcher(None, a, b)
+    if not swapped and m.quick_ratio() < 0.85:  # quick_ratio is never below ratio: the full count is not needed
+        return 0.0
+    ratio = m.ratio()
     return max(ratio, 0.86) if swapped or ratio >= 0.85 else 0.0
 
 
