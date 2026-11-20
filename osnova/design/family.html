@@ -1,0 +1,20 @@
+<!-- The family's bar and footer block, as every site writes them. {…} are values from sites.json in the page's
+     script (lat or cyr); the list repeats for every site in "sites"; the site the page belongs to gets
+     aria-current="page" in the bar. Text is escaped as any other text. -->
+
+<!-- First thing in <body>, before the site's own header. -->
+<nav class="ju-bar" aria-label="{family.name}">
+  <div class="ju-bar-in">
+    <a class="ju-name" href="{family.url}"><svg class="ju-mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="12" r="3.4" fill="currentColor"/></svg>{family.name}</a>
+    <a href="{site.url}">{site.name}</a>
+  </div>
+</nav>
+
+<!-- Last thing in the site's own footer. -->
+<section class="ju-foot" aria-label="{family.name}">
+  <h2><a href="{family.url}"><svg class="ju-mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="12" r="3.4" fill="currentColor"/></svg>{family.name}</a></h2>
+  <p>{family.promise} <a href="{family.url}#nacela">{family.principles}</a></p>
+  <ul>
+    <li><a href="{site.url}">{site.name}</a><span>{site.about}</span></li>
+  </ul>
+</section>

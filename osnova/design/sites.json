@@ -1,0 +1,34 @@
+{
+  "family": {
+    "id": "javni-uvid",
+    "url": {"lat": "https://javni-uvid.github.io/osnova/", "cyr": "https://javni-uvid.github.io/osnova/cir/"},
+    "name": {"lat": "Javni uvid", "cyr": "Јавни увид"},
+    "promise": {
+      "lat": "Šta institucije Srbije rade, iz dokumenata koje same objavljuju. Ista pravila za sve, svaka cifra sa izvorom, bez ocena.",
+      "cyr": "Шта институције Србије раде, из докумената које саме објављују. Иста правила за све, свака цифра са извором, без оцена."
+    },
+    "principles": {"lat": "Načela", "cyr": "Начела"}
+  },
+  "sites": [
+    {
+      "id": "zailiprotiv",
+      "url": {"lat": "https://zailiprotiv.rs/", "cyr": "https://zailiprotiv.rs/cir/"},
+      "name": {"lat": "Za ili Protiv", "cyr": "За или Против"},
+      "about": {
+        "lat": "Zakoni koje Narodna skupština usvaja, šta predlagač navodi da menjaju i kako je glasao svaki poslanik, od 2012.",
+        "cyr": "Закони које Народна скупштина усваја, шта предлагач наводи да мењају и како је гласао сваки посланик, од 2012."
+      },
+      "source": {"lat": "Narodna skupština Republike Srbije", "cyr": "Народна скупштина Републике Србије"}
+    },
+    {
+      "id": "izborni-podaci",
+      "url": {"lat": "https://izbornipodaci.rs/", "cyr": "https://izbornipodaci.rs/cyr/index.html"},
+      "name": {"lat": "Izborni podaci", "cyr": "Изборни подаци"},
+      "about": {
+        "lat": "Svaki fajl sa rezultatima koji objavi Republička izborna komisija, sačuvan, i svako biračko mesto provereno po istim pravilima.",
+        "cyr": "Сваки фајл са резултатима који објави Републичка изборна комисија, сачуван, и свако бирачко место проверено по истим правилима."
+      },
+      "source": {"lat": "Republička izborna komisija", "cyr": "Републичка изборна комисија"}
+    }
+  ]
+}

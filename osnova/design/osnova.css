@@ -1,0 +1,60 @@
+/* Javni uvid: what every site of the family shares, so that a reader sees they are one family. The family's
+   font, the page's base colours in both themes, the one scale of letter sizes, the family's bar above a site's
+   own header and the family's block in its footer. A site's own stylesheet comes after this one and keeps the
+   colours that carry its data (a vote, a warning, a list); it takes the rest from the --ju-* values here.
+   Written in javni-uvid/osnova (shared/design/): change it there, never in a project's copy. */
+@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
+  src: url(fonts/literata-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
+  src: url(fonts/literata-cyrillic-wght-normal.woff2) format("woff2");
+  unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "Literata"; font-style: normal; font-display: swap; font-weight: 200 900;
+  src: url(fonts/literata-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+
+:root {
+  /* The page: white, near-black ink, grey for what is secondary. No colour here means anything; a site's own do. */
+  --ju-bg: #ffffff; --ju-fg: #111111; --ju-muted: #555555; --ju-line: #d9d9d9; --ju-card: #f3f3f1;
+  /* Headings and names in the serif, everything else in the reader's own system font (nothing to download). */
+  --ju-serif: "Literata", Georgia, "Times New Roman", serif;
+  --ju-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* The one scale of letter sizes: 12.8, 14, 16, 18, 20, 24, 30, 36 px, then a page's title. Body text is 16 px. */
+  --ju-t-1: .8rem; --ju-t-2: .875rem; --ju-t-3: 1rem; --ju-t-4: 1.125rem; --ju-t-5: 1.25rem; --ju-t-6: 1.5rem;
+  --ju-t-7: 1.875rem; --ju-t-8: 2.25rem; --ju-t-h1: clamp(1.7rem, 4.5vw, 2.6rem);
+  /* How wide a site's header is, so the bar lines up with it; a site sets its own. */
+  --ju-wide: 1080px;
+}
+/* Dark: by the reader's system, or by a site's own switch (data-theme on the root), which wins either way. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ju-bg: #111318; --ju-fg: #f1f1ee; --ju-muted: #a8adb8; --ju-line: #30343c; --ju-card: #1b1e25;
+  }
+}
+:root[data-theme="dark"] {
+  --ju-bg: #111318; --ju-fg: #f1f1ee; --ju-muted: #a8adb8; --ju-line: #30343c; --ju-card: #1b1e25;
+}
+
+/* The family's bar: the first thing on every page of every site. The family's name leads to its own page, then
+   the sites, the one the reader is on marked. One row; on a narrow phone it scrolls sideways rather than wrap. */
+.ju-bar { background: var(--ju-card); border-bottom: 1px solid var(--ju-line); font: var(--ju-t-1)/1.2 var(--ju-sans); }
+.ju-bar-in { display: flex; align-items: center; gap: 0 1.1rem; max-width: var(--ju-wide); margin: 0 auto; padding: 0 20px;
+  overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+.ju-bar-in::-webkit-scrollbar { display: none; }
+.ju-bar a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; color: var(--ju-muted); text-decoration: none; }
+.ju-bar a:hover { color: var(--ju-fg); text-decoration: underline; text-underline-offset: 3px; }
+.ju-bar .ju-name { font-family: var(--ju-serif); font-weight: 700; font-size: var(--ju-t-2); color: var(--ju-fg); margin-right: auto; padding-right: .6rem; }
+.ju-bar a[aria-current] { color: var(--ju-fg); font-weight: 600; }
+.ju-mark { width: 1.05em; height: 1.05em; flex: none; }
+@media print { .ju-bar { display: none; } }
+
+/* The family's block in a site's footer: what the family promises, and its sites with a line on each. */
+.ju-foot { border-top: 1px solid var(--ju-line); margin-top: 2rem; padding: 1.4rem 0 .4rem; font: var(--ju-t-2)/1.5 var(--ju-sans); color: var(--ju-muted); }
+.ju-foot h2 { font: 700 var(--ju-t-4)/1.2 var(--ju-serif); color: var(--ju-fg); margin: 0 0 .3rem; }
+.ju-foot h2 a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: .45rem; }
+.ju-foot p { margin: 0 0 .8rem; max-width: 62ch; }
+.ju-foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem 2rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.ju-foot li { padding: .5rem 0; }
+.ju-foot li a { color: var(--ju-fg); font-weight: 600; text-underline-offset: 2px; }
+.ju-foot li span { display: block; }
+@media print { .ju-foot { display: none; } }
