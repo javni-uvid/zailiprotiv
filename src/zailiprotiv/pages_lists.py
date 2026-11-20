@@ -28,7 +28,8 @@ def recorded(dates, recordings, latin):
     return rows
 
 
-def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbers, out, rows_mp, recordings=None):
+def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbers, out, rows_mp, recordings=None,
+           floor_by_sitting=None, quiz_themes=None):
     # A page per area (the point of Article 97), every convocation, newest first.
     by_area = defaultdict(list)
     for its in items_by_conv.values():
@@ -39,7 +40,7 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
     for a, its in by_area.items():
         its.sort(key=lambda it: it["law"].get("passed") or "", reverse=True)
         (out / "oblast" / f"{area_slug(a)}.html").write_text(env.get_template("area.html").render(
-            **common, area=a, laws=its, root="../"), encoding="utf-8")
+            **common, area=a, laws=its, quiz_themes=quiz_themes, root="../"), encoding="utf-8")
     (out / "oblasti.html").write_text(env.get_template("areas.html").render(
         **common, areas=[{"name": a, "slug": area_slug(a), "n": len(by_area[a])}
                          for a in sorted(by_area, key=lambda a: (-len(by_area[a]), collate(a)))], root=""), encoding="utf-8")
@@ -50,8 +51,7 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
             if it.get("final"):
                 by_sitting[it["final"]["sitting"]].append(it)
     sitting_slug = {}
-    from zailiprotiv import pages_floor
-    floor_by_sitting = getattr(pages_floor.render, "by_sitting", {})
+    floor_by_sitting = floor_by_sitting or {}
     (out / "sednica").mkdir(exist_ok=True)
     for url, its in by_sitting.items():
         its.sort(key=lambda it: it["final"]["when"])

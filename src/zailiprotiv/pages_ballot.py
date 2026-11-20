@@ -21,7 +21,8 @@ def below(values: list[float]) -> dict[float, float]:
     return {v: round(first[v] / max(1, len(ordered) - 1), 2) for v in first}
 
 
-def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, quiz_laws, rows_mp, waiting, by_hand=False):
+def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, quiz_laws, rows_mp, waiting, by_hand=False,
+           quiz_themes=None):
     folder = out / "listic"
     folder.mkdir(exist_ok=True)
     where = {}
@@ -68,4 +69,5 @@ def render(*, common, convs, current, env, floor_of, gone, items_by_conv, out, q
     bills_json = json.dumps([{"s": b["slug"], "t": short(b["title"], 120), "d": b["submitted"] or "", "g": short(b.get("gist"), 260)}
                              for b in order], ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     (out / "glasaj.html").write_text(env.get_template("ballot.html").render(
-        **common, quiz_laws=quiz_laws, by_hand=by_hand, bill=bill, bills_json=bills_json, waiting=len(waiting), root=""), encoding="utf-8")
+        **common, quiz_laws=quiz_laws, by_hand=by_hand, bill=bill, bills_json=bills_json, waiting=len(waiting),
+        quiz_themes=quiz_themes, root=""), encoding="utf-8")
