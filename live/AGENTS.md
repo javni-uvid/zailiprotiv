@@ -409,3 +409,8 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   (`nema_prenosa`) they now stand above that box, under the notice and the agenda; while a broadcast is on, under
   the speaker's box as before. The day's three with the most time in that box lead to their pages on the site, as
   the day's totals already did.
+- **The notification's offer is counted step by step** (20 Nov 2026, the maintainer's choice; one device had
+  asked after some 47,000 visits). Besides `mikrofon.obavesti` (turned on), once per page: `obavesti-moze` (the
+  offer shown: the browser can push and this one has not asked yet), `obavesti-klik` (pressed), `obavesti-odbijeno`
+  (the browser's question answered no or closed), `obavesti-greska` (failed on the way). So it can be seen whether
+  people do not find the button, or refuse the browser's question.
