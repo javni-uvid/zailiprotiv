@@ -71,10 +71,24 @@ def inspect(http, n: int) -> None:
     print(f"\nIndexed? {sum(map(len, picked.values()))} of the sitemap's {len(addresses)} pages, up to {n} of each kind "
           "(URL Inspection; the state as Google last saw it)")
     url = "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect"
+
+    def ask(page: str):
+        """Google's answer for one address; None when it gave none twice (it once kept a request two minutes)."""
+        import requests
+        for _ in range(2):
+            try:
+                return http.post(url, json={"inspectionUrl": page, "siteUrl": PROPERTY}, timeout=60)
+            except requests.RequestException as e:
+                print(f"    {page}: {type(e).__name__}", flush=True)
+        return None
+
     for k, pages in picked.items():
         states, other_canonical, never = Counter(), [], 0
         for page in pages:
-            r = http.post(url, json={"inspectionUrl": page, "siteUrl": PROPERTY})
+            r = ask(page)
+            if r is None:
+                states["(no answer)"] += 1
+                continue
             if r.status_code != 200:
                 print(f"  Search Console answered {r.status_code}: {r.text[:300]}")
                 return
@@ -83,7 +97,7 @@ def inspect(http, n: int) -> None:
             never += not s.get("lastCrawlTime")
             if s.get("googleCanonical") and s.get("googleCanonical") != page:
                 other_canonical.append(f"{page} → {s['googleCanonical']}")
-        print(f"\n  {k}  ({len(pages)} asked; never crawled: {never})")
+        print(f"\n  {k}  ({len(pages)} asked; never crawled: {never})", flush=True)
         for state, c in states.most_common():
             print(f"    {c:>3}  {state}")
         for line in other_canonical[:3]:
