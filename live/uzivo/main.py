@@ -69,7 +69,9 @@ def _part(cyr: bool, request: Request) -> Response:
     asked = [t.strip().removeprefix("W/") for t in request.headers.get("if-none-match", "").split(",")]
     if tag in asked:  # Cloudflare passes the mark on, made weak ("W/") when it compresses the answer
         return Response(status_code=304, headers=headers)
-    return HTMLResponse(html, headers=headers)
+    # As text, not HTML: the page's script reads it as text, and Cloudflare drops the ETag of an HTML answer, which
+    # it may rewrite (checked 20 Nov 2026: the mark reached the tunnel and not the browser).
+    return Response(html, media_type="text/plain; charset=utf-8", headers=headers)
 
 
 @app.get("/")
