@@ -672,6 +672,15 @@ its minute.
   service says are gone, and the service asks for the next 30 until none is left. On an iPhone it works once the
   page is on the home screen, which the page says. `GET /pregled` gives the number of addresses and what each day
   sent; `mikrofon.obavesti` and `odjavi` are counted as uses.
+- **A new image put live without a break** (20 Nov 2026, the maintainer's choice of three layers; a blue/green pair
+  of services was left out: two would read the same broadcast and write the same files). The restart takes some
+  5 s, and finding the stream again 15-30 s more. (1) The edge worker keeps the shared answers (`/`, `/cir/`, the
+  part, `stanje.json`) a second time for two minutes and gives them, marked `x-mikrofon: poslednje`, while the
+  service answers 5xx; the site's page for a service that is off only after that. (2) The service writes with every
+  frame whether a broadcast is on and who is speaking (`state._save`); a new run within `RESUME_SECONDS` (90) of the
+  last frame takes that up (`Tracker._resume`), counting the waits for a frame from the restart, so the page does
+  not say "no sitting" while the stream is found again, and the same speaker read again is the same turn.
+  (3) `mikrofon.ps1 uzivo` waits for the turn on to end (`-Cekaj`, 10 minutes at most; `-Odmah` at once).
 
 ## Open questions
 

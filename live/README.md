@@ -115,6 +115,11 @@ While the computer is off, Cloudflare would answer with its own error (530). A w
 page for that instead (zailiprotiv.rs/mikrofon: why it is down, the broadcast, the next sitting, a few facts from the
 site). Nothing changes in the tunnel or the DNS.
 
+**Putting a new image live doesn't break the page** (20 Nov 2026): `uzivo` waits for the turn on to end (at most
+`-Cekaj` minutes, 10 by default; `-Odmah` at once); during the restart the edge worker gives the page's last answers
+(up to two minutes old), and the new run takes up the speaker and the broadcast where the last one was, if its last
+frame is under 90 s old (`RESUME_SECONDS`).
+
 When YouTube asks to sign in, put a `cookies.txt` in the volume and set `YTDLP_COOKIES=/data/cookies.txt`; when
 yt-dlp stops working, `.\mikrofon.ps1 test -Novo` takes the newest, then `.\mikrofon.ps1 uzivo`.
 

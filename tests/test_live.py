@@ -1051,3 +1051,28 @@ def test_the_page_offers_the_notification_and_its_worker_writes_it():
     sw = service_worker(True, "BKEY", "https://glasovi.zailiprotiv.rs/")
     assert "Седница је почела" in sw and '"url": "/cir/"' in sw and '"api": "https://glasovi.zailiprotiv.rs"' in sw
     assert "addEventListener(\"fetch\"" not in sw  # it handles no requests
+
+
+def test_a_restart_takes_up_the_speaker_still_on(tmp_path, monkeypatch):
+    from uzivo.names import Person, person_key
+    path = tmp_path / "stanje.json"
+    t0 = time.time() - 20  # frames until 20 s ago, then the image was put live again
+    t = Tracker(str(path), tz="Europe/Belgrade")
+    p = Person(person_key("Petrović Petar"), "Petrović Petar", "petrovic-petar", "PG A")
+    for i in range(3):
+        t.observe(p, role="PG A", now=t0 + 5 * i - 10)
+    again = Tracker(str(path), tz="Europe/Belgrade")  # the new container, at once
+    assert again.status == SPEAKING and again.current() == "Petrović Petar"
+    now = time.time()
+    again.tick(now=now + 50)  # 70 s after the last frame, but 50 s after the restart: the broadcast is still taken as on
+    assert again.status == SPEAKING
+    again.observe(p, role="PG A", now=now + 30)  # the stream found again: the same turn goes on
+    assert len(again.turns) == 1 and again.turns[0]["n"] == 4
+    again.tick(now=now + 30 + 61)
+    assert again.status == NO_STREAM  # and once frames stop for good, it ends as ever
+    assert Tracker(str(path), tz="Europe/Belgrade").status == NO_STREAM  # a restart after it: nothing taken up
+    third = Tracker(str(path), tz="Europe/Belgrade")
+    third.observe(p, role="PG A", now=time.time() - 30)
+    assert Tracker(str(path), tz="Europe/Belgrade").status == SPEAKING
+    monkeypatch.setattr(config, "RESUME_SECONDS", 5)  # a restart long after the last frame: nothing taken up
+    assert Tracker(str(path), tz="Europe/Belgrade").status == NO_STREAM
