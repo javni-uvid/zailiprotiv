@@ -93,7 +93,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
         if snap["stanje"] == "nema_prenosa":
             out.append(countdown(snap, cyr=cyr, tz=tz))
-        out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz))
+        out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz, site=site))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
     if not said and snap.get("bez_potpisa"):  # nobody's caption on: the chair's words (or the hall's), named as no one's
@@ -539,9 +539,10 @@ def summary_box(snap: dict, *, cyr: bool) -> str:
     return f'<div class="sum"><p class="src">{head}</p>{body}<p class="meta">{t("sum_note")}</p></div>'
 
 
-def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
+def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     """While nobody is on (a break, or between sittings): the day so far in place of an empty box. The sentence of the
-    day, the three with the most time, and the picture of it to share (`picture.py`, the page's link preview too)."""
+    day, the three with the most time (each leading to the MP's page on the site, as in the day's totals), and the
+    picture of it to share (`picture.py`, the page's link preview too)."""
     turns = snap.get("danas") or []
     line = headline(turns, cyr=cyr, when=_when(snap, cyr))
     if not line:
@@ -552,8 +553,13 @@ def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
         head = f'{t("last_day")}, {escape(cyrillic(when) if cyr else when)}'
     else:
         head = t("so_far")
-    top = "".join(f'<li><b>{escape(_name(given_first(n), cyr))}</b> <span>{_dur(sec, cyr)}</span></li>'
-                  for n, sec, _ in leaders(turns)[:3])
+    slugs = {d["ime"]: d["adresa"] for d in turns if d.get("adresa")}
+    def who(n: str) -> str:
+        nm = escape(_name(given_first(n), cyr))
+        if site and slugs.get(n):
+            nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + slugs[n])}">{nm}</a>'
+        return f"<b>{nm}</b>"
+    top = "".join(f'<li>{who(n)} <span>{_dur(sec, cyr)}</span></li>' for n, sec, _ in leaders(turns)[:3])
     src = ("/cir" if cyr else "") + "/slika.png"
     tall = ("/cir" if cyr else "") + "/prica.png"
     coming = snap.get("sazvano")
@@ -1016,6 +1022,19 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
            f'<link rel="alternate" hreflang="sr-Latn" href="{escape(url)}">'
            f'<link rel="alternate" hreflang="sr-Cyrl" href="{escape(url + "cir/")}">') if url else ""
     brand = _brand(cyr)
+    day = fragment(snap, cyr=cyr, site=site, tz=tz)
+    # "Obavesti me kad sednica počne": under the speaker's box while a broadcast is on; between sittings above the
+    # day, which had put it half a phone's screens down, under the last day's summary (20 Nov 2026: one device asked)
+    add = f"""<section class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
+<p class="nt" hidden><button type="button" class="add-btn nt-on">{t("nt_on")}</button></p>
+<p class="nt-done" hidden>{t("nt_done")} <button type="button" class="nt-off">{t("nt_off")}</button></p>
+<p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
+<p class="nt-err meta" hidden>{t("nt_err")}</p>
+<p class="add" hidden><button type="button" class="add-btn add-go">{t("add_home")}</button> <span class="meta">{t("add_sub")}</span></p>
+<p class="add-ios meta" hidden>{t("add_ios")}</p>
+<p class="nt-note meta" hidden>{t("nt_note")}</p>
+</section>
+"""
     return f"""<!doctype html>
 <html lang="{lang}">
 <head>
@@ -1043,16 +1062,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <a class="hero-cta" href="{escape(home)}"><span>{t("hero_cta")}</span><b>zailiprotiv.rs →</b></a>
 </section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
-{fragment(snap, cyr=cyr, site=site, tz=tz)}
-<section class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
-<p class="nt" hidden><button type="button" class="add-btn nt-on">{t("nt_on")}</button></p>
-<p class="nt-done" hidden>{t("nt_done")} <button type="button" class="nt-off">{t("nt_off")}</button></p>
-<p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
-<p class="nt-err meta" hidden>{t("nt_err")}</p>
-<p class="add" hidden><button type="button" class="add-btn add-go">{t("add_home")}</button> <span class="meta">{t("add_sub")}</span></p>
-<p class="add-ios meta" hidden>{t("add_ios")}</p>
-<p class="nt-note meta" hidden>{t("nt_note")}</p>
-</section>
+{(add + day) if snap["stanje"] == "nema_prenosa" else (day + add)}
 <p class="rules-cta"><a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}"><b>{t("rules_cta")} →</b><span>{t("rules_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
