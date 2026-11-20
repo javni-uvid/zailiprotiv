@@ -11,8 +11,8 @@ decisions unless said otherwise.
   once; until then everything was committed straight to `main`):
   - **Each agent in an Orca worktree** of its own (`orca worktree create --name <task> --no-parent`, from the main
     clone): Orca makes the branch, `<the maintainer's GitHub login>/<task>`, from `origin/main`, and the folder under
-    `~/orca/workspaces/zailiprotiv/`. Short-lived: hours, a day at most. A new worktree needs `uv sync` (and on
-    Windows `uv pip install tzdata`).
+    `~/orca/workspaces/zailiprotiv/`. Short-lived: hours, a day at most. Orca runs `uv sync` in a new worktree itself
+    (`orca.yaml`, 20 Nov 2026); `tzdata`, which Windows lacks, is a dependency there.
   - **Before starting, `gh pr list`:** when an open pull request touches the same files, build on it or wait
     (19 Nov 2026: two agents added the same setting to the live service in one evening).
   - **Before pushing,** `git rebase origin/main` and `uv run pytest -q`; then `gh pr create` (the template asks what,
