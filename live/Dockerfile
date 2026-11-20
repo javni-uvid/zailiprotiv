@@ -2,7 +2,7 @@
 # The images are named by their content (20 Nov 2026): a tag can be moved to another image, a digest can't. Dependabot
 # moves them once a month (.github/dependabot.yml).
 FROM denoland/deno:bin-2.9.8@sha256:b507583d3c68ba69f3ed2ce5969ae5b8b70f43421c781279c7aea06435263543 AS deno
-FROM python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+FROM python:3.15-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg tesseract-ocr tesseract-ocr-srp fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 # yt-dlp needs a JavaScript runtime for YouTube; Deno is the one it uses without settings.
