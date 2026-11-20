@@ -44,6 +44,8 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.
+- **Poslovnik:** the Assembly's Rules of Procedure, article by article, every version kept (`data/poslovnik/`), for the
+  articles invoked in the debates, the terms the site explains and the order of a sitting's steps.
 - **Ko koliko govori:** per sitting day read from the recording (`govornici/<date>`), each speaker's time and the
   time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a
   link to share it and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`).

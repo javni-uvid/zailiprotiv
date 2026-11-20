@@ -168,6 +168,16 @@ The project's promises to its readers. Never change them without the maintainer.
 - `index` → `data/<N>/index.json`; `votes` reads every roll call not yet read into `data/<N>/votes/<sitting>.json`
   with each PDF's SHA-256.
 
+- **The Rules of Procedure** (20 Nov 2026, the maintainer's decision: link the articles MPs and the chair invoke,
+  explain the site's terms from them, check a sitting's order of steps against them, and follow amendments;
+  `poslovnik.py`, `zailiprotiv poslovnik`, in **votes** once a day): from the Assembly's consolidated text, the page
+  "Цео Пословник", 298 articles in 21 chapters, each chapter linked to its own page there. Kept in `data/poslovnik/`
+  as the Assembly writes it (Cyrillic), one file per version, written only when the articles' text changes, with the
+  day it was first seen (not the day it came into force; the consolidated text gives none) and `poslovnik.load(day)`
+  for the version of a day. Quirks of the source: chapters IX and X numbered with a Cyrillic Х, the menu's "Уводнa
+  одредбa" with a Latin a, article 261 one paragraph of lines broken by `<br/>`. Two proposals to amend it are in
+  procedure in the Fifteenth (02-3333/26, 02-3761/26).
+
 ### Laws
 
 - **The adopted laws** come from "Донети закони" (`laws.py`): title and PDF, the bill (title, PDF, day submitted),

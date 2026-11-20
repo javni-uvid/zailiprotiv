@@ -646,6 +646,29 @@ def mp_years_cmd(args) -> int:
     return 0
 
 
+def poslovnik_cmd(args) -> int:
+    """The Rules of Procedure from the Assembly's consolidated text into data/poslovnik/ (poslovnik.py): a new version
+    only when the articles' text changed. Asked at most once a day (index.json's "provereno")."""
+    from zailiprotiv import poslovnik
+    folder = ROOT / "poslovnik"
+    today = dt.date.today().isoformat()
+    index_path = folder / "index.json"
+    index = json.loads(index_path.read_text(encoding="utf-8")) if index_path.exists() else {}
+    if index.get("provereno") == today and not args.again:
+        print("poslovnik: checked today already")
+        return 0
+    doc = poslovnik.parse(skupstina.fetch(poslovnik.PAGE).decode("utf-8", "replace"))
+    if len(doc["clanovi"]) < 250:  # a page that came out short: keep what is there
+        print(f"::warning::poslovnik: only {len(doc['clanovi'])} articles read; nothing kept")
+        return 0
+    written = poslovnik.store(folder, doc, today)
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    index["provereno"] = today
+    index_path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"poslovnik: {len(doc['clanovi'])} articles, {len(doc['glave'])} chapters; " + (f"new version {written}" if written else "unchanged"))
+    return 0
+
+
 def photos_cmd(args) -> int:
     """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
     import time
@@ -1614,6 +1637,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--model", default="large-v3-turbo")
     p.add_argument("--minutes", type=float, default=300, help="stop after this long; the next run goes on")
     p.set_defaults(run=prepis_cmd)
+    p = commands.add_parser("poslovnik", help="the Rules of Procedure, every version kept → data/poslovnik/")
+    p.add_argument("--again", action="store_true", help="read it even if checked today")
+    p.set_defaults(run=poslovnik_cmd)
     p = commands.add_parser("photos", help="MPs' portraits from the Assembly's list → data/photos/")
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("members", help="the sitting MPs from the Assembly's list → data/<N>/members.json")

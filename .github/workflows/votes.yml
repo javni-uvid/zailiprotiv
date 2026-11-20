@@ -60,7 +60,7 @@ jobs:
           uv run zailiprotiv $c laws
           uv run zailiprotiv $c videos || true  # the sittings' recordings (videos.py); a broadcaster's hiccup stops nothing; before the roll calls, which may fail
           # The bills in procedure are the current convocation's only.
-          if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
+          if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; uv run zailiprotiv poslovnik || true; fi  # the Rules of Procedure, once a day
           # Who holds which office (the Speaker, deputies, groups' chairs, committees, delegations) in the newest
           # convocation, and the Assembly's news, the relevant new ones named in the log (offices.py).
           if [ "$conv" = "$current" ]; then uv run zailiprotiv offices || true; fi
