@@ -354,3 +354,10 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   from, until when they were read, and that the Assembly writes after the event; open when nothing was heard.
   The mark "Zvanično", the hour's "objava" and the full dot with its key are gone. Not done yet: the same
   sentences in the day's mail and summary (the maintainer's other thought).
+- **A step's line leads to what the Rules of Procedure say of it** (20 Nov 2026, the maintainer's choice, the Rules'
+  step 4): `steps.STEP_TERM` gives each kind of step a term of `data/poslovnik/pojmovi.json`, and the line's name
+  links `<site>[cir/]poslovnik-clanovi#pojam-<id>` (the sitting opened: the quorum, art. 88; work, a break, the
+  day's end: 87 and 101; an agenda item: 92 and 93; a debate opened or closed: 96 and 98; a vote and its result: 87
+  and 160; a measure: 108 to 114). "Reč ima" and an election have none. The lead under the heading says so. A test
+  holds every term named to one the site explains. The order kept (`_in_order`) names the articles it rests on; the
+  page never says a sitting broke the Rules.

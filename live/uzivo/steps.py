@@ -9,6 +9,14 @@ from .names import given_first
 STEP_TITLES = {"Sednica otvorena": "Sednica je otvorena", "Nastavak rada": "Rad je nastavljen", "Pauza": "Pauza",
                "Kraj rada": "Kraj rada za danas", "Glasanje": "Glasanje", "Glasanje zaključeno": "Glasanje je zaključeno",
                "Pretres otvoren": "Pretres je otvoren", "Pretres zaključen": "Pretres je zaključen"}
+# What the Rules of Procedure say of each kind of step, on the site's page of the Rules (`poslovnik-clanovi#pojam-<id>`,
+# data/poslovnik/pojmovi.json; 20 Nov 2026, the maintainer's choice: the sitting's steps by the Rules): a step's line
+# leads there. The opening and the quorum art. 88 and 90; work, breaks and the day's end 87 and 101; the agenda 92
+# and 93; a debate opened and closed 96 and 98; votes 87 and 160; the chair's measures 108 to 114.
+STEP_TERM = {"Sednica otvorena": "otvaranje-sednice", "Nastavak rada": "radno-vreme", "Pauza": "radno-vreme",
+             "Kraj rada": "radno-vreme", "Tačka dnevnog reda": "dnevni-red", "Pretres otvoren": "tok-pretresa",
+             "Pretres zaključen": "tok-pretresa", "Glasanje": "dan-za-glasanje", "Glasanje zaključeno": "dan-za-glasanje",
+             "Rezultat glasanja": "dan-za-glasanje", "Mera predsedavajućeg": "mere"}
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
 STEP_IDLE = 600  # work is resumed when nobody was at the rostrum for this long before the chair says so
@@ -21,7 +29,10 @@ _PHASE = {"Sednica otvorena": 0, "Nastavak rada": 0, "Tačka dnevnog reda": 1, "
 def _in_order(kind: str, debate: str, voting: bool) -> tuple[bool, str, bool]:
     """Whether a step of an agenda item fits what has been shown of it, and the item's state after it: a debate is
     opened once and before it is closed (one already under way when the item is taken up, "nastavljamo pretres",
-    counts as opened); a vote is closed only after it was put; a vote put while one is open is that vote."""
+    counts as opened); a vote is closed only after it was put; a vote put while one is open is that vote.
+    By the Rules of Procedure: the debate is opened on the item and the chair closes it once nobody else has asked
+    to speak or its time is up (art. 96, 98); the Assembly decides in the Day for voting, after the debate (art. 87,
+    160): a vote put during an open debate is not held against it, as the chair may set the voting day at once."""
     if kind == "Pretres otvoren":
         return (debate == "", "open" if debate == "" else debate, voting)
     if kind == "Pretres zaključen":
@@ -115,7 +126,7 @@ def steps_shown(snap: dict) -> list[dict]:
             debate, voting = ("open" if "pretres" in e.get("tekst", "").lower() else ""), False
         paused = kind in ("Pauza", "Kraj rada") or (paused and kind != "Nastavak rada")
         resumed = "on" if kind == "Nastavak rada" else ("" if paused else resumed)
-        out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": more, "url": ""})
+        out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": more, "url": "", "pojam": STEP_TERM.get(kind, "")})
     return out[::-1]
 
 
@@ -205,5 +216,6 @@ def model_steps(snap: dict) -> list[dict]:
         if kind not in _UNDER_WAY and kind != "Rezultat glasanja" and t - last.get(key, -10 ** 9) < STEP_SAME:
             continue
         last[key] = t
-        out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": what, "url": "", "model": True})
+        out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": what, "url": "", "model": True,
+                    "pojam": STEP_TERM.get(kind, "")})
     return out[::-1]

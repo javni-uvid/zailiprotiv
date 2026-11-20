@@ -1428,3 +1428,24 @@ def test_the_summary_on_the_page_shows_a_votes_figures_under_its_decision():
     assert html.count("sum-v") == 1
     part = {"vrsta": "deo", "do": "12:00", "ukratko": "U.", "tok": [{"vreme": "11:30", "sta": "Glasanje.", "glasovi": "za 5"}]}
     assert "za 5" in page_.summary_box({"sazetak": part}, cyr=False)
+
+
+def test_a_steps_line_leads_to_what_the_rules_say_of_it():
+    """20 Nov 2026, the maintainer's choice: the sitting's steps by the Rules of Procedure. A step's line leads to its
+    term on the site's page of the Rules (steps.STEP_TERM); every term named there is one the site explains."""
+    import json
+    from pathlib import Path
+    from uzivo import page as page_
+    from uzivo.steps import STEP_TERM, STEP_TITLES
+    kept = {t["id"] for t in json.loads((Path(__file__).parent.parent / "data" / "poslovnik" / "pojmovi.json").read_text(encoding="utf-8"))}
+    assert set(STEP_TERM.values()) <= kept and set(STEP_TITLES) <= set(STEP_TERM)
+    now = 1795089600.0
+    agenda = {"tacke": [{"n": 1, "tekst": "Prva", "stanje": ""}]}
+    steps = [{"t": now, "vrsta": "Tačka dnevnog reda", "tekst": "Prelazimo na prvu tačku dnevnog reda.", "izvor": "prepis", "url": ""},
+             {"t": now + 60, "vrsta": "Pretres otvoren", "tekst": "Otvaram pretres.", "izvor": "prepis", "url": ""}]
+    snap = {"provereno": now + 9000, "sada": None, "dnevni_red": agenda, "danas": [], "hronika": steps}
+    html = page_._steps(snap, cyr=False, tz=TZ, site="https://zailiprotiv.rs/")
+    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojam-tok-pretresa"' in html
+    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojam-dnevni-red"' in html
+    assert "cir/poslovnik-clanovi#pojam-tok-pretresa" in page_._steps(snap, cyr=True, tz=TZ, site="https://zailiprotiv.rs/")
+    assert "poslovnik-clanovi" not in page_._steps(snap, cyr=False, tz=TZ)  # no site known: no link

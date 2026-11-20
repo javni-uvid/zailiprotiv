@@ -56,7 +56,13 @@ as the change. The principles and the rules of work are in AGENTS.md.
   a term reads otherwise in a newer version (`poslovnik.terms`, `changed`), the retelling is dropped and only the
   articles' text is shown, open, until written again. The pages link a term where it appears
   (`macros.term`, only for terms the file has): the floor pages, a law's debate and measures, the convocation and
-  numbers pages (hitni postupak), the method page. Kvorum and the sitting's other steps wait for step 4.
+  numbers pages (hitni postupak), the method page.
+- **The sitting's steps by the Rules** (20 Nov 2026, the maintainer's choice, step 4): four terms more, for what a
+  sitting day goes through: otvaranje sednice i kvorum (88, 90), radno vreme, pauza i prekid (87, 101), dnevni red
+  (92, 93), tok pretresa (96, 98); first in `pojmovi.json`, in the order a day takes them. Each kind of step on the
+  live page leads to its term (`live/AGENTS.md`), and the order the live page keeps (`steps._in_order`) cites the
+  articles it rests on. The site shows what the Rules say and when a step was heard; it does not say whether a
+  sitting kept them (principle 3; a breach is for MPs to point out, art. 103).
 
 ## Laws
 

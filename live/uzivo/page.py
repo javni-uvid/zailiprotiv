@@ -211,7 +211,11 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
                 who = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + e["adresa"])}">{who}</a>'
             body = f'<p class="st-floor">{s(head)}: <b>{who}</b></p>'
         else:
-            body = f'<p class="st-title">{s(e["naslov"])}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
+            title = s(e["naslov"])
+            if e.get("pojam") and site:  # what the Rules say of this kind of step, on the site (steps.STEP_TERM)
+                href = site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojam-" + e["pojam"]
+                title = f'<a href="{escape(href)}" title="{t("steps_rules")}">{title}</a>'
+            body = f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
         return (f'<li class="st-{e["izvor"]}{" st-rec" if e.get("rec") else ""}"><span class="time">{_clock(e["t"], tz)}</span><i aria-hidden="true"></i>'
                 f'<div>{body}</div></li>')
     first, rest = rows[:8], rows[8:]
