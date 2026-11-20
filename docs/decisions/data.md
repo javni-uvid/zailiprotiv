@@ -140,6 +140,13 @@ as the change. The principles and the rules of work are in AGENTS.md.
   made of, with Pagefind's version and pattern: the same pages take the index made of them, any page changed makes
   a new one, so a stale index can't be published. The pages are still built whole (some 65 s; `notes-site` reads
   each convocation's roll calls once), so they stay exactly what a full build makes.
+- **What reads the older notes is installed when the first such file comes** (20 Nov 2026): **transcripts**
+  installed LibreOffice (for .doc and RTF) and poppler (for the PDFs of 2016-2017) on every run, though today's
+  notes are .docx and most hourly runs find nothing new. It cost some 20 s a run, and at 10:49 UTC on 20 Nov, 21
+  minutes: 92 MB from a slow mirror, for a run with nothing to read, while the notes' pages and the summaries
+  waited behind it. Now `transcripts.tool` runs the workflow's `NOTES_TOOLS_INSTALL` the first time a program is
+  asked for and missing; where the variable isn't set (a developer's computer) nothing is installed and a missing
+  program fails as before.
 
 ## Changing convocation
 

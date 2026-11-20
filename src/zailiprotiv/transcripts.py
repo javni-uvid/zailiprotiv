@@ -10,7 +10,9 @@ Each speech starts a paragraph with the speaker's name, or the chair's role, in 
 from __future__ import annotations
 
 import io
+import os
 import re
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -69,6 +71,17 @@ class Unreadable(ValueError):
     """A day's notes that are neither a Word file nor one LibreOffice can turn into one."""
 
 
+def tool(name: str) -> str:
+    """A program the older notes need (LibreOffice for .doc and RTF, pdftotext for PDFs), installed at first need
+    where NOTES_TOOLS_INSTALL says how: today's notes are .docx and need neither, so a run with nothing old to read
+    installs nothing (20 Nov 2026: a run with nothing to read waited 21 minutes for LibreOffice from a slow mirror)."""
+    install = os.environ.get("NOTES_TOOLS_INSTALL")
+    if install and not shutil.which(name):
+        print(f"{name} is needed: {install}", flush=True)
+        subprocess.run(install, shell=True, check=True)
+    return name
+
+
 def to_docx(body: bytes) -> bytes:
     """The older notes are in Word's old format (.doc), or RTF: turned into .docx with LibreOffice."""
     kind = "doc" if body.startswith(b"\xd0\xcf\x11\xe0") else "rtf" if body.lstrip().startswith(b"{\\rtf") else ""
@@ -76,7 +89,7 @@ def to_docx(body: bytes) -> bytes:
         raise Unreadable(f"not a Word file: {body[:80]!r}")
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / f"notes.{kind}").write_bytes(body)
-        run = subprocess.run(["soffice", "--headless", "--norestore", f"-env:UserInstallation=file://{tmp}/profile",
+        run = subprocess.run([tool("soffice"), "--headless", "--norestore", f"-env:UserInstallation=file://{tmp}/profile",
                               "--convert-to", "docx:MS Word 2007 XML", "--outdir", tmp, f"{tmp}/notes.{kind}"],
                              capture_output=True, text=True, timeout=300)
         out = Path(tmp) / "notes.docx"
@@ -104,7 +117,7 @@ def pdf_paragraphs(pdf: bytes) -> list[str]:
     empty line, and a new one starts at a speaker's name, an agenda item or the agenda's heading."""
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / "n.pdf").write_bytes(pdf)
-        run = subprocess.run([PDFTOTEXT, "-enc", "UTF-8", f"{tmp}/n.pdf", "-"], capture_output=True, timeout=300)
+        run = subprocess.run([tool(PDFTOTEXT), "-enc", "UTF-8", f"{tmp}/n.pdf", "-"], capture_output=True, timeout=300)
         if run.returncode:
             raise Unreadable(f"pdftotext failed: {run.stderr[-300:]!r}")
         text = run.stdout.decode("utf-8", "replace")
