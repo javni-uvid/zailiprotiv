@@ -23,6 +23,11 @@ it. Dates are the maintainer's decisions unless said otherwise.
     in this order and waits for **test** to start before it counts as passed (20 Nov 2026: a pull request was
     merged before its test began); `--ne-spajaj` stops before the merge. A pull request that needs the
     maintainer (a principle, something seen from outside, DNS) says so and is left for them to merge.
+  - **A merged task's worktree is removed** (20 Nov 2026, the maintainer's decision: 23 merged ones were left,
+    each a full copy with `data/` and a `.venv`). `tools/pocisti.sh`, run by `posalji.sh` after its merge, removes
+    every worktree with no changes whose pull request was merged on exactly its commit over ten minutes ago
+    (`orca worktree rm --delete-branch`); an agent's own goes in the next agent's run, as Orca would stop its
+    terminal. A pull request merged by hand on GitHub: `sh tools/pocisti.sh` (`--proba` only lists).
   - **The workflows still commit data straight to `main`** (votes, transcripts, notes, summaries…): a branch will
     lag behind in `data/`, which is fine while a task doesn't change `data/`.
   - **`main` is guarded on our side:** GitHub's rulesets can't exempt the workflows' own token (GitHub Actions can't

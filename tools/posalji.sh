@@ -5,6 +5,7 @@
 # 20 Nov 2026 a pull request was merged before its test began.
 #   sh tools/posalji.sh [<file with the PR body>] [--ne-spajaj]
 # --ne-spajaj stops after the check, for a pull request the maintainer merges (a principle, DNS, what is seen outside).
+# After a merge it runs tools/pocisti.sh: the worktrees whose pull requests were merged earlier go.
 set -eu
 body=""; merge=1
 for a in "$@"; do
@@ -40,6 +41,7 @@ gh pr checks "$pr" | grep -q '^test[[:space:]]*pass' || { echo "posalji: test ni
 if [ "$merge" = 1 ]; then
   gh pr merge "$pr" --squash --delete-branch || gh pr view "$pr" --json state -q .state | grep -q MERGED
   echo "posalji: #$pr je spojen."
+  sh tools/pocisti.sh || echo "posalji: pocisti nije uspeo; worktree-ovi ostaju." >&2
 else
   echo "posalji: #$pr čeka održavaoca."
 fi
