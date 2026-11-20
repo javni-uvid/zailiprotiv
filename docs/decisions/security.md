@@ -30,6 +30,10 @@ The site is static and public, with no accounts and nothing private about a visi
 - **The workflows.** As "Workflows, safely" says, and besides: a tool installed in a job is named by version
   (`uv==…`, `pagefind@…`, the packages beside a secret in **visits**), moved by hand when there is a reason;
   repository-wide the workflows' own token only reads, and a job asks for more by name.
+  The repository's settings hold the same (20 Nov 2026): only GitHub's own actions and
+  `cloudflare/wrangler-action` may run, and only named by commit, so a workflow that names another action or a
+  tag doesn't start. A new action is first allowed there (Settings → Actions → General), by the maintainer or
+  an agent with their rights, and said in the pull request.
 - **The live service (`live/`).** Behind Cloudflare's tunnel with no port open to the network; not root, no
   capabilities, images and packages named by content (`live/AGENTS.md`). What a request names never becomes a
   path or markup. The maintainer's pages are opened by a key of 12 characters or more, compared in constant time.
