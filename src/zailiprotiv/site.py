@@ -1154,7 +1154,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         kinds_count=[(k, kinds.KINDS[k], n) for k, n in sorted(Counter(it["law"].get("kind", "other") for it in items)
                                                                 .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
-    (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root=""),
+    # What was corrected on the site, by hand, newest first (data/ispravke.json: [{"date", "text", "url", "where"}]).
+    fixes = json.loads((root / "ispravke.json").read_text(encoding="utf-8")) if (root / "ispravke.json").exists() else []
+    fixes = sorted(fixes, key=lambda c: c["date"], reverse=True)
+    (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root="", corrections=fixes),
                                          encoding="utf-8")
     from zailiprotiv import pages_govornici  # who spoke how long, per day read from the recording and in sum
     pages_govornici.render(common=common, env=env, out=out, root=root)
