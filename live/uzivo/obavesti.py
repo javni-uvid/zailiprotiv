@@ -77,6 +77,22 @@ class Bell:
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.loads(r.read().decode("utf-8"))
 
+    def admin(self, endpoint: str, on: bool = True) -> bool:
+        """The maintainer's device told (or no longer told) when this service is down while a sitting is on: the
+        counter keeps it (/p/admin), asked with the token, which the page never sees."""
+        if not (self.token and self.api.startswith("https://")):
+            return False
+        req = urllib.request.Request(self.api + ("/p/admin" if on else "/p/admin/odjava"),
+                                     data=json.dumps({"endpoint": endpoint}).encode(), method="POST",
+                                     headers={"authorization": "Bearer " + self.token, "content-type": "application/json",
+                                              "user-agent": "zailiprotiv-mikrofon"})
+        try:
+            with urllib.request.urlopen(req, timeout=15) as r:
+                return r.status == 200
+        except Exception as exc:
+            log.warning("admin device not kept (%s)", exc)
+            return False
+
     def _last(self) -> str:
         try:
             return str(json.loads(self.path.read_text(encoding="utf-8")).get("dan", ""))

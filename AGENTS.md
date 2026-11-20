@@ -720,6 +720,17 @@ its minute.
   overrides), waits until the new one answers with its commit and puts the one before back if it doesn't in 90 s.
   A Docker healthcheck, `logovi`, `ocisti`, `.env` taken from the main clone, and `mikrofon-whisper` as an external
   volume.
+- **The maintainer is told when the live page is down during a sitting** (20 Nov 2026, the maintainer's choice of a
+  phone notification over an issue). The counter's cron, every five minutes on weekdays 6-19 UTC (`watch`), asks
+  the service for `stanje.json` (the edge's copy, `x-mikrofon`, doesn't count as an answer); only when it doesn't
+  answer does it read the Assembly's two listings for a sitting marked "(у току)" (at most once in 30 minutes:
+  ask the Assembly little). Down in two checks in a row while one is on, the maintainer's devices (table
+  `push_admin`) get one notification, and one more when it answers again. A device is put on that list from
+  `mikrofon.zailiprotiv.rs/upozorenja?k=<PREPIS_KLJUC>`, which hands its push address to the service, and the
+  service to the counter with its token (`/p/admin`). A push carries nothing, so the service worker asks the
+  counter which it was (`/p/vrsta`, by its own push address): the watch's for the maintainer's devices, the
+  sitting's for everyone else. The Assembly marks a sitting of several days "in progress" on its days off too, so
+  a computer turned off on such a day is told about as well.
 
 ## Open questions
 

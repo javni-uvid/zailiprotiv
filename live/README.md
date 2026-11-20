@@ -83,6 +83,11 @@ service worker (`/sw.js`) and sends the browser's push address to the site's cou
 broadcast in a row, between 7 and 22 h, the service (`obavesti.py`) asks the counter to send the day's notification,
 once a day; it needs `PUSH_TOKEN` in `.env` (the test has it empty and never sends). See `worker/README.md`.
 
+**Told when it is down** (20 Nov 2026): open `/upozorenja?k=<PREPIS_KLJUC>` on your phone and turn it on; the
+site's counter then notifies that phone when this service doesn't answer through two checks five minutes apart
+while the Assembly lists a sitting in progress (weekdays, 7-20 h), and again when it answers. See
+`worker/README.md`.
+
 ## Running it
 
 Two images, **test first, then live** (19 Nov 2026, the maintainer's decision): a change is built and tried

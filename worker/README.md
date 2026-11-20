@@ -53,6 +53,15 @@ no content to 30 addresses after row `od`, signed with `VAPID_JWK`, forgets thos
 for, and answers `{sent, gone, next}`. Secrets: `VAPID_JWK` (a P-256 private key as a JWK; its public half is
 `push_key` in `data/settings.json`) and `PUSH_TOKEN` (also in `live/.env`).
 
+## The watch over "Ko sada govori"
+
+A cron every five minutes, weekdays 6-19 UTC (`watch`): `https://mikrofon.zailiprotiv.rs/stanje.json` answered by
+the service itself is up; otherwise the Assembly's listings are read (at most once in 30 minutes, kept in `watch`)
+for a sitting marked "(у току)". Down in two checks in a row while one is on, the devices in `push_admin` get a
+push, and another when it is up again. `POST /p/admin` and `/p/admin/odjava` (with `PUSH_TOKEN`, from the live
+service's `/upozorenja`) keep and forget those devices; `POST /p/vrsta {endpoint}` (from the live page's service
+worker) says which notification a push was.
+
 ## Inflated counts
 
 There is no robot check. The `watch` workflow reads `GET /pregled` four times a day and opens an issue when one

@@ -1,6 +1,7 @@
 """The web part: the page in both scripts, the changing part of it, the state as JSON, and the fonts."""
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 import re
@@ -10,18 +11,19 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
 from . import config, hronika, picture, prepis, worker
 from .stream import VIDEO
 from .obavesti import Bell
-from .page import fragment, manifest, page, service_worker, transcript_page
+from .page import admin_page, fragment, manifest, page, service_worker, transcript_page
 from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
 tracker = Tracker(config.STATE_PATH)
 _stop = threading.Event()
+bell = Bell()
 _tz = ZoneInfo(config.TZ)
 FONTS = Path(__file__).parent / "static" / "fonts"
 URL = os.environ.get("PUBLIC_URL", "").strip()  # the page's own address, for canonical links
@@ -30,7 +32,7 @@ NO_STORE = {"Cache-Control": "no-store"}
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    threading.Thread(target=worker.run, args=(tracker, _stop, Bell()), daemon=True).start()
+    threading.Thread(target=worker.run, args=(tracker, _stop, bell), daemon=True).start()
     if prepis.on():
         prepis.Writer(tracker, _stop).start()
     hronika.Watcher(tracker, _stop).start()
@@ -185,6 +187,33 @@ def latin_manifest() -> JSONResponse:
 @app.get("/cir/manifest.webmanifest")
 def cyrillic_manifest() -> JSONResponse:
     return JSONResponse(manifest(True), media_type="application/manifest+json", headers=DAY)
+
+
+@app.get("/upozorenja")
+def alerts_page(k: str = "") -> Response:
+    """The maintainer's page for the outage alerts (page.admin_page); anyone without the key is led to the page."""
+    if not config.admin_open(k):
+        return RedirectResponse("/", status_code=302, headers=NO_STORE)
+    return HTMLResponse(admin_page(k, config.PUSH_KEY), headers={"Cache-Control": "private, no-store",
+                        "Referrer-Policy": "no-referrer", "X-Robots-Tag": "noindex, nofollow"})
+
+
+@app.post("/upozorenja")
+async def alerts_device(request: Request, k: str = "") -> JSONResponse:
+    """This device on (or off) the outage alerts: handed to the counter with the service's token."""
+    if not config.admin_open(k):
+        raise HTTPException(403)
+    try:
+        body = await request.json()
+    except ValueError:
+        raise HTTPException(400)
+    endpoint = body.get("endpoint") if isinstance(body, dict) else None
+    if not isinstance(endpoint, str) or not endpoint.startswith("https://") or len(endpoint) > 1000:
+        raise HTTPException(400)
+    ok = await asyncio.to_thread(bell.admin, endpoint, body.get("on", True) is not False)
+    if not ok:
+        raise HTTPException(502)
+    return JSONResponse({"ok": True}, headers=NO_STORE)
 
 
 @app.get("/sw.js")

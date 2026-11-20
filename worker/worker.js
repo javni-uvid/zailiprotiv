@@ -19,6 +19,9 @@
 //   POST /p/odjava    ← {"endpoint": "<push address>"}                no more notifications for it
 //   POST /p/salji     ← {"od": <row>}, with "authorization: Bearer <PUSH_TOKEN>"   from the live service: send the
 //                       day's notification (once a day), a batch at a time; answers with where the next batch starts
+//   POST /p/admin     ← {"endpoint"}, with the token: from the live service's /upozorenja (the maintainer's key):
+//                       this device is told when "Ko sada govori" is down while a sitting is on; /p/admin/odjava
+//   POST /p/vrsta     ← {"endpoint"}   from the page's service worker on a push: which notification it is
 //
 // Only laws (and quotes) the site itself lists are counted (glasanje.json, read from the site and kept for an hour),
 // and one address can send only so often (Cloudflare's rate limiter; the address is not stored by us).
@@ -184,6 +187,7 @@ async function sendPush(env, from) {
   if (!from) {  // the first batch: once a day, whatever the live service asks
     const r = await env.DB.prepare("INSERT OR IGNORE INTO push_days (day) VALUES (?)").bind(day).run();
     if (!r.meta.changes) return { day, already: true, next: null };
+    await watchSet(env, "poslato", { t: Date.now() });  // what a service worker asking now was sent (kind)
   }
   const rows = (await env.DB.prepare("SELECT rowid AS id, endpoint FROM push WHERE rowid > ? ORDER BY rowid LIMIT ?")
     .bind(from || 0, PUSH_BATCH).all()).results;
@@ -202,12 +206,88 @@ async function sendPush(env, from) {
   await env.DB.batch(writes);
   return { day, sent, gone: gone.length, next: rows.length === PUSH_BATCH ? rows[rows.length - 1].id : null };
 }
+// The watch over "Ko sada govori" (20 Nov 2026, the maintainer's request): every five minutes of a weekday's working
+// hours the service is asked for its state; when it doesn't answer, the Assembly's listings are read (at most once
+// in half an hour) for a sitting marked "(у току)"; down through two checks while one is on, the maintainer's
+// devices get one notification, and another when it answers again. The Assembly marks a sitting of several days
+// "in progress" on its days off too, so a computer turned off on such a day is told about as well.
+const LISTINGS = ["https://www.parlament.gov.rs/активности/народна-скупштина/заседања/редовна.34.html",
+  "https://www.parlament.gov.rs/активности/народна-скупштина/заседања/ванредна.35.html"];
+const DOWN_AFTER = 4 * 60e3;  // the second check in a row that finds it down (five minutes apart)
+async function watchGet(env, k) {
+  const r = await env.DB.prepare("SELECT v FROM watch WHERE k = ?").bind(k).first();
+  return r ? JSON.parse(r.v) : null;
+}
+async function watchSet(env, k, v) {
+  if (v === null) await env.DB.prepare("DELETE FROM watch WHERE k = ?").bind(k).run();
+  else await env.DB.prepare("INSERT INTO watch (k, v) VALUES (?, ?) ON CONFLICT (k) DO UPDATE SET v = excluded.v").bind(k, JSON.stringify(v)).run();
+}
+async function answers() {  // the service itself, not the edge's copy of its last answer
+  try {
+    const r = await fetch(LIVE + "/stanje.json", { cf: { cacheTtl: 0 } });
+    return r.status === 200 && !r.headers.get("x-mikrofon") && "stanje" in (await r.json());
+  } catch (e) { return false; }
+}
+async function sitting(env) {
+  const last = await watchGet(env, "sednica");
+  if (last && Date.now() - last.t < 30 * 60e3) return last.on;
+  let on = false;
+  for (const url of LISTINGS) {
+    try {
+      const r = await fetch(encodeURI(url), { headers: { "user-agent": "zailiprotiv/0.1 (+https://github.com/javni-uvid/zailiprotiv)" } });
+      if (r.ok && />[^<]*седниц[^<]*\(у току\)/i.test(await r.text())) on = true;
+    } catch (e) { /* unreadable: not taken as a sitting */ }
+    if (on) break;
+  }
+  await watchSet(env, "sednica", { t: Date.now(), on });
+  return on;
+}
+async function tellAdmins(env, what, minutes) {
+  await watchSet(env, "admin", { vrsta: what, min: minutes, t: Date.now() });
+  const rows = (await env.DB.prepare("SELECT endpoint FROM push_admin LIMIT 20").all()).results;
+  await Promise.all(rows.map(async (r) => {
+    try {
+      const res = await fetch(r.endpoint, { method: "POST", headers: {
+        authorization: await authorization(env, r.endpoint), ttl: "1800", urgency: "high", "content-length": "0" } });
+      if (res.status === 404 || res.status === 410) await env.DB.prepare("DELETE FROM push_admin WHERE endpoint = ?").bind(r.endpoint).run();
+    } catch (e) {}
+  }));
+}
+async function watch(env) {
+  if (!env.VAPID_JWK) return;
+  const down = await watchGet(env, "kvar"), now = Date.now();
+  if (await answers()) {
+    if (down) {
+      if (down.told) await tellAdmins(env, "oporavak", Math.round((now - down.od) / 60e3));
+      await watchSet(env, "kvar", null);
+    }
+    return;
+  }
+  if (!(await sitting(env))) { if (down) await watchSet(env, "kvar", null); return; }
+  if (!down) { await watchSet(env, "kvar", { od: now, told: false }); return; }
+  if (!down.told && now - down.od >= DOWN_AFTER) {
+    await tellAdmins(env, "kvar", Math.round((now - down.od) / 60e3));
+    await watchSet(env, "kvar", { ...down, told: true });
+  }
+}
+// Which notification a push was, asked by the service worker that got it (a push carries nothing): for the
+// maintainer's devices, the watch's last one if newer than the day's notification of a sitting and under ten
+// minutes old; for everyone else always the sitting's.
+async function kind(env, endpoint) {
+  const admin = await env.DB.prepare("SELECT 1 AS x FROM push_admin WHERE endpoint = ?").bind(endpoint || "").first();
+  if (!admin) return { vrsta: "sednica" };
+  const last = await watchGet(env, "admin"), day = await watchGet(env, "poslato");
+  if (last && Date.now() - last.t < 10 * 60e3 && (!day || last.t > day.t)) return { vrsta: last.vrsta, min: last.min };
+  return { vrsta: "sednica" };
+}
+
 async function same(a, b) {  // the token compared by its hash, so the time taken says nothing of it
   return (await hash(a)) === (await hash(b));
 }
 
 export default {
   async scheduled(event, env) {
+    if (event.cron === "*/5 6-19 * * 1-5") return watch(env);
     if (!env.DISPATCH_TOKEN) return;
     if (event.cron === "53 */6 * * *") await dispatch(env, "summaries.yml", {});
     else await dispatch(env, "votes.yml", { convocation: "14", scheduled: "true" });
@@ -239,6 +319,22 @@ export default {
       let od = 0;
       try { od = Math.max(0, parseInt(JSON.parse(await request.text()).od, 10) || 0); } catch (e) { od = 0; }
       return reply(await sendPush(env, od), 200, origin);
+    }
+    if (path === "/p/admin" || path === "/p/admin/odjava") {  // the live service, for the maintainer's key
+      const auth = request.headers.get("authorization") || "";
+      if (!env.PUSH_TOKEN || !(await same(auth, "Bearer " + env.PUSH_TOKEN))) return reply({ error: "token" }, 403, origin);
+      let b;
+      try { b = JSON.parse((await request.text()).slice(0, 2000)) || {}; } catch (e) { return reply({ error: "json" }, 400, origin); }
+      if (typeof b.endpoint !== "string" || !PUSH_HOSTS.test(b.endpoint)) return reply({ error: "endpoint" }, 400, origin);
+      if (path === "/p/admin/odjava") await env.DB.prepare("DELETE FROM push_admin WHERE endpoint = ?").bind(b.endpoint).run();
+      else await env.DB.prepare("INSERT OR IGNORE INTO push_admin (endpoint, day) VALUES (?, ?)").bind(b.endpoint, today()).run();
+      return reply({ ok: true }, 200, origin);
+    }
+    if (path === "/p/vrsta") {  // the page's service worker, on a push
+      if (from !== LIVE) return reply({ error: "origin" }, 403, LIVE);
+      let b = {};
+      try { b = JSON.parse((await request.text()).slice(0, 2000)) || {}; } catch (e) { b = {}; }
+      return reply(await kind(env, typeof b.endpoint === "string" ? b.endpoint : ""), 200, LIVE);
     }
     if (path === "/p" || path === "/p/odjava") {  // the live page only; its script reads the answer
       if (from !== LIVE) return reply({ error: "origin" }, 403, LIVE);

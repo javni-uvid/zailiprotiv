@@ -77,6 +77,13 @@ def transcript_open(key: str = "") -> bool:
 # The speakers' sound is written down and kept too (19 Nov 2026, the maintainer's decision, the same evening after
 # a few hours of the chair's sound only); the chair's is written first, so the day's steps keep up. "1" writes only
 # the chair's sound down and lets the speakers' go.
+def admin_open(key: str = "") -> bool:
+    """The maintainer's own pages (/upozorenja): the transcript's key only (PREPIS_KLJUC, 12 characters or more),
+    whether or not the transcript is on the page."""
+    import hmac
+    return len(TRANSCRIPT_KEY) >= 12 and hmac.compare_digest(key.encode(), TRANSCRIPT_KEY.encode())
+
+
 CHAIR_ONLY = os.environ.get("PREPIS_SAMO_PREDSEDAVAJUCI", "0").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
 WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
