@@ -456,6 +456,69 @@ def test_the_shared_state_is_cacheable_and_open_to_other_pages():
     assert "s-maxage=2" in r.headers["cache-control"] and "stanje" in r.json()
 
 
+def test_an_unchanged_part_is_not_sent_again():
+    import pytest
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+    from uzivo import main
+    c = TestClient(main.app)
+    first = c.get("/deo")
+    tag = first.headers["etag"]
+    assert first.status_code == 200 and first.headers["cache-control"] == "no-cache" and 'data-stanje="' in first.text
+    assert c.get("/deo", headers={"if-none-match": "W/" + tag}).status_code == 304  # weakened by Cloudflare
+    assert c.get("/deo", headers={"if-none-match": '"other"'}).status_code == 200
+
+
+def test_the_hidden_transcript_is_not_in_the_state(monkeypatch):
+    """20 Nov 2026: with the transcript off the page, /stanje.json still carried the speaker's last words and the
+    chair's; the snapshot leaves them out while config.SHOW_TRANSCRIPT is off."""
+    t = Tracker(None, "Europe/Belgrade")
+    now = 1794920000.0
+    petar = ROSTER.match("Петар Петровић", 0.8)
+    t.observe(petar, "Lista za primer", now=now)
+    t.observe(petar, "Lista za primer", now=now + 30)
+    t.say(now + 5, "poštovani predsedavajući, kolege")
+    monkeypatch.setattr(config, "SHOW_TRANSCRIPT", True)
+    assert "kolege" in json.dumps(t.snapshot(now=now + 31), ensure_ascii=False)
+    monkeypatch.setattr(config, "SHOW_TRANSCRIPT", False)
+    snap = t.snapshot(now=now + 31)
+    assert "kolege" not in json.dumps(snap, ensure_ascii=False) and snap["bez_potpisa"] is None
+    assert "reci" not in snap["sada"] and "prepis" not in snap["sada"]
+
+
+def test_the_snapshot_is_computed_by_one_thread_at_a_time():
+    t = Tracker(None, "Europe/Belgrade")
+    t.observe(ROSTER.match("Петар Петровић", 0.8), "Lista za primer")
+    calls, real = [], t._snapshot
+
+    def slow(now):
+        calls.append(1)
+        time.sleep(0.2)
+        return real(now)
+    t._snapshot = slow
+    first = t.snapshot()  # the first is computed; then, with one being computed, the others take the last one
+    t._snap = (0.0, first)
+    threads = [threading.Thread(target=t.snapshot) for _ in range(8)]
+    for th in threads:
+        th.start()
+    for th in threads:
+        th.join()
+    assert len(calls) == 2
+
+
+def test_the_pages_script_is_valid_javascript(tmp_path):
+    import shutil
+    import subprocess
+    import pytest
+    from uzivo import page as page_
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("no node")
+    f = tmp_path / "page.js"
+    f.write_text(page_.SCRIPT, encoding="utf-8")
+    assert subprocess.run([node, "--check", str(f)], capture_output=True).returncode == 0
+
+
 def test_the_page_is_counted_as_the_site_is():
     from uzivo import config
     snap = {"stanje": NO_STREAM, "provereno": 0, "sada": None, "dan": "2026-11-17", "ranije": False, "danas": []}

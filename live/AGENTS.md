@@ -282,3 +282,12 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
 - **The first list's colour is indigo** (20 Nov 2026, with the site: its blue stood too near the blue of "za" on
   the home page, and the two pages wear the same hues): `--c-av` and `page.HEX["c-av"]` are #3730a3 (#818cf8 in
   the dark theme); the pictures take it from `HEX`.
+- **Less work per visitor, nothing hidden in the JSON** (20 Nov 2026, from the same look). With the transcript off
+  the page (`SHOW_TRANSCRIPT`), the snapshot no longer reads it: `/stanje.json` had carried the speaker's last
+  words and the chair's while the page showed none. A snapshot is computed by one thread at a time, the others
+  taking the last one, and one begun before a frame is not kept as newer. `/deo` is drawn once per snapshot and
+  sent with an ETag (`no-cache`): a page holding the same part gets a 304; the page asks every 5 s while there is
+  a broadcast and every 30 s while there is none (`data-stanje`), so a sitting's start shows within half a minute.
+  Every file the service keeps is written beside itself and then moved into place (`state._write`). Checked and
+  left as it is: a segment's frame is read once (frames per segment on 18 Nov: median 0.95). In the counter the
+  VAPID key and each push service's header are kept as promises, so a batch's 30 sends sign once.

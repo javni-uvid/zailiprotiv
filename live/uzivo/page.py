@@ -292,7 +292,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci", "prepis_ceo")}
         snap = {**snap, "bez_potpisa": None, "sada": bare(snap["sada"]) if snap.get("sada") else snap.get("sada"),
                 "danas": [bare(d) for d in snap.get("danas") or []]}
-    out = [f'<div id="deo" data-checked="{snap["provereno"]}">']
+    out = [f'<div id="deo" data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}">']
     cur = snap.get("sada")
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
@@ -1222,8 +1222,6 @@ a.said { margin-left: .3rem; }
 SCRIPT = _shared("mikrofon.js") + """
 (function () {
   var base = document.body.getAttribute("data-base");
-  // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
-  // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
   // The clock beside the speaker: the seconds the page was given, plus those passed since; never back within a turn.
   var got = Date.now(), last = { od: "", s: 0 };
   function hms(s) { var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
@@ -1277,11 +1275,16 @@ SCRIPT = _shared("mikrofon.js") + """
     if (heard !== null && now && now !== heard && line) line.textContent = now + (side ? ", " + side.textContent.trim() : "");
     heard = now;
   }
+  // Asked again with the last answer's mark (ETag): an unchanged part comes back as a 304, from the browser's copy,
+  // and is not put in again.
+  var shown = null;
   function load() {
     if (document.hidden) return;
-    fetch(base + "deo", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; })
+    fetch(base + "deo", { cache: "no-cache" }).then(function (r) { return r.ok ? r.text() : null; })
       .then(function (html) {
         if (!html) return;
+        if (html === shown) { got = Date.now(); tick(); return; }
+        shown = html;
         // what the reader opened (the agenda, the folded steps) stays open when the part is replaced
         var open = [].map.call(document.querySelectorAll("#deo details[open]"), function (d) { return d.id || d.parentNode.className; });
         // the keyboard's place too: the same kind of thing, the same one in order, has the focus again
@@ -1297,7 +1300,13 @@ SCRIPT = _shared("mikrofon.js") + """
       })
       .catch(function () {});
   }
-  setInterval(load, 5000); setInterval(tick, 1000); tick(); said();
+  // Every 5 s while there is a broadcast; every 30 s while there is none (20 Nov 2026: between sittings every open
+  // tab still asked the computer every 5 s for a part that did not change).
+  (function loop() {
+    var d = document.getElementById("deo");
+    setTimeout(function () { load(); loop(); }, d && d.getAttribute("data-stanje") === "nema_prenosa" ? 30000 : 5000);
+  })();
+  setInterval(tick, 1000); tick(); said();
   // a turn folded away among the earlier ones is opened when a link leads to it
   function unfold() {
     var id = location.hash.slice(1), e = id && document.getElementById(id), d = e && e.closest("details");
