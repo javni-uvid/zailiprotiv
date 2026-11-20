@@ -66,6 +66,16 @@ decisions unless said otherwise.
   and poor, by host and device and for the most opened pages; for a page good in fewer than three loads of four,
   the elements that jumped or were drawn late). The first reading, of the site's first week: every page well over
   the line but the quiz, whose note at the foot jumps while the script lays the questions out.
+- **A search of the project's history by meaning, on trial** (20 Nov 2026, the maintainer's decision, to be judged
+  after a day or two of use). On the maintainer's computer an MCP server, `cognee-zailiprotiv`, holds every
+  decision of this file and of `live/AGENTS.md`, every commit message on `main`, and the pull requests and issues
+  (no code, no `data/`; kept outside the repository, nothing sent out). **When the tool is there, ask it first**
+  when looking for why something is as it is or whether something was tried: `recall` with
+  `search_type: "CHUNKS"`, `datasets: "zailiprotiv"`, `top_k` 5 or more, the question in Serbian or English. A
+  hit names its commit, pull request or section: read that in the repository before relying on it, since the
+  store lags behind `main` until refreshed and these files stay the truth. For an exact word or a rare name use
+  `grep` and `git log -S`; it finds by meaning and misses those. Never call its `forget`. Where the tool is
+  missing (another machine, the server off), work as before.
 
 ### The data runs
 
