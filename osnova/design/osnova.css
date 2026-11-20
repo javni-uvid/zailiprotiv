@@ -38,7 +38,7 @@
 /* The family's bar: the first thing on every page of every site. The family's name leads to its own page, then
    the sites, the one the reader is on marked. One row; on a narrow phone it scrolls sideways rather than wrap. */
 .ju-bar { background: var(--ju-card); border-bottom: 1px solid var(--ju-line); font: var(--ju-t-1)/1.2 var(--ju-sans); }
-.ju-bar-in { display: flex; align-items: center; gap: 0 1.1rem; max-width: var(--ju-wide); margin: 0 auto; padding: 0 20px;
+.ju-bar-in { display: flex; align-items: center; gap: 0 1.1rem; box-sizing: border-box; max-width: calc(var(--ju-wide) + 40px); margin: 0 auto; padding: 0 20px;
   overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
 .ju-bar-in::-webkit-scrollbar { display: none; }
 .ju-bar a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; color: var(--ju-muted); text-decoration: none; }
