@@ -4,7 +4,6 @@ and the DejaVu fonts of the image (Latin and Cyrillic in one file)."""
 from __future__ import annotations
 
 import io
-from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 

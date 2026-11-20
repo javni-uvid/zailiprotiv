@@ -296,3 +296,9 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   shown, and as what; no HTML), the page's own styles and script in `static/live.css` and `static/live.js` (read
   at start beside `mikrofon.css` and `mikrofon.js`, still inline in the page). `page.py` draws the HTML. A text
   key given twice (`play_live`) lost its first, dead value.
+- **`state.py` in parts** (20 Nov 2026, the same look; the output checked byte for byte the same): `Tracker` keeps
+  the turns, the day files and the resume; it takes three parts as mixins, each in a module of its own, the
+  methods moved unchanged: `state_said.Said` (the transcript), `state_chronicle.Chronicle` (the day's steps, the
+  agenda's progress, the Assembly's pages read) and `state_view.View` (the snapshot). What they share (the states,
+  `counted` and `SURE_FRAMES`, `SAID_LEAD`, `SAID_TAIL`, `_write`) is in `state_base.py`: a test that changes the
+  rule patches it there.
