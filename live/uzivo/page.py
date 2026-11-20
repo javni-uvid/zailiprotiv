@@ -802,7 +802,10 @@ def admin_page(key: str, push_key: str) -> str:
     """/upozorenja?k=…: the maintainer turns on, on this device, a notification when this service is down while a
     sitting is on (the counter's watch, worker/). Shown to the key only; the device's push address goes to the
     service, which hands it to the counter with its token."""
-    k = json.dumps(key)
+    def js(s: str) -> str:  # inside <script>: "</" would end it
+        return json.dumps(s).replace("</", r"<\/")
+
+    k = js(key)
     return f"""<!doctype html>
 <html lang="sr-Latn"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
@@ -815,7 +818,7 @@ radnim danom od 7 do 20 h, dok Skupština na svom sajtu piše da je sednica u to
 <p class="meta" id="said"></p><p><a href="/">← Ko sada govori</a></p></main>
 <script>
 (function () {{
-  var key = {json.dumps(push_key)}, k = {k}, said = document.getElementById("said");
+  var key = {js(push_key)}, k = {k}, said = document.getElementById("said");
   function bytes(s) {{ var b = atob(s.replace(/-/g, "+").replace(/_/g, "/")), o = new Uint8Array(b.length);
     for (var i = 0; i < b.length; i++) o[i] = b.charCodeAt(i); return o; }}
   function tell(endpoint, on) {{

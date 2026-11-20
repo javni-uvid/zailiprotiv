@@ -31,6 +31,14 @@ from .state_said import Said
 from .state_view import View
 
 
+def _kept(folder: Path | None, day: str) -> Path | None:
+    """The file of a day a request named: one of the folder's own files, so no path is built from what was asked
+    (the address is checked to be a date before this; here that no longer matters)."""
+    if not folder or not folder.is_dir():
+        return None
+    return next((p for p in folder.glob("*.json") if p.stem == day), None)
+
+
 class Tracker(Said, Chronicle, View):
     def __init__(self, path: str | None = None, tz: str | None = None) -> None:
         self._lock = threading.Lock()
@@ -102,9 +110,9 @@ class Tracker(Said, Chronicle, View):
         """The model's summaries of a day: today's as the model keeps them, an earlier day's from its file."""
         if self.summary[0] == day:
             return self.summary[1]
-        f = Path(config.STATE_PATH).parent / "sazetak" / f"{day}.json" if config.STATE_PATH and day else None
+        f = _kept(Path(config.STATE_PATH).parent / "sazetak" if config.STATE_PATH else None, day)
         try:
-            return json.loads(f.read_text(encoding="utf-8")) if f and f.exists() else {}
+            return json.loads(f.read_text(encoding="utf-8")) if f else {}
         except (OSError, ValueError):
             return {}
 
@@ -301,8 +309,8 @@ class Tracker(Said, Chronicle, View):
             if day == self.day:
                 turns, cover = list(self.turns), list(self.cover)
             else:
-                f = self._file(day)
-                if not f or not f.exists():
+                f = _kept(self.days, day)
+                if not f:
                     return None
                 kept = json.loads(f.read_text(encoding="utf-8"))
                 turns, cover = kept.get("turns", []), kept.get("cover", [])

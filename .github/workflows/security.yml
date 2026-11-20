@@ -1,13 +1,16 @@
 # Security checks: the workflows themselves (actionlint: can GitHub read them; zizmor: injected inputs, tokens left behind, unpinned actions,
 # permissions), the Python packages against known vulnerabilities (pip-audit, from uv.lock), and the code
 # (CodeQL: Python and the site's and the counter's JavaScript; its findings go to the Security tab). On changes to
-# the code or the workflows, every Monday, and by hand. Reads only.
+# the code or the workflows (on a pull request too, so a finding is seen before the merge and not after it), every
+# Monday, and by hand. Reads only.
 name: security
 
 on:
   push:
     branches: [main]
-    paths: [".github/**", "src/**", "worker/**", "tools/**", "pyproject.toml", "uv.lock"]
+    paths: [".github/**", "src/**", "live/**", "worker/**", "tools/**", "pyproject.toml", "uv.lock"]
+  pull_request:
+    paths: [".github/**", "src/**", "live/**", "worker/**", "tools/**", "pyproject.toml", "uv.lock"]
   schedule:
     - cron: "17 4 * * 1"
   workflow_dispatch:
@@ -15,7 +18,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: security
+  group: security-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

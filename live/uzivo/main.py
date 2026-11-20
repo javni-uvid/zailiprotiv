@@ -9,6 +9,7 @@ import re
 import threading
 import time
 from contextlib import asynccontextmanager
+from functools import lru_cache
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -238,7 +239,7 @@ def alerts_page(k: str = "") -> Response:
     """The maintainer's page for the outage alerts (page.admin_page); anyone without the key is led to the page."""
     if not config.admin_open(k):
         return RedirectResponse("/", status_code=302, headers=NO_STORE)
-    return HTMLResponse(admin_page(k, config.PUSH_KEY), headers={"Cache-Control": "private, no-store",
+    return HTMLResponse(admin_page(config.TRANSCRIPT_KEY, config.PUSH_KEY), headers={"Cache-Control": "private, no-store",
                         "Referrer-Policy": "no-referrer", "X-Robots-Tag": "noindex, nofollow"})
 
 
@@ -278,9 +279,14 @@ def home_icon(name: str) -> Response:
     return Response(_icons[name], media_type="image/png", headers=DAY)
 
 
+@lru_cache(maxsize=1)
+def _fonts() -> dict[str, Path]:
+    return {p.name: p for p in FONTS.iterdir() if p.is_file()} if FONTS.is_dir() else {}
+
+
 @app.get("/fonts/{name}")
 def font(name: str) -> FileResponse:
-    path = FONTS / name
-    if path.parent != FONTS or not path.is_file():
+    path = _fonts().get(name)  # one of the folder's own files: no path is built from what was asked
+    if not path:
         raise HTTPException(404)
     return FileResponse(path, headers={"Cache-Control": "public, max-age=31536000, immutable"})

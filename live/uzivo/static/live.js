@@ -139,8 +139,9 @@
     var el = document.createElement("div");
     el.className = "st"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
     el.innerHTML = '<div class="st-bar">' + cards.map(function () { return "<i><b></b></i>"; }).join("") + '</div>' +
-      '<button type="button" class="st-x" aria-label="' + data.getAttribute("data-close") + '">×</button>' +
-      '<div class="st-stage"></div><p class="st-hint">' + data.getAttribute("data-hint") + '</p>';
+      '<button type="button" class="st-x">×</button><div class="st-stage"></div><p class="st-hint"></p>';
+    el.querySelector(".st-x").setAttribute("aria-label", data.getAttribute("data-close") || "");  // as text, never as markup
+    el.querySelector(".st-hint").textContent = data.getAttribute("data-hint") || "";
     document.body.appendChild(el);
     var stage = el.querySelector(".st-stage"), bars = el.querySelectorAll(".st-bar i");
     function close() {

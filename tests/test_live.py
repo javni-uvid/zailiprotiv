@@ -1493,3 +1493,13 @@ def test_the_days_cards_tell_what_happened_before_who_spoke():
     bare = fragment({**snap, "sazetak": None, "dnevni_red": None, "hronika": [], "obavestenja": []}, cyr=False,
                     site="https://zailiprotiv.rs/", tz=TZ)
     assert "Dan ukratko" not in bare and "Šta sledi" not in bare and bare.count('<section class="st-c"') == 5  # as before
+
+
+def test_a_day_asked_for_is_found_among_the_kept_files_and_nowhere_else(tmp_path):
+    from uzivo.state import _kept
+    days = tmp_path / "dani"
+    days.mkdir()
+    (days / "2026-11-17.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "state.json").write_text("{}", encoding="utf-8")
+    assert _kept(days, "2026-11-17") == days / "2026-11-17.json"
+    assert _kept(days, "../state") is None and _kept(days, "2026-11-18") is None and _kept(None, "2026-11-17") is None
