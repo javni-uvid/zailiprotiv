@@ -227,6 +227,19 @@ def transcript(root: Path, conv: str, day: str) -> tuple[dict, str]:
     return {k: v.get("tekst", "") for k, v in data.get("govori", {}).items()}, data.get("model", "")
 
 
+def day_summary(root: Path, conv: str, day: str) -> dict | None:
+    """The model's summary of the day (data/<N>/sazetak/<day>.json, from the live page; uzivo.summary), when the day's
+    one was written: {"kratko", "ukratko", "odluke", "govornici", "model"}."""
+    path = root / conv / "sazetak" / f"{day}.json"
+    if not path.exists():
+        return None
+    kept = json.loads(path.read_text(encoding="utf-8"))
+    whole = kept.get("dan")
+    if not isinstance(whole, dict) or not whole.get("ukratko"):
+        return None
+    return {**{k: whole.get(k) for k in ("kratko", "ukratko", "odluke", "govornici")}, "model": kept.get("model", "")}
+
+
 def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None, notes: dict | None = None) -> list[dict]:
     """govornici/<date>.html per day read, govornici.html for each convocation's sum. Returns the days, newest first,
     for the pages that link them. `days`: load(root), when the caller has it; `notes`: the stenographic notes read,
@@ -253,7 +266,8 @@ def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None
             (out / DIR / f"{day['dan']}.html").write_text(env.get_template("govornici_dan.html").render(
                 gap=dur(between(day["govori"])), quick=quick,
                 **common, root="../", day=day["dan"], when=when, people=people, lists=lists, whole=dur(whole),
-                turns=turns, day_parts=parts(day), source=day.get("izvor", "snimak"), conv=conv, model=model),
+                turns=turns, day_parts=parts(day), source=day.get("izvor", "snimak"), conv=conv, model=model,
+                summary=day_summary(root, conv, day["dan"])),
                 encoding="utf-8")
             listed.append({"day": day["dan"], "when": when, "conv": conv, "whole": dur(whole), "people": len(people)})
     newest = max(convs, key=int)

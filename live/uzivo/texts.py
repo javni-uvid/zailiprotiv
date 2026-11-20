@@ -86,6 +86,8 @@ TEXT = {
     "sum_day": "Sažetak dana",
     "sum_earlier": "Ranije danas",
     "sum_note": "Napisao model (Claude Haiku) iz automatskog prepisa zvuka, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Kad Skupština objavi stenografske beleške, one su izvor.",
+    "nt_sum": "Sažetak dana je spreman",
+    "nt_sum_body": "Šta je Narodna skupština danas uradila i odlučila, ukratko. Napisao model iz automatskog prepisa.",
     "steps_site": "sajt Skupštine",
     "steps_site_key": "zvanično: napisala Skupština na stranici sednice; vreme je vreme objave, ne događaja",
     "steps_official": "Zvanično",

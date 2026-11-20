@@ -76,3 +76,33 @@ def test_a_sitting_is_on_while_the_live_page_reads_someone(tmp_path):
     assert uzivo.live_mark(tmp_path, "https://m/", now, get=lambda url: reading) and (tmp_path / "live.json").exists()
     assert not uzivo.live_mark(tmp_path, "https://m/", now + 4 * 3600, get=lambda url: reading)
     assert json.loads((tmp_path / "live.json").read_text()) == {"live": False}
+
+
+def test_the_days_summary_is_taken_in_and_never_lost(tmp_path):
+    """The model's summary (the live page's /sazetak/<day>.json) into data/<N>/sazetak/; one with the day's summary
+    is not replaced by one without it; none served (404) changes nothing."""
+    whole = {"dan": {"ukratko": "Skupština je izabrala predsednika.", "kratko": "Izabran predsednik."},
+             "delovi": [{"ukratko": "a"}], "vidjeno": [1, 2]}
+    served = {"https://m.example/dani.json": {"dani": ["2026-11-19"]},
+              "https://m.example/dan/2026-11-19.json": record("2026-11-19"),
+              "https://m.example/sazetak/2026-11-19.json": whole}
+    uzivo.pull(tmp_path, "https://m.example", today="2026-11-19", get=lambda u: served[u])
+    path = tmp_path / "15" / "sazetak" / "2026-11-19.json"
+    kept = json.loads(path.read_text(encoding="utf-8"))
+    assert kept["dan"]["kratko"] == "Izabran predsednik." and "vidjeno" not in kept
+    served["https://m.example/sazetak/2026-11-19.json"] = {"delovi": [{"ukratko": "a"}]}  # the service lost the day's
+    assert not uzivo.summary(tmp_path, "https://m.example/", "15", "2026-11-19", True, lambda u: served[u])
+    assert json.loads(path.read_text(encoding="utf-8"))["dan"]["kratko"] == "Izabran predsednik."
+    del served["https://m.example/sazetak/2026-11-19.json"]
+    assert not uzivo.summary(tmp_path, "https://m.example/", "15", "2026-11-19", True, lambda u: served[u])
+
+
+def test_the_day_page_takes_the_days_summary(tmp_path):
+    from zailiprotiv import pages_govornici
+    (tmp_path / "15" / "sazetak").mkdir(parents=True)
+    (tmp_path / "15" / "sazetak" / "2026-11-19.json").write_text(json.dumps(
+        {"model": "claude-haiku-5-5", "dan": {"ukratko": "U.", "kratko": "K.", "odluke": [], "govornici": []}}), encoding="utf-8")
+    assert pages_govornici.day_summary(tmp_path, "15", "2026-11-19")["model"] == "claude-haiku-5-5"
+    (tmp_path / "15" / "sazetak" / "2026-11-20.json").write_text(json.dumps({"delovi": []}), encoding="utf-8")
+    assert pages_govornici.day_summary(tmp_path, "15", "2026-11-20") is None
+    assert pages_govornici.day_summary(tmp_path, "15", "2026-11-21") is None

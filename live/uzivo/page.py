@@ -764,7 +764,8 @@ def service_worker(cyr: bool, key: str, api: str) -> str:
     words = json.dumps({"title": _t("nt_title", cyr), "body": _t("nt_body", cyr), "url": "/cir/" if cyr else "/",
                         "lang": "sr-Cyrl" if cyr else "sr-Latn", "key": key, "api": api.rstrip("/"), "cir": cyr,
                         "down": _t("al_down", cyr), "down_body": _t("al_down_body", cyr),
-                        "back": _t("al_back", cyr), "back_body": _t("al_back_body", cyr)},
+                        "back": _t("al_back", cyr), "back_body": _t("al_back_body", cyr),
+                        "sum": _t("nt_sum", cyr), "sum_body": _t("nt_sum_body", cyr)},
                        ensure_ascii=False)
     return f"""const W = {words};
 self.addEventListener("install", function () {{ self.skipWaiting(); }});
@@ -779,6 +780,7 @@ self.addEventListener("push", function (e) {{
     var t = W.title, b = W.body, tag = "sednica", n = String(k.min || 0);
     if (k.vrsta === "kvar") {{ t = W.down; b = W.down_body.replace("%1", n); tag = "kvar"; }}
     else if (k.vrsta === "oporavak") {{ t = W.back; b = W.back_body.replace("%1", n); tag = "kvar"; }}
+    else if (k.vrsta === "sazetak") {{ t = W.sum; b = W.sum_body; tag = "sazetak"; }}
     return self.registration.showNotification(t, {{ body: b, icon: "/ikona-192.png", tag: tag, lang: W.lang,
                                                     data: {{ url: W.url }} }});
   }}));
