@@ -149,3 +149,31 @@ def load(folder: Path, day: str | None = None) -> dict | None:
         before = [v for v in versions if v["od"] <= day]
         pick = before[-1] if before else versions[0]
     return json.loads((folder / pick["datoteka"]).read_text(encoding="utf-8"))
+
+
+# An article invoked in the debates (20 Nov 2026). In a speech pointing out a breach of the Rules ("Повреда
+# Пословника, члан 103"), the articles named in its first CITE_HEAD characters; anywhere, an article named with the
+# Rules' own name ("члан 107. Пословника"). An article named "of the Constitution" or "of the law" is not the Rules'.
+CITE_HEAD = 400
+_CITE = re.compile(r"\b(?:члан\w*|чл\.)\s+(\d{1,3})\b\.?(?:\s*(?:став|ст\.)\s*\d+\.?)?(?=(?P<after>[^.;:]{0,25}))", re.I)
+_OF_RULES = re.compile(r"^\s*(?:,\s*)?Пословник", re.I)
+_OTHER = re.compile(r"Устав|[Зз]акон", re.I)
+
+
+def cited(text: str, point: bool, last: int = 298) -> list[tuple[int, int, int]]:
+    """The Rules' articles a speech invokes: [(article, start, end)] of each mention in the text, by the rule above;
+    `point` when the speech points out a breach of the Rules; only articles the Rules have (1..last)."""
+    out = []
+    for m in _CITE.finditer(text):
+        n, after = int(m.group(1)), m.group("after") or ""
+        if not 1 <= n <= last or _OTHER.search(after[:20]):
+            continue
+        if _OF_RULES.match(after) or (point and m.start() < CITE_HEAD):
+            out.append((n, m.start(), m.end()))
+    return out
+
+
+def short(article: dict, limit: int = 220) -> str:
+    """An article's first paragraph, cut between words at `limit` (with "…")."""
+    first = (article.get("stavovi") or [""])[0]
+    return first if len(first) <= limit else first[:limit].rsplit(" ", 1)[0] + " …"

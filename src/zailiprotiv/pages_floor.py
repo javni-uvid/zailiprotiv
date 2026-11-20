@@ -10,7 +10,7 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from zailiprotiv import debates as debates_, mps, notes_site
+from zailiprotiv import debates as debates_, mps, notes_site, poslovnik
 from zailiprotiv.config import CONVOCATIONS
 from zailiprotiv.site import ORDINAL_NAME, slug
 from zailiprotiv.translit import latin
@@ -138,7 +138,7 @@ _ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођиц
                         r"посланик|посланица|опомену|опомене|речи|седнице),?\s+"
                         r"((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){1,3})")
 _NOMINATIVE = re.compile(r"(?i:посланик|посланица),?\s")  # "народни посланик Миленко Јованов": who, not to whom
-_POINT = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
+_POINT = notes_site._POINT_OF_ORDER  # a speech pointing out a breach of the Rules (one pattern for both)
 # Harsh words: a fixed list, the same for everyone, of words that are abuse in nearly every use (words with an
 # everyday meaning too, like "ђубре", "свиња", "криминал", "фашиста", are left out: they would count talk about waste,
 # farming, crime and history). What is counted is that the word was spoken: not at whom, and not whether the
@@ -296,6 +296,7 @@ def together(by_conv: list[dict]) -> dict:
     return {"n": "svi", "name": "Svi", "years": f"{first}–{last}" if first != last else first, "top": firsts(as_mp.values()),
             "people": sorted(rows.values(), key=lambda r: r["who"]["name"]), "speakers": len(rows),
             "sittings": sum(c["sittings"] for c in by_conv), "measures": [e for c in by_conv for e in c["measures"]],
+            "invoked": sum((c.get("invoked", Counter()) for c in by_conv), Counter()),
             "exchanges": [e for c in by_conv for e in c["exchanges"]], "page": ALL, "page_exchanges": ALL, "page_who": ALL,
             "convs": [{"n": c["n"], "name": c["name"], "years": c["years"], "page": c["page"], "page_who": c["page_who"],
                        "page_exchanges": c["page_exchanges"], "sittings": c["sittings"], "speakers": c["speakers"],
@@ -307,9 +308,30 @@ def together(by_conv: list[dict]) -> dict:
 ALL = "varnice-svi.html"  # every convocation read, counted together
 
 
+def invoked_articles(total: Counter, by_conv: list[dict], rules: dict | None) -> list[dict]:
+    """The Rules' articles invoked in the debates (poslovnik.cited), most first then by number: each with its count,
+    its count per convocation (newest first), its chapter and section, its text as the Rules now read, and its
+    chapter's page at the Assembly. Empty without the Rules."""
+    if not rules:
+        return []
+    art = {a["n"]: a for a in rules["clanovi"]}
+    chapters = {c["broj"]: c for c in rules["glave"]}
+    out = []
+    for n, count in sorted(total.items(), key=lambda x: (-x[1], x[0])):
+        a = art.get(n)
+        if not a:
+            continue
+        ch = chapters.get(a["glava"], {})
+        out.append({"n": n, "label": a["oznaka"], "count": count,
+                    "convs": [{"name": c["name"], "count": c["invoked"][n]} for c in by_conv if c.get("invoked", {}).get(n)],
+                    "chapter": latin(ch.get("naslov", "")).capitalize(), "section": latin(a.get("odeljak", "")),
+                    "short": latin(poslovnik.short(a)), "text": [latin(s) for s in a["stavovi"]], "url": ch.get("url", "")})
+    return out
+
+
 def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
            years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None,
-           seated: dict | None = None, extra: dict | None = None) -> tuple[dict, dict]:
+           seated: dict | None = None, extra: dict | None = None, rules: dict | None = None) -> tuple[dict, dict]:
     """`extra`: MPs not on any roll call yet (a new convocation's new members), by their loose name key:
     {"name", "slug", "photo"}, so that their speeches lead to their pages too."""
     loose = {debates_.loose(k): k for k in people}
@@ -333,6 +355,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         tally = defaultdict(lambda: {"speeches": 0, "words": 0, "points": 0, "exchanges": 0, "measures": 0,
                                      "measures_likely": 0, "harsh": [], "days": {}, "longest": None})
         pair_of = {}
+        invoked: Counter = Counter()  # the Rules' articles invoked (poslovnik.cited), one count a speech an article
         for url, notes in debates.get(c, {}).items():
             whole = debates_.whole_names(notes["speeches"].values())  # "ОБРАДОВИЋ" alone → the one Obradović of the sitting
             speeches = [{**notes["speeches"][k], "key": k, "text": spoken(notes["speeches"][k]["text"]),
@@ -388,6 +411,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 n_words = len(s_["text"].split())
                 t["words"] += n_words
                 t["points"] += bool(_POINT.search(s_["text"][:300]))
+                invoked.update({n for n, _, _ in poslovnik.cited(s_["text"], bool(_POINT.search(s_["text"][:300])))})
                 # Where each speech is among the notes' pages, day by day: the MP's page lists them to be read.
                 m_ = meta(s_)
                 if not t["longest"] or n_words > t["longest"]["words"]:  # the longest speech, for the MP's card
@@ -471,7 +495,7 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                                                  "measure_events": [e for e in events if e["type"] == "mera" and (
                                                      (e.get("to") or e.get("likely") or {}).get("slug") == r["who"]["slug"])]})
         if events:
-            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "years": years_of.get(c, ""), "events": events, "table": sittings, "top": top, "speakers": len(rows),
+            by_conv.append({"n": c, "name": ORDINAL_NAME.get(c, c), "years": years_of.get(c, ""), "events": events, "invoked": invoked, "table": sittings, "top": top, "speakers": len(rows),
                             "people": sorted(rows.values(), key=lambda r: r["who"]["name"]),
                             "measures": [e for e in events if e["type"] == "mera"],
                             "exchanges": [e for e in events if e["type"] == "razmena"],
@@ -500,8 +524,10 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
                 **common, c=c, by_conv=by_conv, part="razmene", shown=chunk, pages=names, page_now=k,
                 all_page=ALL if len(by_conv) > 1 else "", root=""), encoding="utf-8")
     if len(by_conv) > 1:  # all of them together: a tab beside the convocations'
+        everyone = together(by_conv)
         (out / ALL).write_text(env.get_template("floor.html").render(
-            **common, c=together(by_conv), by_conv=by_conv, part="svi", all_page=ALL, root=""), encoding="utf-8")
+            **common, c=everyone, by_conv=by_conv, part="svi", all_page=ALL, root="",
+            invoked=invoked_articles(everyone["invoked"], by_conv, rules)), encoding="utf-8")
     # For the home page: the first of each count in each convocation.
     render.by_sitting = {x["url"]: {**x, "page": c["page"], "page_exchanges": c["page_exchanges"]}
                          for c in by_conv for x in c["table"]}

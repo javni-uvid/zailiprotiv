@@ -188,6 +188,13 @@ The project's promises to its readers. Never change them without the maintainer.
   for the version of a day. Quirks of the source: chapters IX and X numbered with a Cyrillic Х, the menu's "Уводнa
   одредбa" with a Latin a, article 261 one paragraph of lines broken by `<br/>`. Two proposals to amend it are in
   procedure in the Fifteenth (02-3333/26, 02-3761/26).
+- **The articles invoked in the debates** (20 Nov 2026, the maintainer's choice; `poslovnik.cited`): in a speech
+  pointing out a breach of the Rules, the articles named in its first 400 characters; anywhere, an article named
+  with "Poslovnik"; one "of the Constitution" or "of the law" is not the Rules'. One count a speech an article.
+  "Varnice u sali: svi sazivi" lists them, most first, each with its count per convocation, its text (folded) and
+  its chapter at the Assembly (`pages_floor.invoked_articles`, `#clan-<n>`); in the notes' pages each such mention
+  leads there. The text shown is the Rules as now consolidated (the page says an older sitting may have known
+  another wording). Method: `kako-racunamo#poslovnik`.
 
 ### Laws
 
