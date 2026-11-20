@@ -19,6 +19,7 @@ from collections import Counter
 from html import unescape
 
 from zailiprotiv import skupstina
+from zailiprotiv.rollcall import PDFTOTEXT
 
 PATH = "/stenografske_beleske/"
 # … and until 2016 under a folder with a misspelt name ("stenobeske"), as .doc or .docx, one link per day.
@@ -104,7 +105,7 @@ def pdf_paragraphs(pdf: bytes) -> list[str]:
     empty line, and a new one starts at a speaker's name, an agenda item or the agenda's heading."""
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / "n.pdf").write_bytes(pdf)
-        run = subprocess.run(["pdftotext", "-enc", "UTF-8", f"{tmp}/n.pdf", "-"], capture_output=True, timeout=300)
+        run = subprocess.run([PDFTOTEXT, "-enc", "UTF-8", f"{tmp}/n.pdf", "-"], capture_output=True, timeout=300)
         if run.returncode:
             raise Unreadable(f"pdftotext failed: {run.stderr[-300:]!r}")
         text = run.stdout.decode("utf-8", "replace")

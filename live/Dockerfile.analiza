@@ -1,6 +1,8 @@
 # Reading who is at the rostrum from the picture and the sound, when the broadcast shows no caption (20 Nov 2026, the
 # maintainer's decision: faces and voices may be used, the recordings are public). Built on the tested live image,
 # never run live: docker build -f live/Dockerfile.analiza -t mikrofon:analiza .  (from the repository's root)
+# Run it, and any reading of a day's recording (zvuk_dana in mikrofon:test), with --cpus 4 --cpu-shares 256: left
+# alone such a run took 10 of the computer's 12 cores (20 Nov 2026) and the live service's Whisper fell behind.
 FROM mikrofon:test
 RUN pip install --no-cache-dir opencv-python-headless==5.1.0.95 sherpa-onnx==2.0.2 soundfile
 # Faces: YuNet finds them, SFace compares them (OpenCV Zoo, Apache 2.0). Voices: 3D-Speaker's ERes2Net (Apache 2.0).

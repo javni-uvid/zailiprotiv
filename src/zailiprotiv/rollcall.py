@@ -19,6 +19,7 @@ before its sections (December 2025).
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from dataclasses import dataclass, field
@@ -86,9 +87,14 @@ class Vote:
         return out
 
 
+# Poppler's pdftotext; PDFTOTEXT names it where another comes first on the PATH (on Windows, Git's is xpdf's,
+# whose -layout puts the columns elsewhere).
+PDFTOTEXT = os.environ.get("PDFTOTEXT") or "pdftotext"
+
+
 def text_of(pdf: Path | str) -> str:
-    return subprocess.run(["pdftotext", "-layout", str(pdf), "-"], check=True, capture_output=True,
-                          text=True).stdout
+    return subprocess.run([PDFTOTEXT, "-layout", str(pdf), "-"], check=True, capture_output=True,
+                          text=True, encoding="utf-8").stdout
 
 
 def _row(line: str, section: str) -> Row | None:
