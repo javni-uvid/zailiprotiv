@@ -302,3 +302,26 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   agenda's progress, the Assembly's pages read) and `state_view.View` (the snapshot). What they share (the states,
   `counted` and `SURE_FRAMES`, `SAID_LEAD`, `SAID_TAIL`, `_write`) is in `state_base.py`: a test that changes the
   rule patches it there.
+- **The model tells the day's steps and sums the day up** (20 Nov 2026, the maintainer's decision, after a trial on
+  19 Nov read with Haiku: every break, election and result of the day found, the rules none of them, and 14 of the
+  rules' 19 agenda items false; `C:\Users\marko\zailiprotiv-snimak\haiku-19\izvestaj.md`). It ends "nothing summed
+  up or reworded by a model" and "a model as a judge, never the writer" above. `sudija.Judge` (`sudija.py`), started
+  when `ANTHROPIC_API_KEY` is in `live/.env` (`config.MODEL_KEY`; the test has none unless `TEST_ANTHROPIC_API_KEY`
+  is given), sends Claude Haiku (`HAIKU_MODEL`, `claude-haiku-5-5`) every ten minutes the transcript's pieces written
+  since the last call, under the speakers' names, with the set list of the procedure's steps (`sudija.EVENTS`;
+  a warning is no measure). A step is kept only when its sentence is in those pieces word for word
+  (`check_events`), as a line of the day with `"izvor": "model"` and what it read besides (`vise`: the item's
+  number, to whom, who was elected, the result, how long). With a model step today, `steps.model_steps` shows the
+  model's steps and the Assembly's page, of the rules' steps only "Reč ima" (named by the list); a break or the
+  day's end still waits for nobody at the rostrum, an item must be on the agenda and after the last, and a figure
+  or a name the model read is shown only when the sentence holds it (`_borne`). No model step: the rules as before.
+  At a break the model found (quiet for `STEP_QUIET`) the stretch since the last is summed up (`SUMMARY`), and with
+  no broadcast for `END_QUIET` (20 min) the day (`DAY`) from the stretches: only what was said; no tone or verdict of
+  the model's own, the speaker's own words kept as said, harsh ones too (the maintainer, 20 Nov 2026); no quotes;
+  every speaker with two minutes or more, one line each, in the order they first spoke; numbers only as said; a
+  misheard MP's name as the list writes it. A summary naming a speaker not of the stretch or a number not in the text
+  is asked once more with what was wrong, then left out (`check_summary`). Kept in `/data/sazetak/<day>.json`;
+  `/sazetak?k=<PREPIS_KLJUC>` shows it to the maintainer, and with `SAZETAK_PRIKAZ=1` it is on the page while nobody
+  is on (`page.summary_box`, labelled: written by a model from the automatic transcript, may err in names and
+  numbers, no quote, the notes are the source once published) and at `/sazetak/<day>.json`. Next: the site takes
+  that file in (`uzivo-pull`) for `govornici/<date>`, and the subscribers get a push when the day's summary is out.

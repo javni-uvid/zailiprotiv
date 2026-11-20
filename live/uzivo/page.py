@@ -221,7 +221,8 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     first, rest = rows[:8], rows[8:]
     more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
             if rest else "")
-    key = (f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t("steps_said")}</span>'
+    said_key = "steps_model" if any(e.get("model") for e in rows) else "steps_said"
+    key = (f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t(said_key)}</span>'
            f'<span class="st-sajt"><i aria-hidden="true"></i>{t("steps_site_key")}</span></p>')
     # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
     head = t("steps")
@@ -431,6 +432,28 @@ def manifest(cyr: bool) -> dict:
                       icon("/ikona-maskable-512.png", 512, "maskable")]}
 
 
+def summary_box(snap: dict, *, cyr: bool) -> str:
+    """The model's summary of the day so far (sudija.py), while nobody is on: the day's once written (what was
+    decided first), else the latest stretch, the earlier ones folded; always with what wrote it and from what."""
+    s = snap.get("sazetak")
+    if not isinstance(s, dict) or not s.get("ukratko"):
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    n = lambda x: escape(_name(str(x), cyr))
+    if s.get("vrsta") == "dan":
+        head = t("sum_day")
+        body = "".join(f'<li><b>{escape(str(o.get("vreme", "")))}</b> {n(o.get("sta", ""))}</li>'
+                       for o in s.get("odluke") or [] if isinstance(o, dict) and o.get("sta"))
+        body = (f'<ul class="sum-dec">{body}</ul>' if body else "") + f'<p>{n(s["ukratko"])}</p>'
+    else:
+        head = escape(_fill(_t("sum_part", cyr), str(s.get("do") or "")))
+        body = f'<p>{n(s["ukratko"])}</p>'
+        if s.get("ranije"):
+            body += (f'<details><summary>{t("sum_earlier")}</summary>'
+                     + "".join(f"<p>{n(x)}</p>" for x in s["ranije"]) + "</details>")
+    return f'<div class="sum"><p class="src">{head}</p>{body}<p class="meta">{t("sum_note")}</p></div>'
+
+
 def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
     """While nobody is on (a break, or between sittings): the day so far in place of an empty box. The sentence of the
     day, the three with the most time, and the picture of it to share (`picture.py`, the page's link preview too)."""
@@ -457,7 +480,8 @@ def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
         if str(coming.get("url", "")).startswith("https://"):
             title = f'<a href="{escape(coming["url"])}">{title}</a>'
         nxt = f'<p class="pz-next"><b>{t("coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
-    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p><ol class="pz-top">{top}</ol>{nxt}'
+    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p>{summary_box(snap, cyr=cyr)}'
+            f'<ol class="pz-top">{top}</ol>{nxt}'
             f'<p class="acts"><button type="button" class="share-now st-open">▶ {t("st_open")}</button> '
             f'<button type="button" class="share-now share-day" data-src="{src}" '
             f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_day")}</button> '

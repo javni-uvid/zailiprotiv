@@ -1256,3 +1256,97 @@ def test_the_days_steps_follow_the_order_of_the_assemblys_work():
     assert got == [(0, "Prelazak na 1. tačku dnevnog reda"), (120, "Pretres je otvoren"), (900, "Pretres je zaključen"),
                    (900, "Glasanje"), (2000, "Glasanje je zaključeno"), (2200, "Prelazak na 2. tačku dnevnog reda"),
                    (2260, "Pretres je otvoren")]
+
+
+def test_the_models_steps_take_the_rules_place():
+    """20 Nov 2026, the maintainer: the model (sudija.py) is the source of the day's steps, the rules the fallback.
+    Its steps show; the rules' lose their place but for "Reč ima"; what it read besides shows only where the sentence
+    bears it out (a number or name not in the sentence is left out)."""
+    from uzivo import page as page_
+    from uzivo.steps import steps_shown
+    now = 1795089600.0
+    agenda = {"tacke": [{"n": 2, "tekst": "Izbor predsednika"}, {"n": 3, "tekst": "Izbor potpredsednika"}]}
+    ev = lambda dt, kind, text, src, **more: {"t": now - dt, "vrsta": kind, "tekst": text, "izvor": src, "url": "",
+                                              **({"vise": more} if more else {})}
+    hronika = [
+        ev(3000, "Tačka dnevnog reda", "Ovo nema veze sa tačkom dnevnog reda.", "prepis"),  # a rule's false step
+        ev(2900, "Tačka dnevnog reda", "Treća tačka dnevnog reda, izbor potpredsednika.", "model", tacka=3),
+        ev(2800, "Rezultat glasanja", "Za je glasalo 136, protiv nula.", "model", napomena="za 136"),
+        ev(2790, "Rezultat glasanja", "Zaključujem glasanje i saopštavam.", "model", napomena="za 140"),  # 140 not said
+        ev(2700, "Izbor", "Narodna skupština je izabrala Aleksandra Čupića.", "model", ko="Aleksandar Čupić"),
+        ev(2600, "Pauza", "Proglašavam pauzu od deset minuta.", "model", do="deset minuta"),
+    ]
+    snap = {"provereno": now, "sada": None, "danas": [], "dnevni_red": agenda, "hronika": hronika}
+    rows = steps_shown(snap)
+    titles = [(r["naslov"], r["opis"]) for r in rows[::-1]]
+    assert titles == [("Prelazak na 3. tačku dnevnog reda", "Izbor potpredsednika"),
+                      ("Rezultat glasanja", "za 136"), ("Rezultat glasanja", ""),
+                      ("Izbor", "Aleksandar Čupić"), ("Pauza", "deset minuta")]
+    assert all(r["model"] for r in rows)
+    assert "prepoznao model (Claude Haiku)" in page_._steps(snap, cyr=False, tz=TZ)
+    # a break still waits for nobody at the rostrum after it
+    late = {**snap, "danas": [{"od": now - 2500, "do": now - 100}]}
+    assert ("Pauza", "deset minuta") not in [(r["naslov"], r["opis"]) for r in steps_shown(late)]
+    # no model step today: the rules as before
+    assert all(not r.get("model") for r in steps_shown({**snap, "hronika": hronika[:1]}))
+
+
+def test_the_judge_reads_the_transcript_and_sums_the_day_up(tmp_path, monkeypatch):
+    """The model's calls (sudija.Judge): the steps it finds kept when their sentence is in the transcript, a stretch
+    summed up at a break once nobody is on, the day when the broadcast has been off a while; a summary naming someone
+    who did not speak, or a number not said, is asked again and then left out."""
+    from uzivo import sudija
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    base = 1795082400  # 19 Nov 2026, 11:00 in Belgrade
+    t.day = t._day(base)
+    t.say(base + 10, "Govorio sam o penzijama i o budžetu za sledeću godinu.")
+    t.say(base + 250, "Proglašavam pauzu od deset minuta, nastavljamo u jedanaest.", chair=True)
+    turns = [{"ime": "Petrović Petar", "lista": "Lista za primer", "od": base + 5, "do": base + 200}]
+    state = {"stanje": "govori"}
+    monkeypatch.setattr(t, "snapshot", lambda now=None: {"dan": t.day, "ranije": False, "stanje": state["stanje"],
+                                                         "danas": turns, "sada": None, "provereno": base + 400})
+    asked = []
+
+    def ask(system, user, *rest):
+        asked.append(system)
+        if system is sudija.EVENTS:
+            assert "[11:04:10] bez potpisa" in user and "[11:00:10] Petrović Petar (Lista za primer)" in user
+            return json.dumps({"dogadjaji": [
+                {"vrsta": "Pauza", "vreme": "11:04:10", "recenica": "Proglašavam pauzu od deset minuta", "do": "deset minuta"},
+                {"vrsta": "Izbor", "vreme": "11:00:10", "recenica": "Skupština je izabrala nekoga ko nije pomenut", "ko": "X"}]})
+        if system is sudija.SUMMARY:
+            bad = sum(1 for s in asked if s is sudija.SUMMARY) == 1
+            return "Evo: " + json.dumps({"od": "10:00", "do": "10:05", "ukratko": "Petrović je govorio o penzijama."
+                                         + (" Glasalo je 99." if bad else ""),
+                                         "tok": [], "govornici": [{"ime": "Petrović Petar", "o_cemu": "penzije"}]})
+        return json.dumps({"kratko": "Dan o penzijama.", "ukratko": "Petrović je govorio o penzijama.", "odluke": [],
+                           "tok": [], "govornici": [{"ime": "Petrović Petar", "o_cemu": "penzije"}]})
+
+    j = sudija.Judge(t, threading.Event(), ask=ask)
+    j.step(now=base + 300)  # the pieces read, the steps kept; the break not yet quiet long enough: no summary
+    kept = [e for e in t.events if e["izvor"] == "model"]
+    assert [(e["vrsta"], e["vise"]) for e in kept] == [("Pauza", {"do": "deset minuta"})]  # the invented one dropped
+    assert asked == [sudija.EVENTS]
+    j.step(now=base + 250 + sudija.BREAK_QUIET)  # nobody at the rostrum since the break
+    assert asked.count(sudija.SUMMARY) == 2  # 99 was not said: asked again, then fine
+    part = j.kept["delovi"][0]
+    assert part["ukratko"] == "Petrović je govorio o penzijama." and part["t_do"] == base + 251
+    state["stanje"] = "nema_prenosa"
+    j.step(now=base + 400 + sudija.END_QUIET)
+    assert j.kept["dan"]["kratko"] == "Dan o penzijama."
+    on_disk = json.loads((tmp_path / "sazetak" / f"{t.day}.json").read_text(encoding="utf-8"))
+    assert on_disk["dan"]["kratko"] == "Dan o penzijama." and on_disk["vidjeno"]
+    monkeypatch.setattr(config, "SHOW_SUMMARY", True)
+    assert t._summary_shown(t.day)["vrsta"] == "dan"
+    monkeypatch.setattr(config, "SHOW_SUMMARY", False)
+    assert t._summary_shown(t.day) is None
+
+
+def test_the_summary_on_the_page_says_what_wrote_it():
+    from uzivo import page as page_
+    s = {"vrsta": "deo", "do": "13:37", "ukratko": "Skupština je izabrala predsednika.", "ranije": []}
+    html = page_.summary_box({"sazetak": s}, cyr=False)
+    assert "Sažetak dosad, do 13:37" in html and "izabrala predsednika" in html and "Claude Haiku" in html
+    assert "Сажетак" in page_.summary_box({"sazetak": s}, cyr=True)
+    assert page_.summary_box({"sazetak": None}, cyr=False) == ""

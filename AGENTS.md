@@ -720,6 +720,10 @@ records and recordings stays here:
 - **A day's record only grows** (20 Nov 2026: a restart of the live service served 19 Nov with no turn and three
   minutes seen, and the hourly run wrote it over the 28 turns kept). `uzivo.pull` never replaces a kept record with
   one that has fewer turns or less time seen (`uzivo.smaller`), and says so in the run's log; 19 Nov's was put back.
+- **The model tells the day's steps and sums the day up** (20 Nov 2026, the maintainer's decision after a trial on
+  19 Nov): Claude Haiku over the automatic transcript is the source of "Šta se desilo danas", the rules the fallback,
+  and writes a summary at each break and of the day, labelled as a model's from an automatic transcript; how, in
+  `live/AGENTS.md` ("The model tells the day's steps"). The key is in `live/.env` only.
 
 ## Open questions
 

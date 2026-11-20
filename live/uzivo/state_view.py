@@ -155,7 +155,22 @@ class View:
                     "obavestenja": news[:3], "dnevni_red": self._agenda(), "bez_potpisa": unsigned, "hronika": [e if e.get("izvor") == "sajt" else {**e, "tekst": self.shown(e.get("tekst", ""))}
                                 for e in (self.events if day == self.day else self._events_load(day))[-150:][::-1]],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
-                    "danas": done[::-1]}
+                    "danas": done[::-1], "sazetak": self._summary_shown(day)}
+
+    def _summary_shown(self, day: str) -> dict | None:
+        """The model's summary as the page shows it (config.SHOW_SUMMARY): the day's once written, else the latest
+        stretch summed up. None while it is off the page."""
+        if not config.SHOW_SUMMARY:
+            return None
+        kept = self.summary_of(day)
+        whole = kept.get("dan")
+        if isinstance(whole, dict) and whole.get("ukratko"):
+            return {"vrsta": "dan", **{k: whole.get(k) for k in ("kratko", "ukratko", "odluke")}}
+        parts = [p for p in kept.get("delovi") or [] if p.get("ukratko")]
+        if parts:
+            return {"vrsta": "deo", "do": parts[-1].get("do"), "ukratko": parts[-1]["ukratko"],
+                    "ranije": [p["ukratko"] for p in parts[:-1]]}
+        return None
 
     def _lists(self, done: list[dict], current: dict | None, recorded: bool) -> None:
         """Each turn's list ("lista"), for the day's time by list: the line under the name, or the MP's group, when it

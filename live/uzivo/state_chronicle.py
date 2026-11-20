@@ -25,19 +25,28 @@ class Chronicle:
             pass
         return []
 
-    def note(self, ts: float, kind: str, text: str, source: str, url: str = "") -> bool:
-        """A line of the day: when, what it is called, the sentence, where it is from ("prepis" or "sajt"). The same
-        sentence twice within ten minutes is one line (a piece of sound may be heard again at a seam)."""
+    def note(self, ts: float, kind: str, text: str, source: str, url: str = "", more: dict | None = None) -> bool:
+        """A line of the day: when, what it is called, the sentence, where it is from ("prepis", "model" or "sajt"),
+        and for the model's steps what it read besides (`more`: the item's number, to whom, who was elected…). The
+        same sentence from the same source twice within ten minutes is one line (a piece of sound may be heard again
+        at a seam; the model and the rules may find the same sentence, and both are kept)."""
         text = " ".join(str(text).split())
         with self._lock:
             if not text or self._day(ts) != self.day:
                 return False
-            if any(e["tekst"] == text and abs(e["t"] - ts) < 600 for e in self.events[-40:]):
+            if any(e["tekst"] == text and e.get("izvor") == source and e.get("vrsta") == kind and abs(e["t"] - ts) < 600
+                   for e in self.events[-80:]):
                 return False
-            self.events.append({"t": int(ts), "vrsta": kind, "tekst": text, "izvor": source, "url": url})
-            if kind == "Tačka dnevnog reda" and source == "prepis":  # the item the chair moved to, kept across days
+            self.events.append({"t": int(ts), "vrsta": kind, "tekst": text, "izvor": source, "url": url,
+                                **({"vise": more} if more else {})})
+            if kind == "Tačka dnevnog reda" and source in ("prepis", "model"):  # the item moved to, kept across days
                 from .hronika import item_no
                 n = item_no(text)
+                if source == "model":
+                    try:
+                        n = int((more or {}).get("tacka") or 0)
+                    except (TypeError, ValueError):
+                        n = 0
                 if n > self.item.get("n", 0):
                     self.item = {"n": n, "t": int(ts)}
                     f2 = self.days.parent / "tacka.json" if self.days else None

@@ -15,7 +15,7 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, hronika, picture, prepis, worker
+from . import config, hronika, picture, prepis, sudija, worker
 from .stream import VIDEO
 from .obavesti import Bell
 from .page import admin_page, fragment, manifest, page, service_worker, transcript_page
@@ -37,6 +37,8 @@ async def lifespan(_: FastAPI):
     if prepis.on():
         prepis.Writer(tracker, _stop).start()
     hronika.Watcher(tracker, _stop).start()
+    if sudija.on():  # the model tells the day's steps and sums the day up (sudija.py); no key, no calls
+        sudija.Judge(tracker, _stop).start()
     yield
     _stop.set()
 
@@ -181,6 +183,28 @@ def state_shared() -> JSONResponse:
 def days() -> JSONResponse:
     """The days this service has a record of, for the site's workflow that takes them in."""
     return JSONResponse({"dani": tracker.days_kept()}, headers=NO_STORE)
+
+
+@app.get("/sazetak")
+def summary_keyed(k: str = "", dan: str = "") -> Response:
+    """The model's summaries of a day as kept (sudija.py), for the maintainer while they are off the page: only with
+    the transcript's key (?k=), kept by nobody and sending no address on; anyone else is led back to the page."""
+    if not config.admin_open(k):
+        return RedirectResponse("/", status_code=302, headers=NO_STORE)
+    day = dan if re.fullmatch(r"\d{4}-\d{2}-\d{2}", dan) else tracker.snapshot()["dan"]
+    return JSONResponse({"dan": day, **tracker.summary_of(day)}, headers={
+        "Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer", "X-Robots-Tag": "noindex, nofollow"})
+
+
+@app.get("/sazetak/{day}.json")
+def summary_of_day(day: str) -> JSONResponse:
+    """A day's summaries for the site (uzivo-pull), once they are on the page (config.SHOW_SUMMARY)."""
+    if not config.SHOW_SUMMARY or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+        raise HTTPException(404)
+    kept = tracker.summary_of(day)
+    if not kept:
+        raise HTTPException(404)
+    return JSONResponse({"dan": day, **{k: v for k, v in kept.items() if k != "vidjeno"}}, headers=NO_STORE)
 
 
 @app.get("/dan/{day}.json")
