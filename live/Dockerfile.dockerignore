@@ -1,6 +1,8 @@
 # The build runs from the repository's root; send Docker only what the image needs (not data/, hundreds of MB).
 *
 !live/requirements.txt
+!live/constraints.txt
+!live/ulaz.sh
 !live/uzivo
 !src/zailiprotiv/static/fonts
 !src/zailiprotiv/templates/mikrofon.js

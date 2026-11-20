@@ -9,6 +9,29 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+  # The live service's image: its base images (named by digest in live/Dockerfile and docker-compose.yml) and the
+  # packages' exact versions (live/constraints.txt).
+  - package-ecosystem: docker
+    directory: /live
+    schedule:
+      interval: monthly
+    groups:
+      images:
+        patterns: ["*"]
+  - package-ecosystem: docker-compose
+    directory: /live
+    schedule:
+      interval: monthly
+    groups:
+      compose:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: /live
+    schedule:
+      interval: monthly
+    groups:
+      live:
+        patterns: ["*"]
   - package-ecosystem: uv
     directory: /
     schedule:

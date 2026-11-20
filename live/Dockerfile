@@ -1,12 +1,15 @@
 # Built from the repository's root (see docker-compose.yml), so the site's fonts are copied, not kept twice.
-FROM python:3.12-slim
+# The images are named by their content (20 Nov 2026): a tag can be moved to another image, a digest can't. Dependabot
+# moves them once a month (.github/dependabot.yml).
+FROM denoland/deno:bin-2.9.8@sha256:b507583d3c68ba69f3ed2ce5969ae5b8b70f43421c781279c7aea06435263543 AS deno
+FROM python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg tesseract-ocr tesseract-ocr-srp fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 # yt-dlp needs a JavaScript runtime for YouTube; Deno is the one it uses without settings.
-COPY --from=denoland/deno:bin /deno /usr/local/bin/deno
+COPY --from=deno /deno /usr/local/bin/deno
 WORKDIR /srv
-COPY live/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY live/requirements.txt live/constraints.txt ./
+RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 COPY live/uzivo ./uzivo
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
 # The script and styles shared with the site's mikrofon page (page._shared)
@@ -27,5 +30,10 @@ ENV VERZIJA=$VERZIJA
 # `docker ps` says whether it answers (mikrofon.ps1 waits for the page itself)
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/stanje.json', timeout=4)"
+# Not as root (20 Nov 2026): the service reads video from outside with ffmpeg, yt-dlp and tesseract, and holds keys.
+# The entry starts as root only to hand /data (volumes written by root until now) to the user, then becomes it.
+RUN useradd --create-home --uid 1000 uzivo
+COPY --chmod=755 live/ulaz.sh /usr/local/bin/ulaz
+ENTRYPOINT ["ulaz"]
 EXPOSE 8000
 CMD ["uvicorn", "uzivo.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
