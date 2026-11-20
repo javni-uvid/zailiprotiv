@@ -720,7 +720,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                 close = [k for k, w in name_words.items() if k not in people and len(mine & w) >= 2 and (mine <= w or w <= mine)]
                 if len(close) == 1:
                     photo_of[key_] = photo_of[close[0]]
-    from zailiprotiv import pages_floor
+    from zailiprotiv import pages_floor, poslovnik
     sent = root / "notes_manifest.json"  # what notes-upload has put in the bucket
     notes_pages = set(json.loads(sent.read_text(encoding="utf-8"))) if sent.exists() else set()
     # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
@@ -811,7 +811,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                                                   "photo": photo_of.get(r["key"], "")} for r in member_rows if r["new"]}
     _years = {c: years(c) for c, _ in convs} | ({members_conv: pages_members.since(members_conv)[:4] + "–"} if members_conv else {})
     exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of=_years, extra=floor_extra, env=env, common=common, out=out, debates=debates, people=people,
-                                                convs=floor_convs, items_by_conv=items_by_conv)
+                                                convs=floor_convs, items_by_conv=items_by_conv,
+                                                rules=poslovnik.load(root / "poslovnik"))
     _per = getattr(pages_floor.render, "per_mp", {})
     env.globals["floor_notes_now"] = {sl: next((x for x in xs if x["conv"] == members_conv), None) for sl, xs in _per.items()} if members_conv else {}
     if newer15 is not None:

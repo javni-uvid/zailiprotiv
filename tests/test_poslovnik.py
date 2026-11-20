@@ -37,3 +37,29 @@ def test_a_version_is_kept_only_when_the_text_changes(tmp_path):
     assert "изузетно" not in poslovnik.load(tmp_path, "2026-11-25")["clanovi"][1]["stavovi"][0]  # in force then
     assert "изузетно" in poslovnik.load(tmp_path)["clanovi"][1]["stavovi"][0]
     assert poslovnik.load(tmp_path, "2020-01-01")["prvi_put_vidjeno"] == "2026-11-20"  # before any: the earliest
+
+
+def test_the_articles_a_speech_invokes():
+    got = lambda t, p=True: [n for n, _, _ in poslovnik.cited(t, p)]
+    assert got("Повреда Пословника, члан 103. став 1. Дакле, позивање на члан 106. став 1.") == [103, 106]
+    assert got("Рекламирам члан 107.") == [107]
+    assert got("Говорим о томе. " + "x" * 450 + " члан 104.") == []                     # far from the head: not taken
+    assert got("Како каже члан 107. Пословника, достојанство", p=False) == [107]       # the Rules named: anywhere
+    assert got("Повреда Пословника, члан 98. Устава каже", ) == []                       # of the Constitution
+    assert got("члан 5. закона о буџету", p=False) == [] and got("члан 900.") == []
+    text = "Повреда Пословника, члан 103."
+    (n, a, b), = poslovnik.cited(text, True)
+    assert text[a:b] == "члан 103."
+
+
+def test_the_invoked_articles_listed_most_first():
+    from collections import Counter
+    from zailiprotiv import pages_floor
+    rules = poslovnik.parse(PAGE)
+    by_conv = [{"name": "Petnaesti", "invoked": Counter({167: 2})}, {"name": "Četrnaesti", "invoked": Counter({1: 3, 167: 1})}]
+    got = pages_floor.invoked_articles(Counter({1: 3, 167: 3, 999: 5}), by_conv, rules)
+    assert [(a["n"], a["count"]) for a in got] == [(1, 3), (167, 3)]  # ties by number; an article the Rules lack: out
+    a = got[1]
+    assert a["convs"] == [{"name": "Petnaesti", "count": 2}, {"name": "Četrnaesti", "count": 1}]
+    assert a["section"] == "1. Hitni postupak" and a["text"][0].startswith("Zakon se može") and a["url"].endswith(".1317.html")
+    assert pages_floor.invoked_articles(Counter({1: 1}), by_conv, None) == []

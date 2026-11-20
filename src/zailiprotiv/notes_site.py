@@ -16,13 +16,15 @@ import shutil
 import urllib.parse
 from pathlib import Path
 
-from zailiprotiv import debates as debates_, mps
+from zailiprotiv import debates as debates_, mps, poslovnik
 from zailiprotiv.translit import latin
 
 HERE = Path(__file__).parent
 PART = 300_000  # bytes of speech to a page, about; a day longer than that is split
 MAIN = "https://zailiprotiv.rs/"
 NOTES = "https://beleske.zailiprotiv.rs/"  # where the bucket is served: the pages' own addresses, for search engines
+# A speech pointing out a breach of the Rules (as pages_floor._POINT, which imports this module)
+_POINT_OF_ORDER = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
 _MARK = re.compile(r"^\s*\d+/\d+\s*[A-ZА-ЯЈЉЊЂЋЏ]{1,3}\s*/\s*[A-ZА-ЯЈЉЊЂЋЏ]{1,3}\s*$", re.M)
 
 
@@ -200,7 +202,24 @@ def _speech(k: str, s: dict, who: dict | None, w: dict, script: str, at: dict | 
         name = f'<a href="{MAIN}poslanik/{who["slug"]}">{html.escape(who["name"] if script == "lat" else name)}</a>'
     else:
         name = html.escape(name)
-    paras = "".join(f"<p>{html.escape(show(p))}</p>" for p in _MARK.sub("", s["text"]).split("\n") if p.strip())
+    text = _MARK.sub("", s["text"])
+    # The Rules' articles the speech invokes (poslovnik.cited) lead to that article's text on the site (20 Nov 2026).
+    cites = poslovnik.cited(text, not s.get("chair") and bool(_POINT_OF_ORDER.search(text[:300])))
+    paras, pos = [], 0
+    for p in text.split("\n"):
+        start, pos = pos, pos + len(p) + 1
+        if not p.strip():
+            continue
+        out, done = [], 0
+        for n, a, b in cites:
+            if start <= a and b <= start + len(p):
+                href = f'{MAIN}{"" if script == "lat" else "cir/"}varnice-svi#clan-{n}'
+                out += [html.escape(show(p[done:a - start])),
+                        f'<a class="rule" href="{href}">{html.escape(show(p[a - start:b - start]))}</a>']
+                done = b - start
+        out.append(html.escape(show(p[done:])))
+        paras.append(f"<p>{''.join(out)}</p>")
+    paras = "".join(paras)
     return (f'<article class="turn{" turn-chair" if s.get("chair") else ""}" id="g{k}">'
             f'<h2 id="s{k}"><a class="anchor" href="#g{k}">{name}</a></h2>{_clip(at, w)}{paras}</article>')
 
