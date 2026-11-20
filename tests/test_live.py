@@ -1106,3 +1106,22 @@ def test_the_maintainer_alone_turns_on_the_outage_alerts(monkeypatch, tmp_path):
     sw = service_worker(False, "BKEY", "https://glasovi.zailiprotiv.rs")
     assert "Mikrofon ne radi" in sw and "/p/vrsta" in sw and "Mikrofon ponovo radi" in sw
     assert not Bell(str(tmp_path / "o.json"), token="", api="https://glasovi.example").admin("https://fcm.googleapis.com/x")
+
+
+def test_the_last_sitting_days_steps_between_sittings():
+    """20 Nov 2026: after midnight the day's steps were gone; between sittings the last sitting day's are shown, dated."""
+    from uzivo import page as page_
+    now = 1795089600.0
+    step = {"t": now, "vrsta": "Sajt Skupštine", "tekst": "Skupština je izabrala potpredsednike.", "izvor": "sajt", "url": "https://www.parlament.gov.rs/x"}
+    snap = {"provereno": now, "sada": None, "dnevni_red": None, "danas": [], "hronika": [step], "ranije": True, "dan": "2026-11-19"}
+    html = page_._steps(snap, cyr=False, tz=TZ)
+    assert "Šta se desilo, " in html and "19." in html and "potpredsednike" in html
+    assert "Шта се десило, " in page_._steps(snap, cyr=True, tz=TZ)
+    assert "Šta se desilo danas" in page_._steps({**snap, "ranije": False}, cyr=False, tz=TZ)
+
+
+def test_a_date_does_not_end_a_sentence_of_the_assemblys_page():
+    from uzivo import hronika
+    parts = hronika._SENTENCE.split("Trećeg dana rada, 19. novembra 2026. godine, Skupština je nastavila rad. Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova. Hvala.")
+    assert parts == ["Trećeg dana rada, 19. novembra 2026. godine, Skupština je nastavila rad.",
+                     "Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova.", "Hvala."]
