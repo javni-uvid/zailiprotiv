@@ -258,3 +258,11 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   it as one word ("Rečima narodna poslanica …"), and the chair also says "dajem reč", "pravo na repliku ima", or a
   title after "replika", "povreda Poslovnika", "izvolite", "sledeći je" (`hronika._FLOOR`); "replika gospodinu X"
   names whom it answers and is not taken.
+- **The live page on the site's scale, its earlier turns folded** (20 Nov 2026, the maintainer's choice, with the
+  same points for the site, after a look at the design). The page had twenty sizes of letters, a third of the text
+  in 14.4 px grey; it now uses the site's eight steps (`--t-1` … `--t-8` and three for titles, in `page.CSS` and
+  the shared `mikrofon.css`; a test checks that no other size is written). Between sittings half of a phone's ten
+  screens was the list of the day's turns: the latest eight stand (`page.TURNS_SHOWN`), the earlier ones are folded
+  under them and open by themselves when the day's strip or an address leads to one. Left as it is: the day's
+  four numbers have nothing beside them to compare with (the service has no other day's sums; the sentence above
+  them and the speaker's clock already compare).
