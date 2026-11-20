@@ -1,4 +1,6 @@
 """The page shown at mikrofon.zailiprotiv.rs while "Ko sada govori" is down (pages_mikrofon, live/edge)."""
+import json
+
 from zailiprotiv import pages_mikrofon
 
 
@@ -89,3 +91,19 @@ def test_a_turn_in_the_archive_links_to_its_second_in_the_file():
             "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111710.mp4", "snimak": 769}]}
     t = pages_mikrofon.turns(day)[0]
     assert t["recording"].endswith("zas2026111710.mp4#t=769") and t["file"].endswith("10.mp4") and t["t"] == 769
+
+
+def test_the_next_sitting_is_one_convened_for_today_or_later_with_its_agenda(tmp_path):
+    from datetime import datetime as dt_
+    (tmp_path / "15").mkdir()
+    (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {
+        "https://a/druga": {"title": "Друга седница", "starts": "2026-11-24T10:00", "agenda": ["Избор судија"], "votes": []},
+        "https://a/prva": {"title": "Прва седница", "starts": "", "agenda": ["Избор председника"], "votes": []},
+        "https://a/vest": {"title": "Вест", "starts": "", "agenda": [], "votes": []}}}), encoding="utf-8")
+    coming = [{"title": "Стара седница", "url": "https://a/stara", "starts": "2026-11-02", "agenda": ["x"]}]
+    every = pages_mikrofon.upcoming(tmp_path, coming, "15")
+    assert [c["url"] for c in every] == ["https://a/stara", "https://a/druga", "https://a/prva"]
+    w = pages_mikrofon.waiting([], [], every, now=dt_(2026, 11, 20, 1, 0, tzinfo=pages_mikrofon.TZ))
+    assert w["sazvano"] == {"naslov": "Druga sednica", "url": "https://a/druga", "pocinje": "2026-11-24T10:00",
+                            "tacke": ["Izbor sudija"]}
+    assert "sazvano" not in pages_mikrofon.waiting([], [], coming, now=dt_(2026, 11, 20, tzinfo=pages_mikrofon.TZ))

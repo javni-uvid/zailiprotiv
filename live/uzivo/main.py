@@ -15,7 +15,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 
 from . import config, hronika, picture, prepis, worker
 from .stream import VIDEO
-from .page import fragment, page, transcript_page
+from .page import fragment, manifest, page, transcript_page
 from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
@@ -167,6 +167,32 @@ def day(day: str) -> JSONResponse:
     if rec is None:
         raise HTTPException(404)
     return JSONResponse(rec, headers=NO_STORE)
+
+
+ICON_SIZES = {"ikona-180": (180, False), "ikona-192": (192, False), "ikona-512": (512, False),
+              "ikona-maskable-512": (512, True)}
+_icons: dict[str, bytes] = {}
+DAY = {"Cache-Control": "public, max-age=86400"}
+
+
+@app.get("/manifest.webmanifest")
+def latin_manifest() -> JSONResponse:
+    return JSONResponse(manifest(False), media_type="application/manifest+json", headers=DAY)
+
+
+@app.get("/cir/manifest.webmanifest")
+def cyrillic_manifest() -> JSONResponse:
+    return JSONResponse(manifest(True), media_type="application/manifest+json", headers=DAY)
+
+
+@app.get("/{name}.png")
+def home_icon(name: str) -> Response:
+    """The icons for a phone's home screen (picture.icon), drawn once."""
+    if name not in ICON_SIZES:
+        raise HTTPException(404)
+    if name not in _icons:
+        _icons[name] = picture.icon(*ICON_SIZES[name])
+    return Response(_icons[name], media_type="image/png", headers=DAY)
 
 
 @app.get("/fonts/{name}")

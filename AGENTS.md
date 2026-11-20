@@ -646,6 +646,14 @@ its minute.
   bar carries "Ko sada govori" beside the Assembly's broadcast, to `live_page` in `data/settings.json` (its `cir/`
   in the Cyrillic edition, through `data-cir-href`, which `cyrillic.page` follows). Accepted: the link leads to an
   error while the maintainer's computer is off.
+- **Keeping visitors longer** (20 Nov 2026, the maintainer's choice of points 1, 3 and 4 of a plan drawn from the
+  visits: 5.2 min a visit, 2.7 min at the peaks, when most arrive from a shared link). On a phone the head is short,
+  so the broadcast is in the first screen; the page can go on a phone's home screen (a manifest, icons drawn from
+  its microphone, the browser's own offer shown as our button, nothing else installed); between sittings the next
+  sitting convened is counted down with its agenda (`page.countdown`; `pages_mikrofon.upcoming` adds the newest
+  convocation's sittings, and `waiting` takes the first convened for today or later). The counter adds
+  `mikrofon.ekran`, `dodaj`, `dodato` and `sledeca`; the footer and the method page say so. Measured over a full
+  sitting day before the next points (the broadcast's ▶ pressed against pages opened, time in view).
 
 ## Open questions
 

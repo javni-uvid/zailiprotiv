@@ -70,6 +70,14 @@ site's counter (`mikrofon.pusti`, a sum per day; `VOTES_API=` empty turns it off
 `<video>`), and each turn's "▶ snimak" plays that file from the turn's second. Nothing from YouTube or the archive
 loads before a click (AGENTS.md, principle 5); without the script the links open the recording.
 
+**The next sitting and the home screen** (20 Nov 2026). Between sittings, under "no sitting now", the next sitting
+convened (`sazvano` in `mikrofon-cekanje.json`: the first one for today or later, from the current and the newest
+convocation) is counted down each second, with its day, hour, title and agenda. The page has a manifest
+(`/manifest.webmanifest`, `/cir/manifest.webmanifest`) and icons drawn from its microphone (`/ikona-*.png`,
+`picture.icon`), so a phone can keep it on its home screen; where the browser offers that (Chrome, Edge, Samsung)
+the page shows its own button for it, and on an iPhone a line saying where Safari keeps it. On a phone the head is
+short, so the broadcast is in the first screen.
+
 ## Running it
 
 Two images, **test first, then live** (19 Nov 2026, the maintainer's decision): a change is built and tried
