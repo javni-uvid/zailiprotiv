@@ -1144,6 +1144,7 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .hc-agenda { margin: 0 0 .9rem; padding-left: 1.3rem; } .hc-agenda li { margin: .2rem 0; }
 .hc-links li { margin: .3rem 0; font-weight: 600; }
 .home-conv > .label { margin: 1rem 0 0; }
+.hc-rules { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); } .hc-rules h3 { margin: 0 0 .4rem; font-size: var(--t-3); } .hc-rules p { margin: 0; max-width: 46rem; }
 
 /* The groups' colours in the newest convocation's bars (site.GROUP_COLOURS; the same hues as the live page), the
    "prethodni saziv" mark on what is the earlier convocation's, and a place kept for the new one's. */

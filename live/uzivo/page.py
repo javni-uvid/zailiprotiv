@@ -980,6 +980,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="add-ios meta" hidden>{t("add_ios")}</p>
 <p class="nt-note meta" hidden>{t("nt_note")}</p>
 </section>
+<p class="rules-cta"><a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}"><b>{t("rules_cta")} →</b><span>{t("rules_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>

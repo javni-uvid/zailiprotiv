@@ -35,6 +35,7 @@ h2 { font-size: var(--t-5); margin: 2.4rem 0 .6rem; }
 .v-za { color: var(--za); } .v-protiv { color: var(--protiv); }
 .cta { display: inline-block; font-weight: 600; text-decoration: none; padding: .45rem .8rem; border-radius: 6px;
   background: var(--fg); color: var(--bg); } .cta:hover { color: var(--bg); opacity: .85; }
+.rules-cta { margin: 1.4rem 0 0; } .rules-cta a { display: flex; flex-direction: column; gap: .15rem; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--fg); } .rules-cta b { font-size: var(--t-3); } .rules-cta span { color: var(--muted); font-size: var(--t-2); } .rules-cta a:hover b { text-decoration: underline; }
 .site-cta { margin: 1.4rem 0 0; font-weight: 600; } .site-cta a { color: var(--za); }
 .dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--protiv); }
 .who { font-family: var(--serif); font-weight: 700; font-size: var(--t-d1); line-height: 1.05; }

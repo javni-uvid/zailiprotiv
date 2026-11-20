@@ -361,3 +361,6 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   and 160; a measure: 108 to 114). "Reč ima" and an election have none. The lead under the heading says so. A test
   holds every term named to one the site explains. The order kept (`_in_order`) names the articles it rests on; the
   page never says a sitting broke the Rules.
+- **"Sednica po Poslovniku" always on the page** (20 Nov 2026, the maintainer: the new convocation's readers will want
+  the Rules): a box above the link to the site, between sittings too, leads to the terms on the site's page of the
+  Rules (`rules_cta`, `rules_sub`); the steps' own links are as above.

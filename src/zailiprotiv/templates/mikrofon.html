@@ -11,7 +11,7 @@
 <ul class="plain">
   <li><a href="{{ broadcast }}">Prenos Narodne skupštine</a> (sajt Skupštine)</li>
   {% if coming %}{% set s = coming[0] %}<li>Sazvano: <a href="{{ s.url }}">{{ s.title|latin }}</a>{% if s.starts %}, {{ s.starts[:10]|day }}{% if s.starts|length > 10 %} u {{ s.starts[11:16] }}{% endif %}{% endif %}</li>{% endif %}
-  <li><a href="{{ root }}sednice.html">Sednice i snimci</a> · <a href="{{ root }}replike.html">Varnice</a> · <a href="{{ root }}glasaj.html">Glasaj i ti</a></li>
+  <li><a href="{{ root }}sednice.html">Sednice i snimci</a> · <a href="{{ root }}replike.html">Varnice</a>{% if rule_terms %} · <a href="{{ root }}poslovnik-clanovi.html#pojmovi">Sednica po Poslovniku</a>{% endif %} · <a href="{{ root }}glasaj.html">Glasaj i ti</a></li>
 </ul>
 {% if day_turns %}
 <h2>Poslednji dan sednice, {{ day|day }}</h2>

@@ -198,6 +198,8 @@ TEXT = {
     "v_uzdrzan": "uzdržan",
     "o_new": "Novi poslanik u ovom sazivu",
     "o_more": "Svi glasovi i govori na Za ili Protiv",
+    "rules_cta": "Sednica po Poslovniku",
+    "rules_sub": "šta znače kvorum, pauza, pretres, glasanje, replika i opomena, iz teksta Poslovnika Skupštine",
     "site_cta": "Svaki zakon od 2012. i kako je glasao svaki poslanik",
     "totals": "Ko je koliko govorio",
     "day_page": "Ceo dan na sajtu: svaki govor sa snimkom i linkom za deljenje",

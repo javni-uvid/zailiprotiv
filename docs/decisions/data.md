@@ -63,6 +63,10 @@ as the change. The principles and the rules of work are in AGENTS.md.
   live page leads to its term (`live/AGENTS.md`), and the order the live page keeps (`steps._in_order`) cites the
   articles it rests on. The site shows what the Rules say and when a step was heard; it does not say whether a
   sitting kept them (principle 3; a breach is for MPs to point out, art. 103).
+- **The Rules shown where readers come** (20 Nov 2026, the maintainer: the new convocation's readers will want them):
+  the home page's box of the new convocation has "Sednica po Poslovniku" (kvorum, replika, opomena, hitni postupak,
+  and that the live page's steps lead to their articles), the footer's "Skupština" column links "Poslovnik", the
+  page shown at mikrofon while the service is down links it, and the live page has a box of its own.
 
 ## Laws
 
