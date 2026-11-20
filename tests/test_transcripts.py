@@ -77,3 +77,17 @@ def test_iso_date():
     assert t.iso_date("NSRS, odrzana  7. novembra 2025. godine, cetvrti dan rada.docx") == "2025-11-07"
     assert t.iso_date("СТЕНОГРАФСКЕ БЕЛЕШКЕ - … - 2. дан (18. јун 2026.)") == "2026-06-18"
     assert t.iso_date("Sednica Sedmog vanrednog zasedanja") == ""
+
+
+def test_tools_installed_at_first_need(monkeypatch):
+    """A program the older notes need is installed only when asked for and missing, and only where the environment
+    says how."""
+    ran, have = [], set()
+    monkeypatch.setattr(t.shutil, "which", lambda name: name if name in have else None)
+    monkeypatch.setattr(t.subprocess, "run", lambda cmd, **kw: ran.append((cmd, kw)))
+    monkeypatch.delenv("NOTES_TOOLS_INSTALL", raising=False)
+    assert t.tool("soffice") == "soffice" and not ran  # nowhere said how: left to fail as a missing program does
+    monkeypatch.setenv("NOTES_TOOLS_INSTALL", "install-them")
+    assert t.tool("soffice") == "soffice" and ran == [("install-them", {"shell": True, "check": True})]
+    have.add("soffice")
+    assert t.tool("soffice") == "soffice" and len(ran) == 1  # there already: not installed again

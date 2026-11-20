@@ -49,8 +49,10 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # The older notes are .doc or PDF: what reads them is installed when the first such file comes
+          # (transcripts.tool), not on every run; today's notes are .docx and most runs find nothing new.
+          NOTES_TOOLS_INSTALL: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libreoffice-writer-nogui poppler-utils
         run: |
-          sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libreoffice-writer-nogui poppler-utils  # the older notes are .doc
           pip install uv && uv sync --frozen
           convs="${IN_CONVOCATION}"; [ "$convs" = "sve" ] && convs=$(ls -d data/[0-9]*/ | xargs -n1 basename | sort -rn | tr '\n' ' ')
           if [ "${IN_ALL}" = "true" ]; then
