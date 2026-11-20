@@ -94,20 +94,26 @@ imenima, brojevima i rečima. Oznaka reda: [HH:MM:SS] Ime (lista): tekst; "{CHAI
    saopšteni), pauze, mere predsedavajućeg (opomena, oduzimanje reči, udaljenje; upozorenje NIJE mera), svaka stavka
    sa vremenom [HH:MM].
 9. Ako je dat "dosadašnji sažetak", ne ponavljaj ga: pišeš samo ovaj deo.
+10. Stavka toka koja iznosi rezultat glasanja ima polje "glasanje" sa brojevima kako ih je predsedavajući izgovorio:
+   {{"za": n, "protiv": n, "uzdrzano": n, "nevazece": n, "nije_glasalo": n, "glasalo": n, "prisutno": n}}; samo
+   ono što je izgovoreno, ostalo null. Brojeve jednog glasanja ne mešaš s brojevima drugog. "glasalo" je broj onih koji
+   su glasali: za + protiv + uzdržano (+ nevažeći); "nije_glasalo" nije deo toga. U "sta" nema brojeva glasova.
 
 IZLAZ: samo JSON, bez ikakvog drugog teksta:
 {{"od": "HH:MM", "do": "HH:MM", "ukratko": "2 do 4 rečenice: šta je Skupština u ovom delu radila i odlučila",
- "tok": [{{"vreme": "HH:MM", "sta": "..."}}], "govornici": [{{"ime": "...", "lista": "...", "o_cemu": "..."}}]}}"""
+ "tok": [{{"vreme": "HH:MM", "sta": "...", "glasanje": null}}], "govornici": [{{"ime": "...", "lista": "...", "o_cemu": "..."}}]}}"""
 
 DAY = f"""Pišeš sažetak celog dana sednice Narodne skupštine Srbije iz sažetaka njegovih delova, napisanih iz
 AUTOMATSKOG prepisa. Ne dodaješ ništa čega nema u tim sažecima.
 
 {_RULES}
+8. Glasanja prepisuješ iz sažetaka delova sa njihovim poljem "glasanje", brojeve ne menjaš i ne mešaš: svako glasanje
+   je odluka sa svojim "glasanje" (isti ključevi kao u delovima); u "sta" nema brojeva glasova.
 
 IZLAZ: samo JSON, bez ikakvog drugog teksta:
 {{"kratko": "jedna ili dve rečenice, najviše 280 znakova: šta je Skupština tog dana odlučila",
  "ukratko": "jedan pasus, 4 do 7 rečenica: tok dana i odluke",
- "odluke": [{{"vreme": "HH:MM", "sta": "odluka ili izbor, sa brojem glasova kako je saopšten"}}],
+ "odluke": [{{"vreme": "HH:MM", "sta": "odluka ili izbor, bez brojeva glasova", "glasanje": null}}],
  "tok": [{{"vreme": "HH:MM", "sta": "..."}}],
  "govornici": [{{"ime": "...", "lista": "...", "o_cemu": "jedna rečenica, do 35 reči, za ceo dan"}}]}}
 "tok" ima najviše 20 stavki; u "govornici" je svaki govornik iz delova, jednom, redom prvog javljanja."""
@@ -208,6 +214,95 @@ def check_summary(s: dict | None, speakers: set[str], text: str) -> list[str]:
     words = re.sub(r"\b\d\d?:\d\d\b", " ", words)  # the times
     errs += [f"broj {n} nije u prepisu" for n in sorted(set(re.findall(r"\d+", words)) - body, key=int)]
     return errs
+
+
+VOTE_KEYS = ("za", "protiv", "uzdrzano", "nevazece", "nije_glasalo", "glasalo", "prisutno")
+VOTE_WORDS = (("za", "za"), ("protiv", "protiv"), ("uzdrzano", "uzdržano"), ("nevazece", "nevažeći"),
+              ("glasalo", "glasalo"), ("nije_glasalo", "nije glasalo"), ("prisutno", "prisutno"))
+
+
+def vote_of(raw) -> dict | None:
+    """A vote as the model gave it, kept to the known keys with whole non-negative numbers; None when nothing is left."""
+    if not isinstance(raw, dict):
+        return None
+    got = {k: raw[k] for k in VOTE_KEYS if isinstance(raw.get(k), int) and not isinstance(raw.get(k), bool) and raw[k] >= 0}
+    return got or None
+
+
+def vote_errors(v: dict) -> list[str]:
+    """What does not add up in one vote (21 Nov 2026, the maintainer: for + against + abstained must equal those who
+    voted). Checked only with the numbers that were said: za + protiv + uzdrzano (+ nevazece) = glasalo; glasalo +
+    nije_glasalo = prisutno; no part is more than the whole it belongs to."""
+    parts = [v.get(k) for k in ("za", "protiv", "uzdrzano", "nevazece")]
+    said = sum(x for x in parts if x is not None)
+    errs = []
+    if v.get("glasalo") is not None:
+        if None not in parts[:3] and said != v["glasalo"]:
+            errs.append("za + protiv + uzdržano" + (" + nevažeći" if parts[3] is not None else "")
+                        + f" je {said}, a glasalo je {v['glasalo']}")
+        elif said > v["glasalo"]:
+            errs.append(f"delovi glasanja ({said}) su veći od broja glasalih ({v['glasalo']})")
+    if v.get("prisutno") is not None:
+        if v.get("glasalo") is not None and v.get("nije_glasalo") is not None \
+                and v["glasalo"] + v["nije_glasalo"] != v["prisutno"]:
+            errs.append(f"glasalo {v['glasalo']} + nije glasalo {v['nije_glasalo']} nije prisutno {v['prisutno']}")
+        elif v["prisutno"] < max(said, v.get("glasalo") or 0):
+            errs.append("prisutnih je manje nego glasalih")
+    return errs
+
+
+def vote_text(v: dict) -> str:
+    """One vote told the same way every time: "za 136, protiv 0, uzdržano 0, glasalo 136, nije glasalo 98, prisutno 234"."""
+    return ", ".join(f"{label} {v[k]}" for k, label in VOTE_WORDS if k in v)
+
+
+def _loose(v: dict, e: dict) -> list[str]:
+    """Figures of a vote that stand in the entry's words as well (they belong in the vote's own field only)."""
+    return sorted({str(n) for n in v.values() if n > 9} & set(re.findall(r"\d+", str(e.get("sta") or ""))))
+
+
+def vote_entries(s: dict) -> list[dict]:
+    """The entries of a summary ("odluke", "tok") that carry a vote."""
+    return [e for k in ("odluke", "tok") for e in (s.get(k) if isinstance(s.get(k), list) else [])
+            if isinstance(e, dict) and e.get("glasanje") is not None]
+
+
+def check_votes(s: dict | None) -> list[str]:
+    """Votes that do not add up, or whose figures stand in the entry's words too. [] when all is well."""
+    errs = []
+    for e in vote_entries(s or {}):
+        v = vote_of(e["glasanje"])
+        if v is None:
+            continue
+        where = f"glasanje u {e.get('vreme')!r}: "
+        errs += [where + x for x in vote_errors(v)]
+        if _loose(v, e):
+            errs.append(where + f"brojevi glasova {', '.join(_loose(v, e))} su u tekstu stavke, a treba samo u polju glasanje")
+    return errs
+
+
+def settle_votes(s: dict) -> dict:
+    """The summary with its votes made fit to show: the figures normalised and a line of words for each vote that
+    adds up (`glasovi`); one that still does not goes without its figures, and the entry is dropped when its own words
+    carry them (better no line than a wrong one)."""
+    for key in ("odluke", "tok"):
+        if not isinstance(s.get(key), list):
+            continue
+        kept = []
+        for e in s[key]:
+            if not isinstance(e, dict) or e.get("glasanje") is None:
+                kept.append(e)
+                continue
+            v = vote_of(e["glasanje"])
+            bad = v is None or vote_errors(v)
+            e.pop("glasanje", None)
+            if not bad:
+                e["glasanje"], e["glasovi"] = v, vote_text(v)
+            elif v and _loose(v, e):
+                continue
+            kept.append(e)
+        s[key] = kept
+    return s
 
 
 def ask_claude(system: str, user: str, max_tokens: int = 16000, effort: str = "low") -> str:
@@ -339,10 +434,13 @@ class Judge(threading.Thread):
         user = self._roster() + (f"Dosadašnji sažetak: {before}\n\n" if before else "") + "Deo sednice:\n" + text
         reply = self._summary(user, set(talk))
         errs = check_summary(reply, set(talk), text)
-        if errs:
-            reply = self._summary(user + "\n\nPrethodni odgovor nije prošao proveru: " + "; ".join(errs)
+        wrong = check_votes(reply) if not errs else []
+        if errs or wrong:
+            reply = self._summary(user + "\n\nPrethodni odgovor nije prošao proveru: " + "; ".join(errs + wrong)
                                   + ". Napiši ga ponovo po pravilima.", set(talk))
             errs = check_summary(reply, set(talk), text)
+        if not errs:
+            settle_votes(reply)  # a vote that still does not add up goes out without its figures, not the summary
         if errs:
             self.kept["greske"] = self.kept.get("greske", 0) + 1
             log.warning("summary left out: %s", "; ".join(errs))
@@ -395,8 +493,18 @@ class Judge(threading.Thread):
                     log.warning("the day's summary not written (%s)", exc)
                     reply = None
                 errs = check_summary(reply, speakers, user)
+                wrong = check_votes(reply) if not errs else []
+                if wrong:
+                    log.warning("the day's votes asked again: %s", "; ".join(wrong))
+                    try:
+                        reply = reply_json(self.ask(DAY, user + "\n\nPrethodni odgovor nije prošao proveru: "
+                                                    + "; ".join(wrong) + ". Napiši ga ponovo po pravilima.", 16000, "medium"))
+                    except Exception as exc:
+                        log.warning("the day's summary not written (%s)", exc)
+                        reply = None
+                    errs = check_summary(reply, speakers, user)
                 if not errs:
-                    self.kept["dan"] = {**reply, "t": int(now)}
+                    self.kept["dan"] = {**settle_votes(reply), "t": int(now)}
                     self._save()
                 else:
                     log.warning("the day's summary left out: %s", "; ".join(errs))

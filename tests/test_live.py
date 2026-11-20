@@ -1381,3 +1381,42 @@ def test_the_subscribers_are_told_when_the_days_summary_is_out(tmp_path, monkeyp
     j.kept = {"dan": {"ukratko": "U.", "t": morning - 13 * 3600}}
     j._tell(morning)
     assert len(posts) == 1  # half a day old: no more news
+
+
+def test_a_votes_figures_add_up_or_are_not_shown():
+    """21 Nov 2026, the maintainer: for + against + abstained must equal those who voted. A vote that does not add up
+    is asked for again; if it still doesn't it goes without its figures (and the line is dropped when its words carry
+    them); one that adds up is told in one form."""
+    from uzivo import sudija
+    good = {"za": 136, "protiv": 0, "uzdrzano": 0, "glasalo": 136, "nije_glasalo": 98, "prisutno": 234}
+    assert sudija.vote_errors(good) == []
+    assert sudija.vote_text(good) == "za 136, protiv 0, uzdržano 0, glasalo 136, nije glasalo 98, prisutno 234"
+    assert sudija.vote_errors({"za": 235, "protiv": 1, "uzdrzano": 0, "nevazece": 3, "glasalo": 239}) == []
+    assert sudija.vote_errors({"za": 100, "protiv": 30, "uzdrzano": 5, "glasalo": 140})  # 135, not 140
+    assert sudija.vote_errors({"za": 150, "glasalo": 140})  # a part over the whole
+    assert sudija.vote_errors({"glasalo": 140, "nije_glasalo": 98, "prisutno": 234})  # 238, not 234
+    assert sudija.vote_errors({"za": 97}) == []  # only what was said is checked
+    assert sudija.vote_of({"za": "97", "protiv": -1, "x": 4, "uzdrzano": True}) is None  # nothing usable
+    s = {"odluke": [{"vreme": "13:27", "sta": "Izabran predsednik.", "glasanje": {"za": 140, "protiv": 97, "glasalo": 237}},
+                    {"vreme": "22:20", "sta": "Šest potpredsednika.", "glasanje": {"za": 136, "protiv": 5, "glasalo": 200}},
+                    {"vreme": "22:22", "sta": "Način izbora.", "glasanje": {"za": 133, "protiv": 1, "uzdrzano": 0, "glasalo": 150}},
+                    {"vreme": "22:30", "sta": "Odluka sa 120 glasova.", "glasanje": {"za": 120, "protiv": 10, "uzdrzano": 0, "glasalo": 140}},
+                    {"vreme": "23:00", "sta": "Pauza."}]}
+    assert len(sudija.check_votes(s)) == 3  # 22:20 lacks "uzdrzano" so cannot be added up; 22:22 does not add up;
+    sudija.settle_votes(s)                  # 22:30 does not, and says 120 in its words too
+    assert [o["vreme"] for o in s["odluke"]] == ["13:27", "22:20", "22:22", "23:00"]  # 22:30: better none than wrong
+    assert s["odluke"][0]["glasovi"] == "za 140, protiv 97, glasalo 237"
+    assert "glasanje" not in s["odluke"][2] and "glasovi" not in s["odluke"][2]  # no figures, the line stays
+    assert sudija.check_votes(s) == []
+
+
+def test_the_summary_on_the_page_shows_a_votes_figures_under_its_decision():
+    from uzivo import page as page_
+    s = {"vrsta": "dan", "ukratko": "Izabran je predsednik.", "odluke": [
+        {"vreme": "13:27", "sta": "Izabran predsednik Skupštine.", "glasovi": "za 140, protiv 97, glasalo 237"},
+        {"vreme": "14:00", "sta": "Pauza."}]}
+    html = page_.summary_box({"sazetak": s}, cyr=False)
+    assert '<li><b>13:27</b> Izabran predsednik Skupštine.<span class="sum-v">za 140, protiv 97, glasalo 237</span></li>' in html
+    assert html.count("sum-v") == 1
+    part = {"vrsta": "deo", "do": "12:00", "ukratko": "U.", "tok": [{"vreme": "11:30", "sta": "Glasanje.", "glasovi": "za 5"}]}
+    assert "za 5" in page_.summary_box({"sazetak": part}, cyr=False)

@@ -169,7 +169,7 @@ class View:
         parts = [p for p in kept.get("delovi") or [] if p.get("ukratko")]
         if parts:
             return {"vrsta": "deo", "do": parts[-1].get("do"), "ukratko": parts[-1]["ukratko"],
-                    "ranije": [p["ukratko"] for p in parts[:-1]]}
+                    "tok": parts[-1].get("tok"), "ranije": [p["ukratko"] for p in parts[:-1]]}
         return None
 
     def _lists(self, done: list[dict], current: dict | None, recorded: bool) -> None:
