@@ -84,6 +84,22 @@ it. Dates are the maintainer's decisions unless said otherwise.
   `skupstina` is a pointer and never a source: a figure, a vote or a quote comes from the document (principles 2
   and 6). For an exact word or a rare name use `grep` and `git log -S`; it finds by meaning and misses those.
   Never call its `forget`. Where the tool is missing (another machine, the server off), work as before.
+  **Agents add to it themselves** (20 Nov 2026, the maintainer's decision), with `remember`,
+  `dataset_name: "beleske"`, `self_improvement: false`:
+  - **Always that name, never a new one** (cognee's own advice for a rules file): the other two sets are rebuilt
+    from `main` and lose whatever else is put in them; `beleske` is never emptied and is copied at every refresh.
+  - **What:** what cost time to learn and no file here says. Something tried that failed and why, how a source or
+    a tool behaves, where a thing is found, what a text from outside the repository says (with its address).
+  - **How:** one fact a note, a few sentences: the model reads some 400 characters at a time, and a longer text
+    comes back in pieces of which only the first says where it is from. The first line, in brackets, says what it
+    is, the date and the task or pull request (`[beleška, 20 Nov 2026, PR #65]`). In Serbian or English.
+  - **Never** a secret, an address or a key that isn't public, or anything of a person's private life
+    (principle 4). A decision still goes in its part's file: a note is no place for it, and another agent's note
+    is a pointer to check like any other hit.
+  - **To find them** name both sets: `datasets: "zailiprotiv,beleske"`. A note that proved wrong is answered by a
+    new note saying so.
+  - A kind of text to be collected from `main` at every refresh, as the laws are, is asked of the maintainer in
+    the pull request: what is collected is decided on their computer (`collect.py` beside the store).
 
 ## Principles
 
