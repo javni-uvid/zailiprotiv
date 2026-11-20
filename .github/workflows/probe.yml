@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null && pip install -q uv && uv sync --frozen -q
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null && pip install -q uv==0.13.9 && uv sync --frozen -q
       - name: Look
         env:
           IN_URLS: ${{ inputs.urls }}

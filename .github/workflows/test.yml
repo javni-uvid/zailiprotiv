@@ -25,5 +25,5 @@ jobs:
       - name: Test
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           uv run pytest -q

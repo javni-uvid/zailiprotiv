@@ -18,6 +18,9 @@ updates:
     groups:
       images:
         patterns: ["*"]
+    ignore:  # the image's Python moves when that is decided and tried, not by itself (its first pull request asked for 3.15)
+      - dependency-name: python
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: docker-compose
     directory: /live
     schedule:

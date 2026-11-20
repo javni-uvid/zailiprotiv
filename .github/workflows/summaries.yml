@@ -69,7 +69,7 @@ jobs:
           ANTHROPIC_SERVICE_ACCOUNT_ID: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
           ANTHROPIC_WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
         run: |
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           [ -n "${IN_MODEL}" ] && export ZAILIPROTIV_MODEL="${IN_MODEL}"
           [ -n "${IN_REPLACE}" ] && export ZAILIPROTIV_REPLACE="${IN_REPLACE}"
           kinds=" ${IN_KINDS_OR} "

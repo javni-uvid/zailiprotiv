@@ -48,7 +48,7 @@ jobs:
           ANTHROPIC_SERVICE_ACCOUNT_ID: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
           ANTHROPIC_WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
         run: |
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           uv run zailiprotiv --convocation "${IN_CONVOCATION}" debates-batch --only "${IN_ONLY}" \
             --out "samples/${IN_MODEL}/${IN_CONVOCATION}" --wait "${IN_WAIT}"
           uv run zailiprotiv status | grep -E "potrošeno|batch u toku" || true

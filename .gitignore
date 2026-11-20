@@ -1,4 +1,11 @@
 *.pyc
+# Secrets never belong here (AGENTS.md): what a key is usually kept in, wherever it is put down
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].json
 .pytest_cache/
 .venv/
 __pycache__/

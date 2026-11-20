@@ -170,6 +170,7 @@ Read the file of the part you work on before you start; each keeps its sections'
 | Broadcasts and recordings on the site: who spoke when and how long, the archive, transcripts | `docs/decisions/recordings.md` |
 | The live service `mikrofon.zailiprotiv.rs` (`live/`), its edge worker, notifications | `live/AGENTS.md` |
 | The visitors' counter (`worker/`) | `worker/README.md`, and "Visitors' votes" in `docs/decisions/site.md` |
+| Security: what is guarded against per part, what is checked before a merge, what is accepted | `docs/decisions/security.md` |
 | The project's course, day by day | `docs/decisions/log.md` |
 
 ## Open questions
