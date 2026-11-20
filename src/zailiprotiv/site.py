@@ -20,7 +20,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from zailiprotiv import jsonfile, kinds, mps, skupstina
+from zailiprotiv import family, jsonfile, kinds, mps, skupstina
 from zailiprotiv.config import CONVOCATIONS
 from zailiprotiv.months import day, day_of  # noqa: F401  (site.day, as other modules use it)
 from zailiprotiv.translit import latin
@@ -337,7 +337,9 @@ VERSIONED = ("style.css", "site.js", "pretraga.js", "glas.js", "listic.js", "gla
 def asset_version() -> str:
     """The pages ask for the stylesheet and scripts with ?v=<this>: it changes with their content, so a browser or
     cache never pairs new pages with old styles. Every script that carries it counts, not only the stylesheet."""
-    return hashlib.sha256(b"".join((HERE / "static" / n).read_bytes() for n in VERSIONED)).hexdigest()[:10]
+    # The stylesheet as served: the family's in front of the site's own (family.stylesheet).
+    parts = [family.stylesheet() if n == "style.css" else (HERE / "static" / n).read_bytes() for n in VERSIONED]
+    return hashlib.sha256(b"".join(parts)).hexdigest()[:10]
 
 
 def patch_static(out: Path) -> dict:
@@ -352,6 +354,7 @@ def patch_static(out: Path) -> dict:
     new = asset_version()
     for name in STATIC_FILES + ("glasaj.js",):
         shutil.copy(HERE / "static" / name, out / name)
+    family.write_stylesheet(out)
     shutil.rmtree(out / "fonts", ignore_errors=True)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     if (out / "CNAME").exists():
@@ -870,6 +873,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     named = Counter(a["law"]["title"] for a in law_pages)
     env.globals.update(
         hemicycle=hemicycle,
+        family_bar=family.bar, family_foot=family.foot,
+        family_url=family.sites()["family"]["url"]["lat"], family_url_cir=family.sites()["family"]["url"]["cyr"],  # Javni uvid's bar and footer block, the same on every site
         votes_api=settings.get("votes_api", ""),  # the visitors' votes counter (worker/)
         notes_all=bool(settings.get("notes_all")),  # every sitting's notes are read (brought from the bucket)
         files_url=settings.get("files_url", ""),  # where the downloads are (files_site), for the data's description
@@ -890,6 +895,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / "poslanik").mkdir()
     for name in STATIC_FILES:
         shutil.copy(HERE / "static" / name, out / name)
+    family.write_stylesheet(out)  # the family's look in front of the site's own, as one file
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     if settings.get("indexnow_key"):  # IndexNow (Bing and others): the key, at the site's root, proves the site is ours
         (out / f"{settings['indexnow_key']}.txt").write_text(settings["indexnow_key"], encoding="utf-8")
