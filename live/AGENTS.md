@@ -376,3 +376,10 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   letters, 16 at most; `data-t`). Not on the cards: sentences from the automatic transcript as an MP's words
   (principle 6: a quote is word for word and checked against the notes, and the transcript errs); the way to
   the transcript is the day's page, where each is marked automatic.
+- **What a request names never becomes a path or markup** (20 Nov 2026, after CodeQL's first findings in `live/`,
+  none of which could be used as the code stood). A day's file is found among the folder's own files (`state._kept`)
+  and a font among the fonts' (`main._fonts`), so the check of the address is no longer the only thing between a
+  request and the disk. `/upozorenja` writes the key it holds, not the one it was sent, and inside `<script>` a
+  `</` is broken. The player's `yt()` and `file()` check what they are given themselves (the next part of a
+  recording was played unchecked), and the cards' labels are set as text. **security** now runs on pull
+  requests too and on changes under `live/`: a finding used to come after the merge.

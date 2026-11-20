@@ -13,7 +13,9 @@
     told[what] = 1;
     try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
   }
+  // Each checks what it is given itself: whoever calls them, only a YouTube id or an archive file is ever played.
   function yt(id, t) {
+    if (!ID.test(id || "")) return;
     var f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1" + (t > 0 ? "&start=" + t : "");
     f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
@@ -22,6 +24,7 @@
     put(f);
   }
   function file(url, t) {
+    if (!ARCHIVE.test(url || "")) return;
     var v = screen.querySelector("video");
     if (!v || v.getAttribute("src") !== url) {
       v = document.createElement("video");
