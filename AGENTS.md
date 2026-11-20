@@ -375,6 +375,13 @@ The project's promises to its readers. Never change them without the maintainer.
   the open code and data, no advertising) and lists corrections from `data/ispravke.json` (by hand: `date`,
   `text`, `url`, `where`; newest first; empty until the first). Who pays for it and the names of people are the
   maintainer's to write.
+- **The groups keep their colours, the first list's moved from blue to indigo** (20 Nov 2026, the maintainer:
+  the colours may be fitted to the rest, and the pages are better with what moves a reader). On the home page the
+  blue of "Aleksandar Vučić - Srbija pobeđuje" stood a few degrees of hue from the blue of "za" right under it;
+  it is now indigo (`--g-av`: #3730a3, #818cf8 in the dark theme), as far from "za" as the red of "Studentska
+  lista" is from the orange of "protiv", and the three still differ in lightness for colour-blind readers. The
+  live page wears the same (`--c-av`, `page.HEX`). "O projektu" says the project is independent (the
+  maintainer's words); the names of the people behind it wait.
 
 ### Design rules
 

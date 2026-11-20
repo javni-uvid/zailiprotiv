@@ -279,3 +279,6 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   uses the site's (`zailiprotiv.cyrillic.cyr`, copied into the image as `uzivo/cirilica.py`), and both keep a word
   with w, q, x or y whole in Latin (no Serbian word has them), beside the names in `KEEP`. A test renders the
   Cyrillic page and finds no word half in one script.
+- **The first list's colour is indigo** (20 Nov 2026, with the site: its blue stood too near the blue of "za" on
+  the home page, and the two pages wear the same hues): `--c-av` and `page.HEX["c-av"]` are #3730a3 (#818cf8 in
+  the dark theme); the pictures take it from `HEX`.
