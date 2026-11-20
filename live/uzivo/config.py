@@ -49,6 +49,9 @@ CLEAN_CONF = _i("CLEAN_CONF", 85)  # a name not on the list is shown only when e
 HOLD_SECONDS = _f("HOLD_SECONDS", 25)  # no readable name this long: the speaker is no longer known
 STALE_SECONDS = _f("STALE_SECONDS", 60)  # no new frame this long: no broadcast
 MERGE_SECONDS = _f("MERGE_SECONDS", 120)  # the same speaker again within this: one turn, not two
+# A restart (a new image put live) within this many seconds of the last frame takes up where the last run was: the
+# speaker still on, the broadcast still on, and frames given STALE_SECONDS from the restart to come again (20 Nov 2026).
+RESUME_SECONDS = _f("RESUME_SECONDS", 90)
 # Where a turn begins in the recording: its first segment's number, less one segment as the caption comes up
 # after the speaker begins, times the segment's length (the YouTube video keeps the broadcast's numbering).
 RECORDING_LEAD = _i("RECORDING_LEAD", 1)

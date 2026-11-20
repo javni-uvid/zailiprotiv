@@ -1,6 +1,6 @@
 // mikrofon.zailiprotiv.rs: "Ko sada govori" runs on the maintainer's computer behind a Cloudflare tunnel (live/).
 // Every request goes to it first; when it can't answer (the tunnel is down: Cloudflare's 530, or any 5xx), the
-// visitor gets the site's own page for that, zailiprotiv.rs/mikrofon (pages_mikrofon.py), under a <base> so its links
+// visitor gets its last answer if under two minutes old (a restart), and otherwise the site's own page for that, zailiprotiv.rs/mikrofon (pages_mikrofon.py), under a <base> so its links
 // and styles come from the site; the live service's JSON says it is off, and anything else leads to the site.
 
 const SITE = "https://zailiprotiv.rs";
@@ -12,6 +12,11 @@ const PART = /^\/(cir\/)?deo$/;  // what an open page asks for every few seconds
 // 4,500 visits an hour, each page asking every five seconds, and other sites reading the state, left it unanswering).
 const SHARED = /^\/((cir\/)?(deo)?|stanje\.json)$/;
 const KEEP = 3;
+// The same answers kept longer, apart, for when the service doesn't answer (20 Nov 2026): a new image put live
+// restarts it for a few seconds, and in that time an open page goes on showing the last answer (its "checked N s
+// ago" grows) instead of the site's page for a service that is off. Older than this, the service is taken as off.
+const LAST = 120;
+const last = (url) => new Request(url.origin + "/~poslednje" + url.pathname);
 
 export default {
   async fetch(request, env, ctx) {
@@ -33,8 +38,19 @@ export default {
         const kept = new Response(answer.clone().body, answer);
         kept.headers.set("cache-control", `public, max-age=${KEEP}`);
         ctx.waitUntil(caches.default.put(key, kept));
+        const spare = new Response(answer.clone().body, answer);
+        spare.headers.set("cache-control", `public, max-age=${LAST}`);
+        ctx.waitUntil(caches.default.put(last(url), spare));
       }
       return answer;
+    }
+    if (shared) {  // the service restarting: the last answer, if it is recent
+      const spare = await caches.default.match(last(url));
+      if (spare) {
+        const out = fresh(spare);
+        out.headers.set("x-mikrofon", "poslednje");
+        return out;
+      }
     }
     return fallback(url);
   },

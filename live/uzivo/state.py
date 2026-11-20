@@ -79,8 +79,10 @@ class Tracker:
         self._said_other: tuple[str, dict] = ("", {})  # an earlier day's, read when the page shows that day
         self._snap: tuple[float, dict] | None = None  # the last snapshot and when: every visitor asks every few seconds
         self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
+        self._resumed = 0.0  # when this run took up the last one's open turn (a restart; RESUME_SECONDS)
         self._migrate()
         self._load()
+        self._resume()
         for f, attr in ((self.recording_file, "recording"), (self.waiting_file, "waiting"), (self.facts_file, "facts")):
             try:
                 if f and f.exists():
@@ -161,6 +163,25 @@ class Tracker:
                 self.turns = [t for t in turns if self._day(t["start"]) == self.day]
         except (OSError, ValueError):
             pass
+
+    def _resume(self, now: float | None = None) -> None:
+        """After a restart (a new image put live, 20 Nov 2026): when today's file says a broadcast was on and its last
+        frame is under RESUME_SECONDS old, the page goes on showing it (the speaker still on, if one was) instead of
+        "no sitting" until the stream is found again, and the waits for a frame (HOLD_SECONDS, STALE_SECONDS) count
+        from the restart. The same speaker read again is the same turn, as after any short gap (MERGE_SECONDS)."""
+        now = time.time() if now is None else now
+        f = self._file(self.day)
+        try:
+            kept = json.loads(f.read_text(encoding="utf-8")) if f and f.exists() else {}
+        except (OSError, ValueError):
+            return
+        last = float(kept.get("last_frame") or 0)
+        if kept.get("status") not in (SPEAKING, UNKNOWN) or not 0 <= now - last <= config.RESUME_SECONDS:
+            return
+        self.status, self.last_frame, self._resumed = kept["status"], last, now
+        self.open = bool(kept.get("open")) and bool(self.turns)
+        if self.status == SPEAKING and not self.open:
+            self.status = UNKNOWN
 
     # --- the automatic transcript (prepis.py writes it, a piece at a time) ---
     def _said_file(self, day: str) -> Path | None:
@@ -365,7 +386,8 @@ class Tracker:
             return
         f.parent.mkdir(parents=True, exist_ok=True)
         tmp = f.with_suffix(".tmp")
-        tmp.write_text(json.dumps({"day": self.day, "turns": self.turns, "cover": self.cover}, ensure_ascii=False),
+        tmp.write_text(json.dumps({"day": self.day, "turns": self.turns, "cover": self.cover, "open": self.open,
+                                   "status": self.status, "last_frame": self.last_frame}, ensure_ascii=False),
                        encoding="utf-8")
         tmp.replace(f)
 
@@ -440,7 +462,7 @@ class Tracker:
                     self.open = True
                     self._save()
                 self.status = SPEAKING
-            elif self.open and (self._others >= 2 or now - cur["seen"] > config.HOLD_SECONDS):
+            elif self.open and (self._others >= 2 or now - max(cur["seen"], self._resumed) > config.HOLD_SECONDS):
                 self._close()
                 self.status = UNKNOWN
             elif not self.open:
@@ -451,10 +473,11 @@ class Tracker:
         """Called each second, frame or not: a broadcast that stopped ends the turn."""
         now = time.time() if now is None else now
         with self._lock:
-            if self.status != NO_STREAM and now - self.last_frame > config.STALE_SECONDS:
+            if self.status != NO_STREAM and now - max(self.last_frame, self._resumed) > config.STALE_SECONDS:
                 self._close()
                 self.status = NO_STREAM
                 self._snap = None
+                self._save()  # so that a restart after the broadcast ended takes up nothing (_resume)
 
     @staticmethod
     def _out(t: dict) -> dict:
