@@ -68,5 +68,4 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
         **common, waiting=waiting, gone=gone[:200], coming=coming, checked=proc["fetched"], who_label=who_label,
         who_counts=[(k, who_label[k], sum(1 for r in waiting if r["who"] == k)) for k in who_label],
         oldest=min((r["submitted"] for r in waiting if r["submitted"]), default=None), root=""), encoding="utf-8")
-    render.gone = gone
-    return coming, waiting
+    return coming, waiting, gone

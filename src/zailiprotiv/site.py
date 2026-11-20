@@ -418,37 +418,100 @@ def write_feed(path: Path, title: str, self_url: str, page_url: str, entries: li
                     f"<id>{x(page_url or self_url)}</id><updated>{updated}</updated>\n{body}</feed>\n", encoding="utf-8")
 
 
-def build(root: Path, out: Path, domain: str | None = None, clean: bool = False, cyrillic: bool = False) -> dict:
+@dataclass
+class Sources:
+    """What site.build reads from data/, read once. The pages' own modules read a few small files of their own."""
+    convs: list  # [(convocation, folder)] with laws, newest first
+    current: str
+    loaded: dict  # convocation → (laws, votes, bills), as load() gives them
+    debates: dict  # convocation → the stenographic notes read, by sitting, speakers' names mended
+    members_conv: str | None  # the newest convocation with a list of MPs (pages_members)
+    members_listed: dict | None  # that list
+    newest_notes: dict  # its notes, when it is not among `convs` yet (19 Nov 2026: counted before its first law)
+    recorded: dict  # convocation → the days read from the recordings (pages_govornici.load)
+    settings: dict
+    aliases: dict  # names the public uses for a law (data/aliases.json)
+    notes_sent: list  # what notes-upload has put in the bucket (data/notes_manifest.json)
+    profiles: list  # data/profiles/*.json, by file name
+    photos: dict | None  # data/photos/index.json
+    years_listed: dict  # MPs' years of birth by convocation (data/mp_years.json)
+    offices: dict  # offices in the Assembly by convocation (offices.py)
+    listed_now: list  # the sittings config.NEWEST's listing gives now, for the live bar
+    live_reading: bool | None  # the live page's reading (data/live.json)
+    newest_sittings: dict  # the sittings of members_conv's index.json, with their agendas
+    moved: dict  # an MP page's earlier addresses (data/mp_moved.json)
+    fixes: list  # corrections made on the site (data/ispravke.json)
+    recordings: dict  # the plenary recordings by day (videos.py), every convocation's
+    rules: dict | None  # the Rules of Procedure (poslovnik)
+
+
+def read(root: Path) -> Sources:
+    """Everything site.build reads from data/, each file once."""
+    from zailiprotiv import debates as debates_, offices, pages_govornici, pages_members, poslovnik
+    from zailiprotiv.config import NEWEST
     convs = convocations(root)
-    current = convs[0][0]
     mps.load_aliases(root / "mp_aliases.json")
     loaded = {c: load(path) for c, path in convs}
     debates = {c: load_transcripts(path) for c, path in convs}
-    from zailiprotiv import debates as _debates
     for c, _ in convs:  # speakers' names the stenographers mistyped, set right before anything counts by speaker
-        _debates.mend(debates[c], loaded[c][1])
+        debates_.mend(debates[c], loaded[c][1])
+    members_conv, members_listed = pages_members.load(root)
+    newest_notes = {}
+    if members_conv and members_conv not in dict(convs):
+        newest_notes = load_transcripts(root / members_conv)
+        if newest_notes:
+            debates_.mend(newest_notes, {})
+    try:
+        listed_now = list(json.loads((root / NEWEST / "index.json").read_text(encoding="utf-8"))["sittings"].values())
+    except (OSError, ValueError, KeyError):
+        listed_now = []
+    # The live page's reading, where there is one (data/live.json, from the votes run), decides: the Assembly marks a
+    # sitting of several days "(у току)" overnight too, and doesn't always mark one that is on.
+    try:
+        live_reading = json.loads((root / "live.json").read_text(encoding="utf-8")).get("live")
+    except (OSError, ValueError, AttributeError):
+        live_reading = None
+    recordings = {}
+    for p_ in sorted(root.glob("*/videos.json")):
+        try:
+            recordings.update(json.loads(p_.read_text(encoding="utf-8")).get("days") or {})
+        except ValueError:
+            pass
+    return Sources(
+        convs=convs, current=convs[0][0], loaded=loaded, debates=debates, members_conv=members_conv,
+        members_listed=members_listed, newest_notes=newest_notes, recorded=pages_govornici.load(root),
+        settings=jsonfile.load(root / "settings.json", {}), aliases=jsonfile.load(root / "aliases.json", {}),
+        notes_sent=jsonfile.load(root / "notes_manifest.json", []),
+        profiles=[json.loads(f.read_text(encoding="utf-8")) for f in sorted((root / "profiles").glob("*.json"))],
+        photos=jsonfile.load(root / "photos" / "index.json"),
+        years_listed=jsonfile.load(root / "mp_years.json", {}).get("listed", {}), offices=offices.load(root),
+        listed_now=listed_now, live_reading=live_reading,
+        newest_sittings=jsonfile.load(root / members_conv / "index.json", {}).get("sittings", {}) if members_conv else {},
+        moved=jsonfile.load(root / "mp_moved.json", {}), fixes=jsonfile.load(root / "ispravke.json", []),
+        recordings=recordings, rules=poslovnik.load(root / "poslovnik"))
+
+
+def build(root: Path, out: Path, domain: str | None = None, clean: bool = False, cyrillic: bool = False) -> dict:
+    """The site from data/ in three steps: read (read(), each file once), work out what the pages share, then the
+    pages. Every global the templates see is set once, before the first page; nothing is put into a page after it
+    is written."""
+    src = read(root)
+    from zailiprotiv import debates as debates_
+    from zailiprotiv import notes_site, pages_floor, pages_members, pages_mikrofon
+    from zailiprotiv import mp_years, offices as offices_mod
+    from zailiprotiv import pages_govornici as _gv
+    from zailiprotiv import profiles as profiles_
+    from zailiprotiv.config import LIVE, NEWEST
+    convs, current, loaded, debates, settings = src.convs, src.current, src.loaded, src.debates, src.settings
+    members_conv, members_listed = src.members_conv, src.members_listed
+    NEWEST_ = str(NEWEST)
     all_votes = {k: v for _, votes, _ in loaded.values() for k, v in votes.items()}
     people = registry(all_votes)
-    env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
-                      trim_blocks=True, lstrip_blocks=True)
     area_slug = lambda a: slug(latin(a))[:80]
-    env.globals.update(hemicycle=hemicycle)
-    env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
-    env.filters["qid"] = qid
-    env.filters["grp"] = lambda g: g if any(ch.isalnum() for ch in g or "") else "Bez poslaničke grupe"  # a roll call's empty or "()"
-    env.filters["given_first"] = given_first
-    env.filters["locative"] = lambda name: name.lower()[:-1] + "om" if name.lower().endswith("i") else name.lower()  # Četrnaesti → (u) četrnaestom
-    if out.exists():
-        shutil.rmtree(out)
-    (out / "zakon").mkdir(parents=True)
-    (out / "poslanik").mkdir()
-    for name in STATIC_FILES:
-        shutil.copy(HERE / "static" / name, out / name)
-    shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     css_version = asset_version()
     built = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    from zailiprotiv.config import CONVOCATIONS
 
+    # 1. What the pages share.
     def years(c: str) -> str:
         passed = sorted(l.get("passed") or "" for l in loaded[c][0]["laws"].values())
         conf = CONVOCATIONS.get(c, {})
@@ -459,32 +522,12 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
-    settings_file = root / "settings.json"
-    settings = jsonfile.load(settings_file, {})
-    env.globals["votes_api"] = settings.get("votes_api", "")  # the visitors' votes counter (worker/)
-    if settings.get("indexnow_key"):  # IndexNow (Bing and others): the key, at the site's root, proves the site is ours
-        (out / f"{settings['indexnow_key']}.txt").write_text(settings["indexnow_key"], encoding="utf-8")
-    env.globals["notes_all"] = bool(settings.get("notes_all"))  # every sitting's notes are read (brought from the bucket)
-    env.globals["files_url"] = settings.get("files_url", "")  # where the downloads are (files_site), for the data's description
-    env.globals["notes_url"] = settings.get("notes_url", "")  # where the notes' pages (and their search index) are
-    env.globals["live_page"] = settings.get("live_page", "")  # "Ko sada govori" (live/), linked from the live bar
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic}
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
     # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
-    from zailiprotiv.config import LIVE, NEWEST
-    NEWEST_ = str(NEWEST)
     common["live"], common["live_url"] = [], LIVE
-    try:
-        listed = json.loads((root / NEWEST / "index.json").read_text(encoding="utf-8"))["sittings"].values()
-    except (OSError, ValueError, KeyError):
-        listed = []
-    # The live page's reading, where there is one (data/live.json, from the votes run), decides: the Assembly marks a
-    # sitting of several days "(у току)" overnight too, and doesn't always mark one that is on.
-    try:
-        reading = json.loads((root / "live.json").read_text(encoding="utf-8")).get("live")
-    except (OSError, ValueError, AttributeError):
-        reading = None
+    listed, reading = src.listed_now, src.live_reading
     for s in listed:
         if reading is not False and "(у току)" in s["title"] and "седниц" in s["title"].lower():
             common["live"].append(latin(s["title"].replace("(у току)", "").strip()))
@@ -497,9 +540,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
-    aliases = jsonfile.load(root / "aliases.json", {})
+    aliases = src.aliases
     items_by_conv, taken = {}, Counter()
-    law_pages = []  # written once the groups' pages are known, so a law's table can link to them
+    law_pages = []  # each law's page, written once the groups' pages are known, so a law's table can link to them
+    laws_lists = []  # each convocation's list of laws
     for conv, _ in convs:
         laws_store, votes, bills = loaded[conv]
         items = []
@@ -538,8 +582,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             others = [votes[k] for k in law.get("votes", []) if k != law.get("final_vote") and k in votes]
             roll = []
             if final:
-                listed = {mps.key(r[1]): r for r in final["rows"]}
-                roll = sorted(({"mp": people[k], "vote": r[2], "group": latin(r[3])} for k, r in listed.items()),
+                on_roll = {mps.key(r[1]): r for r in final["rows"]}
+                roll = sorted(({"mp": people[k], "vote": r[2], "group": latin(r[3])} for k, r in on_roll.items()),
                               key=lambda x: collate(x["mp"].name))
             law_pages.append(dict(
                 it=it, law=law, final=final,
@@ -551,12 +595,12 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         for it in items:
             by_kind[it["law"].get("kind", "other")].append(it)
         kind_order = [k for k in kinds.KINDS if k in by_kind]
-        (out / laws_page(conv, current)).write_text(env.get_template("laws.html").render(
-            **common, items=items, lead=most_against(items, 3), kind_counts=[(k, kinds.KINDS[k], len(by_kind[k])) for k in kind_order],
+        laws_lists.append((laws_page(conv, current), dict(
+            items=items, lead=most_against(items, 3), kind_counts=[(k, kinds.KINDS[k], len(by_kind[k])) for k in kind_order],
             urgent=sum(1 for it in items if it["urgent"]), total=len(items), conv=conv,
             area_options=sorted({a for it in items for a in it.get("areas") or []}, key=lambda a: collate(latin(a))),
             year_options=sorted({(it["law"].get("passed") or "")[:4] for it in items if it["law"].get("passed")}, reverse=True),
-            conv_name=ORDINAL_NAME.get(conv, conv), root=""), encoding="utf-8")
+            conv_name=ORDINAL_NAME.get(conv, conv), root="")))
 
     by_key_all = {it["key"]: it for its in items_by_conv.values() for it in its}
     # One group under two names. The Assembly's listings changed how they write groups, and groups rename: within a
@@ -610,15 +654,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     groups_in: dict[str, list] = defaultdict(list)
     for (key, g) in line:
         groups_in[key].append(g)
-    # What visitors may vote on and mark (the counter accepts nothing else): every law with a final vote, its quotes.
-    (out / "glasanje.json").write_text(json.dumps({"laws": {
-        it["slug"]: [qid(q["tekst"]) for q in it["quotes"]] for its in items_by_conv.values() for it in its if it.get("final")}},
-        separators=(",", ":")), encoding="utf-8")
     # Under a quote, the link leads to the very speech among our notes' pages, not to the Assembly's file to download.
-    from zailiprotiv import notes_site
-    _sent = root / "notes_manifest.json"
-    spot = notes_site.Finder(root, settings.get("notes_url", ""),
-                             set(jsonfile.load(_sent, [])), stores=debates)
+    spot = notes_site.Finder(root, settings.get("notes_url", ""), set(src.notes_sent), stores=debates)
     for its in items_by_conv.values():
         for it in its:
             days_ = (it["debate"] or {}).get("all_days") or []
@@ -628,7 +665,6 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                 d = days_[q["dan"] - 1] if 0 < q.get("dan", 0) <= len(days_) else None
                 q["ours"] = spot(d["url"], q["govornik"], q["tekst"]) if d else ""
     # What each MP is quoted saying in the debates summarised (the laws with most votes against).
-    from zailiprotiv import debates as debates_
     loose_keys = {debates_.loose(k): k for k in people}
     said_by: dict[str, list] = defaultdict(list)
     for its in items_by_conv.values():
@@ -640,8 +676,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                     said_by[k].append({"it": it, "q": q, "day": days_[q["dan"] - 1] if 0 < q["dan"] <= len(days_) else None})
     # What an MP most often says in the debates read (an AI model's overview, each point with a verbatim quote).
     profiles = {}
-    for f in sorted((root / "profiles").glob("*.json")):
-        p = json.loads(f.read_text(encoding="utf-8"))
+    for p in src.profiles:
         if (k := loose_keys.get(debates_.loose(p["mp"]))):
             spans = {c for t in p["points"] for c in t.get("sazivi", [])}
             for t in p["points"]:  # when the points come from several convocations, each says which
@@ -667,10 +702,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         shares = sorted(p / n for (k, cc), (p, n) in presence.items() if cc == c and n >= 20)
         if shares:
             median_presence[c] = shares[len(shares) // 2]
-    # Whether the ranking by presence has anything to show (pages_presence): the lists of MPs and groups link to it.
-    env.globals["presence_page"] = any(n >= 20 for _, n in presence.values())
     spoke, words = Counter(), {}
-    from zailiprotiv import profiles as profiles_
     seated = profiles_.seated_days(root)
     spoken = profiles_.speeches(root, seated)
     distinct = profiles_.distinctive(spoken)
@@ -684,13 +716,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     for (key, g), how in line.items():
         lines_of[(finals[key]["conv"], g)].append((key, how))
     group_slug = {(c, g): f"{c}-{slug(g, 60)}" for (c, g), ls in lines_of.items() if len(ls) >= 5 and any(ch.isalnum() for ch in g)}  # no group (" ", "()"): no page
-    # Replies and the chair's measures, from the notes read; an MP's exchanges go on the MP's page, a law's on its page.
     # Portraits from the Assembly's list of MPs (data/photos/, the `photos` command), by the MP's key.
-    photos_index = root / "photos" / "index.json"
     photo_of = {}
-    if photos_index.exists():
-        shutil.copytree(root / "photos", out / "foto", ignore=shutil.ignore_patterns("*.json"))
-        photo_of = {k: v["file"] for k, v in json.loads(photos_index.read_text(encoding="utf-8")).items()}
+    if src.photos is not None:
+        photo_of = {k: v["file"] for k, v in src.photos.items()}
         # The Assembly's list sometimes gives a name more fully than the roll calls (a second surname, an initial):
         # a portrait whose name holds all the words of exactly one MP's name, or the other way round, is that MP's.
         name_words = {k: {w for w in k.split() if len(w) > 1} for k in photo_of}
@@ -700,27 +729,19 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                 close = [k for k, w in name_words.items() if k not in people and len(mine & w) >= 2 and (mine <= w or w <= mine)]
                 if len(close) == 1:
                     photo_of[key_] = photo_of[close[0]]
-    from zailiprotiv import pages_floor, poslovnik
-    sent = root / "notes_manifest.json"  # what notes-upload has put in the bucket
-    notes_pages = set(jsonfile.load(sent, []))
+    notes_pages = set(src.notes_sent)  # what notes-upload has put in the bucket
     # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
     # year of birth; their own pages say they sit in it.
-    from zailiprotiv import pages_members
-    from zailiprotiv import pages_mikrofon
-    members_conv, members_listed = pages_members.load(root)
     member_rows, member_now = [], {}
     if members_conv and members_listed:
-        years_file = root / "mp_years.json"
-        years_listed = jsonfile.load(years_file, {}).get("listed", {})
-        member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
+        member_rows = pages_members.match(members_conv, members_listed, people, src.years_listed,
                                           title_case=title_case, slug=slug)
         member_now = pages_members.now_of(member_rows)
     # Offices in the Assembly (offices.py, 20 Nov 2026), from its pages of the composition: by MP key, then by
     # convocation, in one fixed order for everyone. A name two members of the newest convocation share gets none.
-    from zailiprotiv import mp_years, offices as offices_mod
     offices_by: dict[str, dict[str, list[dict]]] = {}
     twice = {k for k, n in Counter(r["key"] for r in member_rows).items() if n > 1}
-    for c, rows in offices_mod.load(root).items():
+    for c, rows in src.offices.items():
         for o in rows:
             k = mp_years.key(o["name"], c)
             if c == members_conv and k in twice:
@@ -734,36 +755,45 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
     # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
     # MPs' pages and found nothing there).
-    from zailiprotiv import pages_govornici as _gv
-    _days_now = _gv.load(root).get(members_conv or NEWEST_, [])
-    env.globals["floor_now"] = _gv.per_speaker(_days_now)
-    env.globals["floor_now_conv"] = members_conv or NEWEST_
-    env.globals["floor_now_last"] = max((d["dan"] for d in _days_now), default="")
+    _days_now = src.recorded.get(members_conv or NEWEST_, [])
+    floor_now = _gv.per_speaker(_days_now)
+    # The newest convocation's notes are counted like any other's as soon as they are read, before it has a law (19
+    # Nov 2026: the first sitting's notes were out and the counts of the floor stopped at the convocation before).
+    # Its new MPs are not in the roll calls yet, so their names and pages come from the Assembly's list.
+    floor_convs, floor_extra, floor_debates = list(convs), {}, dict(debates)
+    if src.newest_notes:
+        floor_debates[members_conv] = src.newest_notes
+        floor_convs = [(members_conv, root / members_conv)] + floor_convs
+        floor_extra = {debates_.loose(r["key"]): {"name": r["name"], "slug": r["slug"],
+                                                  "photo": photo_of.get(r["key"], "")} for r in member_rows if r["new"]}
+    _years = {c: years(c) for c, _ in convs} | ({members_conv: pages_members.since(members_conv)[:4] + "–"} if members_conv else {})
+    # Replies and the chair's measures, from the notes read; an MP's exchanges go on the MP's page, a law's on its page.
+    floor = pages_floor.count(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages,
+                              seated=seated, years_of=_years, extra=floor_extra, debates=floor_debates, people=people,
+                              convs=floor_convs, items_by_conv=items_by_conv, rules=src.rules)
+    exchanges_of, floor_of = floor.by_mp, floor.by_law
+    floor_notes_now = {sl: next((x for x in xs if x["conv"] == members_conv), None) for sl, xs in floor.per_mp.items()} if members_conv else {}
     # What the site has of the newest convocation before its first law, for every page with a place for it (19 Nov
     # 2026, the maintainer's request: the MPs' tabs, the groups, the sittings, "Varnice", the Assembly's pages): its
     # groups with seats, new MPs and time on the floor, its sittings as the Assembly lists them with the days read
-    # from the recordings, and the quick exchanges on those days (by the order of turns only). All by rule.
+    # from the recordings, the quick exchanges on those days (by the order of turns only), and what its notes count.
+    # All by rule.
     newer15 = None
     if members_conv and member_rows and str(members_conv) != str(current):
-        _spoke = env.globals["floor_now"]
         _groups = []
         for sec in pages_members.by_group(member_rows):
             if not sec["rows"]:
                 continue
-            sec_time = sum(_spoke.get(r["slug"], {}).get("sec", 0) for r in sec["rows"])
+            sec_time = sum(floor_now.get(r["slug"], {}).get("sec", 0) for r in sec["rows"])
             _groups.append({"name": sec["name"], "n": len(sec["rows"]), "new": sum(1 for r in sec["rows"] if r["new"]),
                             "time": _gv.dur(sec_time) if sec_time else "", "sec": sec_time,
-                            "speakers": sum(1 for r in sec["rows"] if r["slug"] in _spoke),
+                            "speakers": sum(1 for r in sec["rows"] if r["slug"] in floor_now),
                             "cls": GROUP_COLOURS.get(sec["name"], "g-mn" if sec.get("none") else "")})
         _whole = sum(g["sec"] for g in _groups) or 1
         for g in _groups:
             g["share"] = round(100 * g["sec"] / _whole)
-        _idx = root / members_conv / "index.json"
-        _sit = []
-        if _idx.exists():
-            for u, v in json.loads(_idx.read_text(encoding="utf-8")).get("sittings", {}).items():
-                if v.get("agenda"):
-                    _sit.append({"title": latin(v["title"]), "url": u, "agenda": [latin(x).removesuffix(" i") for x in v["agenda"]]})
+        _sit = [{"title": latin(v["title"]), "url": u, "agenda": [latin(x).removesuffix(" i") for x in v["agenda"]]}
+                for u, v in src.newest_sittings.items() if v.get("agenda")]
         _daysv = [{"day": d["dan"], "when": _gv.day_name(d["dan"]), "time": _gv.dur(sum(max(0, t["do"] - t["od"]) for t in d["govori"])),
                    "people": len({t["ime"] for t in d["govori"]}),
                    "exchanges": [{"a": x["a"], "b": x["b"], "n": x["n"], "id": f"g{x['od']}"} for x in _gv.exchanges(d["govori"])]}
@@ -774,31 +804,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                    "floor_page": "replike.html#saziv-" + members_conv, "sittings_page": "sednice.html#saziv-" + members_conv,
                    "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "groups": _groups,
                    "sittings": _sit, "days": _daysv, "exchanges": sum(len(d["exchanges"]) for d in _daysv)}
-    env.globals["newer15"] = newer15
-    # The newest convocation's notes are counted like any other's as soon as they are read, before it has a law (19
-    # Nov 2026: the first sitting's notes were out and the counts of the floor stopped at the convocation before).
-    # Its new MPs are not in the roll calls yet, so their names and pages come from the Assembly's list.
-    floor_convs, floor_extra = list(convs), {}
-    if members_conv and members_conv not in dict(convs):
-        _notes_new = load_transcripts(root / members_conv)
-        if _notes_new:
-            from zailiprotiv import debates as _deb
-            _deb.mend(_notes_new, {})
-            debates[members_conv] = _notes_new
-            floor_convs = [(members_conv, root / members_conv)] + floor_convs
-            floor_extra = {_deb.loose(r["key"]): {"name": r["name"], "slug": r["slug"],
-                                                  "photo": photo_of.get(r["key"], "")} for r in member_rows if r["new"]}
-    _years = {c: years(c) for c, _ in convs} | ({members_conv: pages_members.since(members_conv)[:4] + "–"} if members_conv else {})
-    exchanges_of, floor_of = pages_floor.render(photo_of=photo_of, notes_url=settings.get("notes_url", ""), notes_pages=notes_pages, seated=seated, years_of=_years, extra=floor_extra, env=env, common=common, out=out, debates=debates, people=people,
-                                                convs=floor_convs, items_by_conv=items_by_conv,
-                                                rules=poslovnik.load(root / "poslovnik"))
-    _per = getattr(pages_floor.render, "per_mp", {})
-    env.globals["floor_notes_now"] = {sl: next((x for x in xs if x["conv"] == members_conv), None) for sl, xs in _per.items()} if members_conv else {}
-    if newer15 is not None:
-        newer15["notes"] = getattr(pages_floor.render, "top", {}).get(members_conv)
+        newer15["notes"] = floor.top.get(members_conv)
         # What the notes of its sittings count so far, whether or not they hold a reply or a measure (the first
         # sitting's held neither): speeches, points of order and harsh words, with the three who lead in each.
-        _mine = {sl: x for sl, x in env.globals["floor_notes_now"].items() if x}
+        _mine = {sl: x for sl, x in floor_notes_now.items() if x}
         _name = {r["slug"]: r["name"] for r in member_rows}
         def _lead(key):
             val = lambda x: len(x[key]) if isinstance(x[key], list) else x[key]
@@ -812,38 +821,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                 "measures": sum(x["measures"] + x["measures_likely"] for x in _mine.values()),
                 "exchanges": sum(x["exchanges"] for x in _mine.values()) // 2,
                 "lead": {k: _lead(k) for k in ("speeches", "points", "harsh")},
-                "days": sum(len(n.get("days", [])) for n in debates.get(members_conv, {}).values())}
-        # the pages of "Varnice" were made before these counts: their panel's mark gets the counts now
-        _filled = env.from_string('{% from "macros.html" import newer_counted with context %}{{ newer_counted() }}').render(root="")
-        for _f in out.glob("*.html"):
-            _t = _f.read_text(encoding="utf-8")
-            if "<!--np-counted-->" in _t:
-                _f.write_text(_t.replace("<!--np-counted-->", _filled), encoding="utf-8")
-    from zailiprotiv import card, mp_card
-    import os
-    cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
-    cache.mkdir(parents=True, exist_ok=True)
-    def picture(path: Path, *args_) -> None:
-        """A share picture, drawn once for what it shows and copied from the cache after that."""
-        kept = cache / (hashlib.sha256(repr((card.VERSION, args_)).encode()).hexdigest()[:24] + ".png")
-        if not kept.exists():
-            card.draw(kept, *args_)
-        shutil.copy(kept, path)
-    picture(out / "za-ili-protiv.png", "Kako glasaju poslanici Narodne skupštine Srbije", "Zakoni, glasanja, rasprave", None, "")
-    # A name the Assembly used for more than one law (the same law amended again): its pages' titles carry the day.
-    named = Counter(a["law"]["title"] for a in law_pages)
-    env.globals["twice"] = {t for t, n in named.items() if n > 1}
-    for args in law_pages:
-        it = args["it"]
-        if it["final"]:  # the picture shown when the page is shared
-            name = it["aka"][0][:1].upper() + it["aka"][0][1:] if it["aka"] else it["law"]["short"]
-            picture(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
-                    "hitan postupak" if it["urgent"] else "", tuple(hemicycle(it["final"]["counts"])))
-        (out / "zakon" / f"{args['it']['slug']}.html").write_text(
-            env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now,
-                                                floor=floor_of.get(it["key"], []),
-                                                sitting_floor=getattr(pages_floor.render, "by_sitting", {}).get(
-                                                    (it["final"] or {}).get("sitting"))), encoding="utf-8")
+                "days": sum(len(n.get("days", [])) for n in floor_debates.get(members_conv, {}).values())}
     # Key votes, by a rule: in each convocation the laws the public knows by another name (one per name) and the
     # four with the largest share of votes against. Shown on MP pages, group pages and in "Glasaj i ti".
     key_votes: dict[str, list] = {}
@@ -865,8 +843,6 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             spoke_days[k] = Counter(sp["date"] for sp in own if sp["date"])
             for sp in own:
                 speech_url[(k, sp["date"])] = sp["url"]
-    env.globals["photo_for"] = lambda mp: photo_of.get(mp.key, "")
-    rows_mp, live_facts = [], {}
     # For the card: of the MPs with ten votes or more beside a group's majority, how many never voted unlike it.
     unlike = {}
     for m in people.values():
@@ -876,6 +852,75 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         if len(own) >= 10:
             unlike[m.key] = sum(1 for how, l in own if how != l)
     never = (sum(1 for n in unlike.values() if not n), len(unlike))
+
+    # 2. The templates' globals, every one of them, before the first page.
+    env = Environment(loader=FileSystemLoader(HERE / "templates"), autoescape=select_autoescape(["html"]),
+                      trim_blocks=True, lstrip_blocks=True)
+    env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
+    env.filters["qid"] = qid
+    env.filters["grp"] = lambda g: g if any(ch.isalnum() for ch in g or "") else "Bez poslaničke grupe"  # a roll call's empty or "()"
+    env.filters["given_first"] = given_first
+    env.filters["locative"] = lambda name: name.lower()[:-1] + "om" if name.lower().endswith("i") else name.lower()  # Četrnaesti → (u) četrnaestom
+    # A name the Assembly used for more than one law (the same law amended again): its pages' titles carry the day.
+    named = Counter(a["law"]["title"] for a in law_pages)
+    env.globals.update(
+        hemicycle=hemicycle,
+        votes_api=settings.get("votes_api", ""),  # the visitors' votes counter (worker/)
+        notes_all=bool(settings.get("notes_all")),  # every sitting's notes are read (brought from the bucket)
+        files_url=settings.get("files_url", ""),  # where the downloads are (files_site), for the data's description
+        notes_url=settings.get("notes_url", ""),  # where the notes' pages (and their search index) are
+        live_page=settings.get("live_page", ""),  # "Ko sada govori" (live/), linked from the live bar
+        # Whether the ranking by presence has anything to show (pages_presence): the lists of MPs and groups link to it.
+        presence_page=any(n >= 20 for _, n in presence.values()),
+        floor_now=floor_now, floor_now_conv=members_conv or NEWEST_,
+        floor_now_last=max((d["dan"] for d in _days_now), default=""),
+        newer15=newer15, floor_notes_now=floor_notes_now,
+        twice={t for t, n in named.items() if n > 1},
+        photo_for=lambda mp: photo_of.get(mp.key, ""))
+
+    # 3. The pages.
+    if out.exists():
+        shutil.rmtree(out)
+    (out / "zakon").mkdir(parents=True)
+    (out / "poslanik").mkdir()
+    for name in STATIC_FILES:
+        shutil.copy(HERE / "static" / name, out / name)
+    shutil.copytree(HERE / "static" / "fonts", out / "fonts")
+    if settings.get("indexnow_key"):  # IndexNow (Bing and others): the key, at the site's root, proves the site is ours
+        (out / f"{settings['indexnow_key']}.txt").write_text(settings["indexnow_key"], encoding="utf-8")
+    for name, args in laws_lists:
+        # newer15=None: as before the build's phases, when these pages were written before it was known.
+        (out / name).write_text(env.get_template("laws.html").render(**common, **args, newer15=None), encoding="utf-8")
+    # What visitors may vote on and mark (the counter accepts nothing else): every law with a final vote, its quotes.
+    (out / "glasanje.json").write_text(json.dumps({"laws": {
+        it["slug"]: [qid(q["tekst"]) for q in it["quotes"]] for its in items_by_conv.values() for it in its if it.get("final")}},
+        separators=(",", ":")), encoding="utf-8")
+    if src.photos is not None:
+        shutil.copytree(root / "photos", out / "foto", ignore=shutil.ignore_patterns("*.json"))
+    pages_floor.render(floor, env=env, common=common, out=out)
+    from zailiprotiv import card, mp_card
+    import os
+    cache = Path(os.environ.get("ZAILIPROTIV_CACHE", ".cache")) / "og"
+    cache.mkdir(parents=True, exist_ok=True)
+    def picture(path: Path, *args_) -> None:
+        """A share picture, drawn once for what it shows and copied from the cache after that."""
+        kept = cache / (hashlib.sha256(repr((card.VERSION, args_)).encode()).hexdigest()[:24] + ".png")
+        if not kept.exists():
+            card.draw(kept, *args_)
+        shutil.copy(kept, path)
+    picture(out / "za-ili-protiv.png", "Kako glasaju poslanici Narodne skupštine Srbije", "Zakoni, glasanja, rasprave", None, "")
+    for args in law_pages:
+        it = args["it"]
+        if it["final"]:  # the picture shown when the page is shared
+            name = it["aka"][0][:1].upper() + it["aka"][0][1:] if it["aka"] else it["law"]["short"]
+            picture(out / "zakon" / f"{it['slug']}.png", name, day(it["law"].get("passed")), it["final"]["counts"],
+                    "hitan postupak" if it["urgent"] else "", tuple(hemicycle(it["final"]["counts"])))
+        (out / "zakon" / f"{args['it']['slug']}.html").write_text(
+            env.get_template("law.html").render(**common, **args, group_slug=group_slug, group_now=group_now,
+                                                floor=floor_of.get(it["key"], []),
+                                                sitting_floor=floor.by_sitting.get(
+                                                    (it["final"] or {}).get("sitting"))), encoding="utf-8")
+    rows_mp, live_facts = [], {}
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
         for k, how in mp.votes.items():
@@ -953,7 +998,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         if tally:  # the picture shown when the MP's page is shared: the name and the final votes
             picture(out / "poslanik" / f"{mp.slug}.png", mp.name, "Konačna glasanja o zakonima",
                     {k: tally.get(k, 0) for k in VOTES}, (by_conv[0]["groups"] or [""])[0] if by_conv else "")
-        floor_mp = [x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, [])
+        floor_mp = [x for x in floor.per_mp.get(mp.slug, [])
                     if x["speeches"] or x["exchanges"] or x["points"] or x["measures"] or x["measures_likely"] or x["harsh"]]
         apart_mp = [r for r in record if r["differs"]]
         # The day with the most speeches, among the days whose speeches are linked in the notes (the MP's card).
@@ -986,7 +1031,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             (out / "poslanik" / f"{mp.slug}-glasovi.html").write_text(env.get_template("mp_votes.html").render(**page_args),
                                                                      encoding="utf-8")
         # Every speech of the MP's, sitting by sitting, on a page of its own when the MP's page shows only the latest.
-        heard = [x for x in getattr(pages_floor.render, "per_mp", {}).get(mp.slug, []) if x.get("spoken")]
+        heard = [x for x in floor.per_mp.get(mp.slug, []) if x.get("spoken")]
         if sum(len(x["spoken"]) for x in heard) > 6:
             (out / "poslanik" / f"{mp.slug}-govori.html").write_text(env.get_template("mp_speeches.html").render(
                 **common, mp=mp, heard=heard, total=sum(s["n"] for x in heard for s in x["spoken"]), root="../"), encoding="utf-8")
@@ -994,9 +1039,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # {old address: the name as the roll calls write it}) send on to the page, as a bill's page does to its law's.
     import html as html_
     from zailiprotiv.downloads import NOINDEX
-    moved_file = root / "mp_moved.json"
-    moved = {old: people.get(mps.key(name)) for old, name in
-             (jsonfile.load(moved_file, {}).items())}
+    moved = {old: people.get(mps.key(name)) for old, name in src.moved.items()}
     moved |= {old: mp for mp in people.values() for old in mp.was}
     pages_ = {mp.slug for mp in people.values()}
     for old, mp in sorted(moved.items()):
@@ -1042,17 +1085,17 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     pages_presence.render(common=common, convs=convs, env=env, finals=finals, group_rows=group_rows,
         median_presence=median_presence, out=out, presence=presence, rows_mp=rows_mp)
     from zailiprotiv import pages_quiz
-    active = pages_quiz.render(by_key_all=by_key_all, common=common, profiles=profiles, convs=convs, current=current, env=env,
+    quiz = pages_quiz.render(by_key_all=by_key_all, common=common, profiles=profiles, convs=convs, current=current, env=env,
         group_rows=group_rows, items_by_conv=items_by_conv, key_votes=key_votes, line=line, out=out, root=root,
         rows_mp=rows_mp)
+    active = quiz.active
     from zailiprotiv import pages_procedure
-    coming, waiting = pages_procedure.render(common=common, current=current, env=env,
+    coming, waiting, gone = pages_procedure.render(common=common, current=current, env=env,
         items_by_conv=items_by_conv, loaded=loaded, out=out, root=root)
     from zailiprotiv import pages_ballot
     pages_ballot.render(common=common, convs=convs, current=current, env=env, floor_of=floor_of,
-        gone=getattr(pages_procedure.render, "gone", []), items_by_conv=items_by_conv, out=out,
-        quiz_laws=getattr(pages_quiz.render, "laws", []), rows_mp=rows_mp, waiting=waiting,
-        by_hand=getattr(pages_quiz.render, "by_hand", False))
+        gone=gone, items_by_conv=items_by_conv, out=out, quiz_laws=quiz.laws, rows_mp=rows_mp, waiting=waiting,
+        by_hand=quiz.by_hand, quiz_themes=quiz.themes)
     from zailiprotiv import digest
     digest.render(env=env, common=common, out=out, root=root, current=current, items_by_conv=items_by_conv,
                   site_url=f"https://{domain}/" if domain else "")
@@ -1071,8 +1114,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     # The live page ("Ko sada govori") shows the speaker's final votes and the first facts of their page's card, and
     # for a new MP where they come from: a reason to open the MP's page while they speak. The newest convocation only.
-    from zailiprotiv import pages_govornici
-    days_read = pages_govornici.load(root).get(members_conv or "", [])
+    days_read = src.recorded.get(members_conv or "", [])
     (out / pages_mikrofon.SPEAKERS_FILE).write_text(json.dumps(pages_mikrofon.speakers(
         member_rows, live_facts, conv=members_conv or "", spoken_=pages_mikrofon.spoken(days_read), plain=_plain,
         latin=latin, day=env.filters["day"]), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -1100,15 +1142,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         secs = pages_members.by_group(member_rows)
         seats = [{"name": x["name"], "n": len(x["rows"]), "none": bool(x.get("none")),
                   "cls": GROUP_COLOURS.get(x["name"], "g-mn" if x.get("none") else "")} for x in secs if x["rows"]]
-        spoke = env.globals.get("floor_now", {})
         by_slug = {r["slug"]: r for r in member_rows}
-        top = sorted(((sl, x) for sl, x in spoke.items() if sl in by_slug), key=lambda kv: (-kv[1]["sec"], kv[0]))[:5]
-        idx_file = root / members_conv / "index.json"
-        sitting = None
-        if idx_file.exists():
-            listed_ = json.loads(idx_file.read_text(encoding="utf-8")).get("sittings", {})
-            sitting = next(({"title": latin(v["title"]), "url": u, "agenda": [latin(a).rstrip(" i") for a in v["agenda"]]}
-                            for u, v in listed_.items() if v.get("agenda")), None)
+        top = sorted(((sl, x) for sl, x in floor_now.items() if sl in by_slug), key=lambda kv: (-kv[1]["sec"], kv[0]))[:5]
+        sitting = next(({"title": latin(v["title"]), "url": u, "agenda": [latin(a).rstrip(" i") for a in v["agenda"]]}
+                        for u, v in src.newest_sittings.items() if v.get("agenda")), None)
         newer = {"conv": members_conv, "name": ORDINAL_NAME.get(members_conv, members_conv),
                  "since": pages_members.since(members_conv), "page": pages_members.PAGE.format(conv=members_conv),
                  "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "seats": seats,
@@ -1121,7 +1158,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / "index.html").write_text(env.get_template("index.html").render(
         **common, divisive=divisive, newer=newer,
         notices_now=[n for n in pages_mikrofon.notices(root) if n["od"] <= built[:10] <= (n["do"] or "9999")],
-        quiz_laws=getattr(pages_quiz.render, "laws", []), floor_top=getattr(pages_floor.render, "top", {}).get(active),
+        quiz_laws=quiz.laws, floor_top=floor.top.get(active),
         last_sitting=last_sitting, last_sitting_slug=sitting_page(last_sitting[0]["final"]["sitting"], last_sitting[0]["final"]["sitting_title"]) if last_sitting else "",
         stats=stats, coming=coming, of_conv=None if active == current else ORDINAL_NAME.get(active, active), latest=items[:6], contested=most_against(items, 9), root="",
         spotlight=spotlight([it for its in items_by_conv.values() for it in its], items,
@@ -1134,34 +1171,27 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                                                                 .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     # What was corrected on the site, by hand, newest first (data/ispravke.json: [{"date", "text", "url", "where"}]).
-    fixes = jsonfile.load(root / "ispravke.json", [])
-    fixes = sorted(fixes, key=lambda c: c["date"], reverse=True)
+    fixes = sorted(src.fixes, key=lambda c: c["date"], reverse=True)
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root="", corrections=fixes),
                                          encoding="utf-8")
-    from zailiprotiv import pages_govornici  # who spoke how long, per day read from the recording and in sum
-    pages_govornici.render(common=common, env=env, out=out, root=root)
-    from zailiprotiv import pages_mikrofon  # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
-    floor_totals = getattr(pages_floor.render, "totals", {})
+    # who spoke how long, per day read from the recording and in sum
+    _gv.render(common=common, env=env, out=out, root=root, days=src.recorded, notes=floor_debates)
+    # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
+    floor_totals = floor.totals
     pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),
                           next_=pages_mikrofon.upcoming(root, coming, NEWEST_),
                           notices_=pages_mikrofon.notices(root),
-                          sittings_=[x["url"] for x in (env.globals.get("newer15") or {}).get("sittings", [])],
+                          sittings_=[x["url"] for x in (newer15 or {}).get("sittings", [])],
                           fixes_=pages_mikrofon.fixes(root),
-                          agenda_=pages_mikrofon.agenda(root, (env.globals.get("newer15") or {}).get("conv", ""),
-                                                        (env.globals.get("newer15") or {}).get("sittings", [])),
+                          agenda_=pages_mikrofon.agenda(root, (newer15 or {}).get("conv", ""),
+                                                        (newer15 or {}).get("sittings", [])),
                           quiz_=pages_mikrofon.quiz(numbers=numbers, totals=floor_totals, active=active, items=items),
                           facts_=pages_mikrofon.facts(
         stats=stats, numbers=numbers, items=items, most_against=most_against, active=active, totals=floor_totals))
     from zailiprotiv import pages_lists
-    recordings = {}  # the plenary recordings by day (videos.py), every convocation's
-    for p_ in sorted(root.glob("*/videos.json")):
-        try:
-            recordings.update(json.loads(p_.read_text(encoding="utf-8")).get("days") or {})
-        except ValueError:
-            pass
     by_area = pages_lists.render(area_slug=area_slug, common=common, conv_list=conv_list, env=env,
         items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp,
-        recordings=recordings)
+        recordings=src.recordings, floor_by_sitting=floor.by_sitting, quiz_themes=quiz.themes)
     from zailiprotiv import downloads
     downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
     from zailiprotiv import feeds

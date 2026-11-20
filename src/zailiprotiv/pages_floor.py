@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter, defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 
 from zailiprotiv import debates as debates_, mps, notes_site, poslovnik
@@ -329,9 +330,24 @@ def invoked_articles(total: Counter, by_conv: list[dict], rules: dict | None) ->
     return out
 
 
-def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
-           years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None,
-           seated: dict | None = None, extra: dict | None = None, rules: dict | None = None) -> tuple[dict, dict]:
+@dataclass
+class Floor:
+    """What the notes count, for the pages of "Varnice" and for the pages that show a part of it."""
+    by_conv: list[dict]  # a convocation's events, table and counts, newest first, with its pages' names
+    chunks: dict[str, list[tuple[list, str]]]  # a convocation's exchanges, PER_PAGE to a page, with the page's name
+    everyone: dict | None  # every convocation together (more than one read)
+    invoked: list  # the articles of the Rules invoked, for the page of every convocation
+    by_mp: dict  # an MP's exchanges, by the MP's address
+    by_law: dict  # the events of a law's debate, by the law's key
+    by_sitting: dict  # a sitting's row of the table, by its address
+    per_mp: dict  # an MP's own counts in each convocation, by the MP's address
+    top: dict  # the first of each count, by convocation
+    totals: dict  # each convocation's totals
+
+
+def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, photo_of: dict | None = None,
+          years_of: dict | None = None, notes_url: str = "", notes_pages: set | None = None,
+          seated: dict | None = None, extra: dict | None = None, rules: dict | None = None) -> Floor:
     """`extra`: MPs not on any roll call yet (a new convocation's new members), by their loose name key:
     {"name", "slug", "photo"}, so that their speeches lead to their pages too."""
     loose = {debates_.loose(k): k for k in people}
@@ -506,47 +522,59 @@ def render(*, env, common, out: Path, debates: dict, people: dict, convs: list, 
         c["page"] = "replike.html" if i == 0 else f"replike-{c['n']}.html"
         c["page_exchanges"] = "razmene.html" if i == 0 else f"razmene-{c['n']}.html"
         c["page_who"] = "ko-najvise.html" if i == 0 else f"ko-najvise-{c['n']}.html"
+    chunks = {}
     for c in by_conv:
         # The exchanges, word for word, run to megabytes in a convocation with many notes read: PER_PAGE to a page.
-        chunks = [c["exchanges"][k:k + PER_PAGE] for k in range(0, len(c["exchanges"]), PER_PAGE)] or [[]]
+        parts = [c["exchanges"][k:k + PER_PAGE] for k in range(0, len(c["exchanges"]), PER_PAGE)] or [[]]
         names = [c["page_exchanges"] if k == 0 else c["page_exchanges"].replace(".html", f"-s{k + 1}.html")
-                 for k in range(len(chunks))]
-        for chunk, name in zip(chunks, names):
+                 for k in range(len(parts))]
+        for chunk, name in zip(parts, names):
             for e in chunk:
                 e["page"] = name
         for e in c["measures"]:
             e["page"] = c["page"]
+        chunks[c["n"]] = list(zip(parts, names))
+    everyone = together(by_conv) if len(by_conv) > 1 else None  # all of them together: a tab beside the convocations'
+    invoked = invoked_articles(everyone["invoked"], by_conv, rules) if everyone else []
+    # For the home page: the first of each count in each convocation.
+    by_sitting = {x["url"]: {**x, "page": c["page"], "page_exchanges": c["page_exchanges"]}
+                  for c in by_conv for x in c["table"]}
+    pages = {c["n"]: c["page_who"] for c in by_conv}
+    per_mp_ = {slug_: [{**x, "page": pages.get(x["conv"], "")} for x in xs] for slug_, xs in per_mp.items()}
+    top = {c["n"]: {k: (v[0] if v else None) for k, v in c["top"].items()} | {"page": c["page_who"]} for c in by_conv}
+    # Each convocation's totals, as the table of all convocations gives them (for the page shown while "Ko sada
+    # govori" is down): sittings read, speeches, chair's measures, exchanges, harsh words and the commonest of them.
+    totals = {c["n"]: {"name": c["name"], "years": c["years"], "page": c["page"], "page_who": c["page_who"],
+                       "sittings": c["sittings"], "speeches": sum(r["speeches"] for r in c["people"]),
+                       "measures": len(c["measures"]), "exchanges": len(c["exchanges"]),
+                       "harsh": sum(len(r["harsh"]) for r in c["people"]),
+                       "harsh_word": commonest([h["word"] for r in c["people"] for h in r["harsh"]]),
+                       "harsh_top": commonest_k([h["word"] for r in c["people"] for h in r["harsh"]], 3),
+                       "harsh_days": Counter(h["date"] for r in c["people"] for h in r["harsh"]
+                                             if h.get("date")).most_common(3),
+                       "harsh_quote": harsh_quote(c["people"])}
+              for c in by_conv}
+    return Floor(by_conv=by_conv, chunks=chunks, everyone=everyone, invoked=invoked, by_mp=by_mp, by_law=by_law,
+                 by_sitting=by_sitting, per_mp=per_mp_, top=top, totals=totals)
+
+
+def render(floor: Floor, *, env, common, out: Path) -> None:
+    """The pages of "Varnice": per convocation the table with the chair's measures, who leads, the exchanges (a
+    page per PER_PAGE), and every convocation together."""
+    by_conv = floor.by_conv
+    for c in by_conv:
+        names = [name for _, name in floor.chunks[c["n"]]]
         for part, name in (("mere", c["page"]), ("ko", c["page_who"])):
             (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, all_page=ALL if len(by_conv) > 1 else "", root=""),
                                     encoding="utf-8")
-        for k, (chunk, name) in enumerate(zip(chunks, names)):
+        for k, (chunk, name) in enumerate(floor.chunks[c["n"]]):
             (out / name).write_text(env.get_template("floor.html").render(
                 **common, c=c, by_conv=by_conv, part="razmene", shown=chunk, pages=names, page_now=k,
                 all_page=ALL if len(by_conv) > 1 else "", root=""), encoding="utf-8")
-    if len(by_conv) > 1:  # all of them together: a tab beside the convocations'
-        everyone = together(by_conv)
+    if floor.everyone:
         (out / ALL).write_text(env.get_template("floor.html").render(
-            **common, c=everyone, by_conv=by_conv, part="svi", all_page=ALL, root="",
-            invoked=invoked_articles(everyone["invoked"], by_conv, rules)), encoding="utf-8")
-    # For the home page: the first of each count in each convocation.
-    render.by_sitting = {x["url"]: {**x, "page": c["page"], "page_exchanges": c["page_exchanges"]}
-                         for c in by_conv for x in c["table"]}
-    pages = {c["n"]: c["page_who"] for c in by_conv}
-    render.per_mp = {slug_: [{**x, "page": pages.get(x["conv"], "")} for x in xs] for slug_, xs in per_mp.items()}
-    render.top = {c["n"]: {k: (v[0] if v else None) for k, v in c["top"].items()} | {"page": c["page_who"]} for c in by_conv}
-    # Each convocation's totals, as the table of all convocations gives them (for the page shown while "Ko sada
-    # govori" is down): sittings read, speeches, chair's measures, exchanges, harsh words and the commonest of them.
-    render.totals = {c["n"]: {"name": c["name"], "years": c["years"], "page": c["page"], "page_who": c["page_who"],
-                              "sittings": c["sittings"], "speeches": sum(r["speeches"] for r in c["people"]),
-                              "measures": len(c["measures"]), "exchanges": len(c["exchanges"]),
-                              "harsh": sum(len(r["harsh"]) for r in c["people"]),
-                              "harsh_word": commonest([h["word"] for r in c["people"] for h in r["harsh"]]),
-                              "harsh_top": commonest_k([h["word"] for r in c["people"] for h in r["harsh"]], 3),
-                              "harsh_days": Counter(h["date"] for r in c["people"] for h in r["harsh"]
-                                                    if h.get("date")).most_common(3),
-                              "harsh_quote": harsh_quote(c["people"])}
-                     for c in by_conv}
-    return by_mp, by_law
+            **common, c=floor.everyone, by_conv=by_conv, part="svi", all_page=ALL, root="",
+            invoked=floor.invoked), encoding="utf-8")
 
 
 def harsh_quote(people: list[dict]) -> dict | None:

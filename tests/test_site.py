@@ -342,8 +342,8 @@ def test_only_changed_notes_pages_are_sent(tmp_path):
 def test_a_speech_is_linked_among_the_notes_only_when_its_page_is_in_the_bucket():
     import inspect
     from zailiprotiv import pages_floor
-    src = inspect.getsource(pages_floor.render)
-    assert "notes_pages" in inspect.signature(pages_floor.render).parameters and "v[0] in notes_pages" in src
+    src = inspect.getsource(pages_floor.count)
+    assert "notes_pages" in inspect.signature(pages_floor.count).parameters and "v[0] in notes_pages" in src
 
 
 def test_links_to_the_notes_bucket_keep_their_ending(tmp_path):
@@ -679,8 +679,11 @@ def test_the_time_between_turns_and_quick_exchanges_by_rule():
     assert [(x["a"], x["b"], x["n"]) for x in quick] == [("A", "B", 4)]
 
 
-def test_a_new_convocations_notes_are_counted_before_it_has_a_law(tmp_path):
-    from zailiprotiv import members
+def test_a_new_convocations_notes_are_counted_before_it_has_a_law(tmp_path, monkeypatch):
+    from zailiprotiv import members, pages_floor
+    counts = []
+    count = pages_floor.count
+    monkeypatch.setattr(pages_floor, "count", lambda **kw: counts.append(count(**kw)) or counts[-1])
     out, root = tmp_path / "_site", data(tmp_path)
     page = "<table>" + "".join(f"<tr><td>{n}</td><td>{p}</td><td>{pl}</td><td>{y}.</td></tr>" for n, p, pl, y in [
         ("ПЕТРОВИЋ ПЕТАР", "СНС", "Ниш", 1970), ("НОВАК НОВА", "-", "Бор", 1985)]) + "</table>"
@@ -698,8 +701,7 @@ def test_a_new_convocations_notes_are_counted_before_it_has_a_law(tmp_path):
                      "2": {"day": 1, "speaker": "ПЕТАР ПЕТРОВИЋ", "chair": False, "part": "other", "items": [],
                            "text": "Реплика. Не слажем се са претходним говорником."}}}))
     site.build(root, out, "zailiprotiv.rs", cyrillic=True)
-    from zailiprotiv import pages_floor
-    counted = pages_floor.render.per_mp  # the new MP's speech is counted and leads to the MP's own page
+    counted = counts[0].per_mp  # the new MP's speech is counted and leads to the MP's own page
     assert counted["novak-nova"][0]["conv"] == "15" and counted["novak-nova"][0]["speeches"] == 1
     new = (out / "poslanik" / "novak-nova.html").read_text()
     assert "<b>1</b><span>govor u stenogramima</span>" in new and "15. saziv" in new

@@ -125,6 +125,14 @@ decisions unless said otherwise.
 - **Shared helpers** (20 Nov 2026): a JSON file that may be missing is read with `jsonfile.load(path, default)`
   and a store written with `jsonfile.save` (one entry per line); the month names (nominative, genitive, Cyrillic)
   and `day`/`day_of` are in `months.py`; "keep the file when a new reading shrank" is `jsonfile.shrank`.
+- **`site.build` in three steps** (20 Nov 2026): `site.read` reads `data/` into `Sources`, each file once (the
+  notes, the newest convocation's notes, the days read from the recordings, which `pages_govornici.render` and the
+  live page's files take from it); then what the pages share is worked out, the newest convocation's `newer15`
+  whole (what its notes count included, from `pages_floor.count`); then every template global is set at once and
+  the pages are written. Nothing is put into a page after it is written, and no module hands data back through an
+  attribute of its function: `pages_floor.count` returns a `Floor` (`pages_floor.render` writes its pages),
+  `pages_quiz.render` a `Quiz` (its themes reach the areas' pages and "Glasaj i ti" as an argument),
+  `pages_procedure.render` the bills no longer listed, `skupstina.index` the later convocation's titles.
 
 ## Principles
 

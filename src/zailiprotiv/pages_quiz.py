@@ -5,6 +5,7 @@ Moved out of `site.build` (13 Nov 2026); it takes what it needs from the build a
 from __future__ import annotations
 
 from collections import defaultdict
+from dataclasses import dataclass
 
 from zailiprotiv import jsonfile, kinds
 from zailiprotiv.site import (  # noqa: F401
@@ -19,6 +20,14 @@ THEMES = {1: "Bezbednost i međunarodni odnosi", 2: "Prava građana i sudovi", 3
           8: "Rad i zapošljavanje", 9: "Životna sredina", 10: "Zdravstvo, obrazovanje, kultura i mediji",
           11: "Kontrola javnog novca", 12: "Razvoj, nauka i tehnologija", 13: "Saobraćaj", 14: "Praznici i odlikovanja",
           15: "Budžet i finansije", 16: "Državni organi"}
+
+
+@dataclass
+class Quiz:
+    active: str  # the convocation the home page and "Glasaj i ti" show (the current one, or the last with five laws)
+    laws: list  # the quiz's laws, for the home page's band and "Glasaj i ti"
+    by_hand: bool  # the quiz's name on "Glasaj i ti" says how its laws were picked
+    themes: dict  # the quizzes by theme, by the area page's address, for "Glasaj i ti" and the areas' pages
 
 
 def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows, items_by_conv, key_votes, line, out, root, rows_mp):
@@ -93,8 +102,6 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
             votes_api=settings.get("votes_api", ""), quiz=json.dumps(data(laws), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
             root="../"), encoding="utf-8")
         themes.append(theme)
-    render.themes = sorted(themes, key=lambda t: (-t["of"], t["name"]))  # for "Glasaj i ti" and the areas' pages
-    env.globals["quiz_themes"] = {t["area"]: t for t in render.themes}  # by the area page's address
-    render.laws = quiz_laws  # for the home page's band
-    render.by_hand = chosen_by_hand  # the quiz's name on "Glasaj i ti" says how its laws were picked
-    return active
+    themes.sort(key=lambda t: (-t["of"], t["name"]))
+    return Quiz(active=active, laws=quiz_laws, by_hand=chosen_by_hand,
+                themes={t["area"]: t for t in themes})

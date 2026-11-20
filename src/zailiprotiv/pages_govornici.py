@@ -199,13 +199,21 @@ def picture(path: Path, title: str, when: str, people: list[dict], whole: int) -
     im.quantize(32).save(path)
 
 
+def noted_in(stores) -> set[str]:
+    """The days of these sittings' stenographic notes (each a transcripts file's content)."""
+    days: set[str] = set()
+    for store in stores:
+        for d in store.get("days") or []:
+            days.add(d if isinstance(d, str) else d.get("date", "") if isinstance(d, dict) else "")
+    return days
+
+
 def noted_days(root: Path, conv: str) -> set[str]:
     """The days whose stenographic notes are read: their transcripts give way to the notes."""
     days: set[str] = set()
     for f in (root / conv / "transcripts").glob("*.json"):
         try:
-            for d in json.loads(f.read_text(encoding="utf-8")).get("days") or []:
-                days.add(d if isinstance(d, str) else d.get("date", "") if isinstance(d, dict) else "")
+            days |= noted_in([json.loads(f.read_text(encoding="utf-8"))])
         except (OSError, ValueError, AttributeError):
             continue
     return days
@@ -219,16 +227,17 @@ def transcript(root: Path, conv: str, day: str) -> tuple[dict, str]:
     return {k: v.get("tekst", "") for k, v in data.get("govori", {}).items()}, data.get("model", "")
 
 
-def render(*, common: dict, env, out: Path, root: Path) -> list[dict]:
+def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None, notes: dict | None = None) -> list[dict]:
     """govornici/<date>.html per day read, govornici.html for each convocation's sum. Returns the days, newest first,
-    for the pages that link them."""
-    convs = load(root)
+    for the pages that link them. `days`: load(root), when the caller has it; `notes`: the stenographic notes read,
+    by convocation and sitting, for the convocations the caller has them of."""
+    convs = load(root) if days is None else days
     if not convs:
         return []
     (out / DIR).mkdir(exist_ok=True)
     listed = []
     for conv, days in convs.items():
-        noted = noted_days(root, conv)
+        noted = noted_in(notes[conv].values()) if notes is not None and conv in notes else noted_days(root, conv)
         for day in days:
             people, lists, whole = sums(day["govori"])
             turns = day_turns(day)

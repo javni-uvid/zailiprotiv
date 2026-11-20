@@ -72,7 +72,7 @@
   {% endfor %}
   {% else %}<p>Još nema brzih razmena između dva govornika na danima koje smo pročitali.</p>{% endif %}
   <p class="label">Ovo je po redosledu javljanja sa snimka, ne po sadržaju.</p>
-  <!--np-counted-->
+  {{ newer_counted() }}
   {% else %}
   <h2>{{ v.name }} saziv: {{ v.n }} poslanika, {{ v.new }} prvi put</h2>
   <p>Još nema usvojenih zakona ni glasanja. {% if v.days %}Do sada {{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }} sednice pročitano sa snimka.{% endif %}</p>
@@ -82,8 +82,8 @@
 {% endif %}
 {%- endmacro %}
 
-{# What the newest convocation's notes count, for its panel on "Varnice": those pages are made while the notes are
-   being counted, so the panel holds a mark there and site.py puts this in its place once the counts are done. #}
+{# What the newest convocation's notes count, for its panel on "Varnice" (newer15.counted, worked out before any
+   page is written). #}
 {% macro newer_counted() -%}
 {% set v = newer15 %}
 {% if v and v.counted %}{% set k = v.counted %}
