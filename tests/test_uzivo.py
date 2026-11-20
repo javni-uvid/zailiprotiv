@@ -25,6 +25,21 @@ def test_records_are_kept_by_convocation_and_the_recent_ones_taken_again(tmp_pat
     assert uzivo.pull(tmp_path, "https://m.example/", today="2026-11-17", get=get) == []  # nothing changed
 
 
+def test_a_record_that_shrank_never_replaces_the_kept_one(tmp_path):
+    kept = {"dan": "2026-11-19", "pokriveno": [{"od": 0, "do": 50000}],
+            "govori": [{"ime": "A", "od": 1}, {"ime": "B", "od": 2}]}
+    lost = {"dan": "2026-11-19", "pokriveno": [{"od": 40000, "do": 40200}], "govori": []}
+    path = tmp_path / "15" / "uzivo" / "2026-11-19.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(kept), encoding="utf-8")
+    served = {"https://m.example/dani.json": {"dani": ["2026-11-19"]}, "https://m.example/dan/2026-11-19.json": lost}
+    assert uzivo.pull(tmp_path, "https://m.example", today="2026-11-20", get=served.get) == []
+    assert json.loads(path.read_text(encoding="utf-8")) == kept
+    grown = {**kept, "govori": kept["govori"] + [{"ime": "C", "od": 3}]}
+    served["https://m.example/dan/2026-11-19.json"] = grown
+    assert uzivo.pull(tmp_path, "https://m.example", today="2026-11-20", get=served.get) == ["2026-11-19"]
+
+
 def test_a_day_belongs_to_the_convocation_of_its_dates():
     assert uzivo.convocation("2026-11-17") == "15" and uzivo.convocation("2026-11-16") == "14"
     assert uzivo.convocation("2001-01-01") is None

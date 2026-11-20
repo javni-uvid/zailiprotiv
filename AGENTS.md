@@ -600,6 +600,9 @@ records and recordings stays here:
   novembra"): the Assembly's "Trećeg dana rada, 19. novembra …" had been cut at the date and dropped. Items 3 and 4
   of the first sitting were added to `data/15/tacke.json` from the Assembly's page, and the next day of work to
   `data/obavestenja.json`.
+- **A day's record only grows** (20 Nov 2026: a restart of the live service served 19 Nov with no turn and three
+  minutes seen, and the hourly run wrote it over the 28 turns kept). `uzivo.pull` never replaces a kept record with
+  one that has fewer turns or less time seen (`uzivo.smaller`), and says so in the run's log; 19 Nov's was put back.
 
 ## Open questions
 
