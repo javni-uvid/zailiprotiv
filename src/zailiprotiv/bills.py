@@ -14,6 +14,7 @@ import subprocess
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+from zailiprotiv.rollcall import PDFTOTEXT
 from zailiprotiv.translit import latin
 
 # The reader's version: a bill whose memorandum an older reader didn't find is read again by a newer one.
@@ -50,8 +51,8 @@ class Memorandum:
 
 
 def text_of(pdf: Path | str) -> str:
-    return subprocess.run(["pdftotext", "-layout", str(pdf), "-"], check=True, capture_output=True,
-                          text=True).stdout
+    return subprocess.run([PDFTOTEXT, "-layout", str(pdf), "-"], check=True, capture_output=True,
+                          text=True, encoding="utf-8").stdout
 
 
 OCR_PAGES = 200  # a scanned bill longer than this is read to here (a whole labour code ran past 60 pages before its memorandum)

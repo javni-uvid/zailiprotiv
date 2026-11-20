@@ -17,7 +17,9 @@ decisions unless said otherwise.
     (19 Nov 2026: two agents added the same setting to the live service in one evening).
   - **Before pushing,** `git rebase origin/main` and `uv run pytest -q`; then `gh pr create` (the template asks what,
     why, what was checked, and whether the maintainer must decide); `gh pr checks --watch` until **test** passes on
-    it, then `gh pr merge --squash`: one commit on `main`, the branch deleted. A pull request that needs the
+    it, then `gh pr merge --squash`: one commit on `main`, the branch deleted. `sh tools/posalji.sh <body file>` does all of it
+    in this order and waits for **test** to start before it counts as passed (20 Nov 2026: a pull request was
+    merged before its test began); `--ne-spajaj` stops before the merge. A pull request that needs the
     maintainer (a principle, something seen from outside, DNS) says so and is left for them to merge.
   - **The workflows still commit data straight to `main`** (votes, transcripts, notes, summaries…): a branch will
     lag behind in `data/`, which is fine while a task doesn't change `data/`.
@@ -34,7 +36,9 @@ decisions unless said otherwise.
     changing what the service takes from the site (`pages_mikrofon.py`, `mikrofon.js`, the counter's push).
   - Dependabot's monthly pull requests: merge them once their checks pass.
 - **Run `uv run pytest -q` before every push.** The **test** workflow runs it again on every pull request and on
-  `main`; a red run is fixed first.
+  `main`; a red run is fixed first. On Windows the roll-call and bill tests need poppler's `pdftotext` (`winget install
+  oschwartz10612.Poppler`), named by `PDFTOTEXT` where Git's (xpdf's, whose columns fall elsewhere) is first on the PATH,
+  and `PYTHONUTF8=1`; the maintainer's computer has both set for the user (20 Nov 2026), and then every test passes.
 - **Explain why in commit messages**: what changed for the site or the data, and the reason.
 - **Update README.md with every feature**, and this file with every decision.
 - **Talk to the maintainer in Serbian** (Latin script), briefly. Code, comments and docs are in English.

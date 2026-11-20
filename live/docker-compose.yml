@@ -12,6 +12,7 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     restart: unless-stopped
+    cpu_shares: 4096              # ahead of anything else on the computer (a recording read with Whisper) when both want it
 
   tunel:                          # Cloudflare's named tunnel: mikrofon.zailiprotiv.rs → http://uzivo:8000
     image: cloudflare/cloudflared:latest
