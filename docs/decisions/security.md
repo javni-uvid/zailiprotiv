@@ -62,6 +62,27 @@ checks pass; a security fix comes at once.
   logs; the page sends no referrer and is never stored. It opens one device's outage alerts and the transcript.
 - **The live service's container has a writable root filesystem** (see `live/AGENTS.md`).
 
+## The headers every host sends
+
+Set once for the whole zone at Cloudflare (Rules → Transform Rules → Modify Response Header, for every request),
+since GitHub Pages and the buckets can send none of their own; **dns-check** prints what each host sends. The
+workflows' Cloudflare token can't change the zone's rules, on purpose, so the maintainer sets them by hand:
+
+| Header | Value | Against |
+|---|---|---|
+| `Content-Security-Policy` | `frame-ancestors 'none'` | another site showing a page of ours in a frame and passing a click to the vote buttons |
+| `X-Frame-Options` | `DENY` | the same, for browsers that don't read the one above |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | a page's full address going to the sites it links to |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), payment=(), usb=()` | a script (ours or the analytics') asking for what no page needs |
+
+`Strict-Transport-Security` (six months) and `X-Content-Type-Options: nosniff` were there before, from the
+zone's settings.
+
+**A full Content-Security-Policy is not set yet.** The pages carry scripts inline (the player, the live page's),
+so a policy would have to allow every inline script, which guards little, or name each by its hash, which the
+build would have to count. To be done as a task of its own: the hashes (or the scripts moved to files), the
+policy sent as report-only first, then enforced.
+
 ## Reporting a flaw
 
 `SECURITY.md`: privately, through GitHub's "Report a vulnerability".
