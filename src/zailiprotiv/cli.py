@@ -16,7 +16,7 @@ import urllib.parse
 from pathlib import Path
 
 from zailiprotiv import bills, jsonfile, kinds, laws, link, rollcall, skupstina, transcripts
-from zailiprotiv.config import CONVOCATIONS, CURRENT, DELAY
+from zailiprotiv.config import CONVOCATIONS, CURRENT
 
 ROOT = Path("data")
 DATA = ROOT / CURRENT  # the convocation's own folder; `--convocation N` before the command picks another
@@ -38,7 +38,7 @@ def _shrunk(path: Path, what: str, now: int, counts=lambda v: True) -> bool:
 
 def index(args) -> int:
     """The current convocation's sittings and the roll-call PDF of each agenda item, into data/index.json."""
-    found = skupstina.index(convocation=CONVOCATION)
+    found, later = skupstina.index(convocation=CONVOCATION)
     store = {
         "fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "sittings": {
@@ -54,7 +54,7 @@ def index(args) -> int:
         return 0
     jsonfile.save(out, store, "sittings")
     print(f"sittings: {len(found)}, roll calls: {total}")
-    for title in getattr(skupstina.index, "later", []):  # the votes workflow opens an issue on this line
+    for title in later:  # the votes workflow opens an issue on this line
         print(f"::notice::A later convocation's sitting is listed: {title}")
     for s in found:
         print(f"  {len(s.votes):4}  {s.title[:100]}")
@@ -484,12 +484,10 @@ def members_cmd(args) -> int:
     from zailiprotiv import members
     from zailiprotiv.config import NEWEST
     conv = NEWEST
-    import time
     page = skupstina.fetch(members.URL).decode("utf-8", "replace")
     found = members.read(page)
     by_group = {}
     for value, label in members.groups(page):  # each group's MPs: the page filtered by it (members.py)
-        time.sleep(DELAY)
         by_group[label] = members.read(skupstina.fetch(members.group_url(value)).decode("utf-8", "replace"))
         print(f"  {label}: {len(by_group[label])}")
     found = members.with_groups(found, by_group)
@@ -505,7 +503,6 @@ def members_cmd(args) -> int:
         if (m["name"], m["year"]) in had:
             m["occupation"] = had[(m["name"], m["year"])]
         elif m["name"] in links:
-            time.sleep(DELAY)
             try:
                 m["occupation"] = members.occupation(skupstina.fetch(links[m["name"]]).decode("utf-8", "replace"))
                 read_now += 1
@@ -530,7 +527,6 @@ def offices_cmd(args) -> int:
     today = now.date().isoformat()
 
     def get(url):
-        time.sleep(DELAY)
         return skupstina.fetch(url).decode("utf-8", "replace")
 
     news_path = ROOT / "vesti.json"
@@ -609,7 +605,6 @@ def offices_cmd(args) -> int:
 def mp_years_cmd(args) -> int:
     """The year of birth of every MP from the Assembly's archive of convocations → data/mp_years.json, and the check:
     a name whose year differs between convocations is two people (split by hand in data/mp_splits.json)."""
-    import time
     from zailiprotiv import mp_years, mps
     mps.load_aliases(ROOT / "mp_aliases.json")
     pages, todo, listed = {}, [mp_years.START], {}
@@ -620,7 +615,6 @@ def mp_years_cmd(args) -> int:
         rows, links = mp_years.parse(skupstina.fetch(url).decode("utf-8", "replace"))
         pages[url] = rows
         todo += [u for u in links if u not in pages and mp_years.convocation(u)]
-        time.sleep(DELAY)
     for url, rows in pages.items():
         conv = mp_years.convocation(url)
         if conv and rows:
@@ -675,8 +669,7 @@ def poslovnik_cmd(args) -> int:
 
 def photos_cmd(args) -> int:
     """MPs' portraits from the Assembly's list of MPs into data/photos/; only those not there yet are downloaded."""
-    import time
-    from zailiprotiv import config, photos
+    from zailiprotiv import photos
     found = photos.parse(skupstina.fetch(photos.PAGE).decode("utf-8", "replace"))
     folder = ROOT / "photos"
     folder.mkdir(parents=True, exist_ok=True)
@@ -697,7 +690,6 @@ def photos_cmd(args) -> int:
         (folder / name).write_bytes(data)
         index[k] = {"file": name, "source": mp["src"], "page": mp["page"]}
         new += 1
-        time.sleep(config.DELAY)
     index_file.write_text(json.dumps(index, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print(f"portraits listed: {len(found)}, new: {new}, kept: {len(index)}")
     return 0
@@ -800,7 +792,6 @@ def memoranda(args) -> int:
         if not target.exists() or args.again or stale:
             if args.limit and read >= args.limit:
                 continue
-            time.sleep(DELAY)
             try:
                 body = skupstina.fetch(url)
             except skupstina.FetchError as e:
@@ -1051,7 +1042,6 @@ def votes(args) -> int:
                 continue
             if args.limit and read >= args.limit:
                 break
-            time.sleep(DELAY)
             try:
                 body = skupstina.fetch(pdf)
             except skupstina.FetchError as e:
@@ -1149,7 +1139,6 @@ def notes_of_debate(args) -> int:
                 continue
             days, meta = [], []
             for d in sorted(listed, key=lambda d: d["day"]):
-                time.sleep(DELAY)
                 body = skupstina.fetch(d["url"])
                 try:
                     paras = transcripts.paragraphs(body)
@@ -1171,7 +1160,6 @@ def notes_of_debate(args) -> int:
         jsonfile.save(path, record, "speeches")
         read += 1
         print(f"{path}: {len(meta)} days, {len(found['speeches'])} speeches, {len(found['amendments'])} amendments", flush=True)
-        time.sleep(DELAY)
     if args.all:
         print(f"transcripts: {read} sittings read, {failed} not read")
     return 0
