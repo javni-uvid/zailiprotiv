@@ -1,3 +1,5 @@
+import json
+
 from zailiprotiv import skupstina
 from zailiprotiv.translit import latin
 
@@ -120,3 +122,15 @@ def test_a_sitting_belongs_to_its_convocation_by_its_dates_and_title():
     assert skupstina.within("", CONVOCATIONS["14"])  # no date: left to the title
     assert skupstina.later_convocation("Прва седница Народне скупштине Републике Србије у Петнаестом сазиву", "četrnaest")
     assert not skupstina.later_convocation("Друга седница у Четрнаестом сазиву", "četrnaest")
+
+
+def test_the_index_command_keeps_the_sittings_and_names_a_later_convocations(tmp_path, monkeypatch, capsys):
+    from zailiprotiv import cli
+    sitting = skupstina.Sitting(BASE + "/s.43.html", "Прва седница")
+    sitting.votes, sitting.agenda, sitting.starts = [skupstina.Vote("1. Предлог", BASE + "/1.pdf")], ["Предлог"], "2026-07-10"
+    monkeypatch.setattr(skupstina, "index", lambda convocation: ([sitting], ["Прва седница у Петнаестом сазиву"]))
+    out = tmp_path / "index.json"
+    assert cli.main(["index", "--out", str(out)]) == 0
+    kept = json.loads(out.read_text(encoding="utf-8"))["sittings"]
+    assert kept[sitting.url]["votes"] == [["1. Предлог", BASE + "/1.pdf"]] and kept[sitting.url]["starts"] == "2026-07-10"
+    assert "::notice::A later convocation's sitting is listed: Прва седница у Петнаестом сазиву" in capsys.readouterr().out

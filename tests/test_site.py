@@ -1,5 +1,8 @@
 import json
 import re
+import shutil
+
+import pytest
 
 from zailiprotiv import site
 
@@ -51,9 +54,16 @@ def data(tmp_path):
     return d
 
 
-def test_site_builds_every_page(tmp_path):
-    out = tmp_path / "_site"
-    stats = site.build(data(tmp_path), out, "zailiprotiv.rs")
+@pytest.fixture(scope="module")
+def built(tmp_path_factory):
+    """One site built from data(), for the tests that only read it: (the site's folder, the build's stats)."""
+    tmp = tmp_path_factory.mktemp("built")
+    out = tmp / "_site"
+    return out, site.build(data(tmp), out, "zailiprotiv.rs")
+
+
+def test_site_builds_every_page(built):
+    out, stats = built
     assert stats["laws"] == 1 and stats["mps"] == 3 and stats["linked"] == 1
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
     assert "Odbrana i bezbednost" in law and "Ilić-Stošić Biljana" in law
@@ -165,9 +175,9 @@ def test_site_builds_every_convocation(tmp_path):
     assert 'href="poslanici-13.html"' in (out / "poslanici.html").read_text()
 
 
-def test_a_built_site_loads_nothing_from_other_sites(tmp_path):
+def test_a_built_site_loads_nothing_from_other_sites(built, tmp_path):
     out = tmp_path / "_site"
-    site.build(data(tmp_path), out, "zailiprotiv.rs")
+    shutil.copytree(built[0], out)  # pages are added to it below
     assert site.check(out) == []
     (out / "x.html").write_text('<script src="https://cdn.example.com/a.js"></script>')
     (out / "y.css").write_text("@import url('https://fonts.googleapis.com/css2?family=X');")
@@ -175,9 +185,8 @@ def test_a_built_site_loads_nothing_from_other_sites(tmp_path):
     assert [b.split(":")[0] for b in site.check(out)] == ["x.html", "y.css", "z.html"]
 
 
-def test_groups_numbers_quiz_and_share_picture(tmp_path):
-    out = tmp_path / "_site"
-    site.build(data(tmp_path), out, "zailiprotiv.rs")
+def test_groups_numbers_quiz_and_share_picture(built):
+    out = built[0]
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
     assert 'og:image" content="https://zailiprotiv.rs/zakon/zakon-o-oruzju.png"' in law
     assert (out / "zakon" / "zakon-o-oruzju.png").read_bytes()[:4] == b"\x89PNG"
@@ -217,9 +226,8 @@ def test_links_without_html_when_published(tmp_path):
     assert '+ ".html"' not in (out / "site.js").read_text() and '+ ".html"' not in (out / "glasaj.js").read_text()
 
 
-def test_the_week_in_the_assembly_and_its_feed(tmp_path):
-    out = tmp_path / "_site"
-    site.build(data(tmp_path), out, "zailiprotiv.rs")
+def test_the_week_in_the_assembly_and_its_feed(built):
+    out = built[0]
     week = (out / "nedelja" / "2026-28.html").read_text()  # the law in the test data was passed on 10 July 2026
     assert "6–12. jul 2026." in week and "zakon-o-oruzju.html" in week
     feed = (out / "nedelje.xml").read_text()
@@ -438,9 +446,8 @@ def test_a_quotes_name_depends_on_its_words_alone():
     assert len(qid("a")) == 10 and qid("a").isalnum()
 
 
-def test_the_ballots_files_hold_each_law_with_a_letter_per_mp(tmp_path):
-    out = tmp_path / "_site"
-    site.build(data(tmp_path), out, "zailiprotiv.rs")
+def test_the_ballots_files_hold_each_law_with_a_letter_per_mp(built):
+    out = built[0]
     where = json.loads((out / "listic" / "zakoni.json").read_text())
     conv = where["zakon-o-oruzju"]
     held = json.loads((out / "listic" / f"{conv}.json").read_text())
