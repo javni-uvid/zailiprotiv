@@ -420,6 +420,24 @@ STEP_SAME = 900  # the same step heard again within this many seconds is one lin
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
 STEP_IDLE = 600  # work is resumed when nobody was at the rostrum for this long before the chair says so
 _UNDER_WAY = {"Glasanje", "Glasanje zaključeno", "Pretres otvoren", "Pretres zaključen"}
+# Steps said in the same second, in the order the Assembly's work takes them.
+_PHASE = {"Sednica otvorena": 0, "Nastavak rada": 0, "Tačka dnevnog reda": 1, "Pretres otvoren": 2,
+          "Pretres zaključen": 3, "Glasanje": 4, "Glasanje zaključeno": 5}
+
+
+def _in_order(kind: str, debate: str, voting: bool) -> tuple[bool, str, bool]:
+    """Whether a step of an agenda item fits what has been shown of it, and the item's state after it: a debate is
+    opened once and before it is closed (one already under way when the item is taken up, "nastavljamo pretres",
+    counts as opened); a vote is closed only after it was put; a vote put while one is open is that vote."""
+    if kind == "Pretres otvoren":
+        return (debate == "", "open" if debate == "" else debate, voting)
+    if kind == "Pretres zaključen":
+        return (debate != "closed" and not voting, "closed" if debate != "closed" and not voting else debate, voting)
+    if kind == "Glasanje":
+        return (not voting, debate, True)
+    if kind == "Glasanje zaključeno":
+        return (voting, debate, False)
+    return (True, debate, voting)
 
 
 def steps_shown(snap: dict) -> list[dict]:
@@ -435,7 +453,10 @@ def steps_shown(snap: dict) -> list[dict]:
     - the floor given to an MP ("Reč ima: …"): the chair's words name exactly one sitting MP, whole (hronika.floor),
       and no turn read from the picture stands at that time (with captions on, the captions say who speaks);
     - anything else (a measure, "the chair notes that…") waits for the Assembly's own page.
-    The same step within a quarter of an hour is one line."""
+    The same step within a quarter of an hour is one line. And every step must fit the order of the Assembly's work
+    (20 Nov 2026, the maintainer's request; `_in_order`): within an agenda item the debate is opened before it is
+    closed and once, a vote is closed only after one was put, and a second "put to the vote" while one is open is
+    the same vote; steps said in the same second are taken in that order (an item, then its debate, then its vote)."""
     from .hronika import find, item_no
     agenda = (snap.get("dnevni_red") or {}).get("tacke") or []
     items = {int(x["n"]): x["tekst"] for x in agenda}
@@ -449,7 +470,8 @@ def steps_shown(snap: dict) -> list[dict]:
     out: list[dict] = []
     last: dict[str, int] = {}
     item, paused, resumed = 0, False, ""
-    for e in sorted(snap.get("hronika") or [], key=lambda e: e["t"]):
+    debate, voting = "", False  # the current item's debate ("", "open", "closed") and whether a vote is open
+    for e in sorted(snap.get("hronika") or [], key=lambda e: (e["t"], _PHASE.get(e.get("vrsta", ""), 9))):
         if e.get("izvor") == "sajt":
             out.append({"t": e["t"], "izvor": "sajt", "naslov": "", "opis": e.get("tekst", ""), "url": e.get("url", "")})
             continue
@@ -461,8 +483,11 @@ def steps_shown(snap: dict) -> list[dict]:
             last[title] = t
             out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": "", "url": "", "adresa": e.get("url", ""), "rec": True})
             continue
-        if kind not in {k for k, _ in find(e.get("tekst", ""))}:
-            continue  # kept by a rule since mended: today's rules no longer find it in the sentence
+        kinds = [k for k, _ in find(e.get("tekst", ""))]
+        if kind not in kinds:  # kept by a rule since mended: what today's rules find in the sentence, or nothing
+            if not kinds:
+                continue
+            kind = kinds[0]
         title = STEP_TITLES.get(kind, "")
         if kind == "Tačka dnevnog reda":
             n = item_no(e.get("tekst", ""))
@@ -483,11 +508,16 @@ def steps_shown(snap: dict) -> list[dict]:
                 continue
         else:
             continue
-        if t - last.get(title, -10 ** 9) < STEP_SAME:
+        if kind in _UNDER_WAY:  # the order of the Assembly's work decides, not the quarter of an hour
+            ok, debate, voting = _in_order(kind, debate, voting)
+            if not ok:
+                continue
+        elif t - last.get(title, -10 ** 9) < STEP_SAME:
             continue
         last[title] = t
         if kind == "Tačka dnevnog reda":
             item = n
+            debate, voting = ("open" if "pretres" in e.get("tekst", "").lower() else ""), False
         paused = kind in ("Pauza", "Kraj rada") or (paused and kind != "Nastavak rada")
         resumed = "on" if kind == "Nastavak rada" else ("" if paused else resumed)
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": more, "url": ""})

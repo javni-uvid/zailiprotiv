@@ -1152,3 +1152,27 @@ def test_earlier_turns_are_folded():
     assert html.count('<li id="t') == 20 and 'id="t2900"' not in fold and 'id="t1000"' in fold  # the newest stands open
     few = page.fragment({**snap, "danas": turns[:10]}, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
     assert "raniji-govori" not in few
+
+
+def test_the_days_steps_follow_the_order_of_the_assemblys_work():
+    """20 Nov 2026, the maintainer: a vote cannot be closed before it was put, a debate opened after it was closed…"""
+    from uzivo import page as page_
+    now = 1795089600.0
+    ev = lambda at, kind, text: {"t": now + at, "vrsta": kind, "tekst": text, "izvor": "prepis", "url": ""}
+    agenda = {"tacke": [{"n": 1, "tekst": "Prva", "stanje": ""}, {"n": 2, "tekst": "Druga", "stanje": ""}]}
+    steps = [ev(0, "Tačka dnevnog reda", "Prelazimo na prvu tačku dnevnog reda."),
+             ev(60, "Glasanje zaključeno", "Zaključujem glasanje."),                 # nothing was put to the vote: out
+             ev(120, "Pretres otvoren", "Otvaram pretres."),
+             ev(500, "Pretres otvoren", "Otvaram pretres."),                         # opened already: out
+             ev(900, "Glasanje", "Stavljam na glasanje predlog."),
+             ev(900, "Pretres zaključen", "Zaključujem pretres."),                   # the same second: the debate first
+             ev(960, "Glasanje", "Pristupamo glasanju prozivkom."),                  # the same vote, still open: out
+             ev(2000, "Glasanje", "Za je glasalo 136 narodnih poslanika."),          # a result, kept under the old name
+             ev(2100, "Pretres otvoren", "Otvaram pretres."),                        # closed already: out
+             ev(2200, "Tačka dnevnog reda", "Prelazimo na drugu tačku dnevnog reda."),
+             ev(2260, "Pretres otvoren", "Otvaram pretres.")]
+    snap = {"provereno": now + 9000, "sada": None, "dnevni_red": agenda, "danas": [], "hronika": steps}
+    got = [(int(r["t"] - now), r["naslov"]) for r in page_.steps_shown(snap)[::-1]]
+    assert got == [(0, "Prelazak na 1. tačku dnevnog reda"), (120, "Pretres je otvoren"), (900, "Pretres je zaključen"),
+                   (900, "Glasanje"), (2000, "Glasanje je zaključeno"), (2200, "Prelazak na 2. tačku dnevnog reda"),
+                   (2260, "Pretres je otvoren")]

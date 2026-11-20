@@ -28,8 +28,10 @@ log = logging.getLogger("hronika")
 
 # (what the line is called, a pattern over the sentence in Latin lower case). The first that fits names the line.
 RULES: list[tuple[str, re.Pattern]] = [(label, re.compile(rx)) for label, rx in [
-    ("Glasanje zaključeno", r"zaključuj\w* glasanj|zaključeno glasanj"),
-    ("Glasanje", r"stavlj\w* na glasanj|prelaz\w* na glasanj|pristup\w* glasanj|molim\w* da se izjasn|dan za glasanj"),
+    # A vote's result closes it too ("za je glasalo 136", "dobio je 97 glasova"); "pristupamo glasanju" starts one,
+    # "poslanici koji su pristupili glasanju" (in the result) does not (20 Nov 2026, 19 Nov's result read as a start).
+    ("Glasanje zaključeno", r"zaključuj\w* glasanj|zaključeno glasanj|za je glasal|glasalo je \d|dobi\w* (je )?\d+ glas"),
+    ("Glasanje", r"stavlj\w* na glasanj|prelaz\w* na glasanj|pristupamo glasanj|pristupićemo glasanj|molim\w* da se izjasn|dan za glasanj"),
     ("Tačka dnevnog reda", r"prelaz\w* na \w*\s*\w*\s*tačk|prelaz\w* na dnevn\w* red|tačk\w* dnevnog reda"),
     ("Pretres zaključen", r"zaključuj\w* \w*\s*\w*\s*(pretres|rasprav)"),
     ("Pretres otvoren", r"otvaram\w* \w*\s*\w*\s*(pretres|rasprav)"),  # the chair's own verb, not "do otvaranja pretresa"
