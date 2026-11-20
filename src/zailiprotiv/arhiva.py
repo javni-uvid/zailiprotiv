@@ -20,6 +20,8 @@ import io
 import json
 import subprocess
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -31,6 +33,7 @@ SUPPORT, SHARE = 4, 0.6  # a start needs this many named frames inside their spe
 TRIES = 3
 LEAD = 5  # a turn's place in a file: this many seconds before its first frame, as everywhere on the site
 MERGE = 120  # one speaker's turns in a row this close are one
+WORKERS = 6  # frames read at once: each is an ffmpeg waiting on the network
 
 
 def offset(samples: list[tuple[float, str]], turns: list[tuple[str, float, float]]) -> tuple[float, int] | None:
@@ -119,16 +122,39 @@ def reader(names: list[tuple[str, str]]):
     return read
 
 
-def samples(url: str, read, dur: float) -> list[tuple[float, str]]:
-    got: list[tuple[float, str]] = []
+def _named(grab, url: str, read, t: float):
+    """A frame's speaker key (or None), or the exception reading it raised, kept to be raised in its turn."""
+    try:
+        img = grab(url, t)
+        return read(img) if img is not None else None
+    except Exception as exc:  # noqa: BLE001: raised again by samples, where the serial reading would have met it
+        return exc
+
+
+def samples(url: str, read, dur: float, *, grab=None, workers: int = WORKERS) -> list[tuple[float, str]]:
+    """The frames read every STEP seconds and the speakers their captions name, until ENOUGH are named. Frames are
+    read `workers` at a time (each an ffmpeg over the network, waiting mostly), and taken in order exactly as one at a
+    time would take them: the frames of a batch after the one that made ENOUGH are dropped, and an error is raised
+    only when the reading in order reaches its frame."""
+    grab = grab or frame
+    times = []
     t = FIRST
-    while t < min(dur, LAST) and sum(1 for _, k in got if k) < ENOUGH:
-        img = frame(url, t)
-        if img is not None:
-            k = read(img)
-            if k:
-                got.append((t, k))
+    while t < min(dur, LAST):
+        times.append(t)
         t += STEP
+    got: list[tuple[float, str]] = []
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for i in range(0, len(times), workers):
+            batch = times[i:i + workers]
+            for t, k in zip(batch, pool.map(lambda t: _named(grab, url, read, t), batch)):
+                if len(got) >= ENOUGH:
+                    return got
+                if isinstance(k, Exception):
+                    raise k
+                if k:
+                    got.append((t, k))
+            if len(got) >= ENOUGH:
+                break
     return got
 
 
@@ -208,6 +234,7 @@ def run(root: Path, conv: str, *, now: str | None = None, read_frames=None, prob
             k = kept.get(url, {})
             if "od" in k or k.get("pokusaja", 0) >= TRIES:
                 continue
+            began = time.monotonic()
             try:
                 dur = probe(url)
                 if read_frames:
@@ -223,7 +250,8 @@ def run(root: Path, conv: str, *, now: str | None = None, read_frames=None, prob
             except Exception as exc:  # a file not there yet, a network hiccup, no OCR: tried again later
                 print(f"::notice::arhiva {url}: {exc}")
                 found, got, dur = None, [], 0
-            print(f"arhiva {url}: {len(got)} frames named, start {found[0] if found else None}")
+            print(f"arhiva {url}: {len(got)} frames named, start {found[0] if found else None}, "
+                  f"{time.monotonic() - began:.0f} s")
             if found:
                 kept[url] = {"od": int(round(found[0])), "trajanje": int(dur), "kadrova": len(got), "slaze_se": found[1]}
             else:

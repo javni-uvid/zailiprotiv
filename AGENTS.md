@@ -86,6 +86,17 @@ decisions unless said otherwise.
   `ANTHROPIC_API_KEY`, if set, is used instead.
 - **One pending run per workflow** (concurrency groups). A failed **votes**, **transcripts** or **summaries** run
   opens (or comments on) one issue.
+- **Two slow steps made faster, their output unchanged** (20 Nov 2026, measured on the runs of 19-20 Nov). In
+  **votes**, `arhiva` spent some 14 minutes on a file whose captions name nobody (120 frames, one ffmpeg at a time):
+  `arhiva.samples` reads six frames at once and takes them in order as one at a time would (the same stop at
+  `ENOUGH`, an error raised only where that reading would meet it; a test compares the two). Caching the apt
+  packages was left out: they take 10-40 s, once 13 minutes (a slow mirror). In **notes**, of some 900 s Pagefind
+  took 470 and wrote a new index from the same pages each time (its files' names change), so every run sent and
+  removed some 630 files (the removals one at a time, 4 minutes; now as many at once as are sent) and emptied the
+  bucket's cache. The index is kept with `actions/cache` under a key that is the SHA-256 of every Latin page it is
+  made of, with Pagefind's version and pattern: the same pages take the index made of them, any page changed makes
+  a new one, so a stale index can't be published. The pages are still built whole (some 65 s; `notes-site` reads
+  each convocation's roll calls once), so they stay exactly what a full build makes.
 
 ### The code
 
