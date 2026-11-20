@@ -1,0 +1,38 @@
+# Brings the organization's shared rules (javni-uvid/osnova, its shared/ folder) into osnova/ here, so that every
+# agent and every workflow has them in the repository it works in. Daily, and by hand right after a change there.
+# It commits straight to main, as the data workflows do: the files are documents, written and merged in osnova
+# (a change of the principles by the maintainer only), and nothing here is built from them.
+name: osnova
+
+on:
+  schedule:
+    - cron: "41 3 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: osnova
+  cancel-in-progress: false
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write  # commits osnova/
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Copy
+        run: |
+          git clone -q --depth 1 https://github.com/javni-uvid/osnova.git "$RUNNER_TEMP/osnova"
+          at=$(git -C "$RUNNER_TEMP/osnova" rev-parse --short HEAD)
+          rm -rf osnova
+          cp -r "$RUNNER_TEMP/osnova/shared" osnova
+          git add -A osnova
+          if git diff --cached --quiet; then echo "osnova: nothing new (at $at)"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "osnova: the shared rules as of javni-uvid/osnova@$at"
+          git push -q
+          git show --stat --oneline HEAD | tail -8

@@ -9,47 +9,27 @@ it. Dates are the maintainer's decisions unless said otherwise.
 
 ## How to work here
 
-- **A branch and a pull request per task** (20 Nov 2026, the maintainer's decision, as several agents now work at
-  once; until then everything was committed straight to `main`):
-  - **Each agent in an Orca worktree** of its own (`orca worktree create --name <task> --no-parent`, from the main
-    clone): Orca makes the branch, `<the maintainer's GitHub login>/<task>`, from `origin/main`, and the folder under
-    `~/orca/workspaces/zailiprotiv/`. Short-lived: hours, a day at most. Orca runs `uv sync` in a new worktree itself
-    (`orca.yaml`, 20 Nov 2026); `tzdata`, which Windows lacks, is a dependency there.
-  - **Before starting, `gh pr list`:** when an open pull request touches the same files, build on it or wait
-    (19 Nov 2026: two agents added the same setting to the live service in one evening).
-  - **Before pushing,** `git rebase origin/main` and `uv run pytest -q`; then `gh pr create` (the template asks what,
-    why, what was checked, and whether the maintainer must decide); `gh pr checks --watch` until **test** passes on
-    it, then `gh pr merge --squash`: one commit on `main`, the branch deleted. `sh tools/posalji.sh <body file>` does all of it
-    in this order and waits for **test** to start before it counts as passed (20 Nov 2026: a pull request was
-    merged before its test began); `--ne-spajaj` stops before the merge. A pull request that needs the
-    maintainer (a principle, something seen from outside, DNS) says so and is left for them to merge.
-  - **A merged task's worktree is removed** (20 Nov 2026, the maintainer's decision: 23 merged ones were left,
-    each a full copy with `data/` and a `.venv`). `tools/pocisti.sh`, run by `posalji.sh` after its merge, removes
-    every worktree with no changes whose pull request was merged on exactly its commit over ten minutes ago
-    (`orca worktree rm --delete-branch`); an agent's own goes in the next agent's run, as Orca would stop its
-    terminal. A pull request merged by hand on GitHub: `sh tools/pocisti.sh` (`--proba` only lists).
-  - **The workflows still commit data straight to `main`** (votes, transcripts, notes, summaries…): a branch will
-    lag behind in `data/`, which is fine while a task doesn't change `data/`.
-  - **`main` is guarded on our side:** GitHub's rulesets can't exempt the workflows' own token (GitHub Actions can't
-    be a ruleset's bypass actor), so a ruleset requiring pull requests would stop the hourly data runs. The
-    repository's ruleset only forbids deleting `main` and force-pushes; `tools/hooks/pre-push` refuses a push to
-    `main` from a clone set with `git config core.hooksPath tools/hooks` (its worktrees share it). For the same
-    reason GitHub's auto-merge can't be used (it needs a required check, which would stop the workflows' pushes too),
-    so the agent waits for **test** and merges. Squash is the only merge; merged branches are deleted.
-  - **A decision goes at the end of the section it belongs to** in its part's file (the map below), rather than
-    inside another's paragraph.
-  - **`live/AGENTS.md` holds the live service's decisions** (20 Nov 2026): a decision about `live/` or the live
-    page goes at the end of that file, not here. Agents get it when they work in `live/`; read it too before
-    changing what the service takes from the site (`pages_mikrofon.py`, `mikrofon.js`, the counter's push).
-  - Dependabot's monthly pull requests: merge them once their checks pass.
-- **Run `uv run pytest -q` before every push.** The **test** workflow runs it again on every pull request and on
+- **The rules every javni-uvid project shares are in `osnova/`: read `osnova/work.md` before anything else**
+  (20 Nov 2026, the maintainer's decision; until then each project kept a hand-made copy of them here). A branch
+  and a pull request per task in an Orca worktree, `gh pr list` before starting, `sh tools/posalji.sh <body file>`
+  to ship, the decision written down in the same commit, why in the commit message, Serbian with the maintainer.
+  `osnova/security.md` holds the guards and `osnova/principles.md` the promises every project makes. The folder is
+  a copy the **osnova** workflow brings from `javni-uvid/osnova`: a rule that should hold for every project is
+  changed there, never in `osnova/` here. What follows is only this project's.
+- **A worktree** is under `~/orca/workspaces/zailiprotiv/`; Orca runs `uv sync` in a new one itself (`orca.yaml`);
+  `tzdata`, which Windows lacks, is a dependency there. The workflows that commit data straight to `main` are
+  votes, transcripts, notes, summaries and the like.
+- **A decision goes at the end of the section it belongs to** in its part's file (the map below), rather than
+  inside another's paragraph. A rule of work or a principle of this project, here.
+- **`live/AGENTS.md` holds the live service's decisions** (20 Nov 2026): a decision about `live/` or the live
+  page goes at the end of that file, not here. Agents get it when they work in `live/`; read it too before
+  changing what the service takes from the site (`pages_mikrofon.py`, `mikrofon.js`, the counter's push).
+- **The tests are `uv run pytest -q`.** The **test** workflow runs them again on every pull request and on
   `main`; a red run is fixed first. On Windows the roll-call and bill tests need poppler's `pdftotext` (`winget install
   oschwartz10612.Poppler`), named by `PDFTOTEXT` where Git's (xpdf's, whose columns fall elsewhere) is first on the PATH,
   and `PYTHONUTF8=1`; the maintainer's computer has both set for the user (20 Nov 2026), and then every test passes. An agent's shell may lack them although they are set: `posalji.sh` reads just these two from the user's Windows
   settings when unset (20 Nov 2026, PR #79 stopped on 44 failures for it); for `uv run pytest -q` alone, export them.
-- **Explain why in commit messages**: what changed for the site or the data, and the reason.
 - **Update README.md with every feature**, and this file with every decision.
-- **Talk to the maintainer in Serbian** (Latin script), briefly. Code, comments and docs are in English.
 - **A development environment may not reach parlament.gov.rs, the subdomains or the buckets; GitHub's runners can.**
   Read the outside through workflows: **peek** (a page's text), **health**, **visits** (Cloudflare's counts, how long
   the live page is in view (`tools/watching.py`: its part asked every 5 s while in view, summed per hour), what
@@ -61,10 +41,8 @@ it. Dates are the maintainer's decisions unless said otherwise.
 - **Pages have a size limit and a guard.** `zailiprotiv site` fails when a page is over 1 MB or loads anything from
   another site (`publish.check`); **pages** then publishes nothing and the last site stays up. A list that can grow
   without bound (an MP's speeches, exchanges) gets a page of its own rather than growing the MP's page.
-- **Workflows, safely** (17 Nov 2026): every action pinned to a commit with its version beside it (Dependabot moves
-  them); inputs and context reach scripts through `env`, never pasted into `run:`; a checkout keeps no token unless
-  the job pushes; each workflow (or job) asks for the least permissions. **security** checks all of this (zizmor,
-  `.github/zizmor.yml` lists the accepted findings), the Python packages (pip-audit) and the code (CodeQL).
+- **Workflows, safely:** the rules are in `osnova/security.md`; what this project guards besides, and what it
+  accepts as it is, in `docs/decisions/security.md`. `.github/zizmor.yml` lists the accepted findings.
 - **Links have no ".html"** (13 Nov 2026): files keep their names, GitHub Pages serves `page.html` at `/page`, and
   `publish.clean_urls` rewrites links after the build. A page named like a folder (`podaci.html`) keeps its ending.
   `zailiprotiv site --html-links` keeps the endings, to open the built pages from disk.

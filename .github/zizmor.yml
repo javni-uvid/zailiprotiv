@@ -6,6 +6,7 @@ rules:
       - fixtures.yml
       - mp-years.yml
       - notes.yml
+      - osnova.yml
       - sample.yml
       - summaries.yml
       - transcripts.yml

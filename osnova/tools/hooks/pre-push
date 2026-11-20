@@ -1,0 +1,14 @@
+#!/bin/sh
+# Changes reach main through a pull request (osnova: work.md): this refuses a push to main from a
+# checkout that uses these hooks (`git config core.hooksPath tools/hooks`, shared by all of a clone's worktrees).
+# The workflows' own pushes of data run on GitHub's runners, without it. A fix that can't wait:
+#   PUSH_MAIN=1 git push origin main
+[ "$PUSH_MAIN" = "1" ] && exit 0
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo "pre-push: main se menja samo kroz PR (osnova: work.md). Grana, pa: gh pr create; gh pr checks --watch; gh pr merge --squash." >&2
+    echo "pre-push: hitna popravka: PUSH_MAIN=1 git push origin main" >&2
+    exit 1
+  fi
+done
+exit 0
