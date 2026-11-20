@@ -1076,3 +1076,9 @@ def test_a_restart_takes_up_the_speaker_still_on(tmp_path, monkeypatch):
     assert Tracker(str(path), tz="Europe/Belgrade").status == SPEAKING
     monkeypatch.setattr(config, "RESUME_SECONDS", 5)  # a restart long after the last frame: nothing taken up
     assert Tracker(str(path), tz="Europe/Belgrade").status == NO_STREAM
+
+
+def test_the_page_names_the_commit_it_was_built_from():
+    snap = {"stanje": "nema_prenosa", "provereno": 0, "sada": None, "danas": [], "dan": "2026-11-20"}
+    assert 'Verzija 31ce3a4</span></footer>' in page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, version="31ce3a4")
+    assert 'class="ver"' not in page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)

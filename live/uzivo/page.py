@@ -122,6 +122,7 @@ TEXT = {
     "nt_title": "Sednica je počela",
     "nt_body": "Prenos uživo i ko sada govori u Skupštini.",
     "app_name": "Mikrofon",
+    "version": "Verzija",
     "sd_text": "Ko je koliko govorio u Skupštini:",
     "og_now": "Sada govori: %1",
     "og_since": "za govornicom od %1",
@@ -1586,7 +1587,7 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
 
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
-         live: str = "", analytics: str = "", api: str = "", push_key: str = "") -> str:
+         live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "") -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -1639,7 +1640,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p>{t("how")}</p>
 <p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
 </body>

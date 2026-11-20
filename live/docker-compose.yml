@@ -26,3 +26,4 @@ volumes:
     name: mikrofon-podaci
   whisper:
     name: mikrofon-whisper
+    external: true                # made once by mikrofon.ps1, shared with the tests

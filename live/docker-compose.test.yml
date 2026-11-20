@@ -1,15 +1,21 @@
-# The test: the working tree built as mikrofon:test, at http://127.0.0.1:8001/, beside the live service and apart
-# from it. It reads the same broadcast but keeps its own data, counts no visits and has no tunnel.
-name: mikrofon-test
+# The test: the working tree built and run beside the live service and apart from it. It reads the same broadcast but
+# keeps its own data, counts no visits, sends no notifications and has no tunnel. mikrofon.ps1 sets the names: from the
+# main clone on main, mikrofon:test at http://127.0.0.1:8001/; from a worktree, mikrofon:test-<branch> on a port of
+# its own, so that agents' tests never replace each other's, nor the one `uzivo` puts live (20 Nov 2026).
+name: ${TEST_PROJEKAT:-mikrofon-test}
 services:
   uzivo:
-    image: mikrofon:test
+    image: ${TEST_IMAGE:-mikrofon:test}
     build:
       context: ..
       dockerfile: live/Dockerfile
+      args:
+        VERZIJA: ${VERZIJA:-}
+        GRANA: ${GRANA:-}
+        CISTO: ${CISTO:-}
     env_file: .env
     environment:
-      PUBLIC_URL: http://127.0.0.1:8001/
+      PUBLIC_URL: http://127.0.0.1:${TEST_PORT:-8001}/
       ANALYTICS_TOKEN: ""         # the test's visits are not the site's
       PUSH_TOKEN: ""              # the test never sends the notifications
       WHISPER_THREADS: "4"        # leaves the live service its cores
@@ -17,10 +23,11 @@ services:
       - podaci:/data
       - whisper:/data/hf          # the live service's model, not fetched again
     ports:
-      - "127.0.0.1:8001:8000"
+      - "127.0.0.1:${TEST_PORT:-8001}:8000"
 
 volumes:
   podaci:
-    name: mikrofon-test-podaci
+    name: ${TEST_PODACI:-mikrofon-test-podaci}
   whisper:
     name: mikrofon-whisper
+    external: true                # made once by mikrofon.ps1, shared by the live service and every test

@@ -86,26 +86,33 @@ once a day; it needs `PUSH_TOKEN` in `.env` (the test has it empty and never sen
 ## Running it
 
 Two images, **test first, then live** (19 Nov 2026, the maintainer's decision): a change is built and tried
-locally, and only the image the test ran goes live, never one built afresh for it.
+locally, and only the image the test ran goes live, never one built afresh for it. Since 20 Nov 2026 only an image
+of a clean `origin/main` goes live, and every image says which commit it is.
 
 ```powershell
 cd live
 cp .env.example .env
 Set-Content -Encoding ascii .tunnel.env "TUNNEL_TOKEN=<token from Cloudflare>"   # never committed
-.\mikrofon.ps1 test      # the working tree as mikrofon:test, at http://127.0.0.1:8001/ (-Novo: the newest yt-dlp)
-.\mikrofon.ps1 uzivo     # once it looks right: that image becomes mikrofon:uzivo, live, and the test stops
+.\mikrofon.ps1 test      # this tree's test (-Novo: the newest yt-dlp); waits until it answers, says where
+.\mikrofon.ps1 uzivo     # mikrofon:test goes live, if built from a clean origin/main (-Ipak: anyway)
 .\mikrofon.ps1 nazad     # the image that was live before, live again
-.\mikrofon.ps1 stanje    # what runs
-docker compose logs -f uzivo                              # the live service
-docker compose -f docker-compose.test.yml logs -f uzivo   # the test
+.\mikrofon.ps1 stanje    # each image's commit and branch, the containers and their health, what runs live
+.\mikrofon.ps1 logovi    # the live service's log (-Test: this tree's test)
+.\mikrofon.ps1 ocisti    # remove images nothing uses
 ```
 
 - **Live** (`docker-compose.yml`, project `mikrofon`): `mikrofon:uzivo` on port 8000 and the tunnel; it never
-  builds. Its data are in the volume `mikrofon-podaci`.
-- **Test** (`docker-compose.test.yml`, project `mikrofon-test`): built from the working tree, port 8001, no tunnel,
-  no visits counted, four Whisper threads, its own volume `mikrofon-test-podaci`. It reads the same broadcast as
-  the live service, so both can run side by side during a sitting.
-- Both keep Whisper's model in `mikrofon-whisper`, fetched once.
+  builds. Its data are in the volume `mikrofon-podaci`. `uzivo` runs only from the main clone on `main`, and only
+  an image whose labels say it was built from `origin/main` as it is now, with nothing uncommitted; it waits until
+  the new one answers with that commit, and if it doesn't within 90 s, puts the one before back.
+- **Tests** (`docker-compose.test.yml`): from the main clone on `main`, `mikrofon:test` at port 8001 (project
+  `mikrofon-test`, volume `mikrofon-test-podaci`); from a worktree, `mikrofon:test-<branch>` on a port of its own
+  (8002-8091, from the branch's name) with its own project and volume, so that agents' tests never replace each
+  other's or the one `uzivo` takes. A worktree's test takes `.env` from the main clone. No tunnel, no visits counted,
+  no notifications sent, four Whisper threads. They read the same broadcast as the live service.
+- Every image carries its commit, branch and whether the tree was clean (labels `zailiprotiv.*`); `/stanje.json`
+  gives `verzija` and the page's footer shows it. Docker checks each container answers (`docker ps`: healthy).
+- All keep Whisper's model in the volume `mikrofon-whisper` (made by the script, `external` in the compose files).
 
 In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostname `mikrofon.zailiprotiv.rs` points to
 `http://uzivo:8000`. A log line per frame: `name matched | name line | list line -> state`.

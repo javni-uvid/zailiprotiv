@@ -15,5 +15,15 @@ COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.cs
 COPY data/settings.json ./uzivo/static/settings.json
 # Whisper's model is fetched once and kept with the data (prepis.py)
 ENV HF_HOME=/data/hf
+# What was built (mikrofon.ps1 passes them): the commit, its branch, and whether the tree had changes not committed.
+# `uzivo` puts live only an image of a clean origin/main; the page and /stanje.json show the commit (config.VERSION).
+ARG VERZIJA=""
+ARG GRANA=""
+ARG CISTO=""
+LABEL zailiprotiv.verzija=$VERZIJA zailiprotiv.grana=$GRANA zailiprotiv.cisto=$CISTO
+ENV VERZIJA=$VERZIJA
+# `docker ps` says whether it answers (mikrofon.ps1 waits for the page itself)
+HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/stanje.json', timeout=4)"
 EXPOSE 8000
 CMD ["uvicorn", "uzivo.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

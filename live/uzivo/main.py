@@ -44,7 +44,7 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 def _page(cyr: bool) -> HTMLResponse:
     return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
                              live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
-                             push_key=config.PUSH_KEY),
+                             push_key=config.PUSH_KEY, version=config.VERSION),
                         headers=NO_STORE)
 
 
@@ -143,7 +143,7 @@ def cyrillic_transcript(k: str = "") -> HTMLResponse:
 
 @app.get("/stanje.json")
 def state() -> JSONResponse:
-    return JSONResponse(tracker.snapshot(), headers=NO_STORE)
+    return JSONResponse({**tracker.snapshot(), "verzija": config.VERSION}, headers=NO_STORE)
 
 
 @app.get("/stanje.js")
