@@ -205,6 +205,9 @@
     var more = item.querySelector(".q-more");
     if (more) more.addEventListener("toggle", stay);
   });
+  // Reading is often scrolling: a swipe or the wheel anywhere on the page stops the clock too, not only a touch of
+  // the result itself (WCAG 2.2.1: a time limit the reader can turn off).
+  ["wheel", "touchmove"].forEach(function (ev) { document.addEventListener(ev, stay, { passive: true }); });
   marks.forEach(function (m) {
     m.addEventListener("click", function () { stay(); send(); go(m.dataset.go === "kraj" ? "kraj" : +m.dataset.go); });
   });
