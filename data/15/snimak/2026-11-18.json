@@ -1,7 +1,7 @@
 {
  "dan": "2026-11-18",
  "izvor": "govor",
- "napomena": "Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa zvukom snimka dana u arhivi videonet.co.rs: snimak je automatski zapisan reč po reč (Whisper), a svaki govor iz beleški nađen u tom zapisu po nizovima od četiri reči koji se jednom javljaju i u beleškama i u zapisu, istim redom; govor traje od prve do poslednje svoje reči. Isto pravilo za svakog govornika; govor za koji nisu nađena bar dva takva niza nema mesto. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi, 'snimak' mesto u njemu u sekundama, pet sekundi pre prve reči. ",
+ "napomena": "Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa zvukom snimka dana u arhivi videonet.co.rs: snimak je automatski zapisan reč po reč (Whisper), a svaki govor iz beleški nađen u tom zapisu po nizovima od četiri reči koji se jednom javljaju i u beleškama i u zapisu, istim redom; govor traje od prve do poslednje svoje reči. Isto pravilo za svakog govornika; govor za koji nisu nađena bar dva takva niza nema mesto, osim sasvim kratkog (manje od osam reči, kao „Ne želim.“) između dva govora koji ga imaju: on stoji odmah posle prethodnog. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi, 'snimak' mesto u njemu u sekundama, pet sekundi pre prve reči. ",
  "pokriveno": [
   {
    "od": 1794992902,
