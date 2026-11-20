@@ -292,6 +292,11 @@ The project's promises to its readers. Never change them without the maintainer.
   360 px in Latin and from 11 to 13 px in Cyrillic (`4.3vw` and `3.55vw`, measured to fit from 320 px up: a new
   word in the menu means measuring again). The numbered links to speeches, the turns on the floor, the parts of a
   recording, the new convocation's links and the foot's links are 44 px high there (WCAG 2.5.5).
+- **The search field never ends in nothing** (20 Nov 2026): the field on the home page and on "Poslanici" finds
+  names and titles only, the search page the whole text, and of a week's visits almost none opened the search
+  page. So the field's list always ends with "Traži u celom tekstu sajta" (the words go to `pretraga.html?q=`),
+  Enter with nothing chosen does the same, and "nothing found" says what was looked through. The field is a
+  combobox (arrows, Enter, `aria-activedescendant`). The two searches stay two until visits say otherwise.
 
 ### Visitors' votes ("Glasaj i ti")
 

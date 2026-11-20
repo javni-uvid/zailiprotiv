@@ -250,13 +250,28 @@ document.addEventListener("DOMContentLoaded", function () {
     return parseInt(p[2], 10) + ". " + MONTHS[parseInt(p[1], 10) - 1] + " " + p[0] + ".";
   }
 
-  // Search: laws by short and official name, MPs by name.
+  // Search: laws by short and official name, MPs by name. The field is a combobox: the arrows move through what is
+  // offered and Enter opens it. The last row, and Enter with nothing chosen, take the words to the search of the
+  // whole text (pretraga.html), so a name or a title not found here is never the end of the way.
   function search(input, list, kinds) {
     if (!input || !list) return;
+    var at = -1;
+    input.setAttribute("role", "combobox"); input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-controls", list.id); input.setAttribute("aria-expanded", "false");
+    list.setAttribute("role", "listbox"); list.setAttribute("aria-label", "Predlozi");
+    function whole() { return root + "pretraga" + ".html" + "?q=" + encodeURIComponent(input.value.trim()); }
+    function rows() { return list.querySelectorAll("a"); }
+    function mark(i) {
+      var all = rows();
+      at = i;
+      Array.prototype.forEach.call(all, function (a, k) { a.classList.toggle("on", k === at); a.setAttribute("aria-selected", k === at ? "true" : "false"); });
+      if (at >= 0) { input.setAttribute("aria-activedescendant", all[at].id); if (all[at].scrollIntoView) all[at].scrollIntoView({ block: "nearest" }); }
+      else input.removeAttribute("aria-activedescendant");
+    }
     function show() {
       var q = norm(input.value.trim());
-      list.textContent = "";
-      if (q.length < 2 || !data) { list.hidden = true; return; }
+      list.textContent = ""; at = -1; input.removeAttribute("aria-activedescendant");
+      if (q.length < 2 || !data) { list.hidden = true; input.setAttribute("aria-expanded", "false"); return; }
       var words = q.split(/\s+/).map(stem), hits = [];
       function has(text) { var t = norm(text); return words.every(function (w) { return t.indexOf(w) >= 0; }); }
       if (kinds.indexOf("mp") >= 0) data.mps.forEach(function (m) {
@@ -266,18 +281,31 @@ document.addEventListener("DOMContentLoaded", function () {
       if (kinds.indexOf("law") >= 0) data.laws.forEach(function (l) {
         if (hits.length < n + 8 && has(l.t + " " + l.f)) hits.push({ href: "zakon/" + l.s + ".html", title: l.t, sub: day(l.d) + (l.za != null ? " · " + l.za + " za, " + l.pr + " protiv" : "") });
       });
-      if (!hits.length) hits.push({ title: "Nema rezultata", sub: "" });
-      hits.forEach(function (h) {
-        var li = el("li"), a = el(h.href ? "a" : "span", null, h.title);
-        if (h.href) a.href = root + h.href; else a.style.cssText = "display:block;padding:.6rem .9rem";
+      if (!hits.length) hits.push({ title: kinds.indexOf("law") >= 0 ? "Nema zakona ni poslanika sa tim rečima u nazivu ili imenu" : "Nema poslanika sa tim imenom", sub: "" });
+      hits.push({ all: true, title: "Traži u celom tekstu sajta", sub: "sažeci zakona, rasprave i stenografske beleške, govor po govor" });
+      hits.forEach(function (h, k) {
+        var li = el("li"), a = el(h.href || h.all ? "a" : "span", h.all ? "hits-all" : null, h.title);
+        li.setAttribute("role", "presentation");
+        if (h.all) a.href = whole(); else if (h.href) a.href = root + h.href; else a.className = "hits-none";
+        if (a.href) { a.id = list.id + "-" + k; a.setAttribute("role", "option"); a.setAttribute("aria-selected", "false"); }
         if (h.sub) a.appendChild(el("small", null, h.sub));
         li.appendChild(a); list.appendChild(li);
       });
-      list.hidden = false;
+      list.hidden = false; input.setAttribute("aria-expanded", "true");
     }
     input.addEventListener("focus", function () { load().then(show); });
     input.addEventListener("input", function () { load().then(show); });
-    input.addEventListener("keydown", function (e) { if (e.key === "Escape") { input.value = ""; show(); } });
+    input.addEventListener("keydown", function (e) {
+      var all = rows();
+      if (e.key === "Escape") { input.value = ""; show(); }
+      else if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !list.hidden && all.length) {
+        e.preventDefault();
+        mark(e.key === "ArrowDown" ? (at + 1 >= all.length ? -1 : at + 1) : (at < 0 ? all.length - 1 : at - 1));
+      } else if (e.key === "Enter" && input.value.trim().length >= 2) {
+        e.preventDefault();
+        location.href = at >= 0 && all[at] ? all[at].href : whole();
+      }
+    });
   }
   search(document.getElementById("q"), document.getElementById("hits"), ["mp", "law"]);
   search(document.getElementById("qmp"), document.getElementById("hits-mp"), ["mp"]);
