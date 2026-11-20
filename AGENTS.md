@@ -322,6 +322,21 @@ The project's promises to its readers. Never change them without the maintainer.
   its page at the Assembly, in one order for all (the Assembly's own offices, groups, committees, delegations;
   chairs first); on the live page, the first line about the speaker. A name two MPs of the newest convocation share
   gets no office. The Assembly's own words, its masculine titles included ("predsednik"), as for every MP.
+- **One scale of letter sizes; a number beside what it is compared with** (20 Nov 2026, the maintainer's choice of
+  points 1–5 of a look at the design against portals of this kind: TheyWorkForYou, ProPublica's Represent and its
+  principles for news graphics, Stanford's credibility guidelines, GOV.UK, NN/g). A page had 16–24 sizes of
+  letters, eight of them between 12.8 and 15.7 px; every `font-size` in `style.css` is now one of eight steps
+  (`--t-1` … `--t-8`: 12.8, 14, 16, 18, 20, 24, 30, 36 px) or of three for titles and big numbers (`--t-h1`,
+  `--t-d1`, `--t-d2`), and a test refuses any other (the menu's and the tabs' letters, sized to fit a phone's row,
+  are the exceptions): a new size is a step added to the scale, not a number in a rule. "Skupština u brojkama"
+  opens with its four numbers each beside the convocation before and over every convocation as columns from zero
+  (`pages_groups.trends`), and the earlier convocations' group tables are folded. On an MP's card "no vote unlike
+  the group's" says for how many MPs that holds (of those with ten such votes or more since 2012), and the count
+  of votes for and against is a headline's size, no longer the largest thing on the page: for most MPs it tells
+  them apart least. The home page's card of the law that divided the chamber has no quotes (they are on the
+  law's page), so it is as tall as the headline beside it; on a phone the first sitting's agenda, the box that
+  repeats "no laws yet", the earlier convocation's "Varnice" and the list of laws that divided the chamber are
+  left to their own pages, and two picked votes follow the card's one (9.3 screens became 7.2).
 
 ### Visitors' votes ("Glasaj i ti")
 
@@ -354,6 +369,10 @@ The project's promises to its readers. Never change them without the maintainer.
   counts speak in the present ("Kao većina u sali glasaš na 4 od 10 zakona") or of the vote ("tvoj glas", in the
   shared text "moj glas"). "Uzdržan" stays: it is the vote's name in the roll calls. New text for the visitor
   keeps to this: the present tense or "tvoj glas", no past participle.
+- **The vote is asked after what the law changes** (20 Nov 2026, the maintainer's choice): on a law's page the box
+  stood right under the result and asked the visitor to read first what was below it. It now follows "Šta zakon
+  menja" and the voices from the debate. The result still stands above it: the page is the record of the vote
+  first, and the visitors' sum is no poll, as the box says.
 
 ### Search engines
 

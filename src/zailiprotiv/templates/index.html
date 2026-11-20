@@ -25,14 +25,6 @@
       <span class="hero-meta">{{ divisive.law.passed|day }}{% if divisive.urgent %} · hitan postupak{% endif %}{% if divisive.against %} · protiv: {% for g, n in divisive.against[:3] %}{{ g }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span>
     </a>
     {% if divisive.gist %}<p class="hero-gist">{{ divisive.gist|latin|truncate(170, killwords=False, end="…") }}</p>{% endif %}
-    {% if divisive.pair|length == 2 %}
-    <div class="hero-said">
-      <p class="hero-kicker">Rečeno u raspravi</p>
-      {% for q in divisive.pair %}
-      <figure class="q q-{{ q.side }}"><blockquote>„{{ q.tekst|latin }}“</blockquote><figcaption>{{ q.govornik|latin|title }}{% if q.side == "vlada" %}, Vlada{% elif q.grupa %}, {{ q.grupa|latin }}{% endif %}{% if q.side == "protiv" %} · glas: protiv{% elif q.side == "za" %} · glas: za{% endif %}</figcaption></figure>
-      {% endfor %}
-    </div>
-    {% endif %}
     <p class="hero-more"><a href="zakon/{{ divisive.slug }}.html">Ceo zakon, glasanje i rasprava</a></p>
   </div>
   {% endif %}

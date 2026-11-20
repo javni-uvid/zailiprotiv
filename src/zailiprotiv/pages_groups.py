@@ -73,6 +73,31 @@ def render(*, common, conv_list, env, finals, former, group_slug, items_by_conv,
                         "days": median([it["days"] for it in its if it["days"] is not None and it["days"] >= 0]),
                         "unopposed": sum(1 for it in voted if not it["final"]["counts"]["protiv"]),
                         "sittings": len({it["final"]["sitting"] for it in voted}), "groups": group_rows.get(cv["n"], [])})
-    (out / "brojke.html").write_text(env.get_template("numbers.html").render(**common, numbers=numbers, root=""),
+    (out / "brojke.html").write_text(env.get_template("numbers.html").render(**common, numbers=numbers,
+                                                                             trends=trends(numbers), root=""),
                                      encoding="utf-8")
     return group_rows, numbers
+
+
+def trends(numbers: list[dict]) -> list[dict]:
+    """The page's four leading numbers, each with the convocation before beside it and every convocation as a column
+    (oldest first, heights from zero against the largest): a number alone does not say whether it is much."""
+    def share(a, b):
+        return round(100 * a / b) if b else None
+    kinds = [("Zakona", lambda n: n["laws"], "", lambda n: ""),
+             ("Po hitnom postupku", lambda n: share(n["urgent"], n["with_bill"]), "%", lambda n: "po hitnom postupku"),
+             ("Bez ijednog glasa protiv", lambda n: share(n["unopposed"], n["voted"]), "%", lambda n: "bez ijednog glasa protiv"),
+             ("Dana od predloga do usvajanja", lambda n: n["days"], "", lambda n: "dana od predloga do usvajanja, za polovinu zakona")]
+    out = []
+    for title, get, unit, label in kinds:
+        vals = [(n, get(n)) for n in numbers]
+        if vals[0][1] is None:
+            continue
+        top = max((v for _, v in vals if v is not None), default=0) or 1
+        before = next(((n, v) for n, v in vals[1:] if v is not None), None)
+        out.append({"title": title, "now": f"{vals[0][1]}{unit}", "label": label(numbers[0]),
+                    "before": f"{before[1]}{unit}" if before else "", "before_name": before[0]["conv"]["name"].lower() if before else "",
+                    "rows": [{"n": n["conv"]["n"], "name": n["conv"]["name"], "years": n["conv"]["years"],
+                              "value": f"{v}{unit}" if v is not None else "—", "h": round(100 * (v or 0) / top)}
+                             for n, v in reversed(vals)]})
+    return out

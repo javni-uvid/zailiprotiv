@@ -5,13 +5,15 @@
 {% block main %}
 <h1>Skupština</h1>
 {% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("brojke") }}
-{% set n0 = numbers[0] %}
-<div class="lead-nums">
-  <p><b>{{ n0.laws }}</b><span>{{ plural(n0.laws, "zakon", "zakona", "zakona") }} u {{ n0.conv.name|locative }} sazivu</span></p>
-  {% if n0.with_bill %}<p><b>{{ (100 * n0.urgent / n0.with_bill)|round|int }}%</b><span>po hitnom postupku</span></p>{% endif %}
-  {% if n0.voted %}<p><b>{{ (100 * n0.unopposed / n0.voted)|round|int }}%</b><span>bez ijednog glasa protiv</span></p>{% endif %}
-  {% if n0.days is not none %}<p><b>{{ n0.days }}</b><span>{{ plural(n0.days, "dan", "dana", "dana") }} od predloga do usvajanja, za polovinu zakona</span></p>{% endif %}
+<div class="lead-nums trends">
+  {% for t in trends %}
+  <figure>
+    <p><b>{{ t.now }}</b><span>{% if t.label %}{{ t.label }}{% else %}{{ plural(numbers[0].laws, "zakon", "zakona", "zakona") }} u {{ numbers[0].conv.name|locative }} sazivu{% endif %}</span>{% if t.before %}<small>{{ t.before_name }} saziv: {{ t.before }}</small>{% endif %}</p>
+    <ol class="cols" aria-label="{{ t.title }}, po sazivima">{% for r in t.rows %}<li{% if loop.last %} class="on"{% endif %}><span>{{ r.value }}</span><i style="height:{{ r.h }}%"></i><abbr title="{{ r.name }} saziv, {{ r.years }}">{{ r.n }}.</abbr></li>{% endfor %}</ol>
+  </figure>
+  {% endfor %}
 </div>
+<p class="label">Stubići: isti broj u svakom sazivu od {{ numbers[-1].conv.n }}. do {{ numbers[0].conv.n }}, s leva na desno; visina je srazmerna broju, od nule.</p>
 <section>
   <h2>Kako se donose zakoni</h2>
   <div class="scroll">
@@ -25,8 +27,9 @@
   <p class="label">Hitan postupak: udeo zakona čiji predlog ima obrazloženje hitnosti, među zakonima čiji predlog imamo. Dani: srednja vrednost (medijana), polovina zakona je usvojena brže. Bez glasa protiv: među zakonima čije konačno glasanje imamo. Sednice: one na kojima je usvojen bar jedan zakon.</p>
 </section>
 {% for n in numbers if n.groups %}
+{% if not loop.first %}<details class="fold-sec"><summary>Poslaničke grupe, {{ n.conv.name|lower }} saziv <span class="meta">{{ n.conv.years }}</span></summary>{% endif %}
 <section>
-  <h2>Poslaničke grupe, {{ n.conv.name|lower }} saziv</h2>
+  {% if loop.first %}<h2>Poslaničke grupe, {{ n.conv.name|lower }} saziv</h2>{% endif %}
   <div class="scroll">
   <table class="groups">
     <thead><tr><th>Grupa</th><th class="num">Najviše članova</th><th class="num">Za</th><th class="num">Protiv</th><th class="num">Glasa kao većina grupe</th><th class="num">Prisutno</th></tr></thead>
@@ -36,6 +39,7 @@
   </table>
   </div>
 </section>
+{% if not loop.first %}</details>{% endif %}
 {% endfor %}
 <p class="meta foot-note">Grupe su poređane po broju članova. Za i protiv: konačna glasanja o zakonima na kojima je većina grupe tako glasala. Prisustvo samo gde Skupština navodi i odsutne (od jeseni 2025).</p>
 <details class="method"><summary>Kako je ovo nastalo</summary>

@@ -36,10 +36,6 @@
     {% if it.areas %}<div><dt>Oblast</dt><dd>{% for a in it.areas %}<a href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</dd></div>{% endif %}
   </dl>
 </section>
-{% if votes_api and final %}
-{{ votebox(it.slug, final.counts, lead="Pročitaj šta zakon menja i šta je rečeno u raspravi, pa glasaj kao da si poslanik.") }}
-<script src="{{ root }}glas.js?v={{ css }}" defer></script>
-{% endif %}
 {% else %}
 <p class="meta">Usvojen {{ law.passed|day }}. Poimenično glasanje nije pronađeno među dokumentima Skupštine.</p>
 {% endif %}
@@ -96,6 +92,12 @@
   {% if sm.sredstva %}<p><b>Novac iz budžeta:</b> {{ sm.sredstva|latin }}</p>{% endif %}
   <p class="label">Sažetak obrazloženja predloga zakona{% if it.summary.depth == "deep" %}, iz celog obrazloženja{% endif %}. Napisao ga je AI model ({{ it.summary.model }}) samo iz predlagačevog obrazloženja; to je ocena predlagača, ne naša, i sažetak može da sadrži grešku. Merodavan je <a href="{{ law.bill_pdf }}">predlog zakona</a>. {{ how("sazetak") }}</p>
 </section>
+{% endif %}
+
+{# 3b. The visitor's vote: after what the law changes and what was said, which its lead asks to be read first. #}
+{% if votes_api and final %}
+{{ votebox(it.slug, final.counts, lead="Iznad je šta zakon menja i šta je rečeno u raspravi. Glasaj kao da si poslanik.") }}
+<script src="{{ root }}glas.js?v={{ css }}" defer></script>
 {% endif %}
 
 {# 4. How the groups voted. #}
