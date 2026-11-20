@@ -54,6 +54,11 @@ decisions unless said otherwise.
   `publish.clean_urls` rewrites links after the build. A page named like a folder (`podaci.html`) keeps its ending.
   `zailiprotiv site --html-links` keeps the endings, to open the built pages from disk.
 - **`zailiprotiv status`** says what the data still lacks per convocation; look before and after a data run.
+- **How fast the pages are, measured before any work on speed** (20 Nov 2026): **visits** also prints the Core Web
+  Vitals Cloudflare Web Analytics measured (`tools/vitals.py`: LCP, INP and CLS as shares of loads good, middling
+  and poor, by host and device and for the most opened pages; for a page good in fewer than three loads of four,
+  the elements that jumped or were drawn late). The first reading, of the site's first week: every page well over
+  the line but the quiz, whose note at the foot jumps while the script lays the questions out.
 
 ### The data runs
 
