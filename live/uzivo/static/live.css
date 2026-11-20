@@ -87,7 +87,7 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .steps-sec details.st-written { margin-top: .9rem; padding-top: .6rem; border-top: 1px solid var(--line); } .steps-sec .st-written summary { color: var(--fg); font-size: var(--t-3); font-weight: 650; min-height: 2.75rem; display: flex; align-items: center; gap: .4rem; }
 .st-written summary::before { content: "▸"; } .st-written[open] summary::before { content: "▾"; } .st-written summary::-webkit-details-marker { display: none; } .st-written p { margin: 0 0 .7rem; max-width: 42rem; line-height: 1.5; }
 .st-floor { color: var(--muted); font-size: var(--t-3); } .st-floor b { color: var(--fg); font-weight: 600; } .steps li.st-rec { padding-bottom: .7rem; } .steps li.st-rec > i { width: .5rem; height: .5rem; margin-top: .48rem; border-color: var(--muted); }
-.steps p { margin: 0; } .st-title { font-weight: 650; } .st-what { color: var(--muted); font-size: var(--t-2); margin-top: .1rem; }
+.steps p { margin: 0; } .st-title { font-weight: 650; } .st-title a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 3px; } .st-title a:hover { text-decoration-color: currentColor; } .st-what { color: var(--muted); font-size: var(--t-2); margin-top: .1rem; }
 .steps-sec .st-src { font-size: var(--t-1); color: var(--muted); margin-top: .2rem; } .st-src a { color: inherit; }
 .st-key { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; margin: .9rem 0 0; padding-top: .6rem; border-top: 1px solid var(--line); font-size: var(--t-1); color: var(--muted); }
 .st-key span { display: inline-flex; align-items: baseline; gap: .4rem; } .st-key i { flex: none; width: .6rem; height: .6rem; border-color: var(--muted); align-self: center; }
