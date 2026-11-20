@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from zailiprotiv import kinds
+from zailiprotiv import jsonfile, kinds
 from zailiprotiv.site import (  # noqa: F401
     HERE, ORDINAL_NAME, json, latin, most_against, shutil, slug
 )
@@ -38,7 +38,7 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
     # The maintainer's choice (data/quiz.json, 13 Nov 2026) replaces the rule for the convocation it names: laws a
     # visitor can have a view on, in the order given, each with a short plain description written from its summary.
     chosen_by_hand = False
-    picked = json.loads((root / "quiz.json").read_text(encoding="utf-8")) if (root / "quiz.json").exists() else {}
+    picked = jsonfile.load(root / "quiz.json", {})
     if picked.get("convocation") == active:
         by_file = {it["law"].get("bill_file"): it for it in items_by_conv[active] if it["final"]}
         hand = [{**by_file[p["bill_file"]], "opis": p["opis"]} for p in picked["laws"] if p["bill_file"] in by_file]
@@ -56,7 +56,7 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
                         "v": "".join(letter.get(line.get((it["law"]["final_vote"], g["name"])), "-") for it in laws)}
                        for g in group_rows.get(active, [])]}
     quiz = data(quiz_laws)
-    settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
+    settings = jsonfile.load(root / "settings.json", {})
     # The laws visitors' votes are counted for: the counter (worker/) accepts no others.
     (out / "glasaj.json").write_text(json.dumps({"laws": [it["slug"] for it in quiz_laws]}), encoding="utf-8")
     shutil.copy(HERE / "static" / "glasaj.js", out / "glasaj.js")

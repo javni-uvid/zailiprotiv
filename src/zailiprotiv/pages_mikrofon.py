@@ -22,6 +22,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from zailiprotiv import jsonfile, months
 from zailiprotiv.config import LIVE
 from zailiprotiv.translit import latin
 
@@ -115,14 +116,7 @@ def options(right: int, turn: int, cap: int | None = None) -> tuple[list[int], i
     return [right], 0
 
 
-MONTHS_OF = ("januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra",
-             "novembra", "decembra")
-
-
-def _day(iso: str) -> str:
-    """"20. aprila 2026", as a date is said in a sentence."""
-    y, m, d = iso[:10].split("-")
-    return f"{int(d)}. {MONTHS_OF[int(m) - 1]} {y}"
+_day = months.day_of  # "20. aprila 2026", as a date is said in a sentence
 
 
 def _times(n: int) -> str:
@@ -312,7 +306,7 @@ def fixes(root) -> dict:
     it: as it is written}, spellings only."""
     path = Path(root) / "prepis-ispravke.json"
     try:
-        rows = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        rows = jsonfile.load(path, {})
     except ValueError:
         return {}
     return {str(k): str(v) for k, v in rows.items() if str(k).strip() and str(v).strip()} if isinstance(rows, dict) else {}
@@ -325,7 +319,7 @@ def agenda(root, conv: str, sittings: list[dict]) -> list[dict]:
     a sentence of fact each; the live service adds what the chair says aloud (hronika.py)."""
     path = Path(root) / str(conv) / "tacke.json"
     try:
-        done = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        done = jsonfile.load(path, {})
     except ValueError:
         done = {}
     out = []

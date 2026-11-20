@@ -18,6 +18,8 @@ import tempfile
 import time
 from pathlib import Path
 
+from zailiprotiv import jsonfile
+
 LEAD = 5  # the turn's place in the file is this many seconds before its first frame (as everywhere on the site)
 TAIL = 10  # and the caption may go a little before the speaker stops
 SHORTEST = 30  # seconds: shorter turns (a reply, a point of order) are not written down
@@ -37,7 +39,7 @@ def run(root: Path, conv: str, day: str, *, model: str = "large-v3-turbo", minut
         return 0
     turns = json.loads(src.read_text(encoding="utf-8"))["govori"]
     path = root / conv / "prepis" / f"{day}.json"
-    out = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"model": model, "govori": {}}
+    out = jsonfile.load(path, {"model": model, "govori": {}})
     if transcribe is None:
         from faster_whisper import WhisperModel
         whisper = WhisperModel(model, device="cpu", compute_type="int8")

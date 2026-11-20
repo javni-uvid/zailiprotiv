@@ -12,6 +12,7 @@ from collections import defaultdict
 from pathlib import Path
 from xml.sax.saxutils import escape as x
 
+from zailiprotiv import jsonfile
 from zailiprotiv.site import against_share, day
 from zailiprotiv.translit import latin
 
@@ -44,7 +45,7 @@ def render(*, env, common, out: Path, root: Path, current: str, items_by_conv: d
                 key, monday = week_of(b["submitted"])
                 weeks[key]["bills"].append({**b, "pdf": pdf})
                 weeks[key]["monday"] = monday
-    settings = json.loads((root / "settings.json").read_text(encoding="utf-8")) if (root / "settings.json").exists() else {}
+    settings = jsonfile.load(root / "settings.json", {})
     listed = []
     for key, w in sorted(weeks.items(), reverse=True):
         laws = sorted(w["laws"], key=lambda it: (-(against_share(it["final"]["counts"]) if it["final"] else 0),

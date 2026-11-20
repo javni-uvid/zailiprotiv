@@ -4,6 +4,7 @@ Moved out of `site.build` (13 Nov 2026); it takes what it needs from the build a
 """
 from __future__ import annotations
 
+from zailiprotiv import jsonfile
 from zailiprotiv.site import (  # noqa: F401
     days_between, dt, json, kinds, slug
 )
@@ -14,8 +15,8 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
     # convened whose votes are not out yet, with their agenda.
     from zailiprotiv import link as link_, procedure as procedure_
     proc_path, index_path = root / current / "procedure.json", root / current / "index.json"
-    proc = json.loads(proc_path.read_text(encoding="utf-8")) if proc_path.exists() else {"bills": {}, "fetched": ""}
-    sittings_index = json.loads(index_path.read_text(encoding="utf-8"))["sittings"] if index_path.exists() else {}
+    proc = jsonfile.load(proc_path, {"bills": {}, "fetched": ""})
+    sittings_index = jsonfile.load(index_path, {"sittings": {}})["sittings"]
     today = dt.date.today()
     coming = sorted(({"title": sv["title"], "url": u, "starts": sv.get("starts", ""), "agenda": sv["agenda"]}
                      for u, sv in sittings_index.items() if sv.get("agenda") and not sv.get("votes")

@@ -12,6 +12,8 @@ import json
 import time
 from pathlib import Path
 
+from zailiprotiv import jsonfile
+
 TRIES = 2
 POLL = 60  # seconds between looks at a batch
 # Room for a reply, in tokens. Only what is written is paid for, so this is generous: Cyrillic takes many tokens,
@@ -25,7 +27,7 @@ class State:
 
     def __init__(self, path: Path):
         self.path = path
-        self.data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        self.data = jsonfile.load(path, {})
         self.data.setdefault("pending", {})
         self.data.setdefault("refused", {})
         self.data.setdefault("usage", {})

@@ -14,19 +14,13 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from zailiprotiv import card
+from zailiprotiv import card, months
 from zailiprotiv.pages_mikrofon import parts, turns as day_turns
 
 TZ = ZoneInfo("Europe/Belgrade")
 DIR, INDEX = "govornici", "govornici.html"
 NO_LIST = "lista nije pročitana"
-MONTHS = ("januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar",
-          "decembar")
-
-
-def day_name(day: str) -> str:
-    y, m, d = (int(x) for x in day.split("-"))
-    return f"{d}. {MONTHS[m - 1]} {y}."
+day_name = months.day  # "2026-11-17" → "17. novembar 2026."
 
 
 def load(root: Path) -> dict[str, list[dict]]:
