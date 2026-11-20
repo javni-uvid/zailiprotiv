@@ -80,7 +80,7 @@
 {% set q = (quiz_laws|rejectattr("slug", "equalto", divisive.slug if divisive else "")|list or quiz_laws)[0] %}
 <section class="home-quiz" aria-labelledby="hq">
   <div class="hq-text">
-    <h2 id="hq">Kako bi ti glasao?</h2>
+    <h2 id="hq">Kako ti glasaš?</h2>
     <p>{{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }}, tri dugmeta. Na kraju vidiš šta bi prošlo da se ti pitaš i koliko puta glasaš kao većina u sali.</p>
   </div>
   <div class="hq-try">

@@ -5,7 +5,7 @@
 {% block main %}
 {# The visitor's ballot is in their browser; listic.js fills everything marked data-l. Without votes the page is the
    invitation: the quiz and the newest bill in procedure. #}
-<div class="lb-h"><h1 id="lb-title">Kako bi ti glasao?</h1><p class="lb-sum" id="lb-sum">Moj listić · <b>prazan</b>, popuni ga glasanjem</p></div>
+<div class="lb-h"><h1 id="lb-title">Kako ti glasaš?</h1><p class="lb-sum" id="lb-sum">Moj listić · <b>prazan</b>, popuni ga glasanjem</p></div>
 <noscript><p class="note">Za ovu stranu treba JavaScript; sve ostalo na sajtu radi i bez njega.</p></noscript>
 
 <div id="lb-mine" hidden>
@@ -21,7 +21,7 @@
       <a class="button ghost" id="lb-save" download="moj-listic.png" href="#">Sačuvaj sliku</a>
       <button type="button" class="button ghost" id="lb-copy">Kopiraj tekst i link</button>
       <p class="meta" id="lb-shared" aria-live="polite"></p>
-      <p class="label">Na slici nema naziva zakona: vidi se koliko si puta glasao za i protiv i gde si drugačije od Skupštine, ne i o kom zakonu.</p>
+      <p class="label">Na slici nema naziva zakona: vidi se koliko je tvojih glasova za i protiv i gde se razlikuješ od Skupštine, ne i o kom zakonu.</p>
     </div>
   </div>
 </div>
@@ -35,7 +35,7 @@
     <small class="k" id="lb-quiz-k">Kviz · {{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }} · oko 5 minuta</small>
     <h2>{{ quiz_laws|length }} zakona {{ "o kojima se najviše govorilo" if by_hand else "koji su podelili salu" }}</h2>
     <div class="bar" aria-hidden="true"><i></i><i></i></div>
-    <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koliko puta si glasao kao većina u sali.</p>
+    <p id="lb-quiz-p">Za svaki zakon dobijaš šta menja i šta je rečeno za i protiv, pa vidiš koliko puta glasaš kao većina u sali.</p>
     <a class="lb-btn" id="lb-quiz-go" href="kviz/podelili-salu.html">Počni kviz</a>
     {% if quiz_themes %}<p class="lb-themes">Ili po temi: {% for t in quiz_themes.values() %}<a href="kviz/{{ t.slug }}.html">{{ t.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
   </div>
@@ -57,7 +57,7 @@
 <div id="lb-rest" hidden>
   <section class="lb-pick" id="lb-pick" hidden><small id="lb-pick-why"></small><h2><a id="lb-pick-law"></a></h2><p id="lb-pick-nums"></p></section>
   <section class="lb-list">
-    <h2>Sve o čemu sam glasao</h2>
+    <h2>Svi moji glasovi</h2>
     <div class="lb-filters" id="lb-filters" role="group" aria-label="Koji glasovi"></div>
     <div class="scroll"><table class="ballot"><thead><tr><th>Zakon</th><th>Moj glas</th><th>Skupština</th><th>U sali</th></tr></thead><tbody id="lb-rows"></tbody></table></div>
     <p><button type="button" class="more-btn" id="lb-more" hidden></button></p>
@@ -65,7 +65,7 @@
   <section class="lb-who">
     <div><h2>Poslaničke grupe</h2><ol id="lb-groups"></ol></div>
   </section>
-  <p class="label" id="lb-note">Poredimo samo zakone o kojima ste oboje glasali za, protiv ili uzdržano; prikazane su grupe sa najmanje polovinom tvojih zakona. Poređenje se računa u pregledaču. Zakon koji je izdvojen bira se pravilom: koliko je podelio salu, koliko je varnica i amandmana bilo u raspravi, i da li si glasao drugačije od Skupštine. Ovo je poređenje glasova, ne preporuka za koga da glasaš.</p>
+  <p class="label" id="lb-note">Poredimo samo zakone o kojima ste oboje glasali za, protiv ili uzdržano; prikazane su grupe sa najmanje polovinom tvojih zakona. Poređenje se računa u pregledaču. Zakon koji je izdvojen bira se pravilom: koliko je podelio salu, koliko je varnica i amandmana bilo u raspravi, i da li je tvoj glas drugačiji nego u Skupštini. Ovo je poređenje glasova, ne preporuka za koga da glasaš.</p>
 </div>
 <p class="meta foot-note">Glasaš bez naloga i imena; listić se čuva samo u ovom pregledaču, a u zbir posetilaca ide glas uz nasumičnu oznaku uređaja. <a href="kako-racunamo.html#posetioci">Šta čuvamo</a></p>
 {% if bill and votes_api %}<script src="glas.js?v={{ css }}" defer></script>
