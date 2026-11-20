@@ -45,6 +45,18 @@ as the change. The principles and the rules of work are in AGENTS.md.
   Cyrillic `varnice-svi` 1.1 MB, over the pages' limit, and no build was published for two hours. It is
   `poslovnik-clanovi` (`pages_floor.RULES`, `rules_cited.html`); "Varnice u sali: svi sazivi" names how many
   articles and the one invoked most, and links there; the notes' pages link `poslovnik-clanovi#clan-<n>`.
+- **The site's terms explained from the Rules** (20 Nov 2026, the maintainer's choice, step 3): replika, the chair's
+  three measures and their fines, ukazivanje na povredu Poslovnika, hitni postupak, načelni pretres, pretres u
+  pojedinostima, amandman, Dan za glasanje. In `data/poslovnik/pojmovi.json`, written by hand: each term the
+  articles it rests on, a short retelling of them checked against their text (only what the articles say, no view of
+  whether they are kept), how the site itself counts it where it does (`na_sajtu`, `kako`: the method's section),
+  and `verzija`, the Rules' version it was written against. Shown on `poslovnik-clanovi#pojam-<id>` (the page is now
+  "Poslovnik Narodne skupštine", terms first, then the articles invoked), each with the articles' full text folded,
+  so an article nobody invoked has a place too; an article also in the invoked list links there. Once an article of
+  a term reads otherwise in a newer version (`poslovnik.terms`, `changed`), the retelling is dropped and only the
+  articles' text is shown, open, until written again. The pages link a term where it appears
+  (`macros.term`, only for terms the file has): the floor pages, a law's debate and measures, the convocation and
+  numbers pages (hitni postupak), the method page. Kvorum and the sitting's other steps wait for step 4.
 
 ## Laws
 

@@ -46,6 +46,9 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.
 - **Poslovnik:** the Assembly's Rules of Procedure, article by article, every version kept (`data/poslovnik/`), for the
   articles invoked in the debates, the terms the site explains and the order of a sitting's steps.
+  The page `poslovnik-clanovi` explains the site's terms from it (`data/poslovnik/pojmovi.json`: replika, the chair's
+  measures, hitni postupak, načelni pretres, amandman, Dan za glasanje…, each with the articles' text), and the
+  pages where a term appears link there.
 - **Ko koliko govori:** per sitting day read from the recording (`govornici/<date>`), each speaker's time and the
   time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a
   link to share it and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`).

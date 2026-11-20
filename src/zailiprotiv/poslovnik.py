@@ -177,3 +177,26 @@ def short(article: dict, limit: int = 220) -> str:
     """An article's first paragraph, cut between words at `limit` (with "…")."""
     first = (article.get("stavovi") or [""])[0]
     return first if len(first) <= limit else first[:limit].rsplit(" ", 1)[0] + " …"
+
+
+# The site's terms explained from the Rules (20 Nov 2026, the maintainer's choice): data/poslovnik/pojmovi.json, written
+# by hand, each term with the articles it rests on and the version of the Rules it was written against. A sentence of
+# ours is shown only while those articles read as they did then; once one changes, the term shows the articles alone.
+TERMS = "pojmovi.json"
+
+
+def terms(folder: Path) -> list[dict]:
+    """The terms, each with `articles` [{"n", "label", "text", "glava"}] as the Rules now read and `changed` (an
+    article differs from the version the explanation was written against, or is gone). Empty without the Rules."""
+    path, now = folder / TERMS, load(folder)
+    if not now or not path.exists():
+        return []
+    current = {a["n"]: a for a in now["clanovi"]}
+    out = []
+    for t in json.loads(path.read_text(encoding="utf-8")):
+        then = {a["n"]: a for a in (load(folder, t["verzija"]) or now)["clanovi"]}
+        arts = [current[n] for n in t["clanovi"] if n in current]
+        changed = any(n not in current or current[n]["stavovi"] != then.get(n, {}).get("stavovi") for n in t["clanovi"])
+        out.append({**t, "changed": changed, "articles": [{"n": a["n"], "label": a["oznaka"], "text": a["stavovi"],
+                                                           "glava": a["glava"]} for a in arts]})
+    return out

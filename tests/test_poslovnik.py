@@ -63,3 +63,36 @@ def test_the_invoked_articles_listed_most_first():
     assert a["convs"] == [{"name": "Petnaesti", "count": 2}, {"name": "Četrnaesti", "count": 1}]
     assert a["section"] == "1. Hitni postupak" and a["text"][0].startswith("Zakon se može") and a["url"].endswith(".1317.html")
     assert pages_floor.invoked_articles(Counter({1: 1}), by_conv, None) == []
+
+
+def test_a_term_keeps_its_sentence_only_while_its_articles_read_the_same(tmp_path):
+    from zailiprotiv import pages_floor
+    d = poslovnik.parse(PAGE)
+    poslovnik.store(tmp_path, d, "2026-11-20")
+    (tmp_path / poslovnik.TERMS).write_text(json.dumps([
+        {"id": "hitni-postupak", "pojam": "Hitni postupak", "clanovi": [167, 168], "verzija": "2026-11-20",
+         "objasnjenje": "Naše prepričavanje.", "kako": "brojke", "na_sajtu": "Kako sajt broji."},
+        {"id": "uvod", "pojam": "Uvod", "clanovi": [1], "verzija": "2026-11-20", "objasnjenje": "Uvod."}]), encoding="utf-8")
+    t = {x["id"]: x for x in poslovnik.terms(tmp_path)}
+    assert not t["hitni-postupak"]["changed"] and [a["n"] for a in t["hitni-postupak"]["articles"]] == [167, 168]
+    d2 = json.loads(json.dumps(d))
+    d2["clanovi"][1]["stavovi"][0] = "Закон се изузетно може донети по хитном поступку."
+    poslovnik.store(tmp_path, d2, "2026-12-01")
+    t = {x["id"]: x for x in poslovnik.terms(tmp_path)}
+    assert t["hitni-postupak"]["changed"] and not t["uvod"]["changed"]  # only the term whose article changed
+    shown = {x["id"]: x for x in pages_floor.rule_terms(list(t.values()), [{"n": 1}], d2)}
+    assert shown["hitni-postupak"]["explained"] is None  # the article alone, until written again
+    assert shown["hitni-postupak"]["articles"][0]["text"][0].startswith("Zakon se izuzetno")  # as the Rules now read
+    assert shown["hitni-postupak"]["method"] == "brojke" and shown["uvod"]["explained"] == "Uvod."
+    assert shown["uvod"]["articles"][0]["listed"] and not shown["hitni-postupak"]["articles"][0]["listed"]
+    assert poslovnik.terms(tmp_path / "none") == []
+
+
+def test_the_sites_terms_rest_on_articles_the_rules_have():
+    from pathlib import Path
+    folder = Path(__file__).resolve().parents[1] / "data" / "poslovnik"
+    kept = json.loads((folder / poslovnik.TERMS).read_text(encoding="utf-8"))
+    ids = [t["id"] for t in kept]
+    assert len(ids) == len(set(ids))
+    terms = poslovnik.terms(folder)
+    assert all(len(t["articles"]) == len(t["clanovi"]) for t in terms)

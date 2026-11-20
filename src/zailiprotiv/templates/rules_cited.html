@@ -1,11 +1,34 @@
 {% extends "base.html" %}
 {% from "macros.html" import plural with context %}
-{% block title %}Na koje članove Poslovnika se poslanici pozivaju — Za ili Protiv{% endblock %}
-{% block description %}Članovi Poslovnika Narodne skupštine koje poslanici navode u govorima, svi sazivi od 2012: koliko puta koji, po sazivima, i tekst člana.{% endblock %}
+{% block title %}Poslovnik Narodne skupštine: pojmovi i članovi na koje se poslanici pozivaju — Za ili Protiv{% endblock %}
+{% block description %}Šta po Poslovniku Narodne skupštine znače replika, opomena, oduzimanje reči, hitni postupak i drugi pojmovi sa sajta, i članovi Poslovnika koje poslanici navode u govorima, svi sazivi od 2012.{% endblock %}
 {% block main %}
 <p class="crumbs"><a href="varnice-svi.html">Varnice u sali</a></p>
-<h1>Na koje članove Poslovnika se poslanici pozivaju</h1>
+<h1>Poslovnik Narodne skupštine</h1>
+{% if terms and invoked %}<nav class="page-menu" aria-label="Na ovoj strani"><a href="#pojmovi">Pojmovi</a><a href="#clanovi">Članovi na koje se poslanici pozivaju</a></nav>{% endif %}
+{% if terms %}
+<section id="pojmovi">
+  <h2>Pojmovi sa sajta, po Poslovniku</h2>
+  <p class="label">Šta reči koje sajt koristi znače po Poslovniku: naše kratko prepričavanje člana, a ispod njega tekst člana iz današnjeg prečišćenog teksta sa sajta Skupštine. Kad se član izmeni posle našeg prepričavanja, ostaje samo njegov tekst dok ga ne napišemo ponovo.</p>
+  <dl class="rule-terms">
+  {% for t in terms %}
+    <dt id="pojam-{{ t.id }}">{{ t.name }} <span class="meta">· {{ plural(t.articles|length, "član", "članovi", "članovi") }} {% for a in t.articles %}{% if a.listed %}<a href="#clan-{{ a.n }}">{{ a.label }}</a>{% else %}{{ a.label }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</span></dt>
+    <dd>
+      {% if t.explained %}<p>{{ t.explained }}</p>{% else %}<p class="meta">Član je izmenjen posle našeg prepričavanja: važi tekst ispod.</p>{% endif %}
+      {% if t.on_site %}<p class="meta">{{ t.on_site }} <a href="kako-racunamo.html{% if t.method %}#{{ t.method }}{% endif %}">Kako računamo</a></p>{% endif %}
+      <details class="inline"{% if not t.explained %} open{% endif %}>
+        <summary>Tekst {{ plural(t.articles|length, "člana", "članova", "članova") }} {% for a in t.articles %}{{ a.label }}{% if not loop.last %}, {% endif %}{% endfor %}</summary>
+        {% for a in t.articles %}<p><b>Član {{ a.label }}</b>{% if a.url %} <span class="meta">· <a href="{{ a.url }}">na sajtu Skupštine ↗</a></span>{% endif %}</p>
+        {% for x in a.text %}<p>{{ x }}</p>{% endfor %}{% endfor %}
+      </details>
+    </dd>
+  {% endfor %}
+  </dl>
+</section>
+{% endif %}
+{% if invoked %}
 <section id="clanovi">
+  <h2>Na koje članove Poslovnika se poslanici pozivaju</h2>
   <p class="label">Članovi Poslovnika Narodne skupštine navedeni u govorima kojima poslanik ukazuje na povredu Poslovnika (na početku govora), i član naveden uz reč „Poslovnik“ bilo gde u govoru; jedan govor broji se jednom po članu. Isto pravilo za svakoga. Tekst je današnji prečišćeni tekst Poslovnika sa sajta Skupštine: član je ranije mogao da glasi drugačije. <a href="kako-racunamo.html#poslovnik">Kako brojimo</a></p>
   <ol class="plain rules-cited">
   {% for a in invoked %}
@@ -20,4 +43,5 @@
   {% endfor %}
   </ol>
 </section>
+{% endif %}
 {% endblock %}
