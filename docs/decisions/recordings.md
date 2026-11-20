@@ -145,6 +145,13 @@ records and recordings stays here:
   part of the recording placed on the clock by captions read in passing (`govor.clock`; 19 Nov's afternoon by hand,
   three of Pastor's captions in three parts agreeing). It is incomplete, and says so: a speaker with no sample is not
   named. Written again from the notes when they come; the analysis's files stay on the maintainer's computer.
+- **A very short speech between two placed ones gets a place** (21 Nov 2026, the maintainer's request: one speech of
+  17 Nov had none). A speech under `SHORT` words (eight: "Ne želim.", "Hvala.") cannot hold two runs of four, so it
+  never had a place by runs. `govor.between`: an MP's speech like that, with a placed speech before it and one after,
+  both in one file, stands just after the one before and lasts as long as its words take at `RATE` (2.5 words a
+  second); it has no runs of its own (`sidra` 0), so it is never a voice sample, and joins the turn before it when
+  the speaker is the same. The same rule for every speaker; a longer speech with no runs still has no place. 17 Nov:
+  Milenko Jovanov's "Ne želim." is in his turn (+13 s); 18 Nov had none unplaced.
 - **`large-v3-turbo` is the one Whisper model** (20 Nov 2026, the maintainer's decision): the live service, the
   **prepis** workflow and the recordings read afterwards; the second reading by a better model is gone with it.
 - **A day's parts the archive's page does not list yet** (20 Nov 2026: `zas2026111910e.mp4`, the end of 19 Nov, was

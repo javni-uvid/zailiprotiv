@@ -42,6 +42,26 @@ def test_place_and_day():
     assert t["okvira"] >= govor.MIN_ANCHORS and t["beleske"] == ["2"]
 
 
+def test_a_very_short_speech_between_two_placed_ones_gets_a_place():
+    """21 Nov 2026: "Ne želim." (two words) answering the chair has no run of four, and so no place by runs; it stands
+    just after the speech before it. A longer speech with no runs, or a short one at the edge, still has none."""
+    def sp(key, text, **kw):
+        return {"key": key, "speaker": "P" if key != "2" else "A", "chair": key != "2", "text": text, "sidra": 0, **kw}
+    chair1 = sp("1", "Да ли желите да се Скупштина изјасни о овоме што сте рекли?", datoteka=F, od=10.0, do=15.0, sidra=2)
+    mp = sp("2", "Не желим.")
+    chair2 = sp("3", "Нећете. Имамо још једну пријаву повреде Пословника.", datoteka=F, od=14.0, do=26.0, sidra=2)
+    out = govor.between([dict(chair1), dict(mp), dict(chair2)])
+    assert out[1]["datoteka"] == F and out[1]["od"] == 15.0 and 15.0 < out[1]["do"] < 17.0 and out[1]["sidra"] == 0
+    long_ = sp("2", "Ovo je govor koji ima mnogo više reči nego što staje u kratak odgovor i nema nijedan niz.")
+    assert "datoteka" not in govor.between([dict(chair1), dict(long_), dict(chair2)])[1]
+    assert "datoteka" not in govor.between([dict(chair1), dict(mp)])[1]  # nothing after it
+    other = dict(chair2, datoteka=F + "b")
+    assert "datoteka" not in govor.between([dict(chair1), dict(mp), other])[1]  # the neighbours in two files
+    turns = govor.day(govor.between([dict(chair1, speaker="A", chair=False), dict(mp), dict(chair2)]),
+                      [{"url": F, "od": 0}], lambda s: {"ime": s, "adresa": "", "grupa": "", "uloga": ""})
+    assert len(turns) == 1 and turns[0]["okvira"] == 2  # joined to the speech before it as one turn, no sample of its own
+
+
 def test_day_joins_one_speaker_across_the_chair():
     a = {"key": "1", "speaker": "A", "datoteka": F, "od": 10.0, "do": 50.0, "sidra": 3}
     c = {"key": "2", "speaker": "P", "chair": True}

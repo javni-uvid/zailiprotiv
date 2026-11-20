@@ -21,6 +21,8 @@ from zailiprotiv.translit import latin
 
 ANCHOR = 4       # words in a run
 MIN_ANCHORS = 2  # runs a speech needs to be placed
+SHORT = 2 * ANCHOR  # a speech with fewer words than this cannot hold two runs ("Ne želim.", "Hvala."): see between()
+RATE = 2.5       # words a second, to give such a speech its length
 _WORD = re.compile(r"[a-z0-9]+")
 
 
@@ -106,7 +108,23 @@ def place(speeches: list[dict], got: list[tuple[str, str, float]]) -> list[dict]
             if got[a][1] == got[b][1]:
                 s.update(datoteka=got[a][1], od=got[a][2], do=got[b][2])
         out.append(s)
-    return out
+    return between(out)
+
+
+def between(speeches: list[dict]) -> list[dict]:
+    """A speech too short to hold two runs (fewer than SHORT words: an answer, a "Hvala"), with no place, gets one
+    where the notes put it: just after the speech before it, which must be placed, in the same file as the one after
+    (21 Nov 2026, the maintainer's request: 17 Nov's two-word "Ne želim" of an MP, between the chair's two turns,
+    had none). It lasts as long as its words take at RATE; it has no runs of its own (`sidra` 0), so it is never a voice
+    sample. The same rule for every speaker; a longer speech with no runs still gets no place."""
+    for i, s in enumerate(speeches):
+        if s.get("chair") or "datoteka" in s or s.get("sidra", 0) >= MIN_ANCHORS or i == 0 or i + 1 >= len(speeches):
+            continue
+        before, after = speeches[i - 1], speeches[i + 1]
+        words = len(fold(s["text"]))
+        if (words and words < SHORT and "datoteka" in before and before.get("datoteka") == after.get("datoteka")):
+            s.update(datoteka=before["datoteka"], od=before["do"], do=before["do"] + words / RATE)
+    return speeches
 
 
 LEAD = 5     # a turn's place in its file: this many seconds before its first word, as everywhere on the site
@@ -116,7 +134,8 @@ NOTE = ("Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa z
         "videonet.co.rs: snimak je automatski zapisan reč po reč (Whisper), a svaki govor iz beleški nađen u tom zapisu "
         "po nizovima od četiri reči koji se jednom javljaju i u beleškama i u zapisu, istim redom; govor traje od "
         "prve do poslednje svoje reči. Isto pravilo za svakog govornika; govor za koji nisu nađena bar dva takva niza "
-        "nema mesto. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi, 'snimak' mesto u njemu u sekundama, "
+        "nema mesto, osim sasvim kratkog (manje od osam reči, kao „Ne želim.“) između dva govora koji ga imaju: on stoji "
+        "odmah posle prethodnog. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi, 'snimak' mesto u njemu u sekundama, "
         "pet sekundi pre prve reči. ")
 
 
