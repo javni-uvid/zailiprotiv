@@ -72,7 +72,7 @@ def _mtime(path: str) -> float:
 WAIT = 60.0  # between sittings, how often to look for a broadcast: a sitting is read within a minute of going live
 
 
-def run(tracker: Tracker, stop: threading.Event) -> None:
+def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
     roster = RosterKeeper(tracker)
     roster.get()  # the list, and the last day from the recording, before any broadcast
     backoff = 5.0
@@ -83,6 +83,8 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
             source, headers = resolve_input()
             proc = start_ffmpeg(source, headers)
             log.info("frames started: %s", VIDEO.get("id", "") or source[:60])
+            if bell:
+                bell.restart()
             waiting = False
             seen = _mtime(config.FRAME_PATH)
             last_new = time.time()
@@ -92,6 +94,8 @@ def run(tracker: Tracker, stop: threading.Event) -> None:
                 m = _mtime(config.FRAME_PATH)
                 if m > seen:
                     seen, last_new, backoff = m, time.time(), 5.0
+                    if bell:  # a sitting's broadcast has begun: the day's notification (obavesti.py)
+                        bell.frame()
                     at = {"video": VIDEO.get("id", ""), "sq": getattr(proc, "frame_seq", None),
                           "seg": getattr(proc, "seg_dur", None)}
                     try:

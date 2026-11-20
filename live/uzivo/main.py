@@ -15,7 +15,8 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 
 from . import config, hronika, picture, prepis, worker
 from .stream import VIDEO
-from .page import fragment, manifest, page, transcript_page
+from .obavesti import Bell
+from .page import fragment, manifest, page, service_worker, transcript_page
 from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
@@ -29,7 +30,7 @@ NO_STORE = {"Cache-Control": "no-store"}
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    threading.Thread(target=worker.run, args=(tracker, _stop), daemon=True).start()
+    threading.Thread(target=worker.run, args=(tracker, _stop, Bell()), daemon=True).start()
     if prepis.on():
         prepis.Writer(tracker, _stop).start()
     hronika.Watcher(tracker, _stop).start()
@@ -42,7 +43,8 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 
 def _page(cyr: bool) -> HTMLResponse:
     return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
-                             live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API),
+                             live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
+                             push_key=config.PUSH_KEY),
                         headers=NO_STORE)
 
 
@@ -183,6 +185,14 @@ def latin_manifest() -> JSONResponse:
 @app.get("/cir/manifest.webmanifest")
 def cyrillic_manifest() -> JSONResponse:
     return JSONResponse(manifest(True), media_type="application/manifest+json", headers=DAY)
+
+
+@app.get("/sw.js")
+def sw(j: str = "") -> Response:
+    """The page's service worker, for the notifications (page.service_worker); never kept, so a change reaches
+    every browser at its next visit."""
+    return Response(service_worker(j == "cir", config.PUSH_KEY, config.VOTES_API), media_type="text/javascript",
+                    headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/{name}.png")

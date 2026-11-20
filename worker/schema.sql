@@ -10,4 +10,8 @@ CREATE TABLE IF NOT EXISTS tally (item TEXT NOT NULL, vote TEXT NOT NULL, n INTE
 INSERT OR IGNORE INTO tally (item, vote, n) SELECT item, vote, COUNT(*) FROM ballots GROUP BY item, vote;
 CREATE TRIGGER IF NOT EXISTS ballots_in AFTER INSERT ON ballots BEGIN INSERT INTO tally (item, vote, n) VALUES (new.item, new.vote, 1) ON CONFLICT (item, vote) DO UPDATE SET n = n + 1; END;
 CREATE TRIGGER IF NOT EXISTS ballots_up AFTER UPDATE OF vote ON ballots WHEN old.vote <> new.vote BEGIN UPDATE tally SET n = n - 1 WHERE item = old.item AND vote = old.vote; INSERT INTO tally (item, vote, n) VALUES (new.item, new.vote, 1) ON CONFLICT (item, vote) DO UPDATE SET n = n + 1; END;
+-- Notifications from the live page (20 Nov 2026): the address a browser's push service gave for one device (nothing
+-- else about it), the page's script, the day it was asked for; and the days a notification went out, once each.
+CREATE TABLE IF NOT EXISTS push (endpoint TEXT PRIMARY KEY, cir INTEGER NOT NULL, day TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS push_days (day TEXT PRIMARY KEY, sent INTEGER NOT NULL DEFAULT 0, gone INTEGER NOT NULL DEFAULT 0);
 CREATE TRIGGER IF NOT EXISTS ballots_out AFTER DELETE ON ballots BEGIN UPDATE tally SET n = n - 1 WHERE item = old.item AND vote = old.vote; END;

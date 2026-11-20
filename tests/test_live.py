@@ -1023,3 +1023,31 @@ def test_the_page_can_go_on_a_phones_home_screen():
     assert m["start_url"] == "/" and c["start_url"] == "/cir/" and m["display"] == "standalone"
     assert c["short_name"] == "Микрофон" and {i["purpose"] for i in m["icons"]} == {"any", "maskable"}
     assert any(i["sizes"] == "512x512" for i in m["icons"]) and any(i["sizes"] == "192x192" for i in m["icons"])
+
+
+def test_the_notification_goes_out_once_a_day_when_a_broadcast_begins(tmp_path):
+    from datetime import datetime as dt_
+    from uzivo.obavesti import Bell
+    asked = []
+    pages = {0: {"sent": 30, "gone": 1, "next": 31}, 31: {"sent": 4, "gone": 0, "next": None}}
+    bell = Bell(str(tmp_path / "o.json"), token="t", api="https://glasovi.example/", post=lambda od: asked.append(od) or pages[od])
+    morning = dt_(2026, 11, 24, 10, 0, tzinfo=TZ)
+    assert not bell.frame(morning, wait=True) and not bell.frame(morning, wait=True)  # two frames: not yet
+    assert bell.frame(morning, wait=True) and asked == [0, 31]  # the third: sent, every batch
+    bell.restart()
+    assert not any(bell.frame(morning, wait=True) for _ in range(5)) and asked == [0, 31]  # once a day, restarts too
+    night = Bell(str(tmp_path / "n.json"), token="t", api="https://glasovi.example", post=lambda od: asked.append(od) or {})
+    assert not any(night.frame(dt_(2026, 11, 24, 23, 0, tzinfo=TZ), wait=True) for _ in range(5))  # out of hours
+    off = Bell(str(tmp_path / "x.json"), token="", api="https://glasovi.example", post=lambda od: asked.append(od) or {})
+    assert not any(off.frame(morning, wait=True) for _ in range(5)) and asked == [0, 31]  # no token (the test): never
+
+
+def test_the_page_offers_the_notification_and_its_worker_writes_it():
+    from uzivo.page import service_worker
+    snap = {"stanje": "nema_prenosa", "provereno": 0, "sada": None, "danas": [], "dan": "2026-11-20"}
+    html = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs/", push_key="BKEY")
+    assert 'data-key="BKEY"' in html and "Obavesti me kad sednica počne" in html
+    assert 'data-key="' not in page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, push_key="BKEY")  # no counter: no offer
+    sw = service_worker(True, "BKEY", "https://glasovi.zailiprotiv.rs/")
+    assert "Седница је почела" in sw and '"url": "/cir/"' in sw and '"api": "https://glasovi.zailiprotiv.rs"' in sw
+    assert "addEventListener(\"fetch\"" not in sw  # it handles no requests
