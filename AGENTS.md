@@ -83,6 +83,13 @@ it. Dates are the maintainer's decisions unless said otherwise.
   before relying on it.** The store lags behind `main` until refreshed, these files stay the truth, and a hit from
   `skupstina` is a pointer and never a source: a figure, a vote or a quote comes from the document (principles 2
   and 6). For an exact word or a rare name use `grep` and `git log -S`; it finds by meaning and misses those.
+  **A hit that doesn't say where it is from** (most of a law's: the store cuts a text into pieces of some 400
+  characters and only the first keeps that line; and the summaries under `data/` are in Cyrillic, so `grep` for
+  the Latin words finds nothing): ask with `include_references: true`, and
+  `python C:/Users/marko/cognee-zailiprotiv/odakle.py text_<md5> …` turns each hit's `document=text_<md5>` into
+  that line. (20 Nov 2026, tried on 120 laws with 14 questions whose law was known: the model in use had the
+  right law in the first five for 13 and named it for one; two models that read a whole summary at once found no
+  better, 13 of 14, named 13, and cost 2 to 3 GB of memory more and a store built anew, so the model stays.)
   Never call its `forget`. Where the tool is missing (another machine, the server off), work as before.
   **Agents add to it themselves** (20 Nov 2026, the maintainer's decision), with `remember`,
   `dataset_name: "beleske"`, `self_improvement: false`:
