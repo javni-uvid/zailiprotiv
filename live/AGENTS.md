@@ -243,6 +243,13 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   overrides), waits until the new one answers with its commit and puts the one before back if it doesn't in 90 s.
   A Docker healthcheck, `logovi`, `ocisti`, `.env` taken from the main clone, and `mikrofon-whisper` as an external
   volume.
+- **A worktree's test goes with the worktree** (20 Nov 2026, the maintainer's request: three tests of merged
+  branches had run for hours, 3 GB of memory between them, and nine images of 1.8 GB and as many volumes stayed
+  behind, since nothing stopped a test but `uzivo`, and that only the main clone's). `tools/pocisti-projekat.sh`
+  removes whatever Docker holds under `mikrofon-test-<branch>` (containers, image, volume) for a branch no
+  worktree is on; `osnova/tools/pocisti.sh` runs it after every merge, once the merged worktrees are removed, and
+  `mikrofon.ps1 ocisti` by hand. It goes by the name alone, so the slug is computed there as in `mikrofon.ps1`:
+  change both together. The main clone's test and the live service are never touched.
 - **The maintainer is told when the live page is down during a sitting** (20 Nov 2026, the maintainer's choice of a
   phone notification over an issue). The counter's cron, every five minutes on weekdays 6-19 UTC (`watch`), asks
   the service for `stanje.json` (the edge's copy, `x-mikrofon`, doesn't count as an answer); only when it doesn't

@@ -9,7 +9,8 @@
 #   .\mikrofon.ps1 nazad          the image that was live before goes live again (at once)
 #   .\mikrofon.ps1 stanje         what runs, and which image is which commit
 #   .\mikrofon.ps1 logovi [-Test] the live service's log (or this tree's test's), followed
-#   .\mikrofon.ps1 ocisti         remove images nothing uses (untagged ones, tests of worktrees no container runs)
+#   .\mikrofon.ps1 ocisti         remove what nothing uses: untagged images, and the tests (containers, images,
+#                                 volumes) of worktrees that are gone
 #                                 and the build cache older than a day
 param(
     [Parameter(Position = 0)][ValidateSet("test", "uzivo", "nazad", "stanje", "logovi", "ocisti")][string]$Korak = "stanje",
@@ -171,9 +172,8 @@ switch ($Korak) {
         else { docker compose logs -f --tail 100 uzivo }
     }
     "ocisti" {
-        $used = docker ps -a --format "{{.Image}}"
-        docker images mikrofon --format "{{.Repository}}:{{.Tag}}" | Where-Object { $_ -like "mikrofon:test-*" -and $used -notcontains $_ } |
-            ForEach-Object { docker rmi $_ | Out-Null; Write-Host "Uklonjen $_" }
+        # The tests of worktrees that are gone: their containers, images and volumes (the script pocisti.sh runs too).
+        sh (Join-Path $here "tools/pocisti-projekat.sh")
         docker images mikrofon --filter dangling=true -q | ForEach-Object { docker rmi $_ 2>$null | Out-Null }
         docker images --filter dangling=true --filter "label=zailiprotiv.grana" -q | ForEach-Object { docker rmi $_ 2>$null | Out-Null }
         docker builder prune -f --filter "until=24h" | Select-Object -Last 1

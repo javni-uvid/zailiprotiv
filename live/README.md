@@ -103,7 +103,7 @@ Set-Content -Encoding ascii .tunnel.env "TUNNEL_TOKEN=<token from Cloudflare>"  
 .\mikrofon.ps1 nazad     # the image that was live before, live again
 .\mikrofon.ps1 stanje    # each image's commit and branch, the containers and their health, what runs live
 .\mikrofon.ps1 logovi    # the live service's log (-Test: this tree's test)
-.\mikrofon.ps1 ocisti    # remove images nothing uses
+.\mikrofon.ps1 ocisti    # remove untagged images and the tests of worktrees that are gone
 ```
 
 - **Live** (`docker-compose.yml`, project `mikrofon`): `mikrofon:uzivo` on port 8000 and the tunnel; it never
