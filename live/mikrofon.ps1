@@ -127,8 +127,8 @@ switch ($Korak) {
     }
     "uzivo" {
         if (-not $Tree.IsMain) { throw "Uzivo se pusta iz glavnog klona ($($Tree.Main)), na grani main." }
-        $test = Get-ImageId "mikrofon:test"
-        if (-not $test) { throw "Nema mikrofon:test: prvo .\mikrofon.ps1 test." }
+        $testId = Get-ImageId "mikrofon:test"
+        if (-not $testId) { throw "Nema mikrofon:test: prvo .\mikrofon.ps1 test." }
         if (-not (Test-Path .tunnel.env)) { throw "Nema .tunnel.env (TUNNEL_TOKEN=... iz Cloudflare-a)." }
         git fetch -q origin
         $want = (git rev-parse --short origin/main).Trim()
@@ -138,7 +138,7 @@ switch ($Korak) {
             throw "mikrofon:test je $what, a origin/main je $want. Prvo: git pull; .\mikrofon.ps1 test (ili -Ipak)."
         }
         $live = Get-ImageId "mikrofon:uzivo"
-        if ($live -eq $test) { Write-Host "Testirani image je vec uzivo." }
+        if ($live -eq $testId) { Write-Host "Testirani image je vec uzivo." }
         else {
             if (-not $Odmah) { Wait-Gap $Cekaj }
             if ($live) { docker tag mikrofon:uzivo mikrofon:prethodni; Assert-Ok "Cuvanje prethodnog" }
