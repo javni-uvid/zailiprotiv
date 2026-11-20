@@ -5,7 +5,7 @@
 # (then drop the two yt-dlp lines). Dependabot moves them once a month.
 annotated-doc==0.0.7
 annotated-types==0.8.0
-anthropic==2.12.0
+anthropic==2.9.0
 anyio==4.16.0
 av==19.0.2
 brotli==1.2.1
