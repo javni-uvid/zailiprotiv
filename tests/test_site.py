@@ -724,3 +724,18 @@ def test_letter_sizes_are_the_scale():
     sizes = {v.strip() for v in re.findall(r"font-size:\s*([^;}]+)", css)}
     assert {v for v in sizes if not re.fullmatch(r"var\(--t-(\d|h1|d1|d2)\)", v)} <= fit
     assert not re.search(r"font:\s*\d+\s+[\d.]+rem", css)
+
+
+def test_the_search_page_counts_its_use_and_never_its_words():
+    """20 Nov 2026, before a search by meaning is decided: a search run, one with no result, a result opened, each a
+    name the counter knows; what is sent is one of those names, never the field's words."""
+    import re
+    from pathlib import Path
+    root = Path(__file__).parents[1]
+    js = (root / "src/zailiprotiv/static/pretraga.js").read_text(encoding="utf-8")
+    worker = (root / "worker/worker.js").read_text(encoding="utf-8")
+    sent = re.findall(r"zipCount\(([^)]*)\)", js)
+    assert sent and all(re.fullmatch(r'"pretraga\.[a-z]+"', s) for s in sent)
+    events = worker[worker.index("const EVENTS"):worker.index("]);", worker.index("const EVENTS"))]
+    for name in {s.strip('"') for s in sent}:
+        assert f'"{name}"' in events

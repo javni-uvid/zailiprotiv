@@ -59,7 +59,10 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   // sitting's agenda opened in the countdown
   "mikrofon.ekran", "mikrofon.dodaj", "mikrofon.dodato", "mikrofon.sledeca",
   // notifications turned on and off (the addresses themselves are in the table `push`)
-  "mikrofon.obavesti", "mikrofon.odjavi"]);
+  "mikrofon.obavesti", "mikrofon.odjavi",
+  // the site's search (20 Nov 2026, to learn whether a search by meaning is worth building): a search run, a search
+  // that found nothing, a result opened. Never the words searched for.
+  "pretraga.trazi", "pretraga.prazno", "pretraga.klik"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {

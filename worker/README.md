@@ -39,7 +39,8 @@ voted on is read from the site's `glasanje.json`. The quiz's old sums stay in `v
 for the quiz's picture (`kviz.`) and the ballot's (`listic.`): `otvori` (the ballot's picture opened), `podeli` (the
 share button), `podeljeno` (the share sheet finished), `kopiraj`, `sacuvaj`; and `mikrofon.pusti` (the live
 page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.zailiprotiv.rs`, which may send only
-`mikrofon.` uses). Nothing else is stored with it, not even
+`mikrofon.` uses); the site's search: `pretraga.trazi` (a search run), `pretraga.prazno` (one that ended with no
+result), `pretraga.klik` (a result opened), never the words searched for. Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.
 
