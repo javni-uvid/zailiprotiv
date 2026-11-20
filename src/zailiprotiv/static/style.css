@@ -84,6 +84,18 @@ th { font-size: var(--t-1); color: var(--muted); font-weight: 600; text-transfor
 details { margin: 1.2rem 0; }
 summary { cursor: pointer; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
 .plain { padding-left: 1.1rem; }
+/* The Rules' articles invoked: a row an article, its count as a bar from zero (grey: a count is no vote), the
+   article's first sentence under it. Only the article's name is underlined, as what opens the row. */
+.rules-cited { list-style: none; padding: 0; max-width: 42rem; }
+.rules-cited li { border-top: 1px solid var(--line); }
+.rules-cited details { margin: 0; }
+.rules-cited details[open] { padding-bottom: .6rem; }
+.rules-cited summary { font-weight: 400; text-decoration: none; padding: .7rem 0; min-height: 2.75rem; }
+.rules-cited summary b { text-decoration: underline; text-underline-offset: 2px; }
+.rc-bar { display: block; height: 6px; background: var(--card); margin: .45rem 0 .4rem; }
+.rc-bar i { display: block; height: 100%; min-width: 2px; background: var(--muted); }
+.rc-short { display: block; font-size: var(--t-2); color: var(--muted); }
+.rules-cited details[open] .rc-short { display: none; }  /* the whole article follows: its first sentence is not said twice */
 @media (max-width: 640px) {
   .vote-cell { width: auto; }
   table.laws thead { display: none; }

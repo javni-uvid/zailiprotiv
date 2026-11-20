@@ -134,6 +134,15 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   lista" is from the orange of "protiv", and the three still differ in lightness for colour-blind readers. The
   live page wears the same (`--c-av`, `page.HEX`). "O projektu" says the project is independent (the
   maintainer's words); the names of the people behind it wait.
+- **The new pages looked at against the rules** (20 Nov 2026: `poslovnik-clanovi`, `u-proceduri`, a day of
+  "Ko koliko govori", `varnice-svi`, the quiz; 320, 390 and 1280 px, both scripts and both themes). None is wider
+  than its screen, each has six to eight letter sizes of the scale, no text is under 4.5:1. One page was changed,
+  `poslovnik-clanovi`: each row's summary was underlined whole (three lines of underlined text a row on a phone)
+  and the list opened on how the count is made. It now opens on its main fact (how many articles, which one
+  most; rule 3), each count has a grey bar from zero against the most invoked (rules 4 and 5; grey, as a count
+  is no vote), only the article's name is underlined, and an opened row doesn't say its first sentence twice.
+  Left as found: on a phone the menu's links are 37-41 px high, the quiz's strip of numbers 34 px and a turn's
+  "podeli" 16 px, under rule 7's 44 px.
 
 ## Design rules
 
