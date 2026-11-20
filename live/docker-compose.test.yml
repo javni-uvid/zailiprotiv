@@ -23,6 +23,13 @@ services:
     volumes:
       - podaci:/data
       - whisper:/data/hf          # the live service's model, not fetched again
+    security_opt:
+      - no-new-privileges:true    # nothing in it can become root again
+    cap_drop: [ALL]
+    # What the entry needs to hand /data over and become the user (ulaz.sh); DAC_OVERRIDE so that an image from
+    # before 20 Nov 2026, which runs as root, can still write there when `vrati` puts it back. The service's own
+    # process has none of them: it isn't root, and can't become it.
+    cap_add: [CHOWN, SETUID, SETGID, DAC_OVERRIDE]
     ports:
       - "127.0.0.1:${TEST_PORT:-8001}:8000"
 

@@ -1,5 +1,5 @@
 # Security checks: the workflows themselves (actionlint: can GitHub read them; zizmor: injected inputs, tokens left behind, unpinned actions,
-# permissions), the Python packages against known vulnerabilities (pip-audit, from uv.lock), and the code
+# permissions), the Python packages against known vulnerabilities (pip-audit, from uv.lock and live/constraints.txt), and the code
 # (CodeQL: Python and the site's and the counter's JavaScript; its findings go to the Security tab). On changes to
 # the code or the workflows (on a pull request too, so a finding is seen before the merge and not after it), every
 # Monday, and by hand. Reads only.
@@ -56,6 +56,11 @@ jobs:
           pip install -q uv pip-audit==2.9.0
           uv export --frozen --no-hashes --no-emit-project -q > requirements.txt
           pip-audit -r requirements.txt --progress-spinner off
+      - name: pip-audit, the live service's image
+        run: |
+          # The exact versions the image is built with (live/constraints.txt). Not yt-dlp, left out of them on
+          # purpose: a build takes its newest.
+          pip-audit -r live/constraints.txt --no-deps --disable-pip --progress-spinner off
 
   code:
     runs-on: ubuntu-latest

@@ -383,3 +383,15 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   `</` is broken. The player's `yt()` and `file()` check what they are given themselves (the next part of a
   recording was played unchecked), and the cards' labels are set as text. **security** now runs on pull
   requests too and on changes under `live/`: a finding used to come after the merge.
+- **The service doesn't run as root, and its image is built from named content** (20 Nov 2026, from the security
+  review). It reads video from outside with ffmpeg, yt-dlp and tesseract and holds the model's key and the
+  notifications' token, on the maintainer's own computer, so a flaw in any of the three was a root shell there.
+  - `ulaz.sh`, the image's entry, starts as root only to give `/data` to the user `uzivo` (the volumes were written
+    by root until now) and then becomes it (`setpriv`); compose adds `no-new-privileges` and drops every capability
+    but the entry's. `docker exec` still enters as root, for looking; a command given to `docker run` runs as `uzivo`,
+    so `Dockerfile.analiza` adds its models readable by all.
+  - The base images are named by digest (`python`, `deno`, `cloudflared`, which was `latest`), and the packages are
+    built at `constraints.txt`'s exact versions: a build next month is today's unless Dependabot's monthly pull
+    request moved them. **yt-dlp stays unpinned** as before. **security** checks `constraints.txt` with pip-audit.
+  - Not done: a read-only root filesystem (Whisper, tesseract and yt-dlp write where they like; to be tried on a
+    day without a sitting).

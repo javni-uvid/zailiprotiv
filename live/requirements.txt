@@ -1,5 +1,6 @@
 # The service's own packages (the site's are in ../pyproject.toml). yt-dlp is not pinned on purpose: YouTube breaks
 # it often, and "docker compose build --pull --no-cache" takes the newest.
+# The rest is built at the versions in constraints.txt (the Dockerfile passes it with -c).
 fastapi>=0.115
 uvicorn>=0.30
 pillow>=10
