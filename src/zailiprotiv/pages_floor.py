@@ -150,6 +150,9 @@ HARSH = ("олош", "стоко", "лопуж", "лопов", "битанг", "
 # … as names for people: not "лоповлук" and "лоповски" (theft), "нељудски", or "стоком" (cattle; only the vocative).
 _NOT = {"лопов": "(?!лу|ск)", "нељуд": "(?!ск)", "стоко": "(?!\\w)"}
 _HARSH = re.compile(r"(?<!\w)(?:(?:" + "|".join(w + _NOT.get(w, "") for w in HARSH) + r")\w*|\w*јеб\w*)", re.I)
+# What every harsh word holds, as plain text: a speech with none of these (nearly all) is not searched word by word,
+# which took a site build some 20 s.
+_HARSH_IN = tuple({w.split("[")[0] for w in HARSH} | {"јеб"})
 _END = re.compile(r"[.!?]+(?=[\s\"“”)]*(?:\n|$|\s+[A-ZА-ЯЈЉЊЂЋЏŠĐČĆŽ(„]))|\n")  # not the point in "300.000" or "чл. 106"
 
 
@@ -165,6 +168,9 @@ PER_PAGE = 20
 def harsh(text: str) -> list[tuple[str, str]]:
     """(word, its sentence) for each harsh word in a speech."""
     out = []
+    folded = text.casefold()  # as re.I compares letters
+    if not any(w in folded for w in _HARSH_IN):
+        return out
     for m in _HARSH.finditer(text):
         out.append((m.group(0).lower(), sentence(text, m.start(), m.end())))
     return out

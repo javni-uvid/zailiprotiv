@@ -36,3 +36,9 @@ the change. The principles and the rules of work are in AGENTS.md.
   `--convocation`) and the helpers the commands share; `__init__` builds the parser. A test that points the
   commands elsewhere patches `cli.common`. Moved unchanged and checked: every command's `--help` (both with and
   without `--convocation`) and `status` give the same text. It found `statistics` never imported in `govor`.
+- **The build's slowest counts made cheaper, the pages unchanged** (20 Nov 2026, from a profile of the build on a
+  runner, 265 s): four counts done one after another took some 80 s. Two names' letters are compared with difflib
+  only when its `quick_ratio`, never below the full ratio, reaches the line (`link.closeness`, `debates._near`); a
+  speech is searched for harsh words only when it holds one of the list's stems as plain text (`pages_floor.harsh`);
+  an MP's words are counted once each before their stems (`profiles.distinctive`). Built before and after on the
+  same data: all 19,180 files the same but for the time of building (538 s → 407 s on the maintainer's computer).

@@ -43,7 +43,9 @@ def closeness(a: str, b: str) -> float:
     from LETTERS up."""
     x, y = set(a.split()), set(b.split())
     words_ = len(x & y) / len(x | y) if x | y else 0.0
-    letters = difflib.SequenceMatcher(None, a, b).ratio()
+    m = difflib.SequenceMatcher(None, a, b)
+    # quick_ratio is never below ratio: under LETTERS, the full count (a site build's slowest step once) is not needed.
+    letters = m.ratio() if m.quick_ratio() >= LETTERS else 0.0
     return max(words_, letters if letters >= LETTERS else 0.0)
 
 
