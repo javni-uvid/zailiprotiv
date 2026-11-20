@@ -395,3 +395,10 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
     request moved them. **yt-dlp stays unpinned** as before. **security** checks `constraints.txt` with pip-audit.
   - Not done: a read-only root filesystem (Whisper, tesseract and yt-dlp write where they like; to be tried on a
     day without a sitting).
+- **Between sittings the notification's offer stands above the day** (20 Nov 2026, the maintainer's choice of three
+  points drawn from the first week's visits: some 47,000 visits on the two sitting days, one device asking for the
+  notification). "Obavesti me kad sednica počne" and "Dodaj na početni ekran" stood under the speaker's box, which
+  between sittings is the last day's box with its summary, half a phone's screens down. With no broadcast
+  (`nema_prenosa`) they now stand above that box, under the notice and the agenda; while a broadcast is on, under
+  the speaker's box as before. The day's three with the most time in that box lead to their pages on the site, as
+  the day's totals already did.

@@ -712,7 +712,7 @@ def test_the_day_in_one_sentence_the_summary_while_nobody_is_on_and_the_link_pre
     paused = t.snapshot(now=now + 861)
     html = fragment(paused, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert paused["stanje"] != "govori" and "Dosad danas" in html and 'class="share-now share-day" data-src="/slika.png"' in html
-    assert "<b>Petar Petrović</b>" in html
+    assert re.search(r"<b>(<a href=\"[^\"]*poslanik/[^\"]*\">)?Petar Petrović(</a>)?</b>", html)  # linked when the site knows the MP
     for s_ in (snap, paused, Tracker(None, "Europe/Belgrade").snapshot(now=now)):
         png = picture.render(s_, cyr=True, tz=TZ, host="mikrofon.zailiprotiv.rs")
         assert png[:8] == b"\x89PNG\r\n\x1a\n" and len(png) > 2000
@@ -1243,6 +1243,28 @@ def test_earlier_turns_are_folded():
     assert html.count('<li id="t') == 20 and 'id="t2900"' not in fold and 'id="t1000"' in fold  # the newest stands open
     few = page.fragment({**snap, "danas": turns[:10]}, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
     assert "raniji-govori" not in few
+
+
+def test_between_sittings_the_notification_offer_stands_above_the_day_and_the_three_link_the_site():
+    """20 Nov 2026: one device had asked for the sitting's notification, its button half a phone's screens down under
+    the last day's summary. Between sittings it stands above the day; while a broadcast is on, under the speaker's
+    box as before. The day's three with the most time lead to their pages on the site, as the totals do."""
+    from zoneinfo import ZoneInfo
+    from uzivo import page
+    tz = ZoneInfo("Europe/Belgrade")
+    turns = [{"ime": n, "adresa": a, "uloga": "", "grupa": "", "lista": "", "od": od, "do": od + s, "sekundi": s}
+             for n, a, od, s in (("Petrović Petar", "petrovic-petar", 1000, 900), ("Jovanović Jovan", "", 2000, 300),
+                                 ("Marković Marko", "markovic-marko", 3000, 120))]
+    snap = {"provereno": 0, "stanje": "nema_prenosa", "sada": None, "danas": turns, "dan": "2026-11-19"}
+    site = "https://zailiprotiv.rs/"
+    html = page.page(snap, cyr=False, site=site, tz=tz)
+    assert html.count('class="add-home"') == 1 and html.index('class="add-home"') < html.index('id="deo"')
+    top = html[html.index('class="pz-top"'):html.index("</ol>", html.index('class="pz-top"'))]
+    assert '<a href="https://zailiprotiv.rs/poslanik/petrovic-petar">Petar Petrović</a>' in top
+    assert "<b>Jovan Jovanović</b>" in top  # no page known: the name alone
+    assert 'href="https://zailiprotiv.rs/cir/poslanik/petrovic-petar"' in page.page(snap, cyr=True, site=site, tz=tz)
+    on = page.page({**snap, "stanje": "govori"}, cyr=False, site=site, tz=tz)
+    assert on.count('class="add-home"') == 1 and on.index('class="add-home"') > on.index('id="deo"')
 
 
 def test_the_days_steps_follow_the_order_of_the_assemblys_work():
