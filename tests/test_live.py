@@ -1350,3 +1350,34 @@ def test_the_summary_on_the_page_says_what_wrote_it():
     assert "Sažetak dosad, do 13:37" in html and "izabrala predsednika" in html and "Claude Haiku" in html
     assert "Сажетак" in page_.summary_box({"sazetak": s}, cyr=True)
     assert page_.summary_box({"sazetak": None}, cyr=False) == ""
+
+
+def test_the_subscribers_are_told_when_the_days_summary_is_out(tmp_path, monkeypatch):
+    """Once a day, in the hours a notification may wake someone, and only while the summary is on the page and
+    under half a day old; the counter is asked with the kind "sazetak"."""
+    from uzivo import sudija
+    from uzivo.obavesti import Bell
+    posts = []
+    bell = Bell(str(tmp_path / "o.json"), token="t", api="https://glasovi.example", post=lambda od, *w: posts.append(w) or {"sent": 1})
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    j = sudija.Judge(t, threading.Event(), ask=lambda *a: "{}", bell=bell)
+    night = 1795134600  # 20 Nov 2026, 01:30 in Belgrade
+    j.day, j.kept = "2026-11-19", {"vidjeno": [], "delovi": [], "dan": {"ukratko": "U.", "t": night - 1800}}
+    monkeypatch.setattr(config, "SHOW_SUMMARY", True)
+    j._tell(night)
+    assert posts == []  # at night: nobody woken
+    morning = night + 6 * 3600  # 07:30
+    j._tell(morning)
+    import time as _t
+    for _ in range(50):
+        if posts:
+            break
+        _t.sleep(0.02)
+    assert posts == [("sazetak",)] and j.kept["javljeno"] == morning
+    j._tell(morning + 60)
+    assert len(posts) == 1  # once
+    assert not bell.summary("2026-11-19")  # the bell keeps the day too
+    j.kept = {"dan": {"ukratko": "U.", "t": morning - 13 * 3600}}
+    j._tell(morning)
+    assert len(posts) == 1  # half a day old: no more news

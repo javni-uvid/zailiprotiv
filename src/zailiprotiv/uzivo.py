@@ -38,6 +38,7 @@ def pull(root: Path, base: str, today: str | None = None, get=_get) -> list[str]
         conv = convocation(day)
         if not conv:
             continue
+        summary(root, base, conv, day, day in recent, get)
         path = root / conv / "uzivo" / f"{day}.json"
         if path.exists() and day not in recent:
             continue
@@ -52,6 +53,31 @@ def pull(root: Path, base: str, today: str | None = None, get=_get) -> list[str]
         path.write_text(text, encoding="utf-8")
         written.append(day)
     return written
+
+
+def summary(root: Path, base: str, conv: str, day: str, recent: bool, get=_get) -> bool:
+    """The model's summary of a day (live/uzivo/sudija.py, /sazetak/<day>.json once it is on the live page) into
+    data/<N>/sazetak/<day>.json: asked for today and yesterday, and for an earlier day not kept yet. One with the
+    day's summary is not replaced by one without it. True when written."""
+    path = root / conv / "sazetak" / f"{day}.json"
+    if path.exists() and not recent:
+        return False
+    try:
+        got = get(f"{base}sazetak/{day}.json")
+    except Exception:  # none yet (404), or the service off
+        return False
+    if not isinstance(got, dict) or not (got.get("dan") or got.get("delovi")):
+        return False
+    got = {k: v for k, v in got.items() if k != "vidjeno"}
+    kept = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    if isinstance(kept.get("dan"), dict) and kept["dan"].get("ukratko") and not (isinstance(got.get("dan"), dict) and got["dan"].get("ukratko")):
+        return False
+    text = json.dumps(got, ensure_ascii=False, indent=1) + "\n"
+    if path.exists() and path.read_text(encoding="utf-8") == text:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    return True
 
 
 def _covered(record: dict) -> int:

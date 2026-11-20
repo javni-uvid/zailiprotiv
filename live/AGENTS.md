@@ -323,5 +323,11 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   is asked once more with what was wrong, then left out (`check_summary`). Kept in `/data/sazetak/<day>.json`;
   `/sazetak?k=<PREPIS_KLJUC>` shows it to the maintainer, and with `SAZETAK_PRIKAZ=1` it is on the page while nobody
   is on (`page.summary_box`, labelled: written by a model from the automatic transcript, may err in names and
-  numbers, no quote, the notes are the source once published) and at `/sazetak/<day>.json`. Next: the site takes
-  that file in (`uzivo-pull`) for `govornici/<date>`, and the subscribers get a push when the day's summary is out.
+  numbers, no quote, the notes are the source once published) and at `/sazetak/<day>.json`. The site takes that file
+  in each hour (`uzivo.summary`, in `uzivo-pull`: today's and yesterday's, never one with the day's summary replaced
+  by one without) into `data/<N>/sazetak/<day>.json`, and `govornici/<date>` opens with "Sažetak dana" (decisions,
+  the paragraph, who spoke about what folded, the same label). Once the day's summary is on the page, the
+  subscribers of the sitting's notification are told (`obavesti.Bell.summary`, the counter's `/p/salji` with
+  `"vrsta": "sazetak"`, kept as `s:<day>` in `push_days`, once a day; the service worker writes "Sažetak dana je
+  spreman"), only between 7 and 22 h and while the summary is under half a day old, so a day ended at midnight is
+  told in the morning. A day ending after midnight is still summed up (`Judge.step`). E-mail may come later.

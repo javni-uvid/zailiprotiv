@@ -53,12 +53,24 @@ class Bell:
             t.join()
         return True
 
-    def send(self) -> None:
+    def summary(self, day: str, *, wait: bool = False) -> bool:
+        """The day's summary is out (sudija.py): every device that asked for the notifications is told, once a day,
+        by the same counter; the counter keeps the day apart from the sitting's ("s:<day>")."""
+        if not (self.token and self.api.startswith("https://")) or self._last("sazetak") == day:
+            return False
+        self._keep(day, "sazetak")
+        t = threading.Thread(target=self.send, args=("sazetak",), daemon=True)
+        t.start()
+        if wait:
+            t.join()
+        return True
+
+    def send(self, what: str = "sednica") -> None:
         sent = gone = 0
         od = 0
         try:
             for _ in range(BATCHES):
-                r = self.post(od)
+                r = self.post(od) if what == "sednica" else self.post(od, what)
                 if r.get("already"):
                     log.info("notification: already sent today")
                     return
@@ -70,8 +82,8 @@ class Bell:
         except Exception as exc:  # the counter unreachable: no second try today, the day is kept
             log.warning("notification not sent (%s)", exc)
 
-    def _post(self, od: int) -> dict:
-        req = urllib.request.Request(self.api + "/p/salji", data=json.dumps({"od": od}).encode(), method="POST",
+    def _post(self, od: int, what: str = "sednica") -> dict:
+        req = urllib.request.Request(self.api + "/p/salji", data=json.dumps({"od": od, "vrsta": what}).encode(), method="POST",
                                      headers={"authorization": "Bearer " + self.token, "content-type": "application/json",
                                               "user-agent": "zailiprotiv-mikrofon"})
         with urllib.request.urlopen(req, timeout=30) as r:
@@ -93,15 +105,19 @@ class Bell:
             log.warning("admin device not kept (%s)", exc)
             return False
 
-    def _last(self) -> str:
+    def _kept(self) -> dict:
         try:
-            return str(json.loads(self.path.read_text(encoding="utf-8")).get("dan", ""))
-        except (OSError, ValueError, AttributeError):
-            return ""
+            got = json.loads(self.path.read_text(encoding="utf-8"))
+            return got if isinstance(got, dict) else {}
+        except (OSError, ValueError):
+            return {}
 
-    def _keep(self, day: str) -> None:
+    def _last(self, what: str = "dan") -> str:
+        return str(self._kept().get(what, ""))
+
+    def _keep(self, day: str, what: str = "dan") -> None:
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(json.dumps({"dan": day}), encoding="utf-8")
+            self.path.write_text(json.dumps({**self._kept(), what: day}), encoding="utf-8")
         except OSError:
             log.warning("the day of the notification not kept")

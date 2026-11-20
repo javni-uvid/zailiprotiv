@@ -17,8 +17,9 @@
 //   POST /p           ← {"endpoint": "<push address>", "cir": bool}   from the live page: notify this device when a
 //                                                                     sitting's broadcast begins
 //   POST /p/odjava    ← {"endpoint": "<push address>"}                no more notifications for it
-//   POST /p/salji     ← {"od": <row>}, with "authorization: Bearer <PUSH_TOKEN>"   from the live service: send the
-//                       day's notification (once a day), a batch at a time; answers with where the next batch starts
+//   POST /p/salji     ← {"od": <row>, "vrsta": "sednica"|"sazetak"}, with "authorization: Bearer <PUSH_TOKEN>"
+//                       from the live service: send the day's notification of a sitting begun, or of the day's
+//                       summary out (each once a day), a batch at a time; answers with where the next batch starts
 //   POST /p/admin     ← {"endpoint"}, with the token: from the live service's /upozorenja (the maintainer's key):
 //                       this device is told when "Ko sada govori" is down while a sitting is on; /p/admin/odjava
 //   POST /p/vrsta     ← {"endpoint"}   from the page's service worker on a push: which notification it is
@@ -189,12 +190,13 @@ async function authorization(env, endpoint) {
   h.catch(() => v.kept.delete(aud));
   return h;
 }
-async function sendPush(env, from) {
-  const day = today();
+async function sendPush(env, from, what = "sednica") {
+  // the sitting's beginning and the day's summary (20 Nov 2026), each once a day; the summary's day kept as "s:<day>"
+  const day = (what === "sazetak" ? "s:" : "") + today();
   if (!from) {  // the first batch: once a day, whatever the live service asks
     const r = await env.DB.prepare("INSERT OR IGNORE INTO push_days (day) VALUES (?)").bind(day).run();
     if (!r.meta.changes) return { day, already: true, next: null };
-    await watchSet(env, "poslato", { t: Date.now() });  // what a service worker asking now was sent (kind)
+    await watchSet(env, "poslato", { t: Date.now(), vrsta: what });  // what a service worker asking now was sent (kind)
   }
   const rows = (await env.DB.prepare("SELECT rowid AS id, endpoint FROM push WHERE rowid > ? ORDER BY rowid LIMIT ?")
     .bind(from || 0, PUSH_BATCH).all()).results;
@@ -282,10 +284,11 @@ async function watch(env) {
 // minutes old; for everyone else always the sitting's.
 async function kind(env, endpoint) {
   const admin = await env.DB.prepare("SELECT 1 AS x FROM push_admin WHERE endpoint = ?").bind(endpoint || "").first();
-  if (!admin) return { vrsta: "sednica" };
-  const last = await watchGet(env, "admin"), day = await watchGet(env, "poslato");
+  const day = await watchGet(env, "poslato"), sent = { vrsta: (day && day.vrsta) || "sednica" };
+  if (!admin) return sent;
+  const last = await watchGet(env, "admin");
   if (last && Date.now() - last.t < 10 * 60e3 && (!day || last.t > day.t)) return { vrsta: last.vrsta, min: last.min };
-  return { vrsta: "sednica" };
+  return sent;
 }
 
 async function same(a, b) {  // the token compared by its hash, so the time taken says nothing of it
@@ -323,9 +326,13 @@ export default {
     if (path === "/p/salji") {  // the live service, with its token
       const auth = request.headers.get("authorization") || "";
       if (!env.PUSH_TOKEN || !env.VAPID_JWK || !(await same(auth, "Bearer " + env.PUSH_TOKEN))) return reply({ error: "token" }, 403, origin);
-      let od = 0;
-      try { od = Math.max(0, parseInt(JSON.parse(await request.text()).od, 10) || 0); } catch (e) { od = 0; }
-      return reply(await sendPush(env, od), 200, origin);
+      let od = 0, what = "sednica";
+      try {
+        const b = JSON.parse(await request.text());
+        od = Math.max(0, parseInt(b.od, 10) || 0);
+        if (b.vrsta === "sazetak") what = "sazetak";
+      } catch (e) { od = 0; }
+      return reply(await sendPush(env, od, what), 200, origin);
     }
     if (path === "/p/admin" || path === "/p/admin/odjava") {  // the live service, for the maintainer's key
       const auth = request.headers.get("authorization") || "";

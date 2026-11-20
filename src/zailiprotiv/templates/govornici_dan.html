@@ -9,6 +9,13 @@
 <p class="kicker"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
 <h1>Ko je koliko govorio u Skupštini, {{ when }}</h1>
 <p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika. Isto pravilo za svakog: govor traje od prvog do poslednjeg kadra s imenom u potpisu. Predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši.</p>
+{% if summary %}<section class="day-summary" id="sazetak">
+<h2>Sažetak dana</h2>
+{% if summary.odluke %}<ul class="plain">{% for o in summary.odluke %}<li><span class="label">{{ o.vreme }}</span> {{ o.sta }}</li>{% endfor %}</ul>{% endif %}
+<p>{{ summary.ukratko }}</p>
+{% if summary.govornici %}<details><summary class="label">O čemu je ko govorio ({{ summary.govornici|length }})</summary><ul class="plain">{% for g in summary.govornici %}<li><b>{{ g.ime|given_first }}</b>{% if g.lista %} <span class="label">{{ g.lista }}</span>{% endif %}: {{ g.o_cemu }}</li>{% endfor %}</ul></details>{% endif %}
+<p class="label">Napisao AI model (Claude Haiku{% if summary.model %}, {{ summary.model }}{% endif %}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
+</section>{% endif %}
 <h2>Po govorniku</h2>
 {{ bars(people, true) }}
 <h2>Po listi</h2>

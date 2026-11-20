@@ -229,9 +229,9 @@ def ask_claude(system: str, user: str, max_tokens: int = 16000, effort: str = "l
 class Judge(threading.Thread):
     """The model's calls (EVENTS every ten minutes, SUMMARY at a break, DAY at the end), from the tracker's day."""
 
-    def __init__(self, tracker, stop: threading.Event, ask=None) -> None:
+    def __init__(self, tracker, stop: threading.Event, ask=None, bell=None) -> None:
         super().__init__(daemon=True)
-        self.tracker, self.halt = tracker, stop
+        self.tracker, self.halt, self.bell = tracker, stop, bell
         self.ask = ask or ask_claude
         self.tz = ZoneInfo(config.TZ)
         self.day, self.kept = "", {}
@@ -284,9 +284,12 @@ class Judge(threading.Thread):
     def step(self, now: float | None = None) -> None:
         now = time.time() if now is None else now
         snap = self.tracker.snapshot(now=now)
-        if snap.get("ranije") or not snap.get("dan"):
+        if not snap.get("dan"):
             return
         self._load(snap["dan"])
+        if snap.get("ranije") and self.kept.get("dan") is not None:  # an earlier day, done: told in the morning
+            self._tell(now)
+            return  # (a day ending after midnight is still finished: its last pieces read, the day summed up)
         rows, turns = self._material(snap)
         seen = set(self.kept["vidjeno"])
         fresh = [r for r in rows if r[0] not in seen and r[0] <= now - LAG]
@@ -295,6 +298,22 @@ class Judge(threading.Thread):
             self._events(fresh, rows, turns)
             self.last_call = now
         self._summaries(snap, rows, turns, now, live)
+        self._tell(now)
+
+    def _tell(self, now: float) -> None:
+        """The day's summary out on the page: the subscribers told once (obavesti.Bell.summary), in the hours a
+        notification may wake someone (obavesti.HOURS; a day ended at midnight is told in the morning)."""
+        from .obavesti import HOURS
+        whole = self.kept.get("dan")
+        if not (self.bell and config.SHOW_SUMMARY and isinstance(whole, dict) and whole.get("ukratko")) or self.kept.get("javljeno"):
+            return
+        if not HOURS[0] <= dt.datetime.fromtimestamp(now, self.tz).hour < HOURS[1]:
+            return
+        if now - whole.get("t", now) > 12 * 3600:  # news no more: a summary half a day old is not pushed
+            return
+        self.kept["javljeno"] = int(now)
+        self._save()
+        self.bell.summary(self.day)
 
     def _events(self, fresh, rows, turns) -> None:
         block = lines(fresh, turns, self.tz, self.tracker.shown)
