@@ -85,6 +85,7 @@ WHISPER_BEAM = _i("WHISPER_BEAM", 3)
 SOUND_PATH = os.environ.get("SOUND_PATH", "/tmp/uzivo/zvuk")  # the segments' sound until it is written down
 
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
+VERSION = os.environ.get("VERZIJA", "").strip()  # the commit the image was built from (mikrofon.ps1; Dockerfile)
 FRAME_PATH = os.environ.get("FRAME_PATH", "/tmp/uzivo/frame.jpg")
 STATE_PATH = os.environ.get("STATE_PATH", "/data/stanje.json")  # today's turns, kept across restarts
 

@@ -696,6 +696,14 @@ its minute.
   last frame takes that up (`Tracker._resume`), counting the waits for a frame from the restart, so the page does
   not say "no sitting" while the stream is found again, and the same speaker read again is the same turn.
   (3) `mikrofon.ps1 uzivo` waits for the turn on to end (`-Cekaj`, 10 minutes at most; `-Odmah` at once).
+- **What goes live is known** (20 Nov 2026, the maintainer's choice; the night before, other agents' worktrees had
+  built `mikrofon:test` too, so `uzivo` would have put live whatever was built last). `mikrofon.ps1` passes the
+  commit, branch and whether the tree was clean to the build (labels `zailiprotiv.*`, `VERZIJA` in the image:
+  `/stanje.json` and the footer show it). A worktree's test is `mikrofon:test-<branch>` on a port and volume of its
+  own; `uzivo` runs from the main clone on `main` and takes only an image of a clean `origin/main` (`-Ipak`
+  overrides), waits until the new one answers with its commit and puts the one before back if it doesn't in 90 s.
+  A Docker healthcheck, `logovi`, `ocisti`, `.env` taken from the main clone, and `mikrofon-whisper` as an external
+  volume.
 
 ## Open questions
 
