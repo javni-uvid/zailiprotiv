@@ -5,11 +5,17 @@
 # GitHub is gone. The ten minutes leave the agent that merged time to finish, so an agent never removes its own
 # worktree (Orca would stop its terminal); the next agent's run removes it. The main clone, the worktree this runs
 # in, one with an open or unmerged pull request, or one left unmerged on purpose are never touched.
+# What a project leaves behind outside git for a worktree (a test's containers, a cache) it removes itself, in
+# tools/pocisti-projekat.sh: run last when there, with the same arguments, after the worktrees are gone.
 #   sh tools/posalji.sh calls it after a merge; by hand: sh tools/pocisti.sh [--proba]   (--proba only lists)
 set -eu
 dry=0; [ "${1:-}" = --proba ] && dry=1
-command -v orca >/dev/null 2>&1 || { echo "pocisti: nema orca; ništa nije uklonjeno."; exit 0; }
 here=$(git rev-parse --show-toplevel)
+own() {
+  [ -f "$here/tools/pocisti-projekat.sh" ] || return 0
+  sh "$here/tools/pocisti-projekat.sh" "$@" || echo "pocisti: tools/pocisti-projekat.sh nije uspeo." >&2
+}
+command -v orca >/dev/null 2>&1 || { echo "pocisti: nema orca; ništa nije uklonjeno."; own "$@"; exit 0; }
 merged=$(gh pr list --state merged --limit 300 --json headRefName,headRefOid,mergedAt \
   --jq '.[] | select(now - (.mergedAt | fromdateiso8601) > 600) | "\(.headRefName) \(.headRefOid)"')
 git worktree list --porcelain | sed -n 's/^worktree //p' | tail -n +2 | while read -r wt; do
@@ -26,3 +32,4 @@ git worktree list --porcelain | sed -n 's/^worktree //p' | tail -n +2 | while re
     echo "pocisti: $wt nije uklonjen (orca worktree rm)." >&2
   fi
 done
+own "$@"

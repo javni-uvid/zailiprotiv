@@ -27,6 +27,8 @@ Several agents work at once, so nothing is committed straight to `main`.
   worktree with no changes whose pull request was merged on exactly its commit over ten minutes ago; an agent's
   own goes in the next agent's run. By hand: `sh tools/pocisti.sh` (`--proba` only lists). Never by
   `git worktree remove`: Orca keeps the folder open, git forgets the worktree and the folder stays behind.
+  What a project keeps outside git for a worktree (a test's containers and images, a cache) goes at the same
+  time: the project removes it in `tools/pocisti-projekat.sh`, which `pocisti.sh` runs last when it is there.
 - **The data workflows commit straight to `main`.** A branch lags behind in `data/`, which is fine while a task
   doesn't change `data/`; a task that must, rebases just before it merges.
 - **`main` is guarded on our side.** GitHub's rulesets can't exempt the workflows' own token, so a ruleset
