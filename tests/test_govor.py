@@ -1,0 +1,94 @@
+"""govor.py: the notes' speeches found in the recording's words."""
+from zailiprotiv import govor
+
+F = "https://arhiva.example/zas1.mp4"
+
+
+def heard(text: str, start: float = 0.0, url: str = F, step: float = 0.5):
+    return [(w, url, start + i * step) for i, w in enumerate(govor.fold(text))]
+
+
+def test_fold_latin_lower_no_diacritics():
+    assert govor.fold("Реч има народни посланик Ђорђе Милићевић.") == ["rec", "ima", "narodni", "poslanik", "djordje",
+                                                                       "milicevic"]
+    assert govor.fold("Gjordjević") == ["djordjevic"]
+
+
+def test_anchors_keep_one_order():
+    said = "a b c d e f g h i j".split()
+    got = "x a b c d e y f g h i j".split()
+    runs = govor.anchors(said, got, n=4)
+    assert runs and all(p2 > p1 for (_, p1), (_, p2) in zip(runs, runs[1:]))
+    assert runs[0] == (0, 1)
+
+
+def test_place_and_day():
+    chair = "Hvala vam. Reč ima narodni poslanik Petar Petrović, izvolite kolega."
+    mp = ("Poštovani predsedavajući, dame i gospodo, govorim danas o budžetu za školstvo i o tome kako se novac deli "
+          "opštinama na jugu zemlje gde škole nemaju grejanje već treću godinu zaredom.")
+    speeches = [{"key": "1", "chair": True, "speaker": "ПРЕДСЕДАВАЈУЋИ", "text": chair},
+                {"key": "2", "chair": False, "speaker": "ПЕТАР ПЕТРОВИЋ", "text": mp},
+                {"key": "3", "chair": True, "speaker": "ПРЕДСЕДАВАЈУЋИ", "text": "Zahvaljujem."}]
+    # the recording: a few words before, the chair, the speech with one word misheard, the end
+    words = heard("buka u sali " + chair, 100) + heard(mp.replace("grejanje", "grijanje"), 120) + heard("hvala", 160)
+    placed = govor.place(speeches, words)
+    assert placed[1]["datoteka"] == F and 119 <= placed[1]["od"] <= 121 and placed[1]["do"] > 130
+    assert "datoteka" not in placed[2]  # one word is no run of four: no place
+    turns = govor.day(placed, [{"url": F, "od": 1_000_000}], lambda s: {"ime": "Petrović Petar", "adresa": "petrovic-petar",
+                                                                       "grupa": "", "uloga": ""})
+    assert [t["ime"] for t in turns] == ["Petrović Petar"]  # the chair is not listed
+    t = turns[0]
+    assert t["od"] == 1_000_000 + int(placed[1]["od"]) and t["snimak"] == int(placed[1]["od"] - govor.LEAD)
+    assert t["okvira"] >= govor.MIN_ANCHORS and t["beleske"] == ["2"]
+
+
+def test_day_joins_one_speaker_across_the_chair():
+    a = {"key": "1", "speaker": "A", "datoteka": F, "od": 10.0, "do": 50.0, "sidra": 3}
+    c = {"key": "2", "speaker": "P", "chair": True}
+    b = {"key": "3", "speaker": "A", "datoteka": F, "od": 60.0, "do": 90.0, "sidra": 2}
+    other = {"key": "4", "speaker": "B", "datoteka": F, "od": 100.0, "do": 120.0, "sidra": 2}
+    turns = govor.day([a, c, b, other], [{"url": F, "od": 0}], lambda s: {"ime": s, "adresa": "", "grupa": "", "uloga": ""})
+    assert [(t["ime"], t["od"], t["do"], t["okvira"]) for t in turns] == [("A", 10, 90, 5), ("B", 100, 120, 2)]
+
+
+def test_a_days_part_the_archive_holds_before_its_page_lists_it():
+    from zailiprotiv import videos
+    base = "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910"
+    parts = [{"part": i + 1, "title": "Sednica", "url": f"{base}{s}.mp4"} for i, s in enumerate(["", "a", "b", "c", "d"])]
+    there = {f"{base}e.mp4"}
+    got = videos.unlisted(parts, lambda u: u in there)
+    assert got == [{"part": 6, "title": "Sednica", "url": f"{base}e.mp4", "nenavedeno": True}]
+    assert videos.unlisted(parts[:1], lambda u: u in there) == []  # "a" is not there: nothing further is tried
+    assert videos.unlisted([], lambda u: True) == []
+
+
+def test_files_placed_on_the_clock_by_captions_read_in_passing():
+    a, b, c = "u/a.mp4", "u/b.mp4", "u/c.mp4"
+    files = [{"url": a, "trajanje": 1000}, {"url": b, "trajanje": 2000}, {"url": c, "trajanje": 500}]
+    stretches = {b: [("pastor", 100.0, 400.0, 0.8)], c: [("pastor", 50.0, 150.0, 0.8)]}
+    # one caption of Pastor read in passing in each: b alone could start anywhere in 300 s, but b's end and c's start
+    # must meet (no break between them), and c has one reading too
+    record = [{"adresa": "pastor", "od": 10_200}, {"adresa": "pastor", "od": 12_100 + 100}]
+    got = govor.clock(files, stretches, record, {a: 5000})
+    assert got[a] == (5000, "poznato")
+    assert set(got) == {a, b, c} and abs(got[b][0] + 2000 - got[c][0]) <= govor.AGREE
+    assert govor.clock(files, {b: stretches[b]}, record[:1], {a: 5000}).keys() == {a}  # one reading, no neighbour to confirm it
+
+
+def test_voice_day_joins_and_places():
+    f = "u/b.mp4"
+    st = {f: [("x", 100.0, 200.0, 0.8), ("x", 250.0, 300.0, 0.8), ("y", 400.0, 500.0, 0.7)]}
+    turns = govor.voice_day([{"url": f, "trajanje": 1000}], st, {f: (1000.0, "")},
+                            lambda w: {"ime": w, "adresa": w, "grupa": "", "uloga": ""})
+    assert [(t["adresa"], t["od"], t["do"], t["snimak"], t["po"]) for t in turns] == [
+        ("x", 1100, 1300, 95, "glas"), ("y", 1400, 1500, 395, "glas")]
+
+
+def test_a_part_starts_after_the_one_before_it():
+    a, b = "u/a.mp4", "u/b.mp4"
+    files = [{"url": a, "trajanje": 1000}, {"url": b, "trajanje": 1000}]
+    st = {b: [("x", 100.0, 200.0, 0.8)]}
+    # x was read in the morning, inside a's time, and again later: only the later readings can place b
+    record = [{"adresa": "x", "od": 5150}, {"adresa": "x", "od": 5160}, {"adresa": "x", "od": 9150}, {"adresa": "x", "od": 9160}]
+    got = govor.clock(files, st, record, {a: 5000})
+    assert 8950 <= got[b][0] <= 9060

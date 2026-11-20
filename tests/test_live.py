@@ -974,6 +974,15 @@ def test_the_floor_given_by_the_chairs_word_when_the_picture_names_nobody():
     assert got("Reč ima koleginica Petrović.") == [] and got("Reč ima Zoran Lutovac.") == []  # two of that surname; nobody near
     assert got("Reč ima Ana Petrović.") == ["petrovic-ana"] and got("Reč ima Ana Marija Petrović.") == []  # two fit: nobody
     assert got("Jovo Bakić je to rekao. Reč ima predstavnik predlagača.") == []  # named elsewhere, not after the phrase
+    # 20 Nov 2026: the other ways the chair gives the floor, as Whisper wrote them on 19 Nov
+    assert got("Zahvaljujem. Rečima narodna poslanica Nataša Jovanović.") == ["jovanovic-natasa"]  # "reč ima" as one word
+    assert got("Složio bih se sa tim rečima kolege Bakića.") == []  # "rečima", the word: "kolege" is no title of a speaker
+    assert got("Rečima koje je izgovorio Jovo Bakić nema mesta ovde.") == []  # "rečima", the word, no title after it
+    assert got("Povreda Poslovnika, narodni poslanik Milenko Jovanov.") == ["jovanov-milenko"]
+    assert got("Pravo na repliku ima Jovo Bakić.") == ["bakic-jovo"] and got("Dajem reč Milenku Jovanovu.") == ["jovanov-milenko"]
+    assert got("Replika, narodni poslanik Jovo Bakić.") == ["bakic-jovo"]
+    assert got("Replika gospodinu Bakiću.") == []  # whom it answers, not who speaks
+    assert got("Izvolite, kolega Jovanov.") == ["jovanov-milenko"]
     now = 1795089600.0
     ev = lambda at, name, slug: {"t": now + at, "vrsta": "Reč ima", "tekst": name, "izvor": "prepis", "url": slug}
     snap = {"provereno": now + 3000, "sada": None, "dnevni_red": None, "danas": [{"od": now + 1000, "do": now + 1400}],

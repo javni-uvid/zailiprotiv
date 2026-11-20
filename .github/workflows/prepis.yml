@@ -12,9 +12,6 @@ on:
       convocation:
         description: "Convocation"
         default: "15"
-      model:
-        description: "Whisper model (small, medium, large-v3)"
-        default: "medium"
       minutes:
         description: "Stop after this many minutes"
         default: "300"
@@ -42,12 +39,11 @@ jobs:
         env:
           IN_DAY: ${{ inputs.day }}
           IN_CONV: ${{ inputs.convocation }}
-          IN_MODEL: ${{ inputs.model }}
           IN_MINUTES: ${{ inputs.minutes }}
         run: |
           command -v ffmpeg >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null; }
           pip install uv && uv sync --frozen
-          uv run --with faster-whisper zailiprotiv --convocation "$IN_CONV" prepis "$IN_DAY" --model "$IN_MODEL" --minutes "$IN_MINUTES"
+          uv run --with faster-whisper zailiprotiv --convocation "$IN_CONV" prepis "$IN_DAY" --minutes "$IN_MINUTES"
       - name: Keep it
         env:
           IN_DAY: ${{ inputs.day }}

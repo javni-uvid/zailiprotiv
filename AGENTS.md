@@ -471,7 +471,7 @@ its minute.
   `kako-racunamo#govornici`.
 - **An automatic transcript until the notes** (18 Nov 2026, the maintainer's request; `prepis.py`, the **prepis**
   workflow, by hand per day): each turn of 30 s or more cut out of the archive's file as sound and written down by
-  Whisper (faster-whisper on the runner's CPU, `medium` by default; a run stops after `minutes` and the next goes on).
+  Whisper (faster-whisper on the runner's CPU, `large-v3-turbo`, the one model since 20 Nov 2026; a run stops after `minutes` and the next goes on).
   Shown under the turn on the day's page, folded, as an automatic transcript that may err and is not a quote
   (principle 6 is about the notes, which the site quotes); not shown once the day's notes are read.
 - **"Dok čekate"** (18 Nov 2026, the maintainer's request: "more fun", on both pages, "like the voting quiz"):
@@ -526,7 +526,7 @@ its minute.
   choices after a look at skupstina.live; its chat, muting and model-written summaries were left out).
   **Automatic transcript** (`live/uzivo/prepis.py`): each segment read for its frame leaves its sound (16 kHz), a
   thread gives the sound to the turn it falls in and has Whisper (faster-whisper on the maintainer's CPU,
-  `WHISPER_MODEL`, "small" by default, empty for off; the model is kept in `/data/hf`) write it down about a minute
+  `WHISPER_MODEL`, `large-v3-turbo`, the one model since 20 Nov 2026, empty for off; the model is kept in `/data/hf`) write it down about a minute
   at a time while the speaker is on, the rest when the turn ends; turns under 20 s and sound in no turn (the chair)
   are thrown away unread. The text is kept per day (`/data/prepis/<day>.json`, `Tracker.say`), shown with the speaker
   as its last 400 characters and whole at `/prepis` (and `/cir/prepis`), always labelled automatic, may err, **not a
@@ -758,6 +758,45 @@ its minute.
   counter which it was (`/p/vrsta`, by its own push address): the watch's for the maintainer's devices, the
   sitting's for everyone else. The Assembly marks a sitting of several days "in progress" on its days off too, so
   a computer turned off on such a day is told about as well.
+- **Who spoke when, from what was said** (20 Nov 2026, the maintainer's decision: from the afternoon of 19 Nov the
+  broadcast showed no speaker's caption, so reading the picture no longer works). `live/uzivo/zvuk_dana.py`, run in
+  the live image on the maintainer's computer (which reaches the archive), writes each archive file of a day down
+  word by word with its second (Whisper, `large-v3-turbo`, told the day's speakers' names; ten minutes of sound at a time, as a whole file does not fit in
+  memory); `zailiprotiv govor <day> <folder>` (`govor.py`) finds each speech of the day's notes in those words by
+  runs of four words found once in each, in the same order, and writes `snimak/<day>.json` with `"izvor": "govor"`:
+  a speech lasts from its first word to its last, gets no place with fewer than two runs, and the name is the
+  notes'. Nothing of the automatic words is shown or quoted. Each file's start on the clock is from `arhiva.json`,
+  or from the live record's turns of the same speakers; a file with neither is reported and its turns are left out
+  (its start is then set by hand in `arhiva.json`, `"rucno": true`, with how). Checked on 18 Nov against the turns
+  read from the captions: a speech begins up to half a minute before its caption appears and ends with it. It waits
+  for the day's notes, which the Assembly publishes a day or more later.
+- **Faces and voices, only where there are no notes** (20 Nov 2026, the maintainer's decisions: faces and voices
+  may be used, the recordings being public and MPs public officials; and they are the fallback). The sources of who
+  spoke when, in this order: the caption while the broadcast shows it; the day's notes lined up with the sound
+  (above), which once published replace whatever else the day had; and only for a day, or a part of one, with no
+  notes yet, faces and voices (`live/uzivo/lice_glas.py` in `live/Dockerfile.analiza`, an image of its own on the
+  tested one, never live: YuNet and SFace for faces, 3D-Speaker's ERes2Net through sherpa-onnx for voices; only the
+  numbers are kept, no picture). `ko.py` matches a voice for every speaker by one rule: a stretch of sound is named
+  when its windows are on average 0.68 alike the mean of a speaker's windows in turns known by caption or notes
+  (`STRETCH_MIN`; checked on 18 Nov, each file left out of the samples in turn: every stretch so named was right).
+  Faces do not name anyone by themselves: the camera often shows someone behind the speaker or listening (19 Nov:
+  Vučević and Lalošević behind Brnabić), and the Assembly's portraits matched 4 of 49 turns. They group the close
+  shots of the parts no voice named, and the maintainer labels the groups by hand (a private page of crops); a label
+  becomes a voice sample only when the sound in that group's frames is one voice (0.65), and a chair (19 Nov:
+  Radenović, then Macura during the vote, then Čupić) is a sample that is never listed. `zailiprotiv glas-dan <day>
+  <stretches>` writes such a day (`"izvor": "glas"`): the captions' turns, the voices' where there were none, each
+  part of the recording placed on the clock by captions read in passing (`govor.clock`; 19 Nov's afternoon by hand,
+  three of Pastor's captions in three parts agreeing). It is incomplete, and says so: a speaker with no sample is not
+  named. Written again from the notes when they come; the analysis's files stay on the maintainer's computer.
+- **`large-v3-turbo` is the one Whisper model** (20 Nov 2026, the maintainer's decision): the live service, the
+  **prepis** workflow and the recordings read afterwards; the second reading by a better model is gone with it.
+- **The chair gives the floor in more words than "reč ima"** (20 Nov 2026, the maintainer's request): Whisper writes
+  it as one word ("Rečima narodna poslanica …"), and the chair also says "dajem reč", "pravo na repliku ima", or a
+  title after "replika", "povreda Poslovnika", "izvolite", "sledeći je" (`hronika._FLOOR`); "replika gospodinu X"
+  names whom it answers and is not taken.
+- **A day's parts the archive's page does not list yet** (20 Nov 2026: `zas2026111910e.mp4`, the end of 19 Nov, was
+  there hours before the page named it): `videos` tries the next letter after each of the latest three days' last
+  file (a HEAD request) and keeps what is there, marked `"nenavedeno": true`.
 
 ## Open questions
 
