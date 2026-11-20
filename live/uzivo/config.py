@@ -106,4 +106,10 @@ def _setting(key: str, env: str) -> str:
 ANALYTICS_TOKEN = _setting("analytics_token", "ANALYTICS_TOKEN")
 # The site's counter (worker/): a press on the broadcast's ▶ adds one to a sum per day ("mikrofon.pusti").
 VOTES_API = _setting("votes_api", "VOTES_API").rstrip("/")
+# Notifications when a sitting's broadcast begins (20 Nov 2026): the public half of the key that signs them (the
+# browser needs it to subscribe), and the token the counter asks for before sending (live/.env only; the test has
+# none, so it never sends). PUSH_PATH keeps the day of the last one sent.
+PUSH_KEY = _setting("push_key", "PUSH_KEY")
+PUSH_TOKEN = os.environ.get("PUSH_TOKEN", "").strip()
+PUSH_PATH = os.environ.get("PUSH_PATH", "/data/obavesti.json")
 

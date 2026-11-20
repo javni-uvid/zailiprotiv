@@ -13,7 +13,8 @@ The **worker** workflow publishes it whenever `worker/` changes. Repository secr
 
 - `CLOUDFLARE_API_TOKEN`: a Cloudflare API token from the template "Edit Cloudflare Workers", plus Account → D1 → Edit;
 - `CLOUDFLARE_ACCOUNT_ID`;
-- `DISPATCH_TOKEN`: a fine-grained GitHub token for javni-uvid/zailiprotiv only, with Actions: Read and write.
+- `DISPATCH_TOKEN`: a fine-grained GitHub token for javni-uvid/zailiprotiv only, with Actions: Read and write;
+- `VAPID_JWK` and `PUSH_TOKEN`: the live page's notifications (below).
 
 To reset the count: in Cloudflare, D1 → `zailiprotiv-glasovi` → Console: `DELETE FROM votes`.
 
@@ -41,6 +42,16 @@ page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.za
 `mikrofon.` uses). Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.
+
+## Notifications from the live page
+
+`POST /p {endpoint, cir}` (from `https://mikrofon.zailiprotiv.rs` only) keeps a browser's push address in `push`;
+`POST /p/odjava {endpoint}` forgets it. Only addresses of the known push services are taken (Google, Mozilla, Apple,
+Microsoft). `POST /p/salji {od}`, with `authorization: Bearer <PUSH_TOKEN>`, is the live service's: the first call of
+a day (`od` 0) records the day in `push_days` (a second one that day sends nothing), and each call sends a push with
+no content to 30 addresses after row `od`, signed with `VAPID_JWK`, forgets those the service answers 404 or 410
+for, and answers `{sent, gone, next}`. Secrets: `VAPID_JWK` (a P-256 private key as a JWK; its public half is
+`push_key` in `data/settings.json`) and `PUSH_TOKEN` (also in `live/.env`).
 
 ## Inflated counts
 

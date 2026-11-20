@@ -14,6 +14,11 @@
 //   POST /e           ← {"e": "kviz.kraj" | "listic.podeljeno" | …}               one use of the quiz or the ballot, counted
 //   GET  /pregled     → what today's votes look like, law by law, for the watch against inflated counts, and the
 //                       uses of the last two weeks by day
+//   POST /p           ← {"endpoint": "<push address>", "cir": bool}   from the live page: notify this device when a
+//                                                                     sitting's broadcast begins
+//   POST /p/odjava    ← {"endpoint": "<push address>"}                no more notifications for it
+//   POST /p/salji     ← {"od": <row>}, with "authorization: Bearer <PUSH_TOKEN>"   from the live service: send the
+//                       day's notification (once a day), a batch at a time; answers with where the next batch starts
 //
 // Only laws (and quotes) the site itself lists are counted (glasanje.json, read from the site and kept for an hour),
 // and one address can send only so often (Cloudflare's rate limiter; the address is not stored by us).
@@ -48,7 +53,9 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   "mikrofon.tacke", "mikrofon.redovi", "mikrofon.podeli", "mikrofon.dan", "mikrofon.kartice", "mikrofon.sajt",
   // the page put on the phone's home screen (20 Nov 2026): opened from there, "add" pressed, added; the next
   // sitting's agenda opened in the countdown
-  "mikrofon.ekran", "mikrofon.dodaj", "mikrofon.dodato", "mikrofon.sledeca"]);
+  "mikrofon.ekran", "mikrofon.dodaj", "mikrofon.dodato", "mikrofon.sledeca",
+  // notifications turned on and off (the addresses themselves are in the table `push`)
+  "mikrofon.obavesti", "mikrofon.odjavi"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {
@@ -89,7 +96,10 @@ async function overview(env) {
   for (const r of nets.results) top[r.item] = Math.max(top[r.item] || 0, r.n);
   const uses = {};
   for (const r of used.results) (uses[r.day] = uses[r.day] || {})[r.what] = r.n;
+  const push = await env.DB.batch([env.DB.prepare("SELECT COUNT(*) AS n FROM push"),
+    env.DB.prepare("SELECT day, sent, gone FROM push_days ORDER BY day DESC LIMIT 14")]);
   return { day, devices_with_many_votes: busy.results[0].n, uses,
+           push: { devices: push[0].results[0].n, sent: push[1].results },
            laws: items.results.map((r) => ({ item: r.item, total: r.total, today: r.today, busiest_network: top[r.item] || 0 }))
              .sort((a, b) => b.today - a.today).slice(0, 200) };
 }
@@ -142,6 +152,60 @@ async function dispatch(env, workflow, inputs) {
   if (!r.ok) throw new Error(`${workflow}: GitHub answered ${r.status} ${await r.text()}`);
 }
 
+// Notifications from the live page (20 Nov 2026, the maintainer's decision; an exception to principle 5, as the
+// browser's own push service carries them). A push with no content: the page's service worker writes the
+// notification itself, so nothing is encrypted and nothing about the sitting passes through the push service. Signed
+// with the project's VAPID key (the secret VAPID_JWK; its public half is `push_key` in data/settings.json).
+const PUSH_HOSTS = /^https:\/\/([a-z0-9-]+\.)*(fcm\.googleapis\.com|push\.services\.mozilla\.com|push\.apple\.com|notify\.windows\.com)\/\S{8,900}$/;
+const PUSH_BATCH = 30;  // the free plan's 50 requests out per call, less the database's
+const b64u = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const unb64u = (s) => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
+let vapid = null;
+async function authorization(env, endpoint) {
+  if (!vapid) {
+    const jwk = JSON.parse(env.VAPID_JWK);
+    const key = await crypto.subtle.importKey("jwk", { kty: "EC", crv: "P-256", x: jwk.x, y: jwk.y, d: jwk.d },
+      { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
+    const pub = new Uint8Array(65);
+    pub[0] = 4; pub.set(unb64u(jwk.x), 1); pub.set(unb64u(jwk.y), 33);
+    vapid = { key, pub: b64u(pub), kept: new Map() };
+  }
+  const aud = new URL(endpoint).origin, now = Math.floor(Date.now() / 1000), kept = vapid.kept.get(aud);
+  if (kept && kept.exp - now > 3600) return kept.h;
+  const exp = now + 12 * 3600, text = (o) => b64u(new TextEncoder().encode(JSON.stringify(o)));
+  const head = text({ typ: "JWT", alg: "ES256" }) + "." + text({ aud, exp, sub: "mailto:kontakt@zailiprotiv.rs" });
+  const sig = await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, vapid.key, new TextEncoder().encode(head));
+  const h = `vapid t=${head}.${b64u(sig)}, k=${vapid.pub}`;
+  vapid.kept.set(aud, { exp, h });
+  return h;
+}
+async function sendPush(env, from) {
+  const day = today();
+  if (!from) {  // the first batch: once a day, whatever the live service asks
+    const r = await env.DB.prepare("INSERT OR IGNORE INTO push_days (day) VALUES (?)").bind(day).run();
+    if (!r.meta.changes) return { day, already: true, next: null };
+  }
+  const rows = (await env.DB.prepare("SELECT rowid AS id, endpoint FROM push WHERE rowid > ? ORDER BY rowid LIMIT ?")
+    .bind(from || 0, PUSH_BATCH).all()).results;
+  let sent = 0;
+  const gone = [];
+  await Promise.all(rows.map(async (r) => {
+    try {
+      const res = await fetch(r.endpoint, { method: "POST", headers: {
+        authorization: await authorization(env, r.endpoint), ttl: "3600", urgency: "high", "content-length": "0" } });
+      if (res.status === 404 || res.status === 410) gone.push(r.endpoint);  // the device unsubscribed: forgotten
+      else if (res.ok) sent++;
+    } catch (e) { /* tried again never: one notification a day */ }
+  }));
+  const writes = gone.map((e) => env.DB.prepare("DELETE FROM push WHERE endpoint = ?").bind(e));
+  writes.push(env.DB.prepare("UPDATE push_days SET sent = sent + ?, gone = gone + ? WHERE day = ?").bind(sent, gone.length, day));
+  await env.DB.batch(writes);
+  return { day, sent, gone: gone.length, next: rows.length === PUSH_BATCH ? rows[rows.length - 1].id : null };
+}
+async function same(a, b) {  // the token compared by its hash, so the time taken says nothing of it
+  return (await hash(a)) === (await hash(b));
+}
+
 export default {
   async scheduled(event, env) {
     if (!env.DISPATCH_TOKEN) return;
@@ -169,6 +233,27 @@ export default {
       return res;
     }
     if (request.method !== "POST") return reply({ error: "method" }, 405, origin);
+    if (path === "/p/salji") {  // the live service, with its token
+      const auth = request.headers.get("authorization") || "";
+      if (!env.PUSH_TOKEN || !env.VAPID_JWK || !(await same(auth, "Bearer " + env.PUSH_TOKEN))) return reply({ error: "token" }, 403, origin);
+      let od = 0;
+      try { od = Math.max(0, parseInt(JSON.parse(await request.text()).od, 10) || 0); } catch (e) { od = 0; }
+      return reply(await sendPush(env, od), 200, origin);
+    }
+    if (path === "/p" || path === "/p/odjava") {  // the live page only; its script reads the answer
+      if (from !== LIVE) return reply({ error: "origin" }, 403, LIVE);
+      if (env.LIMIT) {
+        const { success } = await env.LIMIT.limit({ key: request.headers.get("cf-connecting-ip") || "x" });
+        if (!success) return reply({ error: "limit" }, 429, LIVE);
+      }
+      let b;
+      try { b = JSON.parse((await request.text()).slice(0, 2000)) || {}; } catch (e) { return reply({ error: "json" }, 400, LIVE); }
+      if (typeof b.endpoint !== "string" || !PUSH_HOSTS.test(b.endpoint)) return reply({ error: "endpoint" }, 400, LIVE);
+      if (path === "/p/odjava") await env.DB.prepare("DELETE FROM push WHERE endpoint = ?").bind(b.endpoint).run();
+      else await env.DB.prepare("INSERT INTO push (endpoint, cir, day) VALUES (?, ?, ?) ON CONFLICT (endpoint) DO UPDATE SET cir = excluded.cir")
+        .bind(b.endpoint, b.cir ? 1 : 0, today()).run();
+      return reply({ ok: true }, 200, LIVE);
+    }
     const uses = path === "/e" && from === LIVE;  // the live page may only add to the sums of uses
     if (from !== origin && !uses) return reply({ error: "origin" }, 403, origin);
     const single = path === "/z" || path === "/c" || path === "/e";

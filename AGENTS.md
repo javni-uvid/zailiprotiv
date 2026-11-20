@@ -122,6 +122,10 @@ The project's promises to its readers. Never change them without the maintainer.
      (videonet.co.rs, a plain `<video>`), from where a turn's "▶ snimak" says. Until the click the page shows our own
      button and loads nothing from either; the page and "O projektu" say so. The links work without the script;
      the script plays only archive files and YouTube ids it recognises;
+   - **notifications from `mikrofon.zailiprotiv.rs`, only to who asks** (20 Nov 2026): one when a sitting's
+     broadcast begins, at most once a day, carried by the browser's own push service (Google, Apple, Mozilla).
+     The push has no content (the page's service worker writes the words), and the counter keeps only the
+     address the browser gave, until it is turned off; the page and the method page say so;
    - things of others' making **served from the project itself**: the search (Pagefind), MPs' portraits from the
      Assembly (`photos.py`, `data/photos/`), and the project's own subdomains for the notes' pages and the downloads.
 6. **What MPs say is not censored and not shaped** (13 Nov 2026). Quotes are word for word, checked against the
@@ -653,7 +657,21 @@ its minute.
   sitting convened is counted down with its agenda (`page.countdown`; `pages_mikrofon.upcoming` adds the newest
   convocation's sittings, and `waiting` takes the first convened for today or later). The counter adds
   `mikrofon.ekran`, `dodaj`, `dodato` and `sledeca`; the footer and the method page say so. Measured over a full
-  sitting day before the next points (the broadcast's ▶ pressed against pages opened, time in view).
+  sitting day before the next points (the broadcast's ▶ pressed against pages opened, time in view). The other
+  points (the tab's title, a vote on the item under way, "Pogodi", the day played, a way to the site from the box)
+  were declined by the maintainer the same night.
+- **A notification when a sitting begins** (20 Nov 2026, the maintainer's choice: only the broadcast's beginning,
+  the addresses kept by the counter). "Obavesti me kad sednica počne" under the speaker's box asks the browser,
+  registers the page's service worker (`/sw.js`, `page.service_worker`: it shows the notification and opens the
+  page, and handles no requests) and sends the browser's push address to the counter (`POST /p`, from
+  `mikrofon.` only, the table `push`; "Isključi" sends `/p/odjava`). The live service (`obavesti.Bell`), after three
+  frames of a live broadcast in a row between 7 and 22 h, asks the counter once a day to send (`POST /p/salji` with
+  the token `PUSH_TOKEN`, in `live/.env` and GitHub Secrets; the test's is empty); the counter keeps the day
+  (`push_days`), sends a push with no content signed with the VAPID key (secret `VAPID_JWK`, its public half
+  `push_key` in `data/settings.json`) to 30 addresses a call, its free plan's limit, forgets addresses the push
+  service says are gone, and the service asks for the next 30 until none is left. On an iPhone it works once the
+  page is on the home screen, which the page says. `GET /pregled` gives the number of addresses and what each day
+  sent; `mikrofon.obavesti` and `odjavi` are counted as uses.
 
 ## Open questions
 

@@ -2,6 +2,7 @@
 render it. The page loads nothing from elsewhere: the fonts are served with it, the one script is inline."""
 from __future__ import annotations
 
+import json
 import time
 from datetime import datetime
 from html import escape
@@ -109,7 +110,17 @@ TEXT = {
     "nx_note": "Prenos će biti ovde čim sednica počne, a stranica se sama osvežava.",
     "add_home": "Dodaj na početni ekran",
     "add_sub": "Sledeći put do prenosa jednim dodirom.",
-    "add_ios": "Na iPhoneu: dodirnite „Podeli“, pa „Dodaj na početni ekran“.",
+    "add_ios": "Na iPhoneu: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
+               "obavesti kad sednica počne.",
+    "nt_on": "Obavesti me kad sednica počne",
+    "nt_done": "Obaveštenje stiže kad prenos sednice počne.",
+    "nt_off": "Isključi",
+    "nt_blocked": "Obaveštenja za ovu stranicu su isključena u podešavanjima pregledača.",
+    "nt_err": "Uključivanje nije uspelo; pokušajte ponovo malo kasnije.",
+    "nt_note": "Jedno obaveštenje kad prenos sednice počne, najviše jednom dnevno. Šalje ga vaš pregledač preko "
+               "svog servisa (Gugl, Epl ili Mozila); kod nas ostaje samo adresa za to obaveštenje, dok ga ne isključite.",
+    "nt_title": "Sednica je počela",
+    "nt_body": "Prenos uživo i ko sada govori u Skupštini.",
     "app_name": "Mikrofon",
     "sd_text": "Ko je koliko govorio u Skupštini:",
     "og_now": "Sada govori: %1",
@@ -151,8 +162,8 @@ TEXT = {
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counted": "Brojač sajta zbraja po danu i koliko je puta ova stranica otvorena, koliko puta je gledana duže "
                     "od 1, 5, 15 i 30 minuta i koliko puta je pušten prenos ili snimak, otvoren dnevni red ili nešto "
-                    "podeljeno, i koliko puta je dodata na početni ekran ili otvorena sa njega; bez oznake uređaja i "
-                    "bez ičega o tome ko je to bio",
+                    "podeljeno, i koliko puta je dodata na početni ekran ili otvorena sa njega i uključena ili isključena "
+                    "obaveštenja; bez oznake uređaja i bez ičega o tome ko je to bio",
     "wait_title": "Dok čekate",
     "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
                  "ste blizu.",
@@ -1133,7 +1144,8 @@ a.said { margin-left: .3rem; }
 .nx-big span { display: block; font-family: system-ui, sans-serif; font-weight: 400; font-size: .95rem; color: var(--muted); }
 .nx-when { font-weight: 600; margin-top: .3rem !important; } .nx-title { color: var(--muted); font-size: .95rem; margin: .1rem 0 .6rem !important; }
 .nx-ag { margin: 0 0 .6rem; } .nx-ag summary { cursor: pointer; font-weight: 600; } .nx-ag ol { margin: .4rem 0 0; padding-left: 1.4rem; line-height: 1.4; } .nx-ag li { margin: .2rem 0; }
-.add-home { order: 3; display: flex; flex-wrap: wrap; gap: .3rem .8rem; align-items: center; margin: 1rem 0 0; }
+.add-home { order: 3; margin: 1rem 0 0; } .add-home p { margin: .3rem 0; }
+.nt-off { font: inherit; background: none; border: 0; padding: 0; color: var(--fg); text-decoration: underline; cursor: pointer; }
 .add-home[hidden], .add-home [hidden] { display: none; }
 .add-btn { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg); background: none; color: var(--fg); cursor: pointer; }
 /* A phone (86% of the visits): the head made short, so the broadcast is in the first screen (20 Nov 2026). */
@@ -1366,24 +1378,98 @@ SCRIPT = _shared("mikrofon.js") + """
   }, true);
   window.mikrofonUse = use;
 })();
-// The page on the phone's home screen (20 Nov 2026): opened from there is counted; elsewhere the browser's own offer
-// to add it is shown as our button when the browser makes one (Chrome, Edge, Samsung), and on an iPhone, which makes
-// none, a line saying where Safari keeps it. Nothing is installed but the page's address and icon.
+// "Ne propustite sednicu": the page on the phone's home screen, and a notification when a sitting's broadcast begins.
+// Home screen (20 Nov 2026): opened from there is counted; elsewhere the browser's own offer to add the page is shown
+// as our button when the browser makes one (Chrome, Edge, Samsung), and on an iPhone, which makes none, a line saying
+// where Safari keeps it. Nothing is installed but the page's address and icon.
+// Notifications (20 Nov 2026): on a press, the browser is asked for leave, the page's service worker (/sw.js) is
+// registered and the browser's push address sent to the site's counter; "Isključi" takes it back there too.
 (function () {
   var use = function (w) { if (window.mikrofonUse) window.mikrofonUse(w); };
   var box = document.querySelector(".add-home");
   if (!box) return;
-  if ((window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone) { use("ekran"); return; }
-  var ask = null, btn = box.querySelector(".add-btn");
-  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); ask = e; box.hidden = false; });
-  window.addEventListener("appinstalled", function () { box.hidden = true; use("dodato"); });
-  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) { btn.hidden = true; box.querySelector(".add-ios").hidden = false; box.hidden = false; }
-  btn.addEventListener("click", function () {
-    if (!ask) return;
-    use("dodaj"); ask.prompt();
-    ask.userChoice.then(function () { ask = null; box.hidden = true; }).catch(function () {});
+  var part = function (k) { return box.querySelector("." + k); };
+  function show(k, on) { var el = part(k); if (el) el.hidden = !on; box.hidden = ![].some.call(box.children, function (c) { return !c.hidden; }); }
+  var home = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
+  if (home) use("ekran");
+  else {
+    var ask = null;
+    window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); ask = e; show("add", true); });
+    window.addEventListener("appinstalled", function () { show("add", false); use("dodato"); });
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) show("add-ios", true);
+    part("add-go").addEventListener("click", function () {
+      if (!ask) return;
+      use("dodaj"); ask.prompt();
+      ask.userChoice.then(function () { ask = null; show("add", false); }).catch(function () {});
+    });
+  }
+  var key = box.getAttribute("data-key") || "", api = (document.body.getAttribute("data-api") || "").replace(/\\/$/, "");
+  var cir = document.documentElement.lang === "sr-Cyrl";
+  if (!key || !/^https:\\/\\//.test(api) || !("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) return;
+  function bytes(s) {
+    var b = atob(s.replace(/-/g, "+").replace(/_/g, "/")), out = new Uint8Array(b.length);
+    for (var i = 0; i < b.length; i++) out[i] = b.charCodeAt(i);
+    return out;
+  }
+  function tell(path, sub) {
+    return fetch(api + path, { method: "POST", headers: { "content-type": "text/plain" },
+                               body: JSON.stringify({ endpoint: sub.endpoint, cir: cir }) })
+      .then(function (r) { if (!r.ok) throw new Error("counter " + r.status); });
+  }
+  function state(on) { show("nt", !on); show("nt-done", on); show("nt-note", true); show("nt-err", false); }
+  function failed() { show("nt-err", true); }
+  if (Notification.permission === "denied") { show("nt-blocked", true); return; }
+  navigator.serviceWorker.getRegistration("/").then(function (r) { return r ? r.pushManager.getSubscription() : null; })
+    .then(function (s) { state(!!s); }).catch(function () { state(false); });
+  part("nt-on").addEventListener("click", function () {
+    Notification.requestPermission().then(function (p) {
+      if (p !== "granted") { show("nt", false); show("nt-blocked", p === "denied"); return; }
+      return navigator.serviceWorker.register("/sw.js" + (cir ? "?j=cir" : ""), { scope: "/" })
+        .then(function () { return navigator.serviceWorker.ready; })
+        .then(function (r) { return r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes(key) }); })
+        .then(function (s) { return tell("/p", s); })
+        .then(function () { state(true); use("obavesti"); });
+    }).catch(failed);
+  });
+  part("nt-off").addEventListener("click", function () {
+    navigator.serviceWorker.getRegistration("/").then(function (r) { return r ? r.pushManager.getSubscription() : null; })
+      .then(function (s) { if (!s) return; return tell("/p/odjava", s).then(function () { return s.unsubscribe(); }); })
+      .then(function () { state(false); use("odjavi"); }).catch(failed);
   });
 })();
+"""
+
+
+def service_worker(cyr: bool, key: str, api: str) -> str:
+    """The page's service worker (/sw.js; ?j=cir for the Cyrillic page): it only shows the notification when a push
+    comes (a push carries nothing: the words are here) and opens the page on a tap. It handles no requests, so the
+    page loads as it would without it."""
+    words = json.dumps({"title": _t("nt_title", cyr), "body": _t("nt_body", cyr), "url": "/cir/" if cyr else "/",
+                        "lang": "sr-Cyrl" if cyr else "sr-Latn", "key": key, "api": api.rstrip("/"), "cir": cyr},
+                       ensure_ascii=False)
+    return f"""const W = {words};
+self.addEventListener("install", function () {{ self.skipWaiting(); }});
+self.addEventListener("activate", function (e) {{ e.waitUntil(self.clients.claim()); }});
+self.addEventListener("push", function (e) {{
+  e.waitUntil(self.registration.showNotification(W.title, {{ body: W.body, icon: "/ikona-192.png", tag: "sednica",
+    lang: W.lang, data: {{ url: W.url }} }}));
+}});
+self.addEventListener("notificationclick", function (e) {{
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({{ type: "window", includeUncontrolled: true }}).then(function (list) {{
+    for (var i = 0; i < list.length; i++) if (new URL(list[i].url).pathname === W.url && list[i].focus) return list[i].focus();
+    return self.clients.openWindow(W.url);
+  }}));
+}});
+// A push address the browser renewed: the counter is told the new one.
+self.addEventListener("pushsubscriptionchange", function (e) {{
+  if (!W.key || !W.api) return;
+  var raw = atob(W.key.replace(/-/g, "+").replace(/_/g, "/")), key = new Uint8Array(raw.length);
+  for (var i = 0; i < raw.length; i++) key[i] = raw.charCodeAt(i);
+  e.waitUntil(self.registration.pushManager.subscribe({{ userVisibleOnly: true, applicationServerKey: key }})
+    .then(function (s) {{ return fetch(W.api + "/p", {{ method: "POST", headers: {{ "content-type": "text/plain" }},
+      body: JSON.stringify({{ endpoint: s.endpoint, cir: W.cir }}) }}); }}));
+}});
 """
 
 
@@ -1500,7 +1586,7 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
 
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
-         live: str = "", analytics: str = "", api: str = "") -> str:
+         live: str = "", analytics: str = "", api: str = "", push_key: str = "") -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -1538,7 +1624,15 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 </section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
-<p class="add-home" hidden><button type="button" class="add-btn">{t("add_home")}</button><span class="meta">{t("add_sub")}</span><span class="meta add-ios" hidden>{t("add_ios")}</span></p>
+<section class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
+<p class="nt" hidden><button type="button" class="add-btn nt-on">{t("nt_on")}</button></p>
+<p class="nt-done" hidden>{t("nt_done")} <button type="button" class="nt-off">{t("nt_off")}</button></p>
+<p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
+<p class="nt-err meta" hidden>{t("nt_err")}</p>
+<p class="add" hidden><button type="button" class="add-btn add-go">{t("add_home")}</button> <span class="meta">{t("add_sub")}</span></p>
+<p class="add-ios meta" hidden>{t("add_ios")}</p>
+<p class="nt-note meta" hidden>{t("nt_note")}</p>
+</section>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>

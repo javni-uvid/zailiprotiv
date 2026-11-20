@@ -11,6 +11,7 @@ services:
     environment:
       PUBLIC_URL: http://127.0.0.1:8001/
       ANALYTICS_TOKEN: ""         # the test's visits are not the site's
+      PUSH_TOKEN: ""              # the test never sends the notifications
       WHISPER_THREADS: "4"        # leaves the live service its cores
     volumes:
       - podaci:/data

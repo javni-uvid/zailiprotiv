@@ -50,8 +50,14 @@ jobs:
           command: deploy
           secrets: |
             DISPATCH_TOKEN
+            VAPID_JWK
+            PUSH_TOKEN
         env:
           DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+          # the live page's notifications: the key that signs them (P-256, as a JWK) and the token the live
+          # service sends to have them sent
+          VAPID_JWK: ${{ secrets.VAPID_JWK }}
+          PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
       - name: Publish the worker in front of "Ko sada govori"
         if: steps.ready.outputs.go == 'yes'
         uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0  # v4.1.3

@@ -78,6 +78,11 @@ convocation) is counted down each second, with its day, hour, title and agenda. 
 the page shows its own button for it, and on an iPhone a line saying where Safari keeps it. On a phone the head is
 short, so the broadcast is in the first screen.
 
+**A notification when a sitting begins** (20 Nov 2026). "Obavesti me kad sednica počne" registers the page's
+service worker (`/sw.js`) and sends the browser's push address to the site's counter. After three frames of a live
+broadcast in a row, between 7 and 22 h, the service (`obavesti.py`) asks the counter to send the day's notification,
+once a day; it needs `PUSH_TOKEN` in `.env` (the test has it empty and never sends). See `worker/README.md`.
+
 ## Running it
 
 Two images, **test first, then live** (19 Nov 2026, the maintainer's decision): a change is built and tried
