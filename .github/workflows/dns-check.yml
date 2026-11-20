@@ -17,8 +17,7 @@ jobs:
           echo "== cd (no validation)"; dig +cd +noall +comments +answer zailiprotiv.rs A @1.1.1.1 | grep -E "status|IN"
           echo "== the headers that guard a page (docs/decisions/security.md): each host should name all of them"
           for u in https://zailiprotiv.rs/ https://zailiprotiv.rs/glasaj https://mikrofon.zailiprotiv.rs/ https://beleske.zailiprotiv.rs/14/ https://glasovi.zailiprotiv.rs/pregled; do
-            curl -sS -o /dev/null -D - -A "zailiprotiv (dns-check)" "$u" | tr -d '' | grep -iE "^HTTP|^strict-transport|^content-security|^x-frame|^x-content-type|^referrer-policy|^permissions-policy" | tr '
-' ' '; echo " <- $u"
+            curl -sS -o /dev/null -D - -A "zailiprotiv (dns-check)" "$u" | tr -d '\r' | grep -iE "^HTTP|^strict-transport|^content-security|^x-frame|^x-content-type|^referrer-policy|^permissions-policy" | tr '\n' ' '; echo " <- $u"
           done
           echo "== buckets at the edge: the bare address redirects, pages come from the cache on the second ask"
           curl -sS -o /dev/null -w "beleske /: %{http_code} -> %{redirect_url}\n" https://beleske.zailiprotiv.rs/
