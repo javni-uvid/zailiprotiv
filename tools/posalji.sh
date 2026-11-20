@@ -18,6 +18,20 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 [ "$branch" = main ] && { echo "posalji: na main-u si; grana pa PR (AGENTS.md)." >&2; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "posalji: ima izmena koje nisu commit-ovane." >&2; git status --short >&2; exit 1; }
 
+# On Windows an agent's shell may have started without the user's PYTHONUTF8 and PDFTOTEXT (AGENTS.md: the tests
+# need both), and then ~44 tests fail for no fault of the code. Only these two, only when unset, read from the
+# user's own Windows settings; PDFTOTEXT only when it names an existing pdftotext.exe. Nothing is printed.
+user_var() { powershell.exe -NoProfile -NonInteractive -Command "[Environment]::GetEnvironmentVariable('$1','User')" 2>/dev/null | tr -d '\r'; }
+if command -v powershell.exe >/dev/null 2>&1; then
+  if [ -z "${PYTHONUTF8:-}" ] && [ "$(user_var PYTHONUTF8)" = 1 ]; then export PYTHONUTF8=1; fi
+  if [ -z "${PDFTOTEXT:-}" ]; then
+    v=$(user_var PDFTOTEXT)
+    case "$v" in
+      */pdftotext.exe|*'\'pdftotext.exe) if [ -f "$v" ]; then export PDFTOTEXT="$v"; fi ;;
+    esac
+  fi
+fi
+
 git fetch -q origin
 git rebase -q origin/main
 uv run pytest -q
