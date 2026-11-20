@@ -18,6 +18,7 @@ services:
       PUBLIC_URL: http://127.0.0.1:${TEST_PORT:-8001}/
       ANALYTICS_TOKEN: ""         # the test's visits are not the site's
       PUSH_TOKEN: ""              # the test never sends the notifications
+      ANTHROPIC_API_KEY: "${TEST_ANTHROPIC_API_KEY:-}"  # the test asks the model only when told to (mikrofon.ps1 test with the key)
       WHISPER_THREADS: "4"        # leaves the live service its cores
     volumes:
       - podaci:/data

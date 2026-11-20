@@ -85,6 +85,12 @@ def admin_open(key: str = "") -> bool:
 
 
 CHAIR_ONLY = os.environ.get("PREPIS_SAMO_PREDSEDAVAJUCI", "0").strip() == "1"
+# The model that tells the day's steps and sums the day up from the transcript (sudija.py, 20 Nov 2026, the
+# maintainer's decision). The key lives in live/.env only; empty: nothing is sent and the rules tell the steps.
+MODEL_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+MODEL = os.environ.get("HAIKU_MODEL", "claude-haiku-5-5").strip()
+# Whether the model's summary of the day is on the page and at /sazetak/<day>.json; before that, /sazetak?k=<key>.
+SHOW_SUMMARY = os.environ.get("SAZETAK_PRIKAZ", "0").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
 WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
 WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()

@@ -56,6 +56,7 @@ class Tracker(Said, Chronicle, View):
         self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
         self.events: list[dict] = []  # the day's steps, a line each (hronika.py)
         self.item: dict = {}  # the agenda item the chair last moved to, as heard: {"n", "t"}
+        self.summary: tuple[str, dict] = ("", {})  # the model's summaries of the day (sudija.py): (day, as kept)
         try:
             kept_item = Path(path).parent / "tacka.json" if path else None
             if kept_item and kept_item.exists():
@@ -90,6 +91,22 @@ class Tracker(Said, Chronicle, View):
                 _write(self.waiting_file, w)
             except OSError:
                 pass
+
+    def use_summary(self, day: str, kept: dict) -> None:
+        """The model's summaries of a day (sudija.py): its stretches and the day, as kept in /data/sazetak/."""
+        with self._lock:
+            self.summary = (day, kept)
+            self._snap = None
+
+    def summary_of(self, day: str) -> dict:
+        """The model's summaries of a day: today's as the model keeps them, an earlier day's from its file."""
+        if self.summary[0] == day:
+            return self.summary[1]
+        f = Path(config.STATE_PATH).parent / "sazetak" / f"{day}.json" if config.STATE_PATH and day else None
+        try:
+            return json.loads(f.read_text(encoding="utf-8")) if f and f.exists() else {}
+        except (OSError, ValueError):
+            return {}
 
     def use_facts(self, facts: dict) -> None:
         """The site's facts per MP's page (mikrofon-poslanici.json): {slug: {"za", "protiv", "uzdrzan", "f", "novi"}}."""
