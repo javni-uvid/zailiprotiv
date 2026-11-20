@@ -115,7 +115,7 @@ Assembly's site runs through the workflows.
 | watch | four times a day | do visitors' votes look inflated? An issue when one network sends most of a law's votes |
 | test | on push | the whole test suite |
 | security | on code or workflow changes, Mondays, by hand | zizmor (the workflows), pip-audit (the packages), CodeQL (the code) |
-| visits | by hand | Cloudflare's counts; with options, what Cloudflare stopped and Google Search's numbers |
+| visits | by hand | Cloudflare's counts; with options, what Cloudflare stopped, Google Search's numbers and which kinds of page Google indexed |
 | peek, dns-check | by hand | a page's text as seen from outside; DNS and the buckets |
 | files, trial, probe, sample, fixtures | by hand | the downloads' bucket; a build with all notes; inside scanned bill PDFs; another model's writing; test fixtures |
 

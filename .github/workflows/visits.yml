@@ -13,6 +13,9 @@ on:
         description: "Also Google Search: the searches the site came up for (needs the secret GSC_KEY)"
         type: boolean
         default: false
+      inspect:
+        description: "With search: whether Google indexed the pages, this many of each kind in each script (0: not asked; 8 is some 190 of the 2,000 a day)"
+        default: "0"
       blocked:
         description: "Also what Cloudflare stopped (security events; how search engines' crawlers fared)"
         type: boolean
@@ -23,7 +26,7 @@ permissions: {}
 jobs:
   read:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30  # URL Inspection takes some 5 s an address
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
@@ -34,28 +37,33 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           HOURS: ${{ inputs.hours }}
         run: python3 tools/visits.py "$HOURS"
+      # Each reading stands on its own: one that fails (a key not set right, 20 Nov 2026) does not stop the others.
       - name: How fast the pages are (Core Web Vitals)
+        if: ${{ !cancelled() }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           HOURS: ${{ inputs.hours }}
         run: python3 tools/vitals.py "$HOURS"
       - name: How long the live page is in view
+        if: ${{ !cancelled() }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           HOURS: ${{ inputs.hours }}
         run: python3 tools/watching.py "$HOURS"
       - name: What Google Search showed
-        if: inputs.search
+        if: ${{ !cancelled() && inputs.search }}
         env:
           GSC_KEY: ${{ secrets.GSC_KEY }}
           HOURS: ${{ inputs.hours }}
+          IN_INSPECT: ${{ inputs.inspect }}
         run: |
           pip install -q google-auth requests
-          python3 tools/search.py $(( (HOURS + 23) / 24 < 7 ? 7 : (HOURS + 23) / 24 ))
+          case "$IN_INSPECT" in ''|*[!0-9]*) n=0 ;; *) n="$IN_INSPECT" ;; esac  # a number, or nothing asked
+          python3 tools/search.py $(( (HOURS + 23) / 24 < 7 ? 7 : (HOURS + 23) / 24 )) --inspect "$n"
       - name: What was stopped
-        if: inputs.blocked
+        if: ${{ !cancelled() && inputs.blocked }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           HOURS: ${{ inputs.hours }}

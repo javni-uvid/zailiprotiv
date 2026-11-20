@@ -233,3 +233,9 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   **IndexNow** tells Bing and others which pages changed after each publishing (`tools/indexnow.py`; the hashes in
   the build's cache; `indexnow_all` sends all). Search Console and Bing Webmaster Tools are the maintainer's;
   `tools/search.py` (**visits**, `search`) reads Search Console with a service account key in `GSC_KEY`.
+- **Which pages Google takes in, by kind** (20 Nov 2026): Search Console's first report counted 3,252 pages
+  "crawled, currently not indexed" and names them only on its own pages. `search.py --inspect N` (**visits**,
+  `inspect`) asks the URL Inspection API about N addresses of each kind of page (a law, an MP, an MP's votes, …) in
+  each script, spread evenly over the sitemap, and sums what Google says of each kind, with the canonical address
+  it chose where that is another page. 8 a kind is some 200 of the property's 2,000 a day. Each of **visits**'
+  readings now runs when another failed (that day a key not set right stopped the rest).
