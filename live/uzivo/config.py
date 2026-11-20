@@ -57,11 +57,11 @@ RESUME_SECONDS = _f("RESUME_SECONDS", 90)
 RECORDING_LEAD = _i("RECORDING_LEAD", 1)
 
 # The automatic transcript (prepis.py): Whisper on this computer writes down what is said, a minute at a time.
-# "small" keeps up on four cores; "medium" errs less and needs about three times as long; empty turns it off.
-WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "small").strip()
-# A finished turn read again by a better model, shown in place of the first reading (prepis.Writer.step_whole).
-# Off unless named ("medium"): it keeps the computer busy for hours after a long sitting.
-WHISPER_FINAL_MODEL = os.environ.get("WHISPER_FINAL_MODEL", "").strip()
+# large-v3-turbo is the one model (20 Nov 2026, the maintainer's decision), here, on the site and for recordings read
+# afterwards; empty turns the transcript off.
+WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "large-v3-turbo").strip()
+# The second reading of a finished turn by a better model (prepis.Writer.step_whole) has no better model to use now.
+WHISPER_FINAL_MODEL = ""
 # Whether the transcript is shown on the page (19 Nov 2026, the maintainer's decision: no, it errs too much and does
 # more harm than good; it is still written down, for the day's steps and the agenda). "1" shows it again.
 SHOW_TRANSCRIPT = os.environ.get("PREPIS_PRIKAZ", "0").strip() == "1"

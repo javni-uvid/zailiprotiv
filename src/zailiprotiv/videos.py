@@ -48,6 +48,29 @@ def parse(page: str) -> list[dict]:
     return found
 
 
+_NEXT = re.compile(r"^(.*/zas\d{10})([a-z]?)\.mp4$")
+
+
+def unlisted(parts: list[dict], exists, last: int = 3) -> list[dict]:
+    """Parts of a day the archive holds but its page does not list yet (19 Nov 2026: a sixth part, `…10e.mp4`, was
+    there hours before the page named it): after the day's last file, the next letter, and on while each is there
+    (exists(url) → bool), at most `last`. Each is {"part", "title", "url", "nenavedeno": True}."""
+    if not parts:
+        return []
+    m = _NEXT.match(parts[-1]["url"])
+    if not m:
+        return []
+    stem, letter = m.groups()
+    out = []
+    for _ in range(last):
+        letter = chr(ord(letter) + 1) if letter else "a"
+        url = f"{stem}{letter}.mp4"
+        if any(p["url"] == url for p in parts) or not exists(url):
+            break
+        out.append({"part": parts[-1]["part"] + len(out) + 1, "title": parts[-1]["title"], "url": url, "nenavedeno": True})
+    return out
+
+
 def by_day(entries: list[dict]) -> dict[str, list[dict]]:
     """The recordings of each day, parts in order; the same file listed twice is kept once."""
     days: dict[str, list[dict]] = {}

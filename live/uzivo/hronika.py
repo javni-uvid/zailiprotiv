@@ -73,13 +73,23 @@ def find(text: str) -> list[tuple[str, str]]:
     return out
 
 
-_FLOOR = re.compile(r"(?=\b(?:reč ima|ima reč)\b([^.!?]{0,90}))")  # a look ahead: two in one sentence are both found
+# How the chair gives the floor (20 Nov 2026, the maintainer's request to widen it, from the transcript of 19 Nov):
+# "reč ima", which Whisper often writes as one word ("Rečima narodna poslanica …", taken only before a title, as
+# "rečima" is also a word), "dajem reč", "pravo na repliku (ima)", and a replica, a point of order, "izvolite" or
+# "sledeći (je)" when a title comes right after ("Povreda Poslovnika, narodni poslanik Feđa Dimović"; "Replika
+# gospodinu Vučiću" names whom it answers, so a dative is no title). A look ahead: two in one sentence are both found.
+_TITLE = r"(?=(?:narodn\w*|poslani\w*|kolega|kolegi\w*|gospodine|gospođo|gospodjo|gospodin|gospođa)\b)"
+_FLOOR = re.compile(r"(?=\b(?:reč ima|ima reč|dajem reč|reč dajem|pravo na repliku(?: ima)?|rečima[,:]? " + _TITLE
+                    + r"|replik\w*[,:]? (?:ima )?" + _TITLE + r"|povreda poslovnika[,:]? (?:reč ima |ima reč )?" + _TITLE
+                    + r"|izvolite[,:]? " + _TITLE + r"|sledeći (?:je |govornik |na listi )*" + _TITLE
+                    + r")\b([^.!?]{0,90}))")
 
 
 FLOOR_NEAR = 0.74  # how alike a heard word and a name's word must be at the least ("Jova" for Jovo)
 FLOOR_CLEAR = 0.08  # and how far ahead of the next nearest MP the nearest must be
 _TITLES = {"poslanik", "poslanica", "poslanice", "kolega", "koleginica", "gospodin", "gospodja", "profesor", "profesorka",
-           "doktor", "doktorka", "dr", "prof", "ima", "rec", "narodni", "narodna"}
+           "doktor", "doktorka", "dr", "prof", "ima", "rec", "narodni", "narodna", "gospodine", "gospodjo",
+           "koleginice", "kolegi", "kolegice"}
 
 
 def floor(text: str, people: list) -> list:

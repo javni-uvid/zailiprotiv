@@ -1,0 +1,9 @@
+# Reading who is at the rostrum from the picture and the sound, when the broadcast shows no caption (20 Nov 2026, the
+# maintainer's decision: faces and voices may be used, the recordings are public). Built on the tested live image,
+# never run live: docker build -f live/Dockerfile.analiza -t mikrofon:analiza .  (from the repository's root)
+FROM mikrofon:test
+RUN pip install --no-cache-dir opencv-python-headless==5.1.0.95 sherpa-onnx==2.0.2 soundfile
+# Faces: YuNet finds them, SFace compares them (OpenCV Zoo, Apache 2.0). Voices: 3D-Speaker's ERes2Net (Apache 2.0).
+ADD https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx /modeli/yunet.onnx
+ADD https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx /modeli/sface.onnx
+ADD https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx /modeli/glas.onnx

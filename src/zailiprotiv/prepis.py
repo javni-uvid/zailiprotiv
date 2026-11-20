@@ -29,7 +29,7 @@ def sound(url: str, start: float, seconds: float, path: Path) -> bool:
     return out.returncode == 0 and path.exists() and path.stat().st_size > 1000
 
 
-def run(root: Path, conv: str, day: str, *, model: str = "medium", minutes: float = 300, transcribe=None) -> int:
+def run(root: Path, conv: str, day: str, *, model: str = "large-v3-turbo", minutes: float = 300, transcribe=None) -> int:
     """Write down the turns of `day` not yet written; returns how many were. transcribe(path) → text is for tests."""
     src = root / conv / "snimak" / f"{day}.json"
     if not src.exists():
