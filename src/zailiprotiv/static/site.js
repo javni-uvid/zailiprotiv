@@ -94,15 +94,36 @@ document.addEventListener("DOMContentLoaded", function () {
       var h = sec.firstElementChild;
       return h && h.tagName === "H2" && !/^(kljucna|aktivnost)$/.test(sec.id) && !sec.classList.contains("outcome") && !sec.classList.contains("mp-brief");  // "Ukratko" is always open, first on the page
     });
+    // On a phone the heading's words become a button that says whether its section is open, so the fold can be
+    // worked with a keyboard and a screen reader, not a finger alone; on a wide screen, where nothing folds, the
+    // heading is left as it was. A heading with a link in it keeps its click only.
+    var said = function (sec) { var b = sec.querySelector("h2 > .fold-btn"); if (b) b.setAttribute("aria-expanded", sec.classList.contains("open") ? "true" : "false"); };
+    var buttons = function () {
+      var on = !!(phone && phone.matches);
+      folds.forEach(function (sec) {
+        var h = sec.firstElementChild, b = h.querySelector(":scope > .fold-btn");
+        if (on && !b && !h.querySelector("a")) {
+          b = document.createElement("button"); b.type = "button"; b.className = "fold-btn";
+          while (h.firstChild) b.appendChild(h.firstChild);
+          h.appendChild(b);
+        } else if (!on && b) {
+          while (b.firstChild) h.insertBefore(b.firstChild, b);
+          b.remove();
+        }
+        said(sec);
+      });
+    };
     folds.forEach(function (sec) {
       sec.classList.add("fold");
       var h = sec.firstElementChild;
-      h.addEventListener("click", function (e) { if (!e.target.closest("a") && phone && phone.matches) sec.classList.toggle("open"); });
+      h.addEventListener("click", function (e) { if (!e.target.closest("a") && phone && phone.matches) { sec.classList.toggle("open"); said(sec); } });
     });
+    buttons();
+    if (phone) { if (phone.addEventListener) phone.addEventListener("change", buttons); else if (phone.addListener) phone.addListener(buttons); }
     var unfold = function () {
       var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
       var sec = t && t.closest(".fold");
-      if (sec) { sec.classList.add("open"); if (phone && phone.matches) t.scrollIntoView(); }
+      if (sec) { sec.classList.add("open"); said(sec); if (phone && phone.matches) t.scrollIntoView(); }
     };
     unfold(); window.addEventListener("hashchange", unfold);
   }

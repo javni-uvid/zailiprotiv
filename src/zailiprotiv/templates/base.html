@@ -18,6 +18,7 @@
 <link rel="alternate" type="application/atom+xml" title="Novi zakoni" href="{{ root }}zakoni.xml">{% block feeds %}{% endblock %}
 </head>
 <body data-root="{{ root }}" data-v="{{ css }}"{% if votes_api %} data-api="{{ votes_api }}"{% endif %}>
+<a class="skip" href="#sadrzaj">Preskoči na sadržaj</a>
 <header class="top">
   <a class="brand" href="{{ root }}index.html"><svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/><path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg><span><span class="w-za">Za</span> ili <span class="w-protiv">Protiv</span></span></a>
   <nav>
@@ -29,7 +30,7 @@
     <a class="nav-cta" href="{{ root }}glasaj.html">Glasaj i ti</a>
   </nav>
 </header>
-<main data-pagefind-body>
+<main id="sadrzaj" data-pagefind-body>
 {% block main %}{% endblock %}
 </main>
 <footer class="site-foot">

@@ -274,6 +274,13 @@ The project's promises to its readers. Never change them without the maintainer.
   pages, which link there. Data are CC BY 4.0 (17 Nov 2026), said on the data page; code is MIT.
 - **Hosting:** GitHub Pages at zailiprotiv.rs, behind Cloudflare's proxy; **pages** purges the cache after publishing.
   DNS is the maintainer's; DNS changes only with the maintainer's confirmation.
+- **Read and worked without sight or a pointer** (20 Nov 2026, after a look at the site against WCAG 2.2 and NN/g):
+  white text stands only on colours kept dark in both themes (`--za-on`, `--protiv-on`, `--uzdrzan-on`: the vote
+  buttons and the chips of a vote cast; in the dark theme `--za` and `--protiv` are light, and white on them was
+  2:1), and "uzdržan" as text has a grey of its own (`--uzdrzan-text`, 4.5:1 or more). On a phone the heading of
+  a folded section of an MP's page is a button that says whether it is open (`site.js`, `.fold-btn`), so a keyboard
+  and a screen reader open it too. Every page begins with "Preskoči na sadržaj" (`.skip`, seen when it has the
+  focus). A new colour under text is checked for 4.5:1 in both themes.
 
 ### Visitors' votes ("Glasaj i ti")
 

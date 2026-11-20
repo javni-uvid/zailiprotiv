@@ -12,13 +12,15 @@
   --bg: #ffffff; --fg: #111111; --muted: #555555; --line: #d9d9d9; --card: #f3f3f1; --accent: #111111;
   --za: #1f5fa8; --protiv: #c2410c; --protiv-bar: #e0782f; --uzdrzan: #8a8f99; --nije_glasao: #c9ccd3; --nije_prisutan: #e8e8e8;
   --za-soft: #e6f0f6; --protiv-soft: #f8ece1; --warn: #9a5b00; --warn-soft: #fbf0dc;
+  /* Under white text (the vote buttons, the chips of a vote cast): the same in both themes, dark enough for it. */
+  --za-on: #1f5fa8; --protiv-on: #c2410c; --uzdrzan-on: #6b7079; --uzdrzan-text: #6b7079;
   --serif: "Literata", Georgia, "Times New Roman", serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #111318; --fg: #f1f1ee; --muted: #a8adb8; --line: #30343c; --card: #1b1e25; --accent: #f1f1ee;
     --za: #7cc0f5; --protiv: #ff9a52; --protiv-bar: #ff9a52; --uzdrzan: #7d8390; --nije_glasao: #4a505c; --nije_prisutan: #2a2e36;
-    --za-soft: #18293a; --protiv-soft: #33241a; --warn: #e3b25e; --warn-soft: #2f2716;
+    --za-soft: #18293a; --protiv-soft: #33241a; --warn: #e3b25e; --warn-soft: #2f2716; --uzdrzan-text: #9aa0ab;
   }
 }
 * { box-sizing: border-box; }
@@ -58,7 +60,7 @@ h3 { font-size: 1.05rem; margin: 1.4rem 0 .4rem; }
 .v-za { background: var(--za); } .v-protiv { background: var(--protiv-bar); } .v-uzdrzan { background: var(--uzdrzan); }
 .v-nije_glasao { background: var(--nije_glasao); } .v-nije_prisutan { background: var(--nije_prisutan); }
 .v-text-za, .t-za { color: var(--za); font-weight: 600; } .v-text-protiv, .t-protiv { color: var(--protiv); font-weight: 600; }
-.v-text-uzdrzan { color: var(--uzdrzan); font-weight: 600; }
+.v-text-uzdrzan { color: var(--uzdrzan-text); font-weight: 600; }
 .toc { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
 .toc a { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: .25rem .75rem; text-decoration: none; font-size: .92rem; }
 .toc span { color: var(--muted); }
@@ -142,6 +144,9 @@ main section > ul, main section > p, .debate ul, main details > p { max-width: 4
 
 /* Home, 12 Nov 2026 redesign: a lead law, two voices, rows with filters */
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+/* The first stop of the Tab key: past the menu to the page itself. Out of sight until it has the focus. */
+.skip { position: absolute; left: 8px; top: -4rem; z-index: 40; padding: .6rem 1rem; background: var(--fg); color: var(--bg); font-weight: 600; }
+.skip:focus { top: 8px; color: var(--bg); }
 .masthead { margin: .6rem 0 0; font-size: .8rem; color: var(--muted); letter-spacing: .02em; }
 .kicker { margin: 0 0 .7rem; font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--protiv); }
 .kicker.muted, .kicker.muted a { color: var(--muted); }
@@ -297,9 +302,9 @@ td.lean { white-space: nowrap; }
 .q-item h2 a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .q-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 1.6rem; max-width: 46rem; }
 .q-strip button { flex: 1 1 0; min-width: 2.1rem; height: 2.6rem; padding: 0; border: 2px solid var(--line); background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; cursor: pointer; }
-.q-strip button.a-z { background: var(--za); border-color: var(--za); color: #fff; }
-.q-strip button.a-p { background: var(--protiv); border-color: var(--protiv); color: #fff; }
-.q-strip button.a-u { background: var(--uzdrzan); border-color: var(--uzdrzan); color: #fff; }
+.q-strip button.a-z { background: var(--za-on); border-color: var(--za-on); color: #fff; }
+.q-strip button.a-p { background: var(--protiv-on); border-color: var(--protiv-on); color: #fff; }
+.q-strip button.a-u { background: var(--uzdrzan-on); border-color: var(--uzdrzan-on); color: #fff; }
 .q-strip button.now { border-color: var(--fg); box-shadow: 0 3px 0 var(--fg); }
 .q-strip .q-strip-end { flex: 0 0 auto; padding: 0 .9rem; }
 .q-strip .q-strip-end:disabled { opacity: .4; cursor: default; }
@@ -317,8 +322,8 @@ td.lean { white-space: nowrap; }
 .q-answers { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
 .q-btn { font: inherit; font-family: var(--serif); font-size: 1.6rem; font-weight: 700; padding: 1.1rem 1rem; border: 0; color: #fff; cursor: pointer; transition: transform .08s; }
 .q-btn:active { transform: translateY(2px); }
-.q-btn.q-za { background: var(--za); }
-.q-btn.q-protiv { background: var(--protiv); }
+.q-btn.q-za { background: var(--za-on); }
+.q-btn.q-protiv { background: var(--protiv-on); }
 .q-btn.q-uzd { grid-column: 1 / -1; background: transparent; color: var(--fg); border: 2px solid var(--line); font-family: inherit; font-size: 1.05rem; padding: .7rem; }
 .q-item.answered .q-btn:not(.on) { opacity: .28; }
 .q-btn:focus-visible, .q-strip button:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
@@ -731,6 +736,9 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   /* An MP's page: the sections after the first fold under their headings. */
   .fold > h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; cursor: pointer; margin: 0; padding: .9rem 0; border-top: 1px solid var(--line); font-size: 1.25rem; }
   .fold > h2::after { content: "+"; font-family: system-ui, sans-serif; font-weight: 400; color: var(--muted); flex: none; }
+  /* The heading's words are a button (site.js), so a keyboard and a screen reader can open the section too. */
+  .fold-btn { all: unset; flex: 1 1 auto; min-width: 0; cursor: pointer; }
+  .fold-btn:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
   .fold.open > h2::after { content: "−"; }
   .fold:not(.open) > :not(h2) { display: none; }
   .fold { margin: 0; }
@@ -804,7 +812,7 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 
 /* The quiz is what brings people in: last in the menu, drawn as a button. */
 .top nav .nav-cta { background: var(--fg); color: var(--bg); padding: .42rem .9rem; font-weight: 700; align-self: center; white-space: nowrap; border: 2px solid var(--fg); }
-.top nav .nav-cta:hover { background: var(--za); border-color: var(--za); color: #fff; }
+.top nav .nav-cta:hover { background: var(--za-on); border-color: var(--za-on); color: #fff; }
 @media (max-width: 640px) { .top nav .nav-cta { padding: .3rem .5rem; font-size: inherit; } }
 .notes mark, .notes .pagefind-highlight { background: #ffe066; color: #111111; padding: 0 .1em; }
 
@@ -828,11 +836,11 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 .yv .yv-fine { font-size: .8rem; color: var(--muted); margin-top: .5rem; }
 .yv-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .5rem; }
 .yv-btns button { font: inherit; font-family: var(--serif); font-weight: 700; font-size: 1.3rem; padding: .85rem .5rem; border: 0; color: #fff; cursor: pointer; }
-.yv-btns .z { background: var(--za); } .yv-btns .p { background: var(--protiv); }
+.yv-btns .z { background: var(--za-on); } .yv-btns .p { background: var(--protiv-on); }
 .yv-btns .u { background: none; color: var(--fg); border: 2px solid var(--line); font-family: inherit; font-size: 1rem; font-weight: 500; }
 .yv-btns button:focus-visible, .mark:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
-.yv-you { display: inline-block; color: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-weight: 700; padding: .1rem .5rem; font-size: .95rem; vertical-align: middle; background: var(--uzdrzan); }
-.yv-you.v-z { background: var(--za); } .yv-you.v-p { background: var(--protiv); }
+.yv-you { display: inline-block; color: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-weight: 700; padding: .1rem .5rem; font-size: .95rem; vertical-align: middle; background: var(--uzdrzan-on); }
+.yv-you.v-z { background: var(--za-on); } .yv-you.v-p { background: var(--protiv-on); }
 .yv-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 .yv-cmp small { display: block; color: var(--muted); font-size: .85rem; margin-bottom: .2rem; }
 .yv-cmp b { font-family: var(--serif); font-size: 2rem; line-height: 1; white-space: nowrap; }
@@ -918,8 +926,8 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .ballot td { padding: .6rem .6rem .6rem 0; border-bottom: 1px solid var(--line); vertical-align: middle; font-size: .95rem; }
 .ballot td:first-child a { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; text-decoration: none; }
 .ballot td small { display: block; color: var(--muted); font-size: .8rem; }
-.lb-chip { display: inline-block; min-width: 4.8rem; text-align: center; color: #fff; font-weight: 700; font-size: .85rem; line-height: 1; padding: .4rem .5rem; background: var(--uzdrzan); }
-.lb-chip.z { background: var(--za); } .lb-chip.p { background: var(--protiv); }
+.lb-chip { display: inline-block; min-width: 4.8rem; text-align: center; color: #fff; font-weight: 700; font-size: .85rem; line-height: 1; padding: .4rem .5rem; background: var(--uzdrzan-on); }
+.lb-chip.z { background: var(--za-on); } .lb-chip.p { background: var(--protiv-on); }
 .ballot .sk b { font-family: var(--serif); white-space: nowrap; } .ballot .sk .z { color: var(--za); } .ballot .sk .p { color: var(--protiv); }
 .ballot .same { font-size: .88rem; } .ballot .same.no { color: var(--muted); }
 #lb-more { display: inline-block; }
@@ -1012,8 +1020,8 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
 .q-half { margin: 0 0 .9rem; padding: .6rem .8rem; border-left: 5px solid var(--fg); background: var(--card); font-size: .95rem; }
 .vote-line { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; margin: 1rem 0 1.4rem; font-size: .92rem; color: var(--muted); }
 .vote-line span { flex: 1 1 16rem; }
-.my-vote { display: inline-block; margin-left: .5rem; padding: .05rem .45rem; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .74rem; font-weight: 700; color: #fff; background: var(--uzdrzan); vertical-align: middle; white-space: nowrap; }
-.my-vote.z { background: var(--za); } .my-vote.p { background: var(--protiv); }
+.my-vote { display: inline-block; margin-left: .5rem; padding: .05rem .45rem; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .74rem; font-weight: 700; color: #fff; background: var(--uzdrzan-on); vertical-align: middle; white-space: nowrap; }
+.my-vote.z { background: var(--za-on); } .my-vote.p { background: var(--protiv-on); }
 
 /* A plenary sitting in progress (macros.live_bar) */
 .live { order: -1; display: flex; gap: .7rem; align-items: baseline; margin: 1.2rem 0 1.4rem; padding: .75rem 1rem; border: 2px solid var(--fg); border-radius: 10px; }
