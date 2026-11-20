@@ -307,6 +307,7 @@ def together(by_conv: list[dict]) -> dict:
 
 
 ALL = "varnice-svi.html"  # every convocation read, counted together
+RULES = "poslovnik-clanovi.html"  # the Rules' articles invoked in the debates, every convocation
 
 
 def invoked_articles(total: Counter, by_conv: list[dict], rules: dict | None) -> list[dict]:
@@ -575,6 +576,9 @@ def render(floor: Floor, *, env, common, out: Path) -> None:
         (out / ALL).write_text(env.get_template("floor.html").render(
             **common, c=floor.everyone, by_conv=by_conv, part="svi", all_page=ALL, root="",
             invoked=floor.invoked), encoding="utf-8")
+    if floor.invoked:  # a page of its own (20 Nov 2026: with the articles' text, varnice-svi grew past 1 MB in Cyrillic)
+        (out / RULES).write_text(env.get_template("rules_cited.html").render(**common, invoked=floor.invoked, root=""),
+                                 encoding="utf-8")
 
 
 def harsh_quote(people: list[dict]) -> dict | None:
