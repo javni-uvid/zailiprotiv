@@ -887,6 +887,15 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                 speech_url[(k, sp["date"])] = sp["url"]
     env.globals["photo_for"] = lambda mp: photo_of.get(mp.key, "")
     rows_mp, live_facts = [], {}
+    # For the card: of the MPs with ten votes or more beside a group's majority, how many never voted unlike it.
+    unlike = {}
+    for m in people.values():
+        own = [(how, line.get((k, seat.get((k, m.key), "")))) for k, how in m.votes.items()
+               if k in finals and how in ("za", "protiv", "uzdrzan")]
+        own = [(how, l) for how, l in own if l]
+        if len(own) >= 10:
+            unlike[m.key] = sum(1 for how, l in own if how != l)
+    never = (sum(1 for n in unlike.values() if not n), len(unlike))
     for mp in sorted(people.values(), key=lambda m: collate(m.name)):
         record = []
         for k, how in mp.votes.items():
@@ -973,7 +982,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         card_facts = mp_card.facts(slug=mp.slug, by_conv=by_conv, floor=floor_mp, exchanges=exchanges_of.get(mp.slug, []),
                                    apart=len(apart_mp), voted=sum(1 for r in record if r["line"] and r["vote"] in ("za", "protiv", "uzdrzan")),
                                    busiest=busiest, words=[latin(w) for w in words.get(mp.key, [])],
-                                   day=env.filters["day"], given_first=env.filters["given_first"])
+                                   day=env.filters["day"], given_first=env.filters["given_first"], never=never)
         if mp.key in member_now:  # for the live page (pages_mikrofon.speakers): the speaker's votes, card and a quote
             live_facts[mp.slug] = {"tally": tally, "facts": card_facts, "convs": [c["conv"] for c in by_conv],
                                    "floor_convs": [x["conv"] for x in floor_mp],

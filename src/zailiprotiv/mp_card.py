@@ -35,7 +35,8 @@ def _a(href: str, text: str, more: bool = True) -> str:
 
 
 def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[dict], apart: int, voted: int,
-          busiest: tuple[int, str, str] | None, words: list[str], day, given_first) -> list[dict]:
+          busiest: tuple[int, str, str] | None, words: list[str], day, given_first,
+          never: tuple[int, int] | None = None) -> list[dict]:
     """[{"n": the number, "text": the rest of the sentence (markup), "short": a few words for the number's tile,
     "href": where the tile leads, "sub": a small line under it}], in a fixed order."""
     out = []
@@ -53,16 +54,21 @@ def facts(*, slug: str, by_conv: list[dict], floor: list[dict], exchanges: list[
             f"{_n(of)}{median}).", "prisustva na glasanjima",
             sub=f"pola poslanika ima više od {round(100 * c['median'])}%" if c.get("median") else f"{c['name']} saziv")
     # Votes unlike the group's majority.
+    # Beside it, how common that is: of the MPs with ten such votes or more since 2012, how many have none.
+    peers = f"bez ijednog: {_n(never[0])} od {_n(never[1])} poslanika" if never and never[1] else ""
     if voted >= 10 or apart:  # "never" said of one or two votes says nothing
         # worded without a verb in the past, which in Serbian would say whether the MP is a man or a woman
         if apart:
             add(_n(apart), f"{_plural(apart, 'glas drugačiji', 'glasa drugačija', 'glasova drugačijih')} od većine svoje "
-                f"grupe, od {_n(voted)} glasova za, protiv ili uzdržan. {_a('#drugacije', 'Koji su to zakoni')}",
+                f"grupe, od {_n(voted)} glasova za, protiv ili uzdržan{'; ' + peers if peers else ''}. "
+                f"{_a('#drugacije', 'Koji su to zakoni')}",
                 _plural(apart, "glas mimo svoje grupe", "glasa mimo svoje grupe", "glasova mimo svoje grupe"), "#drugacije",
-                f"od {_n(voted)} glasova")
+                f"od {_n(voted)} glasova" + (" · " + peers if peers else ""))
         else:
             add("Nijedan", f"glas drugačiji od većine svoje grupe ({_n(voted)} {_plural(voted, 'glas', 'glasa', 'glasova')} "
-                f"za, protiv ili uzdržan).", "glas mimo svoje grupe", sub=f"od {_n(voted)} glasova")
+                f"za, protiv ili uzdržan)" + (f"; isto važi za {_n(never[0])} od {_n(never[1])} poslanika od 2012." if peers else "."),
+                "glas mimo svoje grupe",
+                sub=f"od {_n(voted)} glasova" + (f" · kao {_n(never[0])} od {_n(never[1])} poslanika" if peers else ""))
     # The floor: speeches, words, the longest speech, the busiest day, exchanges and with whom.
     speeches = sum(x["speeches"] for x in floor)
     words_ = sum(x["words"] for x in floor)

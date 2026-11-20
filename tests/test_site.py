@@ -704,3 +704,14 @@ def test_a_new_convocations_notes_are_counted_before_it_has_a_law(tmp_path):
     new = (out / "poslanik" / "novak-nova.html").read_text()
     assert "<b>1</b><span>govor u stenogramima</span>" in new and "15. saziv" in new
     assert site.check(out) == []
+
+
+def test_letter_sizes_are_the_scale():
+    """Every letter size in the stylesheet is a step of the one scale (the --t- variables), so a page does not grow
+    twenty sizes again; the menu's and the tabs' letters, sized to fit a phone's row, and an SVG's are the exceptions."""
+    from pathlib import Path
+    css = (Path(site.__file__).parent / "static" / "style.css").read_text(encoding="utf-8")
+    fit = {"clamp(.72rem, 4.3vw, 1rem)", "clamp(.68rem, 3.55vw, .95rem)", "clamp(.8rem, 3.7vw, .95rem)", "inherit", ".8em", "25px", "28px"}
+    sizes = {v.strip() for v in re.findall(r"font-size:\s*([^;}]+)", css)}
+    assert {v for v in sizes if not re.fullmatch(r"var\(--t-(\d|h1|d1|d2)\)", v)} <= fit
+    assert not re.search(r"font:\s*\d+\s+[\d.]+rem", css)
