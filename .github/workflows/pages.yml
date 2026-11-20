@@ -77,7 +77,7 @@ jobs:
       - name: Patch styles and scripts into the published site
         if: steps.changes.outputs.fast == 'true'
         run: |
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           uv run zailiprotiv static-patch --site _site
           : > indexnow.txt  # the pages' text is as it was: nothing to tell search engines
       - name: Build
@@ -91,7 +91,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}  # for telling the cache what changed
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID || secrets.CLOUDFLARE_ZONE_ID }}
         run: |
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           uv run zailiprotiv notes-raw --pull  # the notes of every sitting; the repository holds only some
           uv run zailiprotiv site --out _site --domain zailiprotiv.rs
           # Downloads and share pictures live in a bucket (files_url in data/settings.json; see files_site). They are

@@ -30,7 +30,7 @@ jobs:
           restore-keys: og-
       - name: Bring every sitting's notes
         run: |
-          pip install -q uv && uv sync --frozen -q
+          pip install -q uv==0.13.9 && uv sync --frozen -q
           uv run zailiprotiv notes-raw --pull --force
           du -sh --apparent-size data/*/transcripts | cat; ls data/*/transcripts/*.json | wc -l; nproc; free -g | head -2
       - name: The site

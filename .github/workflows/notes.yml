@@ -41,7 +41,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         id: build
         run: |
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           uv run zailiprotiv notes-raw --pull  # the notes of every sitting; the repository holds only some
           uv run zailiprotiv notes-site --out _beleske
           # What the search index is made of: every Latin page's bytes, and Pagefind's version and pattern. Pagefind

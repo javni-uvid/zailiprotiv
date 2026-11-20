@@ -59,7 +59,7 @@ jobs:
           HOURS: ${{ inputs.hours }}
           IN_INSPECT: ${{ inputs.inspect }}
         run: |
-          pip install -q google-auth requests
+          pip install -q google-auth==2.62.2 requests==2.34.2
           case "$IN_INSPECT" in ''|*[!0-9]*) n=0 ;; *) n="$IN_INSPECT" ;; esac  # a number, or nothing asked
           python3 tools/search.py $(( (HOURS + 23) / 24 < 7 ? 7 : (HOURS + 23) / 24 )) --inspect "$n"
       - name: What was stopped

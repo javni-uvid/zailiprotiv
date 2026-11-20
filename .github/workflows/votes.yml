@@ -51,7 +51,7 @@ jobs:
           IN_REREAD: ${{ inputs.reread }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null  # tesseract: scanned bills
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
           conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
           echo "CONV=$conv" >> "$GITHUB_ENV"

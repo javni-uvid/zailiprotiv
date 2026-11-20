@@ -33,7 +33,7 @@ jobs:
           IN_FOLDER: ${{ inputs.folder }}
           URLS: ${{ inputs.urls }}
         run: |
-          pip install uv && uv sync --frozen
+          pip install uv==0.13.9 && uv sync --frozen
           python3 -c "import os; [print(u.strip()) for u in os.environ['URLS'].replace('|', chr(10)).splitlines() if u.strip()]" > urls.txt
           mapfile -t list < urls.txt
           uv run zailiprotiv download --to "tests/fixtures/${IN_FOLDER}" "${list[@]}"
