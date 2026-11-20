@@ -112,6 +112,9 @@ decisions unless said otherwise.
   `pages_procedure`, `pages_ballot`, `pages_lists`, `pages_floor`, `pages_presence`, `digest`, `downloads`, `feeds`,
   `cyrillic`, `publish`. New kinds of page go in a module of their own; a move is checked by building before and
   after and comparing every file.
+- **Shared helpers** (20 Nov 2026): a JSON file that may be missing is read with `jsonfile.load(path, default)`
+  and a store written with `jsonfile.save` (one entry per line); the month names (nominative, genitive, Cyrillic)
+  and `day`/`day_of` are in `months.py`; "keep the file when a new reading shrank" is `jsonfile.shrank`.
 
 ## Principles
 
