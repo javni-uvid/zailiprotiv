@@ -16,11 +16,16 @@ window.addEventListener("DOMContentLoaded", function () {
     if (!window.zipCount || text.trim().length < 2) return;
     zipCount("pretraga.trazi");
     clearTimeout(quiet);
-    quiet = setTimeout(function () {
-      var msg = document.querySelector("#search .pagefind-ui__message");
-      if (msg && msg.textContent.trim() && !document.querySelector("#search .pagefind-ui__result")
-          && !/^Tražim|^Тражим/.test(msg.textContent.trim())) zipCount("pretraga.prazno");
-    }, 2000);
+    // On a phone the index may still be loading two seconds on ("Tražim…"): look again each second, 15 s at most.
+    var tries = 0;
+    (function look() {
+      quiet = setTimeout(function () {
+        var msg = document.querySelector("#search .pagefind-ui__message"), said = msg ? msg.textContent.trim() : "";
+        if (document.querySelector("#search .pagefind-ui__result")) return;
+        if ((!said || /^Tražim|^Тражим/.test(said)) && ++tries < 15) return look();
+        if (said && !/^Tražim|^Тражим/.test(said)) zipCount("pretraga.prazno");
+      }, tries ? 1000 : 2000);
+    })();
   }
   box.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest(".pagefind-ui__result a");
