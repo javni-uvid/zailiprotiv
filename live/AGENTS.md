@@ -266,3 +266,11 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   under them and open by themselves when the day's strip or an address leads to one. Left as it is: the day's
   four numbers have nothing beside them to compare with (the service has no other day's sums; the sentence above
   them and the speaker's clock already compare).
+- **The day's steps follow the order of the Assembly's work** (20 Nov 2026, the maintainer's request: "a vote
+  cannot be closed before it began"). Within an agenda item (`page._in_order`): the debate is opened once and before
+  it is closed (an item taken up with "nastavljamo pretres" counts as opened); a vote is closed only after one was
+  put, and "put to the vote" while one is open is that vote (19 Nov: the roll call after the decision to vote by
+  roll call); steps said in the same second are taken as an item, then its debate, then its vote (`_PHASE`). These
+  steps are no longer cut to one a quarter of an hour: three votes in five minutes (19 Nov, 22:19–22:24) are three.
+  A vote's result closes it ("za je glasalo", "glasalo je 97", "dobio je … glasova"), and "pristupili glasanju" in
+  a result no longer reads as a vote begun; a kept step is shown under the name today's rules give it.
