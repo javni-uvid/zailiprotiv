@@ -1082,3 +1082,18 @@ def test_the_page_names_the_commit_it_was_built_from():
     snap = {"stanje": "nema_prenosa", "provereno": 0, "sada": None, "danas": [], "dan": "2026-11-20"}
     assert 'Verzija 31ce3a4</span></footer>' in page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, version="31ce3a4")
     assert 'class="ver"' not in page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+
+
+def test_the_maintainer_alone_turns_on_the_outage_alerts(monkeypatch, tmp_path):
+    from uzivo.obavesti import Bell
+    from uzivo.page import admin_page, service_worker
+    monkeypatch.setattr(config, "TRANSCRIPT_KEY", "dug-kljuc-za-prepis")
+    monkeypatch.setattr(config, "SHOW_TRANSCRIPT", True)
+    assert config.admin_open("dug-kljuc-za-prepis") and not config.admin_open("") and not config.admin_open("pogresan")
+    monkeypatch.setattr(config, "TRANSCRIPT_KEY", "kratak")
+    assert not config.admin_open("kratak")  # too short to be a key, transcript on the page or not
+    html = admin_page("dug-kljuc-za-prepis", "BKEY")
+    assert 'content="noindex"' in html and '"BKEY"' in html and "/upozorenja?k=" in html
+    sw = service_worker(False, "BKEY", "https://glasovi.zailiprotiv.rs")
+    assert "Mikrofon ne radi" in sw and "/p/vrsta" in sw and "Mikrofon ponovo radi" in sw
+    assert not Bell(str(tmp_path / "o.json"), token="", api="https://glasovi.example").admin("https://fcm.googleapis.com/x")

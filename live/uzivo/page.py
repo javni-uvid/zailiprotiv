@@ -119,6 +119,10 @@ TEXT = {
     "nt_err": "Uključivanje nije uspelo; pokušajte ponovo malo kasnije.",
     "nt_note": "Jedno obaveštenje kad prenos sednice počne, najviše jednom dnevno. Šalje ga vaš pregledač preko "
                "svog servisa (Gugl, Epl ili Mozila); kod nas ostaje samo adresa za to obaveštenje, dok ga ne isključite.",
+    "al_down": "Mikrofon ne radi",
+    "al_down_body": "Sednica je u toku, a mikrofon.zailiprotiv.rs ne odgovara već %1 min.",
+    "al_back": "Mikrofon ponovo radi",
+    "al_back_body": "Nije odgovarao %1 min.",
     "nt_title": "Sednica je počela",
     "nt_body": "Prenos uživo i ko sada govori u Skupštini.",
     "app_name": "Mikrofon",
@@ -1441,19 +1445,75 @@ SCRIPT = _shared("mikrofon.js") + """
 """
 
 
+def admin_page(key: str, push_key: str) -> str:
+    """/upozorenja?k=…: the maintainer turns on, on this device, a notification when this service is down while a
+    sitting is on (the counter's watch, worker/). Shown to the key only; the device's push address goes to the
+    service, which hands it to the counter with its token."""
+    k = json.dumps(key)
+    return f"""<!doctype html>
+<html lang="sr-Latn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Upozorenja · Mikrofon</title><style>{CSS}</style></head>
+<body><main><h1>Upozorenja za održavanje</h1>
+<p class="lead">Ovaj uređaj dobija obaveštenje kad mikrofon.zailiprotiv.rs ne odgovara dve provere zaredom (oko pet minuta),
+radnim danom od 7 do 20 h, dok Skupština na svom sajtu piše da je sednica u toku; i još jedno kad ponovo proradi.</p>
+<p><button type="button" class="add-btn" id="on">Uključi na ovom uređaju</button>
+<button type="button" class="add-btn" id="off">Isključi</button></p>
+<p class="meta" id="said"></p><p><a href="/">← Ko sada govori</a></p></main>
+<script>
+(function () {{
+  var key = {json.dumps(push_key)}, k = {k}, said = document.getElementById("said");
+  function bytes(s) {{ var b = atob(s.replace(/-/g, "+").replace(/_/g, "/")), o = new Uint8Array(b.length);
+    for (var i = 0; i < b.length; i++) o[i] = b.charCodeAt(i); return o; }}
+  function tell(endpoint, on) {{
+    return fetch("/upozorenja?k=" + encodeURIComponent(k), {{ method: "POST", headers: {{ "content-type": "application/json" }},
+      body: JSON.stringify({{ endpoint: endpoint, on: on }}) }}).then(function (r) {{ if (!r.ok) throw new Error(r.status); }});
+  }}
+  document.getElementById("on").onclick = function () {{
+    Notification.requestPermission().then(function (p) {{
+      if (p !== "granted") throw new Error("dozvola: " + p);
+      return navigator.serviceWorker.register("/sw.js", {{ scope: "/" }}).then(function () {{ return navigator.serviceWorker.ready; }});
+    }}).then(function (r) {{ return r.pushManager.getSubscription().then(function (s) {{
+      return s || r.pushManager.subscribe({{ userVisibleOnly: true, applicationServerKey: bytes(key) }}); }}); }})
+      .then(function (s) {{ return tell(s.endpoint, true); }})
+      .then(function () {{ said.textContent = "Uključeno na ovom uređaju."; }})
+      .catch(function (e) {{ said.textContent = "Nije uspelo: " + e.message; }});
+  }};
+  document.getElementById("off").onclick = function () {{
+    navigator.serviceWorker.getRegistration("/").then(function (r) {{ return r ? r.pushManager.getSubscription() : null; }})
+      .then(function (s) {{ if (!s) throw new Error("ovaj uređaj nema prijavu"); return tell(s.endpoint, false); }})
+      .then(function () {{ said.textContent = "Isključeno na ovom uređaju."; }})
+      .catch(function (e) {{ said.textContent = "Nije uspelo: " + e.message; }});
+  }};
+}})();
+</script></body></html>"""
+
+
 def service_worker(cyr: bool, key: str, api: str) -> str:
     """The page's service worker (/sw.js; ?j=cir for the Cyrillic page): it only shows the notification when a push
     comes (a push carries nothing: the words are here) and opens the page on a tap. It handles no requests, so the
     page loads as it would without it."""
     words = json.dumps({"title": _t("nt_title", cyr), "body": _t("nt_body", cyr), "url": "/cir/" if cyr else "/",
-                        "lang": "sr-Cyrl" if cyr else "sr-Latn", "key": key, "api": api.rstrip("/"), "cir": cyr},
+                        "lang": "sr-Cyrl" if cyr else "sr-Latn", "key": key, "api": api.rstrip("/"), "cir": cyr,
+                        "down": _t("al_down", cyr), "down_body": _t("al_down_body", cyr),
+                        "back": _t("al_back", cyr), "back_body": _t("al_back_body", cyr)},
                        ensure_ascii=False)
     return f"""const W = {words};
 self.addEventListener("install", function () {{ self.skipWaiting(); }});
 self.addEventListener("activate", function (e) {{ e.waitUntil(self.clients.claim()); }});
+// A push carries nothing: the counter says which it was (the sitting's, or for the maintainer's devices the watch's).
 self.addEventListener("push", function (e) {{
-  e.waitUntil(self.registration.showNotification(W.title, {{ body: W.body, icon: "/ikona-192.png", tag: "sednica",
-    lang: W.lang, data: {{ url: W.url }} }}));
+  var which = self.registration.pushManager.getSubscription().then(function (s) {{
+    return fetch(W.api + "/p/vrsta", {{ method: "POST", headers: {{ "content-type": "text/plain" }},
+                                        body: JSON.stringify({{ endpoint: s ? s.endpoint : "" }}) }});
+  }}).then(function (r) {{ return r.json(); }}).catch(function () {{ return {{ vrsta: "sednica" }}; }});
+  e.waitUntil(which.then(function (k) {{
+    var t = W.title, b = W.body, tag = "sednica", n = String(k.min || 0);
+    if (k.vrsta === "kvar") {{ t = W.down; b = W.down_body.replace("%1", n); tag = "kvar"; }}
+    else if (k.vrsta === "oporavak") {{ t = W.back; b = W.back_body.replace("%1", n); tag = "kvar"; }}
+    return self.registration.showNotification(t, {{ body: b, icon: "/ikona-192.png", tag: tag, lang: W.lang,
+                                                    data: {{ url: W.url }} }});
+  }}));
 }});
 self.addEventListener("notificationclick", function (e) {{
   e.notification.close();

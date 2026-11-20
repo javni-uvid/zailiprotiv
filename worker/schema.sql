@@ -14,4 +14,8 @@ CREATE TRIGGER IF NOT EXISTS ballots_up AFTER UPDATE OF vote ON ballots WHEN old
 -- else about it), the page's script, the day it was asked for; and the days a notification went out, once each.
 CREATE TABLE IF NOT EXISTS push (endpoint TEXT PRIMARY KEY, cir INTEGER NOT NULL, day TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS push_days (day TEXT PRIMARY KEY, sent INTEGER NOT NULL DEFAULT 0, gone INTEGER NOT NULL DEFAULT 0);
+-- The maintainer's devices, told when "Ko sada govori" is down while a sitting is on (20 Nov 2026), and the watch's
+-- own few values (the outage under way, the Assembly's last answer, what was last sent), as JSON by name.
+CREATE TABLE IF NOT EXISTS push_admin (endpoint TEXT PRIMARY KEY, day TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS watch (k TEXT PRIMARY KEY, v TEXT NOT NULL);
 CREATE TRIGGER IF NOT EXISTS ballots_out AFTER DELETE ON ballots BEGIN UPDATE tally SET n = n - 1 WHERE item = old.item AND vote = old.vote; END;
