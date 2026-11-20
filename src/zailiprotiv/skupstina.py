@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from html import unescape
 from html.parser import HTMLParser
 
+from zailiprotiv import months
 from zailiprotiv.config import BASE, CONVOCATIONS, DELAY, ORDINALS, USER_AGENT, VOTES_PATHS
 from zailiprotiv.translit import latin
 
@@ -124,8 +125,7 @@ class Sitting:
     starts: str = ""  # "2026-08-24T10:00", from the notice that convened it
 
 
-_MONTHS = ("јануар", "фебруар", "март", "април", "мај", "јун", "јул", "август", "септембар", "октобар", "новембар",
-           "децембар")
+_MONTHS = months.CYR
 
 
 def convened(html: str) -> str:

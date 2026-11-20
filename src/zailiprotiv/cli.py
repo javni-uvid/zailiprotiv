@@ -28,8 +28,8 @@ def _shrunk(path: Path, what: str, now: int, counts=lambda v: True) -> bool:
     convocation's laws and sittings only grow."""
     if not path.exists():
         return False
-    before = sum(1 for v in json.loads(path.read_text(encoding="utf-8"))[what].values() if counts(v))
-    if before >= 10 and now < before * 0.8:
+    before = sum(1 for v in jsonfile.load(path)[what].values() if counts(v))
+    if jsonfile.shrank(now, before, least=10):
         print(f"::warning::{what}: the Assembly's page gives {now}, the file has {before}. Kept the file: has a new "
               f"convocation taken over the page? See AGENTS.md, 'The Fifteenth convocation'.")
         return True
@@ -52,7 +52,7 @@ def index(args) -> int:
     total = sum(len(s.votes) for s in found)
     if _shrunk(out, "sittings", sum(1 for s in found if s.votes), lambda v: bool(v.get("votes"))):
         return 0
-    out.write_text(jsonfile.dumps(store, "sittings"), encoding="utf-8")
+    jsonfile.save(out, store, "sittings")
     print(f"sittings: {len(found)}, roll calls: {total}")
     for title in getattr(skupstina.index, "later", []):  # the votes workflow opens an issue on this line
         print(f"::notice::A later convocation's sitting is listed: {title}")
@@ -88,13 +88,13 @@ def videos_cmd(args) -> int:
     for day in sorted(days)[-3:]:  # the latest days only: the archive adds a day's last parts within hours
         days[day] += videos.unlisted(days[day], exists)
     out = DATA / "videos.json"
-    if out.exists() and len(days) < 0.8 * len(json.loads(out.read_text(encoding="utf-8")).get("days") or {}):
+    if out.exists() and jsonfile.shrank(len(days), len(jsonfile.load(out).get("days") or {})):
         print(f"::warning::videos: the archive gives {len(days)} days, fewer than the file; kept the file")
         return 0
     store = {"fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "source": page,
              "days": days}
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(jsonfile.dumps(store, "days"), encoding="utf-8")
+    jsonfile.save(out, store, "days")
     print(f"recordings: {len(found)} on {len(days)} days")
     return 0
 
@@ -103,7 +103,7 @@ def uzivo_pull(args) -> int:
     """The live page's records of who spoke when (live/) → data/<N>/uzivo/<date>.json. The page runs on the
     maintainer's computer and may be off: then nothing changes and the run goes on."""
     from zailiprotiv import uzivo
-    settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8")) if (ROOT / "settings.json").exists() else {}
+    settings = jsonfile.load(ROOT / "settings.json", {})
     base = settings.get("live_page", "")
     if not base:
         print("no live_page in data/settings.json")
@@ -173,9 +173,9 @@ def govor_cmd(args) -> int:
         return {"ime": name, "adresa": site_slug(name, 60) if m else "", "grupa": translit.latin(m["group"]) if m else "",
                 "uloga": translit.latin(m["group"]) if m else ""}
 
-    kept = json.loads((conv_dir / "arhiva.json").read_text(encoding="utf-8")) if (conv_dir / "arhiva.json").exists() else {}
+    kept = jsonfile.load(conv_dir / "arhiva.json", {})
     record_path = conv_dir / "uzivo" / f"{args.day}.json"
-    record = json.loads(record_path.read_text(encoding="utf-8")).get("govori", []) if record_path.exists() else []
+    record = jsonfile.load(record_path, {}).get("govori", [])
     seen = [(mps.key(cyr(" ".join(t["ime"].split(" ", 1)[::-1]))), t["od"]) for t in record if t.get("okvira", 0) >= 2]
     files = []
     for url in day_files:
@@ -297,12 +297,12 @@ def in_procedure(args) -> int:
     from zailiprotiv import procedure
     found = procedure.parse(skupstina.fetch(procedure.PAGE).decode("utf-8", "replace"))
     out = Path(args.out)
-    store = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+    store = jsonfile.load(out, {})
     today = dt.datetime.now(dt.timezone.utc).date().isoformat()
     before = {k for k, b in (store.get("bills") or {}).items() if b["last_seen"] == store.get("fetched")}
     store = procedure.merge(store, found, today)
     now = {b.pdf for b in found}
-    out.write_text(jsonfile.dumps(store, "bills"), encoding="utf-8")
+    jsonfile.save(out, store, "bills")
     print(f"bills in procedure: {len(found)}, new: {len(now - before)}, no longer listed: {len(before - now)}")
     return 0
 
@@ -323,7 +323,7 @@ def notes_upload_cmd(args) -> int:
     import os
     from zailiprotiv import notes_site
     folder, store = Path(args.dir), ROOT / "notes_manifest.json"
-    manifest = json.loads(store.read_text(encoding="utf-8")) if store.exists() else {}
+    manifest = jsonfile.load(store, {})
     now, send, gone = notes_site.changed(folder, manifest)
     print(f"notes: {len(now)} files, {len(send)} to send, {len(gone)} to remove")
     if args.dry or not (send or gone):
@@ -410,7 +410,7 @@ def notes_check_cmd(args) -> int:
     data/notes_manifest.json, each asked for and read: 200, the right kind, and for a page the speeches in it."""
     import urllib.request
     store = ROOT / "notes_manifest.json"
-    names = sorted(json.loads(store.read_text(encoding="utf-8"))) if store.exists() else []
+    names = sorted(jsonfile.load(store, []))
     pages = [n for n in names if "/dan-" in n]
     if not pages:
         print("notes: nothing in the bucket yet")
@@ -439,7 +439,7 @@ def files_split_cmd(args) -> int:
     (files_url in data/settings.json; without it nothing is done)."""
     from zailiprotiv import files_site
     store = ROOT / "settings.json"
-    url = args.url or (json.loads(store.read_text(encoding="utf-8")).get("files_url", "") if store.exists() else "")
+    url = args.url or (jsonfile.load(store, {}).get("files_url", ""))
     if not url:
         print("files: no files_url in data/settings.json, the site keeps its files")
         return 0
@@ -494,8 +494,8 @@ def members_cmd(args) -> int:
         print(f"  {label}: {len(by_group[label])}")
     found = members.with_groups(found, by_group)
     path = ROOT / conv / "members.json"
-    old = json.loads(path.read_text(encoding="utf-8"))["members"] if path.exists() else []
-    if len(found) < 200 or (old and len(found) < len(old) * 0.8):
+    old = jsonfile.load(path, {"members": []})["members"]
+    if len(found) < 200 or jsonfile.shrank(len(found), len(old)):
         print(f"members: {len(found)} read, {len(old)} kept; the file stays")
         return 0 if old else 1
     # Each MP's occupation, from the MP's own page at the Assembly: read once, then kept (members.py).
@@ -534,7 +534,7 @@ def offices_cmd(args) -> int:
         return skupstina.fetch(url).decode("utf-8", "replace")
 
     news_path = ROOT / "vesti.json"
-    old_news = json.loads(news_path.read_text(encoding="utf-8"))["items"] if news_path.exists() else []
+    old_news = jsonfile.load(news_path, {"items": []})["items"]
     found_news = offices.news(get(offices.NEWS))
     items, fresh = offices.merge_news(old_news, found_news, today)
     if found_news:
@@ -567,7 +567,7 @@ def offices_cmd(args) -> int:
 
     conv = NEWEST
     path = ROOT / conv / "offices.json"
-    old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"offices": [], "parts_read": ""}
+    old = jsonfile.load(path, {"offices": [], "parts_read": ""})
     sources = {"speaker": offices.SPEAKER, "vice": offices.VICE, "group": offices.GROUP_CHAIRS}
     speaker = offices.person(get(offices.SPEAKER))
     vice, chairs = offices.blocks(get(offices.VICE)), offices.blocks(get(offices.GROUP_CHAIRS))
@@ -637,7 +637,7 @@ def mp_years_cmd(args) -> int:
                 keys |= {mps.key(mps.split(r[1], conv)) for r in v["rows"]}
         seated[conv] = keys
     found = mp_years.check(listed, seated)
-    (ROOT / "mp_years.json").write_text(jsonfile.dumps({"check": found, "listed": listed}, "listed"), encoding="utf-8")
+    jsonfile.save(ROOT / "mp_years.json", {"check": found, "listed": listed}, "listed")
     print(f"\nthe same name, another year of birth ({len(found['differ'])}):")
     for d in found["differ"]:
         print(f"  {d['key']}: " + ", ".join(f"{c}: {'/'.join(map(str, y))}" for c, y in d["years"].items()))
@@ -681,7 +681,7 @@ def photos_cmd(args) -> int:
     folder = ROOT / "photos"
     folder.mkdir(parents=True, exist_ok=True)
     index_file = folder / "index.json"
-    index = json.loads(index_file.read_text(encoding="utf-8")) if index_file.exists() else {}
+    index = jsonfile.load(index_file, {})
     new = 0
     for number, mp in sorted(found.items()):
         k, name = photos.key(mp["name"]), f"{number}.jpg"
@@ -716,7 +716,7 @@ def adopted(args) -> int:
         return 0
     if Path(args.out).exists():
         laws.carry(json.loads(Path(args.out).read_text(encoding="utf-8")).get("laws") or {}, store["laws"])
-    Path(args.out).write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    jsonfile.save(Path(args.out), store, "laws")
     print(f"laws: {len(found)} (of {listed} on the page), international treaties: {sum(l.treaty for l in found)}, "
           f"without a bill: {sum(not l.bill_pdf for l in found)}")
     # A page that lists nothing is broken; a new convocation that has passed nothing yet is not.
@@ -741,7 +741,7 @@ def linked(args) -> int:
     # Links made by hand where the Assembly's PDF names the act otherwise (a wrong year, a typo, another word):
     # data/<N>/links.json, {law title: {"vote": vote key, "why": "…"}}, each checked to be a vote of that day.
     manual_path = path.parent / "links.json"
-    manual = json.loads(manual_path.read_text(encoding="utf-8")) if manual_path.exists() else {}
+    manual = jsonfile.load(manual_path, {})
     for key, law in store["laws"].items():
         law["kind"] = kinds.kind(law["title"], law.get("treaty", False))
         law.update(found[key])
@@ -752,7 +752,7 @@ def linked(args) -> int:
                 print(f"  manual link refused (no such vote that day): {law['title'][:90]}")
                 continue
             law.update(final_vote=m["vote"], matched="manual", votes=sorted(set(law.get("votes", [])) | {m["vote"]}))
-    path.write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    jsonfile.save(path, store, "laws")
     n = len(store["laws"])
     final = sum(1 for law in store["laws"].values() if law["final_vote"])
     print(f"laws: {n}, with their final vote: {final}, with some vote: "
@@ -829,11 +829,11 @@ def memoranda(args) -> int:
         law["bill_file"] = target.name
         law["constitution"] = memo["articles"]
         law["areas"] = kinds.areas(memo["articles"])
-    path.write_text(jsonfile.dumps(store, "laws"), encoding="utf-8")
+    jsonfile.save(path, store, "laws")
     if waiting:
         for b in waiting:
             b.pop("bill_pdf", None)
-        proc_path.write_text(jsonfile.dumps(proc, "bills"), encoding="utf-8")
+        jsonfile.save(proc_path, proc, "bills")
     all_laws = store["laws"].values()
     no_memo = [l for l in all_laws if l.get("bill_file") and not l.get("constitution")]
     print(f"bills read now: {read}, failed: {failed}; laws with an area: {sum(1 for l in all_laws if l.get('areas'))}, "
@@ -1040,7 +1040,7 @@ def votes(args) -> int:
         if not sitting["votes"]:
             continue
         path = out_dir / f"{sitting_id(url)}.json"
-        store = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        store = jsonfile.load(path, {})
         store.update({"sitting": url, "title": sitting["title"]})
         store.setdefault("pdfs", {})
         store.setdefault("votes", {})
@@ -1082,7 +1082,7 @@ def votes(args) -> int:
             read += 1
             changed = True
         if changed and (store["votes"] or path.exists()):
-            path.write_text(jsonfile.dumps(store, "votes"), encoding="utf-8")
+            jsonfile.save(path, store, "votes")
     total = sum(len(json.loads(p.read_text(encoding="utf-8"))["votes"]) for p in out_dir.glob("*.json"))
     print(f"PDFs read now: {read}, failed: {failed}; votes in the archive: {total}")
     for p in problems[:50]:
@@ -1144,8 +1144,8 @@ def notes_of_debate(args) -> int:
             if not listed:
                 print(f"{url}: no stenographic notes linked")
                 if args.all:  # written down as read and empty, so the next run does not ask again
-                    path.write_text(jsonfile.dumps({"sitting": url, "days": [], "agenda": {}, "amendments": [],
-                                                    "speeches": {}}, "speeches"), encoding="utf-8")
+                    jsonfile.save(path, {"sitting": url, "days": [], "agenda": {}, "amendments": [], "speeches": {}},
+                                  "speeches")
                 continue
             days, meta = [], []
             for d in sorted(listed, key=lambda d: d["day"]):
@@ -1168,7 +1168,7 @@ def notes_of_debate(args) -> int:
         record = {"sitting": url, "days": meta, "agenda": {str(k): v for k, v in found["agenda"].items()},
                   "amendments": found["amendments"],
                   "speeches": {f"{i:05d}": s for i, s in enumerate(found["speeches"])}}
-        path.write_text(jsonfile.dumps(record, "speeches"), encoding="utf-8")
+        jsonfile.save(path, record, "speeches")
         read += 1
         print(f"{path}: {len(meta)} days, {len(found['speeches'])} speeches, {len(found['amendments'])} amendments", flush=True)
         time.sleep(DELAY)
@@ -1183,7 +1183,7 @@ def notes_raw_cmd(args) -> int:
     another form; --pull brings what this folder lacks."""
     from zailiprotiv import files_site
     store = ROOT / "settings.json"
-    if args.pull and not args.force and not (json.loads(store.read_text(encoding="utf-8")) if store.exists() else {}).get("notes_all"):
+    if args.pull and not args.force and not jsonfile.load(store, {}).get("notes_all"):
         # Until data/settings.json says "notes_all": true, the site and the notes' pages are built from the notes in
         # the repository alone (the bucket is being filled; the builds are tried with all of it first).
         print("notes: every sitting's notes are not asked for yet (notes_all in data/settings.json)")
@@ -1412,7 +1412,7 @@ def debates_batch(args) -> int:
     for i, (law, bill, n, final, item) in enumerate(found):
         name = law["bill_file"]
         text = debates.material(law, bill, n, final, seated, item, df)
-        saved = json.loads((out / name).read_text(encoding="utf-8")) if (out / name).exists() else {}
+        saved = jsonfile.load(out / name, {})
         done = saved.get("fingerprint") == debates.fingerprint(text) and saved.get("model") not in replace
         if only:
             if name in only and not done:

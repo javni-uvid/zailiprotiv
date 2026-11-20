@@ -15,15 +15,14 @@ import urllib.parse
 from collections import defaultdict
 from html.parser import HTMLParser
 
-from zailiprotiv import mps
+from zailiprotiv import months, mps
 from zailiprotiv.config import BASE, CONVOCATIONS
 from zailiprotiv.cyrillic import cyr
 
 # One page of the archive; it links the others.
 START = BASE + "/narodna-skupstina-/sastav/narodni-poslanici/arhiva-saziva/saziv-od-6-februara-2024-.5175.html"
 _ARCHIVE = "/narodni-poslanici/arhiva-saziva/"
-_MONTHS = ("januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra",
-           "novembra", "decembra")
+_MONTHS = months.OF
 _DATE = re.compile(r"saziv-od-(\d{1,2})-([a-z]+)-(\d{4})")
 
 

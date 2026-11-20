@@ -20,16 +20,15 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from zailiprotiv import kinds, mps, skupstina
+from zailiprotiv import jsonfile, kinds, mps, skupstina
 from zailiprotiv.config import CONVOCATIONS
+from zailiprotiv.months import day, day_of  # noqa: F401  (site.day, as other modules use it)
 from zailiprotiv.translit import latin
 
 HERE = Path(__file__).parent
 VOTES = ("za", "protiv", "uzdrzan", "nije_glasao", "nije_prisutan")
 VOTE_LABEL = {"za": "Za", "protiv": "Protiv", "uzdrzan": "Uzdržan", "nije_glasao": "Nije glasao",
               "nije_prisutan": "Nije prisutan", None: "Nije na spisku"}
-MONTHS = ("januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar",
-          "decembar")
 
 
 def slug(text: str, limit: int = 80) -> str:
@@ -54,25 +53,6 @@ def _plain(fact: dict) -> str:
 def given_first(name: str) -> str:
     """"Jovanov Milenko" → "Milenko Jovanov": the site lists surnames first, people say and search the other way round."""
     return " ".join(name.split()[-1:] + name.split()[:-1])
-
-
-def day(iso: str | None) -> str:
-    if not iso:
-        return ""
-    y, m, d = iso[:10].split("-")
-    return f"{int(d)}. {MONTHS[int(m) - 1]} {y}."
-
-
-MONTHS_OF = ("januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra",
-             "novembra", "decembra")
-
-
-def day_of(iso: str | None) -> str:
-    """"2025-11-04" → "4. novembra 2025": the date after "od", "do", without the final dot."""
-    if not iso:
-        return ""
-    y, m, d = iso[:10].split("-")
-    return f"{int(d)}. {MONTHS_OF[int(m) - 1]} {y}"
 
 
 def title_case(name: str) -> str:
@@ -135,12 +115,12 @@ def load(data: Path) -> tuple[dict, dict, dict]:
     # Short names for lists (data/<N>/short_titles.json, {the law's key in laws.json: short name}); the law keeps
     # its official title, shown on its page.
     short = data / "short_titles.json"
-    names = json.loads(short.read_text(encoding="utf-8")) if short.exists() else {}
+    names = jsonfile.load(short, {})
     for key, law in laws["laws"].items():
         law["short"] = names.get(key) or law["title"]
     # Bills whose PDF on the Assembly's site holds another act's memorandum: none of it is shown for this law.
     wrong = data / "wrong_bills.json"
-    for name, why in (json.loads(wrong.read_text(encoding="utf-8")) if wrong.exists() else {}).items():
+    for name, why in jsonfile.load(wrong, {}).items():
         b = bills.setdefault(name, {})
         b.pop("summary", None)
         b["sections"] = {k: v for k, v in b.get("sections", {}).items() if k == "basis"}
@@ -480,7 +460,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     settings_file = root / "settings.json"
-    settings = json.loads(settings_file.read_text(encoding="utf-8")) if settings_file.exists() else {}
+    settings = jsonfile.load(settings_file, {})
     env.globals["votes_api"] = settings.get("votes_api", "")  # the visitors' votes counter (worker/)
     if settings.get("indexnow_key"):  # IndexNow (Bing and others): the key, at the site's root, proves the site is ours
         (out / f"{settings['indexnow_key']}.txt").write_text(settings["indexnow_key"], encoding="utf-8")
@@ -517,7 +497,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
 
     # Laws, newest first within each convocation, the current one first so its addresses never change.
     # Names the public and the media use for a law, for search (data/aliases.json, each checked in the press).
-    aliases = json.loads((root / "aliases.json").read_text(encoding="utf-8")) if (root / "aliases.json").exists() else {}
+    aliases = jsonfile.load(root / "aliases.json", {})
     items_by_conv, taken = {}, Counter()
     law_pages = []  # written once the groups' pages are known, so a law's table can link to them
     for conv, _ in convs:
@@ -638,7 +618,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import notes_site
     _sent = root / "notes_manifest.json"
     spot = notes_site.Finder(root, settings.get("notes_url", ""),
-                             set(json.loads(_sent.read_text(encoding="utf-8"))) if _sent.exists() else set(), stores=debates)
+                             set(jsonfile.load(_sent, [])), stores=debates)
     for its in items_by_conv.values():
         for it in its:
             days_ = (it["debate"] or {}).get("all_days") or []
@@ -722,7 +702,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                     photo_of[key_] = photo_of[close[0]]
     from zailiprotiv import pages_floor, poslovnik
     sent = root / "notes_manifest.json"  # what notes-upload has put in the bucket
-    notes_pages = set(json.loads(sent.read_text(encoding="utf-8"))) if sent.exists() else set()
+    notes_pages = set(jsonfile.load(sent, []))
     # The newest convocation's MPs before its first roll call (pages_members): matched to the site's MPs by name and
     # year of birth; their own pages say they sit in it.
     from zailiprotiv import pages_members
@@ -731,7 +711,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     member_rows, member_now = [], {}
     if members_conv and members_listed:
         years_file = root / "mp_years.json"
-        years_listed = json.loads(years_file.read_text(encoding="utf-8")).get("listed", {}) if years_file.exists() else {}
+        years_listed = jsonfile.load(years_file, {}).get("listed", {})
         member_rows = pages_members.match(members_conv, members_listed, people, years_listed,
                                           title_case=title_case, slug=slug)
         member_now = pages_members.now_of(member_rows)
@@ -765,7 +745,6 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # from the recordings, and the quick exchanges on those days (by the order of turns only). All by rule.
     newer15 = None
     if members_conv and member_rows and str(members_conv) != str(current):
-        from zailiprotiv.translit import latin as _lat15
         _spoke = env.globals["floor_now"]
         _groups = []
         for sec in pages_members.by_group(member_rows):
@@ -784,7 +763,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         if _idx.exists():
             for u, v in json.loads(_idx.read_text(encoding="utf-8")).get("sittings", {}).items():
                 if v.get("agenda"):
-                    _sit.append({"title": _lat15(v["title"]), "url": u, "agenda": [_lat15(x).removesuffix(" i") for x in v["agenda"]]})
+                    _sit.append({"title": latin(v["title"]), "url": u, "agenda": [latin(x).removesuffix(" i") for x in v["agenda"]]})
         _daysv = [{"day": d["dan"], "when": _gv.day_name(d["dan"]), "time": _gv.dur(sum(max(0, t["do"] - t["od"]) for t in d["govori"])),
                    "people": len({t["ime"] for t in d["govori"]}),
                    "exchanges": [{"a": x["a"], "b": x["b"], "n": x["n"], "id": f"g{x['od']}"} for x in _gv.exchanges(d["govori"])]}
@@ -1017,7 +996,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv.downloads import NOINDEX
     moved_file = root / "mp_moved.json"
     moved = {old: people.get(mps.key(name)) for old, name in
-             (json.loads(moved_file.read_text(encoding="utf-8")).items() if moved_file.exists() else [])}
+             (jsonfile.load(moved_file, {}).items())}
     moved |= {old: mp for mp in people.values() for old in mp.was}
     pages_ = {mp.slug for mp in people.values()}
     for old, mp in sorted(moved.items()):
@@ -1118,7 +1097,6 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # recordings, and its first sitting's agenda as the Assembly lists it. All by rule, nothing chosen by hand.
     newer = None
     if members_conv and member_rows and members_conv != active:
-        from zailiprotiv.translit import latin as _lat
         secs = pages_members.by_group(member_rows)
         seats = [{"name": x["name"], "n": len(x["rows"]), "none": bool(x.get("none")),
                   "cls": GROUP_COLOURS.get(x["name"], "g-mn" if x.get("none") else "")} for x in secs if x["rows"]]
@@ -1129,14 +1107,14 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         sitting = None
         if idx_file.exists():
             listed_ = json.loads(idx_file.read_text(encoding="utf-8")).get("sittings", {})
-            sitting = next(({"title": _lat(v["title"]), "url": u, "agenda": [_lat(a).rstrip(" i") for a in v["agenda"]]}
+            sitting = next(({"title": latin(v["title"]), "url": u, "agenda": [latin(a).rstrip(" i") for a in v["agenda"]]}
                             for u, v in listed_.items() if v.get("agenda")), None)
         newer = {"conv": members_conv, "name": ORDINAL_NAME.get(members_conv, members_conv),
                  "since": pages_members.since(members_conv), "page": pages_members.PAGE.format(conv=members_conv),
                  "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "seats": seats,
                  "top": [{"slug": sl, "name": by_slug[sl]["name"], "time": x["time"], "n": x["n"],
-                          "group": _lat(by_slug[sl].get("group", "") or ""),
-                          "cls": GROUP_COLOURS.get(_lat(by_slug[sl].get("group", "") or ""), "g-mn"),
+                          "group": latin(by_slug[sl].get("group", "") or ""),
+                          "cls": GROUP_COLOURS.get(latin(by_slug[sl].get("group", "") or ""), "g-mn"),
                           "photo": photo_of.get(by_slug[sl]["key"], "") or (photo_of.get(by_slug[sl]["mp"].key, "") if by_slug[sl]["mp"] else "")}
                          for sl, x in top],
                  "days": len(_days_now), "sitting": sitting}
@@ -1156,7 +1134,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                                                                 .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     # What was corrected on the site, by hand, newest first (data/ispravke.json: [{"date", "text", "url", "where"}]).
-    fixes = json.loads((root / "ispravke.json").read_text(encoding="utf-8")) if (root / "ispravke.json").exists() else []
+    fixes = jsonfile.load(root / "ispravke.json", [])
     fixes = sorted(fixes, key=lambda c: c["date"], reverse=True)
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root="", corrections=fixes),
                                          encoding="utf-8")

@@ -18,7 +18,7 @@ import zipfile
 from collections import Counter
 from html import unescape
 
-from zailiprotiv import skupstina
+from zailiprotiv import months, skupstina
 from zailiprotiv.rollcall import PDFTOTEXT
 
 PATH = "/stenografske_beleske/"
@@ -43,10 +43,9 @@ def days(html: str, base: str) -> list[dict]:
     return out
 
 
-MONTHS = {m: i for i, m in enumerate(("jan", "feb", "mar", "apr", "maj", "jun", "jul", "avg", "sep", "okt", "nov",
-                                     "dec"), 1)}
-MONTHS_CYR = {m: i for i, m in enumerate(("јан", "феб", "мар", "апр", "мај", "јун", "јул", "авг", "сеп", "окт", "нов",
-                                         "дец"), 1)}
+# A month by the first three letters of its name, as the notes' headings and file names shorten it.
+MONTHS = {m[:3]: i for i, m in enumerate(months.NAMES, 1)}
+MONTHS_CYR = {m[:3]: i for i, m in enumerate(months.CYR, 1)}
 
 
 def iso_date(text: str) -> str:

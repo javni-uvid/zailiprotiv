@@ -11,14 +11,14 @@ import re
 import urllib.parse
 from dataclasses import asdict, dataclass
 
+from zailiprotiv import months
 from zailiprotiv.config import BASE
 from zailiprotiv.skupstina import links
 from zailiprotiv.translit import latin
 
 ADOPTED = BASE + "/akti/doneti-zakoni/doneti-zakoni.1033.html"
 
-MONTHS = {"januar": 1, "februar": 2, "mart": 3, "april": 4, "maj": 5, "jun": 6, "jul": 7, "avgust": 8,
-          "septembar": 9, "oktobar": 10, "novembar": 11, "decembar": 12}
+MONTHS = {m: i for i, m in enumerate(months.NAMES, 1)}
 _DATE = re.compile(r"(\d{1,2})\.\s*([a-zšđčćž]+)\s+(\d{4})\.", re.I)
 
 
