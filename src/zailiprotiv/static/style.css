@@ -1132,8 +1132,8 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 
 /* The groups' colours in the newest convocation's bars (site.GROUP_COLOURS; the same hues as the live page), the
    "prethodni saziv" mark on what is the earlier convocation's, and a place kept for the new one's. */
-:root { --g-av: #1d4ed8; --g-sl: #e11d48; --g-mn: #0f9d8a; }
-@media (prefers-color-scheme: dark) { :root { --g-av: #4a86f0; --g-sl: #ef3a5d; --g-mn: #12a594; } }
+:root { --g-av: #3730a3; --g-sl: #e11d48; --g-mn: #0f9d8a; }
+@media (prefers-color-scheme: dark) { :root { --g-av: #818cf8; --g-sl: #ef3a5d; --g-mn: #12a594; } }
 .g-av { background: var(--g-av); } .g-sl { background: var(--g-sl); } .g-mn { background: var(--g-mn); }
 .hc-dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .35rem; }
 em.prev { font-style: normal; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: var(--t-1); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: .12rem .5rem; margin-left: .4rem; vertical-align: middle; white-space: nowrap; }

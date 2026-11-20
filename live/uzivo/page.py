@@ -942,7 +942,7 @@ def headline(turns: list[dict], *, cyr: bool, when: str = "") -> str:
 # za and protiv", kept to this page). Hues apart from those two, checked for colour-blind readers; a list not named
 # here keeps a shade of grey, and the key beside the bar always names each.
 LIST_COLOURS = {"Aleksandar Vučić - Srbija pobeđuje": "c-av", "Studentska lista": "c-sl"}
-HEX = {"c-av": "#1d4ed8", "c-sl": "#e11d48", "c-mn": "#0f9d8a", "l1": "#5c5c5c", "l2": "#9a9a9a", "l3": "#c4c4c4",
+HEX = {"c-av": "#3730a3", "c-sl": "#e11d48", "c-mn": "#0f9d8a", "l1": "#5c5c5c", "l2": "#9a9a9a", "l3": "#c4c4c4",
        "lx": "#d8d8d8"}  # the same colours for the picture (picture.py), which has no stylesheet
 
 
@@ -1024,12 +1024,12 @@ CSS = """
   src: url(/fonts/literata-latin-wght-normal.woff2) format("woff2");
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 :root { --bg: #fff; --fg: #111; --muted: #555; --line: #d9d9d9; --za: #1f5fa8; --protiv: #c2410c;
-  --c-av: #1d4ed8; --c-sl: #e11d48; --c-mn: #0f9d8a;
+  --c-av: #3730a3; --c-sl: #e11d48; --c-mn: #0f9d8a;
   --serif: "Literata", Georgia, "Times New Roman", serif;
   /* the site's scale of letter sizes (its style.css): every font-size here is one of these, which a test checks */
   --t-1: .8rem; --t-2: .875rem; --t-3: 1rem; --t-4: 1.125rem; --t-5: 1.25rem; --t-6: 1.5rem; --t-7: 1.875rem; --t-8: 2.25rem;
   --t-h1: clamp(1.7rem, 7vw, 2.4rem); --t-d1: clamp(2rem, 7vw, 3.4rem); --t-d2: clamp(3rem, 16vw, 5rem); }
-@media (prefers-color-scheme: dark) { :root { --bg: #111318; --fg: #f1f1ee; --muted: #a8adb8; --line: #30343c; --za: #7cc0f5; --protiv: #ff9a52; --c-av: #4a86f0; --c-sl: #ef3a5d; --c-mn: #12a594; } }
+@media (prefers-color-scheme: dark) { :root { --bg: #111318; --fg: #f1f1ee; --muted: #a8adb8; --line: #30343c; --za: #7cc0f5; --protiv: #ff9a52; --c-av: #818cf8; --c-sl: #ef3a5d; --c-mn: #12a594; } }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 a { color: var(--fg); text-underline-offset: 2px; } a:hover { color: var(--za); }
