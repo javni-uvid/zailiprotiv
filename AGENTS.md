@@ -286,6 +286,12 @@ The project's promises to its readers. Never change them without the maintainer.
   a folded section of an MP's page is a button that says whether it is open (`site.js`, `.fold-btn`), so a keyboard
   and a screen reader open it too. Every page begins with "Preskoči na sadržaj" (`.skip`, seen when it has the
   focus). A new colour under text is checked for 4.5:1 in both themes.
+- **The phone's menu and things to press** (20 Nov 2026; of a week's visits 83% were on phones, most on the
+  Cyrillic pages): the menu's row is one line that fits, so its letters are as large as the row lets them be. On
+  a phone the button reads "Glasaj" ("i ti" is `.wide-only`), which lets the letters grow from 13 to 15.5 px at
+  360 px in Latin and from 11 to 13 px in Cyrillic (`4.3vw` and `3.55vw`, measured to fit from 320 px up: a new
+  word in the menu means measuring again). The numbered links to speeches, the turns on the floor, the parts of a
+  recording, the new convocation's links and the foot's links are 44 px high there (WCAG 2.5.5).
 
 ### Visitors' votes ("Glasaj i ti")
 

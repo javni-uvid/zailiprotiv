@@ -708,8 +708,9 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .top { position: sticky; top: -3rem; z-index: 30; background: var(--bg); margin: 0; padding: 0 16px; display: block; border-bottom-width: 2px; }
   .top .brand { height: 3rem; font-size: 1.35rem; }
   .top .brand-mark { width: 1.9rem; }
-  .top nav { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 0 .4rem; white-space: nowrap; height: 2.75rem; position: static; font-size: clamp(.68rem, 3.6vw, 1rem); }
-  html[lang="sr-Cyrl"] .top nav { font-size: clamp(.64rem, 3.1vw, .95rem); }
+  .top nav { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 0 .4rem; white-space: nowrap; height: 2.75rem; position: static; font-size: clamp(.72rem, 4.3vw, 1rem); }
+  /* The largest the row fits at (measured at 320 to 412 px, both scripts), with the button as "Glasaj" on a phone. */
+  html[lang="sr-Cyrl"] .top nav { font-size: clamp(.68rem, 3.55vw, .95rem); }
   .top nav > a { padding: .5rem 0; flex: 0 0 auto; margin: 0; font-size: inherit; }
   .top nav .nav-tools { position: absolute; right: 16px; top: .35rem; margin: 0; }
   .top nav .script-switch { padding: .2rem .55rem; font-size: .85rem; }
@@ -760,6 +761,7 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   /* Things to press are at least a finger high. */
   .pages a, .pages span { min-width: 2.6rem; min-height: 2.6rem; display: inline-flex; align-items: center; justify-content: center; }
   .method > summary, details.inline > summary { padding: .5rem 0; }
+  .fn-turns a, .speech-n a, .rec-part, .np-links a { min-width: 2.75rem; min-height: 2.75rem; display: inline-flex; align-items: center; justify-content: center; }
   .subtabs a { flex: 1 1 100%; }
   .subtabs.law-kinds a { flex: 1 1 0; }
 }
@@ -797,7 +799,7 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .site-foot { padding: 0 16px 2rem; margin-top: 2.2rem; }
   .foot-top { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.5rem; padding: 1.6rem 0 1.4rem; }
   .foot-brand { grid-column: 1 / -1; }
-  .foot-col a { padding: .45rem 0; }
+  .foot-col a { padding: .7rem 0; }
 }
 .subtabs.law-kinds.four { max-width: 40rem; }
 @media (max-width: 640px) { .subtabs.law-kinds.four a { flex: 1 1 40%; } }
