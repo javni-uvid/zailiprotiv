@@ -45,7 +45,10 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   // not counted); a recording of the archive played; the agenda, the speaker's lines, a share of the moment or of
   // the day, the day in cards opened; a way to the site taken
   "mikrofon.otvori", "mikrofon.1min", "mikrofon.5min", "mikrofon.15min", "mikrofon.30min", "mikrofon.snimak",
-  "mikrofon.tacke", "mikrofon.redovi", "mikrofon.podeli", "mikrofon.dan", "mikrofon.kartice", "mikrofon.sajt"]);
+  "mikrofon.tacke", "mikrofon.redovi", "mikrofon.podeli", "mikrofon.dan", "mikrofon.kartice", "mikrofon.sajt",
+  // the page put on the phone's home screen (20 Nov 2026): opened from there, "add" pressed, added; the next
+  // sitting's agenda opened in the countdown
+  "mikrofon.ekran", "mikrofon.dodaj", "mikrofon.dodato", "mikrofon.sledeca"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {

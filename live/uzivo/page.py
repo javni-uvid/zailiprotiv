@@ -2,6 +2,7 @@
 render it. The page loads nothing from elsewhere: the fonts are served with it, the one script is inline."""
 from __future__ import annotations
 
+import time
 from datetime import datetime
 from html import escape
 from pathlib import Path
@@ -98,6 +99,18 @@ TEXT = {
     "news_page": "stranica poslanika",
     "coming": "Sledeća sednica",
     "at": "u",
+    "nx_in": "počinje za",
+    "nx_soon": "Počinje uskoro",
+    "nx_today": "Danas",
+    "nx_tomorrow": "Sutra",
+    "nx_day1": "dan",
+    "nx_days": "dana",
+    "nx_agenda": "Dnevni red",
+    "nx_note": "Prenos će biti ovde čim sednica počne, a stranica se sama osvežava.",
+    "add_home": "Dodaj na početni ekran",
+    "add_sub": "Sledeći put do prenosa jednim dodirom.",
+    "add_ios": "Na iPhoneu: dodirnite „Podeli“, pa „Dodaj na početni ekran“.",
+    "app_name": "Mikrofon",
     "sd_text": "Ko je koliko govorio u Skupštini:",
     "og_now": "Sada govori: %1",
     "og_since": "za govornicom od %1",
@@ -138,7 +151,8 @@ TEXT = {
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counted": "Brojač sajta zbraja po danu i koliko je puta ova stranica otvorena, koliko puta je gledana duže "
                     "od 1, 5, 15 i 30 minuta i koliko puta je pušten prenos ili snimak, otvoren dnevni red ili nešto "
-                    "podeljeno; bez oznake uređaja i bez ičega o tome ko je to bio",
+                    "podeljeno, i koliko puta je dodata na početni ekran ili otvorena sa njega; bez oznake uređaja i "
+                    "bez ičega o tome ko je to bio",
     "wait_title": "Dok čekate",
     "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
                  "ste blizu.",
@@ -277,6 +291,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(head + '</section><section class="sp">' + box)
     else:
         out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
+        if snap["stanje"] == "nema_prenosa":
+            out.append(countdown(snap, cyr=cyr, tz=tz))
         out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
@@ -610,6 +626,83 @@ def _when(snap: dict, cyr: bool) -> str:
     return ""
 
 
+WEEKDAYS = ("ponedeljak", "utorak", "sreda", "četvrtak", "petak", "subota", "nedelja")
+STALE = 12 * 3600  # a sitting convened this long ago with no broadcast seen is no longer counted down to
+
+
+def _units(cyr: bool) -> dict[str, str]:
+    """The countdown's words; hours as "ч" in Cyrillic, as _dur writes them (letter by letter "h" would be "х")."""
+    return {"d1": _t("nx_day1", cyr), "dn": _t("nx_days", cyr), "h": "ч" if cyr else "h", "m": "мин" if cyr else "min",
+            "soon": _t("nx_soon", cyr)}
+
+
+def left(sec: int, u: dict[str, str]) -> str:
+    """Time left as the countdown writes it (the page's script writes it the same way each second): days and hours,
+    or hours and minutes, or minutes."""
+    if sec <= 0:
+        return u["soon"]
+    d, rest = divmod(int(sec), 86400)
+    h, m = rest // 3600, rest % 3600 // 60
+    if d:
+        return f'{d} {u["d1"] if d % 10 == 1 and d % 100 != 11 else u["dn"]}' + (f' {h} {u["h"]}' if h else "")
+    if h:
+        return f'{h} {u["h"]} {m} {u["m"]}'
+    return f'{max(1, m)} {u["m"]}'
+
+
+def countdown(snap: dict, *, cyr: bool, tz: ZoneInfo, now: float | None = None) -> str:
+    """Between sittings, the next one convened (20 Nov 2026, the maintainer's choice, for visitors to know when to come
+    back): when it begins, counted down each second by the page's script (by days when the Assembly gives no hour),
+    its title and agenda as the Assembly lists them. Nothing when none is convened, or one convened has long begun."""
+    c = snap.get("sazvano") or {}
+    p = str(c.get("pocinje") or "")
+    try:
+        day = datetime.strptime(p[:10], "%Y-%m-%d").date()
+    except ValueError:
+        return ""
+    now = time.time() if now is None else now
+    t = lambda k: escape(_t(k, cyr))
+    hour = p[11:16] if len(p) >= 16 else ""
+    when = f'{WEEKDAYS[day.weekday()].capitalize()}, {_date(p[:10])}' + (f' {TEXT["at"]} {hour}' if hour else "")
+    if hour:
+        at = int(datetime.strptime(p[:16], "%Y-%m-%dT%H:%M").replace(tzinfo=tz).timestamp())
+        if now - at > STALE:
+            return ""
+        u = _units(cyr)
+        data = " ".join(f'data-{k}="{escape(v)}"' for k, v in u.items())
+        big = (f'<p class="nx-big"><span{" hidden" if now >= at else ""}>{t("nx_in")}</span> '
+               f'<b class="nx-in" data-at="{at}" {data}>{escape(left(at - int(now), u))}</b></p>')
+    else:
+        days = (day - datetime.fromtimestamp(now, tz).date()).days
+        if days < 0:
+            return ""
+        if days < 2:
+            big = f'<p class="nx-big"><b>{t("nx_today" if days == 0 else "nx_tomorrow")}</b></p>'
+        else:
+            word = t("nx_day1" if days % 10 == 1 and days % 100 != 11 else "nx_days")
+            big = f'<p class="nx-big"><span>{t("nx_in")}</span> <b>{days} {word}</b></p>'
+    title = escape(_name(c.get("naslov", ""), cyr))
+    if str(c.get("url", "")).startswith("https://"):
+        title = f'<a href="{escape(c["url"])}">{title}</a>'
+    items = [x for x in c.get("tacke") or [] if x]
+    agenda = (f'<details class="nx-ag" id="nx-ag"><summary>{t("nx_agenda")} ({len(items)})</summary><ol>'
+              + "".join(f'<li>{escape(_name(x, cyr))}</li>' for x in items) + "</ol></details>") if items else ""
+    return (f'<div class="nx"><p class="src">{t("coming")}</p>{big}'
+            f'<p class="nx-when">{escape(_name(when, cyr))}</p><p class="nx-title">{title}</p>{agenda}'
+            f'<p class="meta">{t("nx_note")}</p></div>')
+
+
+def manifest(cyr: bool) -> dict:
+    """The page as an app on a phone's home screen (20 Nov 2026): its name, where it opens, its icons (picture.icon)."""
+    base = "/cir/" if cyr else "/"
+    icon = lambda src, size, purpose: {"src": src, "sizes": f"{size}x{size}", "type": "image/png", "purpose": purpose}
+    return {"id": base, "name": _t("title", cyr), "short_name": _t("app_name", cyr), "description": _t("lead", cyr),
+            "lang": "sr-Cyrl" if cyr else "sr-Latn", "start_url": base, "scope": base, "display": "standalone",
+            "background_color": "#ffffff", "theme_color": "#ffffff",
+            "icons": [icon("/ikona-192.png", 192, "any"), icon("/ikona-512.png", 512, "any"),
+                      icon("/ikona-maskable-512.png", 512, "maskable")]}
+
+
 def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
     """While nobody is on (a break, or between sittings): the day so far in place of an empty box. The sentence of the
     day, the three with the most time, and the picture of it to share (`picture.py`, the page's link preview too)."""
@@ -629,7 +722,7 @@ def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
     tall = ("/cir" if cyr else "") + "/prica.png"
     coming = snap.get("sazvano")
     nxt = ""
-    if coming and coming.get("pocinje"):
+    if coming and coming.get("pocinje") and snap["stanje"] != "nema_prenosa":  # between sittings: the countdown says it
         day = _date(coming["pocinje"][:10])
         hour = f' {t("at")} {escape(coming["pocinje"][11:16])}' if len(coming["pocinje"]) > 10 else ""
         title = escape(_name(coming.get("naslov", ""), cyr))
@@ -1033,6 +1126,26 @@ a.said { margin-left: .3rem; }
 .tl-ax { position: relative; height: 1.2rem; font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tl-ax span { position: absolute; top: .15rem; transform: translateX(-50%); } .tl-ax span:first-child { transform: none; }
 .turns li:target { background: color-mix(in srgb, var(--za) 12%, transparent); }
+/* The next sitting, counted down (between sittings), and the way onto the phone's home screen (20 Nov 2026). */
+.nx { margin: .9rem 0 0; padding: .9rem 1.1rem; border: 2px solid var(--fg); border-radius: 12px; }
+.nx p { margin: 0; } .nx .src { margin-bottom: .2rem; }
+.nx-big { font-family: var(--serif); font-weight: 700; font-size: clamp(1.7rem, 7vw, 2.4rem); line-height: 1.15; font-variant-numeric: tabular-nums; }
+.nx-big span { display: block; font-family: system-ui, sans-serif; font-weight: 400; font-size: .95rem; color: var(--muted); }
+.nx-when { font-weight: 600; margin-top: .3rem !important; } .nx-title { color: var(--muted); font-size: .95rem; margin: .1rem 0 .6rem !important; }
+.nx-ag { margin: 0 0 .6rem; } .nx-ag summary { cursor: pointer; font-weight: 600; } .nx-ag ol { margin: .4rem 0 0; padding-left: 1.4rem; line-height: 1.4; } .nx-ag li { margin: .2rem 0; }
+.add-home { order: 3; display: flex; flex-wrap: wrap; gap: .3rem .8rem; align-items: center; margin: 1rem 0 0; }
+.add-home[hidden], .add-home [hidden] { display: none; }
+.add-btn { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg); background: none; color: var(--fg); cursor: pointer; }
+/* A phone (86% of the visits): the head made short, so the broadcast is in the first screen (20 Nov 2026). */
+@media (max-width: 520px) {
+  .top { padding: .7rem 16px .5rem; } main { padding: 0 16px 3rem; }
+  .hero { margin-top: .6rem; padding: .6rem .75rem; gap: .5rem; }
+  .hero h1 { font-size: 1.2rem; margin: 0; } .hero-sub { display: none; }
+  .hero-cta { flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 .6rem; padding: .4rem .75rem; }
+  .hero-cta span { font-size: .78rem; } .hero-cta b { font-size: .95rem; }
+  .news { margin-top: .6rem; padding: .5rem .7rem; font-size: .88rem; line-height: 1.4; }
+  main > .player { margin-top: .6rem; }
+}
 """ + _shared("mikrofon.css")
 
 SCRIPT = _shared("mikrofon.js") + """
@@ -1063,11 +1176,26 @@ SCRIPT = _shared("mikrofon.js") + """
     var no = document.querySelector(".rot-n");
     if (no) no.textContent = (k + 1) + "/" + n;
   }
+  // The next sitting's countdown, written as page.left writes it.
+  function until() {
+    var b = document.querySelector(".nx-in");
+    if (!b) return;
+    var w = function (k) { return b.getAttribute("data-" + k); };
+    var s = Math.floor(+w("at") - Date.now() / 1000), out;
+    if (s <= 0) { out = w("soon"); if (b.previousElementSibling) b.previousElementSibling.hidden = true; }
+    else {
+      var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+      out = d ? d + " " + (d % 10 === 1 && d % 100 !== 11 ? w("d1") : w("dn")) + (h ? " " + h + " " + w("h") : "")
+        : h ? h + " " + w("h") + " " + m + " " + w("m") : Math.max(1, m) + " " + w("m");
+    }
+    if (b.textContent !== out) b.textContent = out;
+  }
   function tick() {
     var d = document.getElementById("deo"), c = document.querySelector("#checked span"), k = document.querySelector(".clk");
     if (d && c) c.textContent = Math.max(0, Math.round(Date.now() / 1000 - (+d.getAttribute("data-checked"))));
     if (k) k.textContent = hms(seconds(k));
     rotate();
+    until();
   }
   // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
   // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
@@ -1228,6 +1356,7 @@ SCRIPT = _shared("mikrofon.js") + """
     if (!t) return;
     if (t.closest(".play:not(.facade), .part")) use("snimak");
     else if (t.closest("#dnevni-red > summary")) use("tacke");
+    else if (t.closest("#nx-ag > summary")) use("sledeca");
     else if (t.closest(".rot-next, .rot")) use("redovi");
     else if (t.closest(".st-open")) use("kartice");
     else if (t.closest(".share-day")) use("dan");
@@ -1235,6 +1364,25 @@ SCRIPT = _shared("mikrofon.js") + """
     var a = t.closest("a[href]");
     if (a && a.hostname === "zailiprotiv.rs") use("sajt");
   }, true);
+  window.mikrofonUse = use;
+})();
+// The page on the phone's home screen (20 Nov 2026): opened from there is counted; elsewhere the browser's own offer
+// to add it is shown as our button when the browser makes one (Chrome, Edge, Samsung), and on an iPhone, which makes
+// none, a line saying where Safari keeps it. Nothing is installed but the page's address and icon.
+(function () {
+  var use = function (w) { if (window.mikrofonUse) window.mikrofonUse(w); };
+  var box = document.querySelector(".add-home");
+  if (!box) return;
+  if ((window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone) { use("ekran"); return; }
+  var ask = null, btn = box.querySelector(".add-btn");
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); ask = e; box.hidden = false; });
+  window.addEventListener("appinstalled", function () { box.hidden = true; use("dodato"); });
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) { btn.hidden = true; box.querySelector(".add-ios").hidden = false; box.hidden = false; }
+  btn.addEventListener("click", function () {
+    if (!ask) return;
+    use("dodaj"); ask.prompt();
+    ask.userChoice.then(function () { ask = null; box.hidden = true; }).catch(function () {});
+  });
 })();
 """
 
@@ -1373,6 +1521,12 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 {alt}
 {_og(snap, cyr=cyr, url=url, tz=tz)}
 <link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
+<link rel="manifest" href="{base}manifest.webmanifest">
+<link rel="apple-touch-icon" href="/ikona-180.png">
+<meta name="apple-mobile-web-app-title" content="{t("app_name")}">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
 <style>{CSS}</style>
 </head>
 <body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
@@ -1384,6 +1538,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 </section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {fragment(snap, cyr=cyr, site=site, tz=tz)}
+<p class="add-home" hidden><button type="button" class="add-btn">{t("add_home")}</button><span class="meta">{t("add_sub")}</span><span class="meta add-ios" hidden>{t("add_ios")}</span></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <h2>{t("how_title")}</h2>

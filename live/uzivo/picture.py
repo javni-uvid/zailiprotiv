@@ -25,6 +25,25 @@ def _font(name: str, size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.load_default(size)
 
 
+def icon(size: int, maskable: bool = False) -> bytes:
+    """The page's icon for a phone's home screen (20 Nov 2026): the page's microphone (page.MIC, its capsule "za" blue,
+    its cradle and stand "protiv" orange) on white. A maskable icon keeps it inside the middle 60%, which every
+    launcher's shape leaves whole. Drawn four times larger and scaled down, for smooth edges."""
+    k = 4 * size
+    img = Image.new("RGB", (k, k), "#ffffff")
+    g = ImageDraw.Draw(img)
+    u = k * (0.56 if maskable else 0.72) / 84  # the mark's height, in the SVG's 76×84 frame
+    x0, y0 = (k - 76 * u) / 2, (k - 84 * u) / 2
+    xy = lambda x, y: (x0 + x * u, y0 + y * u)
+    w = max(1, round(9 * u))
+    g.rounded_rectangle([*xy(26, 6), *xy(50, 46)], radius=12 * u, outline=ZA, width=w)
+    g.arc([*xy(12, 10), *xy(64, 62)], start=0, end=180, fill=PROTIV, width=w)
+    g.line([xy(38, 62), xy(38, 78)], fill=PROTIV, width=w)
+    buf = io.BytesIO()
+    img.resize((size, size), Image.LANCZOS).save(buf, "PNG", optimize=True)
+    return buf.getvalue()
+
+
 serif = lambda size: _font("DejaVuSerif-Bold.ttf", size)
 sans = lambda size: _font("DejaVuSans.ttf", size)
 bold = lambda size: _font("DejaVuSans-Bold.ttf", size)

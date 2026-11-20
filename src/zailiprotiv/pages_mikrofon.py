@@ -23,6 +23,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from zailiprotiv.config import LIVE
+from zailiprotiv.translit import latin
 
 PAGE = "mikrofon.html"
 DAY_FILE = "mikrofon-dan.json"
@@ -333,17 +334,38 @@ def agenda(root, conv: str, sittings: list[dict]) -> list[dict]:
     return out
 
 
+def upcoming(root: Path, coming: list[dict], conv: str) -> list[dict]:
+    """The sittings convened that the live page may count down to: the current convocation's (`coming`, from the
+    bills in procedure) and the newest convocation's from its index (`conv`; before its first law the current one
+    is the earlier convocation, whose listing the Assembly no longer shows): a sitting with an agenda and no roll
+    calls yet, once each."""
+    out, seen = [], {c.get("url") for c in coming}
+    try:
+        listed = json.loads((Path(root) / str(conv) / "index.json").read_text(encoding="utf-8"))["sittings"]
+    except (OSError, ValueError, KeyError):
+        listed = {}
+    for url, s in listed.items():
+        if s.get("agenda") and not s.get("votes") and url not in seen:
+            out.append({"title": s.get("title", ""), "url": url, "starts": s.get("starts", ""), "agenda": s["agenda"]})
+    return [*coming, *out]
+
+
 def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = None,
             notices_: list[dict] | None = None, sittings_: list[str] | None = None,
-            agenda_: list[dict] | None = None, fixes_: dict | None = None) -> dict:
+            agenda_: list[dict] | None = None, fixes_: dict | None = None, now: datetime | None = None) -> dict:
     """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own); and the
-    next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts)."""
+    next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts, its agenda)."""
     plain = lambda h: h if h.startswith("http") else h.removesuffix(".html")
     out = {"kviz": [{**q, "href": plain(q["href"])} for q in quiz_],
            "cinjenice": [{**f, "href": plain(f["href"])} for f in besides(facts_, quiz_)]}
-    if coming:
-        c = coming[0]
-        out["sazvano"] = {"naslov": latin(c.get("title", "")), "url": c.get("url", ""), "pocinje": c.get("starts", "")}
+    # The next sitting: the first convened for today or later (one convened earlier and not yet voted on is not
+    # "next"), with its agenda, for the live page's countdown (20 Nov 2026).
+    today = (now or datetime.now(TZ)).date().isoformat()
+    c = next((c for c in sorted(coming or [], key=lambda c: c.get("starts") or "")
+              if (c.get("starts") or "")[:10] >= today), None)
+    if c:
+        out["sazvano"] = {"naslov": latin(c.get("title", "")), "url": c.get("url", ""), "pocinje": c.get("starts", ""),
+                          "tacke": [latin(a) for a in c.get("agenda") or []]}
     if notices_:
         out["obavestenja"] = notices_
     if agenda_:
@@ -357,7 +379,8 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
 
 def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None,
            quiz_: list[dict] | None = None, notices_: list[dict] | None = None,
-           sittings_: list[str] | None = None, agenda_: list[dict] | None = None, fixes_: dict | None = None) -> None:
+           sittings_: list[str] | None = None, agenda_: list[dict] | None = None, fixes_: dict | None = None,
+           next_: list[dict] | None = None) -> None:
     """mikrofon.html: an ordinary page of the site (its links relative), which the edge worker (live/edge) shows at
     mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap. With the
     last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
@@ -365,6 +388,6 @@ def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], da
         **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
         day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
         encoding="utf-8")
-    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming, notices_, sittings_, agenda_, fixes_), ensure_ascii=False), encoding="utf-8")
+    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming if next_ is None else next_, notices_, sittings_, agenda_, fixes_), ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")

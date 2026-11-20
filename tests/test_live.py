@@ -994,3 +994,32 @@ def test_the_transcript_behind_a_key_while_it_is_off_the_page(monkeypatch):
     assert not config.transcript_open("pogresan") and not config.transcript_open("") and config.transcript_open("dug-kljuc-za-prepis")
     monkeypatch.setattr(config, "SHOW_TRANSCRIPT", True)
     assert config.transcript_open("")  # on the page: open to all
+
+
+def test_the_next_sitting_is_counted_down_between_sittings():
+    from datetime import datetime as dt_
+    from uzivo.page import _units, countdown, left
+    u = _units(False)
+    assert left(0, u) == "Počinje uskoro" and left(59, u) == "1 min" and left(3 * 3600 + 120, u) == "3 h 2 min"
+    assert left(86400 + 5 * 3600, u) == "1 dan 5 h" and left(21 * 86400, u) == "21 dan" and left(2 * 86400, u) == "2 dana"
+    assert _units(True)["h"] == "ч"  # never "х", letter by letter
+    at = dt_(2026, 11, 24, 10, 0, tzinfo=TZ).timestamp()
+    snap = {"stanje": "nema_prenosa", "sazvano": {"naslov": "Druga sednica", "url": "https://www.parlament.gov.rs/x",
+            "pocinje": "2026-11-24T10:00", "tacke": ["Predlog zakona o budžetu", "Izbor sudija"]}}
+    html = countdown(snap, cyr=False, tz=TZ, now=at - 2 * 86400 - 3600)
+    assert "Utorak, 24. novembar 2026. u 10:00" in html and ">2 dana 1 h<" in html and f'data-at="{int(at)}"' in html
+    assert "Dnevni red (2)" in html and "<li>Izbor sudija</li>" in html and 'href="https://www.parlament.gov.rs/x"' in html
+    assert "Уторак" in countdown(snap, cyr=True, tz=TZ, now=at - 60) and "Počinje uskoro" in countdown(snap, cyr=False, tz=TZ, now=at + 60)
+    assert countdown(snap, cyr=False, tz=TZ, now=at + 13 * 3600) == ""  # long begun: not counted down to
+    day_only = {"sazvano": {**snap["sazvano"], "pocinje": "2026-11-24"}}
+    assert ">Sutra<" in countdown(day_only, cyr=False, tz=TZ, now=at - 86400)
+    assert "za</span> <b>3 dana" in countdown(day_only, cyr=False, tz=TZ, now=at - 3 * 86400)
+    assert countdown({"sazvano": None}, cyr=False, tz=TZ) == ""
+
+
+def test_the_page_can_go_on_a_phones_home_screen():
+    from uzivo.page import manifest
+    m, c = manifest(False), manifest(True)
+    assert m["start_url"] == "/" and c["start_url"] == "/cir/" and m["display"] == "standalone"
+    assert c["short_name"] == "Микрофон" and {i["purpose"] for i in m["icons"]} == {"any", "maskable"}
+    assert any(i["sizes"] == "512x512" for i in m["icons"]) and any(i["sizes"] == "192x192" for i in m["icons"])

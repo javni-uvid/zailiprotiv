@@ -1135,6 +1135,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_mikrofon  # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
     floor_totals = getattr(pages_floor.render, "totals", {})
     pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),
+                          next_=pages_mikrofon.upcoming(root, coming, NEWEST_),
                           notices_=pages_mikrofon.notices(root),
                           sittings_=[x["url"] for x in (env.globals.get("newer15") or {}).get("sittings", [])],
                           fixes_=pages_mikrofon.fixes(root),
