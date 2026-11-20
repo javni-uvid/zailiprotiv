@@ -291,3 +291,8 @@ the same commit. Dates are the maintainer's decisions unless said otherwise.
   Every file the service keeps is written beside itself and then moved into place (`state._write`). Checked and
   left as it is: a segment's frame is read once (frames per segment on 18 Nov: median 0.95). In the counter the
   VAPID key and each push service's header are kept as promises, so a batch's 30 sends sign once.
+- **`page.py` in parts** (20 Nov 2026, from the same look; the output checked byte for byte the same): the words in
+  `texts.py` (`TEXT`, months, weekdays, `_t`, converted once per text), the day's steps in `steps.py` (which are
+  shown, and as what; no HTML), the page's own styles and script in `static/live.css` and `static/live.js` (read
+  at start beside `mikrofon.css` and `mikrofon.js`, still inline in the page). `page.py` draws the HTML. A text
+  key given twice (`play_live`) lost its first, dead value.

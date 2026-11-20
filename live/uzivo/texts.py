@@ -1,0 +1,231 @@
+"""The live page's words, in Latin, and the same in Cyrillic (names.cyrillic, the site's converter)."""
+from __future__ import annotations
+
+from functools import lru_cache
+
+from .names import cyrillic
+
+TEXT = {
+    "title": "Ko sada govori u Skupštini",
+    "lead": "Govornik u Narodnoj skupštini u ovom trenutku, pročitan iz potpisa u prenosu uživo.",
+    "intro": "Ko upravo govori u Narodnoj skupštini i koliko dugo, čitano uživo iz potpisa u prenosu. Deo sajta",
+    "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
+    "hero_sub": "Uživo iz prenosa: ko je za govornicom, koliko dugo i šta govori.",
+    "hero_cta": "Kako glasa svaki poslanik",
+    "speaks": "govori",
+    "longer": "duže od {p}% današnjih govora",
+    "longest": "najduži govor danas",
+    "d_today": "Danas",
+    "d_conv": "saziv",
+    "d_turn": "{n}. put za govornicom",
+    "d_total": "ukupno {t}",
+    "d_rank": "{m}. po vremenu od {n} govornika",
+    "d_conv_line": "{t} u {n} {w}",
+    "next_fact": "Sledeća činjenica",
+    "share_now": "Podeli ovaj trenutak",
+    "sh_head": "Sada govori u Skupštini",
+    "sh_already": "govori već",
+    "sh_today": "danas ukupno {t} · {n}. put za govornicom",
+    "sh_first": "prvi put danas za govornicom",
+    "sh_note": "Čitano iz potpisa u prenosu, automatski; može da pogreši.",
+    "sh_text": "%1 govori već %2 min u Skupštini (%3). Uživo:",  # filled by the script; digits survive Cyrillic
+    "sh_done": "Slika je sačuvana, a tekst kopiran.",
+    "h_most": "Najviše vremena za govornicom %1: %2, %3",
+    "h_today": "danas",
+    "h_share": "%1% vremena svih govornika",
+    "h_more": "više nego svi govornici liste „%1“ zajedno (%2)",
+    "n_time": "vreme govora",
+    "n_turns": "govora",
+    "n_people": "govornika",
+    "n_words": "reči u prepisu",
+    "said_now": "Šta govori · automatski prepis, kasni oko minut, može da pogreši",
+    "said_all": "Ceo prepis dana",
+    "said_link": "prepis",
+    "said_title": "Automatski prepis dana",
+    "said_lead": "Šta je ko rekao za govornicom, zapisano automatski (Whisper) sa zvuka prenosa, komad po komad dok "
+                 "govor traje. Prepis greši u imenima, brojevima i na mestima gde se govornici smenjuju, pa nije "
+                 "citat: za citat služe stenografske beleške Skupštine, koje sajt objavljuje kad stignu. Ništa nije "
+                 "prepričano ni skraćeno.",
+    "said_none": "Za ovaj dan još nema prepisa.",
+    "said_unsigned": "Bez potpisa: predsedavajući ili sala · automatski prepis, može da pogreši",
+    "said_nobody": "Bez potpisa: predsedavajući ili sala",
+    "said_report": "Prijavi grešku u prepisu",
+    "said_second": "drugo, tačnije čitanje",
+    "said_fix": "Prepis prvo objavimo, pa ispravljamo: poznate greške u pravopisu i imenima popravljamo po spisku, a "
+                "grešku koju vidite možete da nam javite uz svaki govor. Ispravljamo kako je napisano, nikad šta je rečeno.",
+    "said_back": "Nazad na „Ko sada govori“",
+    "st_open": "Dan u karticama",
+    "st_total": "ukupno vreme za govornicom",
+    "st_most": "Najviše vremena za govornicom",
+    "st_longest": "Najduži govor bez prekida",
+    "st_often": "Najviše puta za govornicom",
+    "st_times": "puta",
+    "st_end": "Ko su ljudi koji govore i kako glasaju?",
+    "st_site": "Svaki zakon i svaki glas",
+    "st_close": "Zatvori",
+    "st_hint": "Dodir desno: dalje · levo: nazad",
+    "so_far": "Dosad danas",
+    "paused": "Sada niko nije za govornicom ili se ime ne vidi u potpisu.",
+    "share_day": "Podeli presek dana",
+    "share_tall": "Uspravna slika za priču",
+    "ag": "Dnevni red",
+    "ag_done": "%1 od %2 tačaka gotovo",
+    "ag_now": "u toku",
+    "ag_next": "na redu",
+    "ag_gotova": "gotova",
+    "ag_site": "po sajtu Skupštine",
+    "ag_said": "po rečima predsedavajućeg (automatski prepis)",
+    "ag_note": "Dnevni red je sa sajta Skupštine. Tačka je gotova kad to napiše Skupština na stranici sednice ili kad "
+               "predsedavajući pređe na sledeću; ovo drugo čitamo iz automatskog prepisa i može da pogreši.",
+    "steps": "Šta se desilo danas",
+    "steps_then": "Šta se desilo",
+    "steps_lead": "Koraci sednice redom, najnoviji prvi.",
+    "steps_said": "po rečima predsedavajućeg, prepoznato automatski sa zvuka prenosa i provereno uz dnevni red i sliku prenosa; i dalje može da pogreši",
+    "steps_site": "sajt Skupštine",
+    "steps_site_key": "zvanično: napisala Skupština na stranici sednice; vreme je vreme objave, ne događaja",
+    "steps_official": "Zvanično",
+    "steps_pub": "objava",
+    "steps_published": "objavljeno oko %1, događaj je bio ranije",
+    "steps_more": "Svi koraci",
+    "news": "Novo:",
+    "news_page": "stranica poslanika",
+    "coming": "Sledeća sednica",
+    "at": "u",
+    "nx_in": "počinje za",
+    "nx_soon": "Počinje uskoro",
+    "nx_today": "Danas",
+    "nx_tomorrow": "Sutra",
+    "nx_day1": "dan",
+    "nx_days": "dana",
+    "nx_agenda": "Dnevni red",
+    "nx_note": "Prenos će biti ovde čim sednica počne, a stranica se sama osvežava.",
+    "add_home": "Dodaj na početni ekran",
+    "add_sub": "Sledeći put do prenosa jednim dodirom.",
+    "add_ios": "Na iPhone-u: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
+               "obavesti kad sednica počne.",
+    "nt_on": "Obavesti me kad sednica počne",
+    "nt_done": "Obaveštenje stiže kad prenos sednice počne.",
+    "nt_off": "Isključi",
+    "nt_blocked": "Obaveštenja za ovu stranicu su isključena u podešavanjima pregledača.",
+    "nt_err": "Uključivanje nije uspelo; pokušajte ponovo malo kasnije.",
+    "nt_note": "Jedno obaveštenje kad prenos sednice počne, najviše jednom dnevno. Šalje ga vaš pregledač preko "
+               "svog servisa (Gugl, Epl ili Mozila); kod nas ostaje samo adresa za to obaveštenje, dok ga ne isključite.",
+    "al_down": "Mikrofon ne radi",
+    "al_down_body": "Sednica je u toku, a mikrofon.zailiprotiv.rs ne odgovara već %1 min.",
+    "al_back": "Mikrofon ponovo radi",
+    "al_back_body": "Nije odgovarao %1 min.",
+    "nt_title": "Sednica je počela",
+    "nt_body": "Prenos uživo i ko sada govori u Skupštini.",
+    "app_name": "Mikrofon",
+    "version": "Verzija",
+    "sd_text": "Ko je koliko govorio u Skupštini:",
+    "og_now": "Sada govori: %1",
+    "og_since": "za govornicom od %1",
+    "lists": "Vreme za govornicom po listama",
+    "no_list": "Vlada i gosti",
+    "other_lists": "poslanici manjih lista i van grupa",
+    "timeline": "Tok dana",
+    "timeline_note": "Svaki blok je jedan govor; klik vodi na njega u spisku ispod.",
+    "since": "govori od",
+    "min": "min",
+    "unknown": "Prenos je u toku, ali se ime govornika sada ne vidi u potpisu.",
+    "none": "Skupština sada ne zaseda ili prenos nije dostupan.",
+    "not_listed": "ime iz potpisa; nije na spisku poslanika ovog sajta",
+    "today": "Danas su govorili",
+    "today_none": "Danas još niko nije prepoznat u prenosu.",
+    "last_day": "Poslednji dan sednice",
+    "from_recording": "Pročitano posle sednice sa celog snimka prenosa, istim pravilom za svakog govornika: govor "
+                      "traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku.",
+    "recording": "snimak",
+    "recording_title": "Na snimku prenosa, od mesta gde je govor počeo",
+    "checked": "provereno pre",
+    "s": "s",
+    "how_title": "Kako ovo radi",
+    "how": "Ime čitamo automatski iz potpisa ispod govornika u prenosu Skupštine, s jednim kadrom na oko pet "
+           "sekundi, isto za svakog govornika. Ime poredimo sa spiskom poslanika ovog sajta; ime kog na spisku "
+           "nema prikazujemo samo kad je jasno pročitano. Govor traje dok se u potpisu vidi isto ime, a završava "
+           "se kad se pojavi drugo ime ili kad se 25 sekundi ne vidi nijedno. Prenos kasni za salom 15 do 25 "
+           "sekundi, a automatsko čitanje može da pogreši. Mesto na snimku je mesto gde se ime prvi put pojavilo, "
+           "oko pet sekundi ranije. Spisak poslednjeg dana sednice ostaje dok sledeće zasedanje ne počne.",
+    "play_day": "Pusti snimak dana",
+    "part": "Deo",
+    "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
+    "yt_live_note": "Prenos Skupštine sa Jutjuba (Gugl) učitava se tek kad ga pustite, u režimu bez kolačića.",
+    "play_live": "Gledaj prenos",
+    "archive_note": "Snimak iz arhive Skupštine (Videonet), pušta se tek na klik. Klik na „▶ snimak“ kod "
+                    "govora pušta ga od tog mesta.",
+    "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
+    "uses_counted": "Brojač sajta zbraja po danu i koliko je puta ova stranica otvorena, koliko puta je gledana duže "
+                    "od 1, 5, 15 i 30 minuta i koliko puta je pušten prenos ili snimak, otvoren dnevni red ili nešto "
+                    "podeljeno, i koliko puta je dodata na početni ekran ili otvorena sa njega i uključena ili isključena "
+                    "obaveštenja; bez oznake uređaja i bez ičega o tome ko je to bio",
+    "wait_title": "Dok čekate",
+    "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
+                 "ste blizu.",
+    "question": "Pitanje",
+    "questions": "Pitanja",
+    "right_is": "Tačno je",
+    "next_q": "Sledeće pitanje",
+    "see_result": "Vidi rezultat",
+    "result": "Rezultat",
+    "share": "Podeli rezultat",
+    "again": "Igraj ponovo",
+    "copied": "Tekst i link su kopirani.",
+    "share_text": "Moj rezultat u kvizu o Skupštini:",
+    "share_end": "Za ili Protiv, „Ko sada govori“.",
+    "answer": "Odgovor",
+    "yes": "Tačno!",
+    "no": "Nije.",
+    "how_counted": "Kako je izračunato",
+    "score": "Pogođeno",
+    "of": "od",
+    "q_all": "Sve tačno! Skupštinu pratite pažljivije od većine.",
+    "q_some": "Brojke iznenade i one koji prate sednice. Svaka je na sajtu, s pravilom kako je izračunata.",
+    "q_none": "Ništa? Zato i postoji ovaj sajt: sve brojke su tamo, s pravilom kako su izračunate.",
+    "know": "Da li ste znali",
+    "facts_note": "Brojevi su iz dokumenata Skupštine, izračunati istim pravilom kao na stranicama na koje vode.",
+    "live": "Prenos uživo na sajtu Skupštine",
+    "home": "Svi zakoni i glasanja poslanika",
+    "o_votes": "Konačna glasanja o zakonima:",
+    "v_za": "za",
+    "v_protiv": "protiv",
+    "v_uzdrzan": "uzdržan",
+    "o_new": "Novi poslanik u ovom sazivu",
+    "o_more": "Svi glasovi i govori na Za ili Protiv",
+    "site_cta": "Svaki zakon od 2012. i kako je glasao svaki poslanik",
+    "totals": "Ko je koliko govorio",
+    "day_page": "Ceo dan na sajtu: svaki govor sa snimkom i linkom za deljenje",
+    "conv_page": "Ko koliko govori u celom sazivu",
+    "totals_rest": "Ostalih",
+    "speakers_n": "govornika",
+    "all_turns": "Svi govori, redom",
+    "turns_earlier": "Raniji govori",
+    "speeches_1": "govor",
+    "speeches_n": "govora",
+    "script": "Ћирилица",
+}
+
+
+# The site's mark (the chamber as one arc, "za" blue and "protiv" orange), and this page's own beside it: a microphone
+# drawn the same way, its capsule in the one colour and its cradle and stand in the other (19 Nov 2026).
+
+MONTHS = ("januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar",
+          "decembar")
+WEEKDAYS = ("ponedeljak", "utorak", "sreda", "četvrtak", "petak", "subota", "nedelja")
+
+
+def _fill(text: str, *values) -> str:
+    """A text with %1, %2… filled in (the marks survive Cyrillic, which braces' names would not)."""
+    for i, v in enumerate(values, 1):
+        text = text.replace(f"%{i}", str(v), 1)
+    return text
+
+
+@lru_cache(maxsize=None)
+def _t(key: str, cyr: bool) -> str:
+    """A text of the page in either script (converted once: the page asks for some 280 of them each time)."""
+    return cyrillic(TEXT[key]) if cyr else TEXT[key]
+
+
+def _name(s: str, cyr: bool) -> str:
+    return cyrillic(s) if cyr else s
