@@ -257,7 +257,12 @@ def _tiles(turns: list[dict], *, cyr: bool) -> str:
 def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     """The day in a few cards to tap through (19 Nov 2026, the maintainer's choice): the whole time, who had the
     most, the time by list, the longest turn, who came up most often, and the way to the site. Every card by a rule,
-    the same whoever it names. The cards wait hidden in the page; the script shows them full screen on a tap."""
+    the same whoever it names. The cards wait hidden in the page; the script shows them full screen on a tap.
+    What happened comes before who spoke (20 Nov 2026, the maintainer: the cards told only the rostrum's time),
+    each card from one source and saying which: the model's sentence of the day, the agenda's items finished that
+    day as the sitting's page has them, the chair's measures counted from the day's steps (kinds, no names: heard
+    automatically), and what comes next by the Assembly's notice and the agenda. A card with more to read stays
+    longer (`data-t`)."""
     rows = leaders(turns)
     if len(rows) < 2:
         return ""
@@ -269,9 +274,14 @@ def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, s
     else:
         when = _t("h_today", cyr).capitalize() + ", " + (cyrillic(_date(snap["dan"])) if cyr else _date(snap["dan"]))
     whole = sum(r[1] for r in rows)
-    card = lambda kicker, body: f'<section class="st-c"><p class="st-k">{kicker}</p>{body}</section>'
+    def card(kicker: str, body: str, read: str = "") -> str:
+        """A card; one with a text to read stays six seconds and one more for every 22 letters, 16 at most."""
+        secs = min(16, 6 + len(read) // 22)
+        stay = f' data-t="{secs}"' if secs > 6 else ""
+        return f'<section class="st-c"{stay}><p class="st-k">{kicker}</p>{body}</section>'
     out = [card(escape(when), f'<p class="st-big">{_dur(whole, cyr)}</p><p class="st-s">{t("st_total")}</p>'
                               f'<p class="st-row"><b>{len(turns)}</b> {t("n_turns")} · <b>{len(rows)}</b> {t("n_people")}</p>')]
+    out += _cards_of_the_day(snap, card, cyr=cyr)
     name, sec, _ = rows[0]
     out.append(card(t("st_most"), f'<p class="st-name">{n(given_first(name))}</p><p class="st-big">{_dur(sec, cyr)}</p>'
                                   f'<p class="st-s">{escape(headline(turns, cyr=cyr, when=_when(snap, cyr)))}</p>'))
@@ -290,8 +300,14 @@ def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, s
         out.append(card(t("st_often"), f'<p class="st-name">{n(given_first(often))}</p>'
                                        f'<p class="st-big">{count[often]} <small>{t("st_times")}</small></p>'))
     home = site + ("cir/" if cyr else "")
+    nxt = _card_next(snap, cyr=cyr)
+    if nxt:
+        out.append(card(t("st_next"), nxt[0], nxt[1]))
+    # once the day is over the site has its page: every turn with its recording and the automatic transcript
+    day_page = (f'<p class="st-s"><a href="{escape(home)}govornici/{escape(str(snap["dan"]))}">{t("st_day_page")} →</a></p>'
+                if snap.get("ranije") and snap.get("dan") else "")
     out.append(card(t("st_end"), f'<p class="st-name">{t("st_site")}</p>'
-                                 f'<p><a class="cta" href="{escape(home)}">zailiprotiv.rs →</a></p>'))
+                                 f'<p><a class="cta" href="{escape(home)}">zailiprotiv.rs →</a></p>{day_page}'))
     go = (f'<p class="acts st-go"><button type="button" class="share-now st-open">▶ {t("st_open")}</button></p>'
           if snap["stanje"] == "govori" and snap.get("sada") else "")
     return (go +
@@ -437,6 +453,60 @@ def manifest(cyr: bool) -> dict:
             "background_color": "#ffffff", "theme_color": "#ffffff",
             "icons": [icon("/ikona-192.png", 192, "any"), icon("/ikona-512.png", 512, "any"),
                       icon("/ikona-maskable-512.png", 512, "maskable")]}
+
+
+def _cards_of_the_day(snap: dict, card, *, cyr: bool) -> list[str]:
+    """What happened, as cards: the model's sentence of the day (said to be the model's); each agenda item the
+    sitting's page has as finished that day, with the sentence of fact kept with it (three at most, the rest as a
+    list); the chair's measures among the day's shown steps, counted by kind."""
+    t = lambda k: escape(_t(k, cyr))
+    n = lambda x: escape(_name(str(x), cyr))
+    out = []
+    s = snap.get("sazetak")
+    if isinstance(s, dict) and s.get("vrsta") == "dan" and s.get("kratko"):
+        out.append(card(t("st_brief"), f'<p class="st-text">{n(s["kratko"])}</p><p class="st-src">{t("st_brief_src")}</p>', s["kratko"]))
+    done = [x for x in (snap.get("dnevni_red") or {}).get("tacke") or []
+            if x.get("stanje") == "gotova" and x.get("izvor") == "sajt" and x.get("kada") == snap.get("dan")]
+    for x in done[:3]:
+        what = f'<p class="st-text">{n(x["sta"])}</p>' if x.get("sta") else ""
+        out.append(card(escape(_fill(_t("st_item", cyr), str(x["n"]))),
+                        f'<p class="st-item">{n(x["tekst"])}</p>{what}<p class="st-src">{t("st_item_src")}</p>',
+                        x["tekst"] + (x.get("sta") or "")))
+    if len(done) > 3:
+        rest = "".join(f'<li>{x["n"]}. {n(x["tekst"])}</li>' for x in done[3:])
+        out.append(card(t("st_items_more"), f'<ul class="st-list">{rest}</ul><p class="st-src">{t("st_item_src")}</p>',
+                        "".join(x["tekst"] for x in done[3:])))
+    kinds: dict[str, int] = {}
+    for e in steps_shown(snap):
+        if e.get("naslov") == "Mera predsedavajućeg":
+            kind = (e.get("opis") or "").split(" · ")[0].strip() or _t("st_measure_other", False)
+            kinds[kind] = kinds.get(kind, 0) + 1
+    if kinds:
+        total = sum(kinds.values())
+        rows = "".join(f'<li><b>{c}</b> {n(k)}</li>' for k, c in sorted(kinds.items(), key=lambda kv: (-kv[1], kv[0])))
+        out.append(card(t("st_measures"), f'<p class="st-big">{total}</p><ul class="st-list">{rows}</ul>'
+                                          f'<p class="st-src">{t("st_measures_src")}</p>', "x" * 90))
+    return out
+
+
+def _card_next(snap: dict, *, cyr: bool) -> tuple[str, str] | None:
+    """What comes next: the Assembly's newest notice (as its site says it) and the agenda's item next in turn."""
+    t = lambda k: escape(_t(k, cyr))
+    n = lambda x: escape(_name(str(x), cyr))
+    notice = next(iter(sorted((x for x in snap.get("obavestenja") or [] if x.get("tekst")),
+                              key=lambda x: str(x.get("od", "")))[-1:]), None)
+    item = next((x for x in (snap.get("dnevni_red") or {}).get("tacke") or [] if x.get("stanje") in ("u_toku", "na_redu")), None)
+    if not notice and not item:
+        return None
+    body = read = ""
+    if notice:
+        body += f'<p class="st-text">{n(notice["tekst"])}</p><p class="st-src">{t("steps_site")}</p>'
+        read += notice["tekst"]
+    if item:
+        label = t("ag_now") if item["stanje"] == "u_toku" else t("ag_next")
+        body += f'<p class="st-item"><small>{label}:</small> {item["n"]}. {n(item["tekst"])}</p>'
+        read += item["tekst"]
+    return body, read
 
 
 def summary_box(snap: dict, *, cyr: bool) -> str:

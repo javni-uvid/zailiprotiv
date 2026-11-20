@@ -1452,3 +1452,44 @@ def test_a_steps_line_leads_to_what_the_rules_say_of_it():
     assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojam-dnevni-red"' in html
     assert "cir/poslovnik-clanovi#pojam-tok-pretresa" in page_._steps(snap, cyr=True, tz=TZ, site="https://zailiprotiv.rs/")
     assert "poslovnik-clanovi" not in page_._steps(snap, cyr=False, tz=TZ)  # no site known: no link
+
+
+def test_the_days_cards_tell_what_happened_before_who_spoke():
+    """The cards from the sources the day has: the model's sentence (said to be the model's), the agenda's items the
+    sitting's page has finished that day, the chair's measures counted by kind without names, what comes next; then
+    the rostrum's cards. A card with more to read stays longer."""
+    from uzivo.page import fragment
+    now = 1795100000
+    turn = lambda name, a, sec: {"ime": name, "adresa": "", "grupa": "", "uloga": "", "lista": "A", "od": now + a,
+                                 "do": now + a + sec, "sekundi": sec, "video": ""}
+    snap = {"stanje": "nema_prenosa", "provereno": now + 9000, "sada": None, "sazvano": None, "bez_potpisa": None,
+            "dan": "2026-11-19", "ranije": True, "snimak": False, "verzija": "x",
+            "danas": [turn("Petrović Petar", 0, 600), turn("Jović Jovan", 700, 300), turn("Petrović Petar", 1100, 200)],
+            "obavestenja": [{"od": "2026-11-20", "do": "2026-11-24", "tekst": "Narodna skupština nastavlja sa radom u utorak.",
+                             "izvor": "sajt Narodne skupštine", "url": "", "adresa": ""}],
+            "sazetak": {"vrsta": "dan", "kratko": "Skupština je izabrala predsednika.", "ukratko": "Duže.", "odluke": []},
+            "dnevni_red": {"naslov": "Prva sednica", "url": "", "tacke": [
+                {"n": 1, "tekst": "Potvrđivanje mandata", "stanje": "gotova", "izvor": "sajt", "kada": "2026-11-17", "sta": "Ranije."},
+                {"n": 2, "tekst": "Izbor predsednika", "stanje": "gotova", "izvor": "sajt", "kada": "2026-11-19", "sta": "Izabran je predsednik: 140 glasova."},
+                {"n": 3, "tekst": "Izbor potpredsednika", "stanje": "gotova", "izvor": "prepis", "kada": "", "sta": ""},
+                {"n": 4, "tekst": "Izbor radnih tela", "stanje": "na_redu", "izvor": "", "kada": "", "sta": ""}]},
+            "hronika": [
+                {"t": now + 500, "vrsta": "Mera predsedavajućeg", "tekst": "Izričem opomenu Petru Petroviću.", "izvor": "model", "url": "",
+                 "vise": {"napomena": "opomenu", "kome": "Petru Petroviću"}},
+                {"t": now + 2500, "vrsta": "Mera predsedavajućeg", "tekst": "Izričem opomenu.", "izvor": "model", "url": "", "vise": {"napomena": "opomenu"}}]}
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    cards = html.split('<div class="st-data"')[1].split('<section class="st-c"')[1:]
+    cards[-1] = cards[-1].split("</section>")[0]
+    kickers = [c.split('<p class="st-k">')[1].split("</p>")[0] for c in cards]
+    assert kickers[1:5] == ["Dan ukratko", "Završena 2. tačka dnevnog reda", "Mere predsedavajućeg", "Najviše vremena za govornicom"]
+    assert kickers[-2:] == ["Šta sledi", "Ko su ljudi koji govore i kako glasaju?"]
+    brief, item, measures = cards[1:4]
+    assert "Skupština je izabrala predsednika." in brief and "Napisao model" in brief and 'data-t="7"' in brief
+    assert "Izbor predsednika" in item and "140 glasova" in item and "na sajtu Skupštine" in item
+    assert "Potvrđivanje mandata" not in "".join(cards)  # finished on another day
+    assert '<p class="st-big">2</p>' in measures and "<b>2</b> opomenu" in measures and "Petroviću" not in measures  # kinds, no names
+    assert "nastavlja sa radom u utorak" in cards[-2] and "4. Izbor radnih tela" in cards[-2]
+    assert 'href="https://zailiprotiv.rs/govornici/2026-11-19"' in cards[-1]
+    bare = fragment({**snap, "sazetak": None, "dnevni_red": None, "hronika": [], "obavestenja": []}, cyr=False,
+                    site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Dan ukratko" not in bare and "Šta sledi" not in bare and bare.count('<section class="st-c"') == 5  # as before

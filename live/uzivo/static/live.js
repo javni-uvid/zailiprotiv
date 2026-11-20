@@ -134,6 +134,7 @@
     var data = document.querySelector(".st-data");
     if (!data || story) return;
     var cards = [].slice.call(data.children).map(function (c) { return c.outerHTML; }), i = -1, timer = null;
+    var secs = [].slice.call(data.children).map(function (c) { return +c.getAttribute("data-t") || 6; });  // more to read: longer
     var calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     var el = document.createElement("div");
     el.className = "st"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
@@ -151,9 +152,10 @@
       i = Math.max(0, k);
       stage.innerHTML = cards[i];
       for (var j = 0; j < bars.length; j++) { bars[j].className = j < i ? "done" : ""; }
+      bars[i].style.setProperty("--st-t", secs[i] + "s");
       void bars[i].offsetWidth; bars[i].className = "on";
       clearTimeout(timer);
-      if (!calm && i < cards.length - 1) timer = setTimeout(function () { show(i + 1); }, 6000);
+      if (!calm && i < cards.length - 1) timer = setTimeout(function () { show(i + 1); }, secs[i] * 1000);
     }
     function key(e) { if (e.key === "Escape") close(); else if (e.key === "ArrowRight") show(i + 1); else if (e.key === "ArrowLeft") show(i - 1); }
     el.addEventListener("click", function (e) {
