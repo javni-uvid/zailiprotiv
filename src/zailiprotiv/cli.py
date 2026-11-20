@@ -515,6 +515,93 @@ def members_cmd(args) -> int:
     return 0
 
 
+def offices_cmd(args) -> int:
+    """Who holds which office in the newest convocation (the Speaker, the deputy Speakers, the groups' chairs, the
+    committees, the delegations) → data/<N>/offices.json, and the Assembly's news → data/vesti.json (offices.py). The
+    committees' and delegations' own pages are read when their lists changed, when a relevant news item is new, or
+    once a week; an earlier convocation's (offices.ARCHIVE) once."""
+    from zailiprotiv import offices
+    from zailiprotiv.config import NEWEST
+    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
+    today = now.date().isoformat()
+
+    def get(url):
+        time.sleep(DELAY)
+        return skupstina.fetch(url).decode("utf-8", "replace")
+
+    news_path = ROOT / "vesti.json"
+    old_news = json.loads(news_path.read_text(encoding="utf-8"))["items"] if news_path.exists() else []
+    found_news = offices.news(get(offices.NEWS))
+    items, fresh = offices.merge_news(old_news, found_news, today)
+    if found_news:
+        news_path.write_text(offices.dumps_news(now.isoformat(), items), encoding="utf-8")
+    print(f"news: {len(found_news)} listed, {len(items) - len(old_news)} new, {len(fresh)} relevant new")
+    for x in fresh:
+        print(f"  relevant: {x['title']} ({x['url']})")
+    if fresh and os.environ.get("GITHUB_STEP_SUMMARY"):  # on the run's page, for whoever looks at it
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+            f.write("### Nove vesti Skupštine o izboru i funkcijama\n\n"
+                    + "".join(f"- [{x['title']}]({x['url']})\n" for x in fresh) + "\n")
+
+    def read_parts(listing):
+        out = []
+        for t, url in offices.parts(get(listing), listing):
+            page = get(url)
+            out.append((t, url, offices.committee(page) or offices.delegation(page)))  # named as the list names it
+        return out
+
+    for conv, pages in offices.ARCHIVE.items():  # an earlier convocation's: its archive doesn't change
+        path = ROOT / conv / "offices.json"
+        if path.exists():
+            continue
+        found = offices.offices_of(speaker=None, vice=[], chairs=[], committees=read_parts(pages["committees"]),
+                                   delegations=read_parts(pages["delegations"]), sources={})
+        if found:
+            path.write_text(offices.dumps(now.isoformat(), [{**o, "since": ""} for o in found], now.isoformat()),
+                            encoding="utf-8")
+        print(f"offices: {len(found)} in convocation {conv}'s archive")
+
+    conv = NEWEST
+    path = ROOT / conv / "offices.json"
+    old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"offices": [], "parts_read": ""}
+    sources = {"speaker": offices.SPEAKER, "vice": offices.VICE, "group": offices.GROUP_CHAIRS}
+    speaker = offices.person(get(offices.SPEAKER))
+    vice, chairs = offices.blocks(get(offices.VICE)), offices.blocks(get(offices.GROUP_CHAIRS))
+    listed = {k: offices.parts(get(u), u) for k, u in (("committee", offices.COMMITTEES),
+                                                        ("delegation", offices.DELEGATIONS))}
+    had = {k: sorted({o["source"] for o in old["offices"] if o["kind"] == k}) for k in listed}
+    last = dt.datetime.fromisoformat(old["parts_read"]) if old.get("parts_read") else None
+    again = (fresh or last is None or (now - last).total_seconds() > offices.WEEK
+             or any(sorted(u for _, u in listed[k]) != had[k] for k in listed))
+    if again:
+        parts = {k: read_parts(u) for k, u in (("committee", offices.COMMITTEES), ("delegation", offices.DELEGATIONS))}
+        read_at = now.isoformat()
+    else:  # the committees and delegations as last read
+        parts = {k: [] for k in listed}
+        for o in old["offices"]:
+            if o["kind"] in parts:
+                body = next((p for p in parts[o["kind"]] if p[1] == o["source"]), None)
+                if not body:
+                    body = (o["body"], o["source"], [])
+                    parts[o["kind"]].append(body)
+                body[2].append({k: o[k] for k in ("name", "role", "group") if k in o})
+        read_at = old["parts_read"]
+    found = offices.offices_of(speaker=speaker, vice=vice, chairs=chairs, committees=parts["committee"],
+                               delegations=parts["delegation"], sources=sources)
+    if not found and old["offices"]:
+        print(f"offices: none read, {len(old['offices'])} kept; the file stays")
+        return 1
+    found = offices.keep_since(old["offices"], found, today)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(offices.dumps(now.isoformat(), found, read_at), encoding="utf-8")
+    by = {}
+    for o in found:
+        by[o["kind"]] = by.get(o["kind"], 0) + 1
+    print(f"offices: convocation {conv}: " + ", ".join(f"{k} {n}" for k, n in by.items())
+          + ("" if again else " (committees and delegations as last read)"))
+    return 0
+
+
 def mp_years_cmd(args) -> int:
     """The year of birth of every MP from the Assembly's archive of convocations → data/mp_years.json, and the check:
     a name whose year differs between convocations is two people (split by hand in data/mp_splits.json)."""
@@ -1531,6 +1618,9 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=photos_cmd)
     p = commands.add_parser("members", help="the sitting MPs from the Assembly's list → data/<N>/members.json")
     p.set_defaults(run=members_cmd)
+    p = commands.add_parser("offices", help="offices in the Assembly (Speaker, deputies, committees, delegations) "
+                                            "→ data/<N>/offices.json, and its news → data/vesti.json")
+    p.set_defaults(run=offices_cmd)
     p = commands.add_parser("mp-years", help="MPs' years of birth from the Assembly's archive, and names that are two people")
     p.set_defaults(run=mp_years_cmd)
     p = commands.add_parser("status", help="what the data still lacks, per convocation")

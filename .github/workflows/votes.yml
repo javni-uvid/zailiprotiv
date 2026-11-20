@@ -61,6 +61,9 @@ jobs:
           uv run zailiprotiv $c videos || true  # the sittings' recordings (videos.py); a broadcaster's hiccup stops nothing; before the roll calls, which may fail
           # The bills in procedure are the current convocation's only.
           if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; uv run zailiprotiv photos || true; fi
+          # Who holds which office (the Speaker, deputies, groups' chairs, committees, delegations) in the newest
+          # convocation, and the Assembly's news, the relevant new ones named in the log (offices.py).
+          if [ "$conv" = "$current" ]; then uv run zailiprotiv offices || true; fi
           uv run zailiprotiv uzivo-pull  # who spoke when, from the live page (live/); its computer may be off
           # Each new recording in the archive placed on the clock by its captions, and the day's turns linked into it
           # (arhiva.py); ffmpeg reads only a few frames of each file over the network. The newest convocation below.

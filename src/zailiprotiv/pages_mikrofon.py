@@ -265,6 +265,9 @@ def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: di
             party = (r.get("party") or "").strip()
             if party not in ("", "-", "–"):
                 lines.append({"t": f"Na predlog stranke: {latin(party)}.", "iz": "sajt Skupštine"})
+        held = [o["text"] for o in r.get("offices") or []]
+        if held:  # the offices in this convocation first (offices.py), the Assembly's own words, at most three
+            lines.insert(0, {"t": "; ".join(held[:3]) + ("; …" if len(held) > 3 else "") + ".", "iz": "sajt Skupštine"})
         e["c"] = lines
         if r["slug"] in spoken_:
             e["sv"] = {**spoken_[r["slug"]], "saziv": conv}

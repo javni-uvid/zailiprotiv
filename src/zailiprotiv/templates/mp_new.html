@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {# A new MP of the newest convocation, before their first vote (pages_members.py). #}
-{% from "macros.html" import how, brief, floor_now_part, next_steps with context %}
+{% from "macros.html" import how, brief, floor_now_part, offices_part, next_steps with context %}
 {% block title %}{{ m.name|given_first }}, poslanik u {{ conv_name|locative }} sazivu — Za ili Protiv{% endblock %}
 {% block description %}{{ m.name|given_first }}, narodni poslanik od {{ since|day_of }}{% if m.party_ %}, na predlog stranke {{ m.party_|latin }}{% endif %}. Glasanja i govori biće ovde od prve sednice na kojoj se glasa.{% endblock %}
 {% block robots %}<meta name="robots" content="noindex">{% endblock %}{# no vote yet, as any MP's page without one #}
@@ -19,6 +19,7 @@
   <li>Stranka na čiji je predlog izabran(a): <b>{{ (m.party_ or "nije navedena")|latin }}</b></li>
 </ul>
 {{ floor_now_part(m.slug) }}
+{{ offices_part([(conv, m.offices)] if m.offices else []) }}
 <p>Prvi put u Skupštini od 2012: nije ni na jednom poimeničnom glasanju koje sajt ima. Kako glasa biće na ovoj strani od prve sednice na kojoj se glasa, a šta govori po stenografskim beleškama čim ih sajt pročita, istim pravilom kao za svakog poslanika.</p>
 {{ next_steps(list_page, m.group) }}
 <p class="meta">Izvor: <a href="{{ source }}">spisak poslanika na sajtu Narodne skupštine</a>. „Nije navedena“: Skupština ne navodi stranku. <a href="../{{ list_page }}">Svi poslanici, {{ conv_name|lower }} saziv</a></p>
