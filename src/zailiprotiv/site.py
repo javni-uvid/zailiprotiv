@@ -889,8 +889,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     if settings.get("indexnow_key"):  # IndexNow (Bing and others): the key, at the site's root, proves the site is ours
         (out / f"{settings['indexnow_key']}.txt").write_text(settings["indexnow_key"], encoding="utf-8")
     for name, args in laws_lists:
-        # newer15=None: as before the build's phases, when these pages were written before it was known.
-        (out / name).write_text(env.get_template("laws.html").render(**common, **args, newer15=None), encoding="utf-8")
+        (out / name).write_text(env.get_template("laws.html").render(**common, **args), encoding="utf-8")
     # What visitors may vote on and mark (the counter accepts nothing else): every law with a final vote, its quotes.
     (out / "glasanje.json").write_text(json.dumps({"laws": {
         it["slug"]: [qid(q["tekst"]) for q in it["quotes"]] for its in items_by_conv.values() for it in its if it.get("final")}},
