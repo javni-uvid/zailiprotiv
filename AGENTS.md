@@ -692,6 +692,14 @@ its minute.
   opens onto its close button, gives the focus back, and does not turn its cards by the clock for a reader who
   asked for less motion. No letters under 12 px; the "next line" button is 32 px high. The archive is named
   "Videonet", not by its address, which the Cyrillic page wrote in Cyrillic letters.
+- **The agent tests and puts live itself** (20 Nov 2026, the maintainer's decision; it changes "Test first, then
+  live" above, where the maintainer's own look came between the two). The agent that changed `live/` runs
+  `mikrofon.ps1 test`, looks at the test page itself (a phone's width, both scripts, what the change was about),
+  and after the merge builds the test from the main clone on a clean `origin/main`, looks again and runs
+  `mikrofon.ps1 uzivo`; it checks first that nothing but its own change lies between the live image's commit and
+  `main` (`mikrofon.ps1 stanje`, `git log <commit>..origin/main -- live/`), and afterwards that the public page
+  answers with the change. The maintainer is not asked to run the Docker steps by hand. A principle, DNS or
+  anything seen from outside beyond the page itself still waits for the maintainer.
 - **Keeping visitors longer** (20 Nov 2026, the maintainer's choice of points 1, 3 and 4 of a plan drawn from the
   visits: 5.2 min a visit, 2.7 min at the peaks, when most arrive from a shared link). On a phone the head is short,
   so the broadcast is in the first screen; the page can go on a phone's home screen (a manifest, icons drawn from
