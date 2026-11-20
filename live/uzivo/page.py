@@ -162,7 +162,7 @@ TEXT = {
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
     "yt_live_note": "Prenos Skupštine sa Jutjuba (Gugl) učitava se tek kad ga pustite, u režimu bez kolačića.",
     "play_live": "Gledaj prenos",
-    "archive_note": "Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod "
+    "archive_note": "Snimak iz arhive Skupštine (Videonet), pušta se tek na klik. Klik na „▶ snimak“ kod "
                     "govora pušta ga od tog mesta.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counted": "Brojač sajta zbraja po danu i koliko je puta ova stranica otvorena, koliko puta je gledana duže "
@@ -1049,7 +1049,7 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .steps .time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .9rem; padding-top: .08rem; text-align: right; }
 .steps li > i, .st-key i { box-sizing: border-box; width: .7rem; height: .7rem; border-radius: 50%; border: 2px solid var(--fg); background: var(--bg); }
 .steps li > i { margin: .38rem auto 0; position: relative; z-index: 1; } .steps li.st-sajt > i { background: var(--fg); }
-.steps .time small { display: block; font-size: .66rem; line-height: 1.1; letter-spacing: .02em; } .st-off { font: 700 .66rem/1 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--fg); border-radius: 4px; padding: .12rem .32rem; margin-right: .25rem; vertical-align: .12em; white-space: nowrap; }
+.steps .time small { display: block; font-size: .75rem; line-height: 1.1; letter-spacing: .02em; } .st-off { font: 700 .75rem/1 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--fg); border-radius: 4px; padding: .12rem .32rem; margin-right: .25rem; vertical-align: .12em; white-space: nowrap; }
 .st-floor { color: var(--muted); font-size: .95rem; } .st-floor b { color: var(--fg); font-weight: 600; } .steps li.st-rec { padding-bottom: .7rem; } .steps li.st-rec > i { width: .5rem; height: .5rem; margin-top: .48rem; border-color: var(--muted); }
 .steps p { margin: 0; } .st-title { font-weight: 650; } .st-what { color: var(--muted); font-size: .92rem; margin-top: .1rem; }
 .st-text { max-width: 42rem; font-size: .97rem; } .st-src { font-size: .8rem; color: var(--muted); margin-top: .2rem; } .st-src a { color: inherit; }
@@ -1083,7 +1083,7 @@ main > .player { margin-top: 1rem; }
 .clk { font-family: var(--serif); font-size: 1.9rem; line-height: 1; color: var(--fg); font-variant-numeric: tabular-nums; margin-right: .5rem; }
 .nums { margin: 0 0 .7rem; display: grid; gap: .35rem; }
 .nums div { display: grid; grid-template-columns: 5.4rem 1fr; gap: .6rem; align-items: baseline; }
-.nums dt, .src { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.nums dt, .src { font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .nums dd { margin: 0; font-weight: 600; }
 .rot-w { display: flex; gap: .8rem; align-items: flex-start; justify-content: space-between; border-top: 1px solid var(--line);
   padding-top: .7rem; margin-bottom: .8rem; min-height: 5.2rem; }
@@ -1092,7 +1092,7 @@ main > .player { margin-top: 1rem; }
 .rot li { display: none; } .rot:not(.js) li:first-child, .rot.js li.on { display: block; }
 .src { display: block; margin-bottom: .15rem; }
 .rot-next { flex: none; border: 1px solid var(--line); background: none; color: var(--muted); border-radius: 999px;
-  padding: .15rem .6rem; font: inherit; font-size: .8rem; cursor: pointer; font-variant-numeric: tabular-nums; }
+  padding: .35rem .8rem; min-height: 2rem; font: inherit; font-size: .85rem; cursor: pointer; font-variant-numeric: tabular-nums; }
 .acts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
 .share-now { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg);
   background: none; color: var(--fg); cursor: pointer; }
@@ -1111,6 +1111,9 @@ a.said { margin-left: .3rem; }
 .st-bar { display: flex; gap: 4px; padding: 12px 14px 0; } .st-bar i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.25); overflow: hidden; }
 .st-bar i b { display: block; height: 100%; width: 0; background: #fff; } .st-bar i.done b { width: 100%; }
 .st-bar i.on b { animation: st-run var(--st-t, 6s) linear forwards; } @keyframes st-run { to { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .st-bar i.on b { animation: none; width: 100%; } }
+/* Said to a screen reader, not shown: who has the floor now (the page's part is replaced without a word). */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; }
 .st-x { position: absolute; top: 22px; right: 10px; z-index: 2; background: none; border: 0; color: #fff; font-size: 1.8rem; line-height: 1; padding: .3rem .6rem; cursor: pointer; }
 .st-stage { flex: 1; display: grid; place-items: center; padding: 1.5rem; }
 .st-c { width: 100%; max-width: 26rem; } .st-c a { color: #fff; }
@@ -1216,6 +1219,13 @@ SCRIPT = _shared("mikrofon.js") + """
   }
   // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
   // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
+  var heard = null;
+  function said() {
+    var w = document.querySelector("#deo .who"), side = document.querySelector("#deo .sp .side"), line = document.getElementById("ko");
+    var now = w ? w.textContent.trim() : "";
+    if (heard !== null && now && now !== heard && line) line.textContent = now + (side ? ", " + side.textContent.trim() : "");
+    heard = now;
+  }
   function load() {
     if (document.hidden) return;
     fetch(base + "deo", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; })
@@ -1223,13 +1233,20 @@ SCRIPT = _shared("mikrofon.js") + """
         if (!html) return;
         // what the reader opened (the agenda, the folded steps) stays open when the part is replaced
         var open = [].map.call(document.querySelectorAll("#deo details[open]"), function (d) { return d.id || d.parentNode.className; });
-        document.getElementById("deo").outerHTML = html;
+        // the keyboard's place too: the same kind of thing, the same one in order, has the focus again
+        var deo = document.getElementById("deo"), f = document.activeElement, keep = null;
+        if (f && deo.contains(f)) {
+          var sel = f.tagName.toLowerCase() + (typeof f.className === "string" && f.className.trim() ? "." + f.className.trim().split(" ").filter(Boolean).join(".") : "");
+          keep = [sel, [].indexOf.call(deo.querySelectorAll(sel), f)];
+        }
+        deo.outerHTML = html;
         [].forEach.call(document.querySelectorAll("#deo details"), function (d) { if (open.indexOf(d.id || d.parentNode.className) >= 0) d.open = true; });
-        got = Date.now(); tick();
+        if (keep) { var again = document.querySelectorAll("#deo " + keep[0])[keep[1]]; if (again) again.focus({ preventScroll: true }); }
+        got = Date.now(); tick(); said();
       })
       .catch(function () {});
   }
-  setInterval(load, 5000); setInterval(tick, 1000); tick();
+  setInterval(load, 5000); setInterval(tick, 1000); tick(); said();
   document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
 
   // "Podeli ovaj trenutak": a picture drawn here, in the browser, of who speaks and for how long, with the page's
@@ -1272,6 +1289,7 @@ SCRIPT = _shared("mikrofon.js") + """
     var data = document.querySelector(".st-data");
     if (!data || story) return;
     var cards = [].slice.call(data.children).map(function (c) { return c.outerHTML; }), i = -1, timer = null;
+    var calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     var el = document.createElement("div");
     el.className = "st"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
     el.innerHTML = '<div class="st-bar">' + cards.map(function () { return "<i><b></b></i>"; }).join("") + '</div>' +
@@ -1279,7 +1297,10 @@ SCRIPT = _shared("mikrofon.js") + """
       '<div class="st-stage"></div><p class="st-hint">' + data.getAttribute("data-hint") + '</p>';
     document.body.appendChild(el);
     var stage = el.querySelector(".st-stage"), bars = el.querySelectorAll(".st-bar i");
-    function close() { clearTimeout(timer); el.remove(); story = null; document.removeEventListener("keydown", key); }
+    function close() {
+      clearTimeout(timer); el.remove(); story = null; document.removeEventListener("keydown", key);
+      var back = document.querySelector(".st-open"); if (back) back.focus({ preventScroll: true });
+    }
     function show(k) {
       if (k >= cards.length) { close(); return; }
       i = Math.max(0, k);
@@ -1287,7 +1308,7 @@ SCRIPT = _shared("mikrofon.js") + """
       for (var j = 0; j < bars.length; j++) { bars[j].className = j < i ? "done" : ""; }
       void bars[i].offsetWidth; bars[i].className = "on";
       clearTimeout(timer);
-      if (i < cards.length - 1) timer = setTimeout(function () { show(i + 1); }, 6000);
+      if (!calm && i < cards.length - 1) timer = setTimeout(function () { show(i + 1); }, 6000);
     }
     function key(e) { if (e.key === "Escape") close(); else if (e.key === "ArrowRight") show(i + 1); else if (e.key === "ArrowLeft") show(i - 1); }
     el.addEventListener("click", function (e) {
@@ -1296,7 +1317,7 @@ SCRIPT = _shared("mikrofon.js") + """
       show(e.clientX < window.innerWidth / 3 ? i - 1 : i + 1);
     });
     document.addEventListener("keydown", key);
-    story = el; show(0);
+    story = el; show(0); el.querySelector(".st-x").focus();
   }
   function shareDay(b) {
     var url = location.origin + location.pathname, text = b.getAttribute("data-text") + " " + url;
@@ -1679,6 +1700,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
 <header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
 <main>
+<p class="sr" id="ko" aria-live="polite"></p>
 <section class="hero">
 <div><h1>{t("title")}</h1><p class="hero-sub">{t("hero_sub")}</p></div>
 <a class="hero-cta" href="{escape(home)}"><span>{t("hero_cta")}</span><b>zailiprotiv.rs →</b></a>
