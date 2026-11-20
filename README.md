@@ -26,7 +26,8 @@ name. Every page is also in Cyrillic, under `cir/`.
 6. **What MPs say is not censored and not shaped:** quotes word for word, every name as spoken, and no label or
    verdict of the site's own.
 
-`AGENTS.md` holds the principles in full, the architecture and the decisions with their dates.
+`AGENTS.md` holds the principles in full, the architecture and the decisions with their dates;
+`live/AGENTS.md` those of the live page.
 
 ## Pages
 
