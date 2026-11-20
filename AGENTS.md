@@ -139,6 +139,12 @@ decisions unless said otherwise.
   attribute of its function: `pages_floor.count` returns a `Floor` (`pages_floor.render` writes its pages),
   `pages_quiz.render` a `Quiz` (its themes reach the areas' pages and "Glasaj i ti" as an argument),
   `pages_procedure.render` the bills no longer listed, `skupstina.index` the later convocation's titles.
+- **The commands in a package** (20 Nov 2026, from a look at the project's structure): `cli.py` (1,672 lines) is
+  `cli/`: `assembly` (reading the Assembly's site), `recordings`, `writing` (the model's), `buckets`, `build`, and
+  `common`, which holds the convocation worked on (`common.DATA`, `ROOT`, `CONVOCATION`, set by `main` from
+  `--convocation`) and the helpers the commands share; `__init__` builds the parser. A test that points the
+  commands elsewhere patches `cli.common`. Moved unchanged and checked: every command's `--help` (both with and
+  without `--convocation`) and `status` give the same text. It found `statistics` never imported in `govor`.
 
 ## Principles
 

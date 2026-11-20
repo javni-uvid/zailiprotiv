@@ -134,7 +134,7 @@ src/zailiprotiv/
   notes_site.py, files_site.py     the notes' pages and the downloads, for the buckets
   cyrillic.py, translit.py    the Cyrillic edition; Cyrillic → Latin
   digest.py, feeds.py, downloads.py, card.py, photos.py, publish.py
-  cli.py                      commands
+  cli/                        commands, by what they work on: assembly, recordings, writing, buckets, build
 tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates)
 worker/                       the visitors' votes counter (Cloudflare Worker, D1)
 live/                         "Ko sada govori": the live broadcast's caption read, a page of its own (Docker; README there)
