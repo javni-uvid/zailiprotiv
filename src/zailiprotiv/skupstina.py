@@ -41,10 +41,31 @@ def ascii_url(url: str) -> str:
     return urllib.parse.urlunsplit((parts.scheme, netloc, path, query, ""))
 
 
+_asked: dict[str, float] = {}  # when each host last answered (time.monotonic)
+
+
+def _wait_turn(url: str) -> None:
+    """Ask the Assembly little: at least DELAY seconds between the end of one request to a host and the next."""
+    host = urllib.parse.urlsplit(url).hostname or ""
+    if host in _asked:
+        gap = DELAY - (time.monotonic() - _asked[host])
+        if gap > 0:
+            time.sleep(gap)
+
+
 def fetch(url: str, timeout: float = 60, tries: int = 3) -> bytes:
-    """The body at url, retried on network errors and server errors; a 4xx is not retried."""
+    """The body at url, retried on network errors and server errors; a 4xx is not retried. Requests name the project
+    in the User-Agent and wait their turn (_wait_turn), so callers need not wait between pages themselves."""
+    try:
+        return _fetch(url, timeout, tries)
+    finally:
+        _asked[urllib.parse.urlsplit(url).hostname or ""] = time.monotonic()
+
+
+def _fetch(url: str, timeout: float, tries: int) -> bytes:
     last = None
     for attempt in range(tries):
+        _wait_turn(url)
         request = urllib.request.Request(ascii_url(url), headers={"User-Agent": USER_AGENT})
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -172,7 +193,7 @@ def other_convocation(title: str, ordinal: str) -> bool:
     return any(f"{o}om sazivu" in t or f"{o}og saziva" in t for o in ORDINALS if o != ordinal)
 
 
-def archive_sittings(listing: str, get: Callable[[str], bytes] = fetch, delay: float = DELAY) -> list[Sitting]:
+def archive_sittings(listing: str, get: Callable[[str], bytes] = fetch) -> list[Sitting]:
     """An earlier convocation's sittings, from its archive page in Latin and the pages after it (?offset=N). A
     sitting's Latin page ("….53525.941.html") has a Cyrillic twin with the next lower number ("….53524.43.html"),
     which is the one linking the roll calls; the site ignores the words before the number."""
@@ -182,8 +203,6 @@ def archive_sittings(listing: str, get: Callable[[str], bytes] = fetch, delay: f
         if page in pages:
             continue
         pages.add(page)
-        if len(pages) > 1:
-            time.sleep(delay)
         for url, text in links(get(page).decode("utf-8", "replace"), page):
             if "offset=" in url and url.split("?")[0] == listing.split("?")[0] and url not in pages:
                 todo.append(url)
@@ -207,18 +226,18 @@ def votes(html: str, base: str) -> list[Vote]:
     return out
 
 
-def index(get: Callable[[str], bytes] = fetch, delay: float = DELAY, convocation: str = "14") -> list[Sitting]:
-    """A convocation's sittings with their roll calls."""
+def index(get: Callable[[str], bytes] = fetch, convocation: str = "14") -> tuple[list[Sitting], list[str]]:
+    """A convocation's sittings with their roll calls, and the titles of sittings listed among them that belong to a
+    later convocation (a newer one has begun)."""
     conf = CONVOCATIONS[convocation]
-    found = archive_sittings(conf["archive"], get, delay) if "archive" in conf else sittings(get, conf["listings"])
-    index.later = [s.title for s in found if later_convocation(s.title, conf["ordinal"])]  # a newer one has begun
+    found = archive_sittings(conf["archive"], get) if "archive" in conf else sittings(get, conf["listings"])
+    later = [s.title for s in found if later_convocation(s.title, conf["ordinal"])]
     found = [s for s in found if not other_convocation(s.title, conf["ordinal"])]
     for sitting in found:
-        time.sleep(delay)
         page = get(sitting.url).decode("utf-8", "replace")
         sitting.votes, sitting.agenda, sitting.starts = votes(page, sitting.url), agenda(page), convened(page)
-    index.later += [s.title for s in found if s.starts and s.starts[:10] >= conf.get("to", "9999")]
-    return [s for s in found if within(s.starts, conf)]
+    later += [s.title for s in found if s.starts and s.starts[:10] >= conf.get("to", "9999")]
+    return [s for s in found if within(s.starts, conf)], later
 
 
 def later_convocation(title: str, ordinal: str) -> bool:

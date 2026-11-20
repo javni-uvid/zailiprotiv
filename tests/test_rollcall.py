@@ -105,7 +105,6 @@ def test_votes_command_reads_new_pdfs_once(tmp_path, monkeypatch):
         return (FIXTURES / files[url]).read_bytes()
 
     monkeypatch.setattr(skupstina, "fetch", fetch)
-    monkeypatch.setattr(cli, "DELAY", 0)
     sitting = "https://www.parlament.gov.rs/Седмо_ванредно_заседање_Народне.53524.43.html"
     index = tmp_path / "index.json"
     index.write_text(json.dumps({"sittings": {sitting: {"listed": 0, "title": "Седмо ванредно заседање",

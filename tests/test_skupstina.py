@@ -44,8 +44,23 @@ def test_index_reads_each_sitting():
     pages = {skupstina.LISTINGS[0]: LISTING, skupstina.LISTINGS[1]: "<p></p>",
              BASE + "/Седмо_ванредно_заседање_Народне.53524.43.html": SITTING,
              BASE + "/Трећа_седница_Првог_редовног.53241.43.html": "<p>no votes yet</p>"}
-    found = skupstina.index(get=lambda u: pages[u].encode(), delay=0)
-    assert [len(s.votes) for s in found] == [2, 0]
+    found, later = skupstina.index(get=lambda u: pages[u].encode())
+    assert [len(s.votes) for s in found] == [2, 0] and later == []
+
+
+def test_requests_to_the_assembly_wait_their_turn(monkeypatch):
+    """At least DELAY between two requests to one host, counted from the end of the last; another host waits not."""
+    import io
+    clock, slept = [100.0], []
+    monkeypatch.setattr(skupstina, "_asked", {})
+    monkeypatch.setattr(skupstina.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(skupstina.time, "sleep", lambda s: slept.append(round(s, 3)))
+    monkeypatch.setattr(skupstina.urllib.request, "urlopen", lambda req, timeout: io.BytesIO(b"x"))
+    skupstina.fetch(BASE + "/a.html")
+    clock[0] += 0.25
+    skupstina.fetch(BASE + "/b.html")
+    skupstina.fetch("https://example.org/c")
+    assert slept == [round(skupstina.DELAY - 0.25, 3)]
 
 
 def test_vote_pdfs():
@@ -85,7 +100,7 @@ def test_archive_sittings_follow_pages_and_cyrillic_twin():
         listing + "?offset=20": '<a href="/aktivnosti/x/druga-sednica.53601.941.html">Druga sednica Drugog '
                                 'vanrednog zasedanja</a><a href="?offset=0">1</a><a href="/o-nama.12.941.html">O nama</a>',
     }
-    found = skupstina.archive_sittings(listing, lambda u: pages.get(u, pages[listing]).encode(), delay=0)
+    found = skupstina.archive_sittings(listing, lambda u: pages.get(u, pages[listing]).encode())
     assert [s.url for s in found] == ["https://www.parlament.gov.rs/sednica.53524.43.html",
                                       "https://www.parlament.gov.rs/sednica.53600.43.html"]
 
