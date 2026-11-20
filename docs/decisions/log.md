@@ -29,3 +29,7 @@ the change. The principles and the rules of work are in AGENTS.md.
 - **18 Nov 2026:** the first sitting day of the Fifteenth read afterwards from the whole recording
   (`data/15/snimak/2026-11-17.json`), shown on `mikrofon.zailiprotiv.rs` as the last sitting day; "Dok čekate" (a
   quiz and the facts) on both versions of that page.
+- **20 Nov 2026:** the rules of work, the guards and the scripts this project shares with the organization's others
+  come from `javni-uvid/osnova` (the maintainer's decision): the **osnova** workflow copies them into `osnova/`,
+  `tools/posalji.sh`, `tools/pocisti.sh` and the pre-push hook only call the copy's, and AGENTS.md keeps what is
+  this project's own. The principles here stay whole and in force; `osnova/principles.md` is the common core.

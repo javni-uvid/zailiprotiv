@@ -1,2 +1,4 @@
 tools/hooks/* text eol=lf
 live/ulaz.sh text eol=lf
+osnova/tools/** text eol=lf
+tools/*.sh text eol=lf
