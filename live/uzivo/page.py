@@ -1081,6 +1081,10 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         # the line under the picture (22 Nov 2026): the script writes the part's newest lines in, after the delay
         onair += (f'<div class="cc" hidden aria-hidden="true" data-delay="{int(config.CAPTION_DELAY)}"><p class="cc-t"><span></span></p>'
                   f'<p class="cc-n">{t("cc_note")}</p></div>')
+        from . import slusaj
+        if config.LISTEN_PUBLIC and slusaj.fresh(time.time()):  # only the sound, ours (slusaj.py; 22 Nov 2026)
+            note = (f'<button type="button" class="play listen-live" data-uzivo="/slusaj/z.m3u8">🎧 {t("listen_live")}</button> '
+                    + note + " " + t("listen_live_note"))
     else:
         onair = ""
         parts = snap.get("datoteke") or []

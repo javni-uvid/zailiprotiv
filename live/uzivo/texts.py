@@ -182,6 +182,8 @@ TEXT = {
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
     "yt_live_note": "Prenos sa Jutjuba (Gugl) učitava se tek na klik, bez kolačića.",
     "play_live": "Gledaj prenos",
+    "listen_live": "Slušaj samo zvuk",
+    "listen_live_note": "Samo zvuk je naš: svira i kad je ekran zaključan, i kasni oko pola minuta za prenosom.",
     "by_glas": "Prepoznat po glasu, jer prenos ne prikazuje ime; automatski, može da pogreši.",
     "by_prepis": "Po rečima predsedavajućeg („Reč ima“), jer prenos ne prikazuje ime; automatski, može da pogreši.",
     "by_short_glas": "po glasu",

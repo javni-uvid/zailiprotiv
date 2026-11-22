@@ -58,3 +58,4 @@ li.now-playing { outline: 2px solid currentColor; outline-offset: 3px; border-ra
 .mq-end [hidden], .mq [hidden] { display: none !important; }
 .facts-list, .facts { padding-left: 1.1rem; } .facts-list li, .facts li { margin: .35rem 0; }
 @media (prefers-reduced-motion: reduce) { .mq-o, .mq-auto.run { transition: none; } }
+.listen-k { display: block; font-style: normal; font-size: var(--t-1); color: #c9ccd3; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .35rem; }

@@ -120,13 +120,53 @@
     var go = function () { v.currentTime = t || 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
     if (v.readyState >= 1) go(); else v.addEventListener("loadedmetadata", go, { once: true });
   }
+  // The live sound, ours (live/uzivo/slusaj.py): only that one address, on this page's own host. Who speaks comes
+  // from the page's part, which is asked again every 5 s; the lock screen's player says it too.
+  function sound(url) {
+    if (url !== "/slusaj/z.m3u8") return;
+    var box = document.createElement("div"), v = document.createElement("audio");
+    box.className = "listen-box";
+    box.innerHTML = '<div class="listen-now"><b></b><span></span><p hidden></p></div>';
+    box.querySelector(".listen-now").insertAdjacentHTML("afterbegin", '<i class="listen-k">🎧 ' + (document.documentElement.lang === "sr-Cyrl" ? "Само звук, уживо" : "Samo zvuk, uživo") + "</i>");
+    v.controls = true; v.preload = "none"; v.setAttribute("src", url);
+    box.appendChild(v);
+    put(box);
+    var shown = "";
+    function now() {
+      if (!screen.contains(v)) { clearInterval(timer); return; }
+      var w = document.querySelector("#deo .who"), s = document.querySelector("#deo .side");
+      var who = w ? w.textContent.trim() : "", side = s ? s.textContent.trim() : "";
+      box.querySelector("b").textContent = who; box.querySelector("span").textContent = side;
+      if ("mediaSession" in navigator && who + side !== shown) {
+        shown = who + side;
+        try {
+          navigator.mediaSession.metadata = new MediaMetadata({ title: who || "Narodna skupština", artist: side || "Narodna skupština",
+            album: "Skupština uživo · Za ili Protiv", artwork: [{ src: "/ikona-512.png", sizes: "512x512", type: "image/png" }] });
+        } catch (e) {}
+      }
+    }
+    var timer = setInterval(now, 2000);
+    now();
+    var p = v.play(); if (p && p.catch) p.catch(function () {});
+  }
+  // The button under the broadcast swaps: while our sound plays it offers the picture, while the picture plays the
+  // sound, so that either is one press away (22 Nov 2026, the maintainer: "probati i jednu i drugu opciju").
+  var swap = document.querySelector(".listen-live"), facade = document.querySelector(".play.facade");
+  var swapText = swap ? swap.innerHTML : "", watchText = facade ? "▶ " + ((facade.querySelector("span") || facade).textContent.replace(/^▶\s*/, "")) : "";
+  function offer(picture) {
+    if (!swap || !facade) return;
+    if (picture) { swap.removeAttribute("data-uzivo"); swap.setAttribute("data-yt", facade.getAttribute("data-yt")); swap.setAttribute("data-t", "0"); swap.textContent = watchText; }
+    else { swap.removeAttribute("data-yt"); swap.setAttribute("data-uzivo", "/slusaj/z.m3u8"); swap.innerHTML = swapText; }
+  }
   document.addEventListener("click", function (e) {
+    var live = e.target.closest ? e.target.closest("[data-uzivo]") : null;
+    if (live) { e.preventDefault(); sound(live.getAttribute("data-uzivo")); offer(true); count("mikrofon.slusaj"); screen.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
     var a = e.target.closest ? e.target.closest("[data-file], [data-yt]") : null;
     if (!a) return;
     var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
     if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
     e.preventDefault();
-    if (url) file(url, t, a.hasAttribute("data-zvuk") ? true : undefined); else yt(id, t);
+    if (url) file(url, t, a.hasAttribute("data-zvuk") ? true : undefined); else { yt(id, t); offer(false); }
     count(a.getAttribute("data-e"));
     if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
   });
