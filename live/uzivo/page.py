@@ -71,8 +71,13 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci", "prepis_ceo")}
         snap = {**snap, "bez_potpisa": None, "sada": bare(snap["sada"]) if snap.get("sada") else snap.get("sada"),
                 "danas": [bare(d) for d in snap.get("danas") or []]}
-    out = [f'<div id="deo" data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}">', _status(snap, cyr=cyr)]
     cur = snap.get("sada")
+    # The speaker's list's colour on the speaker, the line on top and the dot (22 Nov 2026, the maintainer's choice:
+    # more colour, where it means something): the same shade as in the day's bars, a key (the list's name) beside it.
+    lc = ""
+    if snap["stanje"] == "govori" and cur:
+        lc = f' class="lc-{_shades((snap.get("danas") or []) + [cur]).get(cur.get("lista") or "", "lx")}"'
+    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}">', _status(snap, cyr=cyr)]
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
     for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:  # the newest of what the Assembly has decided, as its own site says it (the site's data/obavestenja.json)
@@ -228,6 +233,26 @@ def _measures(steps: list[dict]) -> dict[str, int]:
     return kinds
 
 
+def _votes(told: str, v: dict | None, cyr: bool) -> str:
+    """A vote's figures as the summary tells them (`sudija.vote_text`, checked to add up), "za" and "protiv" in their
+    colours as everywhere on the site, and a bar of the present (or of those who voted) when the vote has "za"
+    (22 Nov 2026, the maintainer's choice: colour where it means a vote)."""
+    parts = []
+    for x in str(told).split(", "):
+        cls = "v-za" if x.startswith("za ") else "v-protiv" if x.startswith("protiv ") else ""
+        x = escape(_name(x, cyr))
+        parts.append(f'<b class="{cls}">{x}</b>' if cls else x)
+    bar = ""
+    if isinstance(v, dict) and isinstance(v.get("za"), int):
+        n = lambda k: v.get(k) if isinstance(v.get(k), int) and v.get(k) > 0 else 0
+        whole = n("prisutno") or n("glasalo") or (n("za") + n("protiv") + n("uzdrzano"))
+        if whole:
+            w = lambda k: f"{100 * min(n(k), whole) / whole:.1f}%"
+            bar = (f'<span class="dl-bar" aria-hidden="true"><i class="z" style="width:{w("za")}"></i>'
+                   f'<i class="p" style="width:{w("protiv")}"></i><i class="u" style="width:{w("uzdrzano")}"></i></span>')
+    return bar + ", ".join(parts)
+
+
 def _minute(hhmm: str) -> int:
     """A clock's "HH:MM" as minutes of the sitting day (a day goes on past midnight: before 6 is the night after)."""
     try:
@@ -277,15 +302,15 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
             title = f'<a href="{escape(href)}" title="{t("steps_rules")}">{title}</a>'
         return title
 
-    def item(when: str, kicker: str, body: str, votes: str = "") -> str:
-        votes = f'<span class="dl-v">{s(votes)}</span>' if votes else ""
+    def item(when: str, kicker: str, body: str, votes: str = "", vote: dict | None = None) -> str:
+        votes = f'<span class="dl-v">{_votes(votes, vote, cyr)}</span>' if votes else ""
         kicker = f'<span class="dl-k">{kicker}</span>' if kicker else ""
         return f'<li><span class="time">{escape(when)}</span><div>{kicker}<p>{body}</p>{votes}</div></li>'
 
     rows: list[tuple[int, str]] = []  # (minute of the day, the line)
     local = lambda e: _minute(_clock(e["t"], tz))
     for o in decisions:
-        rows.append((_minute(o.get("vreme", "")), item(str(o.get("vreme", "")), t("dl_decision"), s(o["sta"]), o.get("glasovi") or "")))
+        rows.append((_minute(o.get("vreme", "")), item(str(o.get("vreme", "")), t("dl_decision"), s(o["sta"]), o.get("glasovi") or "", o.get("glasanje"))))
     measures = [e for e in heard if e.get("naslov") == "Mera predsedavajućeg"]
     for e in heard:
         title = e.get("naslov", "")

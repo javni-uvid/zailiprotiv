@@ -1462,7 +1462,7 @@ def test_the_day_is_one_list_of_what_was_decided():
     rows = main.split("<li>")[1:]
     assert "Imenovan generalni sekretar" in rows[0]  # 00:10 is the night after: the newest
     assert "Ovo je dugačak pasus" not in html and "Izabran je Aleksandar Čupić" not in main  # the summary told the election
-    assert '<span class="dl-v">za 140, protiv 97, glasalo 237</span>' in main
+    assert '<span class="dl-v"><b class="v-za">za 140</b>, <b class="v-protiv">protiv 97</b>, glasalo 237</span>' in main
     assert "Mere predsedavajućeg" in main and "<b>3</b>: 2 opomena, 1 oduzimanje reči" in main and "Bakić" not in main
     assert "3. tačka dnevnog reda" in main and "Izbor potpredsednika" in main
     assert "Pretres je otvoren" not in main and "Pretres je otvoren" in html.split("Svi koraci")[1]  # folded
@@ -1560,4 +1560,23 @@ def test_the_first_line_says_what_is_now_and_the_agenda_stands_open():
                 cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert '<span class="pill off">Не заседа</span>' in off and "Скупштина сада не заседа" not in off
     assert '<details class="parts-more"><summary>Делови дана (2)</summary>' in off
+
+
+def test_colour_where_it_means_something():
+    """22 Nov 2026, the maintainer's choice: the speaker in their list's colour (the day's bars' shade), a vote's bar
+    and figures in "za" and "protiv"; nothing else in those two colours."""
+    from uzivo import page as page_
+    v = {"za": 136, "protiv": 0, "uzdrzano": 0, "glasalo": 136, "nije_glasalo": 98, "prisutno": 234}
+    told = page_._votes("za 136, protiv 0, uzdržano 0, glasalo 136, nije glasalo 98, prisutno 234", v, False)
+    assert '<i class="z" style="width:58.1%"></i>' in told and '<b class="v-za">za 136</b>' in told
+    assert "dl-bar" not in page_._votes("za 5", None, False) and '<b class="v-za">за 5</b>' in page_._votes("za 5", None, True)
+    now = 1795100000
+    turn = {"ime": "Bakić Jovo", "adresa": "", "grupa": "", "uloga": "", "lista": "Studentska lista", "od": now - 60, "do": now,
+            "sekundi": 60, "video": ""}
+    snap = {"stanje": "govori", "provereno": now, "sada": turn, "sazvano": None, "bez_potpisa": None, "dan": "2026-11-19",
+            "ranije": False, "danas": [], "hronika": [], "dnevni_red": None}
+    assert '<div id="deo" class="lc-c-sl"' in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<div id="deo" data-checked' in fragment({**snap, "stanje": "nema_prenosa"}, cyr=False, site="", tz=TZ)
+    css = (Path(__file__).parent.parent / "live" / "uzivo" / "static" / "live.css").read_text(encoding="utf-8")
+    assert "ag-gotova i { color: var(--za)" not in css and ".dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--protiv)" not in css
 

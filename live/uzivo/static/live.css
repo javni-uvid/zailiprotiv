@@ -36,8 +36,8 @@ h2 { font-size: var(--t-5); margin: 2.4rem 0 .6rem; }
 .cta { display: inline-block; font-weight: 600; text-decoration: none; padding: .45rem .8rem; border-radius: 6px;
   background: var(--fg); color: var(--bg); } .cta:hover { color: var(--bg); opacity: .85; }
 .rules-cta { margin: 1.4rem 0 0; } .rules-cta a { display: flex; flex-direction: column; gap: .15rem; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--fg); } .rules-cta b { font-size: var(--t-3); } .rules-cta span { color: var(--muted); font-size: var(--t-2); } .rules-cta a:hover b { text-decoration: underline; }
-.site-cta { margin: 1.4rem 0 0; font-weight: 600; } .site-cta a { color: var(--za); }
-.dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--protiv); }
+.site-cta { margin: 1.4rem 0 0; font-weight: 600; } .site-cta a { color: var(--fg); }
+.dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--lc, var(--muted)); }
 .who { font-family: var(--serif); font-weight: 700; font-size: var(--t-d1); line-height: 1.05; }
 .who a { text-decoration: none; }
 .side { font-size: var(--t-4); margin: .2rem 0 .3rem 1.6rem; }
@@ -71,12 +71,12 @@ main > * { order: 90; }
 main > h1, main > .lead, main > .hero { order: 0; }
 .status { order: 1; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; margin: .7rem 0 0; font-size: var(--t-2); color: var(--muted); }
 .pill { display: inline-flex; align-items: center; gap: .4rem; padding: .25rem .7rem; border-radius: 99px; background: var(--fg); color: var(--bg); font-size: var(--t-1); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
-.pill i { width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; }
+.pill i { width: .55rem; height: .55rem; border-radius: 50%; background: var(--lc, currentColor); box-shadow: 0 0 0 2px var(--bg); }
 .pill.off { background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--fg); }
 @media (prefers-reduced-motion: no-preference) { .pill i { animation: beat 1.6s ease-in-out infinite; } }
 @keyframes beat { 50% { opacity: .35; } }
 #deo { display: contents; }
-.news { order: 2; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: var(--t-3); line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: var(--t-1); color: var(--protiv); margin-right: .3rem; }
+.news { order: 2; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: var(--t-3); line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: var(--t-1); margin-right: .3rem; }
 main > .player { order: 10; } .sp-top { order: 20; } .sp { order: 30; } .said-sec { order: 40; } .day { order: 60; }
 main:has(#deo[data-stanje="nema_prenosa"]) > .player { order: 20; }
 #deo[data-stanje="nema_prenosa"] > .sp-top { order: 3; } #deo[data-stanje="nema_prenosa"] > .sp { order: 25; }
@@ -87,7 +87,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .add-home { order: 4; }
 .agenda > summary > span { color: var(--muted); font-size: var(--t-2); font-weight: 400; }
 .agenda ol { list-style: none; margin: .5rem 0; padding: 0; } .agenda li { display: grid; grid-template-columns: 1.3rem 1fr; gap: .4rem; padding: .45rem 0; border-top: 1px solid var(--line); line-height: 1.4; }
 .agenda li i { font-style: normal; font-weight: 700; } .agenda li .src { display: block; margin: .15rem 0 0; } .ag-what { display: block; color: var(--muted); font-size: var(--t-2); }
-.ag-gotova > span > b, .ag-gotova { color: var(--muted); } .ag-gotova i { color: var(--za); } .ag-u_toku i { color: var(--protiv); } .ag-u_toku, .ag-na_redu { font-weight: 600; } .agenda li .src, .ag-what { font-weight: 400; }
+.ag-gotova > span > b, .ag-gotova { color: var(--muted); } .ag-gotova i, .ag-u_toku i { color: var(--fg); } .ag-u_toku, .ag-na_redu { font-weight: 600; } .agenda li .src, .ag-what { font-weight: 400; }
 .steps-sec { order: 50; } .steps-sec h2 { margin-bottom: .2rem; }
 .steps { list-style: none; margin: .9rem 0 0; padding: 0; }
 .steps li { display: grid; grid-template-columns: 2.9rem 1.1rem 1fr; gap: 0 .55rem; position: relative; padding: 0 0 1.05rem; line-height: 1.45; }
@@ -231,3 +231,17 @@ a.said { margin-left: .3rem; }
   .news { margin-top: .6rem; padding: .5rem .7rem; font-size: var(--t-2); line-height: 1.4; }
   main > .player { margin-top: .6rem; }
 }
+/* The speaker in their list's colour (22 Nov 2026): the shade of the day's bars, set on #deo by the list's class. */
+.lc-c-av { --lc: var(--c-av); } .lc-c-sl { --lc: var(--c-sl); } .lc-c-mn { --lc: var(--c-mn); }
+.lc-l1 { --lc: color-mix(in srgb, var(--fg) 62%, var(--bg)); } .lc-l2 { --lc: color-mix(in srgb, var(--fg) 38%, var(--bg)); }
+.lc-l3 { --lc: color-mix(in srgb, var(--fg) 22%, var(--bg)); } .lc-lx { --lc: var(--muted); }
+#deo[class^="lc-"] > .sp-top { margin-top: 1rem; padding: .2rem 1rem 1rem; border-left: 6px solid var(--lc); border-radius: 12px;
+  background: color-mix(in srgb, var(--lc) 9%, var(--bg)); }
+#deo[class^="lc-"] > .sp-top .sp-head { margin-top: .8rem; } #deo[class^="lc-"] > .sp-top .now { margin-top: 0; }
+#deo[class^="lc-"] .sp .side::before, #deo[class^="lc-"] > .sp-top .side::before { content: ""; display: inline-block; width: .7rem; height: .7rem;
+  border-radius: 2px; background: var(--lc); margin-right: .4rem; }
+/* A vote's figures: a bar of the present, "za" and "protiv" in their colours, the rest the track. */
+.dl-bar { display: flex; height: .5rem; margin: .35rem 0 .3rem; border-radius: 3px; overflow: hidden;
+  background: color-mix(in srgb, var(--fg) 10%, var(--bg)); }
+.dl-bar i { display: block; } .dl-bar .z { background: var(--za); } .dl-bar .p { background: var(--protiv); } .dl-bar .u { background: var(--muted); }
+.dl-v b { font-weight: 700; }
