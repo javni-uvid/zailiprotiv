@@ -437,3 +437,17 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   page (the player and the archive load on a click, what a notification keeps, what is counted) stay, each in one
   short sentence, the method page saying the rest. A list of up to 11 lines is shown whole, a longer one folds
   after 8. Next: the first screen, the rows that open, colour.
+- **The first screen says what is now; every row that opens is one kind of row** (22 Nov 2026, the maintainer's
+  choice of point 3 of the same look, and their remark that the "+" was too small on a phone). The box under the
+  title with its line of text and the black bar to the site is gone (the site's links stay lower on the page); the
+  title stays (the search words, above). Under it one line (`page._status`): "Uživo" while the broadcast is on, "Ne
+  zaseda" while it is not, and the agenda's item under way or next; the sentence "Skupština sada ne zaseda" is gone
+  with it. The order (`live.css`, `order`): during a sitting the line, the notice, the broadcast, the speaker, the
+  day's list, the agenda, the day in numbers; between sittings the line, the notice, when it goes on and the
+  notification, the last day's list, the agenda, the recording, who spoke. The agenda stands open (of 2,055 pages
+  on 20 Nov, 91 opened it); a done item says only its day and the Assembly's sentence, and "po rečima
+  predsedavajućeg" when that is whose word it was (the rest in the label under the list). Since it is open, the
+  counter's `tacke` now counts mostly closings. The recording's six parts are a row "Delovi dana (6)". Every fold
+  (the agenda, the parts, all the steps, the earlier turns, the next sitting's agenda, "Kako ovo radi") is a row at
+  least 44 px high, the whole row pressed, with a count and a chevron; the page's script keeps each one open or
+  shut as the reader left it when the part is replaced (it had only kept the opened ones open).

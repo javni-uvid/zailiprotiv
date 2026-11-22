@@ -71,7 +71,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci", "prepis_ceo")}
         snap = {**snap, "bez_potpisa": None, "sada": bare(snap["sada"]) if snap.get("sada") else snap.get("sada"),
                 "danas": [bare(d) for d in snap.get("danas") or []]}
-    out = [f'<div id="deo" data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}">']
+    out = [f'<div id="deo" data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}">', _status(snap, cyr=cyr)]
     cur = snap.get("sada")
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
@@ -90,9 +90,10 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         head, box, said = _speaker(cur, cyr=cyr, site=site, tz=tz)
         out.append(head + '</section><section class="sp">' + box)
     else:
-        out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
-        if snap["stanje"] == "nema_prenosa":
+        if snap["stanje"] == "nema_prenosa":  # the line on top says so ("Ne zaseda")
             out.append(countdown(snap, cyr=cyr, tz=tz))
+        else:
+            out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
         out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz, site=site))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
@@ -152,6 +153,24 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
 
 
 
+def _status(snap: dict, *, cyr: bool) -> str:
+    """The first line of the page (22 Nov 2026, the maintainer's choice: the first screen says what is now): whether
+    the Assembly sits ("Uživo", while the broadcast is on) or not, and the agenda's item under way or next."""
+    t = lambda k: escape(_t(k, cyr))
+    items = (snap.get("dnevni_red") or {}).get("tacke") or []
+    on = (next((x for x in items if x.get("stanje") == "u_toku"), None)
+          or next((x for x in items if x.get("stanje") == "na_redu"), None))
+    if snap["stanje"] == "nema_prenosa":
+        pill = f'<span class="pill off">{t("status_off")}</span>'
+    else:
+        pill = f'<span class="pill"><i aria-hidden="true"></i>{t("status_live")}</span>'
+    what = ""
+    if on:
+        what = (f'<span class="status-on">{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}: '
+                f'{on["n"]}. {escape(_name(on["tekst"], cyr))}</span>')
+    return f'<p class="status">{pill}{what}</p>'
+
+
 def _agenda(snap: dict, *, cyr: bool) -> str:
     """The sitting's agenda under the broadcast, folded to one line (how many items are done, which is on), the
     items with their state when opened: done by the Assembly's page, done or under way by what the chair said, or
@@ -163,29 +182,28 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
     s = lambda x: escape(_name(x, cyr))
     items = a["tacke"]
     done = sum(1 for x in items if x["stanje"] == "gotova")
-    on = next((x for x in items if x["stanje"] in ("u_toku", "na_redu")), None)
-    head = f'<b>{t("ag")}</b> <span>{escape(_fill(_t("ag_done", cyr), done, len(items)))}</span>'
-    if on:
-        head += f'<span class="ag-on">{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}: {s(on["tekst"])}</span>'
+    head = f'<b>{t("ag")}</b> <span>{escape(_fill(_t("ag_done", cyr), done, len(items)))}</span>'  # what is on: the line on top
     rows = []
     for x in items:
         mark = {"gotova": "✓", "u_toku": "●", "na_redu": "→"}.get(x["stanje"], "")
         state = ""
-        if x["stanje"] == "gotova":
+        if x["stanje"] == "gotova":  # the ✓ says done; the label under the list says by whose word (22 Nov 2026: shorter)
             when = _date(x["kada"]).rsplit(" ", 1)[0] if x.get("kada") else ""
-            src = t("ag_site" if x["izvor"] == "sajt" else "ag_said")
-            state = f'<span class="src">{t("ag_gotova")}{", " + escape(cyrillic(when) if cyr else when) if when else ""} · {src}</span>'
+            told = [escape(cyrillic(when) if cyr else when)] if when else []
+            if x["izvor"] != "sajt":
+                told.append(t("ag_said_short"))
+            state = f'<span class="src">{" · ".join(told)}</span>' if told else ""
             if x.get("sta"):
                 state += f'<span class="ag-what">{s(x["sta"])}</span>'
         elif x["stanje"] == "u_toku":
-            state = f'<span class="src">{t("ag_now")} · {t("ag_said")}</span>'
+            state = f'<span class="src">{t("ag_now")} · {t("ag_said_short")}</span>'
         elif x["stanje"] == "na_redu":
             state = f'<span class="src">{t("ag_next")}</span>'
         rows.append(f'<li class="ag-{x["stanje"] or "ceka"}"><i aria-hidden="true">{mark}</i><span><b>{x["n"]}.</b> {s(x["tekst"])}{state}</span></li>')
     title = s(a.get("naslov", ""))
     if str(a.get("url", "")).startswith("https://"):
         title = f'<a href="{escape(a["url"])}">{title}</a>'
-    return (f'<details class="agenda" id="dnevni-red"><summary>{head}</summary><p class="meta">{title}</p>'
+    return (f'<details class="agenda" id="dnevni-red" open><summary>{head}</summary><p class="meta">{title}</p>'
             f'<ol>{"".join(rows)}</ol>{_chip(t("ag_src"), t("ag_note"))}</details>')
 
 
@@ -1005,8 +1023,8 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
             chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
                             f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'
                             for i, p in enumerate(parts, 1))
-            return (f'<section class="player"><div class="screen" id="screen">{button}</div><ul class="parts">{chips}'
-                    f'</ul><p class="meta">{note}</p></section>')
+            return (f'<section class="player"><div class="screen" id="screen">{button}</div><p class="meta">{note}</p>'
+                    f'<details class="parts-more"><summary>{t("parts")} ({len(parts)})</summary><ul class="parts">{chips}</ul></details></section>')
     return f'<section class="player"><div class="screen" id="screen">{button}</div><p class="meta">{note}</p></section>'
 
 
@@ -1101,10 +1119,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
 <main>
 <p class="sr" id="ko" aria-live="polite"></p>
-<section class="hero">
-<div><h1>{t("title")}</h1><p class="hero-sub">{t("hero_sub")}</p></div>
-<a class="hero-cta" href="{escape(home)}"><span>{t("hero_cta")}</span><b>zailiprotiv.rs →</b></a>
-</section>
+<section class="hero"><h1>{t("title")}</h1></section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {(add + day) if snap["stanje"] == "nema_prenosa" else (day + add)}
 <p class="rules-cta"><a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}"><b>{t("rules_cta")} →</b><span>{t("rules_sub")}</span></a></p>
