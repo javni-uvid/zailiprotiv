@@ -545,3 +545,13 @@ falls back to `TITL_KASNJENJE`. The line takes one segment of sound at a time (`
 News through a test image for 90 s, 29 phrases, none late, each in the page 7-18 s (median 12) before the player
 reached it; with two segments the least was 2.6 s. A broadcast with a low-latency player could leave less: a late
 phrase is shown at once.
+
+**When the player is close behind, it is set back a little** (22 Nov 2026, the maintainer's own first thought, "da
+li moramo malo vratiti youtube snimak unazad"). On a Serbian channel the embedded player was only 6.5-10 s behind
+the broadcast, and phrases came 2-5 s after the player had passed their moment. The page now notes how late a
+phrase new to it is (not those there when the player started), and sets the player back by that and 3 s more by
+YouTube's own `seekTo` message, once in 20 s at most and 30 s in all. Measured on that channel over two minutes:
+after the first half minute the player stood 13.6 s behind, and no phrase was late (each in the page at least 1.8 s
+before its moment). The test servers for this (a hand-run container on a 24/7 channel: `SOURCE_PAGE=`,
+`YOUTUBE_URL=<its watch address>`, `CHANNEL_LIVE=`, port 8095) and `zailiprotiv-dizajn/sync/measure2.py` are the
+way to look again without a sitting.

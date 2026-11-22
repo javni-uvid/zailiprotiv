@@ -66,24 +66,42 @@
     if (!/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(e.origin) || typeof e.data !== "string") return;
     var d; try { d = JSON.parse(e.data); } catch (x) { return; }
     var i = d && d.info, t = i && (i.mediaReferenceTime || (i.progressState && i.progressState.ingestionTime));
-    if (typeof t === "number" && t > 1e9) shows = { t: t, at: Date.now(), playing: shows ? shows.playing : true };
+    if (typeof t === "number" && t > 1e9) {
+      shows = { t: t, at: Date.now(), playing: shows ? shows.playing : true, ct: i.currentTime, since: shows ? shows.since : Date.now() };
+    }
     if (i && typeof i.playerState === "number" && shows) shows.playing = i.playerState === 1;
   });
-  setInterval(function () {  // asks the player to tell it, as YouTube's own script does
+  function tell(msg) {  // to the player, as YouTube's own script does
     var f = cc && stage.querySelector("iframe");
-    if (f && f.contentWindow) f.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "https://www.youtube-nocookie.com");
-  }, 1000);
+    if (f && f.contentWindow) f.contentWindow.postMessage(JSON.stringify(msg), "https://www.youtube-nocookie.com");
+  }
+  setInterval(function () { tell({ event: "listening", id: 1, channel: "widget" }); }, 1000);
+  // A player close behind the broadcast (6.5 s on a Serbian channel, 22 Nov 2026, against 16-20 s on another) can
+  // reach a phrase before it comes. Then the player is set back by as much and 3 s more, once in 20 s at most and
+  // 30 s in all, so that the line keeps up with the sound (the maintainer: "da titl bude istovremen sa zvukom").
+  var late = 0, setBack = 0, lastBack = 0;
+  function keepUp(now) {
+    if (late < 0.5 || setBack >= 30 || now - lastBack < 20000 || !shows || !shows.playing || typeof shows.ct !== "number") return;
+    var back = Math.min(30 - setBack, late + 3);
+    tell({ event: "command", func: "seekTo", args: [Math.max(0, shows.ct + (now - shows.at) / 1000 - back), true], id: 1, channel: "widget" });
+    setBack += back; lastBack = now; late = 0;
+  }
   function captions() {
     if (!cc) return;
     var delay = (+cc.getAttribute("data-delay") || 0) * 1000, now = Date.now(), lines = [], newest = 0;
     var at = shows && now - shows.at < 5000 ? shows.t + (shows.playing ? (now - shows.at) / 1000 : 0) : null;
     [].forEach.call(document.querySelectorAll("#deo .cc-src li"), function (li) {
       var k = li.getAttribute("data-od"), pt = +li.getAttribute("data-pt") || 0;
-      if (!(k in ccSeen)) ccSeen[k] = now;
+      if (!(k in ccSeen)) {
+        ccSeen[k] = now;
+        // a phrase new to the page whose moment the player has passed already: how late (not those of the start)
+        if (at !== null && pt && now - shows.since > 8000 && at > pt) late = Math.max(late, at - pt);
+      }
       if (at !== null && pt) {  // by the broadcast's clock: from its moment, for 15 s
         if (pt <= at && at - pt < 15) { lines.push(li.textContent); newest = now; }
       } else if (now - ccSeen[k] >= delay) { lines.push(li.textContent); newest = Math.max(newest, ccSeen[k] + delay); }
     });
+    keepUp(now);
     var on = lines.length > 0 && now - newest < 40000 && !!stage.querySelector("iframe");
     if (cc.hidden === on) cc.hidden = !on;
     if (!on) return;

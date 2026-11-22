@@ -1700,7 +1700,7 @@ def test_the_line_under_the_picture(tmp_path, monkeypatch):
     assert len(prepis.waiting()) == 3  # a name with the broadcast's clock is still read
     live = page_.player({"stanje": "govori", "danas": [], "datoteke": []}, cyr=False, live="dQw4w9WgXcQ", tz=TZ)
     assert '<div class="cc" hidden aria-hidden="true" data-delay="0">' in live and "nije citat" in live
-    assert "function captions()" in page_.SCRIPT
+    assert "function captions()" in page_.SCRIPT and 'func: "seekTo"' in page_.SCRIPT  # set back when a phrase comes late
 
 
 def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
