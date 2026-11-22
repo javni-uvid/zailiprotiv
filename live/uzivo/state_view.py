@@ -128,6 +128,7 @@ class View:
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
             self._lists(done, current, recorded)
+            groups = self._group_time(done + ([current] if current else [])) if day == self.day and not recorded else None
             if current:
                 self._today(done, current, day)
             # Not while the transcript is not shown (config.SHOW_TRANSCRIPT): /stanje.json carried the speaker's
@@ -155,7 +156,8 @@ class View:
                     "obavestenja": news[:3], "dnevni_red": self._agenda(), "bez_potpisa": unsigned, "hronika": [e if e.get("izvor") == "sajt" else {**e, "tekst": self.shown(e.get("tekst", ""))}
                                 for e in (self.events if day == self.day else self._events_load(day))[-150:][::-1]],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
-                    "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown()}
+                    "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
+                    "vreme_grupa": groups}
 
     def caption(self, start: float, end: float, text: str) -> None:
         """A line under the picture (prepis.Captions): the last four are kept, in memory only."""
@@ -192,6 +194,37 @@ class View:
             mine = [x for x in ((d.get("o") or {}).get("lista"), d.get("uloga"), d.get("grupa")) if x]
             d["lista"] = next((x for x in mine if known is None or x in known),
                               "*" if d.get("adresa") in self.facts else "")
+
+    def _group_time(self, today: list[dict]) -> dict | None:
+        """The groups' time in the debate of the item under way (vreme.py), over every day of that debate: today's
+        turns as listed, the earlier days' from their files (kept once read: a past day does not change)."""
+        from .vreme import groups_time
+        n, start = int(self.item.get("n") or 0), int(self.item.get("t") or 0)
+        agenda = self._agenda()
+        if not n or not start or not self.roster or not agenda or not any(
+                x["n"] == n and x["stanje"] == "u_toku" for x in agenda["tacke"]):
+            return None
+        seats: dict[str, int] = {}
+        for p in self.roster.people:
+            if p.slug in self.roster.current and p.group in self.roster.groups:
+                seats[p.group] = seats.get(p.group, 0) + 1
+        turns, events = list(today), list(self.events)
+        first = self._day(start)
+        cache = self._memo.setdefault("past_days", {})
+        for f in sorted(self.days.glob("*.json")) if self.days and self.days.exists() else []:
+            if not first <= f.stem < self.day:
+                continue
+            if f.stem not in cache:
+                try:
+                    kept = [t for t in json.loads(f.read_text(encoding="utf-8")).get("turns", []) if counted(t)]
+                except (OSError, ValueError, KeyError):
+                    kept = []
+                past = [self._out(t) for t in self._named(kept)]
+                self._lists(past, None, False)
+                cache[f.stem] = (past, self._events_load(f.stem))
+            turns += cache[f.stem][0]
+            events += cache[f.stem][1]
+        return groups_time(item=n, start=start, seats=seats, turns=turns, events=events, now=int(self.last_frame or time.time()))
 
     @staticmethod
     def _today(done: list[dict], current: dict, day: str) -> None:

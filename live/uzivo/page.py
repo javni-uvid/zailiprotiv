@@ -113,7 +113,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     if snap.get("titl"):  # the line under the picture: its newest lines, for the script (prepis.Captions)
         out.append('<ol class="cc-src" hidden>' + "".join(
             f'<li data-od="{c["od"]}">{escape(_name(c["tekst"], cyr))}</li>' for c in snap["titl"]) + "</ol>")
-    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}<section class="day">')
+    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}{_group_time(snap, cyr=cyr, site=site)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         chip = _chip(t("dl_recording"), t("from_recording")) if snap.get("snimak") else ""
@@ -389,6 +389,35 @@ def _resumes(text: str) -> str:
     if not m or m.group(1).lower() not in _WEEKDAYS_ON or m.group(3).lower() not in MONTHS_OF:
         return ""
     return f"{_WEEKDAYS_ON[m.group(1).lower()]}, {int(m.group(2))}. {m.group(3).lower()}, u {int(m.group(4))}.{m.group(5)}"
+
+
+def _group_time(snap: dict, *, cyr: bool, site: str = "") -> str:
+    """The groups' time in the debate of the item under way (vreme.py), an estimate: a bar a group, the share of its
+    time used, what is left or how far over the estimate, and how the estimate is made, with the articles."""
+    g = snap.get("vreme_grupa")
+    if not g or not g.get("grupe"):
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    shade = {**LIST_COLOURS}
+    rows = []
+    for r in g["grupe"]:
+        has, used = r["ima"], r["potroseno"]
+        left = has - used
+        share = min(100.0, 100 * used / has) if has else 100.0
+        rest = (f'{t("gt_left")} <b>{_dur(left, cyr)}</b>' if left >= 60 else
+                f'<b>{t("gt_over")}</b> {_dur(-left, cyr)}' if left <= -60 else f'<b>{t("gt_none")}</b>')
+        rows.append(f'<li><p class="gt-h"><span>{escape(_name(r["lista"], cyr))}</span><span class="meta">{r["mesta"]} '
+                    f'{t("gt_seats")} · {t("gt_has")} {_dur(has, cyr)}</span></p>'
+                    f'<div class="gt-bar"><i class="{shade.get(r["lista"], "l1")}" style="width:{share:.1f}%"></i></div>'
+                    f'<p class="gt-n">{t("gt_used")} {_dur(used, cyr)} ({r["govora"]} {t("gt_turns")}) · {rest}</p></li>')
+    rules = site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojam-vreme-rasprave" if site else ""
+    how = escape(_t("gt_how_detail" if g.get("pojedinosti") else "gt_how", cyr))
+    if rules:
+        how += f' <a href="{escape(rules)}">{t("gt_rules")} →</a>'
+    head = escape(_fill(_t("gt_head_detail" if g.get("pojedinosti") else "gt_head", cyr), str(g["tacka"])))
+    closed = f'<p class="meta">{t("gt_closed")}</p>' if g.get("zakljucen") else ""
+    return (f'<section class="gt-sec"><h2>{head}</h2><p class="chip-est">{t("gt_estimate")}</p>{closed}'
+            f'<ul class="gt">{"".join(rows)}</ul><p class="meta gt-how">{how}</p></section>')
 
 
 def _tiles(turns: list[dict], *, cyr: bool) -> str:

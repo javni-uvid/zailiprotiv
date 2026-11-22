@@ -282,3 +282,11 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .player.mini .cc { order: 5; flex: 1 1 100%; margin: 0; padding: .3rem .55rem; border-radius: 4px; }
 .player.mini .cc-t { font-size: var(--t-2); }
 .player.mini .cc-n { display: none; }
+/* The groups' time in the debate of the item under way (vreme.py), an estimate. */
+.gt-sec { border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; margin-top: 1rem; } .gt-sec h2 { margin: 0; }
+.chip-est { display: inline-block; margin: .4rem 0 0; font-size: var(--t-1); color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: .1rem .6rem; }
+.gt { list-style: none; margin: .8rem 0 0; padding: 0; display: grid; gap: .9rem; }
+.gt-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .2rem 1rem; margin: 0 0 .3rem; font-weight: 650; } .gt-h .meta { font-weight: 400; }
+.gt-bar { height: .8rem; border-radius: 4px; background: color-mix(in srgb, var(--fg) 8%, transparent); overflow: hidden; } .gt-bar i { display: block; height: 100%; }
+.gt-n { margin: .3rem 0 0; font-size: var(--t-2); font-variant-numeric: tabular-nums; } .gt-n b { font-weight: 650; }
+.gt-how { margin: .9rem 0 0; font-size: var(--t-1); line-height: 1.45; max-width: 46rem; }

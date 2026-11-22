@@ -67,6 +67,8 @@ as the change. The principles and the rules of work are in AGENTS.md.
   the home page's box of the new convocation has "Sednica po Poslovniku" (kvorum, replika, opomena, hitni postupak,
   and that the live page's steps lead to their articles), the footer's "Skupština" column links "Poslovnik", the
   page shown at mikrofon while the service is down links it, and the live page has a box of its own.
+- **The groups' time for debate** (22 Nov 2026): term `vreme-rasprave` (97, 99, 158), the rule behind the live
+  page's estimate of each group's time left (`live/AGENTS.md`).
 
 ## Laws
 
