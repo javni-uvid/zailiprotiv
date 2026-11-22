@@ -268,6 +268,22 @@ def listen_segment(k: str, name: str) -> Response:
     return FileResponse(f, media_type="video/mp2t", headers={"Cache-Control": "private, max-age=120"})
 
 
+@app.get("/slusaj/{name}")
+def listen_public(name: str) -> Response:
+    """The playlist and its segments for all, once listening is open (SLUSAJ_JAVNO)."""
+    if not config.LISTEN_PUBLIC:
+        raise HTTPException(404)
+    if name == "z.m3u8":
+        text = slusaj.PLAYLIST.text()
+        if not text:
+            raise HTTPException(404)
+        return Response(text, media_type="application/vnd.apple.mpegurl", headers={"Cache-Control": "no-cache, max-age=2"})
+    f = slusaj.PLAYLIST.segment(name)
+    if not f:
+        raise HTTPException(404)
+    return FileResponse(f, media_type="video/mp2t", headers={"Cache-Control": "public, max-age=300, immutable"})
+
+
 @app.get("/upozorenja")
 def alerts_page(k: str = "") -> Response:
     """The maintainer's page for the outage alerts (page.admin_page); anyone without the key is led to the page."""

@@ -119,6 +119,9 @@ WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()
 WHISPER_BEAM = _i("WHISPER_BEAM", 3)
 SOUND_PATH = os.environ.get("SOUND_PATH", "/tmp/uzivo/zvuk")  # the segments' sound until it is written down
 LISTEN_PATH = os.environ.get("LISTEN_PATH", "/tmp/uzivo/slusaj")  # the live sound's playlist (slusaj.py)
+# Listening live open to all: "Slušaj samo zvuk" beside the broadcast's ▶, the playlist at /slusaj/z.m3u8 without
+# the key. Off until the maintainer opens it (22 Nov 2026: a trial behind the key first).
+LISTEN_PUBLIC = os.environ.get("SLUSAJ_JAVNO", "0").strip() == "1"
 
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 VERSION = os.environ.get("VERZIJA", "").strip()  # the commit the image was built from (mikrofon.ps1; Dockerfile)

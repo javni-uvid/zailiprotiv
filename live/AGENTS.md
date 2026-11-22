@@ -618,3 +618,12 @@ list (`GLAS_BEZ`) was compared with the list's names, which put the surname firs
 and two of its names were wrong (the first sitting was chaired by Stojan Radenović and Nada Macura). It is now the
 MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six deputies, `radenovic-stojan`,
 `macura-nada`. None of them had a voice sample yet, so nothing was named wrongly.
+- **Listening live: the button, behind a switch** (22 Nov 2026, the maintainer tried both on a Serbian 24/7 news
+  channel, IZLAZ.com, in a hand-run container: `SOURCE_PAGE=`, `CHANNEL_LIVE=`, `YOUTUBE_URL=<watch address>`,
+  `SLUSAJ_JAVNO=1`, port 8095). With `SLUSAJ_JAVNO=1` the broadcast's player has "🎧 Slušaj samo zvuk" under the
+  picture while the playlist has a segment from the last minute (`slusaj.fresh`), and `/slusaj/z.m3u8` with its
+  segments needs no key (segments cacheable, `immutable`). The press puts our sound in the screen ("Samo zvuk,
+  uživo", who speaks from the part, the lock screen's player); the same button then offers "▶ Gledaj prenos", and
+  back. Off on the live service until the maintainer opens it. Found by the trial: the sound-only track was asked
+  for only while the transcript was on (`_resolve_youtube`, `HlsPoller`); listening asks for it too. Chrome 150 and
+  phones play the playlist by themselves.

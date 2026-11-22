@@ -106,7 +106,7 @@ def _resolve_youtube(url: str) -> str:
     )
     VIDEO.update(id=info.get("id", ""), started=info.get("release_timestamp"))
     SOUND.clear()
-    if prepis.on() and (info.get("acodec") or "none") == "none":
+    if (prepis.on() or slusaj.on()) and (info.get("acodec") or "none") == "none":
         # YouTube's live formats came without sound in the picture (19 Nov 2026: format 231): the sound is a
         # playlist of its own, with the same segment numbers.
         SOUND.update(url=sound_format(info.get("formats") or []))
@@ -445,7 +445,7 @@ class HlsPoller(threading.Thread):
 def start_ffmpeg(source: str, headers: dict | None = None):
     os.makedirs(os.path.dirname(config.FRAME_PATH), exist_ok=True)
     if _is_hls(source):
-        return HlsPoller(source, headers or {}, SOUND.get("url", "") if prepis.on() else "")
+        return HlsPoller(source, headers or {}, SOUND.get("url", "") if (prepis.on() or slusaj.on()) else "")
     # A file or another stream: one ffmpeg that keeps running.
     cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-re"]
     if headers and headers.get("User-Agent"):

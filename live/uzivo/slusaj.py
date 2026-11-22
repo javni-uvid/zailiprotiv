@@ -22,8 +22,13 @@ KEEP = 20  # segment files kept on disk: a player still fetching one just droppe
 
 
 def on() -> bool:
-    """Only while there is a key to open the trial with (the transcript's, 12 characters or more)."""
-    return len(config.TRANSCRIPT_KEY) >= 12
+    """While there is someone to listen: all (SLUSAJ_JAVNO), or the key's holder (the transcript's key)."""
+    return config.LISTEN_PUBLIC or len(config.TRANSCRIPT_KEY) >= 12
+
+
+def fresh(now: float) -> bool:
+    """Whether the playlist has a segment from the last minute: the button is offered only then."""
+    return bool(PLAYLIST.items) and now - PLAYLIST.seen < 60
 
 
 class Playlist:
