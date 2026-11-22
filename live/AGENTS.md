@@ -460,3 +460,21 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   figures in their colours (`page._votes`). Out of those two colours went what wore them with no vote: the agenda's
   marks (✓ and ●), the notice's "Novo" and the link to the site. The kinds of steps stay without colour (a new
   exception to rule 2, not asked for).
+- **The day back on the line of time, a mark for each kind; when the Assembly goes on, on top** (22 Nov 2026, the
+  maintainer, the same day, after the list above: "ne sviđa mi se ovo"; it changes "The day is one list" and
+  part of "The first screen"). Everything is in the steps again, on the line of time with its marks, under "Šta se
+  desilo danas" / "Šta se desilo 19. novembra": the day summary's decisions (a full dot, their sentence, a vote's
+  figures and bar), and every step heard, each with a mark by its kind (`page._step_mark`): a ring for a step, the
+  item's number in a larger ring for a move to an agenda item, a full dot for an election or a result, **a red
+  square for each measure of the chair** (titled by its kind, "Opomena", whom under it; a heavier one ringed),
+  a dashed ring for a break or the day's end. The first eight stand, the rest fold. The Assembly's sentences stay
+  in the agenda as above. A done item of the agenda has **a green ✓**. Red and green are the maintainer's own
+  choice, outside rule 2 like the lists' colours, with the kind always said in words beside them (`--stop`,
+  `--ok`). **The recording is higher** between sittings, right under the line on top. **When the Assembly goes
+  on** is said large on top ("Skupština nastavlja sa radom u utorak, 24. novembra, u 10.00.", `page._resumes`,
+  from the notice in its set words, linked to the Assembly's site) in place of the notice's box, between sittings;
+  a notice not in those words stands as before. **"Obavesti me kad sednica počne" and "Dodaj na početni ekran"
+  are two buttons in one row with nothing under them** (the maintainer: the structure and the text under it were
+  too much). On an iPhone the second button too, which on a press says where Safari keeps it. What the
+  notification keeps is said once it is turned on ("kod nas ostaje samo adresa za njega") and on the method page;
+  principle 5 asks the page to say it, and it does there.

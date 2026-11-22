@@ -274,16 +274,21 @@
   var box = document.querySelector(".add-home");
   if (!box) return;
   var part = function (k) { return box.querySelector("." + k); };
-  function show(k, on) { var el = part(k); if (el) el.hidden = !on; box.hidden = ![].some.call(box.children, function (c) { return !c.hidden; }); }
+  function show(k, on) {
+    var el = part(k); if (el) el.hidden = !on;
+    box.hidden = ![].some.call(box.querySelectorAll(".nt, .add, .nt-done, .nt-blocked, .nt-err, .add-ios"), function (c) { return !c.hidden; });
+  }
   var home = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
   if (home) use("ekran");
   else {
     var ask = null;
     window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); ask = e; show("add", true); });
     window.addEventListener("appinstalled", function () { show("add", false); use("dodato"); });
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) show("add-ios", true);
+    // an iPhone makes no offer: the same button, and a press says where Safari keeps it (22 Nov 2026: no text under)
+    var ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    if (ios) show("add", true);
     part("add-go").addEventListener("click", function () {
-      if (!ask) return;
+      if (!ask) { if (ios) { show("add-ios", part("add-ios").hidden); use("dodaj"); } return; }
       use("dodaj"); ask.prompt();
       ask.userChoice.then(function () { ask = null; show("add", false); }).catch(function () {});
     });
@@ -301,7 +306,7 @@
                                body: JSON.stringify({ endpoint: sub.endpoint, cir: cir }) })
       .then(function (r) { if (!r.ok) throw new Error("counter " + r.status); });
   }
-  function state(on) { show("nt", !on); show("nt-done", on); show("nt-note", true); show("nt-err", false); }
+  function state(on) { show("nt", !on); show("nt-done", on); show("nt-err", false); }
   function failed() { show("nt-err", true); use("obavesti-greska"); }
   if (Notification.permission === "denied") { show("nt-blocked", true); return; }
   navigator.serviceWorker.getRegistration("/").then(function (r) { return r ? r.pushManager.getSubscription() : null; })

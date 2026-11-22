@@ -998,7 +998,7 @@ def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines
     assert days.split('<ol class="steps">')[1].count("<li") == 2
     assert 'href="https://www.parlament.gov.rs/x">Zapis sednice na sajtu Skupštine ↗</a>' in days
     only = fragment({**snap, "hronika": snap["hronika"][:1]}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "<p>Narodna skupština je izabrala potpredsednike.</p>" in only and '<ol class="steps">' not in only
+    assert '<p class="st-said">Narodna skupština je izabrala potpredsednike.</p>' in only and "<time" not in only
     assert "Skupština piše posle događaja" in only  # where from: in the label beside the heading
 
 
@@ -1208,8 +1208,8 @@ def test_the_last_sitting_days_steps_between_sittings():
     step = {"t": now, "vrsta": "Sajt Skupštine", "tekst": "Skupština je izabrala potpredsednike.", "izvor": "sajt", "url": "https://www.parlament.gov.rs/x"}
     snap = {"provereno": now, "sada": None, "dnevni_red": None, "danas": [], "hronika": [step], "ranije": True, "dan": "2026-11-19"}
     html = page_._steps(snap, cyr=False, tz=TZ)
-    assert "Šta se desilo, " in html and "19." in html and "potpredsednike" in html
-    assert "Шта се десило, " in page_._steps(snap, cyr=True, tz=TZ)
+    assert "Šta se desilo 19. novembra" in html and "potpredsednike" in html
+    assert "Шта се десило 19. новембра" in page_._steps(snap, cyr=True, tz=TZ)
     assert "Šta se desilo danas" in page_._steps({**snap, "ranije": False}, cyr=False, tz=TZ)
 
 
@@ -1436,10 +1436,10 @@ def test_a_votes_figures_add_up_or_are_not_shown():
     assert sudija.check_votes(s) == []
 
 
-def test_the_day_is_one_list_of_what_was_decided():
-    """22 Nov 2026, the maintainer: one list in place of three tellings of the same day. The day summary's decisions
-    with a vote's figures under them; the moves to an item and breaks; the chair's measures as one line by kind,
-    without names; the steps that only say the work moved on, among all the steps, folded; the model's paragraph
+def test_the_day_is_one_line_of_time_with_a_mark_for_each_kind():
+    """22 Nov 2026, the maintainer: everything in the steps, the line of time with its marks, a symbol for each kind
+    (a warning a red square). The day summary's decisions with a vote's figures (the steps telling an election or
+    a result then left out); every step heard, each measure its own line titled by its kind; the model's paragraph
     not shown; where it is from in one label beside the heading."""
     from datetime import datetime
     from uzivo import page as page_
@@ -1451,26 +1451,37 @@ def test_the_day_is_one_list_of_what_was_decided():
                ev(13.1, "Pretres otvoren", "Otvaram pretres."),
                ev(13.2, "Izbor", "Izabran je Aleksandar Čupić.", ko="Aleksandar Čupić"),
                ev(14, "Mera predsedavajućeg", "Izričem opomenu Bakiću.", napomena="opomena", kome="Bakiću"),
-               ev(15, "Mera predsedavajućeg", "Izričem opomenu.", napomena="opomena"),
                ev(16, "Mera predsedavajućeg", "Oduzimam reč.", napomena="oduzimanje reči")]
     s = {"vrsta": "dan", "kratko": "K.", "ukratko": "Ovo je dugačak pasus modela.", "odluke": [
         {"vreme": "13:27", "sta": "Izabran predsednik Skupštine.", "glasovi": "za 140, protiv 97, glasalo 237"},
         {"vreme": "00:10", "sta": "Imenovan generalni sekretar."}]}
     snap = {"provereno": now + 20 * 3600, "sada": None, "danas": [], "dnevni_red": agenda, "hronika": hronika, "sazetak": s}
     html = page_._steps(snap, cyr=False, tz=TZ, site="https://zailiprotiv.rs/")
-    main = html.split('<ul class="day-list">')[1].split("</ul>")[0]
-    rows = main.split("<li>")[1:]
-    assert "Imenovan generalni sekretar" in rows[0]  # 00:10 is the night after: the newest
-    assert "Ovo je dugačak pasus" not in html and "Izabran je Aleksandar Čupić" not in main  # the summary told the election
-    assert '<span class="dl-v"><b class="v-za">za 140</b>, <b class="v-protiv">protiv 97</b>, glasalo 237</span>' in main
-    assert "Mere predsedavajućeg" in main and "<b>3</b>: 2 opomena, 1 oduzimanje reči" in main and "Bakić" not in main
-    assert "3. tačka dnevnog reda" in main and "Izbor potpredsednika" in main
-    assert "Pretres je otvoren" not in main and "Pretres je otvoren" in html.split("Svi koraci")[1]  # folded
+    rows = html.split('<ol class="steps">')[1].split("</ol>")[0].split("<li ")[1:]
+    assert "Imenovan generalni sekretar" in rows[0] and 'class="mk-odluka"' in rows[0]  # 00:10 is the night after: the newest
+    assert "Ovo je dugačak pasus" not in html and "Izabran je Aleksandar Čupić" not in html  # the summary told the election
+    assert '<b class="v-za">za 140</b>, <b class="v-protiv">protiv 97</b>, glasalo 237' in html
+    measures = [r for r in rows if "mk-mera" in r]
+    assert len(measures) == 2 and ">Opomena<" in measures[1] and "Bakiću" in measures[1] and "mk-mera-teska" in measures[0]
+    assert '<i aria-hidden="true">3</i>' in html and "Prelazak na 3. tačku dnevnog reda" in html and "Pretres je otvoren" in html
     assert '<details class="chip"><summary>automatski · može da pogreši</summary>' in html and "Claude Haiku" in html
-    without = page_._steps({**snap, "sazetak": None}, cyr=False, tz=TZ)
-    assert "Aleksandar Čupić" in without.split('<ul class="day-list">')[1].split("</ul>")[0]  # no summary: the step tells it
+    assert "Aleksandar Čupić" in page_._steps({**snap, "sazetak": None}, cyr=False, tz=TZ)  # no summary: the step tells it
     assert "Одлука" in page_._steps(snap, cyr=True, tz=TZ)
 
+
+def test_the_notice_of_when_the_assembly_goes_on_is_said_on_top():
+    """22 Nov 2026, the maintainer: say that part as when the Assembly goes on."""
+    from uzivo import page as page_
+    assert page_._resumes("Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova.") == "u utorak, 24. novembra, u 10.00"
+    assert page_._resumes("Narodna skupština je izabrala predsednika.") == ""
+    snap = {"stanje": "nema_prenosa", "provereno": 1, "sada": None, "sazvano": None, "bez_potpisa": None, "dan": "2026-11-19",
+            "ranije": True, "danas": [], "dnevni_red": None, "hronika": [],
+            "obavestenja": [{"od": "2026-11-20", "do": "2026-11-24", "tekst": "Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova.",
+                             "izvor": "sajt Narodne skupštine", "url": "https://www.parlament.gov.rs/x", "adresa": ""}]}
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<p class="goes-on">Skupština nastavlja sa radom u utorak, 24. novembra, u 10.00.' in html and 'class="news"' not in html
+    assert "Скупштина наставља са радом у уторак, 24. новембра, у 10.00." in fragment(snap, cyr=True, site="", tz=TZ)
+    assert 'class="news"' in fragment({**snap, "stanje": "govori", "sada": None}, cyr=False, site="", tz=TZ)  # a sitting on: as it is
 
 def test_a_steps_line_leads_to_what_the_rules_say_of_it():
     """20 Nov 2026, the maintainer's choice: the sitting's steps by the Rules of Procedure. A step's line leads to its
@@ -1553,7 +1564,7 @@ def test_the_first_line_says_what_is_now_and_the_agenda_stands_open():
     snap = {"stanje": "nepoznato", "provereno": 1, "sada": None, "sazvano": None, "bez_potpisa": None, "dan": "2026-11-19",
             "ranije": False, "danas": [], "dnevni_red": agenda, "hronika": []}
     live = page_(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert '<p class="status"><span class="pill"><i aria-hidden="true"></i>Uživo</span><span class="status-on">u toku: 2. Druga</span></p>' in live
+    assert '<div class="status"><p><span class="pill"><i aria-hidden="true"></i>Uživo</span><span class="status-on">u toku: 2. Druga</span></p></div>' in live
     assert '<details class="agenda" id="dnevni-red" open>' in live and "hero-cta" not in live
     off = page_({**snap, "stanje": "nema_prenosa", "datoteke": [{"url": "https://x/1.mp4", "od": 1795089600, "trajanje": 60},
                                                                  {"url": "https://x/2.mp4", "od": 1795093200, "trajanje": 60}]},
