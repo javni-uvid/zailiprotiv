@@ -6,5 +6,18 @@
   "live_page": "https://mikrofon.zailiprotiv.rs/",
   "notes_all": true,
   "indexnow_key": "4d849078ca77a4cd51d8b6c45acc06c1",
-  "push_key": "BN_I_mecAiq3SzANsUT0F7yO8WkgUZA-zOrYfHMr_2XSG2pF-KBw456JvzisFtO5sdase5nEpjMyyweDfUxyOE0"
+  "push_key": "BN_I_mecAiq3SzANsUT0F7yO8WkgUZA-zOrYfHMr_2XSG2pF-KBw456JvzisFtO5sdase5nEpjMyyweDfUxyOE0",
+  "support": {
+    "account": "265000000676858538",
+    "name": "Marko Pomorišac",
+    "place": "Novi Sad",
+    "code": "289",
+    "purpose": "Podrška projektu Za ili Protiv",
+    "amounts": [
+      300,
+      500,
+      1000
+    ],
+    "paypal": ""
+  }
 }

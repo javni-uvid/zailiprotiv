@@ -1137,6 +1137,12 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .hc-agenda { margin: 0 0 .9rem; padding-left: 1.3rem; } .hc-agenda li { margin: .2rem 0; }
 .hc-links li { margin: .3rem 0; font-weight: 600; }
 .home-conv > .label { margin: 1rem 0 0; }
+.home-support { margin: 2rem 0; padding: 1.1rem 1.3rem; border: 1px solid var(--line); border-radius: 12px; } .home-support h2 { margin: 0 0 .4rem; font-size: var(--t-5); } .home-support p { margin: .3rem 0 0; max-width: 42rem; }
+.support-cta { display: inline-block; margin-top: .4rem; padding: .55rem 1rem; border-radius: 8px; background: var(--fg); color: var(--bg); font-weight: 650; text-decoration: none; } .support-cta:hover { opacity: .9; }
+.ips-codes { list-style: none; margin: 1rem 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 1.2rem; }
+.ips-codes figure { margin: 0; } .ips-qr { display: block; width: 100%; max-width: 15rem; height: auto; background: #fff; border-radius: 6px; }
+.ips-codes figcaption { display: flex; justify-content: space-between; gap: .6rem; margin-top: .4rem; font-size: var(--t-3); }
+.support-order { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1.2rem; margin: .8rem 0; } .support-order dt { color: var(--muted); } .support-order dd { margin: 0; } .acct { font-size: var(--t-4); font-variant-numeric: tabular-nums; letter-spacing: .02em; user-select: all; }
 .hc-rules { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); } .hc-rules h3 { margin: 0 0 .4rem; font-size: var(--t-3); } .hc-rules p { margin: 0; max-width: 46rem; }
 
 /* The groups' colours in the newest convocation's bars (site.GROUP_COLOURS; the same hues as the live page), the
