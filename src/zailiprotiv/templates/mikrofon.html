@@ -17,9 +17,9 @@
 <h2>Poslednji dan sednice, {{ day|day }}</h2>
 {% set first = day_turns|selectattr("file")|first %}
 {% if day_parts or first %}
-<section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button></div>
+<section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button><button type="button" class="play listen" data-zvuk data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">🎧 Slušaj samo zvuk</button></div>
 {% if day_parts|length > 1 %}<ul class="parts">{% for p in day_parts %}<li><button type="button" class="part" data-file="{{ p.url }}" data-t="0">Deo {{ loop.index }} · {{ p.from }}–{{ p.to }}</button></li>{% endfor %}</ul>{% endif %}
-<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta.</p></section>
+<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta. Samo zvuk svira i kad je ekran zaključan; tamo piše ko govori, a ⏮ i ⏭ vode na prethodni i sledeći govor.</p></section>
 {% endif %}
 <p class="label">Pročitano posle sednice sa celog snimka prenosa, iz potpisa ispod govornika, isto za svakog: govor traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku. Automatsko čitanje može da pogreši.</p>
 <p><a href="{{ root }}govornici/{{ day }}.html">Ko je koliko govorio tog dana, svaki govor sa snimkom i linkom za deljenje</a> · <a href="{{ root }}govornici.html">Ko koliko govori u celom sazivu</a></p>

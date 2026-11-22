@@ -1090,8 +1090,9 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         if not parts and not first:
             return ""
         url, at = (parts[0]["url"], 0) if parts else (first["datoteka"], int(first["snimak"]))
-        button = f'<button type="button" class="play" data-file="{escape(url)}" data-t="{at}">▶ {t("play_day")}</button>'
-        note = t("archive_note")
+        button = (f'<button type="button" class="play" data-file="{escape(url)}" data-t="{at}">▶ {t("play_day")}</button>'
+                  f'<button type="button" class="play listen" data-zvuk data-file="{escape(url)}" data-t="{at}">🎧 {t("listen_day")}</button>')
+        note = t("archive_note") + " " + t("listen_note")
         if len(parts) > 1:  # the day in several files: each one, by the hours it covers
             chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
                             f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'

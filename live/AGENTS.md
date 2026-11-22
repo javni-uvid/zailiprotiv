@@ -588,3 +588,12 @@ nobody. The hall's floor for "not silence" is the quietest fifth of the last ten
 `lice_glas` does it (a first try against whole windows threw away continuous speech). `GLAS=0` turns voices off.
 - **"Podrži sajt" on the page** (22 Nov 2026, the maintainer): a box like the Rules' above the link to the site,
   leading to the site's `podrzi` (`support_cta`, `support_sub`).
+- **The page as an app: only the sound, and the lock screen's player** (22 Nov 2026, the maintainer, predlog 2 after
+  readers asked to listen in the car). Beside "Pusti snimak dana" (an archive day's recording) "Slušaj samo zvuk"
+  plays the same file in an `<audio>` (`data-zvuk`), which a phone keeps playing with the screen locked; over it who
+  speaks at that moment and, where the page holds it, that turn's automatic transcript. For the archive's files the
+  page sets the Media Session (`mikrofon.js`, `session`): the title is who speaks (the day's turns' "▶ snimak" of
+  that file, as the page lists them), the artist their list or office, ⏮ ⏭ the turn before or after, ±15/30 s;
+  the turn now playing is outlined in the list. A turn's ▶ keeps the way the day is played. The live broadcast
+  stays YouTube's player (its iframe holds its own session; no sound of ours is relayed: rights, and the tunnel is
+  not made for streams). The site's mikrofon page and day pages (`govornici/<date>`) have the same button.

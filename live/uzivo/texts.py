@@ -176,6 +176,8 @@ TEXT = {
            "sekundi, a automatsko čitanje može da pogreši. Mesto na snimku je mesto gde se ime prvi put pojavilo, "
            "oko pet sekundi ranije. Spisak poslednjeg dana sednice ostaje dok sledeće zasedanje ne počne.",
     "play_day": "Pusti snimak dana",
+    "listen_day": "Slušaj samo zvuk",
+    "listen_note": "Samo zvuk svira i kad je ekran zaključan; tamo piše ko govori, a ⏮ i ⏭ vode na prethodni i sledeći govor.",
     "part": "Deo",
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
     "yt_live_note": "Prenos sa Jutjuba (Gugl) učitava se tek na klik, bez kolačića.",

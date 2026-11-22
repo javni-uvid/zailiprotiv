@@ -3,6 +3,14 @@
 .player { margin: 1.4rem 0 .4rem; }
 .screen { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; display: grid; place-items: center; }
 .screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+/* the buttons side by side; only the sound: who speaks, the turn's transcript, the bar (22 Nov 2026) */
+.screen:has(.listen) { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; align-content: center; }
+.play.listen { background: transparent; color: #fff; border: 2px solid #fff; }
+.listen-box { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: .8rem; padding: 1rem; color: #fff; }
+.listen-box audio { width: 100%; }
+.listen-now b { display: block; font-size: var(--t-5); } .listen-now span { color: #c9ccd3; font-size: var(--t-2); }
+.listen-now p { margin: .5rem 0 0; font-size: var(--t-2); line-height: 1.45; color: #e6e7ea; max-height: 6.5em; overflow: hidden; }
+li.now-playing { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
 .play { font: inherit; font-weight: 700; font-size: var(--t-4); padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
 .play:hover { transform: scale(1.04); }
 .play.facade { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border-radius: 0; background: #000; display: grid; place-items: center; }
