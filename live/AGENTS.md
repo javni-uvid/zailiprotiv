@@ -522,3 +522,13 @@ the newest at the bottom, and says "Automatski prepis: kasni i može da greši, 
 quote, and the site quotes the notes); in the band kept on top, under the picture. Each line is shown
 `TITL_KASNJENJE` seconds after it first came (0 for now): the viewer's player is behind the broadcast by a time to
 be measured on 24 Nov, and the line is to come with its picture. `TITL_PRIKAZ=0` turns it off.
+- **The groups' time in the debate, an estimate** (22 Nov 2026, the maintainer, after readers asked how much time
+  each party has left; `vreme.py`, `View._group_time`, `page._group_time`): while an agenda item is under way, a box
+  under the day's steps shows, for each group the site names (the roster's lists of the sitting MPs, as the
+  Assembly's site gives them), its share of five hours by its MPs (art. 97), the time used and what is left (or how
+  far over the estimate). Counted: a sitting MP's turn of that group longer than `REPLY` (125 s: replies and points
+  of order last two minutes at most, art. 103, 104), from the chair's move to the item (`tacka.json`, so over every
+  day of the debate: the earlier days read from `dani/` and `hronika/`, once); a debate closed and another opened
+  is the debate in detail, counted afresh with each group's chair's 15 minutes more (art. 158). Not known, and said
+  on the page: the shortened procedure (half, art. 99), more time given to the groups, the Assembly's own clock (we
+  count the caption's time). Labelled "procena"; its term `vreme-rasprave` on the site's page of the Rules.

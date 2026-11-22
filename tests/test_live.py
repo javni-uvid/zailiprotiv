@@ -1697,3 +1697,31 @@ def test_the_line_under_the_picture(tmp_path, monkeypatch):
     live = page_.player({"stanje": "govori", "danas": [], "datoteke": []}, cyr=False, live="dQw4w9WgXcQ", tz=TZ)
     assert '<div class="cc" hidden aria-hidden="true" data-delay="0">' in live and "nije citat" in live
     assert "function captions()" in page_.SCRIPT
+
+
+def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
+    """22 Nov 2026, readers asked how much time each party has left: five hours for the groups by their MPs (art. 97),
+    replies and points of order (two minutes at most) left out, the debate in detail counted afresh (art. 158)."""
+    from uzivo import page as page_
+    from uzivo.vreme import CHAIR_MORE, TOTAL, groups_time
+    start = 1795089600
+    turn = lambda at, sec, g: {"od": start + at, "do": start + at + sec, "sekundi": sec, "lista": g}
+    seats = {"Studentska lista": 140, "Aleksandar Vučić - Srbija pobeđuje": 102}
+    turns = [turn(100, 600, "Studentska lista"), turn(800, 120, "Studentska lista"),      # a reply: not counted
+             turn(1000, 900, "Aleksandar Vučić - Srbija pobeđuje"), turn(2000, 1200, ""),  # the Government: not a group
+             turn(3500, 300, "*")]
+    g = groups_time(item=4, start=start, seats=seats, turns=turns, events=[], now=start + 4000)
+    sl, av = g["grupe"]
+    assert sl["lista"] == "Studentska lista" and sl["ima"] == round(TOTAL * 140 / 242) and sl["potroseno"] == 600
+    assert sl["govora"] == 1 and av["potroseno"] == 900 and not g["pojedinosti"]
+    # a debate closed and another opened: the debate in detail, counted from its opening, the chairs' 15 minutes more
+    events = [{"t": start + 1950, "vrsta": "Pretres zaključen"}, {"t": start + 3000, "vrsta": "Pretres otvoren"}]
+    d = groups_time(item=4, start=start, seats=seats, turns=turns + [turn(3100, 400, "Studentska lista")], events=events,
+                    now=start + 4000)
+    assert d["pojedinosti"] and d["grupe"][0]["potroseno"] == 400 and d["grupe"][0]["ima"] == sl["ima"] + CHAIR_MORE
+    assert groups_time(item=4, start=start, seats=seats, turns=[turn(100, 90, "Studentska lista")], events=[], now=start + 200) is None
+    html = page_._group_time({"vreme_grupa": g}, cyr=False, site="https://zailiprotiv.rs/")
+    assert "Vreme poslaničkih grupa za 4. tačku" in html and "procena" in html and "ostalo oko" in html
+    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojam-vreme-rasprave"' in html and "član 97" in html
+    assert "Време посланичких група" in page_._group_time({"vreme_grupa": g}, cyr=True, site="https://zailiprotiv.rs/")
+    assert page_._group_time({}, cyr=False) == ""
