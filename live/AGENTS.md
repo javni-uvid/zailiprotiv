@@ -602,3 +602,13 @@ nobody. The hall's floor for "not silence" is the quietest fifth of the last ten
   own mark, the two arcs of `favicon.svg`, as the site's apple-touch-icon; the header keeps the site's name and
   "Podrži sajt" beside the script's switch, and the microphone mark is gone from the page. A phone that added the
   page before keeps the old icon until it is added again.
+- **Listening live, sound only: a trial behind the key** (22 Nov 2026, the maintainer: the rights are settled on their
+  side; "napravimo probnu verziju"). `slusaj.py`: each segment the reader already fetches (the sound-only track's
+  when YouTube has one, else the picture's) gives its sound to a live HLS playlist of our own (`LISTEN_PATH`): the
+  sound copied as it is (`-c:a copy`, no new encoding) with the broadcast's timestamps (`-copyts`), so the segments
+  follow on; the last `WINDOW` (12) listed, `KEEP` (20) files on disk, a gap in the numbers marked a discontinuity.
+  No new request to YouTube. `/slusaj/<key>/` (the transcript's key, in the path so that the playlist's relative
+  addresses carry it; anything else 404) is a page with an `<audio>` on `z.m3u8`, played by the phone's own player
+  (Safari, Chrome on Android; a desktop Chrome is told to use a phone), and the lock screen's player says who speaks
+  now from `/stanje.json` every 10 s. Not linked from anywhere; opening it to all (a button on the page, caching at
+  Cloudflare's edge, a player for desktops served from our domain) is the maintainer's decision after the trial.

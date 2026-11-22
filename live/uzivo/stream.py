@@ -19,7 +19,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from . import config, prepis
+from . import config, prepis, slusaj
 
 log = logging.getLogger("stream")
 _YT_ID = re.compile(r"youtube(?:-nocookie)?\.com/embed/([\w-]{11})")
@@ -400,16 +400,21 @@ class HlsPoller(threading.Thread):
                     self.frame_seq, self.seg_dur = nxt, dur  # read with the frame: where it is in the broadcast
                     _ffmpeg_last_frame(path)
                     t2 = time.time()
-                    if not prepis.on():
+                    sound = ""  # the segment with the sound: the picture's, or the sound-only track's
+                    if not (prepis.on() or slusaj.on()):
                         pass
                     elif not self.sound_url:
-                        prepis.keep(path, t2, dur, self.program_of(nxt))  # the segment's sound, for the transcript
+                        sound = path
                     else:
                         heard = self._sound(nxt)
                         if heard:
                             with open(path + "-zvuk", "wb") as f:
                                 f.write(heard)
-                            prepis.keep(path + "-zvuk", t2, dur, self.program_of(nxt))
+                            sound = path + "-zvuk"
+                    if sound and prepis.on():
+                        prepis.keep(sound, t2, dur, self.program_of(nxt))  # the segment's sound, for the transcript
+                    if sound and slusaj.on():
+                        slusaj.PLAYLIST.add(sound, dur, nxt, t2)  # and for listening live (the maintainer's trial)
                     if t2 - last_new > 2.5 * dur:
                         log.info(
                             "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",

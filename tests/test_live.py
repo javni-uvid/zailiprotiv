@@ -1796,3 +1796,38 @@ def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch)
     ko = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ko)
     assert (glas.VOICE_MIN, glas.MARGIN, glas.STRETCH_MIN, glas.MIN_RUN, glas.GAP) == (ko.VOICE_MIN, ko.MARGIN, ko.STRETCH_MIN, ko.MIN_RUN, ko.GAP)
+
+
+def test_listening_live_a_playlist_of_the_broadcasts_own_sound(tmp_path, monkeypatch):
+    """22 Nov 2026, the maintainer's trial: each fetched segment's sound into a live HLS playlist of our own, copied
+    as it is with its timestamps, the last WINDOW kept, a gap marked; a player reads it as one stream."""
+    import shutil
+    import subprocess
+    import pytest
+    from uzivo import config, slusaj
+    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
+        pytest.skip("ffmpeg")
+    src = tmp_path / "src"
+    src.mkdir()
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-f", "lavfi", "-i", "sine=frequency=440:duration=20",
+                    "-f", "lavfi", "-i", "color=c=black:s=64x36:d=20", "-shortest", "-c:a", "aac", "-c:v", "libx264",
+                    "-f", "segment", "-segment_time", "5", "-segment_format", "mpegts", str(src / "s%d.ts")], check=True)
+    pl = slusaj.Playlist(tmp_path / "out")
+    for n in range(4):
+        assert pl.add(str(src / f"s{n}.ts"), 5.0, 100 + n, 1000.0 + n)
+    text = pl.text()
+    assert "#EXT-X-MEDIA-SEQUENCE:100" in text and text.count("#EXTINF:") == 4 and "DISCONTINUITY" not in text
+    assert "#EXT-X-ENDLIST" not in text  # live
+    probe = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration:stream=codec_type",
+                            "-of", "csv=p=0", str(tmp_path / "out" / "z.m3u8")], capture_output=True, text=True)
+    assert "audio" in probe.stdout and "video" not in probe.stdout
+    assert abs(float([x for x in probe.stdout.split() if x.replace(".", "").isdigit()][-1]) - 20) < 1.5
+    # a stall: the next number skipped, marked; the window keeps the newest
+    assert pl.add(str(src / "s0.ts"), 5.0, 110, 2000.0)
+    assert "#EXT-X-DISCONTINUITY\n#EXTINF:5.000,\nz110.ts" in pl.text()
+    for n in range(111, 111 + slusaj.WINDOW):
+        pl.add(str(src / "s1.ts"), 5.0, n, 3000.0)
+    assert pl.text().count("#EXTINF:") == slusaj.WINDOW and "z110.ts" not in pl.text()
+    assert pl.segment("z111.ts") and pl.segment("../stanje.json") is None
+    monkeypatch.setattr(config, "TRANSCRIPT_KEY", "")
+    assert not slusaj.on()

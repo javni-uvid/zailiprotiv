@@ -1211,3 +1211,41 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 </body>
 </html>
 """
+
+
+def listen_html() -> str:
+    """/slusaj/<key>/: listening live, sound only (slusaj.py), the maintainer's trial. The playlist next to the page
+    (z.m3u8), played by the phone's own player (Safari, Chrome on Android); the lock screen's player says who speaks
+    now, from /stanje.json every 10 s."""
+    return f"""<!doctype html>
+<html lang="sr-Latn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Slušaj uživo (proba) · Mikrofon</title><style>{CSS}
+.ls-now b {{ display: block; font-size: var(--t-5); }} .ls-now span {{ color: var(--muted); }} audio {{ width: 100%; margin: 1rem 0; }}</style></head>
+<body><main><h1>Slušaj uživo <span class="meta">(proba)</span></h1>
+<p class="lead">Zvuk prenosa Skupštine, bez slike: svira i kad je ekran zaključan. Kasni oko pola minuta za prenosom.</p>
+<div class="ls-now"><b id="who">…</b><span id="side"></span></div>
+<audio id="a" controls preload="none" src="z.m3u8"></audio>
+<p class="meta" id="note"></p>
+<p><a href="/">← Ko sada govori</a></p></main>
+<script>
+(function () {{
+  var a = document.getElementById("a"), who = document.getElementById("who"), side = document.getElementById("side");
+  var note = document.getElementById("note"), shown = "";
+  if (!a.canPlayType("application/vnd.apple.mpegurl")) note.textContent = "Ovaj pregledač ne pušta ovakav zvuk sam: otvori stranu na telefonu (Safari ili Chrome na Androidu).";
+  a.addEventListener("error", function () {{ note.textContent = "Zvuk sada nije dostupan: prenos možda ne ide. Pokušaj ponovo za minut."; }});
+  function now() {{
+    fetch("/stanje.json", {{ cache: "no-cache" }}).then(function (r) {{ return r.json(); }}).then(function (s) {{
+      var c = s && s.sada, name = c ? c.ime.split(" ").slice(1).concat(c.ime.split(" ")[0]).join(" ") : "Narodna skupština";
+      var line = c ? ([c.lista, c.uloga, c.grupa].filter(function (x) {{ return x && x !== "*"; }})[0] || "") : (s && s.stanje === "nema_prenosa" ? "Prenos ne ide" : "");
+      who.textContent = name; side.textContent = line;
+      if ("mediaSession" in navigator && name + line !== shown) {{
+        shown = name + line;
+        try {{ navigator.mediaSession.metadata = new MediaMetadata({{ title: name, artist: line || "Narodna skupština",
+          album: "Skupština uživo · Za ili Protiv", artwork: [{{ src: "/ikona-512.png", sizes: "512x512", type: "image/png" }}] }}); }} catch (e) {{}}
+      }}
+    }}).catch(function () {{}});
+  }}
+  now(); setInterval(now, 10000);
+}})();
+</script></body></html>"""
