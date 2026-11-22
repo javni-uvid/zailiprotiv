@@ -990,14 +990,15 @@ def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines
     assert "Rad je nastavljen" in html and "Izbor potpredsednika" in html and "krada" not in html
     cir = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Рад је настављен" in cir and "Прелазак на 2. тачку дневног реда" in cir
-    # what the Assembly wrote is not on the line of time: under it, folded, whole, with where it is from
-    line_of_time, written = html.split('<details class="st-written"')
-    assert "izabrala potpredsednike" not in line_of_time and "Zvanično" not in html
-    assert line_of_time.split('<ol class="steps">')[1].count("<li") == 2
-    assert "<summary>Šta je Skupština zapisala o ovom danu (1)</summary><p>Narodna skupština je izabrala potpredsednike.</p>" in written
-    assert 'href="https://www.parlament.gov.rs/x"' in written and "Skupština piše posle događaja" in written
+    # what the Assembly wrote is not told a second time on the day's list (its sentence per item is in the
+    # agenda): its page is linked; with nothing heard, its sentences are the list
+    days = html.split('<section class="steps-sec">')[1].split("</section>")[0]
+    assert "izabrala potpredsednike" not in days and "Zvanično" not in html
+    assert days.split('<ol class="steps">')[1].count("<li") == 2
+    assert 'href="https://www.parlament.gov.rs/x">Zapis sednice na sajtu Skupštine ↗</a>' in days
     only = fragment({**snap, "hronika": snap["hronika"][:1]}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert '<details class="st-written" open>' in only and '<ol class="steps">' not in only  # nothing heard: shown open
+    assert "<p>Narodna skupština je izabrala potpredsednike.</p>" in only and '<ol class="steps">' not in only
+    assert "Skupština piše posle događaja" in only  # where from: in the label beside the heading
 
 
 def test_only_the_chairs_sound_is_written_down_and_a_step_is_shown_when_something_bears_it_out(tmp_path):
@@ -1376,15 +1377,6 @@ def test_the_judge_reads_the_transcript_and_sums_the_day_up(tmp_path, monkeypatc
     assert t._summary_shown(t.day) is None
 
 
-def test_the_summary_on_the_page_says_what_wrote_it():
-    from uzivo import page as page_
-    s = {"vrsta": "deo", "do": "13:37", "ukratko": "Skupština je izabrala predsednika.", "ranije": []}
-    html = page_.summary_box({"sazetak": s}, cyr=False)
-    assert "Sažetak dosad, do 13:37" in html and "izabrala predsednika" in html and "Claude Haiku" in html
-    assert "Сажетак" in page_.summary_box({"sazetak": s}, cyr=True)
-    assert page_.summary_box({"sazetak": None}, cyr=False) == ""
-
-
 def test_the_subscribers_are_told_when_the_days_summary_is_out(tmp_path, monkeypatch):
     """Once a day, in the hours a notification may wake someone, and only while the summary is on the page and
     under half a day old; the counter is asked with the kind "sazetak"."""
@@ -1443,16 +1435,40 @@ def test_a_votes_figures_add_up_or_are_not_shown():
     assert sudija.check_votes(s) == []
 
 
-def test_the_summary_on_the_page_shows_a_votes_figures_under_its_decision():
+def test_the_day_is_one_list_of_what_was_decided():
+    """22 Nov 2026, the maintainer: one list in place of three tellings of the same day. The day summary's decisions
+    with a vote's figures under them; the moves to an item and breaks; the chair's measures as one line by kind,
+    without names; the steps that only say the work moved on, among all the steps, folded; the model's paragraph
+    not shown; where it is from in one label beside the heading."""
+    from datetime import datetime
     from uzivo import page as page_
-    s = {"vrsta": "dan", "ukratko": "Izabran je predsednik.", "odluke": [
+    now = datetime(2026, 11, 19, tzinfo=TZ).timestamp()  # 00:00 in Belgrade
+    agenda = {"tacke": [{"n": 2, "tekst": "Izbor predsednika"}, {"n": 3, "tekst": "Izbor potpredsednika"}]}
+    ev = lambda h, kind, text, **more: {"t": now + h * 3600, "vrsta": kind, "tekst": text, "izvor": "model", "url": "",
+                                        **({"vise": more} if more else {})}
+    hronika = [ev(13, "Tačka dnevnog reda", "Prelazimo na treću tačku dnevnog reda.", tacka=3),
+               ev(13.1, "Pretres otvoren", "Otvaram pretres."),
+               ev(13.2, "Izbor", "Izabran je Aleksandar Čupić.", ko="Aleksandar Čupić"),
+               ev(14, "Mera predsedavajućeg", "Izričem opomenu Bakiću.", napomena="opomena", kome="Bakiću"),
+               ev(15, "Mera predsedavajućeg", "Izričem opomenu.", napomena="opomena"),
+               ev(16, "Mera predsedavajućeg", "Oduzimam reč.", napomena="oduzimanje reči")]
+    s = {"vrsta": "dan", "kratko": "K.", "ukratko": "Ovo je dugačak pasus modela.", "odluke": [
         {"vreme": "13:27", "sta": "Izabran predsednik Skupštine.", "glasovi": "za 140, protiv 97, glasalo 237"},
-        {"vreme": "14:00", "sta": "Pauza."}]}
-    html = page_.summary_box({"sazetak": s}, cyr=False)
-    assert '<li><b>13:27</b> Izabran predsednik Skupštine.<span class="sum-v">za 140, protiv 97, glasalo 237</span></li>' in html
-    assert html.count("sum-v") == 1
-    part = {"vrsta": "deo", "do": "12:00", "ukratko": "U.", "tok": [{"vreme": "11:30", "sta": "Glasanje.", "glasovi": "za 5"}]}
-    assert "za 5" in page_.summary_box({"sazetak": part}, cyr=False)
+        {"vreme": "00:10", "sta": "Imenovan generalni sekretar."}]}
+    snap = {"provereno": now + 20 * 3600, "sada": None, "danas": [], "dnevni_red": agenda, "hronika": hronika, "sazetak": s}
+    html = page_._steps(snap, cyr=False, tz=TZ, site="https://zailiprotiv.rs/")
+    main = html.split('<ul class="day-list">')[1].split("</ul>")[0]
+    rows = main.split("<li>")[1:]
+    assert "Imenovan generalni sekretar" in rows[0]  # 00:10 is the night after: the newest
+    assert "Ovo je dugačak pasus" not in html and "Izabran je Aleksandar Čupić" not in main  # the summary told the election
+    assert '<span class="dl-v">za 140, protiv 97, glasalo 237</span>' in main
+    assert "Mere predsedavajućeg" in main and "<b>3</b>: 2 opomena, 1 oduzimanje reči" in main and "Bakić" not in main
+    assert "3. tačka dnevnog reda" in main and "Izbor potpredsednika" in main
+    assert "Pretres je otvoren" not in main and "Pretres je otvoren" in html.split("Svi koraci")[1]  # folded
+    assert '<details class="chip"><summary>automatski · može da pogreši</summary>' in html and "Claude Haiku" in html
+    without = page_._steps({**snap, "sazetak": None}, cyr=False, tz=TZ)
+    assert "Aleksandar Čupić" in without.split('<ul class="day-list">')[1].split("</ul>")[0]  # no summary: the step tells it
+    assert "Одлука" in page_._steps(snap, cyr=True, tz=TZ)
 
 
 def test_a_steps_line_leads_to_what_the_rules_say_of_it():

@@ -419,3 +419,21 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   knew its name (14-20 Nov: "mikrofon za ili protiv" 129 times, "ko govori u skupstini" 20, "skupština uživo" and
   "prenos skupštine" not at all), while the page was already indexed and the site's most clicked (516 clicks a
   week of 982). Read the change in `visits` with search=true from early December.
+- **The day is one list, and where a thing is from is a label** (22 Nov 2026, the maintainer's choice of points 1
+  and 2 of a look at the page: the visits of 20 Nov, 2,055 pages opened, 83% gone before a minute in view; the page
+  nine phone screens long between sittings, half its words in 13-14 px). It changes "What the Assembly wrote stands
+  under the line of time" and the model's summary on the page above. The same day was told three times: the
+  summary's decisions and paragraph, the line of steps, the Assembly's sentences folded under it. Now "Šta se
+  desilo" (`page._steps`) is one list, newest first: what was decided (the day summary's decisions with a vote's
+  figures under them once it is written, else the steps that report an election or a result), the moves to an
+  agenda item, breaks and the day's end, and the chair's measures as one line counted by kind, without names. The
+  steps that only say the work moved on (a debate opened or closed, a vote put; `page._MINOR`), the floor given, and
+  each measure with what was heard of it are among all the steps, folded with their links to the Rules. The model's
+  paragraph is not shown (it stays on the site's day page and in the cards' one sentence). The Assembly's sentences
+  are not told a second time: its sentence per finished item is in the agenda (`tacke.json`), and its page of the
+  sitting is linked under the list; only when nothing was heard are its sentences the list. The long notes on how a
+  thing is computed are labels beside the heading that open to the sentence on a tap (`page._chip`: the day's list,
+  the day read from the recording, the agenda); "Kako ovo radi" is folded; the notes that principle 5 wants on the
+  page (the player and the archive load on a click, what a notification keeps, what is counted) stay, each in one
+  short sentence, the method page saying the rest. A list of up to 11 lines is shown whole, a longer one folds
+  after 8. Next: the first screen, the rows that open, colour.

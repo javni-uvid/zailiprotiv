@@ -105,9 +105,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
-        out.append(f'<h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>')
-        if snap.get("snimak"):
-            out.append(f'<p class="meta">{t("from_recording")}</p>')
+        chip = _chip(t("dl_recording"), t("from_recording")) if snap.get("snimak") else ""
+        out.append(f'<div class="sec-h"><h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>{chip}</div>')
     else:
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
@@ -187,23 +186,61 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
     if str(a.get("url", "")).startswith("https://"):
         title = f'<a href="{escape(a["url"])}">{title}</a>'
     return (f'<details class="agenda" id="dnevni-red"><summary>{head}</summary><p class="meta">{title}</p>'
-            f'<ol>{"".join(rows)}</ol><p class="meta">{t("ag_note")}</p></details>')
+            f'<ol>{"".join(rows)}</ol>{_chip(t("ag_src"), t("ag_note"))}</details>')
+
+
+# Steps that say only that the work moved on (a debate opened, a vote put): on the day's list they are noise beside
+# what was decided, so they stand only among all the steps, folded (22 Nov 2026, the maintainer's choice).
+_MINOR = {"Glasanje", "Glasanje je zaključeno", "Pretres je otvoren", "Pretres je zaključen"}
+
+
+def _chip(label: str, full: str) -> str:
+    """Where something is from, as a small label beside a heading that opens to the whole sentence on a tap
+    (22 Nov 2026, the maintainer: fewer long notes on how things are computed, on the content itself)."""
+    return f'<details class="chip"><summary>{label}</summary><p>{full}</p></details>'
+
+
+def _measures(steps: list[dict]) -> dict[str, int]:
+    """The chair's measures among the shown steps, counted by kind (the kind the model read, or "other")."""
+    kinds: dict[str, int] = {}
+    for e in steps:
+        if e.get("naslov") == "Mera predsedavajućeg":
+            kind = (e.get("opis") or "").split(" · ")[0].strip() or _t("st_measure_other", False)
+            kinds[kind] = kinds.get(kind, 0) + 1
+    return kinds
+
+
+def _minute(hhmm: str) -> int:
+    """A clock's "HH:MM" as minutes of the sitting day (a day goes on past midnight: before 6 is the night after)."""
+    try:
+        h, m = (int(x) for x in str(hhmm).split(":")[:2])
+    except ValueError:
+        return -1
+    return (h + 24 if h < 6 else h) * 60 + m
 
 
 def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
-    """The day's steps as a line of time, newest first (steps_shown): the hour and the line, for what was heard in
-    the chair's words; the first eight shown, the rest folded. What the Assembly wrote on the sitting's page is not
-    on the line of time (20 Nov 2026, the maintainer: it mixed with the steps; its hour is when we read it, hours
-    after the event): its sentences stand whole under the line, folded, in the same box."""
+    """"Šta se desilo": the day as one list, newest first (22 Nov 2026, the maintainer: one list in place of three
+    tellings of the same day). On it: what was decided (the model's day summary's decisions with their votes once it
+    is written, else the steps that report an election or a vote's result), the moves to an agenda item, breaks and
+    the day's end, and the chair's measures as one line counted by kind. The steps that say only that the work moved
+    on, the floor given, and each measure with what was heard of it stand among all the steps, folded. What the
+    Assembly writes about the day is not told here a second time: its sentence per finished item is in the agenda
+    (`tacke.json`), and its page of the sitting is linked; only when nothing was heard are its sentences the list.
+    Where each kind of line is from is one label beside the heading."""
     every = steps_shown(snap)
-    if not every:
-        return ""
-    rows = [e for e in every if e["izvor"] != "sajt"]
+    heard = [e for e in every if e["izvor"] != "sajt"]
     written = [e for e in every if e["izvor"] == "sajt"]
+    summary = snap.get("sazetak") if isinstance(snap.get("sazetak"), dict) else {}
+    decisions = [o for o in summary.get("odluke") or [] if isinstance(o, dict) and o.get("sta")] if summary.get("vrsta") == "dan" else []
+    if not heard and not written and not decisions:
+        return ""
     t = lambda k: escape(_t(k, cyr))
-    s = lambda x: escape(_name(x, cyr))
+    s = lambda x: escape(_name(str(x), cyr))
+    clock = lambda e: _clock(e["t"], tz)
 
     def line(e: dict) -> str:
+        """A step as it stands among all the steps: the hour, a ring, its name (leading to the Rules) and what more."""
         if e.get("rec"):
             head, _, who = e["naslov"].partition(": ")
             who = s(who)
@@ -211,33 +248,74 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
                 who = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + e["adresa"])}">{who}</a>'
             body = f'<p class="st-floor">{s(head)}: <b>{who}</b></p>'
         else:
-            title = s(e["naslov"])
-            if e.get("pojam") and site:  # what the Rules say of this kind of step, on the site (steps.STEP_TERM)
-                href = site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojam-" + e["pojam"]
-                title = f'<a href="{escape(href)}" title="{t("steps_rules")}">{title}</a>'
-            body = f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
-        return (f'<li class="st-{e["izvor"]}{" st-rec" if e.get("rec") else ""}"><span class="time">{_clock(e["t"], tz)}</span><i aria-hidden="true"></i>'
+            body = f'<p class="st-title">{rules(e)}</p>' + (f'<p class="st-what">{s(e["opis"])}</p>' if e["opis"] else "")
+        return (f'<li class="st-{e["izvor"]}{" st-rec" if e.get("rec") else ""}"><span class="time">{clock(e)}</span><i aria-hidden="true"></i>'
                 f'<div>{body}</div></li>')
-    first, rest = rows[:8], rows[8:]
-    more = (f'<details><summary>{t("steps_more")} ({len(rows)})</summary><ol class="steps">{"".join(line(e) for e in rest)}</ol></details>'
-            if rest else "")
-    said_key = "steps_model" if any(e.get("model") for e in rows) else "steps_said"
-    key = f'<p class="st-key"><span class="st-prepis"><i aria-hidden="true"></i>{t(said_key)}</span></p>' if rows else ""
-    official = ""
-    if written:  # the Assembly's sentences whole, in the order they stood; one line says where from and when read
-        links = "".join(f' <a href="{escape(u)}">{t("steps_site")} ↗</a>' for u in dict.fromkeys(
-            str(e["url"]) for e in written) if u.startswith("https://")) or " " + t("steps_site")
-        read = escape(_fill(_t("steps_published", cyr), _clock(max(e["t"] for e in written), tz)))
-        sentences = "".join("<p>" + s(e["opis"]) + "</p>" for e in written)
-        official = (f'<details class="st-written"{"" if rows else " open"}><summary>{t("steps_written")} ({len(written)})</summary>'
-                    f'{sentences}<p class="st-src">{read}{links}</p></details>')
+
+    def rules(e: dict, text: str = "") -> str:
+        title = text or s(e["naslov"])
+        if e.get("pojam") and site:  # what the Rules say of this kind of step, on the site (steps.STEP_TERM)
+            href = site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojam-" + e["pojam"]
+            title = f'<a href="{escape(href)}" title="{t("steps_rules")}">{title}</a>'
+        return title
+
+    def item(when: str, kicker: str, body: str, votes: str = "") -> str:
+        votes = f'<span class="dl-v">{s(votes)}</span>' if votes else ""
+        kicker = f'<span class="dl-k">{kicker}</span>' if kicker else ""
+        return f'<li><span class="time">{escape(when)}</span><div>{kicker}<p>{body}</p>{votes}</div></li>'
+
+    rows: list[tuple[int, str]] = []  # (minute of the day, the line)
+    local = lambda e: _minute(_clock(e["t"], tz))
+    for o in decisions:
+        rows.append((_minute(o.get("vreme", "")), item(str(o.get("vreme", "")), t("dl_decision"), s(o["sta"]), o.get("glasovi") or "")))
+    measures = [e for e in heard if e.get("naslov") == "Mera predsedavajućeg"]
+    for e in heard:
+        title = e.get("naslov", "")
+        if e.get("rec") or title in _MINOR or title == "Mera predsedavajućeg":
+            continue
+        if decisions and title in ("Izbor", "Rezultat glasanja"):
+            continue  # the day's summary has told them, checked (sudija.settle_votes)
+        if title.startswith("Prelazak na "):
+            n = title.split()[2].rstrip(".")
+            rows.append((local(e), item(clock(e), escape(_fill(_t("dl_item", cyr), n)), rules(e, s(e["opis"]) or s(title)))))
+        elif title == "Rezultat glasanja":
+            rows.append((local(e), item(clock(e), rules(e, t("dl_vote")), s(e["opis"]) or t("dl_vote_done"))))
+        elif title == "Izbor":
+            rows.append((local(e), item(clock(e), t("dl_election"), s(e["opis"]))))
+        else:  # the sitting opened, work resumed, a break, the day's end
+            rows.append((local(e), item(clock(e), "", f'<b>{rules(e)}</b>' + (f' · {s(e["opis"])}' if e["opis"] else ""))))
+    if measures:
+        kinds = _measures(measures)
+        told = ", ".join(f"{c} {_name(k, cyr)}" for k, c in sorted(kinds.items(), key=lambda kv: (-kv[1], kv[0])))
+        last = measures[0]  # newest first
+        rows.append((local(last), item(clock(last), rules(last, t("st_measures")), f"<b>{len(measures)}</b>: {escape(told)}")))
+    rows.sort(key=lambda r: -r[0])
+    links = "".join(f' <a href="{escape(u)}">{t("dl_record")} ↗</a>' for u in dict.fromkeys(
+        str(e["url"]) for e in written) if u.startswith("https://"))
+    if not rows and written:  # nothing heard: the Assembly's sentences, whole, in the order they stood
+        body = "<ul class=\"day-list\">" + "".join(item("", "", s(e["opis"])) for e in written) + "</ul>"
+        chip = _chip(t("steps_site"), escape(_fill(_t("steps_published", cyr), _clock(max(e["t"] for e in written), tz))))
+    else:
+        shown, rest = (rows, []) if len(rows) <= 11 else (rows[:8], rows[8:])  # a fold for two or three is no help
+        body = '<ul class="day-list">' + "".join(r[1] for r in shown) + "</ul>"
+        if rest:
+            body += f'<ul class="day-list">{"".join(r[1] for r in rest)}</ul>'.join(
+                (f'<details class="dl-more"><summary>{t("dl_more")} ({len(rest)})</summary>', "</details>"))
+        full = t("steps_model" if any(e.get("model") for e in heard) else "steps_said")
+        if decisions:
+            full = full.rstrip(".") + ". " + t("sum_note")
+        chip = _chip(t("dl_src"), full)
+    if heard:
+        body += (f'<details class="dl-more"><summary>{t("steps_more")} ({len(heard)})</summary>'
+                 f'<ol class="steps">{"".join(line(e) for e in heard)}</ol></details>')
+    if links and rows:
+        body += f'<p class="dl-foot">{links.strip()}</p>'
     # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
     head = t("steps")
     if snap.get("ranije") and snap.get("dan"):
         when = _date(snap["dan"])
         head = f'{t("steps_then")}, {escape(cyrillic(when) if cyr else when)}'
-    line_ = f'<p class="meta">{t("steps_lead")}</p><ol class="steps">{"".join(line(e) for e in first)}</ol>{more}{key}' if rows else ""
-    return f'<section class="steps-sec"><h2>{head}</h2>{line_}{official}</section>'
+    return f'<section class="steps-sec"><div class="sec-h"><h2>{head}</h2>{chip}</div>{body}</section>'
 
 
 def _tiles(turns: list[dict], *, cyr: bool) -> str:
@@ -476,11 +554,7 @@ def _cards_of_the_day(snap: dict, card, *, cyr: bool) -> list[str]:
         rest = "".join(f'<li>{x["n"]}. {n(x["tekst"])}</li>' for x in done[3:])
         out.append(card(t("st_items_more"), f'<ul class="st-list">{rest}</ul><p class="st-src">{t("st_item_src")}</p>',
                         "".join(x["tekst"] for x in done[3:])))
-    kinds: dict[str, int] = {}
-    for e in steps_shown(snap):
-        if e.get("naslov") == "Mera predsedavajućeg":
-            kind = (e.get("opis") or "").split(" · ")[0].strip() or _t("st_measure_other", False)
-            kinds[kind] = kinds.get(kind, 0) + 1
+    kinds = _measures(steps_shown(snap))
     if kinds:
         total = sum(kinds.values())
         rows = "".join(f'<li><b>{c}</b> {n(k)}</li>' for k, c in sorted(kinds.items(), key=lambda kv: (-kv[1], kv[0])))
@@ -507,36 +581,6 @@ def _card_next(snap: dict, *, cyr: bool) -> tuple[str, str] | None:
         body += f'<p class="st-item"><small>{label}:</small> {item["n"]}. {n(item["tekst"])}</p>'
         read += item["tekst"]
     return body, read
-
-
-def summary_box(snap: dict, *, cyr: bool) -> str:
-    """The model's summary of the day so far (sudija.py), while nobody is on: the day's once written (what was
-    decided first), else the latest stretch, the earlier ones folded; always with what wrote it and from what."""
-    s = snap.get("sazetak")
-    if not isinstance(s, dict) or not s.get("ukratko"):
-        return ""
-    t = lambda k: escape(_t(k, cyr))
-    n = lambda x: escape(_name(str(x), cyr))
-    def items(rows) -> str:
-        """Each step as a line: its time, its words, and a vote's figures under it, told the same way each time
-        (`sudija.vote_text`, kept with the summary as `glasovi`; the sum was checked there)."""
-        out = ""
-        for o in rows or []:
-            if isinstance(o, dict) and o.get("sta"):
-                votes = f'<span class="sum-v">{n(o["glasovi"])}</span>' if o.get("glasovi") else ""
-                out += f'<li><b>{escape(str(o.get("vreme", "")))}</b> {n(o["sta"])}{votes}</li>'
-        return f'<ul class="sum-dec">{out}</ul>' if out else ""
-
-    if s.get("vrsta") == "dan":
-        head = t("sum_day")
-        body = items(s.get("odluke")) + f'<p>{n(s["ukratko"])}</p>'
-    else:
-        head = escape(_fill(_t("sum_part", cyr), str(s.get("do") or "")))
-        body = f'<p>{n(s["ukratko"])}</p>' + items(s.get("tok"))
-        if s.get("ranije"):
-            body += (f'<details><summary>{t("sum_earlier")}</summary>'
-                     + "".join(f"<p>{n(x)}</p>" for x in s["ranije"]) + "</details>")
-    return f'<div class="sum"><p class="src">{head}</p>{body}<p class="meta">{t("sum_note")}</p></div>'
 
 
 def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
@@ -571,7 +615,7 @@ def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         if str(coming.get("url", "")).startswith("https://"):
             title = f'<a href="{escape(coming["url"])}">{title}</a>'
         nxt = f'<p class="pz-next"><b>{t("coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
-    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p>{summary_box(snap, cyr=cyr)}'
+    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p>'
             f'<ol class="pz-top">{top}</ol>{nxt}'
             f'<p class="acts"><button type="button" class="share-now st-open">▶ {t("st_open")}</button> '
             f'<button type="button" class="share-now share-day" data-src="{src}" '
@@ -781,7 +825,7 @@ def _timeline(turns: list[dict], shade: dict[str, str], cur: dict | None, *, cyr
         if at > 13:
             marks.append(f'<span style="left:{at:.2f}%">{hour.strftime("%H")}</span>')
     return (f'<h3 class="sub">{t("timeline")}</h3><div class="tl">{"".join(blocks)}</div>'
-            f'<div class="tl-ax" aria-hidden="true">{"".join(marks)}</div><p class="meta">{t("timeline_note")}</p>')
+            f'<div class="tl-ax" aria-hidden="true">{"".join(marks)}</div>')
 
 
 def _own(name: str) -> str:
@@ -1066,8 +1110,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="rules-cta"><a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}"><b>{t("rules_cta")} →</b><span>{t("rules_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-<h2>{t("how_title")}</h2>
-<p>{t("how")}</p>
+<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p></details>
 <p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
