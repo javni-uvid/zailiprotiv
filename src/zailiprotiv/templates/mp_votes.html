@@ -3,6 +3,7 @@
 {% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}: svi glasovi — Za ili Protiv{% endblock %}
 {% block description %}Svi glasovi poslanika {{ mp.name|given_first }} ({{ mp.name }}): zakoni za i protiv, po oblasti, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}{# the MP's page is the one to find; this one is linked from it (docs/decisions/site.md, "Search engines") #}
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Glasovi: {{ mp.name }}" href="{{ mp.slug }}.xml">{% endblock %}
 {% block main %}
