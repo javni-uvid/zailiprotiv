@@ -14,7 +14,7 @@ import subprocess
 import threading
 from pathlib import Path
 
-from . import config
+from . import config, r2
 
 log = logging.getLogger("slusaj")
 WINDOW = 12  # segments in the playlist (about a minute at YouTube's 5 s)
@@ -24,6 +24,15 @@ KEEP = 20  # segment files kept on disk: a player still fetching one just droppe
 def on() -> bool:
     """While there is someone to listen: all (SLUSAJ_JAVNO), or the key's holder (the transcript's key)."""
     return config.LISTEN_PUBLIC or len(config.TRANSCRIPT_KEY) >= 12
+
+
+REMOTE = "uzivo/"  # the folder in the bucket (r2.py): the playlist, and each broadcast's segments under its video's id
+
+
+def address() -> str:
+    """Where listeners get the playlist: the bucket's public address when it is set (22 Nov 2026: Cloudflare's terms
+    want audio served from its storage), else this service's own /slusaj/z.m3u8."""
+    return r2.PUBLIC + REMOTE + "z.m3u8" if r2.on() else "/slusaj/z.m3u8"
 
 
 def fresh(now: float) -> bool:
@@ -36,9 +45,10 @@ class Playlist:
         self.folder = Path(folder)
         self._lock = threading.Lock()
         self.items: list[tuple[int, float, bool]] = []  # (segment number, seconds, a discontinuity before it)
+        self.video = ""  # the broadcast's YouTube id: the bucket's segments are kept under it (numbers start again)
         self.seen = 0.0  # when the last segment was added (time.time())
 
-    def add(self, segment: str, seconds: float, number: int, now: float) -> bool:
+    def add(self, segment: str, seconds: float, number: int, now: float, video: str = "") -> bool:
         """A fetched segment's sound into the playlist; whether it was."""
         try:
             self.folder.mkdir(parents=True, exist_ok=True)
@@ -56,9 +66,10 @@ class Playlist:
             return False
         with self._lock:
             last = self.items[-1][0] if self.items else None
-            if last is not None and number <= last - 50:  # a new broadcast counts from the start again
-                self.items = []
+            if (last is not None and number <= last - 50) or (video and self.video and video != self.video):
+                self.items = []  # a new broadcast counts from the start again
                 last = None
+            self.video = video or self.video
             gap = last is not None and number != last + 1
             self.items = [x for x in self.items if x[0] < number][-(WINDOW - 1):] + [(number, seconds, gap)]
             self.seen = now
@@ -67,10 +78,15 @@ class Playlist:
                 if f.name not in keep:
                     f.unlink(missing_ok=True)
         self.write()
+        if r2.on():  # the segment first, then the playlist that names it (one thread, in order)
+            folder = REMOTE + (self.video or "x") + "/"
+            r2.send(folder + out.name, out.read_bytes(), "video/mp2t", "public, max-age=86400, immutable")
+            r2.send(REMOTE + "z.m3u8", self.text(folder=self.video or "x").encode("utf-8"), "application/vnd.apple.mpegurl",
+                    "public, max-age=1")
         return True
 
-    def text(self) -> str:
-        """The playlist (HLS, a live one: no end)."""
+    def text(self, folder: str = "") -> str:
+        """The playlist (HLS, a live one: no end); `folder`: the segments' folder beside it (the bucket's)."""
         with self._lock:
             items = list(self.items)
         if not items:
@@ -80,7 +96,7 @@ class Playlist:
         for i, (n, s, gap) in enumerate(items):
             if gap and i:
                 lines.append("#EXT-X-DISCONTINUITY")
-            lines += [f"#EXTINF:{s:.3f},", f"z{n}.ts"]
+            lines += [f"#EXTINF:{s:.3f},", (folder + "/" if folder else "") + f"z{n}.ts"]
         return "\n".join(lines) + "\n"
 
     def write(self) -> None:
