@@ -47,14 +47,14 @@ switch ($Korak) {
         foreach ($name in $Models.Keys) {
             $file = Join-Path $dir $name; $url, $sha = $Models[$name]
             if (-not (Test-Path $file) -or (Get-FileHash $file -Algorithm SHA256).Hash -ne $sha) {
-                Write-Host "Preuzimam $name…"; Invoke-WebRequest -UseBasicParsing $url -OutFile $file
+                Write-Host "Preuzimam $name..."; Invoke-WebRequest -UseBasicParsing $url -OutFile $file
             }
             if ((Get-FileHash $file -Algorithm SHA256).Hash -ne $sha) { Remove-Item $file; throw "$name nije onaj koji treba (SHA-256)" }
         }
         Write-Host "Napravljeno: $Exe ($Commit)"
     }
     "pokreni" {
-        if (Get-Server) { Write-Host "Već radi."; return }
+        if (Get-Server) { Write-Host "Vec radi."; return }
         if (-not (Test-Path $Exe)) { throw "Prvo: .\whisper-gpu.ps1 napravi" }
         $m = Join-Path $Home_ "modeli"
         # beam 3 as on the CPU; VAD drops the silence, where Whisper would otherwise make up words
@@ -65,7 +65,7 @@ switch ($Korak) {
     }
     "stanje" {
         $p = Get-Server
-        if (-not $p) { Write-Host "Ne radi (servis piše na procesoru)."; return }
+        if (-not $p) { Write-Host "Ne radi (servis pise na procesoru)."; return }
         $card = Select-String -Path $Log -Pattern "ggml_vulkan: 0 = (.*?) \|" -ErrorAction SilentlyContinue | Select-Object -First 1
         Write-Host ("Radi (pid {0}), odgovara: {1}, kartica: {2}" -f $p.Id, (Test-Answer), $(if ($card) { $card.Matches[0].Groups[1].Value } else { "nepoznato" }))
     }
@@ -74,6 +74,6 @@ switch ($Korak) {
         $startup = [Environment]::GetFolderPath("Startup")
         $line = "@powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$PSCommandPath`" pokreni"
         Set-Content -Path (Join-Path $startup "zailiprotiv-whisper.cmd") -Value $line -Encoding ascii
-        Write-Host "Pokreće se sa Windowsom ($startup\zailiprotiv-whisper.cmd)."
+        Write-Host "Pokrece se sa Windowsom ($startup\zailiprotiv-whisper.cmd)."
     }
 }
