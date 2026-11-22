@@ -32,6 +32,28 @@ def groups(dimension: str, variables: dict, limit: int = 40, order: str = "sum_v
     return ask(query, variables).get("rows", [])
 
 
+def came_from(variables: dict, own: set):
+    """The page of another site a visit came from, the day, and the page it came to: which post or article brings
+    readers (a forum's thread, a news article). Another site's addresses only, sums of three or more as everywhere."""
+    dims = "refererHost refererPath date requestHost requestPath"
+    rows = groups(dims, variables, 200, "count_DESC")
+    if not rows:  # Cloudflare keeps no path of the referring page: the site and the day, at least
+        dims = "refererHost date requestHost requestPath"
+        rows = groups(dims, variables, 200, "count_DESC")
+    print("\nCame from, the page  (page views / visits; the other site's page -> ours, by day)")
+    shown = 0
+    for r in rows:
+        d = r["dimensions"]
+        host = d.get("refererHost") or ""
+        if r["count"] < LEAST or not host or host in own or host.endswith(".zailiprotiv.rs"):
+            continue
+        print(f"  {r['count']:>6} {r['sum']['visits']:>6}  {d['date']}  {host}{d.get('refererPath', '')}"
+              f"  ->  {d['requestHost']}{d['requestPath']}")
+        shown += 1
+        if shown == 40:
+            break
+
+
 def main(hours: int):
     until = datetime.now(timezone.utc)
     since = until - timedelta(hours=hours)
@@ -49,6 +71,7 @@ def main(hours: int):
         for r in rows:
             if r["count"] >= LEAST:
                 print(f"  {r['count']:>6} {r['sum']['visits']:>6}  {r['dimensions'][dim] or '(none)'}")
+    came_from(variables, {r["dimensions"]["requestHost"] for r in total})
     rows = groups("datetimeHour", variables, hours + 2, "datetimeHour_ASC")
     print("\nBy hour, UTC  (page views / visits)")
     for r in rows:
