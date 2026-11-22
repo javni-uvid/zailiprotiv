@@ -159,9 +159,13 @@ class View:
                     "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
                     "vreme_grupa": groups}
 
-    def caption(self, start: float, end: float, text: str) -> None:
-        """A line under the picture (prepis.Captions): the last four are kept, in memory only."""
-        self.captions = (self.captions + [{"od": round(start, 1), "do": round(end, 1), "tekst": text}])[-4:]
+    def caption(self, start: float, end: float, text: str, program: float | None = None) -> None:
+        """A phrase of the line under the picture (prepis.Captions), with when it begins by the broadcast's clock
+        when known: the last eight are kept, in memory only."""
+        line = {"od": round(start, 1), "do": round(end, 1), "tekst": text}
+        if program is not None:
+            line["pt"] = round(program, 2)
+        self.captions = (self.captions + [line])[-8:]
 
     def _captions_shown(self) -> list[dict]:
         """The line's newest lines while a broadcast is on and they are fresh (a minute of the last frame), with the

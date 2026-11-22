@@ -532,3 +532,16 @@ be measured on 24 Nov, and the line is to come with its picture. `TITL_PRIKAZ=0`
   is the debate in detail, counted afresh with each group's chair's 15 minutes more (art. 158). Not known, and said
   on the page: the shortened procedure (half, art. 99), more time given to the groups, the Assembly's own clock (we
   count the caption's time). Labelled "procena"; its term `vreme-rasprave` on the site's page of the Rules.
+
+**The line under the picture comes with the sound (22 Nov 2026, the maintainer: "da titl bude istovremen sa
+zvukom").** Each viewer's YouTube player is behind the broadcast by its own time (16-20 s on a 24/7 news channel,
+measured), so no fixed delay fits. The broadcast's playlist dates each segment (`#EXT-X-PROGRAM-DATE-TIME`), and the
+embedded player, given `enablejsapi=1`, tells the page by its own messages which moment by that clock it shows
+(`mediaReferenceTime`); nothing more is loaded from YouTube, and only after the press as before (principle 5).
+`stream` keeps each segment's program time (`program_of`), the sound's file is named with it, whisper.cpp gives each
+phrase its seconds (`verbose_json`), and each phrase is a line with its moment (`pt`); the page shows a phrase from
+when the player reaches it, for 15 s, the last two together. A line without a moment, or a player that tells none,
+falls back to `TITL_KASNJENJE`. The line takes one segment of sound at a time (`CAPTION` 4 s): measured on Sky
+News through a test image for 90 s, 29 phrases, none late, each in the page 7-18 s (median 12) before the player
+reached it; with two segments the least was 2.6 s. A broadcast with a low-latency player could leave less: a late
+phrase is shown at once.

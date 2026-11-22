@@ -117,6 +117,15 @@ def _resolve_youtube(url: str) -> str:
     return info["url"], info.get("http_headers") or {}
 
 
+def _program_time(text: str) -> float | None:
+    """#EXT-X-PROGRAM-DATE-TIME's value as a Unix time, or None."""
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(text.strip().replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
+
+
 SOUND: dict = {}  # the address of the broadcast's sound, when the picture's format has none
 
 
@@ -211,6 +220,7 @@ class HlsPoller(threading.Thread):
         self._code: int | None = None
         self._lock = threading.Lock()
         self._segments: dict[int, str] = {}   # number → address, from the latest playlist
+        self._program: dict[int, float] = {}  # number → when it begins by the broadcast's own clock (PROGRAM-DATE-TIME)
         self._newest = -1
         self._dur = 5.0
         self._ended = False
@@ -233,22 +243,29 @@ class HlsPoller(threading.Thread):
             variant = next(l for l in text.splitlines() if l and not l.startswith("#"))
             self.url = urllib.parse.urljoin(self.url, variant.strip())
             return self._read_playlist()
-        seq, dur, segs = 0, self._dur, {}
+        seq, dur, segs, clock, program = 0, self._dur, {}, None, {}
         for line in text.splitlines():
             line = line.strip()
             if line.startswith("#EXT-X-MEDIA-SEQUENCE:"):
                 seq = int(line.split(":", 1)[1])
             elif line.startswith("#EXTINF:"):
                 dur = float(line[8:].split(",")[0] or dur)
+            elif line.startswith("#EXT-X-PROGRAM-DATE-TIME:"):
+                clock = _program_time(line.split(":", 1)[1])
             elif line and not line.startswith("#"):
                 url = urllib.parse.urljoin(self.url, line)
                 m = _SQ.search(url)
-                segs[int(m.group(1)) if m else seq] = url
+                n = int(m.group(1)) if m else seq
+                segs[n] = url
+                if clock is not None:  # the broadcast's clock: what the viewer's player tells the page it shows
+                    program[n] = clock
+                    clock += dur
                 seq += 1
         if not segs:
             raise RuntimeError("playlist without segments")
         with self._lock:
             self._segments, self._newest, self._dur = segs, max(segs), dur
+            self._program = program
             self._ended = "#EXT-X-ENDLIST" in text
             self._pl_ok_at = time.time()
 
@@ -307,6 +324,16 @@ class HlsPoller(threading.Thread):
             if self._halt.wait(0.7):
                 break
         return None
+
+    def program_of(self, n: int) -> float | None:
+        """When segment n begins by the broadcast's own clock; past the playlist, counted on from its last."""
+        with self._lock:
+            if n in self._program:
+                return self._program[n]
+            if not self._program:
+                return None
+            last = max(self._program)
+            return self._program[last] + (n - last) * self._dur
 
     def _segment_url(self, n: int) -> str | None:
         with self._lock:
@@ -376,13 +403,13 @@ class HlsPoller(threading.Thread):
                     if not prepis.on():
                         pass
                     elif not self.sound_url:
-                        prepis.keep(path, t2, dur)  # the segment's sound, for the automatic transcript
+                        prepis.keep(path, t2, dur, self.program_of(nxt))  # the segment's sound, for the transcript
                     else:
                         heard = self._sound(nxt)
                         if heard:
                             with open(path + "-zvuk", "wb") as f:
                                 f.write(heard)
-                            prepis.keep(path + "-zvuk", t2, dur)
+                            prepis.keep(path + "-zvuk", t2, dur, self.program_of(nxt))
                     if t2 - last_new > 2.5 * dur:
                         log.info(
                             "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",
