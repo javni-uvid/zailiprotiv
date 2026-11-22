@@ -52,45 +52,6 @@ it. Dates are the maintainer's decisions unless said otherwise.
   and poor, by host and device and for the most opened pages; for a page good in fewer than three loads of four,
   the elements that jumped or were drawn late). The first reading, of the site's first week: every page well over
   the line but the quiz, whose note at the foot jumps while the script lays the questions out.
-- **A search by meaning, on trial** (20 Nov 2026, the maintainer's decision, to be judged after a day or two of
-  use). On the maintainer's computer an MCP server, `cognee-zailiprotiv`, holds two sets of texts taken from
-  `origin/main` (kept outside the repository, nothing sent out). **When the tool is there, ask it first**, with
-  `recall`, `search_type: "CHUNKS"`, `top_k` 5 or more, the question in Serbian or English:
-  - `datasets: "zailiprotiv"`, how the project is made: every decision of this file and of `live/AGENTS.md`, every
-    commit message on `main`, the issues, and a map of the code (each module's docstring with its functions' first
-    lines, each workflow's header, the READMEs by section). For why something is as it is, whether something was
-    tried, and where the code for something is.
-  - `datasets: "skupstina"`, what the site holds, in Latin script: every law and bill of every convocation with the
-    summary of its memorandum, the debates' summaries, the other voices' notes, what an MP says. For finding laws
-    by subject when the title doesn't say it (a quiz, public names, notes).
-  A hit begins with where it is from (a commit, a section, a file under `data/`): **read that in the repository
-  before relying on it.** The store lags behind `main` until refreshed, these files stay the truth, and a hit from
-  `skupstina` is a pointer and never a source: a figure, a vote or a quote comes from the document (principles 2
-  and 6). For an exact word or a rare name use `grep` and `git log -S`; it finds by meaning and misses those.
-  **A hit that doesn't say where it is from** (most of a law's: the store cuts a text into pieces of some 400
-  characters and only the first keeps that line; and the summaries under `data/` are in Cyrillic, so `grep` for
-  the Latin words finds nothing): ask with `include_references: true`, and
-  `python C:/Users/marko/cognee-zailiprotiv/odakle.py text_<md5> …` turns each hit's `document=text_<md5>` into
-  that line. (20 Nov 2026, tried on 120 laws with 14 questions whose law was known: the model in use had the
-  right law in the first five for 13 and named it for one; two models that read a whole summary at once found no
-  better, 13 of 14, named 13, and cost 2 to 3 GB of memory more and a store built anew, so the model stays.)
-  Never call its `forget`. Where the tool is missing (another machine, the server off), work as before.
-  **Agents add to it themselves** (20 Nov 2026, the maintainer's decision), with `remember`,
-  `dataset_name: "beleske"`, `self_improvement: false`:
-  - **Always that name, never a new one** (cognee's own advice for a rules file): the other two sets are rebuilt
-    from `main` and lose whatever else is put in them; `beleske` is never emptied and is copied at every refresh.
-  - **What:** what cost time to learn and no file here says. Something tried that failed and why, how a source or
-    a tool behaves, where a thing is found, what a text from outside the repository says (with its address).
-  - **How:** one fact a note, a few sentences: the model reads some 400 characters at a time, and a longer text
-    comes back in pieces of which only the first says where it is from. The first line, in brackets, says what it
-    is, the date and the task or pull request (`[beleška, 20 Nov 2026, PR #65]`). In Serbian or English.
-  - **Never** a secret, an address or a key that isn't public, or anything of a person's private life
-    (principle 4). A decision still goes in its part's file: a note is no place for it, and another agent's note
-    is a pointer to check like any other hit.
-  - **To find them** name both sets: `datasets: "zailiprotiv,beleske"`. A note that proved wrong is answered by a
-    new note saying so.
-  - A kind of text to be collected from `main` at every refresh, as the laws are, is asked of the maintainer in
-    the pull request: what is collected is decided on their computer (`collect.py` beside the store).
 
 ## Principles
 

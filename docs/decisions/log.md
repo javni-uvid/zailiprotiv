@@ -33,3 +33,12 @@ the change. The principles and the rules of work are in AGENTS.md.
   come from `javni-uvid/osnova` (the maintainer's decision): the **osnova** workflow copies them into `osnova/`,
   `tools/posalji.sh`, `tools/pocisti.sh` and the pre-push hook only call the copy's, and AGENTS.md keeps what is
   this project's own. The principles here stay whole and in force; `osnova/principles.md` is the common core.
+- **22 Nov 2026:** the search by meaning (a local cognee server over the decisions, the commits, the laws and the
+  agents' own notes, 20-22 Nov) removed at the maintainer's decision; it was the second cognee trial (the first, on 16-17 Nov,
+  was removed too). In about 14 hours of agents' work they asked it 6 times and wrote 3 notes; on the full store
+  the right law was among the first five hits for 7 of 12 questions with a known answer (13 of 14 on a sample of 120
+  laws: it falls as the store grows), and a hit often came without the line saying where it is from, which `grep`
+  could not trace because the summaries under `data/` are in Cyrillic and the store was in Latin. It cost 14 hours of
+  the computer to fill, 2 GB of memory kept, and a refresh by hand; without an LLM only the search of pieces of text
+  worked, which a plain index does as well. Before a third try: a lighter index of the same kind, each piece carrying
+  its own source line, and a reason the agents would ask it more than they grep.
