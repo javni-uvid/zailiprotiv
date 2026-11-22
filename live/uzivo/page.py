@@ -19,8 +19,6 @@ from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: 
 
 ARC = ('<svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/>'
        '<path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg>')
-MIC = ('<svg class="mic-mark" viewBox="0 0 76 84" role="img" aria-label="Mikrofon"><rect class="m-za" x="26" y="6" width="24" height="40" rx="12"/>'
-       '<path class="m-protiv" d="M 12 36 A 26 26 0 0 0 64 36"/><path class="m-protiv" d="M 38 62 V 78"/></svg>')
 
 
 def _brand(cyr: bool) -> str:
@@ -532,7 +530,7 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
 <style>{CSS}</style>
 </head>
 <body>
-<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{base}">{t("said_back")}</a></span></header>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a href="{base}">{t("said_back")}</a></span></header>
 <main class="said-page">
 <h1>{t("said_title")}{", " + escape(cyrillic(when) if cyr else when) if when else ""}</h1>
 <p class="lead">{t("said_lead")}</p>
@@ -1195,7 +1193,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <style>{CSS}</style>
 </head>
 <body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
-<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="mic" href="{base}" title="{t("title")}">{MIC}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="top-support" href="{escape(home + "podrzi")}">{t("support_cta")}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
 <main>
 <p class="sr" id="ko" aria-live="polite"></p>
 <section class="hero"><h1>{t("title")}</h1></section>

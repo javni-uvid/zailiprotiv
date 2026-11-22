@@ -25,19 +25,21 @@ def _font(name: str, size: int) -> ImageFont.FreeTypeFont:
 
 
 def icon(size: int, maskable: bool = False) -> bytes:
-    """The page's icon for a phone's home screen (20 Nov 2026): the page's microphone (page.MIC, its capsule "za" blue,
-    its cradle and stand "protiv" orange) on white. A maskable icon keeps it inside the middle 60%, which every
-    launcher's shape leaves whole. Drawn four times larger and scaled down, for smooth edges."""
+    """The page's icon for a phone's home screen: the site's own mark (favicon.svg, apple-touch-icon.png), two arcs
+    of one circle, "za" blue and "protiv" orange, on white (22 Nov 2026, the maintainer: the microphone looked too
+    like another's logo). A maskable icon keeps it inside the middle 60%, which every launcher's shape leaves whole.
+    Drawn four times larger and scaled down, for smooth edges."""
     k = 4 * size
     img = Image.new("RGB", (k, k), "#ffffff")
     g = ImageDraw.Draw(img)
-    u = k * (0.56 if maskable else 0.72) / 84  # the mark's height, in the SVG's 76×84 frame
-    x0, y0 = (k - 76 * u) / 2, (k - 84 * u) / 2
-    xy = lambda x, y: (x0 + x * u, y0 + y * u)
-    w = max(1, round(9 * u))
-    g.rounded_rectangle([*xy(26, 6), *xy(50, 46)], radius=12 * u, outline=ZA, width=w)
-    g.arc([*xy(12, 10), *xy(64, 62)], start=0, end=180, fill=PROTIV, width=w)
-    g.line([xy(38, 62), xy(38, 78)], fill=PROTIV, width=w)
+    # favicon.svg's frame (64x64): a circle of radius 23 about (32, 46), stroke 11; the mark spans x 3.5-60.5 and
+    # y 17.5-51.5, set in the middle of the icon
+    u = k * (0.56 if maskable else 0.74) / 57
+    cx, cy = k / 2, k / 2 + (46 - 34.5) * u
+    r, w = 23 * u, round(11 * u)
+    box = [cx - r - w / 2, cy - r - w / 2, cx + r + w / 2, cy + r + w / 2]
+    g.arc(box, start=180, end=300, fill=ZA, width=w)  # "M 9 46 A 23 23 0 0 1 43.5 26.1"
+    g.arc(box, start=314, end=360, fill=PROTIV, width=w)  # "M 48 29.5 A 23 23 0 0 1 55 46"
     buf = io.BytesIO()
     img.resize((size, size), Image.LANCZOS).save(buf, "PNG", optimize=True)
     return buf.getvalue()
