@@ -555,3 +555,12 @@ after the first half minute the player stood 13.6 s behind, and no phrase was la
 before its moment). The test servers for this (a hand-run container on a 24/7 channel: `SOURCE_PAGE=`,
 `YOUTUBE_URL=<its watch address>`, `CHANNEL_LIVE=`, port 8095) and `zailiprotiv-dizajn/sync/measure2.py` are the
 way to look again without a sitting.
+
+**A day's recording read on the graphics card too** (22 Nov 2026, the maintainer: "možeš prebaciti na karticu ako
+ima mesta"). `zvuk_dana` (who spoke when, from what was said) writes on the card's server when it answers
+(`WHISPER_URL`, else `host.docker.internal:8178`), on the CPU otherwise. The server gives tokens, not words: a token
+with no space before it is the same word's. Its VAD cuts the silence out and gives a segment's times in the whole
+sound but the tokens' in the shortened one, a minute off by the twentieth minute: each segment's words are laid
+over its own span in proportion. Checked on the first 20 min of 19 Nov against what the CPU had written: 89% of the
+words the same, a matched word's start 0.32 s apart at the median (0.84 s at the 90th percentile), the 20 min written
+in 50 s.

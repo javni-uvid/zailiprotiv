@@ -1729,3 +1729,15 @@ def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
     assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojam-vreme-rasprave"' in html and "član 97" in html
     assert "Време посланичких група" in page_._group_time({"vreme_grupa": g}, cyr=True, site="https://zailiprotiv.rs/")
     assert page_._group_time({}, cyr=False) == ""
+
+
+def test_a_days_recording_on_the_card_makes_words_of_tokens():
+    """22 Nov 2026: zvuk_dana on the graphics card; whisper.cpp gives tokens, a token with no space before it is the
+    same word's, the server's marks are left out, the seconds count from the piece's place in the file."""
+    from uzivo import zvuk_dana
+    tokens = [{"word": "[_BEG_]", "start": 0, "end": 0}, {"word": " Ti", "start": 0.04, "end": 0.16},
+              {"word": " ć", "start": 0.16, "end": 0.24}, {"word": "e", "start": 0.24, "end": 0.28},
+              {"word": " morati", "start": 0.3, "end": 0.6}, {"word": ".", "start": 0.6, "end": 0.62}]
+    assert zvuk_dana.words(tokens, 600) == [[600.04, 600.16, "Ti"], [600.16, 600.28, "će"], [600.3, 600.62, "morati."]]
+    # the segment stood at 10.0-11.16 s in the whole sound, its tokens at 0.04-0.62 in the shortened one
+    assert zvuk_dana.words(tokens, 600, (10.0, 11.16)) == [[610.0, 610.24, "Ti"], [610.24, 610.48, "će"], [610.52, 611.16, "morati."]]
