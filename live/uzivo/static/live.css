@@ -64,19 +64,31 @@ h3.sub { font-size: var(--t-4); margin: 1.6rem 0 .6rem; }
 /* The order on the page: the speaker, the player, the day. #deo is replaced whole every few seconds and the player must
    stay, so #deo's two parts are laid out as the page's own (display: contents) and ordered around the player. */
 main { display: flex; flex-direction: column; }
-main > * { order: 6; }
+/* 22 Nov 2026: the first screen says what is now. During a sitting: the line on top, the broadcast, the speaker, the
+   day's list, the agenda, the day in numbers. Between sittings: the line, when it goes on and the notification, the
+   last day's list, the agenda, the recording, who spoke. */
+main > * { order: 90; }
 main > h1, main > .lead, main > .hero { order: 0; }
+.status { order: 1; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; margin: .7rem 0 0; font-size: var(--t-2); color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: .4rem; padding: .25rem .7rem; border-radius: 99px; background: var(--fg); color: var(--bg); font-size: var(--t-1); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.pill i { width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; }
+.pill.off { background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--fg); }
+@media (prefers-reduced-motion: no-preference) { .pill i { animation: beat 1.6s ease-in-out infinite; } }
+@keyframes beat { 50% { opacity: .35; } }
 #deo { display: contents; }
-.news { order: 0; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: var(--t-3); line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: var(--t-1); color: var(--protiv); margin-right: .3rem; }
-main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec { order: 4; } .day { order: 5; }
-.agenda { order: 1; margin: .9rem 0 0; border: 1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; }
-.agenda summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: .2rem .7rem; align-items: baseline; list-style: none; line-height: 1.4; }
-.agenda summary::-webkit-details-marker { display: none; } .agenda summary { position: relative; padding-right: 1.4rem; } .agenda summary::after { content: "+"; position: absolute; right: 0; top: 0; color: var(--muted); } .agenda[open] summary::after { content: "−"; }
-.agenda summary > span { color: var(--muted); font-size: var(--t-2); } .agenda .ag-on { flex: 1 1 100%; color: var(--fg); font-size: var(--t-3); }
+.news { order: 2; margin: .9rem 0 0; padding: .7rem .9rem; border: 2px solid var(--fg); border-radius: 8px; font-size: var(--t-3); line-height: 1.45; } .news b { text-transform: uppercase; letter-spacing: .06em; font-size: var(--t-1); color: var(--protiv); margin-right: .3rem; }
+main > .player { order: 10; } .sp-top { order: 20; } .sp { order: 30; } .said-sec { order: 40; } .day { order: 60; }
+main:has(#deo[data-stanje="nema_prenosa"]) > .player { order: 20; }
+#deo[data-stanje="nema_prenosa"] > .sp-top { order: 3; } #deo[data-stanje="nema_prenosa"] > .sp { order: 25; }
+#deo[data-stanje="nema_prenosa"] > .steps-sec { order: 10; } #deo[data-stanje="nema_prenosa"] > .agenda { order: 15; }
+main:has(#deo[data-stanje="nema_prenosa"]) > .add-home { order: 4; }
+.agenda { order: 55; margin: .9rem 0 0; border: 1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; }
+.agenda > summary { gap: .7rem; justify-content: flex-start; } .agenda > summary > b { font-family: var(--serif); font-size: var(--t-4); }
+.agenda > summary > span { color: var(--muted); font-size: var(--t-2); font-weight: 400; }
 .agenda ol { list-style: none; margin: .5rem 0; padding: 0; } .agenda li { display: grid; grid-template-columns: 1.3rem 1fr; gap: .4rem; padding: .45rem 0; border-top: 1px solid var(--line); line-height: 1.4; }
 .agenda li i { font-style: normal; font-weight: 700; } .agenda li .src { display: block; margin: .15rem 0 0; } .ag-what { display: block; color: var(--muted); font-size: var(--t-2); }
 .ag-gotova > span > b, .ag-gotova { color: var(--muted); } .ag-gotova i { color: var(--za); } .ag-u_toku i { color: var(--protiv); } .ag-u_toku, .ag-na_redu { font-weight: 600; } .agenda li .src, .ag-what { font-weight: 400; }
-.steps-sec { order: 4; } .steps-sec h2 { margin-bottom: .2rem; }
+.steps-sec { order: 50; } .steps-sec h2 { margin-bottom: .2rem; }
 .steps { list-style: none; margin: .9rem 0 0; padding: 0; }
 .steps li { display: grid; grid-template-columns: 2.9rem 1.1rem 1fr; gap: 0 .55rem; position: relative; padding: 0 0 1.05rem; line-height: 1.45; }
 .steps li::before { content: ""; position: absolute; left: calc(2.9rem + .55rem + .55rem - 1px); top: 1.1rem; bottom: -.3rem; width: 2px; background: var(--line); }
@@ -96,10 +108,18 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .dl-k a, .day-list p a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .dl-v { display: block; color: var(--muted); font-size: var(--t-2); font-variant-numeric: tabular-nums; margin-top: .1rem; }
 .dl-more { margin-top: .4rem; border-top: 1px solid var(--line); }
-.dl-more > summary, details.how > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; font-weight: 650; }
-.dl-more > summary::-webkit-details-marker, details.how > summary::-webkit-details-marker, .chip > summary::-webkit-details-marker { display: none; }
-.dl-more > summary::after, details.how > summary::after { content: ""; width: .55rem; height: .55rem; border: solid currentColor; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); margin: 0 .3rem .25rem 0; }
-.dl-more[open] > summary::after, details.how[open] > summary::after { transform: rotate(-135deg); margin-bottom: -.2rem; }
+/* Every row that opens looks the same (22 Nov 2026, the maintainer: the "+" was too small on a phone): the whole
+   row is the button, at least 44 px high, its name, a count, and a chevron at the end. */
+.dl-more > summary, details.how > summary, .agenda > summary, .turns-more > summary, .nx-ag > summary, .parts-more > summary {
+  cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; font-weight: 650; }
+.dl-more > summary::-webkit-details-marker, details.how > summary::-webkit-details-marker, .chip > summary::-webkit-details-marker,
+.agenda > summary::-webkit-details-marker, .turns-more > summary::-webkit-details-marker, .nx-ag > summary::-webkit-details-marker,
+.parts-more > summary::-webkit-details-marker { display: none; }
+.dl-more > summary::after, details.how > summary::after, .agenda > summary::after, .turns-more > summary::after, .nx-ag > summary::after, .parts-more > summary::after {
+  content: ""; flex: none; width: .6rem; height: .6rem; border: solid currentColor; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); margin: 0 .4rem .3rem auto; }
+.dl-more[open] > summary::after, details.how[open] > summary::after, .agenda[open] > summary::after, .turns-more[open] > summary::after,
+.nx-ag[open] > summary::after, .parts-more[open] > summary::after { transform: rotate(-135deg); margin-bottom: -.25rem; }
+.parts-more { border-top: 1px solid var(--line); margin-top: .4rem; }
 .dl-foot { margin: .5rem 0 0; font-size: var(--t-2); } .dl-foot a { color: inherit; }
 /* Where something is from: a small label beside the heading; a tap opens the whole sentence under it. */
 .sec-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .6rem; }
@@ -107,18 +127,12 @@ main > .player { order: 1; } .sp-top { order: 2; } .sp { order: 3; } .said-sec {
 .chip > summary { cursor: pointer; list-style: none; display: inline-block; font-size: var(--t-1); color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: .15rem .6rem; white-space: nowrap; }
 .chip[open] { flex-basis: 100%; } .chip p { margin: .4rem 0 0; font-size: var(--t-2); color: var(--muted); line-height: 1.45; max-width: 42rem; }
 .agenda .chip { margin-top: .2rem; }
-details.how { order: 6; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 1.5rem; } details.how > summary { font-family: var(--serif); font-size: var(--t-5); } details.how p { margin: 0 0 1rem; }
+details.how { order: 90; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 1.5rem; } details.how > summary { font-family: var(--serif); font-size: var(--t-5); } details.how p { margin: 0 0 1rem; }
 .said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
 .pz-next { margin: 0 0 .9rem; }
 /* The top of the page (19 Nov 2026, the maintainer's request: the old line of text was cramped): what the page is in
    a few words, and one clear way to the site. Then the newest notice, then the broadcast. */
-.hero { display: flex; flex-wrap: wrap; gap: .9rem 1.5rem; align-items: center; justify-content: space-between; margin: 1.1rem 0 0; padding: 1rem 1.1rem; border-radius: 12px; background: color-mix(in srgb, var(--fg) 5%, transparent); }
-.hero > div { flex: 1 1 16rem; min-width: 0; }
-.hero h1 { font-family: var(--serif); font-size: var(--t-6); line-height: 1.15; letter-spacing: -.015em; text-transform: none; margin: 0 0 .3rem; }
-.hero-sub { margin: 0; color: var(--muted); font-size: var(--t-3); line-height: 1.4; }
-.hero-cta { flex: 0 1 auto; display: flex; flex-direction: column; gap: .1rem; padding: .6rem 1rem; border-radius: 10px; background: var(--fg); color: var(--bg); text-decoration: none; line-height: 1.25; }
-.hero-cta:hover { color: var(--bg); opacity: .88; } .hero-cta span { font-size: var(--t-1); opacity: .8; } .hero-cta b { font-size: var(--t-3); }
-@media (max-width: 520px) { .hero { padding: .9rem; } .hero-cta { flex: 1 1 100%; } .hero-cta b { white-space: nowrap; } }
+.hero { margin: 1rem 0 0; } .hero h1 { font-family: var(--serif); font-size: var(--t-6); line-height: 1.15; letter-spacing: -.015em; margin: 0; }
 main > .player { margin-top: 1rem; }
 .lead { font-size: var(--t-2); margin: 0 0 .4rem; max-width: 40rem; }
 .sp-head { display: flex; gap: 1rem; align-items: flex-start; margin: 1.2rem 0 0; }
@@ -198,25 +212,22 @@ a.said { margin-left: .3rem; }
 .tl-ax { position: relative; height: 1.2rem; font-size: var(--t-1); color: var(--muted); font-variant-numeric: tabular-nums; }
 .tl-ax span { position: absolute; top: .15rem; transform: translateX(-50%); } .tl-ax span:first-child { transform: none; }
 .turns li:target { background: color-mix(in srgb, var(--za) 12%, transparent); }
-.turns-more { margin: 0; border-bottom: 1px solid var(--line); } .turns-more summary { cursor: pointer; padding: .7rem 0; font-weight: 600; }
+.turns-more { margin: 0; border-bottom: 1px solid var(--line); }
 /* The next sitting, counted down (between sittings), and the way onto the phone's home screen (20 Nov 2026). */
 .nx { margin: .9rem 0 0; padding: .9rem 1.1rem; border: 2px solid var(--fg); border-radius: 12px; }
 .nx p { margin: 0; } .nx .src { margin-bottom: .2rem; }
 .nx-big { font-family: var(--serif); font-weight: 700; font-size: var(--t-h1); line-height: 1.15; font-variant-numeric: tabular-nums; }
 .nx-big span { display: block; font-family: system-ui, sans-serif; font-weight: 400; font-size: var(--t-3); color: var(--muted); }
 .nx-when { font-weight: 600; margin-top: .3rem !important; } .nx-title { color: var(--muted); font-size: var(--t-3); margin: .1rem 0 .6rem !important; }
-.nx-ag { margin: 0 0 .6rem; } .nx-ag summary { cursor: pointer; font-weight: 600; } .nx-ag ol { margin: .4rem 0 0; padding-left: 1.4rem; line-height: 1.4; } .nx-ag li { margin: .2rem 0; }
-.add-home { order: 3; margin: 1rem 0 0; } .add-home p { margin: .3rem 0; }
+.nx-ag { margin: 0 0 .6rem; } .nx-ag ol { margin: .4rem 0 0; padding-left: 1.4rem; line-height: 1.4; } .nx-ag li { margin: .2rem 0; }
+.add-home { order: 35; margin: 1rem 0 0; } .add-home p { margin: .3rem 0; }
 .nt-off { font: inherit; background: none; border: 0; padding: 0; color: var(--fg); text-decoration: underline; cursor: pointer; }
 .add-home[hidden], .add-home [hidden] { display: none; }
 .add-btn { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg); background: none; color: var(--fg); cursor: pointer; }
 /* A phone (86% of the visits): the head made short, so the broadcast is in the first screen (20 Nov 2026). */
 @media (max-width: 520px) {
   .top { padding: .7rem 16px .5rem; } main { padding: 0 16px 3rem; }
-  .hero { margin-top: .6rem; padding: .6rem .75rem; gap: .5rem; }
-  .hero h1 { font-size: var(--t-5); margin: 0; } .hero-sub { display: none; }
-  .hero-cta { flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 .6rem; padding: .4rem .75rem; }
-  .hero-cta span { font-size: var(--t-1); } .hero-cta b { font-size: var(--t-3); }
+  .hero h1 { font-size: var(--t-5); }
   .news { margin-top: .6rem; padding: .5rem .7rem; font-size: var(--t-2); line-height: 1.4; }
   main > .player { margin-top: .6rem; }
 }

@@ -57,6 +57,15 @@
   // Asked again with the last answer's mark (ETag): an unchanged part comes back as a 304, from the browser's copy,
   // and is not put in again.
   var shown = null;
+  // Each fold of the part by its id, or its kind and place among its kind: open or not (or the element, when asked).
+  function folds(els) {
+    var m = {}, seen = {};
+    [].forEach.call(document.querySelectorAll("#deo details"), function (d) {
+      var k = d.id || d.className; seen[k] = (seen[k] || 0) + 1; if (!d.id) k += "|" + seen[k];
+      m[k] = els ? d : d.open;
+    });
+    return m;
+  }
   function load() {
     if (document.hidden) return;
     fetch(base + "deo", { cache: "no-cache" }).then(function (r) { return r.ok ? r.text() : null; })
@@ -64,8 +73,8 @@
         if (!html) return;
         if (html === shown) { got = Date.now(); tick(); return; }
         shown = html;
-        // what the reader opened (the agenda, the folded steps) stays open when the part is replaced
-        var open = [].map.call(document.querySelectorAll("#deo details[open]"), function (d) { return d.id || d.parentNode.className; });
+        // what the reader opened or closed (the agenda, the folded steps) stays so when the part is replaced
+        var was = folds();
         // the keyboard's place too: the same kind of thing, the same one in order, has the focus again
         var deo = document.getElementById("deo"), f = document.activeElement, keep = null;
         if (f && deo.contains(f)) {
@@ -73,7 +82,8 @@
           keep = [sel, [].indexOf.call(deo.querySelectorAll(sel), f)];
         }
         deo.outerHTML = html;
-        [].forEach.call(document.querySelectorAll("#deo details"), function (d) { if (open.indexOf(d.id || d.parentNode.className) >= 0) d.open = true; });
+        var now = folds(true);
+        Object.keys(now).forEach(function (k) { if (k in was) now[k].open = was[k]; });
         if (keep) { var again = document.querySelectorAll("#deo " + keep[0])[keep[1]]; if (again) again.focus({ preventScroll: true }); }
         got = Date.now(); tick(); said();
       })

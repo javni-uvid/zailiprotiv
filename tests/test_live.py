@@ -405,7 +405,7 @@ def test_between_sittings_the_page_has_the_sites_quiz_and_facts(tmp_path):
     snap = t.snapshot()
     lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, waiting=w)
     assert snap["stanje"] == NO_STREAM and "Dok čekate" in lat and 'data-a="1"' in lat
-    assert "Skupština sada ne zaseda" in lat  # the quiz's words don't take the state's place
+    assert '<span class="pill off">Ne zaseda</span>' in lat  # the quiz's words don't take the state's place
     assert '<a href="https://zailiprotiv.rs/brojke">Kako je izračunato</a>' in lat and "Da li ste znali" in lat
     cyr = waiting_part(w, cyr=True, site="https://zailiprotiv.rs/")
     assert "Док чекате" in cyr and 'href="https://zailiprotiv.rs/cir/zakoni"' in cyr
@@ -879,8 +879,9 @@ def test_the_agenda_under_the_broadcast_says_which_items_are_done_and_by_whose_w
     t.note(time.time(), "Tačka dnevnog reda", "Prelazimo na treću tačku dnevnog reda.", "prepis")
     assert states() == [("gotova", "sajt"), ("gotova", "prepis"), ("u_toku", "prepis"), ("", "")]
     html = fragment(t.snapshot(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert 'class="agenda"' in html and "2 od 4 tačaka gotovo" in html and "u toku: Izbor potpredsednika" in html
-    assert "po sajtu Skupštine" in html and "Mandati su potvrđeni." in html and "po rečima predsedavajućeg" in html
+    assert 'class="agenda"' in html and "2 od 4 tačaka gotovo" in html and "u toku: 3. Izbor potpredsednika" in html
+    assert "Mandati su potvrđeni." in html and "po rečima predsedavajućeg" in html  # heard: said so; the Assembly's: the default
+    assert "Tačka je gotova kad to napiše Skupština" in html  # by whose word, in the label under the list
 
 
 def test_one_word_read_cannot_stand_for_two_words_of_a_name():
@@ -1541,3 +1542,22 @@ def test_a_day_asked_for_is_found_among_the_kept_files_and_nowhere_else(tmp_path
     (tmp_path / "state.json").write_text("{}", encoding="utf-8")
     assert _kept(days, "2026-11-17") == days / "2026-11-17.json"
     assert _kept(days, "../state") is None and _kept(days, "2026-11-18") is None and _kept(None, "2026-11-17") is None
+
+
+def test_the_first_line_says_what_is_now_and_the_agenda_stands_open():
+    """22 Nov 2026, the maintainer's choice: the first screen says what is now, in place of the bar to the site; the
+    agenda is open; the recording's parts and every row that opens are one kind of row."""
+    from uzivo.page import page as page_
+    agenda = {"naslov": "S", "url": "", "tacke": [{"n": 1, "tekst": "Prva", "stanje": "gotova", "izvor": "sajt", "kada": "", "sta": ""},
+                                                {"n": 2, "tekst": "Druga", "stanje": "u_toku", "izvor": "prepis", "kada": "", "sta": ""}]}
+    snap = {"stanje": "nepoznato", "provereno": 1, "sada": None, "sazvano": None, "bez_potpisa": None, "dan": "2026-11-19",
+            "ranije": False, "danas": [], "dnevni_red": agenda, "hronika": []}
+    live = page_(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<p class="status"><span class="pill"><i aria-hidden="true"></i>Uživo</span><span class="status-on">u toku: 2. Druga</span></p>' in live
+    assert '<details class="agenda" id="dnevni-red" open>' in live and "hero-cta" not in live
+    off = page_({**snap, "stanje": "nema_prenosa", "datoteke": [{"url": "https://x/1.mp4", "od": 1795089600, "trajanje": 60},
+                                                                 {"url": "https://x/2.mp4", "od": 1795093200, "trajanje": 60}]},
+                cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<span class="pill off">Не заседа</span>' in off and "Скупштина сада не заседа" not in off
+    assert '<details class="parts-more"><summary>Делови дана (2)</summary>' in off
+
