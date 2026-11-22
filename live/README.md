@@ -58,11 +58,10 @@ read afterwards from the whole recording (`data/<N>/snimak/<date>.json`, publish
 that day instead and says so. It does so only for a day the same as or later than the service's own last day, and
 never for today. `/dan/<date>.json` stays the service's own record.
 
-**"Dok čekate".** While there is no broadcast the page also carries a ten-question quiz (one at a time, like the
-site's own) and a few facts from the site's own
+**"Da li ste znali".** While there is no broadcast the page also carries a few facts from the site's own
 counts (`zailiprotiv.rs/mikrofon-cekanje.json`, fetched with the list and kept as `/data/cekanje.json`), each linked
-to the page that says how it is computed. The quiz works by the page's one inline script; without it each answer is
-under "Odgovor".
+to the page that says how it is computed. The same file's quiz is no longer shown here (22 Nov 2026); the site's
+`mikrofon` page keeps it.
 
 **The player.** Above the list, a button: while the broadcast is on, our own picture of the moment with
 "▶ Gledaj prenos", whose press loads the YouTube video of it (`youtube-nocookie.com`), playing, and adds one to the

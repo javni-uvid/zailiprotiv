@@ -393,7 +393,7 @@ def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the
     assert t.recording["dan"] == "2026-11-16"
 
 
-def test_between_sittings_the_page_has_the_sites_quiz_and_facts(tmp_path):
+def test_between_sittings_the_page_has_the_sites_facts_and_no_quiz(tmp_path):
     from uzivo.page import waiting_part
     path = tmp_path / "stanje.json"
     t = Tracker(str(path), tz="Europe/Belgrade")
@@ -404,13 +404,14 @@ def test_between_sittings_the_page_has_the_sites_quiz_and_facts(tmp_path):
     assert Tracker(str(path), tz="Europe/Belgrade").waiting == w  # kept across restarts
     snap = t.snapshot()
     lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, waiting=w)
-    assert snap["stanje"] == NO_STREAM and "Dok čekate" in lat and 'data-a="1"' in lat
-    assert '<span class="pill off">Ne zaseda</span>' in lat  # the quiz's words don't take the state's place
-    assert '<a href="https://zailiprotiv.rs/brojke">Kako je izračunato</a>' in lat and "Da li ste znali" in lat
+    # 22 Nov 2026, the maintainer: the quiz off the foot; the facts stay
+    assert snap["stanje"] == NO_STREAM and "Da li ste znali" in lat and 'data-a="1"' not in lat and 'id="mq"' not in lat
+    assert '<span class="pill off">Ne zaseda</span>' in lat
     cyr = waiting_part(w, cyr=True, site="https://zailiprotiv.rs/")
-    assert "Док чекате" in cyr and 'href="https://zailiprotiv.rs/cir/zakoni"' in cyr
+    assert "Да ли сте знали" in cyr and 'href="https://zailiprotiv.rs/cir/zakoni"' in cyr
     snap["stanje"] = SPEAKING
-    assert "Dok čekate" not in page(snap, cyr=False, site="", tz=TZ, waiting=w)  # not while someone speaks
+    assert "Da li ste znali" not in page(snap, cyr=False, site="", tz=TZ, waiting=w)  # not while someone speaks
+    assert "parlament.gov.rs/prenosi" not in lat  # no link to the Assembly's own broadcast (22 Nov 2026)
     assert waiting_part({}, cyr=False, site="") == ""
 
 
@@ -711,8 +712,8 @@ def test_the_day_in_one_sentence_the_summary_while_nobody_is_on_and_the_link_pre
     t.observe(None, now=now + 860)
     paused = t.snapshot(now=now + 861)
     html = fragment(paused, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert paused["stanje"] != "govori" and "Dosad danas" in html and 'class="share-now share-day" data-src="/slika.png"' in html
-    assert re.search(r"<b>(<a href=\"[^\"]*poslanik/[^\"]*\">)?Petar Petrović(</a>)?</b>", html)  # linked when the site knows the MP
+    # 22 Nov 2026, the maintainer: the box of the day's sentence and its shares is gone; the link preview keeps it
+    assert paused["stanje"] != "govori" and "Dosad danas" not in html and "share-day" not in html and 'class="pz' not in html
     for s_ in (snap, paused, Tracker(None, "Europe/Belgrade").snapshot(now=now)):
         png = picture.render(s_, cyr=True, tz=TZ, host="mikrofon.zailiprotiv.rs")
         assert png[:8] == b"\x89PNG\r\n\x1a\n" and len(png) > 2000
@@ -1247,7 +1248,7 @@ def test_earlier_turns_are_folded():
     assert "raniji-govori" not in few
 
 
-def test_between_sittings_the_notification_offer_stands_above_the_day_and_the_three_link_the_site():
+def test_between_sittings_the_notification_offer_stands_above_the_day_and_the_speakers_link_the_site():
     """20 Nov 2026: one device had asked for the sitting's notification, its button half a phone's screens down under
     the last day's summary. Between sittings it stands above the day; while a broadcast is on, under the speaker's
     box as before. The day's three with the most time lead to their pages on the site, as the totals do."""
@@ -1261,9 +1262,9 @@ def test_between_sittings_the_notification_offer_stands_above_the_day_and_the_th
     site = "https://zailiprotiv.rs/"
     html = page.page(snap, cyr=False, site=site, tz=tz)
     assert html.count('class="add-home"') == 1 and html.index('class="add-home"') < html.index('id="deo"')
-    top = html[html.index('class="pz-top"'):html.index("</ol>", html.index('class="pz-top"'))]
-    assert '<a href="https://zailiprotiv.rs/poslanik/petrovic-petar">Petar Petrović</a>' in top
-    assert "<b>Jovan Jovanović</b>" in top  # no page known: the name alone
+    tot = html[html.index('class="tot"'):]
+    assert '<a href="https://zailiprotiv.rs/poslanik/petrovic-petar">Petar Petrović</a>' in tot
+    assert "Jovan Jovanović" in tot and 'poslanik/"' not in tot  # no page known: the name alone
     assert 'href="https://zailiprotiv.rs/cir/poslanik/petrovic-petar"' in page.page(snap, cyr=True, site=site, tz=tz)
     on = page.page({**snap, "stanje": "govori"}, cyr=False, site=site, tz=tz)
     assert on.count('class="add-home"') == 1 and on.index('class="add-home"') > on.index('id="deo"')
@@ -1527,7 +1528,10 @@ def test_the_days_cards_tell_what_happened_before_who_spoke():
                 {"t": now + 500, "vrsta": "Mera predsedavajućeg", "tekst": "Izričem opomenu Petru Petroviću.", "izvor": "model", "url": "",
                  "vise": {"napomena": "opomenu", "kome": "Petru Petroviću"}},
                 {"t": now + 2500, "vrsta": "Mera predsedavajućeg", "tekst": "Izričem opomenu.", "izvor": "model", "url": "", "vise": {"napomena": "opomenu"}}]}
-    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "st-data" not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)  # no way to them between sittings (22 Nov 2026)
+    from uzivo.page import _cards, _shades
+    html = _cards({**snap, "stanje": "govori", "sada": snap["danas"][-1]}, snap["danas"], _shades(snap["danas"]), cyr=False,
+                  site="https://zailiprotiv.rs/", tz=TZ)
     cards = html.split('<div class="st-data"')[1].split('<section class="st-c"')[1:]
     cards[-1] = cards[-1].split("</section>")[0]
     kickers = [c.split('<p class="st-k">')[1].split("</p>")[0] for c in cards]
@@ -1540,8 +1544,9 @@ def test_the_days_cards_tell_what_happened_before_who_spoke():
     assert '<p class="st-big">2</p>' in measures and "<b>2</b> opomenu" in measures and "Petroviću" not in measures  # kinds, no names
     assert "nastavlja sa radom u utorak" in cards[-2] and "4. Izbor radnih tela" in cards[-2]
     assert 'href="https://zailiprotiv.rs/govornici/2026-11-19"' in cards[-1]
-    bare = fragment({**snap, "sazetak": None, "dnevni_red": None, "hronika": [], "obavestenja": []}, cyr=False,
-                    site="https://zailiprotiv.rs/", tz=TZ)
+    plain = {**snap, "sazetak": None, "dnevni_red": None, "hronika": [], "obavestenja": [], "stanje": "govori",
+             "sada": snap["danas"][-1]}
+    bare = _cards(plain, snap["danas"], _shades(snap["danas"]), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Dan ukratko" not in bare and "Šta sledi" not in bare and bare.count('<section class="st-c"') == 5  # as before
 
 
@@ -1591,3 +1596,19 @@ def test_colour_where_it_means_something():
     css = (Path(__file__).parent.parent / "live" / "uzivo" / "static" / "live.css").read_text(encoding="utf-8")
     assert "ag-gotova i { color: var(--za)" not in css and ".dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--protiv)" not in css
 
+
+def test_the_days_speakers_five_stand_the_rest_open_and_no_bar_of_lists():
+    """22 Nov 2026, the maintainer: "Ko je koliko govorio" the first five, the rest on a tap; the day's time by list
+    off the page (the cards keep it); "Sednica po Poslovniku" higher."""
+    from uzivo import page as page_
+    turns = [{"ime": f"Prezime{i} Ime{i}", "adresa": "", "uloga": "", "grupa": "", "lista": "L" + str(i % 2),
+              "od": 1000 * i, "do": 1000 * i + 60 * (10 - i), "sekundi": 60 * (10 - i)} for i in range(1, 9)]
+    snap = {"provereno": 0, "stanje": "nema_prenosa", "sada": None, "danas": turns, "dan": "2026-11-19", "ranije": True}
+    html = page_.fragment(snap, cyr=False, site="", tz=TZ)
+    shown = html[html.index('class="tot"'):html.index('class="tot-more"')]
+    assert shown.count('class="tr"') == 5 and "Ime1 Prezime1" in shown and "Ime6" not in shown
+    more = html[html.index('class="tot-more"'):]
+    assert "Ostali govornici (3)" in more and more.count('class="tr"') == 3
+    assert '<h3 class="sub">Vreme za govornicom po listama' not in html  # in the cards only
+    css = page_.CSS
+    assert 'main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }' in css

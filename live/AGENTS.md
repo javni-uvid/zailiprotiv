@@ -478,3 +478,12 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   too much). On an iPhone the second button too, which on a press says where Safari keeps it. What the
   notification keeps is said once it is turned on ("kod nas ostaje samo adresa za njega") and on the method page;
   principle 5 asks the page to say it, and it does there.
+
+**A shorter page between sittings (22 Nov 2026, the maintainer).** Taken off: the box of the day's sentence with
+its three with the most time and its buttons ("Dan u karticama", "Podeli presek dana", "Uspravna slika za priču";
+"sklonio bi ceo ovaj segment … sa sve tim za deljenje"); the day's time by list (still a card); the quiz at the
+foot (the facts stay); the link to the Assembly's own live broadcast. "Ko je koliko govorio" shows five, the rest
+under "Ostali govornici (N)". "Sednica po Poslovniku" stands under the agenda between sittings, and before the day
+during one. The cards are reached only from the speaker's box now, so between sittings they are not in the page;
+the link preview's picture (`/slika.png`) and the story picture stay. During a break only the next sitting
+convened, if any, stands where the box was. Measured on the test page: 4.5 screens at 390 px (about 6.4 before).
