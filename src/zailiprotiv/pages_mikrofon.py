@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -289,7 +289,8 @@ NOTICES_FILE = "obavestenja.json"  # data/obavestenja.json
 def notices(root) -> list[dict]:
     """What the Assembly has decided that the live page should say on top (19 Nov 2026: a Speaker elected), written
     by hand into data/obavestenja.json, each a sentence of fact with its source: [{"od", "do", "tekst", "izvor",
-    "url", "adresa"}]. Only what the source says, no comment; shown from "od" until "do"."""
+    "url", "adresa"}]. Only what the source says, no comment; shown from "od" until "do". A notice of when a sitting
+    goes on may also say it as "pocinje" ("2026-11-24T10:00"), for the site's announcement (next_start)."""
     path = Path(root) / NOTICES_FILE
     if not path.exists():
         return []
@@ -299,6 +300,51 @@ def notices(root) -> list[dict]:
         return []
     return [{k: str(r.get(k, "")) for k in ("od", "do", "tekst", "izvor", "url", "adresa")}
             for r in rows if isinstance(r, dict) and r.get("tekst") and str(r.get("url", "")).startswith("https://")]
+
+
+WEEKDAYS = ("ponedeljak", "utorak", "sreda", "četvrtak", "petak", "subota", "nedelja")
+
+
+def next_start(root, conv: str, now: datetime | None = None) -> dict | None:
+    """When the Assembly sits next, for the site's way to the live page (22 Nov 2026): the first sitting of the
+    convocation convened for today or later, as the Assembly lists it (data/<N>/index.json "starts"), or the next day
+    of a sitting going on, as a notice gives it ("pocinje" beside the notice's sentence in data/obavestenja.json,
+    written by hand from the Assembly's site). Times are Belgrade's; the page's script shows the announcement from
+    the day before ("od") until the start ("u"), "sutra" until the day itself begins ("dan"). None when none is known."""
+    now = now or datetime.now(TZ)
+    today = now.date().isoformat()
+    found = []
+    try:
+        listed = jsonfile.load(Path(root) / str(conv) / "index.json", {}).get("sittings", {})
+    except (ValueError, AttributeError):
+        listed = {}
+    for s in listed.values():
+        at = str(s.get("starts") or "")
+        if s.get("agenda") and not s.get("votes") and len(at) >= 16:
+            found.append(at[:16])
+    try:
+        rows = json.loads((Path(root) / NOTICES_FILE).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        rows = []
+    for r in rows if isinstance(rows, list) else []:
+        at = str(r.get("pocinje", "")) if isinstance(r, dict) else ""
+        if len(at) >= 16:
+            found.append(at[:16])
+    starts = []
+    for at in found:
+        try:
+            starts.append(datetime.fromisoformat(at).replace(tzinfo=TZ))
+        except ValueError:
+            pass
+    start = min((s for s in starts if s.date().isoformat() >= today), default=None)
+    if start is None:
+        return None
+    day0 = start.replace(hour=0, minute=0)
+    before = day0 - timedelta(days=1)
+    hour = f"{start.hour} h" if not start.minute else f"{start.hour}.{start.minute:02d} h"
+    return {"pocinje": start.strftime("%Y-%m-%dT%H:%M"), "sat": hour,
+            "dan": f"{WEEKDAYS[start.weekday()]}, {start.day}. {months.NAMES[start.month - 1]}",
+            "od": int(before.timestamp()), "dan_od": int(day0.timestamp()), "u": int(start.timestamp())}
 
 
 def fixes(root) -> dict:

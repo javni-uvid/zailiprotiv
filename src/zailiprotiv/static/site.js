@@ -11,11 +11,23 @@ function zipCount(what) {
   zipCounted[what] = 1;
   try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
 }
-// A way taken from the site to the live page (the bar of a sitting, an MP at the rostrum, any link): counted.
+// A way taken from the site to the live page, counted by where it was taken (22 Nov 2026: the menu, the home page's
+// strip, the announcement before a sitting, the bar of a sitting, an MP at the rostrum; any other link as one).
+var MIK = { meni: "sajt.mikrofon-meni", pocetna: "sajt.mikrofon-pocetna", najava: "sajt.mikrofon-najava",
+  traka: "sajt.mikrofon-traka", poslanik: "sajt.mikrofon-poslanik" };
 document.addEventListener("click", function (e) {
   var a = e.target.closest && e.target.closest("a[href]");
-  if (a && a.hostname === "mikrofon.zailiprotiv.rs") zipCount("sajt.mikrofon");
+  if (a && a.hostname === "mikrofon.zailiprotiv.rs") zipCount(MIK[a.getAttribute("data-mik")] || "sajt.mikrofon");
 }, true);
+// The parts said only in their hours (the announcement from the day before a sitting until it starts, "sutra" or
+// "danas", the strip's day until it has passed): data-show="from,to", seconds since 1970, set when the pages are built.
+(function () {
+  var now = Date.now() / 1000;
+  Array.prototype.forEach.call(document.querySelectorAll("[data-show]"), function (el) {
+    var t = el.getAttribute("data-show").split(",");
+    el.hidden = !(now >= +t[0] && now < +t[1]);
+  });
+})();
 // An MP's speeches of a day (the MP's page): each one's address among the notes' pages, kept short in the page
 // ("dan-3-2.html#g00527 …" beside the sitting's folder) and made into numbered links here.
 document.addEventListener("DOMContentLoaded", function () {
@@ -472,12 +484,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 })();
 
-// The live bar names who is speaking now and since when, read from "Ko sada govori" (our own service's state, kept
-// two seconds by Cloudflare); asked for only while the bar is on the page, every half a minute, and left empty
-// when the service doesn't answer.
+// The live bar (on the home page, its strip) names who is speaking now and since when, read from "Ko sada govori"
+// (our own service's state, kept two seconds by Cloudflare); asked for only while the bar is on the page, every half
+// a minute, and left as it was built when the service doesn't answer.
 (function () {
-  var el = document.querySelector(".live-who[data-src]");
+  var el = document.querySelector(".live-who[data-src], .mic-who[data-src]");
   if (!el || !window.fetch) return;
+  var strip = el.classList.contains("mic-who"), was = el.textContent;
   var cyr = document.documentElement.lang === "sr-Cyrl";
   var MAP = {"lj":"љ","nj":"њ","dž":"џ","Lj":"Љ","Nj":"Њ","Dž":"Џ","a":"а","b":"б","v":"в","g":"г","d":"д","đ":"ђ","e":"е","ž":"ж","z":"з","i":"и","j":"ј","k":"к","l":"л","m":"м","n":"н","o":"о","p":"п","r":"р","s":"с","t":"т","ć":"ћ","u":"у","f":"ф","h":"х","c":"ц","č":"ч","š":"ш","A":"А","B":"Б","V":"В","G":"Г","D":"Д","Đ":"Ђ","E":"Е","Ž":"Ж","Z":"З","I":"И","J":"Ј","K":"К","L":"Л","M":"М","N":"Н","O":"О","P":"П","R":"Р","S":"С","T":"Т","Ć":"Ћ","U":"У","F":"Ф","H":"Х","C":"Ц","Č":"Ч","Š":"Ш"};
   function script(t) { return cyr ? t.replace(/lj|nj|dž|Lj|Nj|Dž|[a-zA-ZđĐžŽćĆčČšŠ]/g, function (m) { return MAP[m] || m; }) : t; }
@@ -485,9 +498,9 @@ document.addEventListener("DOMContentLoaded", function () {
   function ask() {
     fetch(el.getAttribute("data-src")).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
       var c = s && s.stanje === "govori" && s.sada;
-      if (!c) { el.hidden = true; return; }
+      if (!c) { if (strip) el.textContent = was; else el.hidden = true; return; }
       var d = new Date(c.od * 1000), at = d.toLocaleTimeString("sr-Latn-RS", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Belgrade" });
-      el.textContent = script(" (" + first(c.ime) + ", od " + at + ")");
+      el.textContent = strip ? script("Sada govori " + first(c.ime) + ", od " + at) : script(" (" + first(c.ime) + ", od " + at + ")");
       el.hidden = false;
     }).catch(function () {});
   }

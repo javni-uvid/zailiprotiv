@@ -1199,3 +1199,32 @@ em.prev.now { color: var(--fg); border-color: var(--fg); }
   .home-conv .hc-cols h3 { margin-bottom: .3rem; }
   .home-floor-low .floor-firsts ~ .home-floor-head, .home-floor-low .floor-firsts ~ .home-floor-head ~ * { display: none; }
 }
+
+/* The live page's way on the site (22 Nov 2026): "Uživo" in the menu, red while a sitting is on; the home page's
+   strip; the announcement before a sitting (the live bar, its dot grey). */
+.top nav .nav-live { display: inline-flex; align-items: center; gap: .45rem; }
+.nav-live i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--muted); opacity: .55; }
+.top nav .nav-live.on { color: var(--protiv); }
+.nav-live.on i { background: var(--protiv); opacity: 1; animation: live-pulse 1.6s infinite; }
+@keyframes live-pulse { 0% { box-shadow: 0 0 0 0 var(--protiv); } 70%, 100% { box-shadow: 0 0 0 .45rem transparent; } }
+@media (prefers-reduced-motion: reduce) { .nav-live.on i { animation: none; } }
+.mic { display: grid; grid-template-columns: auto 1fr auto; gap: .3rem 1rem; align-items: center; margin: 1rem 0 1.2rem;
+  padding: 1rem 1.2rem; border: 2px solid var(--fg); border-radius: 12px; text-decoration: none; color: inherit; }
+.mic:hover { color: inherit; border-color: var(--za); }
+.mic-ic { grid-row: span 2; width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); }
+.mic.on .mic-ic { background: var(--protiv); color: #fff; }
+.mic-k { font-size: var(--t-2); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.mic.on .mic-k { color: var(--protiv); }
+.mic-m { grid-column: 2; font-size: var(--t-5); font-weight: 700; line-height: 1.3; }
+.mic-s { grid-column: 2; color: var(--muted); font-size: var(--t-2); }
+.mic-go { grid-row: 1 / span 3; grid-column: 3; font-weight: 600; white-space: nowrap; }
+.mic [hidden] { display: none; }
+@media (max-width: 640px) { .mic { grid-template-columns: auto 1fr; } .mic-go { grid-column: 1 / -1; grid-row: auto; } }
+main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone under the search, above the rest */
+.live.soon .live-dot { background: var(--muted); }
+.live[hidden] { display: none; }
+@media (max-width: 640px) {  /* a sixth item in the phone's menu row: the row's letters a little smaller */
+  .top nav:has(.nav-live) { font-size: clamp(.68rem, 3.65vw, 1rem); }
+  html[lang="sr-Cyrl"] .top nav:has(.nav-live) { font-size: clamp(.64rem, 3.05vw, .95rem); }
+  .top nav .nav-live { gap: .3rem; }
+}

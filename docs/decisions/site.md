@@ -153,6 +153,17 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   do people leave it for the whole text), a recording played on a day page (`sajt.snimak`: is "who spoke when" with
   the recording worth going on with), and a link from the site to the live page (`sajt.mikrofon`). Sums per day,
   once per page, never the words; the method page lists them.
+- **The live page has its way on the site** (22 Nov 2026, the maintainer's decision; links from the site to it were
+  taken 2 or 3 times a day, the other way 26 to 177). "Uživo" in the menu of every page, its dot red while a sitting
+  is on (the same reading as the live bar, at the build). On the home page a strip in the live bar's place, under the
+  search on a phone: while a sitting is on, who speaks now (read from the live page's state, as the bar); before
+  one, its day and hour; after, the last day with its recording. On every other page, from the day before a
+  sitting until it starts, the live bar with its dot grey: "Sutra (Danas) u 10 h: sednica Skupštine". The next
+  sitting's start is the Assembly's listing of a sitting convened, or, for the next day of one going on, the
+  notice's `pocinje` in `data/obavestenja.json`, written by hand from the Assembly's site
+  (`pages_mikrofon.next_start`); the pages carry the hours and the script shows each part only in them
+  (`data-show`). Each way counted by where it was taken (`sajt.mikrofon-meni`, `-pocetna`, `-najava`, `-traka`,
+  `-poslanik`), to see after the 24 Nov sitting what brings people.
 - **The family's look and links** (20 Nov 2026, the maintainer's decision: every site of Javni uvid has the same
   font and base colours, and links the others). The font, the page's base colours in both themes and the scale
   of letter sizes are no longer declared here: they come from `osnova/design/osnova.css` (the copy of
