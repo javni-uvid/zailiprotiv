@@ -1137,8 +1137,14 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .hc-agenda { margin: 0 0 .9rem; padding-left: 1.3rem; } .hc-agenda li { margin: .2rem 0; }
 .hc-links li { margin: .3rem 0; font-weight: 600; }
 .home-conv > .label { margin: 1rem 0 0; }
-.home-support { margin: 2rem 0; padding: 1.1rem 1.3rem; border: 1px solid var(--line); border-radius: 12px; } .home-support h2 { margin: 0 0 .4rem; font-size: var(--t-5); } .home-support p { margin: .3rem 0 0; max-width: 42rem; }
-.support-cta { display: inline-block; margin-top: .4rem; padding: .55rem 1rem; border-radius: 8px; background: var(--fg); color: var(--bg); font-weight: 650; text-decoration: none; } .support-cta:hover { opacity: .9; }
+/* "Podrži" (22 Nov 2026): no colour but the site's mark (design rule 2) */
+.home-support { margin: 2.2rem 0; padding: 1.4rem 1.5rem; border: 2px solid var(--fg); border-radius: 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 1rem 1.6rem; align-items: center; background: color-mix(in srgb, var(--fg) 3%, var(--bg)); }
+.hs-mark { width: 4.2rem; height: auto; } .hs-mark path { fill: none; stroke-width: 16; } .hs-mark .m-za { stroke: var(--za); } .hs-mark .m-protiv { stroke: var(--protiv); }
+.home-support .kicker { margin: 0 0 .2rem; } .home-support h2 { margin: 0 0 .4rem; font-size: var(--t-5); line-height: 1.2; } .home-support .hs-text p:last-child { margin: 0; max-width: 40rem; color: var(--muted); }
+.hs-go { display: flex; flex-direction: column; align-items: center; gap: .45rem; text-align: center; } .hs-sum { font-size: var(--t-1); color: var(--muted); }
+.support-cta { display: inline-flex; align-items: center; gap: .45rem; padding: .75rem 1.3rem; border-radius: 999px; background: var(--fg); color: var(--bg); font-weight: 700; font-size: var(--t-3); text-decoration: none; white-space: nowrap; } .support-cta:hover { opacity: .88; }
+@media (max-width: 640px) { .home-support { grid-template-columns: 1fr; text-align: left; } .hs-mark { width: 3.2rem; } .hs-go { align-items: stretch; } .support-cta { justify-content: center; } }
+.top nav .nav-support { display: inline-flex; align-items: center; gap: .35rem; } .nav-support .heart { flex: none; }
 .ips-codes { list-style: none; margin: 1rem 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 1.2rem; }
 .ips-codes figure { margin: 0; } .ips-qr { display: block; width: 100%; max-width: 15rem; height: auto; background: #fff; border-radius: 6px; }
 .ips-codes figcaption { display: flex; justify-content: space-between; gap: .6rem; margin-top: .4rem; font-size: var(--t-3); }

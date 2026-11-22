@@ -299,3 +299,6 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   service is down, and the live page (`support_cta`). The Cyrillic edition leaves a payment code's SVG as drawn
   (`cyrillic.page`). Options weighed that day: Stripe does not serve Serbia; Ko-fi, Liberapay pay out through
   PayPal only.
+- **"Podrži" on top, and a card worth a look** (22 Nov 2026, the maintainer): the header's tools have "Podrži" (a heart,
+  its word on a wide screen) beside the search; the home page's card has the site's mark, the promise (free, no ads,
+  nothing from others), a button and the amounts, with no colour but the mark's (design rule 2).

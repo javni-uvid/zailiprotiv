@@ -597,3 +597,8 @@ nobody. The hall's floor for "not silence" is the quietest fifth of the last ten
   the turn now playing is outlined in the list. A turn's ▶ keeps the way the day is played. The live broadcast
   stays YouTube's player (its iframe holds its own session; no sound of ours is relayed: rights, and the tunnel is
   not made for streams). The site's mikrofon page and day pages (`govornici/<date>`) have the same button.
+- **The site's mark on the home screen, no microphone in the header, "Podrži sajt" on top** (22 Nov 2026, the
+  maintainer: the microphone "looked too like a Google logo"). The home-screen icons (`picture.icon`) are the site's
+  own mark, the two arcs of `favicon.svg`, as the site's apple-touch-icon; the header keeps the site's name and
+  "Podrži sajt" beside the script's switch, and the microphone mark is gone from the page. A phone that added the
+  page before keeps the old icon until it is added again.
