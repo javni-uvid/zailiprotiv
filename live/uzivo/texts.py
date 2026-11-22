@@ -12,6 +12,7 @@ TEXT = {
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
     "status_live": "Uživo",
     "status_off": "Ne zaseda",
+    "goes_on": "Skupština nastavlja sa radom %1.",
     "parts": "Delovi dana",
     "speaks": "govori",
     "longer": "duže od {p}% današnjih govora",
@@ -99,13 +100,8 @@ TEXT = {
     "nt_sum_body": "Šta je Narodna skupština danas uradila i odlučila, ukratko. Napisao model iz automatskog prepisa.",
     "steps_site": "sajt Skupštine",
     "steps_published": "Reč po reč sa stranice sednice, pročitano do %1; Skupština piše posle događaja.",
-    "steps_more": "Svi koraci",
     "dl_src": "automatski · može da pogreši",
     "dl_decision": "Odluka",
-    "dl_item": "%1. tačka dnevnog reda",
-    "dl_vote": "Glasanje",
-    "dl_vote_done": "rezultat saopšten",
-    "dl_election": "Izbor",
     "dl_more": "Ranije tog dana",
     "dl_record": "Zapis sednice na sajtu Skupštine",
     "dl_recording": "sa snimka · automatski",
@@ -123,15 +119,13 @@ TEXT = {
     "nx_agenda": "Dnevni red",
     "nx_note": "Prenos će biti ovde čim sednica počne, a stranica se sama osvežava.",
     "add_home": "Dodaj na početni ekran",
-    "add_sub": "Sledeći put do prenosa jednim dodirom.",
     "add_ios": "Na iPhone-u: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
                "obavesti kad sednica počne.",
     "nt_on": "Obavesti me kad sednica počne",
-    "nt_done": "Obaveštenje stiže kad prenos sednice počne.",
+    "nt_done": "Obaveštenje stiže kad prenos sednice počne; kod nas ostaje samo adresa za njega.",
     "nt_off": "Isključi",
     "nt_blocked": "Obaveštenja za ovu stranicu su isključena u podešavanjima pregledača.",
     "nt_err": "Uključivanje nije uspelo; pokušajte ponovo malo kasnije.",
-    "nt_note": "Najviše jednom dnevno. Šalje ga vaš pregledač; kod nas ostaje samo adresa za obaveštenje.",
     "al_down": "Mikrofon ne radi",
     "al_down_body": "Sednica je u toku, a mikrofon.zailiprotiv.rs ne odgovara već %1 min.",
     "al_back": "Mikrofon ponovo radi",
@@ -231,6 +225,8 @@ TEXT = {
 
 MONTHS = ("januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar",
           "decembar")
+MONTHS_OF = ("januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra",
+             "novembra", "decembra")
 WEEKDAYS = ("ponedeljak", "utorak", "sreda", "četvrtak", "petak", "subota", "nedelja")
 
 
