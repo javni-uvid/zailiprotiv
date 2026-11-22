@@ -612,3 +612,9 @@ nobody. The hall's floor for "not silence" is the quietest fifth of the last ten
   (Safari, Chrome on Android; a desktop Chrome is told to use a phone), and the lock screen's player says who speaks
   now from `/stanje.json` every 10 s. Not linked from anywhere; opening it to all (a button on the page, caching at
   Cloudflare's edge, a player for desktops served from our domain) is the maintainer's decision after the trial.
+
+**The presiding officers never named by voice, by their addresses** (22 Nov 2026, found while replaying 19 Nov). The
+list (`GLAS_BEZ`) was compared with the list's names, which put the surname first, so it would never have matched,
+and two of its names were wrong (the first sitting was chaired by Stojan Radenović and Nada Macura). It is now the
+MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six deputies, `radenovic-stojan`,
+`macura-nada`. None of them had a voice sample yet, so nothing was named wrongly.

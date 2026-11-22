@@ -182,7 +182,7 @@ class Listener(threading.Thread):
         who, a, b, _ = runs[-1]
         roster = self.tracker.roster
         person = next((p for p in roster.people if p.slug == who), None) if roster else None
-        skip = who in config.VOICE_SKIP or (person and person.name in config.VOICE_SKIP)
+        skip = who in config.VOICE_SKIP
         if person and not skip:
             self.tracker.heard(person, "glas", a, b, tracked=set(refs))
         else:  # the chair's voice, or one not to be named: whoever was found before is no longer speaking

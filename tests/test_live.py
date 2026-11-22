@@ -1789,7 +1789,7 @@ def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch)
     L.learn([{"slug": "petrovic-petar", "start": now + 40, "seen": now + 70}])
     assert "petrovic-petar" in L.voices.sums
     # the presiding officers are never named by voice
-    assert "Aleksandar Čupić" in config.VOICE_SKIP
+    assert {"cupic-aleksandar", "radenovic-stojan", "macura-nada"} <= config.VOICE_SKIP  # by address, as the voices are kept
     # the stretch rule is the site's
     import importlib.util, pathlib
     spec = importlib.util.spec_from_file_location("ko", pathlib.Path(__file__).parents[1] / "src/zailiprotiv/ko.py")
