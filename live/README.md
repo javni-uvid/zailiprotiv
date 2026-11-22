@@ -117,6 +117,16 @@ Set-Content -Encoding ascii .tunnel.env "TUNNEL_TOKEN=<token from Cloudflare>"  
 - Every image carries its commit, branch and whether the tree was clean (labels `zailiprotiv.*`); `/stanje.json`
   gives `verzija` and the page's footer shows it. Docker checks each container answers (`docker ps`: healthy).
 - All keep Whisper's model in the volume `mikrofon-whisper` (made by the script, `external` in the compose files).
+- **Whisper on the graphics card** (`whisper-gpu.ps1`): whisper.cpp's server with the same model on the computer's
+  Radeon through Vulkan, at `127.0.0.1:8178`, beside Docker; the live service and the tests send it the sound
+  (`WHISPER_URL`, `http://host.docker.internal:8178` in the compose files) and write on the CPU while it does not
+  answer (asked again after five minutes). Once: the Vulkan SDK and Visual Studio Build Tools with C++, then
+
+```powershell
+.\whisper-gpu.ps1 napravi   # build whisper.cpp at its pinned commit with Vulkan, fetch the two models, checked
+.\whisper-gpu.ps1 zakazi    # start it with Windows (the user's Startup folder)
+.\whisper-gpu.ps1 pokreni   # now; stanje / zaustavi
+```
 
 In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostname `mikrofon.zailiprotiv.rs` points to
 `http://uzivo:8000`. A log line per frame: `name matched | name line | list line -> state`.

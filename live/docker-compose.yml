@@ -5,7 +5,13 @@ services:
   uzivo:
     image: mikrofon:uzivo
     pull_policy: never
+    environment:
+      # Whisper on the graphics card (live/whisper-gpu.ps1); while it does not answer the CPU writes. A WHISPER_URL in
+      # .env, empty too, wins.
+      WHISPER_URL: "${WHISPER_URL-http://host.docker.internal:8178}"
     env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # the computer itself, where Whisper's server on the graphics card runs
     volumes:
       - podaci:/data              # today's turns and the last list of MPs, kept across restarts
       - whisper:/data/hf          # Whisper's model, shared with the test

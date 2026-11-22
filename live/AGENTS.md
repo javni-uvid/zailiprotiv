@@ -495,3 +495,17 @@ not over the archive's recording, whose moment is not the part's. Once a recordi
 out of sight, the picture stands small in a band at the top with the speaker beside it, so the page is read while
 it is watched; its place keeps its height, the player is not moved (an iframe moved reloads), and × puts it back
 until the next ▶. To measure after a sitting week against 20 Nov: the share in view 5 and 15 minutes.
+
+**Whisper on the graphics card (22 Nov 2026, the maintainer's choice).** The maintainer wants the automatic transcript
+beside the picture, and found every model but `large-v3-turbo` too inaccurate. On the computer's CPU (Ryzen 5 7500F)
+that model is 4.5x faster than speech on long sound, but costs some 4.5 s for any piece (Whisper works in 30 s
+windows), so pieces of 5-10 s, which a line under the picture needs, barely keep up; tuning gave nothing (beam 1:
++13% and other words; 6 threads slower; batched: words lost). There is no NVIDIA card (faster-whisper's only GPU);
+the Radeon RX 7600 runs whisper.cpp through Vulkan: 22x faster than speech, a 5 s piece in 0.4 s, 83% of the words
+the same as the CPU's on 5 min of 19 Nov (each erred elsewhere). So `whisper-gpu.ps1` builds whisper.cpp at a pinned
+commit with Vulkan, fetches the model and the VAD model checked by SHA-256, and runs its server on
+`127.0.0.1:8178` from the user's Startup folder; `prepis.Writer` sends it the sound (`WHISPER_URL`, set in both
+compose files to `host.docker.internal`) and writes on the CPU for five minutes whenever it does not answer, the
+CPU's model loaded only then. A word repeated more than three times in a row is cut to three (`prepis.calm`: the
+card once wrote "znaju" nine times over a noisy stretch). What is shown is unchanged: the transcript stays off the
+page until the line beside the picture is made and the maintainer has seen it (principle 6).
