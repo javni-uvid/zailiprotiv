@@ -155,7 +155,18 @@ class View:
                     "obavestenja": news[:3], "dnevni_red": self._agenda(), "bez_potpisa": unsigned, "hronika": [e if e.get("izvor") == "sajt" else {**e, "tekst": self.shown(e.get("tekst", ""))}
                                 for e in (self.events if day == self.day else self._events_load(day))[-150:][::-1]],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
-                    "danas": done[::-1], "sazetak": self._summary_shown(day)}
+                    "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown()}
+
+    def caption(self, start: float, end: float, text: str) -> None:
+        """A line under the picture (prepis.Captions): the last four are kept, in memory only."""
+        self.captions = (self.captions + [{"od": round(start, 1), "do": round(end, 1), "tekst": text}])[-4:]
+
+    def _captions_shown(self) -> list[dict]:
+        """The line's newest lines while a broadcast is on and they are fresh (a minute of the last frame), with the
+        corrections of the transcript's spellings; none between sittings or with the line off."""
+        if not config.SHOW_CAPTIONS or self.status == NO_STREAM:
+            return []
+        return [{**c, "tekst": self.shown(c["tekst"])} for c in self.captions if self.last_frame - c["do"] < 60]
 
     def _summary_shown(self, day: str) -> dict | None:
         """The model's summary as the page shows it (config.SHOW_SUMMARY): the day's once written, else the latest

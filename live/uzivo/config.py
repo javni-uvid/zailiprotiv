@@ -69,6 +69,12 @@ WHISPER_FINAL_MODEL = ""
 # Whether the transcript is shown on the page (19 Nov 2026, the maintainer's decision: no, it errs too much and does
 # more harm than good; it is still written down, for the day's steps and the agenda). "1" shows it again.
 SHOW_TRANSCRIPT = os.environ.get("PREPIS_PRIKAZ", "0").strip() == "1"
+# The line under the broadcast's picture (22 Nov 2026, the maintainer: "probamo odmah"): the newest sound written down
+# by the graphics card's Whisper, some eight seconds at a time, for the page only (prepis.Captions). "0" turns it off;
+# without the card (WHISPER_URL) there is none. CAPTION_DELAY: seconds the page holds a new line before showing it,
+# so it comes with the picture of the viewer's player (to be measured on a sitting day).
+SHOW_CAPTIONS = os.environ.get("TITL_PRIKAZ", "1").strip() == "1"
+CAPTION_DELAY = _i("TITL_KASNJENJE", 0)
 # With the transcript off the page, /prepis?k=<this> still shows it to whoever has the key (the maintainer, to see
 # what is being written down). Empty: nobody. At least 12 characters, so that it cannot be guessed.
 TRANSCRIPT_KEY = os.environ.get("PREPIS_KLJUC", "").strip()

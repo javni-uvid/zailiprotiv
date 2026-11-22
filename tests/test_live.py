@@ -1667,3 +1667,33 @@ def test_whisper_on_the_graphics_card_and_the_cpu_while_it_does_not_answer(monke
     assert write(raw) == "sa procesora" and write(raw) == "sa procesora" and len(cpu_calls) == 2
     monkeypatch.setattr(config, "WHISPER_URL", "")
     assert w._model()(raw) == "sa procesora"
+
+
+def test_the_line_under_the_picture(tmp_path, monkeypatch):
+    """22 Nov 2026, the maintainer: the automatic transcript under the broadcast's picture, at once. The newest sound,
+    some eight seconds at a time, written by the card's Whisper for the page only; the page holds it for the script."""
+    import threading as th
+    from uzivo import prepis, config, page as page_
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path))
+    now = 1795100000.0
+    for i in range(3):  # three segments of 4 s, the last ended a second ago
+        (tmp_path / f"{int((now - 9 + 4 * i) * 1000)}-4000.pcm").write_bytes(b"\0\0" * prepis.RATE * 4)
+    t = Tracker(None, "Europe/Belgrade")
+    t.status, t.last_frame = SPEAKING, now
+    heard = []
+    c = prepis.Captions(t, th.Event(), write=lambda raw, hint: heard.append((len(raw), hint)) or "Хвала хвала хвала хвала, колеге.")
+    assert c.step(now) and heard[0][0] == 2 * prepis.RATE * 8 and "Narodna skupština" in heard[0][1]
+    assert t.captions[-1]["tekst"] == "Hvala hvala hvala kolege." and not c.step(now)  # 4 s left: not yet a line
+    assert len(list(tmp_path.glob("*.pcm"))) == 3  # nothing taken from the transcript
+    snap = t.snapshot(now)
+    assert snap["titl"] and snap["titl"][0]["tekst"] == "Hvala hvala hvala kolege."
+    monkeypatch.setattr(config, "SHOW_CAPTIONS", False)
+    assert t.snapshot(now + 1)["titl"] == []
+    monkeypatch.setattr(config, "SHOW_CAPTIONS", True)
+    t.status = NO_STREAM
+    assert t.snapshot(now + 2)["titl"] == []  # between sittings, none
+    html = page_.fragment({**snap, "stanje": "govori"}, cyr=True, site="", tz=TZ)
+    assert '<ol class="cc-src" hidden><li data-od=' in html and "Хвала хвала хвала колеге." in html
+    live = page_.player({"stanje": "govori", "danas": [], "datoteke": []}, cyr=False, live="dQw4w9WgXcQ", tz=TZ)
+    assert '<div class="cc" hidden aria-hidden="true" data-delay="0">' in live and "nije citat" in live
+    assert "function captions()" in page_.SCRIPT

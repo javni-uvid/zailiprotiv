@@ -53,6 +53,7 @@ class Tracker(Said, Chronicle, View):
         self.open = False
         self._pending = ""  # a name not on the list, or with nothing under it, read once
         self._held: dict = {}  # when and where that one frame was
+        self.captions: list[dict] = []  # the line under the picture, its last lines (prepis.Captions); not kept
         self._forms: tuple = (None, {})  # the sitting MPs' names in their cases, for the transcript's corrections
         self._others = 0  # frames in a row naming someone other than the current speaker
         self.recording_file = Path(path).with_name("snimak.json") if path else None

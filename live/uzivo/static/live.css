@@ -267,9 +267,18 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
   display: flex; align-items: center; gap: .7rem; padding: calc(.4rem + env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) .4rem max(12px, env(safe-area-inset-left, 0px));
   background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: 0 4px 14px rgba(0, 0, 0, .14); }
 .player.mini .screen { flex: none; width: min(46vw, 15rem); border-radius: 4px; }
-.player.mini .on-air { position: static; flex: 1 1 auto; min-width: 0; max-width: none; flex-direction: column; align-items: flex-start;
+.player.mini .on-air { position: static; flex: 1 1 0; min-width: 0; max-width: none; flex-direction: column; align-items: flex-start;
   gap: .1rem; padding: .1rem 0 .1rem .6rem; background: none; color: var(--fg); border-radius: 0; }
 .player.mini .on-air[hidden] { display: none; }
 .player.mini .on-air .oa-side { color: var(--muted); }
 .mini-x { flex: none; margin-left: auto; width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: 50%;
   background: var(--bg); color: var(--fg); font-size: var(--t-5); line-height: 1; cursor: pointer; }
+/* The line under the picture (22 Nov 2026): the automatic transcript's last two lines, the newest at the bottom. */
+.cc { background: #000; color: #fff; margin-top: -6px; padding: .55rem .8rem .5rem; border-radius: 0 0 6px 6px; }
+.cc-t { margin: 0; height: 2.8em; line-height: 1.4; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+  font-size: var(--t-3); }
+.cc-n { margin: .25rem 0 0; font-size: var(--t-1); color: #b8bcc4; }
+.player.mini .stage { flex-wrap: wrap; row-gap: .35rem; }
+.player.mini .cc { order: 5; flex: 1 1 100%; margin: 0; padding: .3rem .55rem; border-radius: 4px; }
+.player.mini .cc-t { font-size: var(--t-2); }
+.player.mini .cc-n { display: none; }
