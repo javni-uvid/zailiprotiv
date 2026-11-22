@@ -451,3 +451,12 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   (the agenda, the parts, all the steps, the earlier turns, the next sitting's agenda, "Kako ovo radi") is a row at
   least 44 px high, the whole row pressed, with a count and a chevron; the page's script keeps each one open or
   shut as the reader left it when the part is replaced (it had only kept the opened ones open).
+- **Colour where it means something** (22 Nov 2026, the maintainer's choice of point 4 of the same look: "malo više
+  boje"), with no new exception to the design rules. The speaker wears their list's colour, the same shade as in
+  the day's bars (`page._shades`; a class `lc-<shade>` on `#deo` sets `--lc`): a band at the left and a light tint
+  of the box with the name, a square before the list's name (its key), the dot before the name, which wore the
+  orange of "protiv", and the dot of "Uživo" on top. A vote on the day's list with its figures (`glasanje`, checked
+  to add up) has a bar of the present (or of those who voted), "za" blue and "protiv" orange, and those two
+  figures in their colours (`page._votes`). Out of those two colours went what wore them with no vote: the agenda's
+  marks (✓ and ●), the notice's "Novo" and the link to the site. The kinds of steps stay without colour (a new
+  exception to rule 2, not asked for).
