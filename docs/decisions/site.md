@@ -261,6 +261,13 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   default), large image previews allowed, the place in the site as BreadcrumbList made from its crumbs; the home page
   names the site and its publisher (WebSite, Organization), the data page its downloads (Dataset). A 404 page of its
   own (`noindex`). Favicon also as PNG (Google shows no SVG).
+- **An MP's result says what the page holds** (22 Nov 2026): searches for MPs' names showed the site 7th to 12th
+  and were hardly ever clicked (in the week to 22 Nov "danijela nikolic" was shown 101 times, not clicked once),
+  under a description that was one sentence for all. Now it is the MP's own counts, in the same words and order for
+  everyone: the final votes on laws and how they went (za, protiv, then uzdržan, nije prisutan, nije glasao when
+  any), the speeches in the hall, the latest group and convocation; what is past 160 characters is cut. The page
+  also says who the MP is as schema.org `Person` (name, address, portrait; a sitting MP's office and the Assembly),
+  only what the page shows. Read the clicks on MPs' names with **visits** `search` in December.
 - **The sitemap** lists every indexed page in both scripts with the day its main text last changed and its pictures;
   **IndexNow** tells Bing and others which pages changed after each publishing (`tools/indexnow.py`; the hashes in
   the build's cache; `indexnow_all` sends all). Search Console and Bing Webmaster Tools are the maintainer's;
