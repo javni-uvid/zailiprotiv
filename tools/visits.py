@@ -33,22 +33,18 @@ def groups(dimension: str, variables: dict, limit: int = 40, order: str = "sum_v
 
 
 def came_from(variables: dict, own: set):
-    """The page of another site a visit came from, the day, and the page it came to: which post or article brings
-    readers (a forum's thread, a news article). Another site's addresses only, sums of three or more as everywhere."""
-    dims = "refererHost refererPath date requestHost requestPath"
-    rows = groups(dims, variables, 200, "count_DESC")
-    if not rows:  # Cloudflare keeps no path of the referring page: the site and the day, at least
-        dims = "refererHost date requestHost requestPath"
-        rows = groups(dims, variables, 200, "count_DESC")
-    print("\nCame from, the page  (page views / visits; the other site's page -> ours, by day)")
+    """The day a visit came from another site and the page it came to: which day's post brought readers where.
+    Not the other site's page: browsers send only its address's host (the default referrer policy since 2020), so
+    Cloudflare's refererPath is "/" for all (tried 22 Nov 2026). Sums of three or more, as everywhere."""
+    dims = "refererHost date requestHost requestPath"
+    print("\nCame from, by day  (page views / visits; the other site -> our page)")
     shown = 0
-    for r in rows:
+    for r in groups(dims, variables, 200, "count_DESC"):
         d = r["dimensions"]
-        host = d.get("refererHost") or ""
+        host = d["refererHost"] or ""
         if r["count"] < LEAST or not host or host in own or host.endswith(".zailiprotiv.rs"):
             continue
-        print(f"  {r['count']:>6} {r['sum']['visits']:>6}  {d['date']}  {host}{d.get('refererPath', '')}"
-              f"  ->  {d['requestHost']}{d['requestPath']}")
+        print(f"  {r['count']:>6} {r['sum']['visits']:>6}  {d['date']}  {host}  ->  {d['requestHost']}{d['requestPath']}")
         shown += 1
         if shown == 40:
             break
