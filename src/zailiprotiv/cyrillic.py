@@ -86,6 +86,8 @@ def page(html: str, rel: str) -> str:
                     skip = None
             elif tag in ("script", "style", "code") and not part.startswith("</") and not part.endswith("/>"):
                 skip = tag
+            elif tag == "svg" and 'class="ips-qr"' in part:  # a payment code (pages_support): a drawing, never words
+                skip = tag
             if tag == "meta" and _SAID.match(part):
                 part = part.replace(_SAID.match(part).group(1), cyr(_SAID.match(part).group(1)))
             elif tag == "html":

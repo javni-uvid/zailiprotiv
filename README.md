@@ -44,6 +44,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.
+- **Podrži:** readers' support by bank transfer, NBS IPS QR codes drawn in the page (`podrzi.html`, `settings.json` `support`).
 - **Poslovnik:** the Assembly's Rules of Procedure, article by article, every version kept (`data/poslovnik/`), for the
   articles invoked in the debates, the terms the site explains and the order of a sitting's steps.
   The page `poslovnik-clanovi` explains the site's terms from it (`data/poslovnik/pojmovi.json`: replika, the chair's

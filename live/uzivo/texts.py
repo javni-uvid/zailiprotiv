@@ -223,6 +223,8 @@ TEXT = {
     "o_more": "Svi glasovi i govori na Za ili Protiv",
     "rules_cta": "Sednica po Poslovniku",
     "rules_sub": "šta znače kvorum, pauza, pretres, glasanje, replika i opomena, iz teksta Poslovnika Skupštine",
+    "support_cta": "Podrži sajt",
+    "support_sub": "besplatan je i bez reklama; uplata skeniranjem koda u aplikaciji banke",
     "site_cta": "Svaki zakon od 2012. i kako je glasao svaki poslanik",
     "totals": "Ko je koliko govorio",
     "totals_more": "Ostali govornici",

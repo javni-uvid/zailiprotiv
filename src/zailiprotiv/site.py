@@ -530,7 +530,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
               "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic,
               # The terms explained from the Rules, where they are (macros.term links there; 20 Nov 2026).
-              "rule_terms": {t["id"] for t in src.rule_terms}}
+              "rule_terms": {t["id"] for t in src.rule_terms},
+              # "Podrži" (pages_support), linked from the footer and the home page when settings has it (22 Nov 2026)
+              "support": bool((settings.get("support") or {}).get("account"))}
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
     # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
     common["live"], common["live_url"] = [], LIVE
@@ -1184,6 +1186,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         debated=sum(1 for it in items if it["said"])), encoding="utf-8")
     # What was corrected on the site, by hand, newest first (data/ispravke.json: [{"date", "text", "url", "where"}]).
     fixes = sorted(src.fixes, key=lambda c: c["date"], reverse=True)
+    from zailiprotiv import pages_support
+    pages_support.render(settings=settings, env=env, common=common, out=out)  # "Podrži": bank transfer, NBS IPS QR
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root="", corrections=fixes),
                                          encoding="utf-8")
     # who spoke how long, per day read from the recording and in sum

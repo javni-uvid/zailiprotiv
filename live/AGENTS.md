@@ -586,3 +586,5 @@ Checked: samples from 17 Nov only, speeches of 18 Nov fed as the stream leaves t
 sample named (Hubač, Brnabić, Vučić), the three without none; and four minutes of a Serbian TV talk show named
 nobody. The hall's floor for "not silence" is the quietest fifth of the last ten minutes' tenths of a second, as
 `lice_glas` does it (a first try against whole windows threw away continuous speech). `GLAS=0` turns voices off.
+- **"Podrži sajt" on the page** (22 Nov 2026, the maintainer): a box like the Rules' above the link to the site,
+  leading to the site's `podrzi` (`support_cta`, `support_sub`).
