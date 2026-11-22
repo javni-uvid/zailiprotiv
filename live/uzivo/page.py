@@ -16,7 +16,6 @@ from .names import cyrillic, given_first
 from .steps import steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
 
-LIVE = "https://www.parlament.gov.rs/prenosi/sednice-narodne-skupstine.2083.html"
 
 ARC = ('<svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/>'
        '<path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg>')
@@ -126,7 +125,6 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         if line and (snap["stanje"] == "govori" and cur):  # otherwise the summary above already says it
             out.append(f'<p class="hl">{escape(line)}</p>')
         out.append(_cards(snap, every, shade, cyr=cyr, site=site, tz=tz))
-        out.append(_lists(every, shade, cyr=cyr))
         out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
         out.append(_totals(every, cyr=cyr, site=site, shade=shade))
         where = f'{site}{"cir/" if cyr else ""}'
@@ -460,6 +458,8 @@ def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, s
                                  f'<p><a class="cta" href="{escape(home)}">zailiprotiv.rs →</a></p>{day_page}'))
     go = (f'<p class="acts st-go"><button type="button" class="share-now st-open">▶ {t("st_open")}</button></p>'
           if snap["stanje"] == "govori" and snap.get("sada") else "")
+    if not go:  # the way to them otherwise stood in the box of the day, gone since 22 Nov 2026 (the maintainer)
+        return ""
     return (go +
             f'<div class="st-data" hidden data-close="{t("st_close")}" data-hint="{t("st_hint")}">{"".join(out)}</div>')
 
@@ -656,45 +656,19 @@ def _card_next(snap: dict, *, cyr: bool) -> tuple[str, str] | None:
 
 
 def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
-    """While nobody is on (a break, or between sittings): the day so far in place of an empty box. The sentence of the
-    day, the three with the most time (each leading to the MP's page on the site, as in the day's totals), and the
-    picture of it to share (`picture.py`, the page's link preview too)."""
-    turns = snap.get("danas") or []
-    line = headline(turns, cyr=cyr, when=_when(snap, cyr))
-    if not line:
-        return ""
+    """While nobody is on during a sitting's break: the next sitting convened, if any. The box of the day's sentence,
+    its three with the most time and the pictures to share stood here until 22 Nov 2026 (the maintainer: "sklonio bi
+    ceo ovaj segment … sa sve tim za deljenje"); the day's tiles, totals and cards below say the same."""
     t = lambda k: escape(_t(k, cyr))
-    if snap.get("ranije"):
-        when = _date(snap["dan"])
-        head = f'{t("last_day")}, {escape(cyrillic(when) if cyr else when)}'
-    else:
-        head = t("so_far")
-    slugs = {d["ime"]: d["adresa"] for d in turns if d.get("adresa")}
-    def who(n: str) -> str:
-        nm = escape(_name(given_first(n), cyr))
-        if site and slugs.get(n):
-            nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + slugs[n])}">{nm}</a>'
-        return f"<b>{nm}</b>"
-    top = "".join(f'<li>{who(n)} <span>{_dur(sec, cyr)}</span></li>' for n, sec, _ in leaders(turns)[:3])
-    src = ("/cir" if cyr else "") + "/slika.png"
-    tall = ("/cir" if cyr else "") + "/prica.png"
     coming = snap.get("sazvano")
-    nxt = ""
-    if coming and coming.get("pocinje") and snap["stanje"] != "nema_prenosa":  # between sittings: the countdown says it
-        day = _date(coming["pocinje"][:10])
-        hour = f' {t("at")} {escape(coming["pocinje"][11:16])}' if len(coming["pocinje"]) > 10 else ""
-        title = escape(_name(coming.get("naslov", ""), cyr))
-        if str(coming.get("url", "")).startswith("https://"):
-            title = f'<a href="{escape(coming["url"])}">{title}</a>'
-        nxt = f'<p class="pz-next"><b>{t("coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
-    return (f'<div class="o pz"><p class="src">{head}</p><p class="hl">{escape(line)}</p>'
-            f'<ol class="pz-top">{top}</ol>{nxt}'
-            f'<p class="acts"><button type="button" class="share-now st-open">▶ {t("st_open")}</button> '
-            f'<button type="button" class="share-now share-day" data-src="{src}" '
-            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_day")}</button> '
-            f'<button type="button" class="share-now share-day tall" data-src="{tall}" '
-            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_tall")}</button></p>'
-            f'<p class="meta share-said" hidden></p></div>')
+    if not (coming and coming.get("pocinje") and snap["stanje"] != "nema_prenosa"):  # between sittings: the countdown
+        return ""
+    day = _date(coming["pocinje"][:10])
+    hour = f' {t("at")} {escape(coming["pocinje"][11:16])}' if len(coming["pocinje"]) > 10 else ""
+    title = escape(_name(coming.get("naslov", ""), cyr))
+    if str(coming.get("url", "")).startswith("https://"):
+        title = f'<a href="{escape(coming["url"])}">{title}</a>'
+    return f'<p class="pz-next"><b>{t("coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
 
 
 def _dur(sec: int, cyr: bool = False) -> str:
@@ -703,8 +677,9 @@ def _dur(sec: int, cyr: bool = False) -> str:
     return f"{h} {hour} {m} {minute}" if h else f"{m} {minute}"
 
 
-def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8, shade: dict[str, str] | None = None) -> str:
-    """The day's time on the floor per speaker, longest first, as bars: the turns summed, by the same rule for all."""
+def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 5, shade: dict[str, str] | None = None) -> str:
+    """The day's time on the floor per speaker, longest first, as bars: the turns summed, by the same rule for all.
+    The first five stand, the others open under them (22 Nov 2026, the maintainer: "skrati na top 5")."""
     t = lambda k: escape(_t(k, cyr))
     by: dict[str, list] = {}
     tone: dict[str, str] = {}
@@ -727,16 +702,17 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 8, shade: dic
         return (f'<div class="tr{" rest" if rest else ""}"><div class="tn">{name_html}{under}</div>'
                 f'<div class="tb"><i{f' class="{cls}"' if cls else ""} style="width:{max(1.5, 100 * sec / most):.1f}%"></i></div>'
                 f'<div class="tv"><b>{_dur(sec, cyr)}</b><span>{share}% · {n} {word}</span></div></div>')
-    for name, (sec, n, slug, side) in rows[:top]:
+    def row(name: str, sec: int, n: int, slug: str, side: str) -> str:
         nm = escape(_name(given_first(name), cyr))
         if slug:
             nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + slug)}">{nm}</a>'
-        out.append(line(nm, side, sec, n, cls=tone.get(name, "")))
+        return line(nm, side, sec, n, cls=tone.get(name, ""))
+    out += [row(name, *r) for name, r in rows[:top]]
+    out.append("</div>")
     rest = rows[top:]
     if rest:
-        out.append(line(f'{t("totals_rest")} {len(rest)} {t("speakers_n")}', "", sum(r[0] for _, r in rest),
-                        sum(r[1] for _, r in rest), rest=True))
-    out.append("</div>")
+        out.append(f'<details class="tot-more"><summary>{t("totals_more")} ({len(rest)})</summary><div class="tot">'
+                   + "".join(row(name, *r) for name, r in rest) + "</div></details>")
     return "".join(out)
 
 
@@ -1086,15 +1062,15 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
     """"Dok čekate": the site's quiz, one question at a time like the site's own quiz, and facts (pages_mikrofon),
     shown between sittings; the markup as the site's mikrofon page has it, for the same script and styles."""
     w = w or {}
-    quiz, facts = w.get("kviz") or [], w.get("cinjenice") or []
-    if not quiz and not facts:
+    quiz, facts = [], w.get("cinjenice") or []  # the quiz no longer shown (22 Nov 2026, the maintainer)
+    if not facts:
         return ""
     t = lambda k: escape(_t(k, cyr))
     s = lambda text: escape(cyrillic(text) if cyr else text)
     home = site + ("cir/" if cyr else "")
     href = lambda h: escape(h if h.startswith("http") else home + h)
     n = len(quiz)
-    out = [f'<h2>{t("wait_title")}</h2>']
+    out = []
     if quiz:
         marks = "".join(f'<button type="button" aria-label="{t("question")} {i}">{i}</button>' for i in range(1, n + 1))
         out.append(f'<p>{s(_t("quiz_lead", False).format(n=n))}</p><div class="mq" id="mq">'
@@ -1120,7 +1096,7 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
                      f'<p class="mq-share-text" hidden>{t("share_text")} <span class="mq-got">0</span> {t("of")} {n}. '
                      f'{t("share_end")}</p></section></div>')
     if facts:
-        out.append(f'<h3>{t("know")}</h3><ul class="facts">')
+        out.append(f'<h2>{t("know")}</h2><ul class="facts">')
         out += [f'<li><a href="{href(f["href"])}">{s(f["text"])}</a></li>' for f in facts]
         out.append(f'</ul><p class="meta">{t("facts_note")}</p>')
     return "\n".join(out)
@@ -1178,7 +1154,6 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p></details>
-<p><a href="{LIVE}">{t("live")}</a> · <a href="{escape(home)}">{t("home")}</a></p>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>

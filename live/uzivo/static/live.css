@@ -35,7 +35,7 @@ h2 { font-size: var(--t-5); margin: 2.4rem 0 .6rem; }
 .v-za { color: var(--za); } .v-protiv { color: var(--protiv); }
 .cta { display: inline-block; font-weight: 600; text-decoration: none; padding: .45rem .8rem; border-radius: 6px;
   background: var(--fg); color: var(--bg); } .cta:hover { color: var(--bg); opacity: .85; }
-.rules-cta { margin: 1.4rem 0 0; } .rules-cta a { display: flex; flex-direction: column; gap: .15rem; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--fg); } .rules-cta b { font-size: var(--t-3); } .rules-cta span { color: var(--muted); font-size: var(--t-2); } .rules-cta a:hover b { text-decoration: underline; }
+.rules-cta { order: 57; margin: 1.4rem 0 0; } .rules-cta a { display: flex; flex-direction: column; gap: .15rem; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--fg); } .rules-cta b { font-size: var(--t-3); } .rules-cta span { color: var(--muted); font-size: var(--t-2); } .rules-cta a:hover b { text-decoration: underline; }
 .site-cta { margin: 1.4rem 0 0; font-weight: 600; } .site-cta a { color: var(--fg); }
 .dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; background: var(--lc, var(--muted)); }
 .who { font-family: var(--serif); font-weight: 700; font-size: var(--t-d1); line-height: 1.05; }
@@ -104,14 +104,14 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .add-home { order: 6; }
 .dl-more { margin-top: .4rem; border-top: 1px solid var(--line); }
 /* Every row that opens looks the same (22 Nov 2026, the maintainer: the "+" was too small on a phone): the whole
    row is the button, at least 44 px high, its name, a count, and a chevron at the end. */
-.dl-more > summary, details.how > summary, .agenda > summary, .turns-more > summary, .nx-ag > summary, .parts-more > summary {
+.tot-more > summary, .dl-more > summary, details.how > summary, .agenda > summary, .turns-more > summary, .nx-ag > summary, .parts-more > summary {
   cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; font-weight: 650; }
-.dl-more > summary::-webkit-details-marker, details.how > summary::-webkit-details-marker, .chip > summary::-webkit-details-marker,
+.tot-more > summary::-webkit-details-marker, .dl-more > summary::-webkit-details-marker, details.how > summary::-webkit-details-marker, .chip > summary::-webkit-details-marker,
 .agenda > summary::-webkit-details-marker, .turns-more > summary::-webkit-details-marker, .nx-ag > summary::-webkit-details-marker,
 .parts-more > summary::-webkit-details-marker { display: none; }
-.dl-more > summary::after, details.how > summary::after, .agenda > summary::after, .turns-more > summary::after, .nx-ag > summary::after, .parts-more > summary::after {
+.tot-more > summary::after, .dl-more > summary::after, details.how > summary::after, .agenda > summary::after, .turns-more > summary::after, .nx-ag > summary::after, .parts-more > summary::after {
   content: ""; flex: none; width: .6rem; height: .6rem; border: solid currentColor; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); margin: 0 .4rem .3rem auto; }
-.dl-more[open] > summary::after, details.how[open] > summary::after, .agenda[open] > summary::after, .turns-more[open] > summary::after,
+.tot-more[open] > summary::after, .dl-more[open] > summary::after, details.how[open] > summary::after, .agenda[open] > summary::after, .turns-more[open] > summary::after,
 .nx-ag[open] > summary::after, .parts-more[open] > summary::after { transform: rotate(-135deg); margin-bottom: -.25rem; }
 .parts-more { border-top: 1px solid var(--line); margin-top: .4rem; }
 .dl-foot { margin: .5rem 0 0; font-size: var(--t-2); } .dl-foot a { color: inherit; }
@@ -251,3 +251,6 @@ a.said { margin-left: .3rem; }
 /* "Obavesti me" and "Dodaj na početni ekran" side by side, one row, nothing under them (22 Nov 2026). */
 .ah-row { display: flex; flex-wrap: wrap; gap: .5rem; } .ah-row .add-btn { flex: 1 1 10rem; min-height: 2.75rem; }
 .ah-row:not(:has(button:not([hidden]))) { display: none; }
+/* "Sednica po Poslovniku" higher, under the agenda between sittings (22 Nov 2026, the maintainer). */
+main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
+.tot-more { margin-top: .4rem; border-top: 1px solid var(--line); } .tot-more > .tot { padding: .3rem 0 .6rem; }
