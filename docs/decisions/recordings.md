@@ -132,7 +132,7 @@ records and recordings stays here:
   spoke when, in this order: the caption while the broadcast shows it; the day's notes lined up with the sound
   (above), which once published replace whatever else the day had; and only for a day, or a part of one, with no
   notes yet, faces and voices (`live/uzivo/lice_glas.py` in `live/Dockerfile.analiza`, an image of its own on the
-  tested one, never live: YuNet and SFace for faces, 3D-Speaker's ERes2Net through sherpa-onnx for voices; only the
+  tested one, never live (voices live since 22 Nov 2026: live/AGENTS.md): YuNet and SFace for faces, 3D-Speaker's ERes2Net through sherpa-onnx for voices; only the
   numbers are kept, no picture). `ko.py` matches a voice for every speaker by one rule: a stretch of sound is named
   when its windows are on average 0.68 alike the mean of a speaker's windows in turns known by caption or notes
   (`STRETCH_MIN`; checked on 18 Nov, each file left out of the samples in turn: every stretch so named was right).

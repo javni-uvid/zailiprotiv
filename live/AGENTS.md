@@ -564,3 +564,25 @@ sound but the tokens' in the shortened one, a minute off by the twentieth minute
 over its own span in proportion. Checked on the first 20 min of 19 Nov against what the CPU had written: 89% of the
 words the same, a matched word's start 0.32 s apart at the median (0.84 s at the 90th percentile), the 20 min written
 in 50 s.
+
+**Who speaks without a caption: the chair's words and the voice, counted and labelled** (22 Nov 2026, the
+maintainer: "da čitanje prepisa utiče na govornika ako prepoznamo uspešno", voices live, and the time so found
+counted, labelled). It changes "Reč ima … from the chair's words" above, where no time was counted, and, for the live
+service, "never live" of the voices in `docs/decisions/recordings.md`. The order: a caption names the speaker and
+rules; while none does, (1) the chair giving the floor (`hronika.floor`, in the chair's sound or in a turn found this
+way) makes that MP the speaker from the end of that piece (`Tracker.heard`, `"izvor": "prepis"`), until a caption, the
+chair giving the floor to another, a voice, or `HEARD_LONGEST` (20 min); (2) the voice (`glas.py`): ERes2Net through
+sherpa-onnx, the model the recordings are read with (its file checked by digest in the image), a window of 3 s every
+1.5 s of the kept sound, and the site's rule (`ko.stretches`: 0.55 a window, 0.05 ahead of the next, 20 s at 0.68 on
+average, 8 s of gap); a stretch so named makes that MP the speaker (`"izvor": "glas"`), and the turn ends when the
+voice stops for 8 s or the chair's or another's voice is named (`unheard`, `voice_gone`). The presiding officers
+(`GLAS_BEZ`: the Speaker, the six deputies, the two who chaired the first sitting) are never named by voice. The
+samples are each MP's mean voice (`/data/glasovi.npz`, numbers only, never published): first from 17-18 Nov, placed
+by the notes (27 MPs), then every turn the caption names adds its windows (from 5 s after its start to 5 s before its
+end), so an MP is known by voice once the picture has named them. Such turns count in the day's totals and the
+groups' time; the speaker's box says "Prepoznat po glasu" or "Po rečima predsedavajućeg …, automatski; može da
+pogreši", and the list of turns "po glasu" / "po rečima predsedavajućeg"; `/dan/<date>.json` carries `izvor`.
+Checked: samples from 17 Nov only, speeches of 18 Nov fed as the stream leaves them, 90 s each: the three MPs with a
+sample named (Hubač, Brnabić, Vučić), the three without none; and four minutes of a Serbian TV talk show named
+nobody. The hall's floor for "not silence" is the quietest fifth of the last ten minutes' tenths of a second, as
+`lice_glas` does it (a first try against whole windows threw away continuous speech). `GLAS=0` turns voices off.

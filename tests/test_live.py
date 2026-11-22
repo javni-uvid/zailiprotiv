@@ -1741,3 +1741,58 @@ def test_a_days_recording_on_the_card_makes_words_of_tokens():
     assert zvuk_dana.words(tokens, 600) == [[600.04, 600.16, "Ti"], [600.16, 600.28, "će"], [600.3, 600.62, "morati."]]
     # the segment stood at 10.0-11.16 s in the whole sound, its tokens at 0.04-0.62 in the shortened one
     assert zvuk_dana.words(tokens, 600, (10.0, 11.16)) == [[610.0, 610.24, "Ti"], [610.24, 610.48, "će"], [610.52, 611.16, "morati."]]
+
+
+def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch):
+    """22 Nov 2026, the maintainer: with no caption, whom the chair gives the floor to is the speaker, and so is a
+    voice clearly an MP's for 20 s; the time counts, labelled; a caption rules; the chair's voice ends such a turn."""
+    import threading as th
+    from uzivo import config
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path / "zvuk"))
+    (tmp_path / "zvuk").mkdir()
+    now = 1795100000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    t.observe(None, now=now)  # a broadcast, nobody's caption
+    petar = next(p for p in ROSTER.people if p.slug == "petrovic-petar")
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    t.heard(petar, "prepis", now + 10, now + 10)  # "Reč ima Petar Petrović"
+    t.observe(None, now=now + 40)  # frames go on, no caption: the turn goes on
+    snap = t.snapshot(now + 40)
+    assert snap["stanje"] == "govori" and snap["sada"]["ime"] == "Petrović Petar" and snap["sada"]["izvor"] == "prepis"
+    assert snap["sada"]["sekundi"] == 30
+    from uzivo.page import fragment
+    html = fragment(snap, cyr=False, site="", tz=TZ)
+    assert "Po rečima predsedavajućeg („Reč ima“), jer prenos ne prikazuje ime" in html
+    # voices (numpy, which the live image has and the site's tests may not): Marko's sample known; his voice for 24 s
+    # ends Petar's turn and begins his
+    np = pytest.importorskip("numpy")
+    from uzivo import glas
+    a, b = np.zeros(512, np.float32), np.zeros(512, np.float32)
+    a[0], b[1] = 1, 1
+    voices = tmp_path / "glasovi.npz"
+    np.savez_compressed(voices, slugs=np.array(["markovic-marko", "jovanovic-marko"]), vecs=np.stack([a, b]), counts=np.array([10, 10]))
+    L = glas.Listener(t, th.Event(), embed=lambda s: a if s[0] > 0 else b, path=voices)
+    for i in range(2):  # the hall quiet first: what the loudness is measured against
+        (tmp_path / "zvuk" / f"{int((now + 36 + 4 * i) * 1000)}-4000.pcm").write_bytes(np.zeros(4 * 16000, np.int16).tobytes())
+    for i in range(6):  # six segments of 4 s with Marko's voice (positive samples)
+        (tmp_path / "zvuk" / f"{int((now + 44 + 4 * i) * 1000)}-4000.pcm").write_bytes((np.ones(4 * 16000) * 3000).astype(np.int16).tobytes())
+    L.step()
+    snap = t.snapshot(now + 70)
+    assert snap["sada"]["ime"] == "Marković Marko" and snap["sada"]["izvor"] == "glas"
+    done = [d for d in snap["danas"] if d["ime"] == "Petrović Petar"][0]
+    assert done["izvor"] == "prepis" and done["do"] <= now + 41
+    # a caption comes up for Marko: the caption rules, the turn is his by caption now
+    t.observe(marko, "Treća lista", now=now + 72)
+    assert "izvor" not in t.snapshot(now + 72)["sada"] and not t.turns_now()[-1].get("izvor")
+    # learning: a caption turn's windows go into the speaker's voice
+    L.learn([{"slug": "petrovic-petar", "start": now + 40, "seen": now + 70}])
+    assert "petrovic-petar" in L.voices.sums
+    # the presiding officers are never named by voice
+    assert "Aleksandar Čupić" in config.VOICE_SKIP
+    # the stretch rule is the site's
+    import importlib.util, pathlib
+    spec = importlib.util.spec_from_file_location("ko", pathlib.Path(__file__).parents[1] / "src/zailiprotiv/ko.py")
+    ko = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ko)
+    assert (glas.VOICE_MIN, glas.MARGIN, glas.STRETCH_MIN, glas.MIN_RUN, glas.GAP) == (ko.VOICE_MIN, ko.MARGIN, ko.STRETCH_MIN, ko.MIN_RUN, ko.GAP)

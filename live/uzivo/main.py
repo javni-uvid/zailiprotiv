@@ -39,6 +39,9 @@ async def lifespan(_: FastAPI):
         prepis.Writer(tracker, _stop).start()
         if config.WHISPER_URL and config.SHOW_CAPTIONS:  # the line under the picture, on the graphics card only
             prepis.Captions(tracker, _stop).start()
+        if config.VOICES:  # who speaks by the voice, while no caption names anyone (glas.py)
+            from . import glas
+            glas.Listener(tracker, _stop).start()
     hronika.Watcher(tracker, _stop).start()
     if sudija.on():  # the model tells the day's steps and sums the day up (sudija.py); no key, no calls
         sudija.Judge(tracker, _stop, bell=bell).start()

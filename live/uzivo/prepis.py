@@ -327,10 +327,15 @@ class Writer(threading.Thread):
         for what, sentence in hronika.find(text):
             self.tracker.note(piece[0][0], what, sentence, "prepis")
         roster = self.tracker.roster
-        if chair and roster:  # no caption on the picture: whom the chair gave the floor to, by name (hronika.floor)
+        heard_turn = bool(current and current.get("izvor"))  # a turn found without a caption: the chair may be in it
+        if (chair or heard_turn) and roster:  # no caption: whom the chair gave the floor to, by name (hronika.floor)
             sitting = [p for p in roster.people if not roster.current or p.slug in roster.current]
             for person in hronika.floor(text, sitting):
                 self.tracker.note(piece[0][0], "Reč ima", person.name, "prepis", person.slug)
+                # and they are the speaker from the piece's end, until a caption, a voice or the chair says otherwise
+                # (22 Nov 2026, the maintainer: "da čitanje prepisa utiče na govornika")
+                end = piece[-1][0] + piece[-1][1]
+                self.tracker.heard(person, "prepis", end, end)
         for _, _, f in piece:
             if self.write_whole and not chair:  # kept for the second reading, once the turn is over
                 (f.parent / "kraj").mkdir(exist_ok=True)

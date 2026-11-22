@@ -11,6 +11,12 @@ WORKDIR /srv
 COPY live/requirements.txt live/constraints.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 COPY live/uzivo ./uzivo
+# Who speaks by the voice (glas.py, 22 Nov 2026): 3D-Speaker's ERes2Net (Apache 2.0), the model the recordings are read
+# with afterwards (Dockerfile.analiza), checked by its digest
+ADD --chmod=644 --checksum=sha256:f1ee61be04000b50392a63442e5dd9feaea7e81dddd494d3647cf1c3d88a1498 \
+    https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx \
+    /srv/modeli/glas.onnx
+RUN chmod -R a+rX /srv/modeli  # read by the user uzivo, not root (ulaz.sh)
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
 # The script and styles shared with the site's mikrofon page (page._shared)
 COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
