@@ -25,18 +25,95 @@
     f.title = "YouTube";
     put(f);
   }
-  function file(url, t) {
+  // The day's turns with their place in the archive's files (each turn's "▶ snimak"), from the page as it is now:
+  // who speaks at a moment of a file, and the turn before or after it.
+  function turns(url) {
+    var out = [];
+    [].forEach.call(document.querySelectorAll("li[id] [data-file][data-t]"), function (a) {
+      if (a.getAttribute("data-file") !== url) return;
+      var li = a.closest("li"), name = li.querySelector("a[href*='poslanik/']") || null;
+      // the line beside the name (the list or the office): not the hours, not "· 3 min", not a link
+      var side = [].filter.call(li.children, function (m) {
+        return /\b(meta|label)\b/.test(m.className) && m.tagName === "SPAN" && !/^[·\d]/.test(m.textContent.trim());
+      })[0];
+      var who = name ? name.textContent.trim() : (li.textContent.replace(/^[\s\d:–-]+/, "").split("·")[0].trim());
+      var said = li.querySelector("details.prepis p");
+      out.push({ t: +a.getAttribute("data-t") || 0, who: who, side: side ? side.textContent.trim() : "",
+                 said: said ? said.textContent.trim() : "", li: li });
+    });
+    return out.sort(function (x, y) { return x.t - y.t; });
+  }
+  function at(list, sec) { var k = -1; for (var i = 0; i < list.length; i++) if (list[i].t <= sec + 1) k = i; return k; }
+  // The lock screen's (and a car's, where the phone shows it) player (22 Nov 2026, the maintainer: the page as an
+  // app, to listen in the car): who speaks now, the sitting's day, back and on by 15 and 30 s, and ⏮ ⏭ to the
+  // turn before or after. Only for the archive's files, which the page plays itself; YouTube's player keeps its own.
+  var title = (document.querySelector("h1") || {}).textContent || "Narodna skupština";
+  var day = document.querySelector(".sec-h h2, main h2");
+  function session(v, url) {
+    if (!("mediaSession" in navigator)) return;
+    var ms = navigator.mediaSession, shown = null;
+    function now() {
+      var list = turns(url), k = at(list, v.currentTime), x = k >= 0 ? list[k] : null;
+      var key = x ? x.who + "|" + x.t : "";
+      if (key !== shown) {
+        shown = key;
+        try {
+          ms.metadata = new MediaMetadata({ title: x ? x.who : title.trim(), artist: x && x.side ? x.side : "Narodna skupština",
+            album: (day ? day.textContent.trim() + " · " : "") + "Za ili Protiv",
+            artwork: [{ src: "/ikona-512.png", sizes: "512x512", type: "image/png" }] });
+        } catch (e) {}
+        var card = screen.querySelector(".listen-now");
+        if (card) {
+          card.querySelector("b").textContent = x ? x.who : "";
+          card.querySelector("span").textContent = x && x.side ? x.side : "";
+          var p = card.querySelector("p"); p.textContent = x && x.said ? x.said.slice(0, 400) + (x.said.length > 400 ? " …" : "") : ""; p.hidden = !p.textContent;
+        }
+        [].forEach.call(document.querySelectorAll("li.now-playing"), function (li) { li.classList.remove("now-playing"); });
+        if (x) x.li.classList.add("now-playing");
+      }
+      if (ms.setPositionState && isFinite(v.duration) && v.duration > 0) {
+        try { ms.setPositionState({ duration: v.duration, position: Math.min(v.currentTime, v.duration), playbackRate: v.playbackRate || 1 }); } catch (e) {}
+      }
+    }
+    function turn(step) {  // ⏭ the next turn; ⏮ the start of this one, or the one before when just begun
+      var list = turns(url), k = at(list, v.currentTime);
+      var to = step > 0 ? k + 1 : (k >= 0 && v.currentTime - list[k].t > 5 ? k : k - 1);
+      if (to >= 0 && to < list.length) v.currentTime = list[to].t;
+    }
+    var h = { play: function () { v.play(); }, pause: function () { v.pause(); },
+              seekbackward: function (d) { v.currentTime = Math.max(0, v.currentTime - ((d && d.seekOffset) || 15)); },
+              seekforward: function (d) { v.currentTime = v.currentTime + ((d && d.seekOffset) || 30); },
+              seekto: function (d) { if (d && typeof d.seekTime === "number") v.currentTime = d.seekTime; },
+              previoustrack: function () { turn(-1); }, nexttrack: function () { turn(1); } };
+    Object.keys(h).forEach(function (k) { try { ms.setActionHandler(k, h[k]); } catch (e) {} });
+    var last = 0;
+    v.addEventListener("timeupdate", function () { var n = Date.now(); if (n - last > 1000) { last = n; now(); } });
+    v.addEventListener("play", function () { ms.playbackState = "playing"; now(); });
+    v.addEventListener("pause", function () { ms.playbackState = "paused"; });
+  }
+  // Only the sound ("Slušaj zvuk"): the same file in an <audio>, which a phone keeps playing with the screen locked,
+  // and over it who speaks and, where the page has it, the automatic transcript of that turn.
+  function file(url, t, sound) {
     if (!ARCHIVE.test(url || "")) return;
-    var v = screen.querySelector("video");
-    if (!v || v.getAttribute("src") !== url) {
-      v = document.createElement("video");
-      v.controls = true; v.playsInline = true; v.preload = "metadata";
+    var v = screen.querySelector("video, audio");
+    if (sound === undefined) sound = !!(v && v.tagName === "AUDIO");  // a turn's ▶ keeps the way the day is played
+    if (!v || v.getAttribute("src") !== url || (v.tagName === "AUDIO") !== sound) {
+      v = document.createElement(sound ? "audio" : "video");
+      v.controls = true; v.preload = "metadata";
+      if (!sound) v.playsInline = true;
       v.setAttribute("src", url);
       v.addEventListener("ended", function () {  // a day in several files: on to the next one
         var parts = document.querySelectorAll(".part[data-file]");
-        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0); break; }
+        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0, sound); break; }
       });
-      put(v);
+      if (sound) {
+        var box = document.createElement("div");
+        box.className = "listen-box";
+        box.innerHTML = '<div class="listen-now"><b></b><span></span><p hidden></p></div>';
+        box.appendChild(v);
+        put(box);
+      } else put(v);
+      session(v, url);
     }
     var parts = document.querySelectorAll(".part[data-file]");
     for (var j = 0; j < parts.length; j++) parts[j].classList.toggle("on", parts[j].getAttribute("data-file") === url);
@@ -49,7 +126,7 @@
     var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
     if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
     e.preventDefault();
-    if (url) file(url, t); else yt(id, t);
+    if (url) file(url, t, a.hasAttribute("data-zvuk") ? true : undefined); else yt(id, t);
     count(a.getAttribute("data-e"));
     if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
   });

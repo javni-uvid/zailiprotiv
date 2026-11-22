@@ -173,3 +173,5 @@ records and recordings stays here:
   19 Nov): Claude Haiku over the automatic transcript is the source of "Šta se desilo danas", the rules the fallback,
   and writes a summary at each break and of the day, labelled as a model's from an automatic transcript; how, in
   `live/AGENTS.md` ("The model tells the day's steps"). The key is in `live/.env` only.
+- **A day's recording as sound only** (22 Nov 2026): the day pages (`govornici/<date>`) have "Slušaj samo zvuk" and
+  the lock screen's player with who speaks, as the live page (`live/AGENTS.md`).
