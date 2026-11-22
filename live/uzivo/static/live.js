@@ -54,6 +54,24 @@
     put(oa.querySelector(".oa-side"), side ? side.textContent.trim() : "");
     put(oa.querySelector(".oa-clk"), hms(seconds(k)));
   }
+  // The line under the picture (22 Nov 2026): the part's newest lines of the automatic transcript, each shown the
+  // page's delay after it first came (the viewer's player is behind the broadcast), the last two, while YouTube's
+  // player plays; gone when no new line has come for 40 s.
+  var cc = stage && stage.querySelector(".cc"), ccSeen = {};
+  function captions() {
+    if (!cc) return;
+    var delay = (+cc.getAttribute("data-delay") || 0) * 1000, now = Date.now(), lines = [], newest = 0;
+    [].forEach.call(document.querySelectorAll("#deo .cc-src li"), function (li) {
+      var k = li.getAttribute("data-od");
+      if (!(k in ccSeen)) ccSeen[k] = now;
+      if (now - ccSeen[k] >= delay) { lines.push(li.textContent); newest = Math.max(newest, ccSeen[k] + delay); }
+    });
+    var on = lines.length > 0 && now - newest < 40000 && !!stage.querySelector("iframe");
+    if (cc.hidden === on) cc.hidden = !on;
+    if (!on) return;
+    var text = lines.slice(-2).join(" "), span = cc.querySelector(".cc-t span");
+    if (span.textContent !== text) span.textContent = text;
+  }
   function tick() {
     var d = document.getElementById("deo"), c = document.querySelector("#checked span"), k = document.querySelector(".clk");
     if (d && c) c.textContent = Math.max(0, Math.round(Date.now() / 1000 - (+d.getAttribute("data-checked"))));
@@ -61,6 +79,7 @@
     rotate();
     until();
     onAir();
+    captions();
   }
   // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
   // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.

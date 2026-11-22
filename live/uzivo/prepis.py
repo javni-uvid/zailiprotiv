@@ -351,3 +351,54 @@ class Writer(threading.Thread):
                 log.exception("a piece not written down")
                 busy = False
             self.halt.wait(0.5 if busy else 3.0)
+
+
+CAPTION = 8  # seconds of new sound for a line under the picture
+CAPTION_LATE = 30  # seconds: sound older than this is not written for the line any more (it would come too late)
+
+
+class Captions(threading.Thread):
+    """The line under the broadcast's picture (22 Nov 2026, the maintainer): the newest sound, some eight seconds at a
+    time, written down by the graphics card's Whisper (config.WHISPER_URL) for the page only. Not kept, not read for
+    the day's steps, nobody's words by name: the transcript above (`Writer`) goes on as it was, and reads the same
+    files after this has. While the card does not answer, there is no line."""
+
+    def __init__(self, tracker: Tracker, stop: threading.Event, write=None) -> None:
+        super().__init__(daemon=True)
+        self.tracker, self.halt = tracker, stop
+        self.write = write or (lambda raw, hint: over_http(config.WHISPER_URL, raw, hint, timeout=15))
+        self.until = 0.0  # the end of the sound already written for the line
+
+    def step(self, now: float | None = None) -> bool:
+        now = time.time() if now is None else now
+        fresh = [x for x in waiting() if x[0] >= self.until - 0.5 and now - x[0] < CAPTION_LATE]
+        if sum(x[1] for x in fresh) < CAPTION:
+            return False
+        piece, total = [], 0.0
+        for x in fresh:
+            piece.append(x)
+            total += x[1]
+            if total >= CAPTION:
+                break
+        self.until = piece[-1][0] + piece[-1][1]
+        try:
+            raw = b"".join(f.read_bytes() for _, _, f in piece)
+        except OSError:  # the transcript has just taken it
+            return False
+        cur = (self.tracker.snapshot().get("sada") or {}).get("ime", "")
+        hint = Writer.TERMS + (f" Govori: {' '.join(cur.split()[-1:] + cur.split()[:-1])}." if cur else "")
+        text = calm(latin(self.write(raw, hint)))
+        if text:
+            self.tracker.caption(piece[0][0], self.until, text)
+        return True
+
+    def run(self) -> None:
+        log.info("the line under the picture on: %s", config.WHISPER_URL)
+        while not self.halt.is_set():
+            try:
+                busy = self.step()
+            except Exception as exc:
+                log.debug("a line under the picture not written (%s)", exc)
+                self.halt.wait(10.0)
+                continue
+            self.halt.wait(0.3 if busy else 1.0)

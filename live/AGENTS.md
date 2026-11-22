@@ -509,3 +509,16 @@ compose files to `host.docker.internal`) and writes on the CPU for five minutes 
 CPU's model loaded only then. A word repeated more than three times in a row is cut to three (`prepis.calm`: the
 card once wrote "znaju" nine times over a noisy stretch). What is shown is unchanged: the transcript stays off the
 page until the line beside the picture is made and the maintainer has seen it (principle 6).
+
+**The automatic transcript under the broadcast's picture (22 Nov 2026, the maintainer: "probamo odmah pa ću videti
+kako izgleda").** It changes, for this line only, "The transcript is written down but not shown" above. A thread of
+its own (`prepis.Captions`) takes the newest kept sound, some eight seconds at a time (`CAPTION`; nothing older than
+30 s), and has the graphics card's Whisper write it down for the page only: not kept, not read for the day's steps,
+nobody's words by name, and the files left for the transcript (`Writer`), which goes on as it was. Without the card
+there is no line (the CPU would not keep up). The tracker keeps the last four lines in memory; the snapshot gives
+them as `titl` while a broadcast is on and they are a minute fresh, with the transcript's spelling corrections, and
+the part carries them hidden (`cc-src`). Under YouTube's picture, while it plays, a black band shows the last two,
+the newest at the bottom, and says "Automatski prepis: kasni i može da greši, nije citat." (principle 6: it is no
+quote, and the site quotes the notes); in the band kept on top, under the picture. Each line is shown
+`TITL_KASNJENJE` seconds after it first came (0 for now): the viewer's player is behind the broadcast by a time to
+be measured on 24 Nov, and the line is to come with its picture. `TITL_PRIKAZ=0` turns it off.

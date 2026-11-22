@@ -110,6 +110,9 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         tail = ("… " + tail.split(" ", 1)[-1]) if len(tail) >= 400 else tail
         said = (f'<div class="said-now"><p class="src">{t("said_unsigned")}</p><p>{escape(_name(tail, cyr))}</p>'
                 f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis">{t("said_all")} →</a></p></div>')
+    if snap.get("titl"):  # the line under the picture: its newest lines, for the script (prepis.Captions)
+        out.append('<ol class="cc-src" hidden>' + "".join(
+            f'<li data-od="{c["od"]}">{escape(_name(c["tekst"], cyr))}</li>' for c in snap["titl"]) + "</ol>")
     out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
@@ -1043,6 +1046,9 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         note = t("yt_live_note")
         # the speaker on the picture, written by the script from the part while the broadcast plays (22 Nov 2026)
         onair = '<p class="on-air" hidden aria-hidden="true"><b></b><span class="oa-side"></span><span class="oa-clk"></span></p>'
+        # the line under the picture (22 Nov 2026): the script writes the part's newest lines in, after the delay
+        onair += (f'<div class="cc" hidden aria-hidden="true" data-delay="{int(config.CAPTION_DELAY)}"><p class="cc-t"><span></span></p>'
+                  f'<p class="cc-n">{t("cc_note")}</p></div>')
     else:
         onair = ""
         parts = snap.get("datoteke") or []
