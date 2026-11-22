@@ -81,6 +81,9 @@ def test_site_builds_every_page(built):
     assert 'id="ukratko"' in mp and 'href="abramovic-nenad-glasovi.html"' in mp and "Po vrsti zakona" not in mp
     assert "Glasovi protiv" in votes and "Glasovi za" in votes and "Po vrsti zakona" in votes and 'href="abramovic-nenad.html"' in votes
     assert "Sa kim glasa isto" not in mp  # fewer than ten votes in common with any group
+    # What a search result shows: the MP's own counts first, the same sentence for everyone; who they are as data.
+    assert re.search(r'<meta name="description" content="Nenad Abramović, poslanik: od \d+ konačn\w+ glasanja o zakonima \d+ za, \d+ protiv', mp)
+    assert '"@type": "Person"' in mp and '"url": "https://zailiprotiv.rs/poslanik/abramovic-nenad"' in mp
     assert (out / "kako-racunamo.html").exists() and "kako-racunamo.html#" in (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
     import xml.dom.minidom as dom
     assert dom.parse(str(out / "zakoni.xml")).getElementsByTagName("entry")
