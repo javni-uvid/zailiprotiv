@@ -63,7 +63,7 @@ def program(f: Path) -> float | None:
     return int(parts[2]) / 1000 if len(parts) > 2 and parts[2].isdigit() else None
 
 
-def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90, phrases: bool = False):
+def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90, phrases: bool = False, whole: bool = False):
     """The sound written down by whisper.cpp's server (`/inference`): a wav of the raw samples, Serbian, the hint as
     its prompt. Raises when it does not answer."""
     b = io.BytesIO()
@@ -75,7 +75,7 @@ def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90, phrases
     k = uuid.uuid4().hex
     parts = [(f'--{k}\r\nContent-Disposition: form-data; name="file"; filename="a.wav"\r\n'
               "Content-Type: audio/wav\r\n\r\n").encode(), b.getvalue(), b"\r\n"]
-    for name, value in (("response_format", "verbose_json" if phrases else "json"), ("language", "sr"),
+    for name, value in (("response_format", "verbose_json" if phrases or whole else "json"), ("language", "sr"),
                         ("temperature", "0.0"), ("prompt", hint)):
         if value:
             parts.append(f'--{k}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode())
@@ -84,6 +84,8 @@ def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90, phrases
                                  headers={"Content-Type": f"multipart/form-data; boundary={k}"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         got = json.loads(r.read())
+    if whole:  # the server's whole answer: its segments, each with its tokens' times (zvuk_dana)
+        return got
     if phrases:  # each phrase with its seconds in the sound: [(start, end, text)]
         return [(float(x.get("start", 0)), float(x.get("end", 0)), " ".join(str(x.get("text", "")).split()))
                 for x in got.get("segments") or [] if str(x.get("text", "")).strip()]
