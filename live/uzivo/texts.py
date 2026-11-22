@@ -166,6 +166,7 @@ TEXT = {
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
     "yt_live_note": "Prenos sa Jutjuba (Gugl) učitava se tek na klik, bez kolačića.",
     "play_live": "Gledaj prenos",
+    "mini_x": "Vrati snimak na njegovo mesto",
     "archive_note": "Snimak iz arhive Skupštine (Videonet) učitava se tek na klik.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counted": "Brojač sajta zbraja po danu koliko je puta stranica otvorena, koliko dugo je gledana i šta je "

@@ -38,12 +38,29 @@
     }
     if (b.textContent !== out) b.textContent = out;
   }
+  // The speaker on the broadcast's picture while it plays: the name, the list and the clock of the part, the list's
+  // colour beside them (22 Nov 2026, the maintainer). Only on YouTube's broadcast, whose speaker is the part's.
+  var stage = document.querySelector(".player .stage"), oa = stage && stage.querySelector(".on-air");
+  function onAir() {
+    if (!oa) return;
+    var d = document.getElementById("deo"), w = d && d.querySelector(".sp-head .who"), k = d && d.querySelector(".sp-head .clk");
+    var on = !!(w && k && d.getAttribute("data-stanje") === "govori" && stage.querySelector("iframe"));
+    if (oa.hidden === on) oa.hidden = !on;
+    if (!on) return;
+    var side = d.querySelector(".sp-head .side"), cls = "on-air" + (d.className ? " " + d.className : "");
+    if (oa.className !== cls) oa.className = cls;
+    var put = function (el, text) { if (el.textContent !== text) el.textContent = text; };
+    put(oa.querySelector("b"), w.textContent.trim());
+    put(oa.querySelector(".oa-side"), side ? side.textContent.trim() : "");
+    put(oa.querySelector(".oa-clk"), hms(seconds(k)));
+  }
   function tick() {
     var d = document.getElementById("deo"), c = document.querySelector("#checked span"), k = document.querySelector(".clk");
     if (d && c) c.textContent = Math.max(0, Math.round(Date.now() / 1000 - (+d.getAttribute("data-checked"))));
     if (k) k.textContent = hms(seconds(k));
     rotate();
     until();
+    onAir();
   }
   // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
   // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
@@ -102,6 +119,24 @@
     if (d && !d.open) { d.open = true; e.scrollIntoView({ block: "center" }); }
   }
   window.addEventListener("hashchange", unfold); unfold();
+  // The picture kept on top while the page is read: once it plays and its place has gone up out of sight, it stands
+  // in a band at the top, small, the speaker beside it; its place keeps its height. × puts it back until the next ▶.
+  var player = stage && stage.parentNode, back = stage && stage.querySelector(".mini-x"), seen = true, away = false;
+  function mini(on) {
+    if (!player || on === player.classList.contains("mini")) return;
+    player.style.minHeight = on ? player.offsetHeight + "px" : "";
+    player.classList.toggle("mini", on);
+    back.hidden = !on;
+  }
+  function check() { mini(!seen && !away && !!stage.querySelector("iframe, video")); }
+  if (player && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { seen = es[0].isIntersecting || es[0].boundingClientRect.top > 0; check(); }).observe(player);
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest) return;
+      if (e.target.closest(".mini-x")) { away = true; mini(false); return; }
+      if (e.target.closest("[data-file], [data-yt]")) { away = false; setTimeout(check, 0); }
+    });
+  }
   document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
 
   // "Podeli ovaj trenutak": a picture drawn here, in the browser, of who speaks and for how long, with the page's

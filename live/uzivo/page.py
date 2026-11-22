@@ -1041,7 +1041,10 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
                   f'<img src="{img}" alt="" width="1200" height="630" decoding="async">'
                   f'<span>▶ {t("play_live")}</span></button>')
         note = t("yt_live_note")
+        # the speaker on the picture, written by the script from the part while the broadcast plays (22 Nov 2026)
+        onair = '<p class="on-air" hidden aria-hidden="true"><b></b><span class="oa-side"></span><span class="oa-clk"></span></p>'
     else:
+        onair = ""
         parts = snap.get("datoteke") or []
         first = next((d for d in reversed(snap["danas"]) if d.get("datoteka") and d.get("snimak") is not None), None)
         if not parts and not first:
@@ -1053,9 +1056,16 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
             chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
                             f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'
                             for i, p in enumerate(parts, 1))
-            return (f'<section class="player"><div class="screen" id="screen">{button}</div><p class="meta">{note}</p>'
+            return (f'<section class="player">{_stage(button, onair, cyr)}<p class="meta">{note}</p>'
                     f'<details class="parts-more"><summary>{t("parts")} ({len(parts)})</summary><ul class="parts">{chips}</ul></details></section>')
-    return f'<section class="player"><div class="screen" id="screen">{button}</div><p class="meta">{note}</p></section>'
+    return f'<section class="player">{_stage(button, onair, cyr)}<p class="meta">{note}</p></section>'
+
+
+def _stage(button: str, onair: str, cyr: bool) -> str:
+    """The screen, the speaker's line over it, and the button that puts the picture back in its place when the
+    script has kept it on top while the page is read (22 Nov 2026, the maintainer: watch and read at once)."""
+    return (f'<div class="stage"><div class="screen" id="screen">{button}</div>{onair}'
+            f'<button type="button" class="mini-x" hidden aria-label="{escape(_t("mini_x", cyr))}">×</button></div>')
 
 
 def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:

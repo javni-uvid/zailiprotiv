@@ -487,3 +487,11 @@ under "Ostali govornici (N)". "Sednica po Poslovniku" stands under the agenda be
 during one. The cards are reached only from the speaker's box now, so between sittings they are not in the page;
 the link preview's picture (`/slika.png`) and the story picture stay. During a break only the next sitting
 convened, if any, stands where the box was. Measured on the test page: 4.5 screens at 390 px (about 6.4 before).
+
+**The speaker on the picture, the picture kept on top (22 Nov 2026, the maintainer; points 1 and 2 of the analysis
+"Mikrofon, gledanje preko nas").** While YouTube's broadcast plays, a line over its top left corner gives the
+speaker's name, list (in the list's colour) and clock, written by the script from the part (`#deo`) every second;
+not over the archive's recording, whose moment is not the part's. Once a recording plays and its place has gone up
+out of sight, the picture stands small in a band at the top with the speaker beside it, so the page is read while
+it is watched; its place keeps its height, the player is not moved (an iframe moved reloads), and × puts it back
+until the next ▶. To measure after a sitting week against 20 Nov: the share in view 5 and 15 minutes.

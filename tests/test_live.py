@@ -1612,3 +1612,17 @@ def test_the_days_speakers_five_stand_the_rest_open_and_no_bar_of_lists():
     assert '<h3 class="sub">Vreme za govornicom po listama' not in html  # in the cards only
     css = page_.CSS
     assert 'main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }' in css
+
+
+def test_the_speaker_stands_on_the_picture_and_the_picture_stays_on_top():
+    """22 Nov 2026, the maintainer: the name, list and clock on the broadcast's picture; the picture kept small on
+    top while the page is read, with a way to put it back."""
+    from uzivo.page import player, SCRIPT, CSS
+    snap = {"stanje": "govori", "danas": [], "datoteke": []}
+    live = player(snap, cyr=False, live="dQw4w9WgXcQ", tz=TZ)
+    assert '<div class="stage"><div class="screen" id="screen">' in live and '<p class="on-air" hidden' in live
+    assert 'class="mini-x" hidden aria-label="Vrati snimak na njegovo mesto"' in live
+    day = {"stanje": NO_STREAM, "datoteke": [{"url": "https://arhiva.videonet.co.rs/a.mp4", "od": 0, "trajanje": 60}], "danas": []}
+    archive = player(day, cyr=False, tz=TZ)
+    assert 'class="mini-x"' in archive and "on-air" not in archive  # the archive's speaker is not the part's
+    assert "function onAir()" in SCRIPT and "function mini(on)" in SCRIPT and ".player.mini .stage { position: fixed" in CSS
