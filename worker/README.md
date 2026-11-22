@@ -78,3 +78,10 @@ the method page when it is done):
     wrangler d1 execute zailiprotiv-glasovi --remote --command "DELETE FROM ballots WHERE item='<law>' AND day='<day>' AND net='<net>'"
 
 If this happens often, the next step is Cloudflare Turnstile on `POST /z` (free; adds a script from Cloudflare).
+
+## Mail
+
+`POST /m/salji {"poruke": [{to, subject, html, text, odjava}]}`, with the push's token, is the live service's: up to
+20 messages a call, each sent as it is through Cloudflare Email Service (the binding `MEJL`, Workers Paid) from
+`sazetak@mikrofon.zailiprotiv.rs`, answers to `kontakt@zailiprotiv.rs`; `odjava` also as `List-Unsubscribe` (left out
+when Cloudflare does not allow the header). Answers `{poslato, greske: [{i, code}]}`. The subscribers' list comes next.
