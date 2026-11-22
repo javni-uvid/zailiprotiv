@@ -18,7 +18,7 @@
     if (!ID.test(id || "")) return;
     var f = document.createElement("iframe");
     // enablejsapi: the player tells the page by messages which moment it shows (the live page's line under it)
-    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&enablejsapi=1&origin=" +
+    f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&enablejsapi=1&origin=" +
       encodeURIComponent(location.origin) + (t > 0 ? "&start=" + t : "");
     f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
     f.allowFullscreen = true;
