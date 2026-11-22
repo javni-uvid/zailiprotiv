@@ -23,6 +23,11 @@ name = "VLIMIT"
 namespace_id = "1002"
 simple = { limit = 40, period = 60 }
 
+# The day's summary by mail (Cloudflare Email Service, Workers Paid; 23 Nov 2026): only from the live page's address.
+[[send_email]]
+name = "MEJL"
+allowed_sender_addresses = ["sazetak@mikrofon.zailiprotiv.rs"]
+
 # The clock GitHub's own schedule didn't keep (13 Nov 2026): every hour of the working day the worker starts the
 # votes workflow (reading the Assembly's site), and every six hours the model's writing. Times in UTC.
 [triggers]

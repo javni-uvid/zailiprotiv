@@ -20,6 +20,8 @@
 //   POST /p/salji     ← {"od": <row>, "vrsta": "sednica"|"sazetak"}, with "authorization: Bearer <PUSH_TOKEN>"
 //                       from the live service: send the day's notification of a sitting begun, or of the day's
 //                       summary out (each once a day), a batch at a time; answers with where the next batch starts
+//   POST /m/salji     ← {"poruke": [{"to", "subject", "html", "text", "odjava"}, …]}, with the token: from the live
+//                       service, the day's summary by mail, up to 20 messages a call (sendMail)
 //   POST /p/admin     ← {"endpoint"}, with the token: from the live service's /upozorenja (the maintainer's key):
 //                       this device is told when "Ko sada govori" is down while a sitting is on; /p/admin/odjava
 //   POST /p/vrsta     ← {"endpoint"}   from the page's service worker on a push: which notification it is
@@ -28,6 +30,40 @@
 // and one address can send only so often (Cloudflare's rate limiter; the address is not stored by us).
 const SITE = "https://zailiprotiv.rs";
 const LIVE = "https://mikrofon.zailiprotiv.rs";
+// Mail goes out from the live page's own address (Cloudflare Email Service, the domain mikrofon.zailiprotiv.rs:
+// the site's own domain keeps its mail at Loopia); answers go to the project's address.
+const MAIL_FROM = { email: "sazetak@mikrofon.zailiprotiv.rs", name: "Za ili Protiv" };
+const MAIL_REPLY = "kontakt@zailiprotiv.rs";
+const MAIL_BATCH = 20;  // messages a call: each is a call of Cloudflare's, as each push is
+const MAIL_TO = /^[^\s@<>()",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
+
+// One message to each address, made by the live service (`live/uzivo/mejl.py`): the subject, HTML and text as they
+// are, and the address that unsubscribes this reader in one click (also as List-Unsubscribe, where mail readers put
+// their own button). Answers what went and what did not, by its place in the batch, with Cloudflare's code.
+async function sendMail(env, messages) {
+  let sent = 0;
+  const failed = [];
+  for (const [i, m] of messages.entries()) {
+    if (!m || typeof m.to !== "string" || !MAIL_TO.test(m.to) || typeof m.subject !== "string" || typeof m.html !== "string") {
+      failed.push({ i, code: "poruka" });
+      continue;
+    }
+    const msg = { from: MAIL_FROM, to: m.to, replyTo: MAIL_REPLY, subject: m.subject.slice(0, 300), html: m.html };
+    if (typeof m.text === "string") msg.text = m.text;
+    const out = typeof m.odjava === "string" && m.odjava.startsWith("https://") ? m.odjava : "";
+    try {
+      await env.MEJL.send(out ? { ...msg, headers: { "List-Unsubscribe": `<${out}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } } : msg);
+      sent++;
+    } catch (e) {
+      let err = e;
+      if (out && String(e && e.code).startsWith("E_HEADER")) {  // the header not allowed: the link in the mail stays
+        try { await env.MEJL.send(msg); sent++; continue; } catch (e2) { err = e2; }
+      }
+      failed.push({ i, code: String((err && err.code) || (err && err.name) || "greska") });
+    }
+  }
+  return { poslato: sent, greske: failed };
+}
 let laws = { at: 0, map: new Map() };  // law → the quotes of its page that may be marked
 
 async function allowed() {
@@ -347,6 +383,13 @@ export default {
         if (b.vrsta === "sazetak") what = "sazetak";
       } catch (e) { od = 0; }
       return reply(await sendPush(env, od, what), 200, origin);
+    }
+    if (path === "/m/salji") {  // the live service, with its token: mail it made, sent as it is
+      const auth = request.headers.get("authorization") || "";
+      if (!env.PUSH_TOKEN || !env.MEJL || !(await same(auth, "Bearer " + env.PUSH_TOKEN))) return reply({ error: "token" }, 403, origin);
+      let b;
+      try { b = JSON.parse((await request.text()).slice(0, 4e6)) || {}; } catch (e) { return reply({ error: "json" }, 400, origin); }
+      return reply(await sendMail(env, Array.isArray(b.poruke) ? b.poruke.slice(0, MAIL_BATCH) : []), 200, origin);
     }
     if (path === "/p/admin" || path === "/p/admin/odjava") {  // the live service, for the maintainer's key
       const auth = request.headers.get("authorization") || "";

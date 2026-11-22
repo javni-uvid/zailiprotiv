@@ -638,3 +638,24 @@ MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six 
   library; checked against botocore for the same request and moment. The bucket's settings are the maintainer's:
   the public domain `zvuk.zailiprotiv.rs`, CORS for `mikrofon.zailiprotiv.rs`, objects deleted after a day, and a
   cache rule for that host so that listeners are served from Cloudflare's cache.
+- **The day's summary by mail** (22–23 Nov 2026, the maintainer's decisions: principle 5's exception as for the
+  notifications, a mail every sitting day, the addresses kept by the maintainer, encrypted; the look chosen over
+  three drafts). `mejl.build` makes the subject, text and HTML of a day (Latin or Cyrillic) from the day's summary,
+  the chair's measures and the speakers' measured time: the decisions, the warnings and to whom, and what each
+  speaker spoke about, on a line of time with the live page's marks; a speaker's list in its colour, a bar of the
+  time, "opomena" by who got one and "najduže" by the three longest; no paragraph (the maintainer: "veliki blokovi
+  teksta su loši"). The subject and the counts are the code's, and how the summary is made is on the method page
+  linked at the foot, not in the mail. Tables and inline styles only: no picture, font or anything loaded, nothing
+  tracked. `mejl.mixed_words` finds a word in two scripts (19 Nov: "iznео"). The counter sends what the service
+  made (`POST /m/salji`, the push's token; Cloudflare Email Service from `sazetak@mikrofon.zailiprotiv.rs`, the
+  only sending domain: the site's own keeps its mail at Loopia, whose MX records Email Routing would replace;
+  answers go to `kontakt@zailiprotiv.rs`).
+- **Who is who: the list's names and lists, never the model's** (23 Nov 2026, the maintainer: "Anji Brnabić",
+  "Bakić" and MPs of the ruling group shown "bez liste" in the first draft). `mere.Roll` finds an MP in a sentence by
+  the surname in any case ("Bakiću", "Milinku Jovanovu" → Milenko Jovanov), the given name or who had the floor
+  deciding between MPs of one surname, nobody when still two; an MP's list is the group, else the party that
+  proposed them (`data/<N>/members.json`), else "van poslaničkih grupa". `mere.measures` keeps only the chair's own
+  words giving a measure (a sentence that speaks of one given before is none: of 19 Nov's 13, 8 were measures) and
+  finds to whom, said so: a name in the chair's sentence; the stretch's summary naming who got one at that minute;
+  the chair saying later whom he warned; for a word taken away over time, the MP with the floor. Never guessed
+  otherwise. Written on 19 Nov alone: to be checked on the next days before the live page and the day's page use it.
