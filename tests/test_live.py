@@ -156,10 +156,10 @@ def test_page_both_scripts():
     snap = t.snapshot()
     lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
     assert "Petar Petrović" in lat and 'href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in lat
-    assert "Ko sada govori u Skupštini" in lat and "Lista za primer" in lat
+    assert "<title>Skupština uživo: ko sada govori" in lat and "Lista za primer" in lat
     cyr = page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Петар Петровић" in cyr and "https://zailiprotiv.rs/cir/poslanik/petrovic-petar" in cyr
-    assert "Ко сада говори у Скупштини" in cyr
+    assert "<title>Скупштина уживо: ко сада говори" in cyr
     # the Rules of Procedure, always under the day (20 Nov 2026: the new convocation's readers asked to find it)
     assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojmovi"' in lat and "Sednica po Poslovniku" in lat
     assert 'href="https://zailiprotiv.rs/cir/poslovnik-clanovi#pojmovi"' in cyr

@@ -414,3 +414,8 @@ of this file, in the same commit. Dates are the maintainer's decisions unless sa
   offer shown: the browser can push and this one has not asked yet), `obavesti-klik` (pressed), `obavesti-odbijeno`
   (the browser's question answered no or closed), `obavesti-greska` (failed on the way). So it can be seen whether
   people do not find the button, or refuse the browser's question.
+- **The title says what people search for** (22 Nov 2026, the maintainer's decision): "Skupština uživo: ko sada
+  govori", and the description begins "Prenos Narodne skupštine uživo". Google showed the page mostly to those who
+  knew its name (14-20 Nov: "mikrofon za ili protiv" 129 times, "ko govori u skupstini" 20, "skupština uživo" and
+  "prenos skupštine" not at all), while the page was already indexed and the site's most clicked (516 clicks a
+  week of 982). Read the change in `visits` with search=true from early December.

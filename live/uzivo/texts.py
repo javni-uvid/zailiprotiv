@@ -6,8 +6,8 @@ from functools import lru_cache
 from .names import cyrillic
 
 TEXT = {
-    "title": "Ko sada govori u Skupštini",
-    "lead": "Govornik u Narodnoj skupštini u ovom trenutku, pročitan iz potpisa u prenosu uživo.",
+    "title": "Skupština uživo: ko sada govori",
+    "lead": "Prenos Narodne skupštine uživo: ko je sada za govornicom i koliko dugo, pročitano iz potpisa u prenosu.",
     "intro": "Ko upravo govori u Narodnoj skupštini i koliko dugo, čitano uživo iz potpisa u prenosu. Deo sajta",
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
     "hero_sub": "Uživo iz prenosa: ko je za govornicom, koliko dugo i šta govori.",
