@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import NO_STREAM, SPEAKING, UNKNOWN, _write, counted
+from .state_base import SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -261,6 +261,8 @@ class Tracker(Said, Chronicle, View):
                 if self.open and cur["key"] == person.key:
                     cur["seen"], cur["n"] = now, cur["n"] + 1
                     cur["role"] = role or cur["role"]
+                    cur.pop("izvor", None)  # found before the caption came up: the caption now says it
+                    cur.pop("po_glasu", None)
                     if at.get("sq") is not None and cur.get("video") == at.get("video"):
                         cur["sq_seen"] = at["sq"]
                 else:
@@ -285,12 +287,83 @@ class Tracker(Said, Chronicle, View):
                     self.open = True
                     self._save()
                 self.status = SPEAKING
+            elif self.open and cur.get("izvor"):
+                # found without a caption (the chair's words, the voice): no caption is what it lives on; one found by
+                # the chair's words alone goes on while nothing else is heard, HEARD_LONGEST at the most
+                if not cur.get("po_glasu"):
+                    cur["seen"] = now
+                if now - cur["start"] > config.HEARD_LONGEST:
+                    self._close()
+                    self.status = UNKNOWN
             elif self.open and (self._others >= 2 or now - max(cur["seen"], self._resumed) > config.HOLD_SECONDS):
                 self._close()
                 self.status = UNKNOWN
             elif not self.open:
                 self.status = UNKNOWN
             self._save()
+
+    # --- who speaks without a caption (22 Nov 2026, the maintainer) ---
+    def turns_now(self) -> list[dict]:
+        with self._lock:
+            return [dict(t) for t in self.turns]
+
+    def caption_on(self) -> bool:
+        """Whether a caption names the speaker now (a turn open that was not found by voice or the chair's words)."""
+        with self._lock:
+            return bool(self.open and self.turns and not self.turns[-1].get("izvor"))
+
+    def heard(self, person: Person, how: str, start: float, seen: float, tracked: set | None = None) -> None:
+        """Someone found speaking without a caption: by the chair's words giving them the floor ("prepis") or by
+        their voice ("glas"). A caption on rules; the same speaker goes on; another one ends the turn before (not
+        before its own start) and begins theirs. `tracked`: whose voices are known, so that a turn of theirs lasts as
+        long as the voice does, and one of someone else's as long as nothing else is heard."""
+        with self._lock:
+            if self.status == NO_STREAM or (self.open and self.turns and not self.turns[-1].get("izvor")):
+                return
+            cur = self.turns[-1] if self.turns else None
+            if self.open and cur and cur["key"] == person.key:
+                cur["seen"] = max(cur["seen"], seen)
+                if how == "glas":
+                    cur["po_glasu"] = True
+                    cur["start"] = min(cur["start"], start) if start > cur["start"] - 30 else cur["start"]
+            else:
+                if self.open and cur:
+                    cur["seen"] = min(cur["seen"], max(cur["start"], start))
+                    self.open = False
+                begin = max(start, cur["seen"] if cur else start)
+                self.turns.append({"key": person.key, "name": person.name, "slug": person.slug, "group": person.group,
+                                   "role": "", "start": begin, "seen": max(seen, begin), "n": SURE_FRAMES, "izvor": how,
+                                   "video": "", "sq_start": None, "sq_seen": None, "seg": None})
+                if how == "glas" or (tracked and person.slug in tracked and how != "prepis"):
+                    self.turns[-1]["po_glasu"] = True
+                self.open = True
+            self.status = SPEAKING
+            self._snap = None
+            self._save()
+
+    def unheard(self, at: float) -> None:
+        """Another voice (the chair's) has the floor from `at`: a turn found without a caption ends there."""
+        with self._lock:
+            cur = self.turns[-1] if self.turns else None
+            if self.open and cur and cur.get("izvor") and at > cur["start"]:
+                cur["seen"] = min(cur["seen"], at) if cur.get("po_glasu") else at
+                self._close()
+                self.status = UNKNOWN
+                self._snap = None
+
+    def voice_gone(self, last: float, newest: float, tracked: set) -> None:
+        """No voice heard for GAP: a turn found by voice, or by the chair's words for someone whose voice is known and
+        has had time to be heard, ends with the last voice heard."""
+        with self._lock:
+            cur = self.turns[-1] if self.turns else None
+            if not (self.open and cur and cur.get("izvor")):
+                return
+            known = cur.get("po_glasu") or cur["slug"] in tracked
+            if known and newest - cur["start"] > 30 and newest - cur["seen"] > 8:
+                cur["seen"] = max(cur["start"], min(cur["seen"], last) if cur.get("po_glasu") else last)
+                self._close()
+                self.status = UNKNOWN
+                self._snap = None
 
     def tick(self, now: float | None = None) -> None:
         """Called each second, frame or not: a broadcast that stopped ends the turn."""
@@ -323,7 +396,8 @@ class Tracker(Said, Chronicle, View):
             "govori": [{"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
                         "od": int(t["start"]), "do": int(t["seen"]), "okvira": t["n"] if counted(t) or t["n"] < 2 else 1,  # a turn not kept reads as a single frame to the site, which drops those
                         "video": t.get("video", ""),
-                        "sq_od": t.get("sq_start"), "sq_do": t.get("sq_seen"), "segment": t.get("seg")}
+                        "sq_od": t.get("sq_start"), "sq_do": t.get("sq_seen"), "segment": t.get("seg"),
+                        **({"izvor": t["izvor"]} if t.get("izvor") else {})}
                        for t in (self._named(turns, merge=False) if self.roster else turns)],
         }
 

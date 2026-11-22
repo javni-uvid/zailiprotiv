@@ -74,6 +74,17 @@ SHOW_TRANSCRIPT = os.environ.get("PREPIS_PRIKAZ", "0").strip() == "1"
 # without the card (WHISPER_URL) there is none. CAPTION_DELAY: seconds the page holds a new line before showing it,
 # so it comes with the picture of the viewer's player (to be measured on a sitting day).
 SHOW_CAPTIONS = os.environ.get("TITL_PRIKAZ", "1").strip() == "1"
+# Who speaks, by the chair's words and by the voice, while no caption names anyone (22 Nov 2026, the maintainer: the
+# time so found is counted, labelled). GLAS=0 turns the voices off (glas.py); the chair's words always count.
+VOICES = os.environ.get("GLAS", "1").strip() == "1"
+VOICE_MODEL = os.environ.get("GLAS_MODEL", "/srv/modeli/glas.onnx").strip()
+VOICES_PATH = os.environ.get("GLASOVI", "/data/glasovi.npz").strip()  # the MPs' mean voices: numbers only, never published
+# The presiding officers are never named by voice: they speak from the chair far more than from the floor (their
+# turns at the rostrum still come from the caption or the chair's words). Names as the list writes them, or addresses.
+VOICE_SKIP = {x.strip() for x in os.environ.get("GLAS_BEZ", "Aleksandar Čupić,Marija Bjelobrk,Sara Valentik,"
+                                                  "Lidija Dimitrijević,Tibor Lazar,Adem Mavrić,Jelena Petrović,"
+                                                  "Dragan Radenović,Danijela Macura").split(",") if x.strip()}
+HEARD_LONGEST = _i("GOVOR_NAJDUZE", 1200)  # seconds: a turn found by the chair's words and no voice ends at the latest
 CAPTION_DELAY = _i("TITL_KASNJENJE", 0)
 # With the transcript off the page, /prepis?k=<this> still shows it to whoever has the key (the maintainer, to see
 # what is being written down). Empty: nobody. At least 12 characters, so that it cannot be guessed.

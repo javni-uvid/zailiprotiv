@@ -20,7 +20,7 @@ class View:
             rec = int(max(0, t["sq_start"] - config.RECORDING_LEAD) * t["seg"])
         return {"ime": t["name"], "adresa": t["slug"], "grupa": t["group"], "uloga": t["role"],
                 "od": int(t["start"]), "do": int(t["seen"]), "sekundi": int(t["seen"] - t["start"]),
-                "video": t.get("video") or "", "snimak": rec}
+                "video": t.get("video") or "", "snimak": rec, **({"izvor": t["izvor"]} if t.get("izvor") else {})}
 
     def _last_day(self) -> tuple[str, list[dict]]:
         """The latest earlier day with turns: its list stays on the page until someone is read at the next sitting."""

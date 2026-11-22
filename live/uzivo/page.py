@@ -144,6 +144,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
                 nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + d["adresa"])}">{nm}</a>'
             side = d["uloga"] or d["grupa"]
             side = f' <span class="meta">{escape(_name(side, cyr))}</span>' if side else ""
+            if d.get("izvor") in ("glas", "prepis"):
+                side += f' <span class="meta">· {t("by_short_" + d["izvor"])}</span>'
             if d.get("reci"):
                 side += (f' <a class="meta said" href="{"/cir" if cyr else ""}/prepis#t{int(d["od"])}">{t("said_link")}</a>')
             rows.append(f'<li id="t{int(d["od"])}"><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
@@ -769,6 +771,8 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str
         out.append(f'<p class="side">{s(side)}</p>')
     if not cur["adresa"]:
         out.append(f'<p class="meta">({t("not_listed")})</p>')
+    if cur.get("izvor") in ("glas", "prepis"):  # found without a caption (22 Nov 2026): said how, and that it may err
+        out.append(f'<p class="meta how-found">{t("by_" + cur["izvor"])}</p>')
     longer = (" · " + s(TEXT["longest"] if cur["duze"] >= 100 else TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
                f'{_hms(max(0, cur["sekundi"]))}</b> <span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
