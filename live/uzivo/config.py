@@ -117,6 +117,7 @@ WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
 WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()
 WHISPER_BEAM = _i("WHISPER_BEAM", 3)
 SOUND_PATH = os.environ.get("SOUND_PATH", "/tmp/uzivo/zvuk")  # the segments' sound until it is written down
+LISTEN_PATH = os.environ.get("LISTEN_PATH", "/tmp/uzivo/slusaj")  # the live sound's playlist (slusaj.py)
 
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 VERSION = os.environ.get("VERZIJA", "").strip()  # the commit the image was built from (mikrofon.ps1; Dockerfile)

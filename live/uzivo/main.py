@@ -16,10 +16,10 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, hronika, picture, prepis, sudija, worker
+from . import config, hronika, picture, prepis, slusaj, sudija, worker
 from .stream import VIDEO
 from .obavesti import Bell
-from .page import admin_page, fragment, manifest, page, service_worker, transcript_page
+from .page import admin_page, fragment, listen_html, manifest, page, service_worker, transcript_page
 from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
@@ -237,6 +237,35 @@ def latin_manifest() -> JSONResponse:
 @app.get("/cir/manifest.webmanifest")
 def cyrillic_manifest() -> JSONResponse:
     return JSONResponse(manifest(True), media_type="application/manifest+json", headers=DAY)
+
+
+@app.get("/slusaj/{k}/")
+def listen_page(k: str) -> Response:
+    """Listening live, sound only (slusaj.py): the maintainer's trial, behind the key."""
+    if not config.admin_open(k):
+        raise HTTPException(404)
+    return HTMLResponse(listen_html(), headers={"Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer",
+                                                "X-Robots-Tag": "noindex, nofollow"})
+
+
+@app.get("/slusaj/{k}/z.m3u8")
+def listen_playlist(k: str) -> Response:
+    if not config.admin_open(k):
+        raise HTTPException(404)
+    text = slusaj.PLAYLIST.text()
+    if not text:
+        raise HTTPException(404)
+    return Response(text, media_type="application/vnd.apple.mpegurl", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/slusaj/{k}/{name}")
+def listen_segment(k: str, name: str) -> Response:
+    if not config.admin_open(k):
+        raise HTTPException(404)
+    f = slusaj.PLAYLIST.segment(name)
+    if not f:
+        raise HTTPException(404)
+    return FileResponse(f, media_type="video/mp2t", headers={"Cache-Control": "private, max-age=120"})
 
 
 @app.get("/upozorenja")
