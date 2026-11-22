@@ -31,7 +31,8 @@ it. Dates are the maintainer's decisions unless said otherwise.
   settings when unset (20 Nov 2026, PR #79 stopped on 44 failures for it); for `uv run pytest -q` alone, export them.
 - **Update README.md with every feature**, and this file with every decision.
 - **A development environment may not reach parlament.gov.rs, the subdomains or the buckets; GitHub's runners can.**
-  Read the outside through workflows: **peek** (a page's text), **health**, **visits** (Cloudflare's counts, how long
+  Read the outside through workflows: **peek** (a page's text), **health**, **visits** (Cloudflare's counts; which site sent
+  readers to which page on which day, never the other site's page, as browsers send only its host; how long
   the live page is in view (`tools/watching.py`: its part asked every 5 s while in view, summed per hour), what
   Cloudflare stopped, Google Search), **dns-check**, **probe**. Never ask the maintainer to paste secrets in chat.
 - **Ask the Assembly little.** Requests name the project in the User-Agent and wait a second between pages;

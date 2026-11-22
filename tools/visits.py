@@ -32,6 +32,24 @@ def groups(dimension: str, variables: dict, limit: int = 40, order: str = "sum_v
     return ask(query, variables).get("rows", [])
 
 
+def came_from(variables: dict, own: set):
+    """The day a visit came from another site and the page it came to: which day's post brought readers where.
+    Not the other site's page: browsers send only its address's host (the default referrer policy since 2020), so
+    Cloudflare's refererPath is "/" for all (tried 22 Nov 2026). Sums of three or more, as everywhere."""
+    dims = "refererHost date requestHost requestPath"
+    print("\nCame from, by day  (page views / visits; the other site -> our page)")
+    shown = 0
+    for r in groups(dims, variables, 200, "count_DESC"):
+        d = r["dimensions"]
+        host = d["refererHost"] or ""
+        if r["count"] < LEAST or not host or host in own or host.endswith(".zailiprotiv.rs"):
+            continue
+        print(f"  {r['count']:>6} {r['sum']['visits']:>6}  {d['date']}  {host}  ->  {d['requestHost']}{d['requestPath']}")
+        shown += 1
+        if shown == 40:
+            break
+
+
 def main(hours: int):
     until = datetime.now(timezone.utc)
     since = until - timedelta(hours=hours)
@@ -49,6 +67,7 @@ def main(hours: int):
         for r in rows:
             if r["count"] >= LEAST:
                 print(f"  {r['count']:>6} {r['sum']['visits']:>6}  {r['dimensions'][dim] or '(none)'}")
+    came_from(variables, {r["dimensions"]["requestHost"] for r in total})
     rows = groups("datetimeHour", variables, hours + 2, "datetimeHour_ASC")
     print("\nBy hour, UTC  (page views / visits)")
     for r in rows:
