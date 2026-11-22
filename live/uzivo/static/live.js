@@ -57,14 +57,32 @@
   // The line under the picture (22 Nov 2026): the part's newest lines of the automatic transcript, each shown the
   // page's delay after it first came (the viewer's player is behind the broadcast), the last two, while YouTube's
   // player plays; gone when no new line has come for 40 s.
-  var cc = stage && stage.querySelector(".cc"), ccSeen = {};
+  // With the sound (22 Nov 2026, the maintainer): YouTube's player says by messages which moment of the broadcast it
+  // shows (mediaReferenceTime, the broadcast's own clock); each phrase carries its moment by the same clock
+  // (data-pt), and is shown when the player reaches it, whatever that viewer's player is behind. Without those, a
+  // line is shown the page's delay after it came.
+  var cc = stage && stage.querySelector(".cc"), ccSeen = {}, shows = null;
+  window.addEventListener("message", function (e) {
+    if (!/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(e.origin) || typeof e.data !== "string") return;
+    var d; try { d = JSON.parse(e.data); } catch (x) { return; }
+    var i = d && d.info, t = i && (i.mediaReferenceTime || (i.progressState && i.progressState.ingestionTime));
+    if (typeof t === "number" && t > 1e9) shows = { t: t, at: Date.now(), playing: shows ? shows.playing : true };
+    if (i && typeof i.playerState === "number" && shows) shows.playing = i.playerState === 1;
+  });
+  setInterval(function () {  // asks the player to tell it, as YouTube's own script does
+    var f = cc && stage.querySelector("iframe");
+    if (f && f.contentWindow) f.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "https://www.youtube-nocookie.com");
+  }, 1000);
   function captions() {
     if (!cc) return;
     var delay = (+cc.getAttribute("data-delay") || 0) * 1000, now = Date.now(), lines = [], newest = 0;
+    var at = shows && now - shows.at < 5000 ? shows.t + (shows.playing ? (now - shows.at) / 1000 : 0) : null;
     [].forEach.call(document.querySelectorAll("#deo .cc-src li"), function (li) {
-      var k = li.getAttribute("data-od");
+      var k = li.getAttribute("data-od"), pt = +li.getAttribute("data-pt") || 0;
       if (!(k in ccSeen)) ccSeen[k] = now;
-      if (now - ccSeen[k] >= delay) { lines.push(li.textContent); newest = Math.max(newest, ccSeen[k] + delay); }
+      if (at !== null && pt) {  // by the broadcast's clock: from its moment, for 15 s
+        if (pt <= at && at - pt < 15) { lines.push(li.textContent); newest = now; }
+      } else if (now - ccSeen[k] >= delay) { lines.push(li.textContent); newest = Math.max(newest, ccSeen[k] + delay); }
     });
     var on = lines.length > 0 && now - newest < 40000 && !!stage.querySelector("iframe");
     if (cc.hidden === on) cc.hidden = !on;

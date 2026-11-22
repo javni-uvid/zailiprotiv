@@ -57,7 +57,13 @@ def calm(text: str) -> str:
     return " ".join(out)
 
 
-def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90) -> str:
+def program(f: Path) -> float | None:
+    """When a kept file's sound begins by the broadcast's own clock (stream.program_of), or None."""
+    parts = f.stem.split("-")
+    return int(parts[2]) / 1000 if len(parts) > 2 and parts[2].isdigit() else None
+
+
+def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90, phrases: bool = False):
     """The sound written down by whisper.cpp's server (`/inference`): a wav of the raw samples, Serbian, the hint as
     its prompt. Raises when it does not answer."""
     b = io.BytesIO()
@@ -69,21 +75,26 @@ def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90) -> str:
     k = uuid.uuid4().hex
     parts = [(f'--{k}\r\nContent-Disposition: form-data; name="file"; filename="a.wav"\r\n'
               "Content-Type: audio/wav\r\n\r\n").encode(), b.getvalue(), b"\r\n"]
-    for name, value in (("response_format", "json"), ("language", "sr"), ("temperature", "0.0"), ("prompt", hint)):
+    for name, value in (("response_format", "verbose_json" if phrases else "json"), ("language", "sr"),
+                        ("temperature", "0.0"), ("prompt", hint)):
         if value:
             parts.append(f'--{k}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode())
     parts.append(f"--{k}--\r\n".encode())
     req = urllib.request.Request(url + "/inference", data=b"".join(parts),
                                  headers={"Content-Type": f"multipart/form-data; boundary={k}"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
-        return " ".join(str(json.loads(r.read()).get("text", "")).split())
+        got = json.loads(r.read())
+    if phrases:  # each phrase with its seconds in the sound: [(start, end, text)]
+        return [(float(x.get("start", 0)), float(x.get("end", 0)), " ".join(str(x.get("text", "")).split()))
+                for x in got.get("segments") or [] if str(x.get("text", "")).strip()]
+    return " ".join(str(got.get("text", "")).split())
 
 
 def on() -> bool:
     return bool(config.WHISPER_MODEL)
 
 
-def keep(segment: str, read_at: float, seconds: float) -> None:
+def keep(segment: str, read_at: float, seconds: float, program: float | None = None) -> None:
     """A segment's sound → a file of raw samples, named by the second the segment ends at and its length. Never
     raises: the frame matters more than the sound."""
     if not on():
@@ -91,7 +102,8 @@ def keep(segment: str, read_at: float, seconds: float) -> None:
     try:
         folder = Path(config.SOUND_PATH)
         folder.mkdir(parents=True, exist_ok=True)
-        out = folder / f"{int(read_at * 1000)}-{int(seconds * 1000)}.tmp"
+        # named by the second the segment ends at, its length, and when it begins by the broadcast's clock
+        out = folder / (f"{int(read_at * 1000)}-{int(seconds * 1000)}" + (f"-{int(program * 1000)}" if program else "") + ".tmp")
         done = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-y", "-i", segment, "-vn",
                                "-ac", "1", "-ar", str(RATE), "-f", "s16le", str(out)], capture_output=True, timeout=20)
         if done.returncode == 0 and out.exists() and out.stat().st_size > 2000:
@@ -107,7 +119,7 @@ def waiting() -> list[tuple[float, float, Path]]:
     out = []
     for f in Path(config.SOUND_PATH).glob("*.pcm"):
         try:
-            end, length = (int(x) / 1000 for x in f.stem.split("-"))
+            end, length = (int(x) / 1000 for x in f.stem.split("-")[:2])
         except ValueError:
             continue
         out.append((end - length, length, f))
@@ -353,7 +365,7 @@ class Writer(threading.Thread):
             self.halt.wait(0.5 if busy else 3.0)
 
 
-CAPTION = 8  # seconds of new sound for a line under the picture
+CAPTION = 4  # seconds of new sound for a line under the picture: one segment (5 s), so a phrase waits little
 CAPTION_LATE = 30  # seconds: sound older than this is not written for the line any more (it would come too late)
 
 
@@ -366,7 +378,7 @@ class Captions(threading.Thread):
     def __init__(self, tracker: Tracker, stop: threading.Event, write=None) -> None:
         super().__init__(daemon=True)
         self.tracker, self.halt = tracker, stop
-        self.write = write or (lambda raw, hint: over_http(config.WHISPER_URL, raw, hint, timeout=15))
+        self.write = write or (lambda raw, hint: over_http(config.WHISPER_URL, raw, hint, timeout=15, phrases=True))
         self.until = 0.0  # the end of the sound already written for the line
 
     def step(self, now: float | None = None) -> bool:
@@ -387,9 +399,13 @@ class Captions(threading.Thread):
             return False
         cur = (self.tracker.snapshot().get("sada") or {}).get("ime", "")
         hint = Writer.TERMS + (f" Govori: {' '.join(cur.split()[-1:] + cur.split()[:-1])}." if cur else "")
-        text = calm(latin(self.write(raw, hint)))
-        if text:
-            self.tracker.caption(piece[0][0], self.until, text)
+        # each phrase a line, at its own second: by the broadcast's clock when the files carry it, so the page shows it
+        # when the viewer's player reaches it (22 Nov 2026, the maintainer: "da titl bude istovremen sa zvukom")
+        start, clock = piece[0][0], program(piece[0][2])
+        for a, b, text in self.write(raw, hint):
+            text = calm(latin(text))
+            if text:
+                self.tracker.caption(start + a, start + b, text, None if clock is None else clock + a)
         return True
 
     def run(self) -> None:

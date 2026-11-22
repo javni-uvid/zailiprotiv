@@ -1676,24 +1676,28 @@ def test_the_line_under_the_picture(tmp_path, monkeypatch):
     from uzivo import prepis, config, page as page_
     monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path))
     now = 1795100000.0
-    for i in range(3):  # three segments of 4 s, the last ended a second ago
-        (tmp_path / f"{int((now - 9 + 4 * i) * 1000)}-4000.pcm").write_bytes(b"\0\0" * prepis.RATE * 4)
+    for i in range(3):  # three segments of 4 s, the last ended a second ago; by the broadcast's clock 20 s earlier
+        (tmp_path / f"{int((now - 9 + 4 * i) * 1000)}-4000-{int((now - 33 + 4 * i) * 1000)}.pcm").write_bytes(b"\0\0" * prepis.RATE * 4)
     t = Tracker(None, "Europe/Belgrade")
     t.status, t.last_frame = SPEAKING, now
     heard = []
-    c = prepis.Captions(t, th.Event(), write=lambda raw, hint: heard.append((len(raw), hint)) or "Хвала хвала хвала хвала, колеге.")
-    assert c.step(now) and heard[0][0] == 2 * prepis.RATE * 8 and "Narodna skupština" in heard[0][1]
-    assert t.captions[-1]["tekst"] == "Hvala hvala hvala kolege." and not c.step(now)  # 4 s left: not yet a line
+    c = prepis.Captions(t, th.Event(), write=lambda raw, hint: heard.append((len(raw), hint)) or
+                        [(0.5, 2.0, "Добар дан."), (2.5, 7.0, "Хвала хвала хвала хвала, колеге.")])
+    assert c.step(now) and heard[0][0] == 2 * prepis.RATE * 4 and "Narodna skupština" in heard[0][1]
+    assert t.captions[-1]["tekst"] == "Hvala hvala hvala kolege."
+    assert t.captions[0]["pt"] == round(now - 33 + 0.5, 2) and t.captions[-1]["od"] == round(now - 13 + 2.5, 1)
     assert len(list(tmp_path.glob("*.pcm"))) == 3  # nothing taken from the transcript
     snap = t.snapshot(now)
-    assert snap["titl"] and snap["titl"][0]["tekst"] == "Hvala hvala hvala kolege."
+    assert [c["tekst"] for c in snap["titl"]] == ["Dobar dan.", "Hvala hvala hvala kolege."]
     monkeypatch.setattr(config, "SHOW_CAPTIONS", False)
     assert t.snapshot(now + 1)["titl"] == []
     monkeypatch.setattr(config, "SHOW_CAPTIONS", True)
     t.status = NO_STREAM
     assert t.snapshot(now + 2)["titl"] == []  # between sittings, none
     html = page_.fragment({**snap, "stanje": "govori"}, cyr=True, site="", tz=TZ)
-    assert '<ol class="cc-src" hidden><li data-od=' in html and "Хвала хвала хвала колеге." in html
+    assert '<ol class="cc-src" hidden><li data-od=' in html and "Хвала хвала хвала колеге." in html and 'data-pt="' in html
+    assert prepis.program(tmp_path / "1-2-3000.pcm") == 3.0 and prepis.program(tmp_path / "1-2.pcm") is None
+    assert len(prepis.waiting()) == 3  # a name with the broadcast's clock is still read
     live = page_.player({"stanje": "govori", "danas": [], "datoteke": []}, cyr=False, live="dQw4w9WgXcQ", tz=TZ)
     assert '<div class="cc" hidden aria-hidden="true" data-delay="0">' in live and "nije citat" in live
     assert "function captions()" in page_.SCRIPT

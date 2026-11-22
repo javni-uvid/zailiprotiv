@@ -112,7 +112,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
                 f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis">{t("said_all")} →</a></p></div>')
     if snap.get("titl"):  # the line under the picture: its newest lines, for the script (prepis.Captions)
         out.append('<ol class="cc-src" hidden>' + "".join(
-            f'<li data-od="{c["od"]}">{escape(_name(c["tekst"], cyr))}</li>' for c in snap["titl"]) + "</ol>")
+            f'<li data-od="{c["od"]}"{f' data-pt="{c["pt"]}"' if c.get("pt") else ""}>{escape(_name(c["tekst"], cyr))}</li>'
+            for c in snap["titl"]) + "</ol>")
     out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}{_group_time(snap, cyr=cyr, site=site)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
