@@ -627,3 +627,14 @@ MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six 
   back. Off on the live service until the maintainer opens it. Found by the trial: the sound-only track was asked
   for only while the transcript was on (`_resolve_youtube`, `HlsPoller`); listening asks for it too. Chrome 150 and
   phones play the playlist by themselves.
+- **The live sound from Cloudflare R2** (22 Nov 2026, the maintainer's choice among three): Cloudflare caches by a
+  file's extension and not `.ts` or `.m3u8`, so through the tunnel every listener would draw the sound from the
+  maintainer's computer, and its terms for the free plan want video and "a disproportionate percentage of ... audio
+  files" served from its paid storage (R2, Stream). With `ZVUK_R2_ENDPOINT`, `ZVUK_R2_BUCKET`, `ZVUK_R2_KLJUC`,
+  `ZVUK_R2_TAJNA` and `ZVUK_URL` in `live/.env` (`r2.py`), each segment goes to the bucket once, under
+  `uzivo/<the broadcast's video id>/` (the numbers start again with each broadcast; `immutable`), then the playlist
+  `uzivo/z.m3u8` (`max-age=1`), from one thread in order, a full queue dropping its oldest job; the button plays
+  `ZVUK_URL` + `uzivo/z.m3u8` (`slusaj.address`). The PUT is signed by hand (AWS Signature Version 4), no new
+  library; checked against botocore for the same request and moment. The bucket's settings are the maintainer's:
+  the public domain `zvuk.zailiprotiv.rs`, CORS for `mikrofon.zailiprotiv.rs`, objects deleted after a day, and a
+  cache rule for that host so that listeners are served from Cloudflare's cache.

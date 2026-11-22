@@ -1831,3 +1831,27 @@ def test_listening_live_a_playlist_of_the_broadcasts_own_sound(tmp_path, monkeyp
     assert pl.segment("z111.ts") and pl.segment("../stanje.json") is None
     monkeypatch.setattr(config, "TRANSCRIPT_KEY", "")
     assert not slusaj.on()
+
+
+def test_the_live_sound_goes_to_the_bucket_signed_as_s3_wants(monkeypatch):
+    """22 Nov 2026, the maintainer's choice: the live sound from Cloudflare R2. The PUT's signature (AWS Signature
+    Version 4) is the one botocore gives for the same request and moment (checked then, kept here); the playlist in
+    the bucket names its segments under the broadcast's id; the page offers the bucket's address once it is set."""
+    import datetime as dt
+    from uzivo import r2, slusaj
+    when = dt.datetime(2026, 11, 22, 23, 37, 52, tzinfo=dt.timezone.utc)
+    req = r2.request("uzivo/vid_1/z100870.ts", b"\x47" * 1880, "video/mp2t", "public, max-age=86400, immutable", now=when,
+                     endpoint="https://abc123.r2.cloudflarestorage.com", bucket="zailiprotiv-zvuk", key_id="KEYID",
+                     secret="SECRETVALUE", region="auto")
+    assert req.full_url == "https://abc123.r2.cloudflarestorage.com/zailiprotiv-zvuk/uzivo/vid_1/z100870.ts"
+    assert dict(req.header_items())["Authorization"].endswith(
+        "Signature=4ada9e739d5b8ee4ac7441d8da127ea0562c7ddd617cfff324f3b6be555ee3d8")
+    pl = slusaj.Playlist("/nonexistent")
+    pl.items, pl.video = [(5, 2.0, False), (6, 2.0, False)], "vid_1"
+    assert "vid_1/z5.ts" in pl.text(folder="vid_1") and "\nz5.ts" in pl.text()
+    monkeypatch.setattr(r2, "PUBLIC", "")
+    assert slusaj.address() == "/slusaj/z.m3u8"
+    for k, v in (("ENDPOINT", "https://abc.r2.cloudflarestorage.com"), ("BUCKET", "b"), ("KEY_ID", "k"), ("SECRET", "s"),
+                 ("PUBLIC", "https://zvuk.zailiprotiv.rs/")):
+        monkeypatch.setattr(r2, k, v)
+    assert slusaj.address() == "https://zvuk.zailiprotiv.rs/uzivo/z.m3u8"

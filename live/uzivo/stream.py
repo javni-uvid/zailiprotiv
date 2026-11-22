@@ -414,7 +414,7 @@ class HlsPoller(threading.Thread):
                     if sound and prepis.on():
                         prepis.keep(sound, t2, dur, self.program_of(nxt))  # the segment's sound, for the transcript
                     if sound and slusaj.on():
-                        slusaj.PLAYLIST.add(sound, dur, nxt, t2)  # and for listening live (the maintainer's trial)
+                        slusaj.PLAYLIST.add(sound, dur, nxt, t2, VIDEO.get("id", ""))  # and for listening live (the maintainer's trial)
                     if t2 - last_new > 2.5 * dur:
                         log.info(
                             "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",

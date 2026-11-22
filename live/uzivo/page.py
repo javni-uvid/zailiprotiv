@@ -1083,7 +1083,7 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
                   f'<p class="cc-n">{t("cc_note")}</p></div>')
         from . import slusaj
         if config.LISTEN_PUBLIC and slusaj.fresh(time.time()):  # only the sound, ours (slusaj.py; 22 Nov 2026)
-            note = (f'<button type="button" class="play listen-live" data-uzivo="/slusaj/z.m3u8">🎧 {t("listen_live")}</button> '
+            note = (f'<button type="button" class="play listen-live" data-uzivo="{escape(slusaj.address())}">🎧 {t("listen_live")}</button> '
                     + note + " " + t("listen_live_note"))
     else:
         onair = ""
