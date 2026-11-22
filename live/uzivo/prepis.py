@@ -12,10 +12,16 @@ Off unless the packages are there and WHISPER_MODEL names a model: the service r
 """
 from __future__ import annotations
 
+import io
+import json
 import logging
+import re
 import subprocess
 import threading
 import time
+import urllib.request
+import uuid
+import wave
 from pathlib import Path
 
 from . import config
@@ -31,6 +37,46 @@ SHORTEST = 20  # seconds: a shorter turn (a reply, a point of order) is not writ
 TAIL = 3  # seconds after a turn's last frame that still count as its sound
 LOST = 180  # seconds: sound this old in no turn is thrown away
 MOST = 45 * 60  # seconds of sound kept waiting; beyond it the oldest is dropped (the computer can't keep up)
+
+
+RETRY = 300  # seconds the CPU writes after the graphics card's server did not answer, before it is asked again
+
+
+def calm(text: str) -> str:
+    """A word Whisper repeats more than three times in a row is its own loop, not speech (22 Nov 2026: "znaju" nine
+    times over a noisy stretch): kept three times. Nothing else is touched."""
+    out: list[str] = []
+    for w in text.split():
+        key = re.sub(r"\W", "", w.lower())
+        if key and len(out) >= 3 and all(re.sub(r"\W", "", x.lower()) == key for x in out[-3:]):
+            end = re.search(r"[.!?…]+$", w)
+            if end:  # the sentence's end stays
+                out[-1] = out[-1].rstrip(",;:.!?…") + end.group(0)
+            continue
+        out.append(w)
+    return " ".join(out)
+
+
+def over_http(url: str, raw: bytes, hint: str = "", timeout: float = 90) -> str:
+    """The sound written down by whisper.cpp's server (`/inference`): a wav of the raw samples, Serbian, the hint as
+    its prompt. Raises when it does not answer."""
+    b = io.BytesIO()
+    with wave.open(b, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(RATE)
+        w.writeframes(raw)
+    k = uuid.uuid4().hex
+    parts = [(f'--{k}\r\nContent-Disposition: form-data; name="file"; filename="a.wav"\r\n'
+              "Content-Type: audio/wav\r\n\r\n").encode(), b.getvalue(), b"\r\n"]
+    for name, value in (("response_format", "json"), ("language", "sr"), ("temperature", "0.0"), ("prompt", hint)):
+        if value:
+            parts.append(f'--{k}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode())
+    parts.append(f"--{k}--\r\n".encode())
+    req = urllib.request.Request(url + "/inference", data=b"".join(parts),
+                                 headers={"Content-Type": f"multipart/form-data; boundary={k}"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return " ".join(str(json.loads(r.read()).get("text", "")).split())
 
 
 def on() -> bool:
@@ -134,6 +180,28 @@ class Writer(threading.Thread):
         self._whole: dict[int, list[str]] = {}  # a long turn's second reading so far, by the turn's first second
 
     def _model(self):
+        """The writer: the graphics card's server when one is named (config.WHISPER_URL), the CPU while it does not
+        answer (for RETRY seconds, then it is asked again) or when none is; the CPU's model is loaded only when it is
+        first needed. Either way a word's loop is cut (`calm`)."""
+        if not config.WHISPER_URL:
+            cpu = self._cpu()
+            return lambda raw: calm(cpu(raw))
+        local: list = []
+        state = {"cpu_until": 0.0}
+
+        def write(raw: bytes) -> str:
+            if time.time() >= state["cpu_until"]:
+                try:
+                    return calm(over_http(config.WHISPER_URL, raw, self.hint, timeout=max(30.0, len(raw) / 2 / RATE)))
+                except Exception as exc:
+                    state["cpu_until"] = time.time() + RETRY
+                    log.warning("Whisper on the graphics card did not answer (%s): the CPU writes for %d s", exc, RETRY)
+            if not local:
+                local.append(self._cpu())
+            return calm(local[0](raw))
+        return write
+
+    def _cpu(self):
         from faster_whisper import WhisperModel
         import numpy as np
         model = WhisperModel(config.WHISPER_MODEL, device=config.WHISPER_DEVICE, compute_type=config.WHISPER_COMPUTE,
@@ -263,7 +331,8 @@ class Writer(threading.Thread):
         if self.write is None:
             try:
                 self.write = self._model()
-                log.info("transcript on: %s, %d threads%s", config.WHISPER_MODEL, config.WHISPER_THREADS,
+                log.info("transcript on: %s, %s%s", config.WHISPER_MODEL,
+                         config.WHISPER_URL or f"{config.WHISPER_THREADS} threads",
                          ", the chair's sound only" if config.CHAIR_ONLY else "")
                 try:
                     self.write_whole = self._final_model()

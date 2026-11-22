@@ -1626,3 +1626,44 @@ def test_the_speaker_stands_on_the_picture_and_the_picture_stays_on_top():
     archive = player(day, cyr=False, tz=TZ)
     assert 'class="mini-x"' in archive and "on-air" not in archive  # the archive's speaker is not the part's
     assert "function onAir()" in SCRIPT and "function mini(on)" in SCRIPT and ".player.mini .stage { position: fixed" in CSS
+
+
+def test_whisper_on_the_graphics_card_and_the_cpu_while_it_does_not_answer(monkeypatch):
+    """22 Nov 2026: whisper.cpp's server on the Radeon writes the sound; the CPU while it does not answer, asked again
+    after RETRY; a word's loop is cut either way."""
+    import http.server
+    import threading as th
+    from uzivo import prepis, config
+    assert prepis.calm("da da da da da da ne ne") == "da da da ne ne"
+    assert prepis.calm("Znaju, znaju znaju znaju. Znaju dobro") == "Znaju, znaju znaju. dobro"
+    got = {}
+
+    class H(http.server.BaseHTTPRequestHandler):
+        def do_POST(self):
+            body = self.rfile.read(int(self.headers["Content-Length"]))
+            got["body"] = body
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write('{"text": " Poštovani predsedniče,\\n hvala hvala hvala hvala hvala."}'.encode())
+
+        def log_message(self, *a):
+            pass
+    srv = http.server.HTTPServer(("127.0.0.1", 0), H)
+    th.Thread(target=srv.serve_forever, daemon=True).start()
+    raw = b"\0\0" * prepis.RATE
+    assert prepis.over_http(f"http://127.0.0.1:{srv.server_port}", raw, "Govore: Petrović Petar.") == \
+        "Poštovani predsedniče, hvala hvala hvala hvala hvala."
+    assert b'name="language"\r\n\r\nsr' in got["body"] and b"Govore: Petrovi" in got["body"] and b"RIFF" in got["body"]
+    w = prepis.Writer(None, th.Event())
+    cpu_calls = []
+    monkeypatch.setattr(prepis.Writer, "_cpu", lambda self: (lambda raw: cpu_calls.append(1) or "sa procesora"))
+    monkeypatch.setattr(config, "WHISPER_URL", f"http://127.0.0.1:{srv.server_port}")
+    write = w._model()
+    assert write(raw) == "Poštovani predsedniče, hvala hvala hvala." and not cpu_calls  # the card; the loop cut
+    srv.shutdown()
+    srv.server_close()
+    monkeypatch.setattr(config, "WHISPER_URL", "http://127.0.0.1:9")  # nothing answers there
+    write = w._model()
+    assert write(raw) == "sa procesora" and write(raw) == "sa procesora" and len(cpu_calls) == 2
+    monkeypatch.setattr(config, "WHISPER_URL", "")
+    assert w._model()(raw) == "sa procesora"

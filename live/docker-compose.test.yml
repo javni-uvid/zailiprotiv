@@ -14,12 +14,15 @@ services:
         GRANA: ${GRANA:-}
         CISTO: ${CISTO:-}
     env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # the computer itself, where Whisper's server on the graphics card runs
     environment:
       PUBLIC_URL: http://127.0.0.1:${TEST_PORT:-8001}/
       ANALYTICS_TOKEN: ""         # the test's visits are not the site's
       PUSH_TOKEN: ""              # the test never sends the notifications
       ANTHROPIC_API_KEY: "${TEST_ANTHROPIC_API_KEY:-}"  # the test asks the model only when told to (mikrofon.ps1 test with the key)
       WHISPER_THREADS: "4"        # leaves the live service its cores
+      WHISPER_URL: "${WHISPER_URL-http://host.docker.internal:8178}"  # the same server as the live service (it is fast enough for both)
     volumes:
       - podaci:/data
       - whisper:/data/hf          # the live service's model, not fetched again

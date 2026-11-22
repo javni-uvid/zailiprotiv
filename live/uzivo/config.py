@@ -60,6 +60,10 @@ RECORDING_LEAD = _i("RECORDING_LEAD", 1)
 # large-v3-turbo is the one model (20 Nov 2026, the maintainer's decision), here, on the site and for recordings read
 # afterwards; empty turns the transcript off.
 WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "large-v3-turbo").strip()
+# Whisper on the graphics card (22 Nov 2026, the maintainer's choice): whisper.cpp's server with the same model on the
+# computer's Radeon (`live/whisper-gpu.ps1`), some 20 times faster than speech where the CPU is 4.5. The compose files
+# point here; empty, or while it does not answer, the CPU writes as before (prepis.Writer._model).
+WHISPER_URL = os.environ.get("WHISPER_URL", "").strip().rstrip("/")
 # The second reading of a finished turn by a better model (prepis.Writer.step_whole) has no better model to use now.
 WHISPER_FINAL_MODEL = ""
 # Whether the transcript is shown on the page (19 Nov 2026, the maintainer's decision: no, it errs too much and does
