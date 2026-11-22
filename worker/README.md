@@ -43,7 +43,8 @@ page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.za
 result), `pretraga.klik` (a result opened), and the field on the home page and "Poslanici": `pretraga.polje` (typed in),
 `polje-nema` (no name or title), `polje-izbor` (one taken), `polje-ceo` (the whole text's search taken), never the
 words searched for; `sajt.snimak` (a recording played on a day page), `sajt.mikrofon` (a link to the live page
-taken); from the live page `mikrofon.obavesti-moze`, `-klik`, `-odbijeno`, `-greska` (the notification's offer
+taken; `sajt.mikrofon-meni`, `-pocetna`, `-najava`, `-traka`, `-poslanik` by where: the menu, the home page's
+strip, the announcement before a sitting, the bar of a sitting, an MP at the rostrum); from the live page `mikrofon.obavesti-moze`, `-klik`, `-odbijeno`, `-greska` (the notification's offer
 shown, pressed, refused at the browser's question, failed). Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.

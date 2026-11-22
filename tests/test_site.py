@@ -473,8 +473,49 @@ def test_the_live_bar_links_the_live_page_while_a_sitting_lasts(tmp_path):
     (root / "settings.json").write_text(json.dumps({"live_page": "https://mikrofon.example/"}))
     site.build(root, out, "zailiprotiv.rs", cyrillic=True)
     home, twin = (out / "index.html").read_text(), (out / "cir" / "index.html").read_text()
-    assert '<a href="https://mikrofon.example/" data-cir-href="https://mikrofon.example/cir/">Ko sada govori</a>' in home
+    # on the home page the live page's strip stands in the bar's place; the list of sittings keeps the bar
+    assert '<a class="mic on" data-pagefind-ignore href="https://mikrofon.example/"' in home
+    assert "Uživo · sednica je u toku" in home and "Skupština sada zaseda" not in home
     assert 'href="https://mikrofon.example/cir/"' in twin and "Ко сада говори" in twin
+    bar = (out / "sednice.html").read_text()
+    assert 'data-cir-href="https://mikrofon.example/cir/" data-mik="traka">Ko sada govori</a>' in bar
+    assert '<a class="nav-live on" href="https://mikrofon.example/"' in bar
+    assert site.check(out) == []
+
+
+def test_the_next_sitting_from_the_assemblys_listing_or_a_notice(tmp_path):
+    from datetime import datetime
+    from zailiprotiv.pages_mikrofon import TZ, next_start
+    now = datetime(2026, 11, 22, 3, 0, tzinfo=TZ)
+    assert next_start(tmp_path, "15", now) is None
+    (tmp_path / "obavestenja.json").write_text(json.dumps([
+        {"tekst": "Nastavlja u utorak.", "url": "https://x/", "pocinje": "2026-11-24T10:00"},
+        {"tekst": "Bilo je.", "url": "https://x/", "pocinje": "2026-11-19T10:00"}]), encoding="utf-8")
+    n = next_start(tmp_path, "15", now)
+    assert (n["pocinje"], n["dan"], n["sat"]) == ("2026-11-24T10:00", "utorak, 24. novembar", "10 h")
+    at = datetime(2026, 11, 24, 10, 0, tzinfo=TZ).timestamp()
+    assert n["u"] == at and n["dan_od"] == at - 10 * 3600 and n["od"] == at - 34 * 3600
+    (tmp_path / "15").mkdir()
+    (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {
+        "a": {"title": "Druga sednica", "agenda": ["x"], "starts": "2026-11-23T11:30"},
+        "b": {"title": "Ranija", "agenda": ["x"], "starts": "2026-11-23T09:00", "votes": [["x", "y"]]}}}))
+    assert next_start(tmp_path, "15", now)["pocinje"] == "2026-11-23T11:30"
+    assert next_start(tmp_path, "15", now)["sat"] == "11.30 h"
+
+
+def test_the_live_page_on_every_page_before_a_sitting(tmp_path):
+    out, root = tmp_path / "_site", data(tmp_path)
+    (root / "settings.json").write_text(json.dumps({"live_page": "https://mikrofon.example/"}))
+    (root / "obavestenja.json").write_text(json.dumps([{"od": "2026-01-01", "do": "2099-12-31", "tekst": "Nastavlja.",
+        "url": "https://x/", "pocinje": "2099-11-24T10:00"}]), encoding="utf-8")
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    home, laws = (out / "index.html").read_text(), (out / "zakoni.html").read_text()
+    assert '<a class="mic" data-pagefind-ignore href="https://mikrofon.example/"' in home
+    assert "u 10 h: sednica Skupštine" in home and 'class="live soon"' not in home
+    assert '<a class="nav-live" href="https://mikrofon.example/"' in laws and 'data-mik="meni"' in laws
+    assert '<p class="live soon" data-pagefind-ignore data-show="' in laws and 'data-mik="najava"' in laws
+    assert "Sutra</span>" in laws and "Danas</span>" in laws
+    assert "Уживо" in (out / "cir" / "zakoni.html").read_text()
     assert site.check(out) == []
 
 
@@ -720,7 +761,7 @@ def test_letter_sizes_are_the_scale():
     twenty sizes again; the menu's and the tabs' letters, sized to fit a phone's row, and an SVG's are the exceptions."""
     from pathlib import Path
     css = (Path(site.__file__).parent / "static" / "style.css").read_text(encoding="utf-8")
-    fit = {"clamp(.72rem, 4.3vw, 1rem)", "clamp(.68rem, 3.55vw, .95rem)", "clamp(.8rem, 3.7vw, .95rem)", "inherit", ".8em", "25px", "28px"}
+    fit = {"clamp(.72rem, 4.3vw, 1rem)", "clamp(.68rem, 3.55vw, .95rem)", "clamp(.68rem, 3.65vw, 1rem)", "clamp(.64rem, 3.05vw, .95rem)", "clamp(.8rem, 3.7vw, .95rem)", "inherit", ".8em", "25px", "28px"}
     sizes = {v.strip() for v in re.findall(r"font-size:\s*([^;}]+)", css)}
     assert {v for v in sizes if not re.fullmatch(r"var\(--t-(\d|h1|d1|d2)\)", v)} <= fit
     assert not re.search(r"font:\s*\d+\s+[\d.]+rem", css)

@@ -129,7 +129,21 @@
 {% endmacro %}
 
 {# A plenary sitting in progress: the Assembly's live broadcast, linked, not played here (principle 5). #}
-{% macro live_bar(broadcast=true) %}{% if live %}<p class="live"><span class="live-dot" aria-hidden="true"></span><span><b>Skupština sada zaseda:</b> {{ live|join("; ") }}.{% if broadcast or not live_page %} <a href="{{ live_url }}">Prenos uživo na sajtu Skupštine</a>{% endif %}{% if live_page %}{% if broadcast %} ·{% endif %} <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Ko sada govori</a><span class="live-who" data-src="{{ live_page }}stanje.js" hidden></span>{% endif %}</span></p>{% endif %}{% endmacro %}
+{% macro live_bar(broadcast=true) %}{% if live %}<p class="live"><span class="live-dot" aria-hidden="true"></span><span><b>Skupština sada zaseda:</b> {{ live|join("; ") }}.{% if broadcast or not live_page %} <a href="{{ live_url }}">Prenos uživo na sajtu Skupštine</a>{% endif %}{% if live_page %}{% if broadcast %} ·{% endif %} <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="traka">Ko sada govori</a><span class="live-who" data-src="{{ live_page }}stanje.js" hidden></span>{% endif %}</span></p>{% endif %}{% endmacro %}
+
+{# The live page's way on the site (22 Nov 2026, the maintainer's decision): the home page's strip, which says by
+   itself what the live page holds now (a sitting going on, the next one, the last day with its recording), and the
+   announcement on every other page from the day before a sitting until it starts. The script shows each part only
+   in its hours ([data-show]: from, to, seconds since 1970); the pages are built from the Assembly's listing. #}
+{% macro mic_strip() %}{% set n = next_sitting %}
+<a class="mic{% if live %} on{% endif %}" data-pagefind-ignore href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="pocetna"><span class="mic-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+{% if live %}<span class="mic-k">Uživo · sednica je u toku</span><span class="mic-m mic-who" data-src="{{ live_page }}stanje.js">Ko sada govori, koliko i šta je rekao</span><span class="mic-s">{{ live|join("; ") }}. Uživo sa prepisom.</span>
+{% elif n %}<span class="mic-k">Mikrofon · uživo iz Skupštine</span><span class="mic-m" data-show="0,{{ n.u }}">{{ n.dan[:1]|upper }}{{ n.dan[1:] }} u {{ n.sat }}: sednica Skupštine</span><span class="mic-m" data-show="{{ n.u }},9999999999" hidden>Ko govori u Skupštini i koliko</span><span class="mic-s">Ko govori, koliko i šta je rekao, uživo sa prepisom.{% if floor_now_last %} Do tada ceo {{ floor_now_last|day|replace(" " ~ floor_now_last[:4] ~ ".", "") }} sa snimkom.{% endif %}</span>
+{% elif floor_now_last %}<span class="mic-k">Mikrofon · poslednji dan sednice</span><span class="mic-m">Ceo {{ floor_now_last|day|replace(" " ~ floor_now_last[:4] ~ ".", "") }} sa snimkom: ko je kada govorio</span><span class="mic-s">Klik na govornika pušta njegov deo snimka. Kad Skupština zaseda, uživo sa prepisom.</span>
+{% else %}<span class="mic-k">Mikrofon · uživo iz Skupštine</span><span class="mic-m">Ko govori u Skupštini i koliko</span><span class="mic-s">Uživo sa prepisom dok Skupština zaseda, posle sednice ceo dan sa snimkom.</span>{% endif %}
+<span class="mic-go">{{ live_page.split("//")[-1].rstrip("/") }} →</span></a>
+{% endmacro %}
+{% macro mic_soon() %}{% set n = next_sitting %}{% if n and live_page and not live %}<p class="live soon" data-pagefind-ignore data-show="{{ n.od }},{{ n.u }}" hidden><span class="live-dot" aria-hidden="true"></span><span><b><span data-show="{{ n.od }},{{ n.dan_od }}">Sutra</span><span data-show="{{ n.dan_od }},{{ n.u }}" hidden>Danas</span> u {{ n.sat }}: sednica Skupštine.</b> Prati ko govori i koliko, uživo sa prepisom: <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="najava">Mikrofon</a></span></p>{% endif %}{% endmacro %}
 
 {# "Ukratko": the MP in a few numbers, always first on the page (19 Nov 2026, the maintainer's decision): a tile a
    number, a few words under it, the whole sentences folded below. The same tiles for every MP, by rules (mp_card.py);
@@ -155,7 +169,7 @@
 {# The MP's turns on the floor in the newest convocation, read from the recordings (pages_govornici.per_speaker), and
    the way on from the page: the same parts for every MP, new or returning. #}
 {% macro floor_now_part(slug) %}{% set f = floor_now.get(slug) %}
-<p class="mp-live" data-slug="{{ slug }}" data-src="{{ live_page }}stanje.js" hidden><span class="live-dot" aria-hidden="true"></span> <b>Sada je za govornicom.</b> <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Prenos i prepis uživo →</a></p>
+<p class="mp-live" data-slug="{{ slug }}" data-src="{{ live_page }}stanje.js" hidden><span class="live-dot" aria-hidden="true"></span> <b>Sada je za govornicom.</b> <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="poslanik">Prenos i prepis uživo →</a></p>
 {% if f %}
 <section class="mp-floor-now" id="govornica">
 <header><h2>Za govornicom u {{ floor_now_conv }}. sazivu</h2><p class="fn-sum"><b>{{ f.time }}</b><span>{{ f.n }} {{ "govor" if f.n == 1 else "govora" }}</span></p></header>

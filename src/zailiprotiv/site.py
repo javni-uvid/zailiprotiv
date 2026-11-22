@@ -880,6 +880,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         files_url=settings.get("files_url", ""),  # where the downloads are (files_site), for the data's description
         notes_url=settings.get("notes_url", ""),  # where the notes' pages (and their search index) are
         live_page=settings.get("live_page", ""),  # "Ko sada govori" (live/), linked from the live bar
+        # When the Assembly sits next: the home page's strip and the announcement on the other pages lead to the live page.
+        next_sitting=pages_mikrofon.next_start(root, members_conv or NEWEST_),
         # Whether the ranking by presence has anything to show (pages_presence): the lists of MPs and groups link to it.
         presence_page=any(n >= 20 for _, n in presence.values()),
         floor_now=floor_now, floor_now_conv=members_conv or NEWEST_,

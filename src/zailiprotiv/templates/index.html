@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, chamber, plural, how with context %}
 {% block title %}Za ili Protiv: svako glasanje u Skupštini Srbije od 2012.{% endblock %}
+{% block soon %}{% endblock %}
 {% block main %}
-{# On the home page the bar leads to "Ko sada govori" alone, which has the broadcast on it (19 Nov 2026, the maintainer's decision). #}
-{% from "macros.html" import live_bar with context %}{{ live_bar(false) }}
+{# On the home page the bar leads to "Ko sada govori" alone, which has the broadcast on it (19 Nov 2026, the maintainer's
+   decision); where the live page is, its strip stands in the bar's place, a sitting on or not (22 Nov 2026). #}
+{% from "macros.html" import live_bar, mic_strip with context %}{% if live_page %}{{ mic_strip() }}{% else %}{{ live_bar(false) }}{% endif %}
 <section class="home-hero">
   <div class="hero-text">
     <h1>Svaki glas i svaka reč iz Skupštine</h1>
