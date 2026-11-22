@@ -2,6 +2,7 @@
 {% from "macros.html" import plural with context %}
 {% block title %}Govori u Skupštini: {{ mp.name|given_first }} — Za ili Protiv{% endblock %}
 {% block description %}Svi govori poslanika {{ mp.name|given_first }} u Narodnoj skupštini, sednica po sednica, od reči do reči iz stenografskih beleški.{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}{# the MP's page is the one to find; this one is linked from it (docs/decisions/site.md, "Search engines") #}
 {% block main %}
 <p class="crumbs"><a href="../poslanici.html">Poslanici</a> › <a href="{{ mp.slug }}.html">{{ mp.name }}</a></p>
 <h1>Govori: {{ mp.name|given_first }}</h1>

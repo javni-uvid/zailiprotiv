@@ -271,3 +271,10 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   each script, spread evenly over the sitemap, and sums what Google says of each kind, with the canonical address
   it chose where that is another page. 8 a kind is some 200 of the property's 2,000 a day. Each of **visits**'
   readings now runs when another failed (that day a key not set right stopped the rest).
+- **The pages to find, the rest linked from them** (22 Nov 2026): the first `inspect` (8 a kind) found the home
+  pages, MPs, laws, bills and sittings mostly indexed, and an MP's every vote (`-glasovi`) and every speech
+  (`-govori`) and the weeks mostly "discovered, not crawled": 3,756 of the sitemap's 10,954 pages, a third of what
+  Google was asked to read, for a domain ten days old that it reads slowly. The three get `noindex` and so leave
+  the sitemap: the MP's page, which links them, is what a name is searched for; a week's laws and sittings have
+  pages of their own. They stay linked and open; links on them are followed. Read the effect with `inspect` in
+  December: whether the MPs' and laws' pages leave "discovered" sooner.

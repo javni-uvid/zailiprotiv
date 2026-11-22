@@ -89,7 +89,11 @@ def test_site_builds_every_page(built):
     assert "Iz rasprava" in mp and "„Ovaj zakon ne valja jer ukida dozvole za lovce.“" in mp
     assert (out / "CNAME").read_text().strip() == "zailiprotiv.rs"
     assert "Allow: /" in (out / "robots.txt").read_text()
-    assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in (out / "sitemap.xml").read_text()
+    sitemap = (out / "sitemap.xml").read_text()
+    assert "https://zailiprotiv.rs/zakon/zakon-o-oruzju.html" in sitemap
+    # The MP's page is the one to find: the page of every vote is linked from it, kept out of search engines.
+    assert "poslanik/abramovic-nenad.html" in sitemap and "-glasovi.html" not in sitemap
+    assert '<meta name="robots" content="noindex">' in votes and "nedelja/" not in sitemap
     assert not (out / "najvise-protiv.html").exists()
     assert "<dt>Glasovi protiv</dt><dd>50%" in law
     assert law.index("<dt>Glasovi protiv</dt><dd>50%") < law.index("Šta zakon menja") < law.index("Rasprava u Skupštini") \
