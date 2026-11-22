@@ -80,10 +80,11 @@ VOICES = os.environ.get("GLAS", "1").strip() == "1"
 VOICE_MODEL = os.environ.get("GLAS_MODEL", "/srv/modeli/glas.onnx").strip()
 VOICES_PATH = os.environ.get("GLASOVI", "/data/glasovi.npz").strip()  # the MPs' mean voices: numbers only, never published
 # The presiding officers are never named by voice: they speak from the chair far more than from the floor (their
-# turns at the rostrum still come from the caption or the chair's words). Names as the list writes them, or addresses.
-VOICE_SKIP = {x.strip() for x in os.environ.get("GLAS_BEZ", "Aleksandar Čupić,Marija Bjelobrk,Sara Valentik,"
-                                                  "Lidija Dimitrijević,Tibor Lazar,Adem Mavrić,Jelena Petrović,"
-                                                  "Dragan Radenović,Danijela Macura").split(",") if x.strip()}
+# turns at the rostrum still come from the caption or the chair's words). Their addresses on the site (22 Nov 2026: by name
+# it never matched, the list writing the surname first, and two of the names were wrong).
+VOICE_SKIP = {x.strip() for x in os.environ.get("GLAS_BEZ", "cupic-aleksandar,bjelobrk-marija,valentik-sara,"
+                                                  "dimitrijevic-lidija,lazar-tibor,mavric-adem,petrovic-jelena,"
+                                                  "radenovic-stojan,macura-nada").split(",") if x.strip()}
 HEARD_LONGEST = _i("GOVOR_NAJDUZE", 1200)  # seconds: a turn found by the chair's words and no voice ends at the latest
 CAPTION_DELAY = _i("TITL_KASNJENJE", 0)
 # With the transcript off the page, /prepis?k=<this> still shows it to whoever has the key (the maintainer, to see
