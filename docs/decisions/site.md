@@ -342,6 +342,9 @@ show otherwise, unlike the six principles above). A change to a page is checked 
 - **"Podrži" on top, and a card worth a look** (22 Nov 2026, the maintainer): the header's tools have "Podrži" (a heart,
   its word on a wide screen) beside the search; the home page's card has the site's mark, the promise (free, no ads,
   nothing from others), a button and the amounts, with no colour but the mark's (design rule 2).
+- **Časlav in a heart beside "Podrži"** (23 Nov 2026, the maintainer: "stavi obavezno Časlava umesto crnog srca"): the
+  live page's picture (`caslav-srce.webp`, 6 KB) in the head of every page, in place of the black heart. On a phone the
+  script's switch is "Ћир" / "Lat", as on the live page: at 360 px in Cyrillic the heart stood over the site's name.
 - **"Podrži": who makes the site, and what it costs** (23 Nov 2026, the maintainer's request and photos): the page
   names the maintainer with his photo and the cat Časlav's (part of every gift buys his food), and lists what the money
   pays for, with a figure only where it is known (Cloudflare's 5 $ a month). The photos are cut so that no screen's

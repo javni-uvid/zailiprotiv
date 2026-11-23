@@ -340,6 +340,7 @@ ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", 
 # Search doesn't take an SVG favicon.
 STATIC_FILES = ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js",
                 "favicon-96.png", "apple-touch-icon.png", "logo.png",
+                "caslav-srce.webp",  # the cat in a heart beside "Podrži" in the head of every page, as on the live page
                 "marko.jpg", "caslav.jpg")  # the two on the page "Podrži" (23 Nov 2026, the maintainer's)
 VERSIONED = ("style.css", "site.js", "pretraga.js", "glas.js", "listic.js", "glasaj.js")
 
