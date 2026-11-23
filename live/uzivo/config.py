@@ -144,6 +144,20 @@ def _setting(key: str, env: str) -> str:
     return ""
 
 
+def _amounts() -> list[int]:
+    """The amounts of the site's page "Podrži" (settings.json, "support"): what the mail's card offers."""
+    import json
+    from pathlib import Path
+    for path in (Path(__file__).parent / "static" / "settings.json",
+                 Path(__file__).resolve().parents[2] / "data" / "settings.json"):
+        try:
+            return [int(a) for a in (json.loads(path.read_text(encoding="utf-8")).get("support") or {}).get("amounts") or []]
+        except (OSError, ValueError):
+            continue
+    return []
+
+
+SUPPORT_AMOUNTS = _amounts()
 # Visits counted as on the site (AGENTS.md, principle 5): Cloudflare's beacon, no cookies, totals per page.
 ANALYTICS_TOKEN = _setting("analytics_token", "ANALYTICS_TOKEN")
 # The site's counter (worker/): a press on the broadcast's ▶ adds one to a sum per day ("mikrofon.pusti").

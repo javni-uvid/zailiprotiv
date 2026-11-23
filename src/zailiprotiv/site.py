@@ -544,7 +544,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
               # The terms explained from the Rules, where they are (macros.term links there; 20 Nov 2026).
               "rule_terms": {t["id"] for t in src.rule_terms},
               # "Podrži" (pages_support), linked from the footer and the home page when settings has it (22 Nov 2026)
-              "support": bool((settings.get("support") or {}).get("account"))}
+              "support": bool((settings.get("support") or {}).get("account")),
+              "support_amounts": [str(a) for a in (settings.get("support") or {}).get("amounts") or [500]]}
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
     # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
     common["live"], common["live_url"] = [], LIVE

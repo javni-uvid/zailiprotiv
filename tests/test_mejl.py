@@ -108,7 +108,16 @@ def test_a_word_in_two_scripts_is_caught():
     assert mejl.mixed_words("Čupić je iznео načela, a izneo ih je jasno.") == ["iznео"]
 
 
-def test_every_mail_asks_for_support_in_one_line_and_locks_nothing():
+def test_every_mail_asks_for_support_in_its_middle_and_locks_nothing():
+    import json
+    amounts = json.loads((Path(__file__).parents[1] / "data" / "settings.json").read_text(encoding="utf-8"))["support"]["amounts"]
     m = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL)
-    assert m.html.count("https://zailiprotiv.rs/podrzi") == 1 and "Podrži ga" in m.text
-    assert "https://zailiprotiv.rs/cir/podrzi" in mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, cyr=True).html
+    for a in amounts:  # each leads to its code on the site's page
+        assert f'href="https://zailiprotiv.rs/podrzi#din-{a}"' in m.html
+    assert m.html.count("Časlav") == 1 and "ili koliko želiš" in m.html
+    for said in (m.html, m.text):  # after the decisions, before what was said
+        assert said.upper().index("ODLUKE") < said.index("Časlav") < said.upper().index("KO JE ŠTA REKAO")
+    cyr = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, cyr=True)
+    assert "https://zailiprotiv.rs/cir/podrzi#din-" in cyr.html and "Часлава" in cyr.html
+    bare = mejl.build(date(2026, 11, 19), {**SUMMARY, "odluke": []}, [], ROLL)  # nothing decided: after what was said
+    assert bare.html.index("Ko je šta rekao") < bare.html.index("Časlav") and bare.text.count("Časlav") == 1

@@ -33,7 +33,7 @@
   <p>Otvori aplikaciju svoje banke, izaberi <b>IPS skeniraj</b> i skeniraj kod. Iznos možeš da promeniš pre nego što potvrdiš. Na telefonu: sačuvaj sliku koda pa je u aplikaciji banke učitaj iz galerije.</p>
   <ul class="ips-codes">
   {% for c in codes %}
-    <li><figure>{{ c.svg|safe }}<figcaption><b>{{ c.amount }} din</b> <a href="podrzi-{{ c.amount }}.png" download>Sačuvaj sliku</a></figcaption></figure></li>
+    <li id="din-{{ c.amount }}"><figure>{{ c.svg|safe }}<figcaption><b>{{ c.amount }} din</b> <a href="podrzi-{{ c.amount }}.png" download>Sačuvaj sliku</a></figcaption></figure></li>
   {% endfor %}
   </ul>
   <p class="meta">NBS IPS QR kod, po pravilima Narodne banke Srbije: popunjava nalog za prenos u aplikaciji banke, a uplatu potvrđuješ ti.</p>
