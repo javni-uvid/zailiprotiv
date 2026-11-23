@@ -192,6 +192,16 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   (`pages_mikrofon.next_start`); the pages carry the hours and the script shows each part only in them
   (`data-show`). Each way counted by where it was taken (`sajt.mikrofon-meni`, `-pocetna`, `-najava`, `-traka`,
   `-poslanik`), to see after the 24 Nov sitting what brings people.
+- **The phone's menu is a bar at the bottom, and "Uživo" is its middle** (23 Nov 2026, the maintainer's choice of three:
+  "Uživo" was the fifth of six words in a row, 11 px high in Cyrillic at 360 px). Zakoni, Poslanici, the microphone
+  (red, `--live`, while a sitting is on: as at the build, and, as that is hourly, the live page asked once a page from
+  ten minutes before an announced start to 16 hours after it), Glasaj, and "Još" with the
+  rest (a `details`, so it works without the script). It goes away whole while the page is read down and comes back at
+  the first move up (tried on a page on the phone, against keeping the microphone and against standing always); 52 px,
+  where the old row held 46 px at all times. The head is one row that scrolls away, so a page's own menu (`.page-menu`)
+  sticks to the top. In the quiz there is no
+  bar until it is answered: its answers stand there. Counted as before (`data-mik="meni"`). On a wide screen
+  the menu stays on top, with "Uživo" as a button. The notes' pages keep their own head.
 - **The family's look and links** (20 Nov 2026, the maintainer's decision: every site of Javni uvid has the same
   font and base colours, and links the others). The font, the page's base colours in both themes and the scale
   of letter sizes are no longer declared here: they come from `osnova/design/osnova.css` (the copy of

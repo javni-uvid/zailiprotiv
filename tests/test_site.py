@@ -551,6 +551,7 @@ def test_the_live_bar_links_the_live_page_while_a_sitting_lasts(tmp_path):
     bar = (out / "sednice.html").read_text()
     assert 'data-cir-href="https://mikrofon.example/cir/" data-mik="traka">Ko sada govori</a>' in bar
     assert '<a class="nav-live on" href="https://mikrofon.example/"' in bar
+    assert '<a class="dno-live on" href="https://mikrofon.example/"' in bar  # the phone's bar, red
     assert site.check(out) == []
 
 
@@ -584,6 +585,8 @@ def test_the_live_page_on_every_page_before_a_sitting(tmp_path):
     assert '<a class="mic" data-pagefind-ignore href="https://mikrofon.example/"' in home
     assert "u 10 h: sednica Skupštine" in home and 'class="live soon"' not in home
     assert '<a class="nav-live" href="https://mikrofon.example/"' in laws and 'data-mik="meni"' in laws
+    assert 'data-src="https://mikrofon.example/stanje.js" data-od="' in laws  # asked from its start on
+    assert '<a class="dno-live" href="https://mikrofon.example/"' in laws and "<summary>" in laws.split('class="dno"')[1].split("</nav>")[0]
     assert '<p class="live soon" data-pagefind-ignore data-show="' in laws and 'data-mik="najava"' in laws
     assert "Sutra</span>" in laws and "Danas</span>" in laws
     assert "Уживо" in (out / "cir" / "zakoni.html").read_text()

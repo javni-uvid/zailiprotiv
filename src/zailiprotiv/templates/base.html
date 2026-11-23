@@ -32,6 +32,23 @@
     <a class="nav-cta" href="{{ root }}glasaj.html">Glasaj<span class="wide-only"> i ti</span></a>
   </nav>
 </header>
+{# The phone's menu, a bar at the bottom (23 Nov 2026); hidden on wider screens, its icons drawn by the styles. #}
+<nav class="dno" aria-label="Meni" data-pagefind-ignore>
+  <a href="{{ root }}zakoni.html" data-at="zakon"><i class="i-zak" aria-hidden="true"></i>Zakoni</a>
+  <a href="{{ root }}{{ newer15.mps_page if newer15 else "poslanici.html" }}" data-at="poslani"><i class="i-pos" aria-hidden="true"></i>Poslanici</a>
+  {% if live_page %}<a class="dno-live{% if live %} on{% endif %}" href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="meni"{% if live or next_sitting %} data-src="{{ live_page }}stanje.js" data-od="{{ 0 if live else next_sitting.u }}"{% endif %}><b aria-hidden="true"><i class="i-mik"></i></b>Uživo</a>{% endif %}
+  <a href="{{ root }}glasaj.html" data-at="glasaj"><i class="i-gl" aria-hidden="true"></i>Glasaj</a>
+  <details><summary><i class="i-jos" aria-hidden="true"></i>Još</summary><div>
+    <a href="{{ root }}replike.html">Varnice</a>
+    <a href="{{ root }}nedelje.html">Nedelja u Skupštini</a>
+    <a href="{{ root }}sednice.html">Sednice</a>
+    <a href="{{ root }}grupe.html">Poslaničke grupe</a>
+    <a href="{{ root }}brojke.html">Skupština u brojkama</a>
+    <a href="{{ root }}pretraga.html">Pretraga</a>
+    {% if support %}<a data-don="meni" href="{{ root }}podrzi.html">Podrži sajt</a>{% endif %}
+    <a href="{{ root }}o-projektu.html">O projektu</a>
+  </div></details>
+</nav>
 <main id="sadrzaj" data-pagefind-body>
 {% block soon %}{% from "macros.html" import mic_soon with context %}{{ mic_soon() }}{% endblock %}
 {% block main %}{% endblock %}

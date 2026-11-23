@@ -723,22 +723,20 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 /* ============ Phones (640px and under). Nothing below touches the wider layout. ============ */
 .more-btn { display: none; }
 @media (max-width: 640px) {
-  /* The head: the name scrolls away and the menu stays: one row that fits, nothing to swipe. */
-  .top { position: sticky; top: -3rem; z-index: 30; background: var(--bg); margin: 0; padding: 0 16px; display: block; border-bottom-width: 2px; }
-  .top .brand { height: 3rem; font-size: var(--t-5); }
+  /* The head: one row, the name and the tools; the menu is the bar at the bottom (.dno). */
+  .top { position: relative; background: var(--bg); margin: 0; padding: 0 16px; display: block; border-bottom-width: 2px; }
+  .top .brand { height: 3.3rem; font-size: var(--t-5); }
   .top .brand-mark { width: 1.9rem; }
-  .top nav { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 0 .4rem; white-space: nowrap; height: 2.75rem; position: static; font-size: clamp(.72rem, 4.3vw, 1rem); }
-  /* The largest the row fits at (measured at 320 to 412 px, both scripts), with the button as "Glasaj" on a phone. */
-  html[lang="sr-Cyrl"] .top nav { font-size: clamp(.68rem, 3.55vw, .95rem); }
-  .top nav > a { padding: .5rem 0; flex: 0 0 auto; margin: 0; font-size: inherit; }
-  .top nav .nav-tools { position: absolute; right: 16px; top: .35rem; margin: 0; }
+  .top nav { display: block; position: static; }
+  .top nav > a, .top nav > a.nav-live { display: none; }
+  .top nav .nav-tools { position: absolute; right: 16px; top: .5rem; margin: 0; }
   .top nav .script-switch { padding: .25rem .5rem; font-size: var(--t-2); font-weight: 600; color: var(--fg); border-radius: 8px; }
   .nav-tools { gap: .3rem; }
   .nav-more { position: static; }
   .nav-more > div { left: 0; right: 0; top: 100%; min-width: 0; border-width: 0 0 2px; padding: .2rem 16px .5rem; max-height: 70vh; overflow-y: auto; white-space: normal; }
   [id], .subtabs { scroll-margin-top: 3.4rem; }
   /* The menu of a long page stays under the head. */
-  .page-menu { position: sticky; top: 2.75rem; z-index: 20; background: var(--bg); margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; }
+  .page-menu { position: sticky; top: 0; z-index: 20; background: var(--bg); margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; }
   .page-menu::-webkit-scrollbar { display: none; }
   .page-menu a { padding: .2rem 0; }
   main:has(.page-menu) [id] { scroll-margin-top: 6.2rem; }
@@ -838,7 +836,6 @@ p.measure-pre { margin: .2rem 0 .3rem; }
 /* The quiz is what brings people in: last in the menu, drawn as a button. */
 .top nav .nav-cta { background: var(--fg); color: var(--bg); padding: .42rem .9rem; font-weight: 700; align-self: center; white-space: nowrap; border: 2px solid var(--fg); }
 .top nav .nav-cta:hover { background: var(--za-on); border-color: var(--za-on); color: #fff; }
-@media (max-width: 640px) { .top nav .nav-cta { padding: .3rem .5rem; font-size: inherit; } }
 .notes mark, .notes .pagefind-highlight { background: #ffe066; color: #111111; padding: 0 .1em; }
 
 /* An MP's activity: four tiles for the totals, a row to a convocation. (Phones already drew the tiles: two by two.) */
@@ -1216,11 +1213,11 @@ em.prev.now { color: var(--fg); border-color: var(--fg); }
 
 /* The live page's way on the site (22 Nov 2026): "Uživo" in the menu, red while a sitting is on; the home page's
    strip; the announcement before a sitting (the live bar, its dot grey). */
-.top nav .nav-live { display: inline-flex; align-items: center; gap: .45rem; }
-.nav-live i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--muted); opacity: .55; }
-.top nav .nav-live.on { color: var(--protiv); }
-.nav-live.on i { background: var(--protiv); opacity: 1; animation: live-pulse 1.6s infinite; }
-@keyframes live-pulse { 0% { box-shadow: 0 0 0 0 var(--protiv); } 70%, 100% { box-shadow: 0 0 0 .45rem transparent; } }
+.top nav .nav-live { display: inline-flex; align-items: center; gap: .45rem; align-self: center; padding: .3rem .8rem; border: 1.5px solid currentColor; border-radius: 99px; font-weight: 650; }
+.nav-live i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--muted); }
+.top nav .nav-live.on { background: var(--live); border-color: var(--live); color: #fff; }
+.nav-live.on i { background: #fff; animation: live-pulse 1.6s infinite; }
+@keyframes live-pulse { 0% { box-shadow: 0 0 0 0 currentColor; } 70%, 100% { box-shadow: 0 0 0 .45rem transparent; } }
 @media (prefers-reduced-motion: reduce) { .nav-live.on i { animation: none; } }
 .mic { display: grid; grid-template-columns: auto 1fr auto; gap: .3rem 1rem; align-items: center; margin: 1rem 0 1.2rem;
   padding: 1rem 1.2rem; border: 2px solid var(--fg); border-radius: 12px; text-decoration: none; color: inherit; }
@@ -1237,11 +1234,6 @@ em.prev.now { color: var(--fg); border-color: var(--fg); }
 main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone under the search, above the rest */
 .live.soon .live-dot { background: var(--muted); }
 .live[hidden] { display: none; }
-@media (max-width: 640px) {  /* a sixth item in the phone's menu row: the row's letters a little smaller */
-  .top nav:has(.nav-live) { font-size: clamp(.68rem, 3.65vw, 1rem); }
-  html[lang="sr-Cyrl"] .top nav:has(.nav-live) { font-size: clamp(.64rem, 3.05vw, .95rem); }
-  .top nav .nav-live { gap: .3rem; }
-}
 /* "Podrži": who makes the site, and what the money pays for (23 Nov 2026) */
 .who { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.2rem 1.6rem; align-items: center; margin: 1.6rem 0; }
 .who h2 { margin-top: 0; }
@@ -1261,3 +1253,38 @@ main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone u
 .off-m { font-size: var(--t-1); color: var(--muted); margin-top: .15rem; line-height: 1.35; }
 .off-more { margin: .5rem 0 .3rem; font-size: var(--t-2); color: var(--muted); } .off-more summary { cursor: pointer; } .off-more ul { margin-top: .5rem; color: var(--fg); }
 @media (max-width: 600px) { .mp-hero:has(.off) { grid-template-columns: 5.5rem minmax(0, 1fr); gap: .6rem 1rem; } .mp-hero:has(.off) .mp-photo { grid-row: auto; } .off { grid-column: 1 / -1; } .off ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* The phone's menu: a bar at the bottom, under the thumb, away while the page is read down and back at the first move
+   up (site.js; without the script it stays). The microphone in the middle, red while a sitting is on (23 Nov 2026, the
+   maintainer's choice B). 52 px, where the row it replaces held 46 px at all times. */
+:root { --live: #dc2626; --dno: 52px; }
+.dno { display: none; }
+@media (max-width: 640px) {
+  body { padding-bottom: calc(var(--dno) + env(safe-area-inset-bottom)); }
+  .dno { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; height: var(--dno);
+    padding-bottom: env(safe-area-inset-bottom); background: var(--bg); border-top: 1px solid var(--line); transition: transform .22s; }
+  .dno > a, .dno summary { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; height: var(--dno); text-decoration: none; font-size: var(--t-1);
+    font-weight: 600; line-height: 1.15; color: var(--muted); cursor: pointer; list-style: none; white-space: nowrap; }
+  .dno details, .dno details[open] { margin: 0; padding: 0; border: 0; } .dno summary, .dno details[open] summary { margin: 0; padding: 0; border: 0; } .dno summary::before, .dno summary::after { content: none; }
+  .dno summary::-webkit-details-marker { display: none; }
+  .dno > a[aria-current], .dno details[open] summary, .dno > a.dno-live { color: var(--fg); }
+  .dno i { width: 1.3rem; height: 1.3rem; background: currentColor; -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+  .dno > a.dno-live { justify-content: flex-end; padding-bottom: 4px; }
+  .dno-live b { width: 46px; height: 46px; box-sizing: content-box; margin-top: -28px; border: 4px solid var(--bg); border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); }
+  .dno > a.dno-live.on { color: var(--live); } .dno-live.on b { background: var(--live); color: #fff; }
+  .dno details > div { position: absolute; left: 0; right: 0; bottom: 100%; display: flex; flex-direction: column; padding: .4rem 16px .9rem; background: var(--bg); border-top: 2px solid var(--fg); max-height: 70vh; overflow-y: auto; z-index: 1; }
+  .dno details > div a { padding: .7rem 0; border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 550; }
+  .dno details > div a:last-child { border-bottom: 0; }
+  .dno:has(details[open]) .dno-live b { margin-top: -28px; position: relative; z-index: 2; }
+  .dno :focus-visible { outline: 3px solid var(--za); outline-offset: -3px; }
+  .dno-away .dno:not(:focus-within) { transform: translateY(calc(100% + 40px)); }
+  body:has(.q-item:not(.answered) .q-answers) { padding-bottom: 0; } body:has(.q-item:not(.answered) .q-answers) .dno { display: none; }  /* the answers stand there */
+}
+@media (prefers-reduced-motion: reduce) { .dno { transition: none; } }
+@media print { .dno { display: none; } }
+.dno .i-zak { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3h9l4 4v14H6zM9 11h7M9 15h7'/%3E%3C/svg%3E"); }
+.dno .i-pos { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c1-5 4-7 8-7s7 2 8 7'/%3E%3C/svg%3E"); }
+.dno .i-mik { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='3' width='6' height='11' rx='3'/%3E%3Cpath d='M5 11a7 7 0 0 0 14 0M12 18v3'/%3E%3C/svg%3E"); }
+.dno .i-gl { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12l5 5L20 6'/%3E%3C/svg%3E"); }
+.dno .i-jos { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke-width='3.4' d='M5 12h.01M12 12h.01M19 12h.01'/%3E%3C/svg%3E"); }
+@media (min-width: 641px) and (max-width: 1100px) { .top nav { gap: 0 1rem; } .top nav .nav-live { padding: .25rem .6rem; } .nav-tools { gap: .45rem; } .top nav .nav-cta { padding: .42rem .7rem; } }
