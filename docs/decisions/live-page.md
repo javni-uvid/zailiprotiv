@@ -199,3 +199,8 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   Assembly goes on, the item next on the agenda and what the page gives then; the picture's address changes with it
   (`?v=najava-…`). From that hour on the notice is no news, on the page's top either: the evening of a sitting would
   have said it goes on that morning. `page._now` is the clock, so that tests name their own day.
+- **The two offers say what they give, with a mark each** (23 Nov 2026, the maintainer: that "Dodaj na početni ekran" means
+  having the page as an app was not said). "Mikrofon kao aplikacija", with the app's own tile as it will stand among
+  the others and "Dodaj na početni ekran: ikonica pored ostalih, bez prodavnice."; "Obavesti me kad sednica počne" with
+  a bell and "I kad sažetak dana bude spreman." (the same address gets both). The iPhone's line opens with the mark of
+  Safari's "Podeli". Icons are lines in the page itself; nothing is loaded.
