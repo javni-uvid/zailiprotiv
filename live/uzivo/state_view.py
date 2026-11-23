@@ -9,7 +9,7 @@ import time
 
 from . import config
 from .names import Person
-from .state_base import NO_STREAM, SAID_LEAD, SAID_TAIL, counted
+from .state_base import NO_STREAM, SAID_TAIL, counted
 
 
 class View:
@@ -145,8 +145,6 @@ class View:
                     runs = self._unsigned(said)
                     if runs and self.last_frame - runs[-1]["do"] < 240 and day == self.day:
                         unsigned = {"od": runs[-1]["od"], "tekst": self.shown(runs[-1]["tekst"][-SAID_TAIL:])}
-                for d in done + ([current] if current else []):
-                    d["prepis_ceo"] = any(k[:1] == "k" and abs(int(k[1:]) - d["od"]) <= SAID_LEAD + 1 for k in said)
             coming = self.waiting.get("sazvano") if isinstance(self.waiting, dict) else None
             if not (isinstance(coming, dict) and str(coming.get("pocinje", ""))[:10] >= today and not current):
                 coming = None  # shown only while nobody is on, and not once its day has passed

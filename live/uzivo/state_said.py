@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .state_base import SAID_LEAD, _write
+from .state_base import SAID_LEAD
 
 
 class Said:
@@ -56,11 +56,7 @@ class Said:
 
     @staticmethod
     def _text(said: dict[str, str], start: float, end: float) -> str:
-        """What was written down of a turn: the whole turn as the second, better reading wrote it once the turn was
-        over (a key "k<second>", prepis.py), else the pieces that begin within it (a piece is cut where a turn begins)."""
-        whole = [said[k] for k in said if k[:1] == "k" and start - SAID_LEAD - 1 <= int(k[1:]) <= start + SAID_LEAD + 1]
-        if whole:
-            return whole[0]
+        """What was written down of a turn: the pieces that begin within it (a piece is cut where a turn begins)."""
         return " ".join(said[k] for k in sorted((k for k in said if k.isdigit()), key=int) if start - SAID_LEAD - 1 <= int(k) <= end)
 
     @staticmethod
@@ -85,22 +81,6 @@ class Said:
             self._forms = (self.roster, ispravke.name_forms(sitting))
         return ispravke.apply(text, rules if isinstance(rules, dict) else None, self._forms[1])
 
-    def say_whole(self, start: float, text: str) -> None:
-        """A finished turn written down again as a whole by the better model: shown in place of its pieces."""
-        text = " ".join(text.split())
-        if text:
-            with self._lock:
-                if self._day(start) != self.day:
-                    return
-                self.said["k" + str(int(start))] = text
-                self._snap = None
-                f = self._said_file(self.day)
-                if f:
-                    try:
-                        _write(f, self.said)
-                    except OSError:
-                        pass
-
     def transcript(self) -> dict:
         """The day on the page, each turn with what was written down of it, newest first: for the transcript's page."""
         snap = self.snapshot()
@@ -108,8 +88,8 @@ class Said:
             said = dict(self._said_of(snap["dan"]))
         turns = ([snap["sada"]] if snap["stanje"] == "govori" and snap.get("sada") else []) + snap["danas"]
         out = [{**{k: d[k] for k in ("ime", "adresa", "od", "do", "sekundi")}, "lista": d.get("lista", ""),
-                "tekst": self.shown(self._text(said, d["od"], d["do"])), "ceo": bool(d.get("prepis_ceo"))} for d in turns]
+                "tekst": self.shown(self._text(said, d["od"], d["do"]))} for d in turns]
         out += [{"ime": "", "adresa": "", "od": r["od"], "do": r["do"], "sekundi": r["do"] - r["od"], "lista": "",
-                 "tekst": self.shown(r["tekst"]), "ceo": False, "bez": True} for r in self._unsigned(said)]
+                 "tekst": self.shown(r["tekst"]), "bez": True} for r in self._unsigned(said)]
         out.sort(key=lambda d: -d["od"])
         return {"dan": snap["dan"], "ranije": snap["ranije"], "govori": [d for d in out if d["tekst"]]}

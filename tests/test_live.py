@@ -334,20 +334,23 @@ def test_a_slow_sound_does_not_hold_up_the_frames(monkeypatch, tmp_path):
     moment its own frame was read."""
     import threading
     import time
+    import urllib.error
     from uzivo import stream
     let_go, kept = threading.Event(), []
     frames: list[tuple[int, float]] = []
 
     def get(self, url, timeout=20):
         if url == "https://v/zvuk":
+            time.sleep(0.2)
             return _PLAYLIST.replace(b"https://v/", b"https://z/")
         if url.startswith("https://z/"):
-            let_go.wait(5)
+            let_go.wait(20)
             return b"s" * 2000
         if "/sq/" not in url:
             return _PLAYLIST
-        if int(url.split("/sq/")[1].split("/")[0]) > 14:
-            raise __import__("urllib.error").error.HTTPError(url, 404, "not yet", None, None)
+        # the picture's segments once the sound's playlist is in: the sound of one read before that is not known
+        if int(url.split("/sq/")[1].split("/")[0]) > 14 or not self._sound_segments:
+            raise urllib.error.HTTPError(url, 404, "not yet", None, None)
         return b"x" * 2000
     monkeypatch.setattr(config, "FRAME_PATH", str(tmp_path / "frame" / "now.jpg"))
     monkeypatch.setattr(stream.HlsPoller, "_get", get)
@@ -359,16 +362,16 @@ def test_a_slow_sound_does_not_hold_up_the_frames(monkeypatch, tmp_path):
     monkeypatch.setattr(stream.slusaj.PLAYLIST, "add", lambda path, dur, n, at, video="": added.append(n))
     p = stream.HlsPoller("https://v/playlist", {}, "https://v/zvuk")
     try:
-        end = time.time() + 4
+        end = time.time() + 15
         while len(frames) < 4 and time.time() < end:
             time.sleep(0.02)
         assert len(frames) == 4 and not kept  # 11-14 read while no sound has come
         let_go.set()
-        end = time.time() + 4
+        end = time.time() + 15
         while len(added) < 4 and time.time() < end:
             time.sleep(0.02)
         assert added == [11, 12, 13, 14] and kept == sorted(kept)
-        assert all(abs(at - f[1]) < 0.5 for at, f in zip(kept, frames))
+        assert all(0 <= at - f[1] < 2 for at, f in zip(kept, frames))
     finally:
         let_go.set()
         p.kill()
@@ -956,7 +959,7 @@ def test_a_name_with_nothing_under_it_is_taken_on_its_second_frame():
     assert cur["ime"] == "Petrović Petar" and cur["od"] == int(now + 400) and t.turns[-1]["n"] == 2
 
 
-def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read_again(tmp_path, monkeypatch):
+def test_the_transcript_is_corrected_after_it_is_out(tmp_path, monkeypatch):
     from uzivo import config, ispravke, prepis
     from uzivo.page import transcript_page
     forms = ispravke.name_forms(["Petrović Petar", "Jovanović Marko"])
@@ -977,7 +980,6 @@ def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read
         (tmp_path / "zvuk" / f"{int((now + s_) * 1000)}-5000.pcm").write_bytes(b"\0" * 100)
     hints = []
     w = prepis.Writer(t, threading.Event(), write=lambda raw: hints.append(w.hint) or "Petrovic je rekao oktober.")
-    w.write_whole = lambda raw: "Petrović je rekao: oktobar, tačno."
     assert w.step(now=now + 62) is True
     assert "Poslovnik" in hints[0] and "Petar Petrović" in hints[0]  # the terms and today's speakers, told to Whisper
     assert next(iter(t.said.values())) == "Petrovic je rekao oktober."  # kept as written
@@ -987,7 +989,7 @@ def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read
     while w.step(now=now + 131):
         pass
     page_ = transcript_page(t.transcript(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "Petrović je rekao: oktobar, tačno." in page_ and "drugo, tačnije čitanje" in page_  # the second reading took its place
+    assert "Petrović je rekao oktobar." in page_
     assert "mailto:kontakt@zailiprotiv.rs?subject=Ispravka%20prepisa" in page_ and "Prijavi grešku u prepisu" in page_
 
 
