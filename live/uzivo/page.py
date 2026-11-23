@@ -1181,9 +1181,9 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
             chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
                             f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'
                             for i, p in enumerate(parts, 1))
-            return (f'<section class="player">{_stage(button, onair, cyr)}<p class="meta">{note}</p>'
+            return (f'<section class="player">{_stage(button, onair, cyr)}<p class="meta" data-nosnippet>{note}</p>'
                     f'<details class="parts-more"><summary>{t("parts")} ({len(parts)})</summary><ul class="parts">{chips}</ul></details></section>')
-    return f'<section class="player">{_stage(button, onair, cyr)}<p class="meta">{note}</p></section>'
+    return f'<section class="player">{_stage(button, onair, cyr)}<p class="meta" data-nosnippet>{note}</p></section>'
 
 
 def _stage(button: str, onair: str, cyr: bool) -> str:
@@ -1235,6 +1235,13 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
         out += [f'<li><a href="{href(f["href"])}">{s(f["text"])}</a></li>' for f in facts]
         out.append(f'</ul><p class="meta">{t("facts_note")}</p>')
     return "\n".join(out)
+
+
+def _site_name(url: str) -> str:
+    """The page's name for a search engine (schema.org WebSite, on the address's home only): as people search for it."""
+    data = {"@context": "https://schema.org", "@type": "WebSite", "name": "Mikrofon Za ili Protiv",
+            "alternateName": ["Za ili Protiv uživo", "mikrofon.zailiprotiv.rs"], "url": url, "inLanguage": "sr"}
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace("<", "\\u003c") + "</script>"
 
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
@@ -1290,6 +1297,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <meta name="description" content="{t("lead")}">
 {alt}
 {_og(snap, cyr=cyr, url=url, tz=tz)}
+{_site_name(url) if url and not cyr else ""}
 <link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
 <link rel="manifest" href="{base}manifest.webmanifest">
 <link rel="apple-touch-icon" href="/ikona-180.png">
