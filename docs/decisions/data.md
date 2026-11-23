@@ -125,12 +125,23 @@ as the change. The principles and the rules of work are in AGENTS.md.
   under `data/profiles/RULES.md`: only what recurs in two or more speeches, as the MP's claim, content not tone, no
   labels, one checked quote per point. Labels for MPs ("populist") were rejected as judgements. **Distinctive
   words** (`profiles.distinctive`, no model): a smoothed log-odds ratio over stems against all MPs.
+- **Every measure read again, the rules in `measures.py`** (23 Nov 2026, the maintainer: "skeniraj ponovo kome su date
+  opomene i ispravi gde treba"). Each measure the rules found in the notes of every convocation was read with its
+  context by an agent (a model; the rules themselves stay without one, and the method page says both), and the chair's other mentions of a warning looked through for what they missed. Published and wrong: a
+  warning put "by context" to Nikola Selaković (the chair said "Изричем опомену Добрици Веселиновићу") and a removal
+  to Radomir Lazović (an earlier measure recalled); both are the first entries of `data/ispravke.json`. Missed: every
+  measure of an address but its first, a list of names, "имате / добијате (другу) опомену", "Колега Божићу, друга
+  опомена", "морам да вам изрекнем опомену", a name before the verb ("Бошку Обрадовићу изричем"). Not measures:
+  a condition or a threat, "него да вам изричем", a rule quoted, an earlier one recalled, the same one told again in
+  one address. To whom: those who only heckled count too; a name misspelt by a letter is one person; someone named and
+  not found is never replaced by whoever spoke before; the likely ones by the order in `by_context`. Before: 100
+  measures, 42 with a name, 36 likely, 22 nobody's; after: 139, 70, 66 and 3. Counts per MP change with it.
 - **Varnice** (13 Nov 2026; `pages_floor.py`, no model): the chair's measures (warning, taking the floor away,
   removal; `MEASURES`, with talk about measures left out), exchanges of replies (two speakers taking turns four times
   or more, no speech over 400 words), points of order, harsh words (a fixed list), who speaks most. A measure goes to
   an MP only when the chair's sentence names a speaker of the sitting: addressed ("господине …", "посланику …") or
   right after the measure ("изричем опомену Стефану Јовановићу", 17 Nov 2026); a first name said must fit; several
-  named at once count for none. Otherwise the context may make it "likely", said so. The rule can't tell whether an
+  named at once count for none (since 23 Nov 2026 a measure each: below). Otherwise the context may make it "likely", said so. The rule can't tell whether an
   exchange is personal and the page doesn't claim it. Rankings count only MPs of that convocation (`as_mp`), not
   ministers or guests.
 

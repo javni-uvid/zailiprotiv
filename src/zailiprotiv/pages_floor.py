@@ -13,15 +13,11 @@ from pathlib import Path
 
 from zailiprotiv import debates as debates_, mps, notes_site, poslovnik
 from zailiprotiv.config import CONVOCATIONS
+from zailiprotiv.measures import (MEASURES, _END, by_context, measures, present, pronounced, sentence, sentences,  # noqa: F401
+                                    to_whom)
 from zailiprotiv.site import ORDINAL_NAME, slug
 from zailiprotiv.translit import latin
 
-# What the chair says when pronouncing a measure (Rules of Procedure, Articles 108–111), first person, present tense.
-MEASURES = [
-    ("udaljenje", "Udaljenje sa sednice", re.compile(r"изричем[^.!?]{0,120}удаљењ|мер[ау] удаљења са седнице", re.I)),
-    ("oduzimanje", "Oduzimanje reči", re.compile(r"изричем[^.!?]{0,120}одузимањ\w* речи|одузимам вам реч", re.I)),
-    ("opomena", "Opomena", re.compile(r"изричем[^.!?]{0,60}опомен", re.I)),
-]
 TURNS = 4      # an exchange: this many speeches or more, two speakers taking turns
 SHORT = 400    # … none longer than this many words (a reply is short; a speech on the agenda is not)
 
@@ -34,49 +30,9 @@ def spoken(text: str) -> str:
     return _MARK.sub("", text).strip()
 
 
-# Talk about measures is not a measure: "нећу да изричем опомене, нисмо деца", "шта очекујете - да изричем опомене?",
-# "могу да почнем да опомињем, изричем опомене, али …". A denial right before the verb, or reprimands in the plural
-# with no number ("две опомене"), is talk.
-_DENIED = re.compile(r"(?:\bне|\bнећу да|\bнећемо да|\bне желим да|\bнисам хте\w+ да)(?:\s+(?:вам|му|јој|им|сад|сада|још))*\s+$", re.I)
-_NONE = re.compile(r"изричем\s+(?:\w+\s+){0,3}(?:никакв|ниједн)", re.I)  # "… изричем сад никакву опомену"
-_PLURAL = re.compile(r"изричем(?! (?:вам |му |јој |им )?(?:две|три|четири|\d))[^.!?]{0,30}\bопомене\b", re.I)
-
-
-def pronounced(text: str, pattern) -> re.Match | None:
-    """The place where a measure is pronounced in the chair's words, or None when the words only talk of measures."""
-    for m in pattern.finditer(text):
-        if _DENIED.search(text[max(0, m.start() - 40):m.start()]) or _PLURAL.match(text, m.start()) or _NONE.match(text, m.start()):
-            continue
-        return m
-    return None
-
-
-def measures(speeches: list[dict]) -> list[dict]:
-    out = []
-    for i, s in enumerate(speeches):
-        if not s.get("chair"):
-            continue
-        found = next(((k, label, m) for k, label, pattern in MEASURES if (m := pronounced(s["text"], pattern))), None)
-        if found:
-            hit, m = found[:2], found[2]
-            before = next((p for p in reversed(speeches[max(0, i - 6):i]) if not p.get("chair")), None)
-            out.append({"kind": hit[0], "label": hit[1], "chair": s, "before": before,
-                        "adjacent": i > 0 and not speeches[i - 1].get("chair"), "at": m.start(),
-                        "sentence": sentence(s["text"], m.start(), m.end()).lstrip(')"“” ')})  # the sentence that pronounces the measure
-    return out
-
-
 _ASIDE = re.compile(r"\(([^():]{3,60}):\s*([^()]{1,400})\)")   # "(Бошко Обрадовић: Не директно.)": words from the floor
 _BRACKET = re.compile(r"\s*\([^()]*\)")
 _REASON = re.compile(r"^\s*(?:Зато|Због|Јер)\b|\bзато што\b|\bзбог\b", re.I)
-
-
-def _sentences(text: str) -> list[str]:
-    out, last = [], 0
-    for m in _END.finditer(text):
-        out.append(text[last:m.end()].strip())
-        last = m.end()
-    return [x for x in out + [text[last:].strip()] if x]
 
 
 def around(measure: dict, to: str | None) -> dict:
@@ -93,10 +49,10 @@ def around(measure: dict, to: str | None) -> dict:
     end = (end if end >= 0 else at) + len(measure["sentence"])
     start = end - len(measure["sentence"])
     upto = chair[:start] + (")" if chair[:start].count("(") > chair[:start].count(")") else "")  # a bracket cut by the sentence
-    lead = _sentences(_BRACKET.sub("", upto))[-2:]
+    lead = sentences(_BRACKET.sub("", upto))[-2:]
     while lead and sum(len(x) for x in lead) > 420:
         lead = lead[1:]
-    after = _sentences(_BRACKET.sub("", chair[end:]))[:1]
+    after = sentences(_BRACKET.sub("", chair[end:]))[:1]
     after = after if after and _REASON.search(after[0]) and len(after[0]) < 420 else []
     surname = to.split()[-1].lower() if to and to.split() else None
     mine = lambda name: surname is None or name.strip().split()[-1].lower() == surname
@@ -105,9 +61,9 @@ def around(measure: dict, to: str | None) -> dict:
     asides = [(n.strip(), t.strip()) for n, t in _ASIDE.findall(near) if mine(n)][-3:]
     last = []
     if before and measure["adjacent"] and (surname is None or before["speaker"].split()[-1].lower() == surname):
-        last = _sentences(_BRACKET.sub("", before["text"][-900:]))[-2:]
+        last = sentences(_BRACKET.sub("", before["text"][-900:]))[-2:]
         if len(before["text"]) > 900:
-            last = last[-2:] if len(_sentences(before["text"][-900:])) > 2 else last[-1:]
+            last = last[-2:] if len(sentences(before["text"][-900:])) > 2 else last[-1:]
         while len(last) > 1 and sum(len(x) for x in last) > 420:
             last = last[1:]
     return {"lead": " ".join(lead), "after": " ".join(after), "asides": asides,
@@ -132,13 +88,6 @@ def exchanges(speeches: list[dict]) -> list[list[dict]]:
     return out
 
 
-# Also a name right after the measure itself, as the chair of the Thirteenth said it ("изричем опомену Стефану
-# Јовановићу", "изричем вам прву опомену Зеленовићу", "одузимање речи, Драгана Ракић"), or the MP named first
-# ("Народни посланик Александар Јовановић, … изричем вам опомену").
-_ADDRESSED = re.compile(r"(?i:господине|госпођо|госпођице|колега|колегинице|посланиче|посланице|посланику|посланици|"
-                        r"посланик|посланица|опомену|опомене|речи|седнице),?\s+"
-                        r"((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){1,3})")
-_NOMINATIVE = re.compile(r"(?i:посланик|посланица),?\s")  # "народни посланик Миленко Јованов": who, not to whom
 _POINT = notes_site._POINT_OF_ORDER  # a speech pointing out a breach of the Rules (one pattern for both)
 # Harsh words: a fixed list, the same for everyone, of words that are abuse in nearly every use (words with an
 # everyday meaning too, like "ђубре", "свиња", "криминал", "фашиста", are left out: they would count talk about waste,
@@ -153,14 +102,6 @@ _HARSH = re.compile(r"(?<!\w)(?:(?:" + "|".join(w + _NOT.get(w, "") for w in HAR
 # What every harsh word holds, as plain text: a speech with none of these (nearly all) is not searched word by word,
 # which took a site build some 20 s.
 _HARSH_IN = tuple({w.split("[")[0] for w in HARSH} | {"јеб"})
-_END = re.compile(r"[.!?]+(?=[\s\"“”)]*(?:\n|$|\s+[A-ZА-ЯЈЉЊЂЋЏŠĐČĆŽ(„]))|\n")  # not the point in "300.000" or "чл. 106"
-
-
-def sentence(text: str, start: int, end: int) -> str:
-    """The sentence around text[start:end], word for word."""
-    before = [m.end() for m in _END.finditer(text, 0, start)]
-    after = _END.search(text, end)
-    return text[before[-1] if before else 0:after.end() if after else len(text)].strip()
 TOP = 25
 PER_PAGE = 20
 
@@ -186,66 +127,6 @@ def marked(sentence: str) -> list[tuple[str, bool]]:
 
 
 _PAUSE = re.compile(r"одређујем паузу|прекидам седницу|прекидам рад", re.I)
-
-
-_HECKLE = re.compile(r"\(((?:[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+[ -]?){2,4}):")
-
-
-def by_context(measure: dict) -> tuple[str, str] | None:
-    """Whom a measure without a name is most likely for, with the reason, from the notes themselves:
-    - the one person whose interjections the notes record in brackets in the chair's words up to the measure;
-    - or, with no interjections, the speaker of the speech right before, when the chair pronounces the measure in
-      the first two sentences after it.
-    Likely, not certain: shown as such, with the reason, and counted apart."""
-    chair = measure["chair"]["text"]
-    upto = chair[:measure["at"] + len(measure["sentence"])]
-    heckles = [n.strip() for n in _HECKLE.findall(upto)]
-    if len({mps.key(n) for n in heckles}) == 1:
-        return heckles[-1], "u beleškama je zapisano da dobacuje dok predsedavajući govori, neposredno pre mere"
-    if not heckles and measure["before"] and measure["adjacent"] and len(_END.findall(chair[:measure["at"]])) <= 1:
-        return measure["before"]["speaker"], "mera je izrečena na samom početku obraćanja predsedavajućeg, odmah posle ovog govora"
-    return None
-
-
-def to_whom(measure: dict, speakers: dict[str, str]) -> str | None:
-    """The speaker a measure went to, when the chair's own sentence names them: a speaker of the sitting whose
-    surname stands in the sentence that pronounces the measure ("Господине Живковићу, … изричем вам опомену",
-    "Народном посланику Александру Јовановићу изричем опомену"), or failing that in the sentence before it. When two
-    speakers share the surname, the first name must be there too. None when nobody or more than one fits: the page
-    then shows the chair's words only."""
-    text = measure["chair"]["text"]
-    pattern = next(p for k, _, p in MEASURES if k == measure["kind"])
-    sentences = re.split(r"(?<=[.!?])\s+", text)
-    at = next((i for i, x in enumerate(sentences) if pattern.search(x)), 0)
-
-    def stems(word: str) -> set[str]:  # the word as it may stand in another case: "Живковићу", "Јованове", "Марији"
-        w = word.lower()
-        return {w, w[:-1], w[:-2]} if len(w) > 4 else {w}
-    for sentence in (sentences[at], sentences[at - 1] if at else ""):
-        # Only a name the chair addresses ("господине …", "посланику …") counts: another name in the sentence may be
-        # the person the speech was about ("зато што сте колеги Филиповићу рекли …").
-        found = list(_ADDRESSED.finditer(sentence))
-        # The case decides: a measure goes to someone in the dative or the vocative ("посланику Новаковићу",
-        # "господине Живковићу"). A name in the nominative beside one of those is the next speaker given the floor
-        # ("По Пословнику, народни посланик Миленко Јованов, а народном посланику Новаковићу изричем опомену").
-        to_one = [m for m in found if not _NOMINATIVE.match(m.group(0))]
-        if to_one and len(to_one) < len(found):
-            found = to_one
-        fits = []
-        for m in found:
-            if re.match(r"\s*(?:,|и)\s+[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+\s+[А-ЯЈЉЊЂЋЏ]", sentence[m.end():]):
-                return None  # several named at once ("опомену Александру Јовановићу, Бориславу Новаковићу, …"): not one
-            words = re.findall(r"[А-ЯЈЉЊЂЋЏ][а-яјљњђћџ]+", m.group(1))
-            said = set().union(*(stems(w) for w in words)) if words else set()
-            named = [name for name, surname in speakers.items() if surname in said]
-            if len(named) > 1 or len(words) > 1:  # two with the surname, or a first name said: the first name decides
-                named = [n for n in named if n.split()[0].lower()[:4] in {w.lower()[:4] for w in words}]
-            fits += named
-        if len(set(fits)) == 1:
-            return fits[0]
-        if fits or to_one:  # several, or the one addressed is no speaker of the sitting: not someone else instead
-            return None
-    return None
 
 
 def _tail(link: str) -> str:
@@ -396,6 +277,11 @@ def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, phot
                                      "measures_likely": 0, "harsh": [], "days": {}, "longest": None})
         pair_of = {}
         invoked: Counter = Counter()  # the Rules' articles invoked (poslovnik.cited), one count a speech an article
+        # everybody who spoke or heckled in the convocation, for a measure to someone not at that sitting
+        everyone_c = {}
+        for notes in debates.get(c, {}).values():
+            for n, sur in present([x for x in notes["speeches"].values()]).items():
+                everyone_c.setdefault(n, sur)
         for url, notes in debates.get(c, {}).items():
             whole = debates_.whole_names(notes["speeches"].values())  # "ОБРАДОВИЋ" alone → the one Obradović of the sitting
             speeches = [{**notes["speeches"][k], "key": k, "text": spoken(notes["speeches"][k]["text"]),
@@ -410,7 +296,7 @@ def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, phot
             title = latin(re.sub(r"^СТЕНОГРАФСКЕ БЕЛЕШКЕ\s*-\s*", "", notes["days"][0]["title"]).split(" - ")[0]) if notes["days"] else ""
             agenda = notes["agenda"] if isinstance(notes["agenda"], dict) else dict(notes["agenda"])
             # surnames of the sitting's speakers: the last word of the name as the notes write it
-            surnames = {s["speaker"]: s["speaker"].split()[-1].lower() for s in speeches if not s.get("chair") and s["speaker"].split()}
+            surnames = present(speeches)
 
             def meta(s):
                 d = days.get(s["day"], {})
@@ -426,8 +312,8 @@ def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, phot
                         "joint": len(items) if len(items) > 3 else 0}
             found = []
             for m in measures(speeches):
-                to = to_whom(m, surnames)
-                ctx = None if to else by_context(m)
+                to = to_whom(m, surnames, everyone_c)
+                ctx = None if to else by_context(m, surnames)
                 found.append({"type": "mera", **m, **meta(m["chair"]), "to": who(to) if to else None, "to_raw": to,
                               "likely": who(ctx[0]) if ctx else None, "likely_raw": ctx[0] if ctx else None,
                               "why": ctx[1] if ctx else "",

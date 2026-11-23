@@ -139,6 +139,7 @@ src/zailiprotiv/
   summaries.py, profiles.py, batch.py, federated.py   the model's writing: prompts, checks, the Batch API
   site.py, pages_*.py         the static site, with templates/ and static/
   pages_floor.py              "Varnice", by rule from the notes
+  measures.py                 the chair's measures in the notes, by rule, and to whom each went
   pages_ballot.py, pages_quiz.py   "Glasaj i ti": the ballot and the quizzes
   notes_site.py, files_site.py     the notes' pages and the downloads, for the buckets
   cyrillic.py, translit.py    the Cyrillic edition; Cyrillic → Latin
