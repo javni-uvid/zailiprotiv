@@ -1278,8 +1278,7 @@ main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone u
   .dno:has(details[open]) .dno-live b { margin-top: -28px; position: relative; z-index: 2; }
   .dno :focus-visible { outline: 3px solid var(--za); outline-offset: -3px; }
   .dno-away .dno:not(:focus-within) { transform: translateY(calc(100% + 40px)); }
-  .q-item:not(.answered) .q-answers { bottom: calc(var(--dno) + env(safe-area-inset-bottom)); }
-  .dno-away .q-item:not(.answered) .q-answers { bottom: 0; }
+  body:has(.q-item:not(.answered) .q-answers) { padding-bottom: 0; } body:has(.q-item:not(.answered) .q-answers) .dno { display: none; }  /* the answers stand there */
 }
 @media (prefers-reduced-motion: reduce) { .dno { transition: none; } }
 @media print { .dno { display: none; } }

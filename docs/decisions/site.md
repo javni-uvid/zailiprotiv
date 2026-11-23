@@ -199,7 +199,8 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   rest (a `details`, so it works without the script). It goes away whole while the page is read down and comes back at
   the first move up (tried on a page on the phone, against keeping the microphone and against standing always); 52 px,
   where the old row held 46 px at all times. The head is one row that scrolls away, so a page's own menu (`.page-menu`)
-  sticks to the top. The quiz's answers stand above the bar. Counted as before (`data-mik="meni"`). On a wide screen
+  sticks to the top. In the quiz there is no
+  bar until it is answered: its answers stand there. Counted as before (`data-mik="meni"`). On a wide screen
   the menu stays on top, with "Uživo" as a button. The notes' pages keep their own head.
 - **The family's look and links** (20 Nov 2026, the maintainer's decision: every site of Javni uvid has the same
   font and base colours, and links the others). The font, the page's base colours in both themes and the scale
