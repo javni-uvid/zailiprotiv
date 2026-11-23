@@ -1288,3 +1288,12 @@ main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone u
 .dno .i-gl { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12l5 5L20 6'/%3E%3C/svg%3E"); }
 .dno .i-jos { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke-width='3.4' d='M5 12h.01M12 12h.01M19 12h.01'/%3E%3C/svg%3E"); }
 @media (min-width: 641px) and (max-width: 1100px) { .top nav { gap: 0 1rem; } .top nav .nav-live { padding: .25rem .6rem; } .nav-tools { gap: .45rem; } .top nav .nav-cta { padding: .42rem .7rem; } }
+/* "Podrži" beside Časlav on a phone too, where the row has room for it (23 Nov 2026, the maintainer); measured in both
+   scripts: in Latin from 360 px, in Cyrillic, whose name is longer, from 400 px. */
+@media (max-width: 640px) {
+  .top .nav-support { font-size: var(--t-2); font-weight: 650; gap: .2rem; }
+  html[lang="sr-Cyrl"] .top .nav-support .wide-only { display: none; }
+}
+@media (min-width: 360px) and (max-width: 640px) { html:not([lang="sr-Cyrl"]) .top .nav-support .wide-only { display: inline; } }
+@media (min-width: 400px) and (max-width: 640px) { html[lang="sr-Cyrl"] .top .nav-support .wide-only { display: inline; } }
+@media (max-width: 430px) { .top .brand { gap: .3rem; } .top .brand-mark { width: 1.5rem; } .top nav .nav-search { width: 2rem; } .top .nav-support img { width: 1.9rem; } .top nav .script-switch { padding: .25rem .4rem; } }
