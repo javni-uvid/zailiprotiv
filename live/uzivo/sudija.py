@@ -112,7 +112,9 @@ AUTOMATSKOG prepisa. Ne dodaješ ništa čega nema u tim sažecima.
    je odluka sa svojim "glasanje" (isti ključevi kao u delovima); u "sta" nema brojeva glasova.
 
 IZLAZ: samo JSON, bez ikakvog drugog teksta:
-{{"kratko": "jedna ili dve rečenice, najviše 280 znakova: šta je Skupština tog dana odlučila",
+{{"naslov": "najviše 80 znakova: glavna odluka dana (izbor ili usvojen akt pre odluke o toku sednice), bez brojeva glasova,
+   bez ocene i bez tvrdnji govornika; kad odluke nema, tačka o kojoj se raspravljalo",
+ "kratko": "jedna ili dve rečenice, najviše 280 znakova: šta je Skupština tog dana odlučila",
  "ukratko": "jedan pasus, 4 do 7 rečenica: tok dana i odluke",
  "odluke": [{{"vreme": "HH:MM", "sta": "odluka ili izbor, bez brojeva glasova", "glasanje": null}}],
  "tok": [{{"vreme": "HH:MM", "sta": "..."}}],
