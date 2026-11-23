@@ -332,6 +332,69 @@ def test_a_measure_without_a_name_is_placed_by_context_only_when_the_notes_show_
     assert f.by_context(f.measures([said, later])[0]) is None  # too far from the speech to say
 
 
+def test_the_measures_as_the_chairs_said_them_in_every_convocation():
+    """23 Nov 2026: every measure in the notes read with its context; the sentences are the notes' own."""
+    from zailiprotiv import measures as f
+    mp = lambda who, text="Говор.": {"speaker": who, "text": text, "chair": False, "day": 1}
+    chair = lambda text: {"speaker": "ПРЕДСЕДНИК", "text": text, "chair": True, "day": 1}
+
+    def found(*speeches, everyone=None):
+        people = f.present(list(speeches))
+        out = []
+        for m in f.measures(list(speeches)):
+            to = f.to_whom(m, people, everyone)
+            ctx = None if to else f.by_context(m, people)
+            out.append((m["kind"], to.upper() if to else None, ctx[0].upper() if ctx else None))
+        return out
+    op = lambda name: ("opomena", name, None)
+    likely = lambda name: ("opomena", None, name)
+    # several in one address; a list of names; the same one told again is not another
+    assert found(mp("БОШКО ОБРАДОВИЋ"), mp("ИВАН КОСТИЋ"), chair(
+        "Дакле, изричем опомену Бошку Обрадовићу, ви сте хтели, Ивану Костићу изричем опомену.")) == [op("БОШКО ОБРАДОВИЋ"), op("ИВАН КОСТИЋ")]
+    assert found(mp("АЛЕКСАНДАР ЈОВАНОВИЋ"), mp("БОРИСЛАВ НОВАКОВИЋ"), mp("СРЂАН МИЛИВОЈЕВИЋ"), mp("РАДОМИР ЛАЗОВИЋ"), mp("ЂОРЂО ЂОРЂИЋ"), chair(
+        "Изричем опомену Александру Јовановићу, Бориславу Новаковићу, Срђану Миливојевићу. Изричем другу опомену Радомиру Лазовићу.")) == [
+        op("АЛЕКСАНДАР ЈОВАНОВИЋ"), op("БОРИСЛАВ НОВАКОВИЋ"), op("СРЂАН МИЛИВОЈЕВИЋ"), op("РАДОМИР ЛАЗОВИЋ")]
+    assert found(mp("ГОРДАНА ЧОМИЋ"), chair(
+        "Госпођо Чомић, нажалост, изричем вам опомену. Изричем вам опомену, из простог разлога што не поштујете председавајућег.")) == [op("ГОРДАНА ЧОМИЋ")]
+    assert found(mp("СЛОБОДАН НИКОЛИЋ"), mp("ДРАГАН НИКОЛИЋ"), mp("СЛОБОДАН НИКОЛИЋ"), chair(
+        "Хвала. Изричем вам, господине Николићу, опомену зато што је некоректно. Дакле, тако да имате једну опомену.")) == [op("СЛОБОДАН НИКОЛИЋ")]
+    assert found(mp("ГОРАН ЈЕШИЋ"), chair("Изричем вам опомену, колега Јешићу. (Горан Јешић: Ви не знате ништа.) Изричем вам другу опомену.")) == [
+        op("ГОРАН ЈЕШИЋ"), likely("ГОРАН ЈЕШИЋ")]
+    # other words for it
+    assert found(mp("НЕНАД БОЖИЋ"), chair("Колега Божићу, изричем вам опомену. (Ненад Божић: Зашто?) Колега Божићу, друга опомена. (Ненад Божић: Срам те било!) "
+                                          "Колега Божићу, трећа опомена.")) == [op("НЕНАД БОЖИЋ")] * 3
+    assert found(mp("НЕБОЈША БАКАРЕЦ"), chair("Посланиче Бакарец, морам да вам изрекнем опомену због овог.")) == [op("НЕБОЈША БАКАРЕЦ")]
+    # not a measure: a condition, talk, a rule, an earlier one
+    for text in ("Добаците још једном и добијате опомену.", "Ако наставите овако, имате опомену.", "Боље да вас упозорим, него да вам сада изричем опомену.",
+                 "Без везе је да вас опомињем па да вам на крају одузимам реч.", "Нећу да вам изричем сад никакву опомену.",
+                 "Господине Трнавчевићу, ако наставите да довикујете с места, дужна сам да вам изрекнем опомену.",
+                 "Пошто сам за меру удаљења са седнице која је изречена Александру Јовановићу на претходној седници рекао да ће да се примењује.",
+                 "Председник Народне скупштине изриче меру удаљења са седнице."):
+        assert found(mp("ПЕТАР ПЕТРОВИЋ"), chair(text)) == [], text
+    assert found(mp("АЛЕКСАНДАР ЈОВАНОВИЋ", "Имам опомену, у реду је. Баш ме брига."), chair("Све је у реду, имате опомену.")) == []
+    # someone named is never replaced by whoever spoke before
+    assert found(mp("НИКОЛА СЕЛАКОВИЋ", "Идемо даље. (Добрица Веселиновић: Чудо, ви министар културе.) Идемо даље."),
+                 chair("Изричем опомену Добрици Веселиновићу. Хвала вам."), mp("НИКОЛА СЕЛАКОВИЋ")) == [op("ДОБРИЦА ВЕСЕЛИНОВИЋ")]
+    assert found(mp("АЛЕКСАНДАР ЈОВАНОВИЋ"), mp("АЛЕКСАНДР ЈОВАНОВИЋ"), mp("МИЛОШ ВУЧЕВИЋ"), chair(
+        "Хвала вам, председниче Владе. Народном посланику Александру Јовановићу изричем опомену поново.")) == [op("АЛЕКСАНДАР ЈОВАНОВИЋ")]  # misspelt once
+    assert found(mp("МИЛОШ ВУЧЕВИЋ"), chair("Хвала вам. Народном посланику Петру Петровићу изричем опомену.")) == [("opomena", None, None)]
+    assert found(mp("РАДОМИР ЛАЗОВИЋ"), mp("МИЛЕНКО ЈОВАНОВ"), chair(
+        "Господине Лазовићу, да ли можете да прекинете да добацујете? Не можете да прекинете. Ја вама изричем опомену."), mp("МИЛЕНКО ЈОВАНОВ")) == [likely("РАДОМИР ЛАЗОВИЋ")]
+    assert found(mp("БОШКО ОБРАДОВИЋ"), mp("НЕБОЈША СТЕФАНОВИЋ"), chair(
+        "Молим посланика Бошка Обрадовића да физички не угњетава посланика. Посланиче, имате опомену зато што сте покушали краватом да задавите посланика.")) == [likely("БОШКО ОБРАДОВИЋ")]
+    # a warning without a name, and another by name to the one who heckled right before it: the first is someone else's
+    assert found(mp("МАРЈАНА МАРАШ"), chair(
+        "Јован Палалић. (Бошко Обрадовић: Повреда Пословника.) Изричем вам опомену за ово понашање. Не можете да приђете председавајућем ако вам то није дозволио. "
+        "Реч има народни посланик Јован Палалић. (Иван Костић: Повреда Пословника.) (Бошко Обрадовић: Повреда Пословника.) Бошку Обрадовићу изричем опомену.")) == [
+        ("opomena", None, None), op("БОШКО ОБРАДОВИЋ")]
+    # the notes cut one address in two at a heckle; someone not at the sitting, named in full
+    assert found(mp("МАРКО ЂУРИШИЋ"), chair("Изричем вам опомену. (Марко Ђуришић: А ви, господине Бабићу, тапшете овде.)"),
+                 chair("Господине Ђуришићу, изричем вам опомену.")) == [op("МАРКО ЂУРИШИЋ")]
+    assert found(mp("МИЛОШ ПАРАНДИЛОВИЋ"), chair(
+        "Мени не преостаје ништа друго осим да изрекнем меру удаљења са седнице народним посланицима Милошу Парандиловићу и Драгану Нинковићу."),
+        everyone={"ДРАГАН НИНКОВИЋ": "нинковић"}) == [("udaljenje", "МИЛОШ ПАРАНДИЛОВИЋ", None), ("udaljenje", "ДРАГАН НИНКОВИЋ", None)]
+
+
 def test_every_speech_of_the_notes_has_a_place_and_long_days_are_split(monkeypatch):
     from zailiprotiv import notes_site
     monkeypatch.setattr(notes_site, "PART", 30)

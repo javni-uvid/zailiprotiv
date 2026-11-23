@@ -83,7 +83,7 @@
             {% if ar.last %}<span class="measure-pre"><span class="meta">Pre mere, {{ ar.last_who.name }}:</span> „{% for t, hit in ar.last %}{% if hit %}<b>{{ t|latin }}</b>{% else %}{{ t|latin }}{% endif %}{% endfor %}“</span>{% endif %}
             {% for n, t in ar.asides %}<span class="measure-pre"><span class="meta">Dobacuje, {{ n }}:</span> „{{ t|latin }}“</span>{% endfor %}
             <span class="measure-said"><span class="meta">Predsedavajući:</span> „{% if ar.lead %}{{ ar.lead|latin }} {% endif %}<b>{{ (e.sentence or e.chair.text)|latin|truncate(260, killwords=False, end=" …") }}</b>{% if ar.after %} {{ ar.after|latin }}{% endif %}“</span>
-            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if e.likely %} · ime nije izgovoreno; {{ e.why }}{% elif not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
+            <span class="meta">Izriče: {{ "predsednik Skupštine" if role.startswith("predsedn") else ("predsedavajuća" if role.endswith("a") else "predsedavajući") }} · {{ e.date|day }}{% if e.likely %} · ime nije izgovoreno uz meru; {{ e.why }}{% elif not e.to %} · predsedavajući ne navodi ime{% if e.before_who %}; izrečena posle govora: {{ e.before_who.name }}{% endif %}{% endif %}</span>
           </span>
         </summary>
         <div class="measure-more" data-pagefind-ignore>
@@ -96,7 +96,7 @@
     </li>
   {% endfor %}
   </ul>
-  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji samo kad u toj rečenici oslovi govornika prezimenom koje na sednici nosi jedan govornik. Kad ime ne izgovori, a beleške pokazuju kome se obraća (jedan poslanik dobacuje u zagradama, ili je mera izrečena odmah posle nečijeg govora), ime stoji sa oznakom „po kontekstu“ i razlogom: to je vrlo verovatno, ne sigurno, i broji se odvojeno. Zvanična evidencija izrečenih mera postoji u Skupštini (Poslovnik, član 108), ali nije objavljena. Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
+  <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji kad ga predsedavajući izgovori uz meru, a nosi ga jedan od onih koji su na sednici govorili ili dobacivali. Kad ime uz meru ne izgovori, a beleške pokazuju kome se obraća (oslovljava ga neposredno pre, jedan poslanik dobacuje u zagradama, ili je mera izrečena odmah posle nečijeg govora), ime stoji sa oznakom „po kontekstu“ i razlogom: to je vrlo verovatno, ne sigurno, i broji se odvojeno. Zvanična evidencija izrečenih mera postoji u Skupštini (Poslovnik, član 108), ali nije objavljena. Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
 </section>
 {% endif %}
 <section id="sednice">
