@@ -113,7 +113,8 @@ def _twin(job: tuple[str, str]) -> None:
     twin = out / "cir" / rel
     twin.parent.mkdir(parents=True, exist_ok=True)
     twin.write_text(page(html, rel).replace('href="#pismo"', f'href="../{up}{rel}"')
-                    .replace(">Ћирилица</a>", ">Latinica</a>"), encoding="utf-8")
+                    .replace('aria-label="Ћирилица"><span class="wide-only">Ћирилица</span><span class="phone-only">Ћир</span></a>',
+                             'aria-label="Latinica"><span class="wide-only">Latinica</span><span class="phone-only">Lat</span></a>'), encoding="utf-8")
     p.write_text(html.replace('href="#pismo"', f'href="{up}cir/{rel}"'), encoding="utf-8")
 
 
