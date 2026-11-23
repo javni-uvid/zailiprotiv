@@ -21,9 +21,10 @@ it. Dates are the maintainer's decisions unless said otherwise.
   votes, transcripts, notes, summaries and the like.
 - **A decision goes at the end of the section it belongs to** in its part's file (the map below), rather than
   inside another's paragraph. A rule of work or a principle of this project, here.
-- **`live/AGENTS.md` holds the live service's decisions** (20 Nov 2026): a decision about `live/` or the live
-  page goes at the end of that file, not here. Agents get it when they work in `live/`; read it too before
-  changing what the service takes from the site (`pages_mikrofon.py`, `mikrofon.js`, the counter's push).
+- **`live/AGENTS.md` says in short what holds for the live service** (23 Nov 2026), and its map names the file of
+  each part's decisions (`docs/decisions/live-*.md`): a decision about `live/` or the live page goes at the end of
+  that file. Agents get the short one when they work in `live/`; read it too before changing what the service takes
+  from the site (`pages_mikrofon.py`, `mikrofon.js`, the counter's push).
 - **The tests are `uv run pytest -q`.** The **test** workflow runs them again on every pull request and on
   `main`; a red run is fixed first. On Windows the roll-call and bill tests need poppler's `pdftotext` (`winget install
   oschwartz10612.Poppler`), named by `PDFTOTEXT` where Git's (xpdf's, whose columns fall elsewhere) is first on the PATH,
@@ -112,7 +113,7 @@ Read the file of the part you work on before you start; each keeps its sections'
 | The code's layout, the build's steps, the commands (`cli/`) | `docs/decisions/code.md` |
 | The site: pages, design rules, accessibility, visitors' votes and quizzes, search engines | `docs/decisions/site.md` |
 | Broadcasts and recordings on the site: who spoke when and how long, the archive, transcripts | `docs/decisions/recordings.md` |
-| The live service `mikrofon.zailiprotiv.rs` (`live/`), its edge worker, notifications | `live/AGENTS.md` |
+| The live service `mikrofon.zailiprotiv.rs` (`live/`), its edge worker, notifications, the day's mail | `live/AGENTS.md` (in short, and the map of `docs/decisions/live-*.md`) |
 | The visitors' counter (`worker/`) | `worker/README.md`, and "Visitors' votes" in `docs/decisions/site.md` |
 | Security: what is guarded against per part, what is checked before a merge, what is accepted | `docs/decisions/security.md` |
 | The project's course, day by day | `docs/decisions/log.md` |

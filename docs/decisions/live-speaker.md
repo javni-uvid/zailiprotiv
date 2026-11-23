@@ -1,0 +1,80 @@
+# The live page: who is speaking
+
+Decisions about the live page `mikrofon.zailiprotiv.rs` and its service: the caption, the chair's words, the voice, who presides. Moved word for word from
+`live/AGENTS.md` on 23 Nov 2026 (it had grown to 77 KB, read whole by every agent working in `live/`); what holds now,
+in short, is there. **Keep it current:** a decision is added at the end of this file, in the same commit, and one that
+changes an earlier one says so. Dates are the maintainer's decisions unless said otherwise.
+
+**Changed since written:** "Reč ima …" (19 Nov): time is now counted from it ("Who speaks without a caption", 22 Nov).
+
+- **Read from the broadcast, matched to the roll calls:** a name counts when it matches an MP on the site's list
+  (`podaci.json`, from the roll calls) on the caption's name line only, never the list line under it (a list's name
+  often holds its leader's name). A name not on the list (ministers, guests) is shown only when read surely in two
+  frames in a row; a half-read name is never shown. The page says it is read automatically and may err.
+- **A name with nothing under it** (19 Nov 2026): the live page listed two turns of an MP who had not spoken, each
+  read in two frames with no second line. `state.counted`: a turn goes into the day's list when read in two frames
+  or more and either the line under the name (the list or office, which every real caption has) was read at least
+  once, or it lasted four frames or more; the day's record gives a turn not counted as one frame, which the site
+  drops. The same rule for every name.
+- **Chance readings during a break** (19 Nov 2026: one MP's name kept flashing as the speaker while nobody was on
+  the screen). Two causes, both mended. In `names.Roster` one word read could stand for two words of a name
+  ("Сара" was both "Sarag" and "Sarah"): each word of the name now needs a word of its own (`_pair`). And in
+  `Tracker.observe` a name with no line read under it, like a name not on the list, is taken only on its second
+  frame in a row (within `HOLD_SECONDS`), the turn then counted from the first of the two; a whole caption, with its
+  list or office, is taken at once as before.
+- **"Reč ima: …" from the chair's words, while the picture names nobody** (19 Nov 2026: that afternoon the
+  broadcast showed no captions at all, the frame checked). `hronika.floor`: after "reč ima" / "ima reč" the next
+  seven words must name one sitting MP: every word of the name whole but for diacritics, or, as a guess the
+  maintainer allowed after that phrase, the clearly nearest MP by every word of the name (`FLOOR_NEAR`,
+  `FLOOR_CLEAR`; "Jova Bakič", "Krko Babić"), or a surname alone that only one MP has, right after a title
+  ("kolega Jovanov") and never after a given name we do not know. Two MPs fitting: nobody. Shown in the day's steps as a lighter line with a link to the MP's page, and not where a turn read from
+  the picture stands. No time at the rostrum is counted from it (the end of the speech is not known), and nobody
+  is ever named from a face.
+- **The chair gives the floor in more words than "reč ima"** (20 Nov 2026, the maintainer's request): Whisper writes
+  it as one word ("Rečima narodna poslanica …"), and the chair also says "dajem reč", "pravo na repliku ima", or a
+  title after "replika", "povreda Poslovnika", "izvolite", "sledeći je" (`hronika._FLOOR`); "replika gospodinu X"
+  names whom it answers and is not taken.
+**Who speaks without a caption: the chair's words and the voice, counted and labelled** (22 Nov 2026, the
+maintainer: "da čitanje prepisa utiče na govornika ako prepoznamo uspešno", voices live, and the time so found
+counted, labelled). It changes "Reč ima … from the chair's words" above, where no time was counted, and, for the live
+service, "never live" of the voices in `docs/decisions/recordings.md`. The order: a caption names the speaker and
+rules; while none does, (1) the chair giving the floor (`hronika.floor`, in the chair's sound or in a turn found this
+way) makes that MP the speaker from the end of that piece (`Tracker.heard`, `"izvor": "prepis"`), until a caption, the
+chair giving the floor to another, a voice, or `HEARD_LONGEST` (20 min); (2) the voice (`glas.py`): ERes2Net through
+sherpa-onnx, the model the recordings are read with (its file checked by digest in the image), a window of 3 s every
+1.5 s of the kept sound, and the site's rule (`ko.stretches`: 0.55 a window, 0.05 ahead of the next, 20 s at 0.68 on
+average, 8 s of gap); a stretch so named makes that MP the speaker (`"izvor": "glas"`), and the turn ends when the
+voice stops for 8 s or the chair's or another's voice is named (`unheard`, `voice_gone`). The presiding officers
+(`GLAS_BEZ`: the Speaker, the six deputies, the two who chaired the first sitting) are never named by voice. The
+samples are each MP's mean voice (`/data/glasovi.npz`, numbers only, never published): first from 17-18 Nov, placed
+by the notes (27 MPs), then every turn the caption names adds its windows (from 5 s after its start to 5 s before its
+end), so an MP is known by voice once the picture has named them. Such turns count in the day's totals and the
+groups' time; the speaker's box says "Prepoznat po glasu" or "Po rečima predsedavajućeg …, automatski; može da
+pogreši", and the list of turns "po glasu" / "po rečima predsedavajućeg"; `/dan/<date>.json` carries `izvor`.
+Checked: samples from 17 Nov only, speeches of 18 Nov fed as the stream leaves them, 90 s each: the three MPs with a
+sample named (Hubač, Brnabić, Vučić), the three without none; and four minutes of a Serbian TV talk show named
+nobody. The hall's floor for "not silence" is the quietest fifth of the last ten minutes' tenths of a second, as
+`lice_glas` does it (a first try against whole windows threw away continuous speech). `GLAS=0` turns voices off.
+**The presiding officers never named by voice, by their addresses** (22 Nov 2026, found while replaying 19 Nov). The
+list (`GLAS_BEZ`) was compared with the list's names, which put the surname first, so it would never have matched,
+and two of its names were wrong (the first sitting was chaired by Stojan Radenović and Nada Macura). It is now the
+MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six deputies, `radenovic-stojan`,
+`macura-nada`. None of them had a voice sample yet, so nothing was named wrongly.
+**The floor given now, a voice that changes, and who presides** (22-23 Nov 2026, the maintainer: "napravi", after
+19 Nov was replayed through the service's code with no caption at all). Three changes, each from a fault the replay
+showed. (1) "Reč ima X, a posle njega ima reč Y" made Y the speaker: `hronika.floor(now_only=True)` leaves out a
+floor announced for later (posle, nakon, zatim, potom, sledeći, pripremi among the four words before it), and the
+speaker is the last floor given now in the piece. (2) A turn found by the chair's words, of an MP whose voice is not
+known, went on while someone else spoke (a reply, the President): its own first seconds (3-15 s) are now its voice,
+and when a later 15 s is on average under 0.45 alike them the turn ends after the last window still alike (set
+against the notes of 18 Nov: a speech's own later 15 s fall under it in 10% of cases, ending it early with nobody
+named; the next speaker's stay above in 4%). (3) The presiding officers' voices tell who presides: their samples are
+the voice in the chair's own lines of 19 Nov's transcript ("reč ima", "zahvaljujem", "izvolite", "konstatujem"...),
+in each one's hours (Radenović until the vote, Macura 12:40-13:38, Čupić after: 36, 8 and 145 windows, each 0.75-0.82
+alike its mean, 0.15-0.33 alike each other). A stretch in a presiding officer's voice, unless they hold the floor,
+sets "Predsedava: <ime> (po glasu)" in the line on top (shown while heard in the last quarter of an hour) and ends a
+turn found without a caption. Replayed: 18 Nov against the notes (voices sampled on 17 Nov only), wrongly named
+1.5% -> 0.4% of the MPs' speech, named rightly 76% -> 73%; 19 Nov's morning against its captions 6.7% -> 3.1% wrong,
+the day against its reading by voice 6.3% -> 1.1%; the chair found as it was: Radenović, Macura from 12:42, Čupić
+from 13:32. The deputies get their voices once they speak with a caption; a measure of the chair could carry who
+presided (not done).

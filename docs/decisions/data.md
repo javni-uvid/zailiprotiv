@@ -60,7 +60,7 @@ as the change. The principles and the rules of work are in AGENTS.md.
 - **The sitting's steps by the Rules** (20 Nov 2026, the maintainer's choice, step 4): four terms more, for what a
   sitting day goes through: otvaranje sednice i kvorum (88, 90), radno vreme, pauza i prekid (87, 101), dnevni red
   (92, 93), tok pretresa (96, 98); first in `pojmovi.json`, in the order a day takes them. Each kind of step on the
-  live page leads to its term (`live/AGENTS.md`), and the order the live page keeps (`steps._in_order`) cites the
+  live page leads to its term (`live-day.md`), and the order the live page keeps (`steps._in_order`) cites the
   articles it rests on. The site shows what the Rules say and when a step was heard; it does not say whether a
   sitting kept them (principle 3; a breach is for MPs to point out, art. 103).
 - **The Rules shown where readers come** (20 Nov 2026, the maintainer: the new convocation's readers will want them):
@@ -68,7 +68,7 @@ as the change. The principles and the rules of work are in AGENTS.md.
   and that the live page's steps lead to their articles), the footer's "Skupština" column links "Poslovnik", the
   page shown at mikrofon while the service is down links it, and the live page has a box of its own.
 - **The groups' time for debate** (22 Nov 2026): term `vreme-rasprave` (97, 99, 158), the rule behind the live
-  page's estimate of each group's time left (`live/AGENTS.md`).
+  page's estimate of each group's time left (`live-day.md`).
 
 ## Laws
 

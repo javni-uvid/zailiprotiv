@@ -232,7 +232,7 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   page. **Uses** (17 Nov 2026, `POST /e`): a sum per day of the quiz's result reached and the share pictures opened,
   shared, copied, saved; nothing beside it. `GET /pregled` shows both. **The live page's uses** (19 Nov 2026,
   the maintainer's request, to see how long people stay and what keeps them): the same sums from
-  `mikrofon.zailiprotiv.rs` beside the broadcast's ▶ (`mikrofon.pusti`, `live/AGENTS.md`): opened; in view 1, 5, 15, 30 min,
+  `mikrofon.zailiprotiv.rs` beside the broadcast's ▶ (`mikrofon.pusti`, `live-page.md`): opened; in view 1, 5, 15, 30 min,
   time out of sight not counted; a recording of the archive played (`mikrofon.snimak`); the agenda, the speaker's
   lines, a share, the day in cards, a way to the site; each at most once per page opened. Same counter and switch
   as `mikrofon.pusti` (`config.VOTES_API`); the page's footer and the method page say so.
