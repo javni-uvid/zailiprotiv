@@ -563,3 +563,48 @@ document.addEventListener("DOMContentLoaded", function () {
   var on = document.querySelector(".tabs a[aria-current]"), row = on && on.parentNode;
   if (row && row.scrollWidth > row.clientWidth) row.scrollLeft = Math.max(0, on.offsetLeft - row.offsetLeft - 16);
 })();
+
+// The phone's menu at the bottom (23 Nov 2026): away while the page is read down, back at the first move up or near the
+// top; "Još" closes on a press elsewhere and keeps the bar while open. The part of the site the page is in is marked.
+(function () {
+  var bar = document.querySelector(".dno"), root = document.documentElement;
+  if (!bar) return;
+  var more = bar.querySelector("details"), at = window.scrollY, moved = 0;
+  var path = location.pathname.replace(/^\/cir\//, "/").slice(1);
+  Array.prototype.forEach.call(bar.querySelectorAll("a[data-at]"), function (a) {
+    if (path.indexOf(a.getAttribute("data-at")) === 0) a.setAttribute("aria-current", "true");
+  });
+  window.addEventListener("scroll", function () {
+    // held within the page: the bounce at either end of an iPhone's page is no move of the reader's
+    var y = Math.max(0, Math.min(window.scrollY, root.scrollHeight - window.innerHeight)), d = y - at;
+    at = y;
+    if (!d || more.open) return;
+    moved = (d > 0) === (moved > 0) ? moved + d : d;
+    if (y < 80 || moved < -12) root.classList.remove("dno-away");
+    else if (moved > 24) root.classList.add("dno-away");
+  }, { passive: true });
+  document.addEventListener("click", function (e) { if (more.open && !more.contains(e.target)) more.open = false; });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && more.open) { more.open = false; more.firstElementChild.focus(); } });
+})();
+
+// "Uživo" is red while a sitting's broadcast is on. The pages are built once an hour, so in the hours a sitting may be
+// on (it was at the build, or its announced start has come) the live page is asked, once a page and when it is come
+// back to; left as it was built when it doesn't answer.
+(function () {
+  var el = document.querySelector(".dno-live[data-src]");
+  if (!el || !window.fetch || el.getAttribute("data-src").indexOf("http") !== 0) return;
+  var from = +el.getAttribute("data-od"), asked = 0;
+  function ask() {
+    var now = Date.now() / 1000;
+    if (document.hidden || now - asked < 60 || (from && (now < from - 600 || now > from + 57600))) return;
+    asked = now;
+    fetch(el.getAttribute("data-src")).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
+      if (!s || !s.stanje) return;
+      Array.prototype.forEach.call(document.querySelectorAll(".dno-live, .nav-live"), function (a) {
+        a.classList.toggle("on", s.stanje !== "nema_prenosa");
+      });
+    }).catch(function () {});
+  }
+  ask();
+  document.addEventListener("visibilitychange", ask);
+})();
