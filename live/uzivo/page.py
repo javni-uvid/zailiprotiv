@@ -1133,7 +1133,7 @@ def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
     cur = snap.get("sada") if snap["stanje"] == "govori" else None
     mark = int(cur["od"]) if cur else f'{snap.get("dan", "")}-{len(snap.get("danas") or [])}'
     if announced(snap)[0]:  # another picture, so another address: a service keeps a picture by its address
-        mark = f'najava2-{announced(snap)[1].get("od", "")}'
+        mark = f'najava3-{announced(snap)[1].get("od", "")}'
     img = f'{url}{"cir/" if cyr else ""}slika.png?v={mark}'
     e = escape
     return (f'<meta property="og:type" content="website"><meta property="og:url" content="{e(url + ("cir/" if cyr else ""))}">'

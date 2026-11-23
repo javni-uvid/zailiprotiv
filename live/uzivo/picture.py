@@ -95,7 +95,7 @@ def _announcement(snap: dict, start, *, cyr: bool, host: str) -> bytes:
     """Before a sitting: the day as a leaf of a calendar, when, what is next and what the page gives then, with a mark
     each (23 Nov 2026, the maintainer: the link's picture to look better on Reddit). The day by its name and never
     "sutra": a service keeps a picture past midnight. Nothing looks like a button, and the top right corner is left
-    empty, where Reddit puts its own. Drawn twice as large and scaled down, for smooth edges."""
+    empty, where Reddit puts its own. All of it in the middle, for the small pictures. Drawn twice as large and scaled down, for smooth edges."""
     k = 2
     im = Image.new("RGB", (W * k, H * k), DARK)
     d = ImageDraw.Draw(im)
@@ -114,62 +114,59 @@ def _announcement(snap: dict, start, *, cyr: bool, host: str) -> bytes:
             size -= 2
         return size
 
-    # the mark (favicon.svg's two arcs), the name, the address
-    d.arc(box(P, 44, P + 60, 104), start=180, end=300, fill=ZA_D, width=14 * k)
-    d.arc(box(P, 44, P + 60, 104), start=314, end=360, fill=PROTIV_D, width=14 * k)
-    x = P + 78
+    # Everything stands between x = M0 and M1: Reddit's app and others show a small picture cut to its middle (4:3,
+    # 840 of the 1200), with their own mark over its bottom right corner
+    M0, M1 = 196, 1004
+    # the mark (favicon.svg's two arcs), the name
+    d.arc(box(M0, 46, M0 + 72, 118), start=180, end=300, fill=ZA_D, width=17 * k)
+    d.arc(box(M0, 46, M0 + 72, 118), start=314, end=360, fill=PROTIV_D, width=17 * k)
+    x = M0 + 92
     for word, color in ((("За", ZA_D), (" или ", ON_DARK), ("Против", PROTIV_D)) if cyr else
                         (("Za", ZA_D), (" ili ", ON_DARK), ("Protiv", PROTIV_D))):
-        text(x, 76, word, lit, 40, color)
-        x += wide(word, lit, 40)
+        text(x, 82, word, lit, 48, color)
+        x += wide(word, lit, 48)
     if host:
-        text(x + 26, 76, host, lit_text, 28, SOFT)
+        text(x + 24, 82, host, lit_text, fit(host, lit_text, 28, M1 - x - 24, 18), SOFT)
     # the leaf
-    x0, y0, x1, y1 = P, 136, P + 270, 444
+    x0, y0, x1, y1 = M0, 136, M0 + 236, 444
     d.rounded_rectangle(box(x0, y0, x1, y1), radius=24 * k, fill="#ffffff")
     d.rounded_rectangle(box(x0, y0, x1, y0 + 84), radius=24 * k, fill=ZA_D)
     d.rectangle(box(x0, y0 + 48, x1, y0 + 84), fill=ZA_D)
     mid = (x0 + x1) / 2
-    text(mid, y0 + 43, _name(_WD[start.weekday()], cyr).upper(), lit, 46, DARK, "mm")
+    text(mid, y0 + 43, _name(_WD[start.weekday()], cyr).upper(), lit, 50, DARK, "mm")
     text(mid, y0 + 164, str(start.day), lit, 142, DARK, "mm")
-    text(mid, y0 + 264, _name(MONTHS[start.month - 1][:3], cyr).upper(), lit, 42, MUTED, "mm")
-    # when, and what is next
-    left = x1 + 56
-    room = W - P - left
-    rows = [_t("og_sitting", cyr), _said_on(start, cyr).split(" ", 1)[1]]  # "u utorak u 10 h", never broken inside
-    size = min(fit(r, lit, 78, room) for r in rows)
-    y = 216
-    for row in rows:
-        text(left, y, row, lit, size, ON_DARK)
-        y += 90
+    text(mid, y0 + 264, _name(MONTHS[start.month - 1][:3], cyr).upper(), lit, 44, MUTED, "mm")
+    # when ("u utorak u 10 h", never broken inside), and what is next
+    left = x1 + 40
+    room = M1 - left
+    head, when = _t("og_sitting", cyr), _said_on(start, cyr).split(" ", 1)[1]
+    text(left, 222, head, lit, fit(head, lit, 104, room), ON_DARK)
+    text(left, 312, when, lit, fit(when, lit, 72, room), ON_DARK)
     nxt = next_item(snap)
     if nxt:
-        y -= 14
-        text(left, y, _t("ag_next", cyr).capitalize() + ":", lit_text, 30, SOFT)
-        for row in _wrap(d, _short_item(nxt, cyr), lit_text(32 * k), room * k, 2):
+        rows = _wrap(d, _short_item(nxt, cyr), lit_text(34 * k), room * k, 2)
+        y = 386 if len(rows) > 1 else 408
+        for row in rows:
+            text(left, y, row, lit_text, 34, SOFT)
             y += 44
-            text(left, y, row, lit_text, 32, ON_DARK)
     # what the page gives, with a mark each
-    d.rectangle(box(P, 486, W - P, 488), fill=SOFT_LINE)
-    bits = [_t(key, cyr) for key in ("og_follow", "og_listen", "og_mail")]
-    size = 34
-    while size > 24 and sum(wide(b, lit, size) + 62 for b in bits) > W - 2 * P - 60:
-        size -= 1
-    gap = (W - 2 * P - sum(wide(b, lit, size) + 62 for b in bits)) / 2
-    x, cy = P, 552
-    for n, b in enumerate(bits):
+    d.rectangle(box(M0, 480, M1, 482), fill=SOFT_LINE)
+    size, x, cy = 46, M0, 550
+    for n, key in enumerate(("og_follow", "og_listen", "og_mail")):
+        b = _t(key, cyr)
         if n == 0:  # on the air
-            d.ellipse(box(x + 8, cy - 14, x + 36, cy + 14), fill=LIVE)
+            d.ellipse(box(x, cy - 18, x + 36, cy + 18), fill=LIVE)
         elif n == 1:  # headphones
-            d.arc(box(x + 2, cy - 22, x + 42, cy + 22), start=180, end=360, fill=ZA_D, width=5 * k)
-            for ex in (x, x + 32):
-                d.rounded_rectangle(box(ex, cy - 3, ex + 12, cy + 20), radius=5 * k, fill=ZA_D)
+            d.arc(box(x + 2, cy - 24, x + 46, cy + 24), start=180, end=360, fill=ZA_D, width=6 * k)
+            for ex in (x, x + 35):
+                d.rounded_rectangle(box(ex, cy - 3, ex + 13, cy + 22), radius=5 * k, fill=ZA_D)
         else:  # an envelope
-            d.rounded_rectangle(box(x, cy - 16, x + 44, cy + 16), radius=4 * k, outline=PROTIV_D, width=4 * k)
-            d.line([(a * k, c * k) for a, c in ((x + 3, cy - 13), (x + 22, cy + 4), (x + 41, cy - 13))],
-                   fill=PROTIV_D, width=4 * k)
-        text(x + 58, cy, b, lit, size, ON_DARK, "lm")
-        x += wide(b, lit, size) + 62 + gap
+            d.rounded_rectangle(box(x, cy - 18, x + 50, cy + 18), radius=4 * k, outline=PROTIV_D, width=5 * k)
+            d.line([(q * k, c * k) for q, c in ((x + 3, cy - 14), (x + 25, cy + 5), (x + 47, cy - 14))],
+                   fill=PROTIV_D, width=5 * k)
+        x += (36, 48, 50)[n] + 14
+        text(x, cy, b, lit, size, ON_DARK, "lm")
+        x += wide(b, lit, size) + 40
     out = io.BytesIO()
     im.resize((W, H), Image.LANCZOS).save(out, "PNG", optimize=True)
     return out.getvalue()
