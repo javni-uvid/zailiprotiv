@@ -193,3 +193,9 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   own mark, the two arcs of `favicon.svg`, as the site's apple-touch-icon; the header keeps the site's name and
   "Podrži sajt" beside the script's switch, and the microphone mark is gone from the page. A phone that added the
   page before keeps the old icon until it is added again.
+- **Before a sitting a pasted link announces it** (23 Nov 2026, the maintainer, before a post on Reddit: a link showed
+  who spoke how long on the last day, the hook he had dropped). While nobody is on the air and the Assembly's notice
+  names a day and an hour still to come (`page.announced`), the link's title and line and its picture say when the
+  Assembly goes on, the item next on the agenda and what the page gives then; the picture's address changes with it
+  (`?v=najava-…`). From that hour on the notice is no news, on the page's top either: the evening of a sitting would
+  have said it goes on that morning. `page._now` is the clock, so that tests name their own day.

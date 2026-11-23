@@ -10,7 +10,8 @@ from zoneinfo import ZoneInfo
 from PIL import Image, ImageDraw, ImageFont
 
 from .names import cyrillic, given_first
-from .page import HEX, TEXT, _clock, _date, _dur, _name, _shades, _t, _when, headline, leaders
+from .page import (HEX, TEXT, _clock, _date, _dur, _fill, _name, _shades, _t, _when, announced, headline, leaders,
+                   next_item)
 
 W, H, P = 1200, 630, 64
 FG, MUTED, ZA, PROTIV, LINE = "#111111", "#555555", "#1f5fa8", "#c2410c", "#d9d9d9"
@@ -87,7 +88,24 @@ def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
     turns = (snap.get("danas") or []) + ([cur] if cur else [])
     line = headline(turns, cyr=cyr, when=_when(snap, cyr))
     y = 150
-    if cur:
+    when = announced(snap)[0]
+    if when:  # before a sitting: the announcement alone, no figures of the last day (23 Nov 2026)
+        d.text((P, y + 9), _t("og_head", cyr).upper(), font=bold(24), fill=MUTED, anchor="lm")
+        f = serif(58)  # the day and the hour on one line
+        rows = _wrap(d, _fill(_t("og_goes_on", cyr), _name(when, cyr)), f, W - 2 * P, 3)
+        for i, row in enumerate(rows):
+            d.text((P, y + 48 + i * 78), row, font=f, fill=FG)
+        nxt = next_item(snap)
+        y2 = y + 48 + len(rows) * 78 + 30
+        if nxt:
+            text = f'{_t("ag_next", cyr).capitalize()}: {_name(nxt["tekst"], cyr)}'
+            for i, row in enumerate(_wrap(d, text, sans(32), W - 2 * P, 2)):
+                d.text((P, y2 + i * 44), row, font=sans(32), fill=MUTED)
+        d.rectangle((P, 534, W - P, 535), fill=LINE)
+        text = _t("og_live", cyr)
+        d.text((P, 572), text, font=_fit(d, text, bold, 32, W - 2 * P), fill=FG, anchor="lm")
+        turns = []
+    elif cur:
         d.ellipse((P, y - 2, P + 22, y + 20), fill=PROTIV)
         d.text((P + 36, y + 9), _t("sh_head", cyr).upper(), font=bold(24), fill=MUTED, anchor="lm")
         name = _name(given_first(cur["ime"]), cyr)

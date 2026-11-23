@@ -183,13 +183,11 @@ def _status(snap: dict, *, cyr: bool) -> str:
         what += (f'<span class="status-chair">{t("presides")}: {escape(_name(given_first(chair["ime"]), cyr))} '
                  f'<span class="meta">({t("by_short_glas")})</span></span>')
     goes_on = ""
-    if snap["stanje"] == "nema_prenosa":
-        newest = sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]
-        when = _resumes(newest[0].get("tekst", "")) if newest else ""
-        if when:
-            src = (f' <a href="{escape(newest[0]["url"])}">{t("steps_site")} ↗</a>'
-                   if str(newest[0].get("url", "")).startswith("https://") else "")
-            goes_on = f'<p class="goes-on">{escape(_fill(_t("goes_on", cyr), _name(when, cyr)))}{src}</p>'
+    when, notice = announced(snap)
+    if when:
+        src = (f' <a href="{escape(notice["url"])}">{t("steps_site")} ↗</a>'
+               if str(notice.get("url", "")).startswith("https://") else "")
+        goes_on = f'<p class="goes-on">{escape(_fill(_t("goes_on", cyr), _name(when, cyr)))}{src}</p>'
     if goes_on:  # when it goes on, large, under the mark; what is next under that
         return f'<div class="status"><p>{pill}</p>{goes_on}<p>{what}</p></div>'
     return f'<div class="status"><p>{pill}{what}</p></div>'
@@ -394,6 +392,38 @@ def _resumes(text: str) -> str:
     if not m or m.group(1).lower() not in _WEEKDAYS_ON or m.group(3).lower() not in MONTHS_OF:
         return ""
     return f"{_WEEKDAYS_ON[m.group(1).lower()]}, {int(m.group(2))}. {m.group(3).lower()}, u {int(m.group(4))}.{m.group(5)}"
+
+
+def _now() -> datetime:
+    return datetime.now(ZoneInfo("Europe/Belgrade"))
+
+
+def announced(snap: dict) -> tuple[str, dict]:
+    """When the Assembly has said it goes on, and its notice, while nobody is on the air and that hour has not come
+    ("", {} otherwise): the page's line on top, and what a pasted link shows. Past the hour the notice is no news: the
+    evening of a sitting would say it goes on that morning (23 Nov 2026)."""
+    if snap.get("stanje") != "nema_prenosa":
+        return "", {}
+    newest = sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]
+    when = _resumes(newest[0].get("tekst", "")) if newest else ""
+    m = re.search(r", (\d{1,2})\. (\w+), u (\d{1,2})\.(\d{2})$", when)
+    if not m:
+        return "", {}
+    at = _now()
+    said = str(newest[0].get("od", ""))[:10]
+    try:  # the first such day from the notice's own on (a notice in December may speak of January)
+        day0 = datetime.strptime(said, "%Y-%m-%d").replace(tzinfo=at.tzinfo)
+        start = day0.replace(month=MONTHS_OF.index(m[2]) + 1, day=int(m[1]), hour=int(m[3]), minute=int(m[4]))
+        if start.date() < day0.date():
+            start = start.replace(year=start.year + 1)
+    except ValueError:
+        return "", {}
+    return (when, newest[0]) if at < start else ("", {})
+
+
+def next_item(snap: dict) -> dict | None:
+    """The item of the agenda that is next ("na redu"), when the Assembly's page says it."""
+    return next((x for x in ((snap.get("dnevni_red") or {}).get("tacke") or []) if x.get("stanje") == "na_redu"), None)
 
 
 def _group_time(snap: dict, *, cyr: bool, site: str = "") -> str:
@@ -1030,6 +1060,12 @@ self.addEventListener("pushsubscriptionchange", function (e) {{
 
 def og_text(snap: dict, *, cyr: bool, tz: ZoneInfo) -> tuple[str, str]:
     """The link preview's title and line: who is on and since when, or the sentence of the day, or what the page is."""
+    when, _ = announced(snap)
+    if when:  # before a sitting: when it goes on, what is next and what is here then (23 Nov 2026, the maintainer: not
+        # who spoke how long on the last day, which is what a link pasted before a sitting had been saying)
+        nxt = next_item(snap)
+        what = f'{_t("ag_next", cyr).capitalize()}: {_name(nxt["tekst"], cyr)}. ' if nxt else ""
+        return _fill(_t("og_goes_on", cyr), _name(when, cyr)), f'{what}{_t("og_live", cyr)}.'
     cur = snap.get("sada")
     turns = (snap.get("danas") or []) + ([cur] if snap["stanje"] == "govori" and cur else [])
     line = headline(turns, cyr=cyr, when=_when(snap, cyr)) or _t("lead", cyr)
@@ -1048,6 +1084,8 @@ def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
     title, line = og_text(snap, cyr=cyr, tz=tz)
     cur = snap.get("sada") if snap["stanje"] == "govori" else None
     mark = int(cur["od"]) if cur else f'{snap.get("dan", "")}-{len(snap.get("danas") or [])}'
+    if announced(snap)[0]:  # another picture, so another address: a service keeps a picture by its address
+        mark = f'najava-{announced(snap)[1].get("od", "")}'
     img = f'{url}{"cir/" if cyr else ""}slika.png?v={mark}'
     e = escape
     return (f'<meta property="og:type" content="website"><meta property="og:url" content="{e(url + ("cir/" if cyr else ""))}">'
