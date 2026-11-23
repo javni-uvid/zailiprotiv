@@ -21,6 +21,7 @@ from datetime import date, timedelta
 PROPERTY = "sc-domain:zailiprotiv.rs"  # the Domain property: the site, the notes and the downloads together
 SITE = "https://zailiprotiv.rs/"
 LEAST = 3
+NAMES = "^(za ili protiv|zailiprotiv|za i protiv|за или против|заилипротив|mikrofon za ili protiv)"  # searches for the site by its name
 
 
 def session():
@@ -139,8 +140,27 @@ def main(days: int, n_inspect: int = 0):
         for r in rows:
             if r["impressions"] >= LEAST:
                 print(f"  {r['impressions']:>6.0f} {r['clicks']:>5.0f} {r['position']:>6.1f}  {r['keys'][0]}")
+    by_name(http, url, days)
     if n_inspect:
         inspect(http, n_inspect)
+
+
+def by_name(http, url: str, days: int) -> None:
+    """The searches for the site by its name, day by day to the newest Google has (23 Nov 2026, the maintainer saw the
+    site for "zailiprotiv" and not for "za ili protiv"): those days are Google's first count and may still change."""
+    end = date.today()
+    body = {"startDate": (end - timedelta(days=days + 2)).isoformat(), "endDate": end.isoformat(), "type": "web", "dataState": "all",
+            "rowLimit": 500, "dimensionFilterGroups": [{"filters": [
+                {"dimension": "query", "operator": "includingRegex", "expression": NAMES}]}]}
+    for title, dims in (("by day", ["date", "query"]), ("which page", ["query", "page"]), ("from where", ["query", "country"])):
+        r = http.post(url, json={**body, "dimensions": dims})
+        if r.status_code != 200:
+            print(f"  Search Console answered {r.status_code}: {r.text[:300]}")
+            return
+        print(f"\nSearches for the site's name, {title}, to today  (shown / clicks / position)")
+        rows = [x for x in r.json().get("rows", []) if x["impressions"] >= LEAST]
+        for x in sorted(rows, key=lambda x: (x["keys"][1], x["keys"][0]) if dims[0] == "date" else (x["keys"][0], -x["impressions"])):
+            print(f"  {x['impressions']:>6.0f} {x['clicks']:>5.0f} {x['position']:>6.1f}  {'  '.join(reversed(x['keys'])) if dims[0] == 'date' else '  '.join(x['keys'])}")
 
 
 if __name__ == "__main__":
