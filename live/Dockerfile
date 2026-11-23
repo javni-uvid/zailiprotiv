@@ -18,6 +18,8 @@ ADD --chmod=644 --checksum=sha256:f1ee61be04000b50392a63442e5dd9feaea7e81dddd494
     /srv/modeli/glas.onnx
 RUN chmod -R a+rX /srv/modeli  # read by the user uzivo, not root (ulaz.sh)
 COPY src/zailiprotiv/static/fonts ./uzivo/static/fonts
+# The site's letters for the link's picture (picture.py): Pillow needs them whole, the page's are split by script
+COPY src/zailiprotiv/og ./uzivo/static/og
 # The script and styles shared with the site's mikrofon page (page._shared)
 COPY src/zailiprotiv/templates/mikrofon.js src/zailiprotiv/templates/mikrofon.css ./uzivo/static/
 # The site's Cyrillic converter (names.cyrillic), so both editions write Cyrillic alike.

@@ -10,11 +10,17 @@ from zoneinfo import ZoneInfo
 from PIL import Image, ImageDraw, ImageFont
 
 from .names import cyrillic, given_first
-from .page import (HEX, TEXT, _clock, _date, _dur, _fill, _name, _shades, _t, _when, announced, headline, leaders,
-                   next_item)
+from .page import (_WD, HEX, TEXT, _clock, _date, _dur, _name, _said_on, _shades, _short_item, _t, _when, announcement,
+                   headline, leaders, next_item)
+from .texts import MONTHS
 
 W, H, P = 1200, 630, 64
 FG, MUTED, ZA, PROTIV, LINE = "#111111", "#555555", "#1f5fa8", "#c2410c", "#d9d9d9"
+# the colours of the page's dark card that offers the mail (live.css, .ml-box), for the announcement
+DARK, ON_DARK, SOFT, SOFT_LINE = "#111318", "#ffffff", "#c9ccd3", "#3a3f4a"
+ZA_D, PROTIV_D, LIVE = "#7cc0f5", "#ff9a52", "#f87171"
+# the site's own letters, Latin and Cyrillic in one file: in the image, or in the repository when run from it
+OWN = (Path(__file__).parent / "static" / "og", Path(__file__).parents[1].parent / "src" / "zailiprotiv" / "og")
 DIRS = (Path("/usr/share/fonts/truetype/dejavu"), Path("/usr/share/fonts/dejavu"), Path("/usr/share/fonts/TTF"))
 
 
@@ -51,6 +57,17 @@ sans = lambda size: _font("DejaVuSans.ttf", size)
 bold = lambda size: _font("DejaVuSans-Bold.ttf", size)
 
 
+def _literata(weight: str, size: int) -> ImageFont.FreeTypeFont:
+    for d in OWN:
+        if (d / f"Literata-{weight}.ttf").is_file():
+            return ImageFont.truetype(str(d / f"Literata-{weight}.ttf"), size)
+    return serif(size) if weight == "Bold" else sans(size)
+
+
+lit = lambda size: _literata("Bold", size)
+lit_text = lambda size: _literata("Regular", size)
+
+
 def _fit(d: ImageDraw.ImageDraw, text: str, make, size: int, width: int, least: int = 22):
     f = make(size)
     while size > least and d.textlength(text, font=f) > width:
@@ -74,7 +91,94 @@ def _wrap(d: ImageDraw.ImageDraw, text: str, font, width: int, lines: int) -> li
     return out
 
 
+def _announcement(snap: dict, start, *, cyr: bool, host: str) -> bytes:
+    """Before a sitting: the day as a leaf of a calendar, when, what is next and what the page gives then, with a mark
+    each (23 Nov 2026, the maintainer: the link's picture to look better on Reddit). The day by its name and never
+    "sutra": a service keeps a picture past midnight. Nothing looks like a button, and the top right corner is left
+    empty, where Reddit puts its own. Drawn twice as large and scaled down, for smooth edges."""
+    k = 2
+    im = Image.new("RGB", (W * k, H * k), DARK)
+    d = ImageDraw.Draw(im)
+
+    def text(x, y, s, f, size, fill, anchor="ls"):
+        d.text((x * k, y * k), s, font=f(size * k), fill=fill, anchor=anchor)
+
+    def wide(s, f, size):
+        return d.textlength(s, font=f(size * k)) / k
+
+    def box(x0, y0, x1, y1):
+        return [x0 * k, y0 * k, x1 * k, y1 * k]
+
+    def fit(s, f, size, width, least=24):
+        while size > least and wide(s, f, size) > width:
+            size -= 2
+        return size
+
+    # the mark (favicon.svg's two arcs), the name, the address
+    d.arc(box(P, 44, P + 60, 104), start=180, end=300, fill=ZA_D, width=14 * k)
+    d.arc(box(P, 44, P + 60, 104), start=314, end=360, fill=PROTIV_D, width=14 * k)
+    x = P + 78
+    for word, color in ((("За", ZA_D), (" или ", ON_DARK), ("Против", PROTIV_D)) if cyr else
+                        (("Za", ZA_D), (" ili ", ON_DARK), ("Protiv", PROTIV_D))):
+        text(x, 76, word, lit, 40, color)
+        x += wide(word, lit, 40)
+    if host:
+        text(x + 26, 76, host, lit_text, 28, SOFT)
+    # the leaf
+    x0, y0, x1, y1 = P, 136, P + 270, 444
+    d.rounded_rectangle(box(x0, y0, x1, y1), radius=24 * k, fill="#ffffff")
+    d.rounded_rectangle(box(x0, y0, x1, y0 + 84), radius=24 * k, fill=ZA_D)
+    d.rectangle(box(x0, y0 + 48, x1, y0 + 84), fill=ZA_D)
+    mid = (x0 + x1) / 2
+    text(mid, y0 + 43, _name(_WD[start.weekday()], cyr).upper(), lit, 46, DARK, "mm")
+    text(mid, y0 + 164, str(start.day), lit, 142, DARK, "mm")
+    text(mid, y0 + 264, _name(MONTHS[start.month - 1][:3], cyr).upper(), lit, 42, MUTED, "mm")
+    # when, and what is next
+    left = x1 + 56
+    room = W - P - left
+    rows = [_t("og_sitting", cyr), _said_on(start, cyr).split(" ", 1)[1]]  # "u utorak u 10 h", never broken inside
+    size = min(fit(r, lit, 78, room) for r in rows)
+    y = 216
+    for row in rows:
+        text(left, y, row, lit, size, ON_DARK)
+        y += 90
+    nxt = next_item(snap)
+    if nxt:
+        y -= 14
+        text(left, y, _t("ag_next", cyr).capitalize() + ":", lit_text, 30, SOFT)
+        for row in _wrap(d, _short_item(nxt, cyr), lit_text(32 * k), room * k, 2):
+            y += 44
+            text(left, y, row, lit_text, 32, ON_DARK)
+    # what the page gives, with a mark each
+    d.rectangle(box(P, 486, W - P, 488), fill=SOFT_LINE)
+    bits = [_t(key, cyr) for key in ("og_follow", "og_listen", "og_mail")]
+    size = 34
+    while size > 24 and sum(wide(b, lit, size) + 62 for b in bits) > W - 2 * P - 60:
+        size -= 1
+    gap = (W - 2 * P - sum(wide(b, lit, size) + 62 for b in bits)) / 2
+    x, cy = P, 552
+    for n, b in enumerate(bits):
+        if n == 0:  # on the air
+            d.ellipse(box(x + 8, cy - 14, x + 36, cy + 14), fill=LIVE)
+        elif n == 1:  # headphones
+            d.arc(box(x + 2, cy - 22, x + 42, cy + 22), start=180, end=360, fill=ZA_D, width=5 * k)
+            for ex in (x, x + 32):
+                d.rounded_rectangle(box(ex, cy - 3, ex + 12, cy + 20), radius=5 * k, fill=ZA_D)
+        else:  # an envelope
+            d.rounded_rectangle(box(x, cy - 16, x + 44, cy + 16), radius=4 * k, outline=PROTIV_D, width=4 * k)
+            d.line([(a * k, c * k) for a, c in ((x + 3, cy - 13), (x + 22, cy + 4), (x + 41, cy - 13))],
+                   fill=PROTIV_D, width=4 * k)
+        text(x + 58, cy, b, lit, size, ON_DARK, "lm")
+        x += wide(b, lit, size) + 62 + gap
+    out = io.BytesIO()
+    im.resize((W, H), Image.LANCZOS).save(out, "PNG", optimize=True)
+    return out.getvalue()
+
+
 def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
+    when, _, start = announcement(snap)
+    if when:  # before a sitting: the announcement alone, no figures of the last day (23 Nov 2026)
+        return _announcement(snap, start, cyr=cyr, host=host)
     im = Image.new("RGB", (W, H), "#ffffff")
     d = ImageDraw.Draw(im)
     x = P
@@ -88,24 +192,7 @@ def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
     turns = (snap.get("danas") or []) + ([cur] if cur else [])
     line = headline(turns, cyr=cyr, when=_when(snap, cyr))
     y = 150
-    when = announced(snap)[0]
-    if when:  # before a sitting: the announcement alone, no figures of the last day (23 Nov 2026)
-        d.text((P, y + 9), _t("og_head", cyr).upper(), font=bold(24), fill=MUTED, anchor="lm")
-        f = serif(58)  # the day and the hour on one line
-        rows = _wrap(d, _fill(_t("og_goes_on", cyr), _name(when, cyr)), f, W - 2 * P, 3)
-        for i, row in enumerate(rows):
-            d.text((P, y + 48 + i * 78), row, font=f, fill=FG)
-        nxt = next_item(snap)
-        y2 = y + 48 + len(rows) * 78 + 30
-        if nxt:
-            text = f'{_t("ag_next", cyr).capitalize()}: {_name(nxt["tekst"], cyr)}'
-            for i, row in enumerate(_wrap(d, text, sans(32), W - 2 * P, 2)):
-                d.text((P, y2 + i * 44), row, font=sans(32), fill=MUTED)
-        d.rectangle((P, 534, W - P, 535), fill=LINE)
-        text = _t("og_live", cyr)
-        d.text((P, 572), text, font=_fit(d, text, bold, 32, W - 2 * P), fill=FG, anchor="lm")
-        turns = []
-    elif cur:
+    if cur:
         d.ellipse((P, y - 2, P + 22, y + 20), fill=PROTIV)
         d.text((P + 36, y + 9), _t("sh_head", cyr).upper(), font=bold(24), fill=MUTED, anchor="lm")
         name = _name(given_first(cur["ime"]), cyr)

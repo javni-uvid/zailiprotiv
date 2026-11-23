@@ -453,6 +453,13 @@ def _said_soon(start: datetime, cyr: bool) -> str:
     days = (start.date() - _now().date()).days
     if days <= 1:
         return _name(_fill(TEXT["st_today" if days <= 0 else "st_tomorrow"], hour), cyr)
+    return _said_on(start, cyr)
+
+
+def _said_on(start: datetime, cyr: bool) -> str:
+    """The same by the day's name or date alone, for what is kept past midnight (the link's picture)."""
+    hour = f"{start.hour}\u00a0h" if not start.minute else f"{start.hour}.{start.minute:02d}\u00a0h"
+    days = (start.date() - _now().date()).days
     on = _WD_ON[start.weekday()] if days < 7 else f"{start.day}. {MONTHS_OF[start.month - 1]}"
     return _name(_fill(TEXT["st_day"], on, hour), cyr)
 
@@ -1126,7 +1133,7 @@ def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
     cur = snap.get("sada") if snap["stanje"] == "govori" else None
     mark = int(cur["od"]) if cur else f'{snap.get("dan", "")}-{len(snap.get("danas") or [])}'
     if announced(snap)[0]:  # another picture, so another address: a service keeps a picture by its address
-        mark = f'najava-{announced(snap)[1].get("od", "")}'
+        mark = f'najava2-{announced(snap)[1].get("od", "")}'
     img = f'{url}{"cir/" if cyr else ""}slika.png?v={mark}'
     e = escape
     return (f'<meta property="og:type" content="website"><meta property="og:url" content="{e(url + ("cir/" if cyr else ""))}">'
