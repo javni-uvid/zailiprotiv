@@ -66,7 +66,7 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   look in its box). `tests/test_pretplata.py` runs the worker's own code in Node against a table in memory.
 - **The card that offers the mail stands out, and shows what it offers** (23 Nov 2026, the maintainer: "ulepšaj i izrazi
   karticu … želeo bih da bude deo objave"). A dark card in either theme with colours of its own, the one thing on the
-  page that asks something of the reader: "Cela sednica u jednom mejlu", the maintainer's three lines with the mail's
+  page that asks something of the reader: "Dan u Skupštini, u jednom mejlu" (a sitting has many days), the maintainer's three lines with the mail's
   own marks (a decision, a warning, a speaker), the address and one button; `#mejl` leads straight to it. "Pogledaj
   primer" (`/mejl/primer`, `/cir/mejl/primer`) is the last day's mail by the same code, public once its summary is,
   with a line on top that it is a sample and that a model writes the summary; with a word in two scripts there is none.

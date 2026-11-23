@@ -123,7 +123,7 @@ TEXT = {
     "add_ios": "Na iPhone-u: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
                "obavesti kad sednica počne.",
     "ml_kicker": "Sažetak dana na mejl",
-    "ml_title": "Cela sednica u jednom mejlu",
+    "ml_title": "Dan u Skupštini, u jednom mejlu",
     "ml_1": "šta je odlučeno",
     "ml_2": "ko je dobio opomenu",
     "ml_3": "ko je šta rekao",
