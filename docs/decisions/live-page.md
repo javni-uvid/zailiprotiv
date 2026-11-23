@@ -218,3 +218,8 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   Literata, the site's own letters (`src/zailiprotiv/og`, now in the image); the other pictures keep DejaVu. The day
   by its name, never "sutra", since a service keeps a picture past midnight; nothing looks like a button; the top right
   corner is empty, where Reddit puts its own. The address is `?v=najava2-…`: a new look needs a new one.
+- **The announcement's picture stands in its middle** (23 Nov 2026, the maintainer, on the first post with it: Reddit's app
+  shows a link with a small picture cut to the middle, and the leaf's "U" and "2" were gone). Everything is between
+  x = 196 and 1004 of the 1200, in larger letters and fewer words ("Skupština / u utorak u 10 h"; "Uživo", "Slušanje",
+  "Mejl"), the marks from the left, since the bottom right is under the app's own. Changes the words of the entry
+  above; `?v=najava3-…`.

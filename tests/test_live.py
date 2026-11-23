@@ -2017,7 +2017,7 @@ def test_before_a_sitting_a_pasted_link_announces_it_and_past_the_hour_it_does_n
                     "Uživo: ko govori, opomene, glasanja i snimak svakog govora.")
     assert "Скупштина наставља са радом у уторак" in page.og_text(snap, cyr=True, tz=TZ)[0]
     before = page._og(snap, cyr=False, url="https://mikrofon.zailiprotiv.rs/", tz=TZ)
-    assert "slika.png?v=najava2-2026-11-20" in before and "Najviše vremena" not in before
+    assert "slika.png?v=najava3-2026-11-20" in before and "Najviše vremena" not in before
     a = picture.render(snap, cyr=False, tz=TZ, host="mikrofon.zailiprotiv.rs")
     assert a[:8] == b"\x89PNG\r\n\x1a\n" and picture.render(snap, cyr=True, tz=TZ) != a
     monkeypatch.setattr(page, "_now", lambda: datetime(2026, 11, 24, 10, 0, tzinfo=TZ))
