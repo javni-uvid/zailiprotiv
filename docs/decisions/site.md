@@ -302,3 +302,8 @@ show otherwise, unlike the six principles above). A change to a page is checked 
 - **"Podrži" on top, and a card worth a look** (22 Nov 2026, the maintainer): the header's tools have "Podrži" (a heart,
   its word on a wide screen) beside the search; the home page's card has the site's mark, the promise (free, no ads,
   nothing from others), a button and the amounts, with no colour but the mark's (design rule 2).
+- **"Podrži": who makes the site, and what it costs** (23 Nov 2026, the maintainer's request and photos): the page
+  names the maintainer with his photo and the cat Časlav's (part of every gift buys his food), and lists what the money
+  pays for, with a figure only where it is known (Cloudflare's 5 $ a month). The photos are cut so that no screen's
+  text shows (another person's name was on one) and saved anew, without their metadata (place, phone). Every mail of
+  the day's summary ends with one line asking for support; nothing is locked behind it (the maintainer's decision).

@@ -330,7 +330,8 @@ ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", 
 # The files copied as they are from static/ to the site's root (glasaj.js comes with the quiz's pages). PNGs: Google
 # Search doesn't take an SVG favicon.
 STATIC_FILES = ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js",
-                "favicon-96.png", "apple-touch-icon.png", "logo.png")
+                "favicon-96.png", "apple-touch-icon.png", "logo.png",
+                "marko.jpg", "caslav.jpg")  # the two on the page "Podrži" (23 Nov 2026, the maintainer's)
 VERSIONED = ("style.css", "site.js", "pretraga.js", "glas.js", "listic.js", "glasaj.js")
 
 

@@ -1240,3 +1240,11 @@ main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone u
   html[lang="sr-Cyrl"] .top nav:has(.nav-live) { font-size: clamp(.64rem, 3.05vw, .95rem); }
   .top nav .nav-live { gap: .3rem; }
 }
+/* "Podrži": who makes the site, and what the money pays for (23 Nov 2026) */
+.who { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.2rem 1.6rem; align-items: center; margin: 1.6rem 0; }
+.who h2 { margin-top: 0; }
+.who-pics { display: flex; gap: .8rem; }
+.who-pics figure { margin: 0; text-align: center; font-size: var(--t-2); color: var(--muted); }
+.who-pics img { display: block; width: 8.5rem; height: 8.5rem; max-width: 100%; border-radius: 50%; object-fit: cover; margin-bottom: .35rem; }
+@media (max-width: 640px) { .who { grid-template-columns: 1fr; } .who-pics { justify-content: center; } }
+.costs { padding-left: 1.2rem; } .costs li { margin: .35rem 0; } .costs .num { white-space: nowrap; font-weight: 600; }

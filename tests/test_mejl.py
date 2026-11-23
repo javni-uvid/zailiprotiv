@@ -106,3 +106,9 @@ def test_the_mail_says_who_and_which_list_from_the_list_and_nothing_of_a_model()
 
 def test_a_word_in_two_scripts_is_caught():
     assert mejl.mixed_words("Čupić je iznео načela, a izneo ih je jasno.") == ["iznео"]
+
+
+def test_every_mail_asks_for_support_in_one_line_and_locks_nothing():
+    m = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL)
+    assert m.html.count("https://zailiprotiv.rs/podrzi") == 1 and "Podrži ga" in m.text
+    assert "https://zailiprotiv.rs/cir/podrzi" in mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, cyr=True).html
