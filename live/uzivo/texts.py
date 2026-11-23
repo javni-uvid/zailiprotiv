@@ -13,7 +13,8 @@ TEXT = {
     "status_live": "Uživo",
     "status_off": "Ne zaseda",
     "goes_on": "Skupština nastavlja sa radom %1.",
-    "h1": "Skupština uživo",
+    "h1": "Za ili Protiv: Jutrić, Kafica, Skupštinica",
+    "title_tail": "Skupština uživo",  # the words people search for, after the name in the tab's title
     "st_today": "Sednica danas u %1",
     "st_tomorrow": "Sednica sutra u %1",
     "st_day": "Sednica %1 u %2",

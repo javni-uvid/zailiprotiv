@@ -1293,7 +1293,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{t("title")} · {"За или Против" if cyr else "Za ili Protiv"}</title>
+<title>{t("h1")} · {t("title_tail")}</title>
 <meta name="description" content="{t("lead")}">
 {alt}
 {_og(snap, cyr=cyr, url=url, tz=tz)}
