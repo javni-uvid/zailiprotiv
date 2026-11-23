@@ -309,13 +309,14 @@ def test_harsh_words_are_counted_in_their_sentence_and_everyday_words_are_not():
 
 
 def test_portraits_are_read_from_the_list_of_mps():
-    from zailiprotiv import mps, photos
+    from zailiprotiv import members, mps, photos
     html = ('<a href="https://www.parlament.gov.rs/NENAD_ABRAMOVI%C4%86.1435.891.html"><a name="x"></a></a>'
             '<img src="/upload/thumbs/images/archive/photo/poslanici/14_saziv/288-Nenad_Abramovic_150x0.jpg">'
             '<a href="/NENAD_ABRAMOVIĆ.1435.891.html">ABRAMOVIĆ NENAD</a><img src="/images/logo.png">')
     found = photos.parse(html)
     assert list(found) == ["1435"] and found["1435"]["src"].endswith("288-Nenad_Abramovic_150x0.jpg")
     assert photos.key(found["1435"]["name"]) == mps.key("АБРАМОВИЋ НЕНАД")
+    assert photos.key("DRAGANA ŽIVKOVIĆ - OBRADOVIĆ") == members.key("ЖИВКОВИЋ-ОБРАДОВИЋ ДРАГАНА", "15")  # one surname of two
 
 
 def test_a_measure_without_a_name_is_placed_by_context_only_when_the_notes_show_whom():
@@ -980,3 +981,17 @@ def test_a_change_of_markup_alone_tells_the_search_engines_nothing(tmp_path, mon
     assert run("<p>\n  x", "y") == []
     assert run("x", "z") == [urls[1]]
     assert run('<a href="q">x</a>', "z") == [urls[0]]
+
+
+def test_the_support_pages_uses_are_known_to_the_counter_and_say_nothing_of_who():
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    js = (root / "src/zailiprotiv/static/site.js").read_text(encoding="utf-8")
+    worker = (root / "worker/worker.js").read_text(encoding="utf-8")
+    sent = set(re.findall(r'"(podrzi\.[a-z-]+)"', js))
+    assert sent and sent == set(re.findall(r'"(podrzi\.[a-z-]+)"', worker))  # a name the counter doesn't know is refused
+    for f, where in (("base.html", ("meni", "podnozje")), ("index.html", ("pocetna",))):
+        html = (root / "src/zailiprotiv/templates" / f).read_text(encoding="utf-8")
+        assert all(f'data-don="{w}"' in html for w in where)
+    mail = (root / "live/uzivo/mejl.py").read_text(encoding="utf-8")
+    assert 'SUPPORT = "podrzi"' in mail  # the same address for every reader: the privacy page says no link is tracked

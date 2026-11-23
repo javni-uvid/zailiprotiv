@@ -19,6 +19,36 @@ document.addEventListener("click", function (e) {
   var a = e.target.closest && e.target.closest("a[href]");
   if (a && a.hostname === "mikrofon.zailiprotiv.rs") zipCount(MIK[a.getAttribute("data-mik")] || "sajt.mikrofon");
 }, true);
+// The page "Podrži" (23 Nov 2026), as the other uses: a sum per day, nothing of who. The way to it by where it was
+// taken; on it, that it was opened (and opened from the live page), the codes in view, a code's picture saved, the
+// account copied, PayPal opened.
+var DON = { meni: "podrzi.klik-meni", podnozje: "podrzi.klik-podnozje", pocetna: "podrzi.klik-pocetna" };
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest("a[data-don]");
+  if (a && DON[a.getAttribute("data-don")]) zipCount(DON[a.getAttribute("data-don")]);
+}, true);
+(function () {
+  function start() {
+    var codes = document.querySelector("#ips.support");
+    if (!codes) return;
+    zipCount("podrzi.otvori");
+    if (/^https:\/\/mikrofon\.zailiprotiv\.rs\//.test(document.referrer)) zipCount("podrzi.od-mikrofona");
+    if (window.IntersectionObserver) new IntersectionObserver(function (seen, o) {
+      if (seen.some(function (x) { return x.isIntersecting; })) { zipCount("podrzi.kod"); o.disconnect(); }
+    }, { threshold: 0.2 }).observe(codes.querySelector(".ips-codes") || codes);
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a) return;
+      if (a.hasAttribute("download") && codes.contains(a)) zipCount("podrzi.slika");
+      else if (/(^|\.)paypal\.(com|me)$/.test(a.hostname)) zipCount("podrzi.paypal");
+    }, true);
+    document.addEventListener("copy", function () {
+      var s = window.getSelection && window.getSelection(), n = s && s.anchorNode;
+      if (n && document.getElementById("nalog") && document.getElementById("nalog").contains(n)) zipCount("podrzi.kopiraj");
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
 // The parts said only in their hours (the announcement from the day before a sitting until it starts, "sutra" or
 // "danas", the strip's day until it has passed): data-show="from,to", seconds since 1970, set when the pages are built.
 (function () {

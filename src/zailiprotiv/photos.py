@@ -42,4 +42,6 @@ def parse(html: str) -> dict[str, dict]:
 
 def key(name: str) -> str:
     """The MP's key (as in the roll calls, which are in Cyrillic) from the Latin name in the page's address."""
-    return mps.key(cyr(name.title()))
+    # "DRAGANA ŽIVKOVIĆ - OBRADOVIĆ" is one surname of two, as the lists write it, "ŽIVKOVIĆ-OBRADOVIĆ" (23 Nov 2026:
+    # three portraits stood under a key no MP has)
+    return mps.key(cyr(re.sub(r"\s+[-–]\s+", "-", name).title()))
