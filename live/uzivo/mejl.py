@@ -21,6 +21,7 @@ from .names import cyrillic, given_first
 SITE = "https://zailiprotiv.rs/"
 LIVE = "https://mikrofon.zailiprotiv.rs/"
 METHOD = "kako-racunamo#sazetak-dana"
+SUPPORT = "podrzi"  # the page "Podrži"; one line in every mail (23 Nov 2026, the maintainer: a call, never a lock)
 FROM = "sazetak@zailiprotiv.rs"
 CONTACT = "kontakt@zailiprotiv.rs"
 BELGRADE = ZoneInfo("Europe/Belgrade")
@@ -77,6 +78,7 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     subject = t(f"Skupština, {weekday} {when}: " + (f"{n} {plural(n, 'odluka', 'odluke', 'odluka')}" if n else "sažetak dana"))
     prefix = "cir/" if cyr else ""
     day_page, live, method = f"{SITE}{prefix}govornici/{day.isoformat()}", f"{LIVE}{prefix}", f"{SITE}{prefix}{METHOD}"
+    support = f"{SITE}{prefix}{SUPPORT}"
     roll = roll or Roll([])
 
     def who(s: dict) -> MP:
@@ -111,7 +113,8 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
             if said:
                 lines.append(t(f"    {said}"))
         lines.append("")
-    lines += [t("Ceo dan, ko je govorio i snimci:") + " " + day_page, t("Mikrofon uživo:") + " " + live, "", "-- ",
+    lines += [t("Ceo dan, ko je govorio i snimci:") + " " + day_page, t("Mikrofon uživo:") + " " + live, "",
+              t("Za ili Protiv je besplatan i bez reklama. Podrži ga:") + " " + support, "", "-- ",
               t("Kako nastaje ovaj sažetak:") + " " + method,
               t("Dobijaš ga jer si se prijavio na mikrofon.zailiprotiv.rs.")]
     if unsubscribe:
@@ -226,6 +229,7 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
 <tr><td style="padding:0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{SOFT};border-radius:10px"><tr>{stat_cells}</tr></table></td></tr>
 {"".join(parts)}
 <tr><td style="padding:10px 0 0">{button(day_page, "Ceo dan na sajtu", True)}{button(live, "Mikrofon uživo", False)}</td></tr>
+<tr><td style="{font}font-size:14px;line-height:1.5;color:{INK};border-top:1px solid {LINE};padding:14px 0 0;margin-top:8px">{e("Za ili Protiv je besplatan i bez reklama.")} <a href="{html.escape(support)}" style="color:{INK};font-weight:bold">{e("Podrži ga →")}</a></td></tr>
 </table></td></tr>
 <tr><td style="{font}font-size:12px;line-height:1.6;color:{MUTED};padding:16px 8px 0;text-align:center">
 {" &nbsp;·&nbsp; ".join(foot)}<br>{e("Dobijaš ovaj mejl jer si se prijavio na mikrofon.zailiprotiv.rs.")}<br>{e("Za ili Protiv")} · {CONTACT}</td></tr>
