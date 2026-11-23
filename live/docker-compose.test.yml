@@ -21,6 +21,16 @@ services:
       ANALYTICS_TOKEN: ""         # the test's visits are not the site's
       PUSH_TOKEN: ""              # the test never sends the notifications
       ANTHROPIC_API_KEY: "${TEST_ANTHROPIC_API_KEY:-}"  # the test asks the model only when told to (mikrofon.ps1 test with the key)
+      # Nothing the live service alone may do: the readers' addresses and the maintainer's mail, and the bucket its
+      # listeners hear (a test once had its keys, and would have written over the live playlist). A new secret of the
+      # service is emptied here too (a test asks for it).
+      MEJL_KLJUC: ""
+      MEJL_UREDNIK: ""
+      ZVUK_R2_ENDPOINT: ""
+      ZVUK_R2_BUCKET: ""
+      ZVUK_R2_KLJUC: ""
+      ZVUK_R2_TAJNA: ""
+      ZVUK_URL: ""                # the test's listeners hear its own playlist (/slusaj/z.m3u8)
       WHISPER_THREADS: "4"        # leaves the live service its cores
       WHISPER_URL: "${WHISPER_URL-http://host.docker.internal:8178}"  # the same server as the live service (it is fast enough for both)
     volumes:
