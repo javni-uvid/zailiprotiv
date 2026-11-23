@@ -698,3 +698,8 @@ presided (not done).
   goes, and again when a word in two scripts was mended (edit `/data/sazetak/<day>.json` and restart the service,
   which keeps the summary in memory). The link works until noon (the maintainer; a day ended late reaches them at 7).
   Without `MEJL_KLJUC` no code opens anything (an empty key signed codes anyone could compute).
+- **Leaving the day's mail takes the reader's own press** (23 Nov 2026, found in a look at the code): the link in
+  every mail deleted the address when merely opened, and mail scanners open links. It is now a page with one button,
+  as the confirmation is; the mail reader's own button (List-Unsubscribe-Post) still leaves at once. The texts no
+  longer say "jednim klikom". A confirming mail that failed to go lets the address ask again (it had been told all day to
+  look in its box). `tests/test_pretplata.py` runs the worker's own code in Node against a table in memory.

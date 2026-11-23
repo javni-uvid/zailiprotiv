@@ -10,7 +10,9 @@
 //                          the live page: a mail asking to confirm, at most once a day to one address
 //   GET  /m/potvrdi?k=   → a page with one button; POST /m/potvrdi (the button) confirms. A button, not the link
 //                          itself: mail scanners open links, and a sign-up must be the reader's own
-//   GET|POST /m/odjava?i=&k= → the address is deleted at once (the link in every mail, and List-Unsubscribe)
+//   GET  /m/odjava?i=&k= → a page with one button (the link in every mail: scanners open it too, and until 23 Nov
+//                          2026 opening it deleted the address); POST deletes the address at once (the button, and
+//                          List-Unsubscribe-Post, the mail reader's own button)
 //   GET  /m/spisak       ← with the push's token: the confirmed, encrypted, with each one's unsubscribe link
 // Unconfirmed sign-ups are deleted after 48 hours (cleanup, from the scheduled run).
 
@@ -51,8 +53,10 @@ const WORDS = {
          button: "Potvrdi prijavu", not: "Ako nisi ti, ne radi ništa: bez potvrde adresu brišemo za 48 sati i više ti ne pišemo.",
          privacy: "Politika o privatnosti",
          confirmTitle: "Potvrdi prijavu", confirmText: "Jedan klik i sažetak dana stiže na tvoju adresu posle svakog dana sednice.",
-         done: "Prijava je potvrđena", doneText: "Sažetak stiže posle sledećeg dana sednice. Odjava je jednim klikom u svakom mejlu.",
+         done: "Prijava je potvrđena", doneText: "Sažetak stiže posle sledećeg dana sednice. Odjava je u svakom mejlu.",
          gone: "Link je istekao", goneText: "Prijava nije potvrđena u 48 sati ili je već potvrđena. Prijavi se ponovo na mikrofonu.",
+         fail: "Mejl nije poslat", failText: "Nismo uspeli da pošaljemo mejl za potvrdu. Probaj ponovo malo kasnije.",
+         outAsk: "Odjavi se", outAskText: "Jedan klik i tvoja adresa se briše: sažetak dana ti više ne stiže.",
          out: "Odjavljen si", outText: "Tvoja adresa je obrisana i više ti ne pišemo.",
          check: "Proveri sanduče", checkText: "Poslali smo mejl za potvrdu. Prijava važi kad klikneš na dugme u njemu.",
          bad: "Adresa nije ispravna", back: "Nazad na mikrofon" },
@@ -61,8 +65,10 @@ const WORDS = {
          button: "Потврди пријаву", not: "Ако ниси ти, не ради ништа: без потврде адресу бришемо за 48 сати и више ти не пишемо.",
          privacy: "Политика о приватности",
          confirmTitle: "Потврди пријаву", confirmText: "Један клик и сажетак дана стиже на твоју адресу после сваког дана седнице.",
-         done: "Пријава је потврђена", doneText: "Сажетак стиже после следећег дана седнице. Одјава је једним кликом у сваком мејлу.",
+         done: "Пријава је потврђена", doneText: "Сажетак стиже после следећег дана седнице. Одјава је у сваком мејлу.",
          gone: "Линк је истекао", goneText: "Пријава није потврђена у 48 сати или је већ потврђена. Пријави се поново на микрофону.",
+         fail: "Мејл није послат", failText: "Нисмо успели да пошаљемо мејл за потврду. Пробај поново мало касније.",
+         outAsk: "Одјави се", outAskText: "Један клик и твоја адреса се брише: сажетак дана ти више не стиже.",
          out: "Одјављен си", outText: "Твоја адреса је обрисана и више ти не пишемо.",
          check: "Провери сандуче", checkText: "Послали смо мејл за потврду. Пријава важи кад кликнеш на дугме у њему.",
          bad: "Адреса није исправна", back: "Назад на микрофон" },
@@ -145,8 +151,9 @@ export async function handle(request, env, path, from, same) {
     const mail = confirmMail(w, `${SELF}/m/potvrdi?k=${token}`);
     try {
       await env.MEJL.send({ from: FROM, to: address, replyTo: REPLY, subject: w.subject, html: mail.html, text: mail.text });
-    } catch (e) {
-      return b.json ? json({ error: "slanje", code: String((e && e.code) || "") }, 502) : page(w, w.bad, "", "");
+    } catch (e) {  // it did not go: the same address may ask again at once, not be told all day that it went
+      await env.DB.prepare("UPDATE mejl SET poslato = NULL WHERE kljuc = ?").bind(key).run();
+      return b.json ? json({ error: "slanje", code: String((e && e.code) || "") }, 502) : page(w, w.fail, w.failText, "");
     }
     return answer();
   }
@@ -165,8 +172,12 @@ export async function handle(request, env, path, from, same) {
     const id = url.searchParams.get("i") || "", k = url.searchParams.get("k") || "";
     const row = /^[0-9a-f]{24}$/.test(id) ? await env.DB.prepare("SELECT cir FROM mejl WHERE id = ?").bind(id).first() : null;
     const w = row && row.cir ? WORDS.cir : WORDS.lat;
-    if (row && env.SALT && k === (await sha(env.SALT + "|odjava|" + id)).slice(0, 32)) await env.DB.prepare("DELETE FROM mejl WHERE id = ?").bind(id).run();
-    if (request.method === "POST") return new Response(null, { status: 204 });  // the mail reader's own button
+    const valid = row && env.SALT && k === (await sha(env.SALT + "|odjava|" + id)).slice(0, 32);
+    if (request.method !== "POST")
+      return valid ? page(w, w.outAsk, w.outAskText, `<form method="post" action="/m/odjava?i=${id}&amp;k=${k}"><input type="hidden" name="strana" value="1"><button>${esc(w.outAsk)}</button></form>`)
+        : page(w, w.out, w.outText, "");  // no such row: already gone
+    if (valid) await env.DB.prepare("DELETE FROM mejl WHERE id = ?").bind(id).run();
+    if (!(await form(request)).strana) return new Response(null, { status: 204 });  // the mail reader's own button
     return page(w, w.out, w.outText, "");
   }
   if (path === "/m/spisak" && request.method === "GET") {
