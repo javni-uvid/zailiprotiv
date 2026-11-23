@@ -184,6 +184,84 @@ def test_the_days_mail_goes_until_noon_the_next_day():
     assert pretplata.deadline(DAY).isoformat()[:16] == "2026-11-25T12:00"
 
 
+WORKER = r"""
+import { handle } from %(module)s;
+// the table `mejl` in memory: only the statements the worker makes
+const rows = [];
+const DB = { prepare: (sql) => ({ bind: (...a) => ({
+  first: async () => {
+    if (sql.includes("WHERE kljuc = ?")) return rows.find((r) => r.kljuc === a[0]) || null;
+    if (sql.includes("WHERE kod = ?")) return rows.find((r) => r.kod === a[0] && !r.potvrda) || null;
+    if (sql.includes("WHERE id = ?")) return rows.find((r) => r.id === a[0]) || null;
+    throw new Error(sql);
+  },
+  run: async () => {
+    if (sql.startsWith("INSERT INTO mejl")) { const [id, kljuc, adresa, cir, prijava, kod, poslato] = a; rows.push({ id, kljuc, adresa, cir, prijava, kod, poslato, potvrda: null }); }
+    else if (sql.startsWith("UPDATE mejl SET poslato = NULL")) rows.find((r) => r.kljuc === a[0]).poslato = null;
+    else if (sql.startsWith("UPDATE mejl SET kod = ?")) Object.assign(rows.find((r) => r.id === a[4]), { kod: a[0], poslato: a[1], prijava: a[2], cir: a[3] });
+    else if (sql.startsWith("UPDATE mejl SET potvrda")) Object.assign(rows.find((r) => r.id === a[1]), { potvrda: a[0], kod: null });
+    else if (sql.startsWith("DELETE FROM mejl WHERE id")) rows.splice(rows.findIndex((r) => r.id === a[0]), 1);
+    else throw new Error(sql);
+  },
+  all: async () => ({ results: rows.filter((r) => r.potvrda) }) }),
+  all: async () => ({ results: rows.filter((r) => r.potvrda) }) }) };
+const mails = [];
+let broken = false;
+const env = { DB, SALT: "so", PUSH_TOKEN: "t", MEJL_JAVNI: process.argv[1],
+              MEJL: { send: async (m) => { if (broken) throw Object.assign(new Error("x"), { code: "E_X" }); mails.push(m); } } };
+const LIVE = "https://mikrofon.zailiprotiv.rs", SELF = "https://glasovi.zailiprotiv.rs";
+const same = async (a, b) => a === b;
+const ask = (path, method = "GET", body, headers = {}) => {
+  const req = new Request(SELF + path, { method, body, headers: { "content-type": "application/x-www-form-urlencoded", ...headers } });
+  return handle(req, env, new URL(req.url).pathname, headers.origin || "", same);
+};
+const sign = () => ask("/m", "POST", "adresa=citalac%%40primer.rs&js=1", { origin: LIVE });
+const out = {};
+broken = true;
+out.failed = (await sign()).status;
+broken = false;
+out.again = (await sign()).status;
+out.mails = mails.length;
+out.twice = (await sign(), mails.length);
+const confirm = mails[0].text.match(/\/m\/potvrdi\?k=[0-9a-f]+/)[0];
+await ask(confirm);
+out.opened = rows[0].potvrda;
+await ask("/m/potvrdi", "POST", "k=" + confirm.split("k=")[1]);
+out.confirmed = !!rows[0].potvrda;
+const list = await (await ask("/m/spisak", "GET", undefined, { authorization: "Bearer t" })).json();
+out.refused = (await ask("/m/spisak", "GET", undefined, { authorization: "Bearer x" })).status;
+const leave = list.primaoci[0].odjava.replace(SELF, "");
+const page = await (await ask(leave)).text();
+out.scanned = rows.length;                         // a scanner opened the link
+out.button = /<form method="post" action="\/m\/odjava\?i=[0-9a-f]{24}&amp;k=[0-9a-f]{32}">/.test(page);
+await ask(leave.slice(0, -1) + (leave.endsWith("0") ? "1" : "0"), "POST", "strana=1");
+out.forged = rows.length;
+const gone = await ask(leave, "POST", "strana=1");
+out.left = [gone.status, rows.length, (await gone.text()).includes("Odjavljen si")];
+await sign();
+await ask(mails.at(-1).text.match(/\/m\/potvrdi\?k=[0-9a-f]+/)[0].split("?")[0], "POST", "k=" + mails.at(-1).text.match(/potvrdi\?k=([0-9a-f]+)/)[1]);
+const next = (await (await ask("/m/spisak", "GET", undefined, { authorization: "Bearer t" })).json()).primaoci[0].odjava.replace(SELF, "");
+out.oneclick = [(await ask(next, "POST", "List-Unsubscribe=One-Click")).status, rows.length];
+console.log(JSON.stringify(out));
+"""
+
+
+@pytest.mark.skipif(not shutil.which("node"), reason="needs Node, as the worker's code is JavaScript")
+def test_signing_up_confirming_and_leaving_by_the_workers_own_code():
+    script = WORKER % {"module": json.dumps((ROOT / "worker" / "mejl.js").as_uri())}
+    ran = subprocess.run(["node", "--input-type=module", "-e", script, json.dumps(pretplata.public_jwk(KEY))],
+                         capture_output=True, text=True, encoding="utf-8")
+    assert ran.returncode == 0, ran.stderr
+    out = json.loads(ran.stdout)
+    assert out["failed"] == 502 and out["again"] == 200 and out["mails"] == 1  # a mail that did not go: asked again
+    assert out["twice"] == 1  # one that went: once a day to one address
+    assert out["opened"] is None and out["confirmed"] and out["refused"] == 403
+    assert out["scanned"] == 1 and out["button"]  # the link opened leaves the reader on the list
+    assert out["forged"] == 1
+    assert out["left"] == [200, 0, True]
+    assert out["oneclick"] == [204, 0]  # the mail reader's own button
+
+
 def test_the_worker_serves_sign_up_confirmation_and_unsubscription():
     js = (ROOT / "worker" / "worker.js").read_text(encoding="utf-8")
     assert 'import * as mejl from "./mejl.js"' in js and "mejl.cleanup(env)" in js and "mejl: await mejl.count(env)" in js

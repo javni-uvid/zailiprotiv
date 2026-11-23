@@ -118,7 +118,7 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
               t("Kako nastaje ovaj sažetak:") + " " + method,
               t("Dobijaš ga jer si se prijavio na mikrofon.zailiprotiv.rs.")]
     if unsubscribe:
-        lines.append(t("Odjava jednim klikom:") + " " + unsubscribe)
+        lines.append(t("Odjava:") + " " + unsubscribe)
     lines.append(t("Za ili Protiv") + f", {CONTACT}")
     text = "\n".join(lines) + "\n"
 

@@ -126,7 +126,7 @@ TEXT = {
     "ml_button": "Prijavi me",
     "ml_done": "Poslali smo mejl za potvrdu. Prijava važi kad klikneš na dugme u njemu.",
     "ml_err": "Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.",
-    "ml_fine": "Bez praćenja, odjava jednim klikom.",
+    "ml_fine": "Bez praćenja, odjava u svakom mejlu.",
     "ml_privacy": "Politika o privatnosti",
     "nt_on": "Obavesti me kad sednica počne",
     "nt_done": "Obaveštenje stiže kad prenos sednice počne; kod nas ostaje samo adresa za njega.",
