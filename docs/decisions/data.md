@@ -208,7 +208,8 @@ Left to do: give the Fourteenth its "archive" and archived "laws" pages once the
 issue #7 once the Fifteenth is current.
 
 - **The home page for a new convocation** (19 Nov 2026, shown to the maintainer before it went out). The headline is
-  "Svaki glas i svaka reč iz Skupštine" (his choice of four). While the newest convocation has passed no law
+  "Svaki glas i svaka reč iz Skupštine" (his choice of four). Since 23 Nov 2026 "Za ili Protiv:
+  svaki glas i svaka reč iz Skupštine" (the maintainer's decision): Google titles the page by its h1, which had no name in it. While the newest convocation has passed no law
   (`newer` in `site.py`), a block right under the search, across the page (first on a phone): how many MPs and how
   many with no vote since 2012, the seats by group in the groups' colours (`site.GROUP_COLOURS`, the live page's
   hues: the second place the exception to "colour only for za and protiv" holds), the five longest on the floor by

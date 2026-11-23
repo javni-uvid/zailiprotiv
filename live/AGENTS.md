@@ -56,3 +56,8 @@ that file in the same commit, and here only when a line below no longer holds.
 description was the player's note ("Snimak iz arhive … učitava se tek na klik"): that note is `data-nosnippet`, so
 the page's own description stands. Its name was the address: the home says it as schema.org WebSite ("Mikrofon Za
 ili Protiv", which people search for; Latin home only, as on the site).
+
+**The live page's heading has the name** (23 Nov 2026, the maintainer: "moramo i mikrofon istaći isto"): "Za ili
+Protiv: Jutrić, Kafica, Skupštinica", the maintainer's words, as the h1 and first in the tab's title, which keeps
+"Skupština uživo" after it (what people search for: the decision of 22 Nov on the title). Google titles a page by its
+h1 as well as its title. The link's preview and the description say what they said.
