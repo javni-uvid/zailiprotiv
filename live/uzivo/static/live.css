@@ -291,10 +291,24 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .gt-bar { height: .8rem; border-radius: 4px; background: color-mix(in srgb, var(--fg) 8%, transparent); overflow: hidden; } .gt-bar i { display: block; height: 100%; }
 .gt-n { margin: .3rem 0 0; font-size: var(--t-2); font-variant-numeric: tabular-nums; } .gt-n b { font-weight: 650; }
 .gt-how { margin: .9rem 0 0; font-size: var(--t-1); line-height: 1.45; max-width: 46rem; }
-/* "Sažetak dana na mejl" (23 Nov 2026): beside the notification's offer, the same order on the page */
-.ml-box { order: 36; margin: 1.2rem 0 0; border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+/* "Sažetak dana na mejl" (23 Nov 2026): a dark card in either theme, with colours of its own, as the one thing on the
+   page that asks something of the reader; the list's marks are the mail's (a decision, a warning, a speaker) */
+.ml-box { --ml-bg: #111318; --ml-fg: #ffffff; --ml-soft: #c9ccd3; --ml-line: #3a3f4a; --ml-go: #7cc0f5; --ml-dot: #ff9a52; --ml-stop: #f87171;
+  order: 36; margin: 1.4rem 0 0; border-radius: 14px; padding: 1.3rem 1.25rem 1.15rem; background: var(--ml-bg); color: var(--ml-fg); border: 1px solid var(--ml-line); scroll-margin-top: 1rem; }
+@media (prefers-color-scheme: dark) { .ml-box { --ml-bg: #222834; } }
 main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
-.ml-box h2 { font-size: var(--t-4); margin: 0 0 .2rem; } .ml-box p { margin: .3rem 0; } .ml-box label { font-weight: 600; font-size: var(--t-2); }
-.ml-row { display: flex; flex-wrap: wrap; gap: .5rem; margin: .3rem 0; }
-.ml-row input[type=email] { flex: 1 1 14rem; min-width: 0; font: inherit; padding: .5rem .6rem; border: 1px solid var(--muted); border-radius: 6px; background: var(--bg); color: var(--fg); }
-.ml-row .add-btn { min-height: 2.75rem; } .ml-done { color: var(--ok); font-weight: 600; } .ml-fine { font-size: var(--t-1); }
+.ml-k { margin: 0; font-size: var(--t-1); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ml-go); }
+.ml-box h2 { font-size: var(--t-7); line-height: 1.15; margin: .25rem 0 .7rem; color: inherit; text-wrap: balance; } .ml-box a { color: inherit; } .ml-box a:hover { color: var(--ml-go); }
+.ml-list { list-style: none; margin: 0 0 .7rem; padding: 0; display: grid; gap: .3rem; font-size: var(--t-4); }
+.ml-list li { display: grid; grid-template-columns: .8rem 1fr; gap: .7rem; align-items: center; }
+.ml-list li::before { content: ""; width: .7rem; height: .7rem; border-radius: 50%; background: var(--ml-fg); }
+.ml-list li:nth-child(2)::before { border-radius: 2px; background: var(--ml-stop); } .ml-list li:nth-child(3)::before { background: none; border: 2px solid var(--ml-dot); box-sizing: border-box; }
+.ml-when { margin: 0 0 .9rem; color: var(--ml-soft); font-size: var(--t-3); } .ml-see { font-weight: 650; white-space: nowrap; }
+.ml-box label { display: block; font-weight: 600; font-size: var(--t-2); margin-bottom: .3rem; }
+.ml-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ml-row[hidden], .ml-box [hidden] { display: none; }
+.ml-row input[type=email] { flex: 1 1 14rem; min-width: 0; min-height: 3rem; font: inherit; padding: .5rem .8rem; border: 1px solid var(--ml-fg); border-radius: 8px; background: #fff; color: #111; }
+.ml-go { flex: 0 1 auto; min-height: 3rem; font: inherit; font-weight: 700; padding: .5rem 1.4rem; border: 0; border-radius: 8px; background: var(--ml-go); color: #111; cursor: pointer; } .ml-go:hover { filter: brightness(1.08); } .ml-go[disabled] { opacity: .6; cursor: default; }
+.ml-row input:focus-visible, .ml-go:focus-visible, .ml-box a:focus-visible { outline: 3px solid var(--ml-go); outline-offset: 2px; }
+.ml-done { margin: .2rem 0 0; font-weight: 650; color: #86efac; } .ml-err { margin: .6rem 0 0; color: #fca5a5; } .ml-fine { margin: .8rem 0 0; font-size: var(--t-1); color: var(--ml-soft); }
+@media (max-width: 480px) { .ml-go { flex: 1 1 100%; } }

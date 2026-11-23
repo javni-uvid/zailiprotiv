@@ -59,7 +59,9 @@ def mixed_words(text: str) -> list[str]:
 
 def _minutes(seconds: int) -> str:
     m = round(seconds / 60)
-    return f"{m} min" if m else ""
+    if m < 60:
+        return f"{m} min" if m else ""
+    return f"{m // 60} h" + (f" {m % 60} min" if m % 60 else "")
 
 
 def build(day: date, summary: dict, measures: list[Measure] | None = None, roll: Roll | None = None,

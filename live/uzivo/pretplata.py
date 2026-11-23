@@ -252,6 +252,21 @@ def day_mail(tracker):
     return build
 
 
+def sample(build, day: date, cyr: bool) -> str:
+    """A day's mail as a page, with what it is said on top ("" when there is none, or it may go to nobody)."""
+    from .names import cyrillic
+    from .texts import TEXT
+    m = build(day, cyr, "")
+    if m is None or mejl.mixed_words(m.text):
+        return ""
+    t = (lambda k: escape(cyrillic(TEXT[k]))) if cyr else (lambda k: escape(TEXT[k]))
+    home = "/cir/#mejl" if cyr else "/#mejl"
+    top = (f'<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;padding:12px 16px;'
+           f'background:#111318;color:#ffffff;text-align:center">{t("ml_sample_top")} '
+           f'<a href="{home}" style="color:#7cc0f5;font-weight:bold;white-space:nowrap">{t("ml_sample_back")} →</a></div>')
+    return _with_top(m.html, top)
+
+
 _PAGE = """<!doctype html><html lang="sr-Latn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>Sažetak dana: slanje</title><style>body{{margin:0;background:#eef0f3;color:#111;
 font:16px/1.55 system-ui,sans-serif}}main{{max-width:30rem;margin:12vh auto 0;background:#fff;border-top:4px solid #111;

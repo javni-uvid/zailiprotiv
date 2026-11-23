@@ -280,7 +280,7 @@ def test_the_live_page_offers_the_mail_and_the_form_works_without_the_script():
     snap = Tracker(None).snapshot()
     html = page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"),
                      api="https://glasovi.zailiprotiv.rs")
-    assert '<form class="ml-box" method="post" action="https://glasovi.zailiprotiv.rs/m">' in html
+    assert '<form class="ml-box" id="mejl" method="post" action="https://glasovi.zailiprotiv.rs/m">' in html
     assert 'name="adresa"' in html and 'name="pismo" value="lat"' in html and "https://zailiprotiv.rs/privatnost" in html
     assert "<form class=\"ml-box\"" not in page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
     cyr = page.page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"), api="https://glasovi.zailiprotiv.rs")
@@ -302,3 +302,28 @@ def test_the_site_publishes_each_mps_name_and_party_for_the_mail():
     assert "stranka" not in out["kamberi-saip"]
     roll = pretplata.roll_of(out)
     assert roll.one("Pastor Balint").label == "SVM-VMSZ" and roll.one("Kamberi Šaip").label == "van poslaničkih grupa"
+
+
+def test_the_card_shows_the_mails_three_parts_and_a_sample_only_when_there_is_one():
+    from zoneinfo import ZoneInfo
+
+    from uzivo import page
+    from uzivo.state import Tracker
+    tz, snap = ZoneInfo("Europe/Belgrade"), Tracker(None).snapshot()
+    kw = dict(site="https://zailiprotiv.rs/", tz=tz, api="https://glasovi.zailiprotiv.rs")
+    html = page.page(snap, cyr=False, sample=True, **kw)
+    for words in ("šta je odlučeno", "ko je dobio opomenu", "ko je šta rekao", "Stiže kad se sednica završi."):
+        assert words in html
+    assert 'href="/mejl/primer"' in html and 'href="/cir/mejl/primer"' in page.page(snap, cyr=True, sample=True, **kw)
+    assert "mejl/primer" not in page.page(snap, cyr=False, **kw)
+
+
+def test_the_sample_is_the_days_mail_with_what_it_is_on_top():
+    day = date(2026, 11, 19)
+    html = pretplata.sample(FakeMail(), day, False)
+    assert html.startswith("<html><body><div") and "Primer: ovako izgleda mejl" in html and "AI model" in html and 'href="/#mejl"' in html
+    assert "Пример" in pretplata.sample(FakeMail(), day, True) and 'href="/cir/#mejl"' in pretplata.sample(FakeMail(), day, True)
+    assert pretplata.sample(lambda *a: None, day, False) == ""
+    slip = lambda *a: mejl.Mail("n", "Čupić je iznео načela", "<html><body>x</body></html>")  # noqa: E731
+    assert pretplata.sample(slip, day, False) == ""  # what may go to nobody is no sample either
+    assert (mejl._minutes(206 * 60), mejl._minutes(59 * 60), mejl._minutes(120 * 60), mejl._minutes(10)) == ("3 h 26 min", "59 min", "2 h", "")
