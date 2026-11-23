@@ -34,10 +34,23 @@ GROUP_CHAIRS = S + "/посланичке-групе-/председници-п�
 COMMITTEES = S + "/радна-тела/одбори.13.html"
 DELEGATIONS = S + "/делегације/делегације.14.html"
 NEWS = BASE + "/активности.42.html"
+# The Speakers and deputy Speakers of every convocation since 1991, with the days they took office and left it: one
+# table, the Assembly's own (23 Nov 2026).
+HISTORY = BASE + "/народна-скупштина/скупштина-1804-2025/народна-скупштина-републике-србије-(1991-2026).2145.html"
 
 # An earlier convocation's committees and delegations, as its archive pages list them. Only those whose rows read
 # as the newest's do are listed here.
 ARCHIVE = {
+    "9": {"committees": S + "/радна-тела/сазив-од-31-маја-2012-године/одбори-.2196.html",
+          "delegations": S + "/делегације/сазив-од-31-маја-2012-године.2203.html"},
+    "10": {"committees": S + "/радна-тела/сазив-од-16-априла-2014-године/одбори.3430.html",
+           "delegations": S + "/делегације/сазив-од-16-априла-2014-године.3419.html"},
+    "11": {"committees": S + "/радна-тела/сазив-од-3-јуна-2016-година/одбори.4255.html",
+           "delegations": S + "/делегације/сазив-од-3-јуна-2016-године.4337.html"},
+    "12": {"committees": S + "/радна-тела/сазив-од-3-августа-2020-године.4559.html",
+           "delegations": S + "/делегације/сазив-од-3-августа-2020-године.4562.html"},
+    "13": {"committees": S + "/радна-тела/сазив-од-1-августа-2022-године.4841.html",
+           "delegations": S + "/делегације/сазив-од-1-августа-2022-године-.4844.html"},
     "14": {"committees": S + "/радна-тела/сазив-од-6-фебруара-2024-године.5177.html",
            "delegations": S + "/делегације/сазив-од-6-фебруара-2024-године.5180.html"},
 }
@@ -204,6 +217,85 @@ def dumps(fetched: str, offices: list[dict], read_parts: str) -> str:
 def dumps_news(fetched: str, items: list[dict]) -> str:
     rows = ",\n".join(json.dumps(x, ensure_ascii=False, sort_keys=True) for x in items)
     return f'{{"fetched": {json.dumps(fetched)}, "source": {json.dumps(NEWS, ensure_ascii=False)}, "items": [\n{rows}\n]}}\n'
+
+
+_MONTH = {m: i + 1 for i, m in enumerate(("јануара", "фебруара", "марта", "априла", "маја", "јуна", "јула", "августа",
+                                           "септембра", "октобра", "новембра", "децембра"))}
+_DATE = re.compile(r"(\d{1,2})\.\s+(" + "|".join(_MONTH) + r")\s+(\d{4})")
+_ROMAN = {"VIII": "8", "IX": "9", "X": "10", "XI": "11", "XII": "12", "XIII": "13", "XIV": "14", "XV": "15"}
+
+
+def _iso(text: str) -> str:
+    m = _DATE.search(text)
+    return f"{m[3]}-{_MONTH[m[2]]:02d}-{int(m[1]):02d}" if m else ""
+
+
+def _people(cell: str) -> list[dict]:
+    """A cell of the table → [{"name", "since", "until"}]. Each "од <date>" starts a list of names ("др" and the like
+    as the table writes them); a name's own "(до …)" or "(од …)" stands after it. Names are left as written."""
+    out: list[dict] = []
+    for part in re.split(r"(?=<b>\s*од\s)", cell):
+        head = re.match(r"<b>(.*?)</b>", part, re.S)
+        if not head:
+            continue
+        since, until = _iso(head[1]), ""
+        if " до " in " " + _text(head[1]) + " ":
+            until = _iso(head[1].split(" до ")[-1])
+        rest = re.sub(r"\s+", " ", _text(part[head.end():]))
+        for m in re.finditer(r"([^,()]+?)\s*(\([^)]*\))?\s*(?:,|\sи\s(?=[А-ЯЉЊЂЋЏ])|$)", rest):
+            name = re.sub(r"^\s*и\s+", "", m[1]).strip(" :;.")
+            if not name:
+                continue
+            note = m[2] or ""
+            row = {"name": name, "since": since, "until": until}
+            if note.startswith("(од") or " од " in note:
+                row["since"] = _iso(note.split("до")[0]) or since
+            if "до" in note:
+                row["until"] = _iso(note.split("до")[-1]) or until
+            out.append(row)
+    return out
+
+
+def history(page: str) -> list[dict]:
+    """Who was the Speaker and who were the deputy Speakers of each convocation → [{"conv", "kind" (speaker, vice),
+    "name", "since", "until"}], "until" "" when the table gives none (the term ran to the convocation's end)."""
+    out = []
+    body = _content(page)
+    for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", body, re.S):
+        cells = re.findall(r"<td[^>]*>(.*?)</td>", tr, re.S)
+        m = re.search(r"<b>\s*([XIV]+)\s+сазив", cells[0]) if len(cells) >= 3 else None
+        if not m or m[1] not in _ROMAN:
+            continue
+        for kind, cell in (("speaker", cells[1]), ("vice", cells[2])):
+            out += [{"conv": _ROMAN[m[1]], "kind": kind, **p} for p in _people(cell)]
+    return out
+
+
+def with_history(offices_: list[dict], found: list[dict], conv: str) -> list[dict]:
+    """A convocation's offices with its Speaker and deputies from `history`: the newest's, read from their pages, get
+    the day they took office; an earlier one's are added whole (their rows "dated", as no other office's day is known)."""
+    mine = [h for h in found if h["conv"] == conv]
+    if not mine:
+        return offices_
+    others = [o for o in offices_ if o["kind"] not in ("speaker", "vice")]
+    rows = [{"name": h["name"], "kind": h["kind"], "role": "Председник Народне скупштине" if h["kind"] == "speaker" else "потпредседник",
+             "body": "Народна скупштина", "source": HISTORY, "since": h["since"], "until": h["until"], "dated": True} for h in mine]
+    if any(o["kind"] in ("speaker", "vice") for o in offices_):  # the pages of those who hold it now stay the source
+        day = {(mp_key(h["name"]), h["kind"]): h for h in mine}
+        kept = []
+        for o in offices_:
+            h = day.get((mp_key(o["name"]), o["kind"])) if o["kind"] in ("speaker", "vice") else None
+            kept.append({**o, "since": h["since"], "until": h["until"], "dated": True} if h else o)
+        known = {(mp_key(o["name"]), o["kind"]) for o in kept}
+        return kept + [r for r in rows if (mp_key(r["name"]), r["kind"]) not in known]
+    return rows + others
+
+
+def mp_key(name: str) -> str:
+    """A name in any order and either script, titles left out → one key."""
+    from zailiprotiv.translit import latin
+    words = re.sub(r"[^a-zčćžšđ ]", " ", latin(name).lower()).split()
+    return " ".join(sorted(w for w in words if w not in ("prof", "dr", "mr", "doc", "prim")))
 
 
 # How the site says an office, in Latin after `latin`: "Predsednik Narodne skupštine", "Odbor za spoljne poslove:

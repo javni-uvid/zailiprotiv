@@ -189,9 +189,9 @@
 <h2>Funkcije u Skupštini</h2>
 {% for c, rows in by_conv %}
 <h3>{{ c }}. saziv</h3>
-<ul class="plain">{% for o in rows %}<li><a href="{{ o.source }}">{{ o.text }}</a></li>{% endfor %}</ul>
+<ul class="plain">{% for o in rows %}<li><a href="{{ o.source }}">{{ o.text }}</a>{% if o.dated and o.since %} <span class="meta">od {{ o.since|day }}{% if o.until %} do {{ o.until|day }}{% endif %}</span>{% endif %}</li>{% endfor %}</ul>
 {% endfor %}
-<p class="label">Prema stranicama sastava na sajtu Narodne skupštine (predsednik, potpredsednici, predsednici poslaničkih grupa, odbori, delegacije), istim pravilom za svakog poslanika. Dan izbora te stranice ne navode.</p>
+<p class="label">Prema stranicama sastava na sajtu Narodne skupštine (predsednik, potpredsednici, predsednici poslaničkih grupa, odbori, delegacije), istim pravilom za svakog poslanika. Dan izbora te stranice ne navode, osim za predsednika i potpredsednike Skupštine; kraj mandata piše samo kad ga Skupština navodi, inače traje do kraja saziva.</p>
 </section>
 {% endif %}{% endmacro %}
 {% macro next_steps(list_page, group) %}
