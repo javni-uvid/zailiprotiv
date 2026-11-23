@@ -329,6 +329,51 @@ def test_a_fault_on_the_way_to_a_segment_does_not_stop_the_reading(monkeypatch, 
         p.kill()
 
 
+def test_a_slow_sound_does_not_hold_up_the_frames(monkeypatch, tmp_path):
+    """The sound-only track's segments hang: the frames go on, and the sound that comes is kept in order with the
+    moment its own frame was read."""
+    import threading
+    import time
+    from uzivo import stream
+    let_go, kept = threading.Event(), []
+    frames: list[tuple[int, float]] = []
+
+    def get(self, url, timeout=20):
+        if url == "https://v/zvuk":
+            return _PLAYLIST.replace(b"https://v/", b"https://z/")
+        if url.startswith("https://z/"):
+            let_go.wait(5)
+            return b"s" * 2000
+        if "/sq/" not in url:
+            return _PLAYLIST
+        if int(url.split("/sq/")[1].split("/")[0]) > 14:
+            raise __import__("urllib.error").error.HTTPError(url, 404, "not yet", None, None)
+        return b"x" * 2000
+    monkeypatch.setattr(config, "FRAME_PATH", str(tmp_path / "frame" / "now.jpg"))
+    monkeypatch.setattr(stream.HlsPoller, "_get", get)
+    monkeypatch.setattr(stream, "_ffmpeg_last_frame", lambda path: frames.append((len(frames), time.time())))
+    monkeypatch.setattr(stream.prepis, "on", lambda: True)
+    monkeypatch.setattr(stream.slusaj, "on", lambda: True)
+    monkeypatch.setattr(stream.prepis, "keep", lambda path, at, dur, program=None: kept.append(at))
+    added = []
+    monkeypatch.setattr(stream.slusaj.PLAYLIST, "add", lambda path, dur, n, at, video="": added.append(n))
+    p = stream.HlsPoller("https://v/playlist", {}, "https://v/zvuk")
+    try:
+        end = time.time() + 4
+        while len(frames) < 4 and time.time() < end:
+            time.sleep(0.02)
+        assert len(frames) == 4 and not kept  # 11-14 read while no sound has come
+        let_go.set()
+        end = time.time() + 4
+        while len(added) < 4 and time.time() < end:
+            time.sleep(0.02)
+        assert added == [11, 12, 13, 14] and kept == sorted(kept)
+        assert all(abs(at - f[1]) < 0.5 for at, f in zip(kept, frames))
+    finally:
+        let_go.set()
+        p.kill()
+
+
 def test_a_reading_that_ends_stops_asking_for_the_playlist(monkeypatch, tmp_path):
     import time
     import urllib.error

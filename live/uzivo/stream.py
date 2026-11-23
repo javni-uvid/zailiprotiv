@@ -10,6 +10,7 @@ import http.client
 import io
 import logging
 import os
+import queue
 import re
 import subprocess
 import tempfile
@@ -200,6 +201,9 @@ def _ffmpeg_last_frame(segment: str) -> None:
 _SQ = re.compile(r"/sq/(\d+)/")
 
 
+SOUND_WAITS = 24  # segments (two minutes) whose sound may wait its turn; beyond it the oldest is let go
+
+
 class HlsPoller(threading.Thread):
     """Takes the last frame of each new HLS segment. Behaves like Popen (poll/kill/stderr), so the worker need not
     know the difference.
@@ -214,6 +218,7 @@ class HlsPoller(threading.Thread):
         self.url = playlist_url
         self.sound_url = sound_url  # the sound's own playlist, when the picture's segments have none
         self._sound_segments: dict[int, str] = {}
+        self._heard: queue.Queue = queue.Queue(maxsize=SOUND_WAITS)  # segments read, their sound still to be taken
         self.headers = {"User-Agent": "Mozilla/5.0", **headers}
         self.stderr = io.BytesIO()
         self._halt = threading.Event()
@@ -325,6 +330,44 @@ class HlsPoller(threading.Thread):
                 break
         return None
 
+    def _hear(self, n: int, data: bytes | None, dur: float, read_at: float) -> None:
+        """Segment n is read: its sound is taken by the thread below, in order, whenever it comes. `data`: the segment,
+        when its own sound is meant. Never waits: the frames go on."""
+        job = (n, data, dur, read_at, self.program_of(n), VIDEO.get("id", ""))
+        while True:
+            try:
+                self._heard.put_nowait(job)
+                return
+            except queue.Full:
+                try:
+                    self._heard.get_nowait()
+                except queue.Empty:
+                    pass
+
+    def _hear_loop(self) -> None:
+        """The segments' sound, for the transcript (prepis) and for listening live (slusaj), in a thread of its own: the
+        sound-only track's segment may take half a minute to come or not come at all, and the reading of the picture
+        used to wait for it (23 Nov 2026)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "zvuk")
+            while not self._halt.is_set():
+                try:
+                    n, data, dur, read_at, program, video = self._heard.get(timeout=0.5)
+                except queue.Empty:
+                    continue
+                try:
+                    heard = data if data is not None else self._sound(n)
+                    if not heard:
+                        continue
+                    with open(path, "wb") as f:
+                        f.write(heard)
+                    if prepis.on():
+                        prepis.keep(path, read_at, dur, program)  # the segment's sound, for the transcript
+                    if slusaj.on():
+                        slusaj.PLAYLIST.add(path, dur, n, read_at, video)  # and for listening live
+                except Exception:
+                    log.debug("segment %d: its sound not taken", n, exc_info=True)
+
     def program_of(self, n: int) -> float | None:
         """When segment n begins by the broadcast's own clock; past the playlist, counted on from its last."""
         with self._lock:
@@ -369,6 +412,7 @@ class HlsPoller(threading.Thread):
         threading.Thread(target=self._playlist_loop, daemon=True).start()
         if self.sound_url:
             threading.Thread(target=self._sound_loop, daemon=True).start()
+        threading.Thread(target=self._hear_loop, daemon=True).start()
         try:
             while self._newest < 0:  # the first playlist
                 if self._halt.wait(0.2):
@@ -400,21 +444,8 @@ class HlsPoller(threading.Thread):
                     self.frame_seq, self.seg_dur = nxt, dur  # read with the frame: where it is in the broadcast
                     _ffmpeg_last_frame(path)
                     t2 = time.time()
-                    sound = ""  # the segment with the sound: the picture's, or the sound-only track's
-                    if not (prepis.on() or slusaj.on()):
-                        pass
-                    elif not self.sound_url:
-                        sound = path
-                    else:
-                        heard = self._sound(nxt)
-                        if heard:
-                            with open(path + "-zvuk", "wb") as f:
-                                f.write(heard)
-                            sound = path + "-zvuk"
-                    if sound and prepis.on():
-                        prepis.keep(sound, t2, dur, self.program_of(nxt))  # the segment's sound, for the transcript
-                    if sound and slusaj.on():
-                        slusaj.PLAYLIST.add(sound, dur, nxt, t2, VIDEO.get("id", ""))  # and for listening live (the maintainer's trial)
+                    if prepis.on() or slusaj.on():  # its sound: the picture's own, or the sound-only track's
+                        self._hear(nxt, None if self.sound_url else data, dur, t2)
                     if t2 - last_new > 2.5 * dur:
                         log.info(
                             "segment %d after %.0f s (segment %.1f s, fetch %.1f s, frame %.1f s)",
