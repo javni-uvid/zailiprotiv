@@ -1197,7 +1197,8 @@ def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
 
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
-         live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "") -> str:
+         live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "",
+         sample: bool = False) -> str:
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -1222,12 +1223,18 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     # "Sažetak dana na mejl" (23 Nov 2026, the maintainer's decision): the address goes to the counter, sealed there for
     # the maintainer's key (worker/mejl.js); the form works without the script, which only keeps the reader on the page
     if api.startswith("https://"):
-        add += f"""<form class="ml-box" method="post" action="{escape(api)}/m">
-<h2>{t("ml_title")}</h2><p class="meta">{t("ml_text")}</p>
+        # `#mejl` is its address on the page, for a link that leads straight to it; its three lines stand with the
+        # mail's own marks (23 Nov 2026, the maintainer: a card that stands out)
+        see = f' <a class="ml-see" href="{base}mejl/primer">{t("ml_sample")} →</a>' if sample else ""
+        add += f"""<form class="ml-box" id="mejl" method="post" action="{escape(api)}/m">
+<p class="ml-k">{t("ml_kicker")}</p>
+<h2>{t("ml_title")}</h2>
+<ul class="ml-list"><li>{t("ml_1")}</li><li>{t("ml_2")}</li><li>{t("ml_3")}</li></ul>
+<p class="ml-when">{t("ml_when")}{see}</p>
 <label for="ml-adresa">{t("ml_label")}</label>
-<div class="ml-row"><input type="email" id="ml-adresa" name="adresa" autocomplete="email" required maxlength="254"><input type="hidden" name="pismo" value="{"cir" if cyr else "lat"}"><button type="submit" class="add-btn">{t("ml_button")}</button></div>
-<p class="ml-done" hidden>{t("ml_done")}</p><p class="ml-err meta" hidden>{t("ml_err")}</p>
-<p class="meta ml-fine">{t("ml_fine")} <a href="{escape(site)}privatnost">{t("ml_privacy")}</a></p>
+<div class="ml-row"><input type="email" id="ml-adresa" name="adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="pismo" value="{"cir" if cyr else "lat"}"><button type="submit" class="ml-go">{t("ml_button")}</button></div>
+<p class="ml-done" role="status" hidden>{t("ml_done")}</p><p class="ml-err" role="alert" hidden>{t("ml_err")}</p>
+<p class="ml-fine">{t("ml_fine")} <a href="{escape(site)}privatnost">{t("ml_privacy")}</a></p>
 </form>
 """
     return f"""<!doctype html>

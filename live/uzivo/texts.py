@@ -122,8 +122,16 @@ TEXT = {
     "add_home": "Dodaj na početni ekran",
     "add_ios": "Na iPhone-u: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
                "obavesti kad sednica počne.",
-    "ml_title": "Sažetak dana na mejl",
-    "ml_text": "Šta je odlučeno, ko je dobio opomenu, ko je šta rekao: mejl kad se sednica završi.",
+    "ml_kicker": "Sažetak dana na mejl",
+    "ml_title": "Dan u Skupštini, u jednom mejlu",
+    "ml_1": "šta je odlučeno",
+    "ml_2": "ko je dobio opomenu",
+    "ml_3": "ko je šta rekao",
+    "ml_when": "Stiže kad se sednica završi.",
+    "ml_sample": "Pogledaj primer",
+    "ml_sample_top": "Primer: ovako izgleda mejl, sa poslednjim danom sednice. Sažetak piše AI model iz automatskog "
+                     "prepisa i može da pogreši.",
+    "ml_sample_back": "Prijavi se na mikrofonu",
     "ml_label": "E-adresa",
     "ml_button": "Prijavi me",
     "ml_done": "Poslali smo mejl za potvrdu. Prijava važi kad klikneš na dugme u njemu.",

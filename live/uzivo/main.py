@@ -56,8 +56,40 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 def _page(cyr: bool) -> HTMLResponse:
     return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
                              live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
-                             push_key=config.PUSH_KEY, version=config.VERSION),
+                             push_key=config.PUSH_KEY, version=config.VERSION, sample=bool(_sample_day())),
                         headers=NO_STORE)
+
+
+def _sample_day():
+    """The day whose mail is shown as a sample: the last one on the page, once its summary is shown to everyone."""
+    from datetime import date
+    if not config.SHOW_SUMMARY:
+        return None
+    day = str(tracker.snapshot().get("dan") or "")
+    try:
+        return date.fromisoformat(day) if isinstance((tracker.summary_of(day) or {}).get("dan"), dict) else None
+    except ValueError:
+        return None
+
+
+def _sample(cyr: bool) -> Response:
+    """The last day's mail as a page, so that a reader sees what they sign up for (23 Nov 2026): the same mail, made
+    by the same code, with a line on top saying what it is; nobody's unsubscribe link in it."""
+    day = _sample_day()
+    html = pretplata.sample(mailer.build, day, cyr) if day else ""
+    if not html:
+        return RedirectResponse("/cir/#mejl" if cyr else "/#mejl", status_code=302, headers=NO_STORE)
+    return HTMLResponse(html, headers={"Cache-Control": "public, max-age=300", "X-Robots-Tag": "noindex"})
+
+
+@app.get("/mejl/primer")
+def mail_sample() -> Response:
+    return _sample(False)
+
+
+@app.get("/cir/mejl/primer")
+def cyrillic_mail_sample() -> Response:
+    return _sample(True)
 
 
 _parts: dict[bool, tuple[dict, str, str]] = {}  # per script: the snapshot, the part drawn from it, its mark
