@@ -440,6 +440,7 @@ class Sources:
     photos: dict | None  # data/photos/index.json
     years_listed: dict  # MPs' years of birth by convocation (data/mp_years.json)
     offices: dict  # offices in the Assembly by convocation (offices.py)
+    vlada: tuple  # the decisions electing the Government, and who was looked at by hand (vlada.py)
     listed_now: list  # the sittings config.NEWEST's listing gives now, for the live bar
     live_reading: bool | None  # the live page's reading (data/live.json)
     newest_sittings: dict  # the sittings of members_conv's index.json, with their agendas
@@ -452,7 +453,7 @@ class Sources:
 
 def read(root: Path) -> Sources:
     """Everything site.build reads from data/, each file once."""
-    from zailiprotiv import debates as debates_, offices, pages_govornici, pages_members, poslovnik
+    from zailiprotiv import debates as debates_, offices, pages_govornici, pages_members, poslovnik, vlada
     from zailiprotiv.config import NEWEST
     convs = convocations(root)
     mps.load_aliases(root / "mp_aliases.json")
@@ -490,6 +491,7 @@ def read(root: Path) -> Sources:
         profiles=[json.loads(f.read_text(encoding="utf-8")) for f in sorted((root / "profiles").glob("*.json"))],
         photos=jsonfile.load(root / "photos" / "index.json"),
         years_listed=jsonfile.load(root / "mp_years.json", {}).get("listed", {}), offices=offices.load(root),
+        vlada=vlada.load(root),
         listed_now=listed_now, live_reading=live_reading,
         newest_sittings=jsonfile.load(root / members_conv / "index.json", {}).get("sittings", {}) if members_conv else {},
         moved=jsonfile.load(root / "mp_moved.json", {}), fixes=jsonfile.load(root / "ispravke.json", []),
@@ -504,7 +506,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     src = read(root)
     from zailiprotiv import debates as debates_
     from zailiprotiv import notes_site, pages_floor, pages_members, pages_mikrofon
-    from zailiprotiv import mp_years, offices as offices_mod
+    from zailiprotiv import mp_years, office_cards, offices as offices_mod, vlada as vlada_mod
     from zailiprotiv import pages_govornici as _gv
     from zailiprotiv import profiles as profiles_
     from zailiprotiv.config import LIVE, NEWEST
@@ -760,8 +762,28 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     for by_c in offices_by.values():
         for c in by_c:
             by_c[c].sort(key=offices_mod.order)
+    # The Government (vlada.py, 23 Nov 2026): only for a person confirmed to be the MP, never for the name alone.
+    gov_items, gov_reviewed = src.vlada
+    sure = vlada_mod.confirmed(gov_items, src.years_listed, gov_reviewed)
+    gov_by: dict[str, list[dict]] = {}
+    for o in vlada_mod.offices(gov_items):
+        k = offices_mod.mp_key(o["name"].replace("-", " "))
+        if k in sure:
+            gov_by.setdefault(k, []).append(o)
+    bearers: dict[str, set] = defaultdict(set)  # the MPs of one name: an office goes to nobody when there are two
+    for mp_ in people.values():
+        bearers[offices_mod.mp_key(mp_.name.replace("-", " "))].add(mp_.key)
+    for r in member_rows:
+        bearers[offices_mod.mp_key(r["name"].split(" (")[0].replace("-", " "))].add(r["key"])
+
+    def office_rows(key: str, name: str) -> list[dict]:
+        """Every office of one MP, each with its convocation, for the cards beside the portrait."""
+        rows = [{**o, "conv": c} for c, os_ in offices_by.get(key, {}).items() for o in os_]
+        k = offices_mod.mp_key(name.split(" (")[0].replace("-", " "))
+        return rows + (gov_by.get(k, []) if len(bearers.get(k, ())) == 1 else [])
     for r in member_rows:
         r["offices"] = offices_by.get(r["key"], {}).get(members_conv, [])
+        r["office_rows"] = office_rows(r["key"], r["name"])
     # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
     # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
     # MPs' pages and found nothing there).
@@ -869,6 +891,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                       trim_blocks=True, lstrip_blocks=True)
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     env.filters["qid"] = qid
+    env.filters["office_cards"] = lambda rows: office_cards.cards(rows, latin, env.filters["day_of"])
+    env.globals["office_cards_shown"] = office_cards.SHOWN
     env.filters["grp"] = lambda g: g if any(ch.isalnum() for ch in g or "") else "Bez poslaničke grupe"  # a roll call's empty or "()"
     env.filters["given_first"] = given_first
     env.filters["locative"] = lambda name: name.lower()[:-1] + "om" if name.lower().endswith("i") else name.lower()  # Četrnaesti → (u) četrnaestom
@@ -1036,7 +1060,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             timeline=timeline, key_votes=keys_, exchanges=exchanges_of.get(mp.slug, []),
             profile=profiles.get(mp.key), spoke=spoke.get(mp.key, 0), words=words.get(mp.key, []),
             floor=floor_mp, member_now=member_now.get(mp.key),
-            offices=sorted(offices_by.get(mp.key, {}).items(), key=lambda kv: -int(kv[0])),
+            offices=office_rows(mp.key, mp.name),
             member_conv=ORDINAL_NAME.get(members_conv, members_conv) if members_conv else "",
             member_page=pages_members.PAGE.format(conv=members_conv) if members_conv else "",
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True)),

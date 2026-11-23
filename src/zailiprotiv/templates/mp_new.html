@@ -12,6 +12,7 @@
 <h1>{{ m.name }}</h1>
 <p class="mp-groups">{{ conv_name }} saziv, od {{ since|day_of }}{% if m.group %}: {{ m.group|latin }}{% elif m.group is defined %}: van poslaničkih grupa{% endif %}</p>
 </div>
+{{ offices_part(m.office_rows or []) }}
 </div>
 {{ brief(m.slug, [], [(m.year ~ "." if m.year else "", "godište"), ((m.occupation or "")|latin|capitalize, "zanimanje"), (m.place|latin, "mesto")]) }}
 <ul class="mp-facts mp-facts-new">
@@ -19,7 +20,6 @@
   <li>Stranka na čiji je predlog izabran(a): <b>{{ (m.party_ or "nije navedena")|latin }}</b></li>
 </ul>
 {{ floor_now_part(m.slug) }}
-{{ offices_part([(conv, m.offices)] if m.offices else []) }}
 <p>Prvi put u Skupštini od 2012: nije ni na jednom poimeničnom glasanju koje sajt ima. Kako glasa biće na ovoj strani od prve sednice na kojoj se glasa, a šta govori po stenografskim beleškama čim ih sajt pročita, istim pravilom kao za svakog poslanika.</p>
 {{ next_steps(list_page, m.group) }}
 <p class="meta">Izvor: <a href="{{ source }}">spisak poslanika na sajtu Narodne skupštine</a>. „Nije navedena“: Skupština ne navodi stranku. <a href="../{{ list_page }}">Svi poslanici, {{ conv_name|lower }} saziv</a></p>

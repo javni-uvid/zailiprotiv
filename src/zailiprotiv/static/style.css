@@ -1248,3 +1248,14 @@ main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone u
 .who-pics img { display: block; width: 8.5rem; height: 8.5rem; max-width: 100%; border-radius: 50%; object-fit: cover; margin-bottom: .35rem; }
 @media (max-width: 640px) { .who { grid-template-columns: 1fr; } .who-pics { justify-content: center; } }
 .costs { padding-left: 1.2rem; } .costs li { margin: .35rem 0; } .costs .num { white-space: nowrap; font-weight: 600; }
+/* An MP's offices as small cards beside the portrait, under it on a phone (23 Nov 2026; office_cards.py) */
+.mp-hero:has(.off) { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: .2rem 1.6rem; }
+.mp-hero:has(.off) .mp-photo { grid-row: 1 / span 2; }
+.off { min-width: 0; }
+.off ul { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); gap: .5rem; }
+.off li { border: 1px solid var(--line); border-radius: 8px; background: var(--card); padding: .45rem .6rem .5rem; min-width: 0; display: flex; flex-direction: column; }
+.off-k { font-size: var(--t-1); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+.off li a { font-size: var(--t-2); font-weight: 650; line-height: 1.3; text-decoration-color: var(--line); text-underline-offset: 3px; overflow-wrap: anywhere; } .off li a:hover { text-decoration-color: currentColor; }
+.off-m { font-size: var(--t-1); color: var(--muted); margin-top: .15rem; line-height: 1.35; }
+.off-more { margin: .5rem 0 .3rem; font-size: var(--t-2); color: var(--muted); } .off-more summary { cursor: pointer; } .off-more ul { margin-top: .5rem; color: var(--fg); }
+@media (max-width: 600px) { .mp-hero:has(.off) { grid-template-columns: 5.5rem minmax(0, 1fr); gap: .6rem 1rem; } .mp-hero:has(.off) .mp-photo { grid-row: auto; } .off { grid-column: 1 / -1; } .off ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

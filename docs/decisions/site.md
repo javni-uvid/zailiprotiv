@@ -105,8 +105,19 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   Speakers and deputy Speakers of every convocation since 1991, with the days they took office and left it, from its
   own table (`offices.HISTORY`; a name matched by the MPs' key, titles taken off). The MP's page shows each office
   under its convocation; only the Speaker's and deputies' rows have days ("od … do …"), because only that table gives
-  them, and the end only when it says it. Next: the Government (the Assembly's own decisions electing it, "Донета
-  акта", 2012-2025) and the President of the Republic.
+  them, and the end only when it says it.
+- **An MP's offices as small cards beside the portrait, the Government's too** (23 Nov 2026, the maintainer's choice of
+  the look: "sitne kartice negde oko portreta", every office and not only the leading ones, the link on the office's
+  own words). `office_cards.py`: one card an office however many convocations it was held in, with the convocations;
+  the Assembly, the Government, the groups' chairs, then committees and delegations, chairs first; four shown, the
+  rest folded with where it is from (the section "Funkcije u Skupštini" lower on the page went; `#funkcije` is the
+  cards). The Government is from the Assembly's own decisions (`vlada.py`, `data/vlada.json`: every election of a
+  Government, a member or a minister, and dismissals, 2012-2025; a list that can't be read whole is refused; the
+  newest convocation's read weekly). The card says the year of each election; an end only when a decision dismisses
+  (never the next Government's election: Ana Brnabić left before it). **A minister is an MP only when confirmed**, not
+  for the name: the MP's mandate ended within 10 days of the election (32), or the year of birth is the same, looked
+  up by hand in `data/vlada_isti.json` (20; another site only checks who is who, principle 2); Marko Blagojević is
+  two people. The President of the Republic waits for a primary source.
 - **One scale of letter sizes; a number beside what it is compared with** (20 Nov 2026, the maintainer's choice of
   points 1–5 of a look at the design against portals of this kind: TheyWorkForYou, ProPublica's Represent and its
   principles for news graphics, Stanford's credibility guidelines, GOV.UK, NN/g). A page had 16–24 sizes of
