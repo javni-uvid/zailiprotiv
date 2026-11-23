@@ -1855,3 +1855,43 @@ def test_the_live_sound_goes_to_the_bucket_signed_as_s3_wants(monkeypatch):
                  ("PUBLIC", "https://zvuk.zailiprotiv.rs/")):
         monkeypatch.setattr(r2, k, v)
     assert slusaj.address() == "https://zvuk.zailiprotiv.rs/uzivo/z.m3u8"
+
+
+def test_the_floor_given_now_and_the_chair_by_voice(tmp_path, monkeypatch):
+    """22 Nov 2026, replaying 19 Nov: "Reč ima X, a posle njega ima reč Y" gives the floor to X now; a turn found by
+    the chair's words ends when its voice changes; a presiding officer's voice is the chair, said on top."""
+    from uzivo import hronika, config
+    from uzivo.names import Person
+    people = [Person("a", "Bakić Jovo", "bakic-jovo", ""), Person("b", "Jovanov Milenko", "jovanov-milenko", "")]
+    text = "Reč ima Jovo Bakić, a posle njega ima reč Milenko Jovanov."
+    assert [p.slug for p in hronika.floor(text, people)] == ["bakic-jovo", "jovanov-milenko"]
+    assert [p.slug for p in hronika.floor(text, people, now_only=True)] == ["bakic-jovo"]
+    np = pytest.importorskip("numpy")
+    import threading as th
+    from uzivo import glas
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path))
+    now = 1795100000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    t.observe(None, now=now)
+    petar = next(p for p in ROSTER.people if p.slug == "petrovic-petar")
+    t.heard(petar, "prepis", now + 1, now + 1)
+    a, b = np.zeros(512, np.float32), np.zeros(512, np.float32)
+    a[0], b[1] = 1, 1
+    L = glas.Listener(t, th.Event(), embed=lambda x: a, path=tmp_path / "none.npz")
+    L.t = [now + 1 + 1.5 * i for i in range(30)]  # 45 s: his voice (a) for 22 s, then another (b)
+    L.f = [a if i < 15 else b for i in range(30)]
+    L.changed()
+    snap = t.snapshot(now + 47)
+    assert snap["stanje"] != "govori" and t.turns_now()[-1]["seen"] <= now + 1 + 1.5 * 16
+    # the chair's voice: a presiding officer's, said on top
+    monkeypatch.setattr(config, "VOICE_SKIP", {"markovic-marko"})
+    np.savez_compressed(tmp_path / "v.npz", slugs=np.array(["markovic-marko"]), vecs=np.stack([b]), counts=np.array([5]))
+    L = glas.Listener(t, th.Event(), embed=lambda x: b, path=tmp_path / "v.npz")
+    L.t, L.f = [now + 50 + 1.5 * i for i in range(16)], [b] * 16
+    t.observe(None, now=now + 75)
+    L.judge()
+    snap = t.snapshot(now + 75)
+    assert snap["predsedava"] == {"ime": "Marković Marko", "adresa": "markovic-marko"} and snap["sada"] is None
+    from uzivo.page import fragment
+    assert "Predsedava: Marko Marković" in fragment(snap, cyr=False, site="", tz=TZ)

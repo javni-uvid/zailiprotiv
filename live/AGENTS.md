@@ -668,3 +668,22 @@ MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six 
   every confirmed address (`/m/spisak`, opened here with `MEJL_KLJUC`, each with its own unsubscribe link), once,
   until 8 the next morning. A word in two scripts stops it: the maintainer is told, nobody else gets the day. Both
   keys are in `live/.env` only; without them nothing is sent. What went is kept in `/data/mejl/<day>.json`.
+
+**The floor given now, a voice that changes, and who presides** (22-23 Nov 2026, the maintainer: "napravi", after
+19 Nov was replayed through the service's code with no caption at all). Three changes, each from a fault the replay
+showed. (1) "Reč ima X, a posle njega ima reč Y" made Y the speaker: `hronika.floor(now_only=True)` leaves out a
+floor announced for later (posle, nakon, zatim, potom, sledeći, pripremi among the four words before it), and the
+speaker is the last floor given now in the piece. (2) A turn found by the chair's words, of an MP whose voice is not
+known, went on while someone else spoke (a reply, the President): its own first seconds (3-15 s) are now its voice,
+and when a later 15 s is on average under 0.45 alike them the turn ends after the last window still alike (set
+against the notes of 18 Nov: a speech's own later 15 s fall under it in 10% of cases, ending it early with nobody
+named; the next speaker's stay above in 4%). (3) The presiding officers' voices tell who presides: their samples are
+the voice in the chair's own lines of 19 Nov's transcript ("reč ima", "zahvaljujem", "izvolite", "konstatujem"...),
+in each one's hours (Radenović until the vote, Macura 12:40-13:38, Čupić after: 36, 8 and 145 windows, each 0.75-0.82
+alike its mean, 0.15-0.33 alike each other). A stretch in a presiding officer's voice, unless they hold the floor,
+sets "Predsedava: <ime> (po glasu)" in the line on top (shown while heard in the last quarter of an hour) and ends a
+turn found without a caption. Replayed: 18 Nov against the notes (voices sampled on 17 Nov only), wrongly named
+1.5% -> 0.4% of the MPs' speech, named rightly 76% -> 73%; 19 Nov's morning against its captions 6.7% -> 3.1% wrong,
+the day against its reading by voice 6.3% -> 1.1%; the chair found as it was: Radenović, Macura from 12:42, Čupić
+from 13:32. The deputies get their voices once they speak with a caption; a measure of the chair could carry who
+presided (not done).

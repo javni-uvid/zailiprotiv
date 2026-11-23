@@ -157,7 +157,14 @@ class View:
                                 for e in (self.events if day == self.day else self._events_load(day))[-150:][::-1]],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
-                    "vreme_grupa": groups}
+                    "vreme_grupa": groups, "predsedava": self._presiding_shown()}
+
+    def _presiding_shown(self) -> dict | None:
+        """Who presides, by the voice, while a broadcast is on and the chair was heard in the last quarter of an hour."""
+        p = getattr(self, "presiding", None) or {}
+        if not p or self.status == NO_STREAM or self.last_frame - p.get("do", 0) > 900:
+            return None
+        return {"ime": p["ime"], "adresa": p["adresa"]}
 
     def caption(self, start: float, end: float, text: str, program: float | None = None) -> None:
         """A phrase of the line under the picture (prepis.Captions), with when it begins by the broadcast's clock

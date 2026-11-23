@@ -79,8 +79,9 @@ SHOW_CAPTIONS = os.environ.get("TITL_PRIKAZ", "1").strip() == "1"
 VOICES = os.environ.get("GLAS", "1").strip() == "1"
 VOICE_MODEL = os.environ.get("GLAS_MODEL", "/srv/modeli/glas.onnx").strip()
 VOICES_PATH = os.environ.get("GLASOVI", "/data/glasovi.npz").strip()  # the MPs' mean voices: numbers only, never published
-# The presiding officers are never named by voice: they speak from the chair far more than from the floor (their
-# turns at the rostrum still come from the caption or the chair's words). Their addresses on the site (22 Nov 2026: by name
+# The presiding officers are never named as the speaker by voice: they speak from the chair far more than from the
+# floor (their turns at the rostrum still come from the caption or the chair's words). Their voice tells who presides
+# (glas.Listener.judge, "Predsedava" on the page) and ends a turn found without a caption. Their addresses on the site (22 Nov 2026: by name
 # it never matched, the list writing the surname first, and two of the names were wrong).
 VOICE_SKIP = {x.strip() for x in os.environ.get("GLAS_BEZ", "cupic-aleksandar,bjelobrk-marija,valentik-sara,"
                                                   "dimitrijevic-lidija,lazar-tibor,mavric-adem,petrovic-jelena,"
