@@ -2041,3 +2041,14 @@ def test_the_app_and_the_notification_say_what_they_give_with_a_mark_each():
     for cls in ("nt-on", "add-go", "nt-off", "add-ios"):  # what the page's script looks for
         assert f" {cls}" in html or f'"{cls}' in html
     assert "Микрофон као апликација" in page.page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+
+
+def test_what_a_search_engine_takes_of_the_page():
+    """23 Nov 2026: Google showed the player's note as the page's description, and the address as its name."""
+    from uzivo.page import page, player
+    day = {"stanje": NO_STREAM, "provereno": 0, "sada": None, "dan": "2026-11-19", "ranije": True, "danas": [],
+           "datoteke": [{"url": "https://arhiva.videonet.co.rs/a.mp4", "od": 0, "trajanje": 60}]}
+    assert '<p class="meta" data-nosnippet>' in player(day, cyr=False, tz=TZ)
+    html = page(day, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
+    assert '"@type": "WebSite", "name": "Mikrofon Za ili Protiv"' in html
+    assert "application/ld+json" not in page(day, cyr=True, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")

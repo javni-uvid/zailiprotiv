@@ -51,3 +51,8 @@ that file in the same commit, and here only when a line below no longer holds.
   page: a change there changes the words too, in both scripts.
 - The tests are `tests/test_live.py`, `test_pretplata.py` and `test_mejl.py`; OCR and the stream are tried against a
   broadcast.
+
+**What Google shows of the live page (23 Nov 2026, from the maintainer's picture of the search).** The result's
+description was the player's note ("Snimak iz arhive … učitava se tek na klik"): that note is `data-nosnippet`, so
+the page's own description stands. Its name was the address: the home says it as schema.org WebSite ("Mikrofon Za
+ili Protiv", which people search for; Latin home only, as on the site).
