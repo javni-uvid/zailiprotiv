@@ -102,7 +102,11 @@ jobs:
           # The Latin pages only: the Cyrillic twins (cir/) say the same and their text is not indexed, but reading
           # them took Pagefind more than half of its five minutes.
           npx -y pagefind@1.5.0 --site _site --glob "{*.html,{zakon,poslanik,grupa,sednica,nedelja,predlog,oblast,kviz}/**/*.html}" | tail -8
+          uv run zailiprotiv lighten --site _site  # after the search: without the cells' end tags it runs words together
           du -sh --apparent-size _site; find _site -type f | wc -l
+          # GitHub Pages publishes no site over 1 GB: said while there is still time (docs/decisions/code.md)
+          bytes=$(du -sb _site | cut -f1)
+          if [ "$bytes" -gt 850000000 ]; then echo "::warning::the site is $((bytes / 1000000)) MB of GitHub Pages' 1000"; fi
           # The pages whose text changed since the last build, for search engines (told after publishing).
           python3 tools/indexnow.py list _site .cache/indexnow.json indexnow.txt ${IN_INDEXNOW_ALL_FLAG}
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0

@@ -16,6 +16,18 @@ from pathlib import Path
 
 HOST = "zailiprotiv.rs"
 MAIN = re.compile(r"<main\b.*?</main>", re.S)
+# What a page says: its words and where they lead. The hash was of the markup until 23 Nov 2026, when a change of
+# markup alone would have told the search engines of every page; HASH names the way it is made now.
+TAG = re.compile(r"<[^>]+>")
+LINK = re.compile(r'\b(?:href|src)="([^"]*)"')
+HASH = "2"
+
+
+def said(text: str) -> str:
+    """A page's main part as its words and links: the same for the same page in other markup."""
+    m = MAIN.search(text)
+    part = VERSION.sub("", m.group(0) if m else text)
+    return " ".join(TAG.sub(" ", part).split()) + "\n" + "\n".join(LINK.findall(part))
 # The pictures of a page, for Google Images (image sitemap): its own share picture and an MP's portrait. The site's
 # general picture, on most pages, is left out.
 OG = re.compile(r'<meta property="og:image" content="([^"]+)"')
@@ -35,8 +47,7 @@ def pages(site: Path) -> dict[str, str]:
         f = site / (path + "index.html" if path == "" or path.endswith("/") else path if path.endswith(".html") else path + ".html")
         if f.exists():
             text = f.read_text(encoding="utf-8")
-            m = MAIN.search(text)
-            out[url] = hashlib.sha256(VERSION.sub("", m.group(0) if m else text).encode()).hexdigest()[:16]
+            out[url] = hashlib.sha256(said(text).encode()).hexdigest()[:16]
             pics = [x for x in OG.findall(text) if not x.endswith("/za-ili-protiv.png")]
             pics += [urljoin(url, x) for x in PORTRAIT.findall(text)]
             if pics:
@@ -50,6 +61,8 @@ def main():
         old = json.loads(store.read_text(encoding="utf-8")) if store.exists() else {}
         old = {u: v if isinstance(v, list) else [v, None] for u, v in old.items()}  # {address: [hash, day it changed]}
         now = pages(site)
+        if old.pop("~", [None])[0] != HASH:  # kept by another way of making the hash: no page is taken as changed by that
+            old = {u: [now.get(u), v[1]] for u, v in old.items()}
         today = __import__("datetime").date.today().isoformat()
         changed = [u for u, h in now.items() if old.get(u, [None])[0] != h or "--all" in sys.argv]
         fresh = {u for u, h in now.items() if old.get(u, [None])[0] != h}  # the day only moves when the text did
@@ -69,7 +82,7 @@ def main():
         sm.write_text(text, encoding="utf-8")
         listing.write_text("\n".join(changed) + ("\n" if changed else ""), encoding="utf-8")
         store.parent.mkdir(parents=True, exist_ok=True)
-        store.write_text(json.dumps(kept, separators=(",", ":")), encoding="utf-8")
+        store.write_text(json.dumps({**kept, "~": [HASH, None]}, separators=(",", ":")), encoding="utf-8")
         print(f"indexnow: {len(now)} pages, {len(changed)} changed since the last build")
         return
     urls = [u for u in Path(sys.argv[2]).read_text(encoding="utf-8").split("\n") if u]

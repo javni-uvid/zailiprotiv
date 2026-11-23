@@ -302,6 +302,7 @@ td.lean { white-space: nowrap; }
 .kv-law .meta { display: block; font-size: var(--t-2); }
 .timeline { list-style: none; padding: 0; margin: .5rem 0; font-size: var(--t-2); }
 .timeline li { padding: .25rem 0; }
+.record td:first-child, .record td:last-child { white-space: nowrap; }
 .roll-filter { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .6rem 0; }
 .roll-filter select { max-width: 100%; }
 /* Glasaj i ti */

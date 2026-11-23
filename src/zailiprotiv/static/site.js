@@ -173,6 +173,12 @@ document.addEventListener("DOMContentLoaded", function () {
     open(); window.addEventListener("hashchange", open);
   })();
 
+  // A row of the roll call: the group and the vote as its cells say them (an empty group as the filter names it).
+  function rollGroup(tr) {
+    return tr.cells[1].textContent.trim() || (document.documentElement.lang === "sr-Cyrl" ? "Без посланичке групе" : "Bez poslaničke grupe");
+  }
+  function rollVote(tr) { return (/v-text-([a-z_]+)/.exec(tr.cells[2].className) || [])[1] || ""; }
+
   // Law page: each seat of the chamber becomes an MP, from the roll call on the page: for from the left, against
   // from the right, and between them those who abstained, did not vote or were absent, each group's MPs together.
   // The order is by vote, not by where anyone sits. Without this script the chamber shows the count only.
@@ -182,8 +188,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var NS = "http://www.w3.org/2000/svg", WORD = { za: "za", protiv: "protiv", uzdrzan: "uzdržan", nije_glasao: "nije glasao", nije_prisutan: "nije prisutan" };
     var by = { za: [], protiv: [], uzdrzan: [], nije_glasao: [], nije_prisutan: [] };
     Array.prototype.forEach.call(table.tBodies[0].rows, function (tr) {
-      var a = tr.querySelector("a"), v = tr.dataset.v;
-      if (a && by[v]) by[v].push({ name: a.textContent, href: a.getAttribute("href"), group: tr.dataset.g || "", vote: v });
+      var a = tr.querySelector("a"), v = rollVote(tr);
+      if (a && by[v]) by[v].push({ name: a.textContent, href: a.getAttribute("href"), group: rollGroup(tr), vote: v });
     });
     Object.keys(by).forEach(function (k) { by[k].sort(function (x, y) { return x.group.localeCompare(y.group, "sr") || x.name.localeCompare(y.name, "sr"); }); });
     var seats = Array.prototype.slice.call(svg.querySelectorAll("circle"));
@@ -233,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var filterRoll = function () {
       var shown = 0, rows = roll.tBodies[0].rows;
       for (var i = 0; i < rows.length; i++) {
-        var ok = (!rg.value || rows[i].dataset.g === rg.value) && (!rv.value || rows[i].dataset.v === rv.value);
+        var ok = (!rg.value || rollGroup(rows[i]) === rg.value.trim()) && (!rv.value || rollVote(rows[i]) === rv.value);
         rows[i].hidden = !ok; if (ok) shown++;
       }
       document.getElementById("r-n").textContent = shown === rows.length ? "" : "Prikazano " + shown + " od " + rows.length;

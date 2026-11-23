@@ -25,7 +25,7 @@ from zailiprotiv.cli.buckets import (
     files_purge_cmd, files_split_cmd, files_upload_cmd, notes_check_cmd, notes_cors_cmd, notes_raw_cmd,
     notes_site_cmd, notes_upload_cmd,
 )
-from zailiprotiv.cli.build import website, static_patch, status
+from zailiprotiv.cli.build import lighten, website, static_patch, status
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -205,6 +205,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--latin-only", action="store_true", help="skip the Cyrillic edition (cir/), for a quicker build")
     p.add_argument("--html-links", action="store_true", help="keep .html in links, to open the pages from disk")
     p.set_defaults(run=website)
+    p = commands.add_parser("lighten", help="a built site's pages in fewer bytes, once the search index is made")
+    p.add_argument("--site", default="_site")
+    p.set_defaults(run=lighten)
     p = commands.add_parser("static-patch", help="put static/ into a site built before (styles and scripts only)")
     p.add_argument("--site", default="_site")
     p.set_defaults(run=static_patch)

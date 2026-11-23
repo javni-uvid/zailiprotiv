@@ -194,7 +194,7 @@
       <thead><tr><th>Poslanik</th><th>Grupa</th><th>Glas</th></tr></thead>
       <tbody>
       {% for r in roll %}
-        <tr data-g="{{ r.group or "Bez poslaničke grupe" }}" data-v="{{ r.vote }}"><td><a href="../poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td><td>{{ r.group }}</td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
+        <tr><td><a href="../poslanik/{{ r.mp.slug }}.html">{{ r.mp.name }}</a></td><td>{{ r.group }}</td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
       {% endfor %}
       </tbody>
     </table>
