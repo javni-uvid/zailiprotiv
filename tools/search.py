@@ -141,8 +141,27 @@ def main(days: int, n_inspect: int = 0):
             if r["impressions"] >= LEAST:
                 print(f"  {r['impressions']:>6.0f} {r['clicks']:>5.0f} {r['position']:>6.1f}  {r['keys'][0]}")
     by_name(http, url, days)
+    home_pages(http)
     if n_inspect:
         inspect(http, n_inspect)
+
+
+def home_pages(http) -> None:
+    """What Google has of the four home pages (the site's and the live page's, in both scripts): in the index or not,
+    when it last read each, and the canonical address it chose."""
+    print("\nThe home pages in Google's index (URL Inspection)")
+    for page in (SITE, SITE + "cir/", "https://mikrofon.zailiprotiv.rs/", "https://mikrofon.zailiprotiv.rs/cir/"):
+        r = http.post("https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
+                      json={"inspectionUrl": page, "siteUrl": PROPERTY}, timeout=90)
+        if r.status_code != 200:
+            print(f"  {page}: Search Console answered {r.status_code}")
+            continue
+        s = r.json().get("inspectionResult", {}).get("indexStatusResult", {})
+        print(f"  {page}")
+        for k in ("verdict", "coverageState", "indexingState", "robotsTxtState", "pageFetchState", "lastCrawlTime",
+                  "crawledAs", "googleCanonical", "userCanonical"):
+            if s.get(k):
+                print(f"    {k}: {s[k]}")
 
 
 def by_name(http, url: str, days: int) -> None:
