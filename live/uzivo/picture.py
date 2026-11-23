@@ -91,12 +91,12 @@ def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
     when = announced(snap)[0]
     if when:  # before a sitting: the announcement alone, no figures of the last day (23 Nov 2026)
         d.text((P, y + 9), _t("og_head", cyr).upper(), font=bold(24), fill=MUTED, anchor="lm")
-        f = serif(64)
+        f = serif(58)  # the day and the hour on one line
         rows = _wrap(d, _fill(_t("og_goes_on", cyr), _name(when, cyr)), f, W - 2 * P, 3)
         for i, row in enumerate(rows):
-            d.text((P, y + 40 + i * 80), row, font=f, fill=FG)
+            d.text((P, y + 48 + i * 78), row, font=f, fill=FG)
         nxt = next_item(snap)
-        y2 = y + 40 + len(rows) * 80 + 20
+        y2 = y + 48 + len(rows) * 78 + 30
         if nxt:
             text = f'{_t("ag_next", cyr).capitalize()}: {_name(nxt["tekst"], cyr)}'
             for i, row in enumerate(_wrap(d, text, sans(32), W - 2 * P, 2)):
