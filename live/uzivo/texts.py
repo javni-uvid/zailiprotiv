@@ -120,6 +120,16 @@ TEXT = {
     "add_home": "Dodaj na početni ekran",
     "add_ios": "Na iPhone-u: dodirnite „Podeli“, pa „Dodaj na početni ekran“. Otvorena odatle, stranica može i da vas "
                "obavesti kad sednica počne.",
+    "ml_title": "Sažetak dana na mejl",
+    "ml_text": "Posle svakog dana sednice: šta je odlučeno, ko je dobio opomenu i ko je šta rekao. Jedan mejl dnevno, "
+               "samo kad Skupština zaseda.",
+    "ml_label": "E-adresa",
+    "ml_button": "Prijavi me",
+    "ml_done": "Poslali smo mejl za potvrdu. Prijava važi kad klikneš na dugme u njemu.",
+    "ml_err": "Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.",
+    "ml_fine": "Adresu čuvamo šifrovanu dok si prijavljen, ne dajemo je nikome i ne pratimo otvaranja. Odjava je "
+               "jednim klikom u svakom mejlu.",
+    "ml_privacy": "Politika o privatnosti",
     "nt_on": "Obavesti me kad sednica počne",
     "nt_done": "Obaveštenje stiže kad prenos sednice počne; kod nas ostaje samo adresa za njega.",
     "nt_off": "Isključi",

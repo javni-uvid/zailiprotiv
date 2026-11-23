@@ -19,3 +19,9 @@ CREATE TABLE IF NOT EXISTS push_days (day TEXT PRIMARY KEY, sent INTEGER NOT NUL
 CREATE TABLE IF NOT EXISTS push_admin (endpoint TEXT PRIMARY KEY, day TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS watch (k TEXT PRIMARY KEY, v TEXT NOT NULL);
 CREATE TRIGGER IF NOT EXISTS ballots_out AFTER DELETE ON ballots BEGIN UPDATE tally SET n = n - 1 WHERE item = old.item AND vote = old.vote; END;
+-- The day's summary by mail (23 Nov 2026; worker/mejl.js): the address sealed for the maintainer's key (this worker
+-- can't read it), a hash of it with SALT to find it again, the script, when asked and confirmed, the hash of the
+-- confirmation's code and the day that mail went. Unconfirmed rows go after 48 hours.
+CREATE TABLE IF NOT EXISTS mejl (id TEXT PRIMARY KEY, kljuc TEXT NOT NULL UNIQUE, adresa TEXT NOT NULL, cir INTEGER NOT NULL,
+  prijava TEXT NOT NULL, potvrda TEXT, kod TEXT, poslato TEXT);
+CREATE INDEX IF NOT EXISTS mejl_kod ON mejl (kod);

@@ -1188,6 +1188,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     fixes = sorted(src.fixes, key=lambda c: c["date"], reverse=True)
     from zailiprotiv import pages_support
     pages_support.render(settings=settings, env=env, common=common, out=out)  # "Podrži": bank transfer, NBS IPS QR
+    (out / "privatnost.html").write_text(env.get_template("privacy.html").render(**common, root=""), encoding="utf-8")
     (out / "o-projektu.html").write_text(env.get_template("about.html").render(**common, stats=stats, root="", corrections=fixes),
                                          encoding="utf-8")
     # who spoke how long, per day read from the recording and in sum

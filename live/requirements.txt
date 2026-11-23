@@ -11,3 +11,4 @@ yt-dlp[default]
 faster-whisper>=1.0
 anthropic>=2.8  # the model that tells the day's steps and sums the day up (uzivo/sudija.py)
 sherpa-onnx>=2.0  # the voice's numbers (uzivo/glas.py)
+cryptography>=44  # opens the subscribers' sealed addresses (uzivo/pretplata.py)

@@ -10,8 +10,10 @@ anyio==4.16.0
 av==19.0.2
 brotli==1.2.1
 certifi==2026.10.23
+cffi==2.1.1
 charset-normalizer==3.5.2
 click==8.5.1
+cryptography==50.0.2
 ctranslate2==4.9.0
 docstring-parser==0.18.0
 fastapi==0.165.0
@@ -33,6 +35,7 @@ opentelemetry-api==1.45.2
 packaging==26.3
 pillow==13.0.0
 protobuf==7.36.2
+pycparser==3.12
 pycryptodomex==3.24.2
 pydantic-core==2.50.5
 pydantic==2.14.4

@@ -90,6 +90,10 @@ The project's promises to its readers. Never change them without the maintainer.
      broadcast begins, at most once a day, carried by the browser's own push service (Google, Apple, Mozilla).
      The push has no content (the page's service worker writes the words), and the counter keeps only the
      address the browser gave, until it is turned off; the page and the method page say so;
+   - **the day's summary by mail, only to who asks** (22–23 Nov 2026): after a sitting day, from
+     `sazetak@mikrofon.zailiprotiv.rs` through Cloudflare Email Service, confirmed by a click; the address kept
+     sealed for the maintainer's key until the reader leaves (one click in every mail), nothing about opening it;
+     the maintainer, Marko Pomorišac, is the controller, as "Politika o privatnosti" (`privatnost`) says;
    - things of others' making **served from the project itself**: the search (Pagefind), MPs' portraits from the
      Assembly (`photos.py`, `data/photos/`), and the project's own subdomains for the notes' pages and the downloads.
 6. **What MPs say is not censored and not shaped** (13 Nov 2026). Quotes are word for word, checked against the

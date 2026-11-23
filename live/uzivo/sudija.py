@@ -324,9 +324,9 @@ def ask_claude(system: str, user: str, max_tokens: int = 16000, effort: str = "l
 class Judge(threading.Thread):
     """The model's calls (EVENTS every ten minutes, SUMMARY at a break, DAY at the end), from the tracker's day."""
 
-    def __init__(self, tracker, stop: threading.Event, ask=None, bell=None) -> None:
+    def __init__(self, tracker, stop: threading.Event, ask=None, bell=None, mailer=None) -> None:
         super().__init__(daemon=True)
-        self.tracker, self.halt, self.bell = tracker, stop, bell
+        self.tracker, self.halt, self.bell, self.mailer = tracker, stop, bell, mailer
         self.ask = ask or ask_claude
         self.tz = ZoneInfo(config.TZ)
         self.day, self.kept = "", {}
@@ -409,6 +409,8 @@ class Judge(threading.Thread):
         self.kept["javljeno"] = int(now)
         self._save()
         self.bell.summary(self.day)
+        if self.mailer:  # the day's mail to the maintainer, with the link that sends it to all (pretplata.py)
+            threading.Thread(target=self.mailer.ready, args=(dt.date.fromisoformat(self.day),), daemon=True).start()
 
     def _events(self, fresh, rows, turns) -> None:
         block = lines(fresh, turns, self.tz, self.tracker.shown)

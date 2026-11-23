@@ -1178,6 +1178,17 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="add-ios meta" hidden>{t("add_ios")}</p>
 </section>
 """
+    # "Sažetak dana na mejl" (23 Nov 2026, the maintainer's decision): the address goes to the counter, sealed there for
+    # the maintainer's key (worker/mejl.js); the form works without the script, which only keeps the reader on the page
+    if api.startswith("https://"):
+        add += f"""<form class="ml-box" method="post" action="{escape(api)}/m">
+<h2>{t("ml_title")}</h2><p class="meta">{t("ml_text")}</p>
+<label for="ml-adresa">{t("ml_label")}</label>
+<div class="ml-row"><input type="email" id="ml-adresa" name="adresa" autocomplete="email" required maxlength="254"><input type="hidden" name="pismo" value="{"cir" if cyr else "lat"}"><button type="submit" class="add-btn">{t("ml_button")}</button></div>
+<p class="ml-done" hidden>{t("ml_done")}</p><p class="ml-err meta" hidden>{t("ml_err")}</p>
+<p class="meta ml-fine">{t("ml_fine")} <a href="{escape(site)}privatnost">{t("ml_privacy")}</a></p>
+</form>
+"""
     return f"""<!doctype html>
 <html lang="{lang}">
 <head>

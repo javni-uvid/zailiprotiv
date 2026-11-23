@@ -233,6 +233,11 @@ def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: di
             latin(r.get("place", "")), f"godište {r['year']}" if r.get("year") else "") if x)
         lines = []
         e: dict = {"lista": latin(r.get("group", "") or "")}
+        # the name as the list writes it and the party that proposed the MP: the day's mail names every MP so
+        # and shows the party of one in no group (live/uzivo/mere.py; 23 Nov 2026)
+        e["ime"] = " ".join(latin(w).capitalize() for w in (r.get("name") or "").split() if w.isupper())
+        if (r.get("party") or "").strip() not in ("", "-", "–"):
+            e["stranka"] = latin(r["party"].strip())
         if r.get("photo"):
             e["foto"] = r["photo"]
         if k:
