@@ -666,7 +666,7 @@ MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six 
   on the page (`sudija.Judge._tell`), `pretplata.Mailer.ready` mails the day to `MEJL_UREDNIK` with a link
   (`/mejl/posalji?dan=&k=`, the day signed with `MEJL_KLJUC`) to a page with one button; the button sends the day to
   every confirmed address (`/m/spisak`, opened here with `MEJL_KLJUC`, each with its own unsubscribe link), once,
-  until 8 the next morning. A word in two scripts stops it: the maintainer is told, nobody else gets the day. Both
+  until noon the next day (23 Nov 2026; first until 8). A word in two scripts stops it: the maintainer is told, nobody else gets the day. Both
   keys are in `live/.env` only; without them nothing is sent. What went is kept in `/data/mejl/<day>.json`.
 
 **The floor given now, a voice that changes, and who presides** (22-23 Nov 2026, the maintainer: "napravi", after
@@ -687,3 +687,14 @@ turn found without a caption. Replayed: 18 Nov against the notes (voices sampled
 the day against its reading by voice 6.3% -> 1.1%; the chair found as it was: Radenović, Macura from 12:42, Čupić
 from 13:32. The deputies get their voices once they speak with a caption; a measure of the chair could carry who
 presided (not done).
+
+- **The day's mail loses nobody and goes to nobody twice** (23 Nov 2026, found by trying the sender with the counter
+  replaced: two clicks sent everything twice; a break after the first batch left the rest without the mail, the next
+  click saying "already sent"; a mail to the maintainer that failed was kept as sent; a word in two scripts blocked
+  the day after it was mended too). `pretplata.Mailer` sends under a lock and keeps per reader (the counter's row
+  id, never the address) who has it, written before and after every batch of 20: a click after a break goes on where
+  it stopped. A batch whose call timed out or ended in a 5xx is "nesigurni" and is not sent again: better one batch
+  without the mail than twice. The mail to the maintainer is tried every five minutes (`sudija.MAIL_EVERY`) until it
+  goes, and again when a word in two scripts was mended (edit `/data/sazetak/<day>.json` and restart the service,
+  which keeps the summary in memory). The link works until noon (the maintainer; a day ended late reaches them at 7).
+  Without `MEJL_KLJUC` no code opens anything (an empty key signed codes anyone could compute).

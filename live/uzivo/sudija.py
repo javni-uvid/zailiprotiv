@@ -40,6 +40,7 @@ EVERY = 600  # seconds between calls while the broadcast is on
 LAG = 45  # a piece younger than this may still be followed by its sentence's end: it waits for the next call
 END_QUIET = 1200  # no broadcast this long after a day with a transcript: the day is over
 BREAK_QUIET = 600  # a stretch is summed up at a break with nobody at the rostrum this long (not at a five-minute one)
+MAIL_EVERY = 300  # seconds between tries of the day's mail to the maintainer
 CHAIR = "bez potpisa (predsedavajući ili sala)"
 
 KINDS = ("Tačka dnevnog reda", "Pretres otvoren", "Pretres zaključen", "Glasanje", "Rezultat glasanja", "Izbor",
@@ -331,6 +332,7 @@ class Judge(threading.Thread):
         self.tz = ZoneInfo(config.TZ)
         self.day, self.kept = "", {}
         self.last_call = 0.0
+        self.mailed = 0.0  # when the day's mail to the maintainer was last tried
 
     # --- what is kept per day: the pieces already read, the stretches summed up, the day ---
     def _file(self, day: str) -> Path | None:
@@ -400,16 +402,20 @@ class Judge(threading.Thread):
         notification may wake someone (obavesti.HOURS; a day ended at midnight is told in the morning)."""
         from .obavesti import HOURS
         whole = self.kept.get("dan")
-        if not (self.bell and config.SHOW_SUMMARY and isinstance(whole, dict) and whole.get("ukratko")) or self.kept.get("javljeno"):
+        if not ((self.bell or self.mailer) and config.SHOW_SUMMARY and isinstance(whole, dict) and whole.get("ukratko")):
             return
         if not HOURS[0] <= dt.datetime.fromtimestamp(now, self.tz).hour < HOURS[1]:
             return
         if now - whole.get("t", now) > 12 * 3600:  # news no more: a summary half a day old is not pushed
             return
-        self.kept["javljeno"] = int(now)
-        self._save()
-        self.bell.summary(self.day)
-        if self.mailer:  # the day's mail to the maintainer, with the link that sends it to all (pretplata.py)
+        if self.bell and not self.kept.get("javljeno"):
+            self.kept["javljeno"] = int(now)
+            self._save()
+            self.bell.summary(self.day)
+        # the day's mail to the maintainer, with the link that sends it to all (pretplata.py): asked again every few
+        # minutes, so that one that did not go is tried again (Mailer.ready knows what went)
+        if self.mailer and now - self.mailed >= MAIL_EVERY:
+            self.mailed = now
             threading.Thread(target=self.mailer.ready, args=(dt.date.fromisoformat(self.day),), daemon=True).start()
 
     def _events(self, fresh, rows, turns) -> None:
