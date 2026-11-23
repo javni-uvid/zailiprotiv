@@ -53,6 +53,7 @@ class Tracker(Said, Chronicle, View):
         self.open = False
         self._pending = ""  # a name not on the list, or with nothing under it, read once
         self._held: dict = {}  # when and where that one frame was
+        self.presiding: dict = {}  # who presides, by the voice (glas.py): name, address, from, to
         self.captions: list[dict] = []  # the line under the picture, its last lines (prepis.Captions); not kept
         self._forms: tuple = (None, {})  # the sitting MPs' names in their cases, for the transcript's corrections
         self._others = 0  # frames in a row naming someone other than the current speaker
@@ -306,6 +307,20 @@ class Tracker(Said, Chronicle, View):
     def turns_now(self) -> list[dict]:
         with self._lock:
             return [dict(t) for t in self.turns]
+
+    def open_turn(self) -> dict | None:
+        with self._lock:
+            return dict(self.turns[-1]) if self.open and self.turns else None
+
+    def presides(self, person: Person, start: float, seen: float) -> None:
+        """The chair's voice heard: a presiding officer's (config.VOICE_SKIP), from `start` to `seen`."""
+        with self._lock:
+            p = self.presiding
+            if p.get("adresa") == person.slug and start - p.get("do", 0) < 1800:
+                p["do"] = max(p["do"], seen)
+            else:
+                self.presiding = {"ime": person.name, "adresa": person.slug, "od": int(start), "do": int(seen)}
+            self._snap = None
 
     def caption_on(self) -> bool:
         """Whether a caption names the speaker now (a turn open that was not found by voice or the chair's words)."""

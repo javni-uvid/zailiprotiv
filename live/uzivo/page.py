@@ -178,6 +178,10 @@ def _status(snap: dict, *, cyr: bool) -> str:
     if on:
         what = (f'<span class="status-on">{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}: '
                 f'{on["n"]}. {escape(_name(on["tekst"], cyr))}</span>')
+    chair = snap.get("predsedava") if snap["stanje"] != "nema_prenosa" else None
+    if chair and chair.get("ime"):  # who presides, by the voice (22 Nov 2026), said how
+        what += (f'<span class="status-chair">{t("presides")}: {escape(_name(given_first(chair["ime"]), cyr))} '
+                 f'<span class="meta">({t("by_short_glas")})</span></span>')
     goes_on = ""
     if snap["stanje"] == "nema_prenosa":
         newest = sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]

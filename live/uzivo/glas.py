@@ -26,6 +26,11 @@ WIN, HOP = 3.0, 1.5  # seconds of sound in a window, and between windows (lice_g
 # was the speaker): keep them the same.
 VOICE_MIN, MARGIN, STRETCH_MIN, MIN_RUN, GAP = 0.55, 0.05, 0.68, 20.0, 8.0
 KEEP = 600  # seconds of windows kept in memory
+# A turn found by the chair's words, of someone whose voice is not known: its first seconds (3-15 s) are its voice, and
+# a later 15 s on average less alike than CHANGE is someone else's. Set on 18 Nov 2026 against the notes: a speech's
+# own later 15 s fall below 0.45 in 10% of cases (an interruption: the turn ends early, nobody is named), the next
+# speaker's stay above in 4% (the turn goes on wrongly).
+CHANGE, OWN_FROM, OWN_TO, CHANGE_SPAN = 0.45, 3.0, 15.0, 15.0
 LEARN_EDGE = 5.0  # seconds at a turn's start and end not taken as its voice (the chair may still be speaking)
 
 
@@ -182,11 +187,34 @@ class Listener(threading.Thread):
         who, a, b, _ = runs[-1]
         roster = self.tracker.roster
         person = next((p for p in roster.people if p.slug == who), None) if roster else None
-        skip = who in config.VOICE_SKIP
-        if person and not skip:
-            self.tracker.heard(person, "glas", a, b, tracked=set(refs))
-        else:  # the chair's voice, or one not to be named: whoever was found before is no longer speaking
+        cur = self.tracker.open_turn()
+        if person and who in config.VOICE_SKIP and not (cur and cur.get("slug") == who):
+            # a presiding officer's voice, not at the rostrum: the chair; it ends a turn found without a caption
+            self.tracker.presides(person, a, b)
             self.tracker.unheard(a)
+        elif person:
+            self.tracker.heard(person, "glas", a, b, tracked=set(refs))
+        else:
+            self.tracker.unheard(a)
+
+    def changed(self) -> None:
+        """A turn found by the chair's words, of someone whose voice is not known: ended when its voice changes."""
+        cur = self.tracker.open_turn()
+        if not cur or cur.get("izvor") != "prepis" or cur.get("po_glasu") or not self.t:
+            return
+        t = np.array(self.t)
+        own = (t >= cur["start"] + OWN_FROM) & (t + WIN <= cur["start"] + OWN_TO)
+        newest = t[-1]
+        late = (t > newest - CHANGE_SPAN) & (t >= cur["start"] + OWN_TO)
+        if own.sum() < 5 or late.sum() < 6:
+            return
+        f = np.stack(self.f)
+        ref = f[own].mean(0)
+        ref /= np.linalg.norm(ref) + 1e-9
+        if float((f[late] @ ref).mean()) < CHANGE:
+            # it ends after the last window still alike its first seconds, before the 15 s that were not
+            after = np.flatnonzero((t >= cur["start"] + OWN_TO) & (t < t[late][0]) & (f @ ref >= CHANGE))
+            self.tracker.unheard(float(t[after[-1]] + HOP) if len(after) else cur["start"] + OWN_TO)
 
     def step(self) -> None:
         self.take()
@@ -194,6 +222,7 @@ class Listener(threading.Thread):
         self.learn(snap_turns)
         if not self.tracker.caption_on():
             self.judge()
+            self.changed()
         if time.time() - self.saved > 300:
             self.voices.save()
             self.saved = time.time()

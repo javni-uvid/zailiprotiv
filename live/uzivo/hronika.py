@@ -96,7 +96,10 @@ _TITLES = {"poslanik", "poslanica", "poslanice", "kolega", "koleginica", "gospod
            "koleginice", "kolegi", "kolegice"}
 
 
-def floor(text: str, people: list) -> list:
+_NEXT = {"posle", "nakon", "zatim", "potom", "sledeci", "sledeca", "sledece", "pripremi", "priprema"}
+
+
+def floor(text: str, people: list, now_only: bool = False) -> list:
     """Whom the chair gave the floor to in a piece of text ("Reč ima narodni poslanik Jovo Bakić"): the sitting MPs
     (names.Person) named in the seven words after the phrase. Whisper errs in names, so after that phrase a name is
     also guessed (19 Nov 2026, the maintainer's decision; the line gives the floor, it puts no words in anyone's
@@ -106,13 +109,17 @@ def floor(text: str, people: list) -> list:
        least FLOOR_NEAR alike, and clearly nearer than the next MP (FLOOR_CLEAR);
     3. a surname alone, whole, that only one sitting MP has, right after a title ("kolega Bakić"), not after a
        given name we do not know (a minister or a guest of the same surname is not that MP).
-    Two MPs fitting equally: nobody."""
+    Two MPs fitting equally: nobody. `now_only`: not a floor announced for later ("Reč ima X, a posle njega ima reč
+    Y": Y is next, not now; 22 Nov 2026, replaying 19 Nov), told by those words among the four before the phrase."""
     from difflib import SequenceMatcher
     from .ispravke import fold
     names = [([fold(w) for w in p.name.split()], p) for p in people if len(p.name.split()) >= 2]
     alike = lambda a, b: 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
     out = []
-    for m in _FLOOR.finditer(" ".join(latin(text).split()).lower()):
+    low = " ".join(latin(text).split()).lower()
+    for m in _FLOOR.finditer(low):
+        if now_only and _NEXT & {fold(w) for w in re.findall(r"[^\W\d_]+", low[:m.start()])[-4:]}:
+            continue
         said = [fold(w) for w in re.findall(r"[^\W\d_]+", m.group(1))[:7]]
         if not said:
             continue

@@ -332,10 +332,13 @@ class Writer(threading.Thread):
             sitting = [p for p in roster.people if not roster.current or p.slug in roster.current]
             for person in hronika.floor(text, sitting):
                 self.tracker.note(piece[0][0], "Reč ima", person.name, "prepis", person.slug)
-                # and they are the speaker from the piece's end, until a caption, a voice or the chair says otherwise
-                # (22 Nov 2026, the maintainer: "da čitanje prepisa utiče na govornika")
+            # the last floor given now (not one announced for later) is the speaker from the piece's end, until a
+            # caption, a voice or the chair says otherwise (22 Nov 2026, the maintainer: "da čitanje prepisa utiče na
+            # govornika")
+            given = hronika.floor(text, sitting, now_only=True)
+            if given:
                 end = piece[-1][0] + piece[-1][1]
-                self.tracker.heard(person, "prepis", end, end)
+                self.tracker.heard(given[-1], "prepis", end, end)
         for _, _, f in piece:
             if self.write_whole and not chair:  # kept for the second reading, once the turn is over
                 (f.parent / "kraj").mkdir(exist_ok=True)
