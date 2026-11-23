@@ -123,3 +123,9 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   the bucket's keys and the mail's: during a sitting a test left running would have written its own segments over the
   live playlist in R2). `docker-compose.test.yml` empties each by name; `tests/test_live.py` reads the code for what
   looks like a secret and fails when one is not emptied there. A test container started by hand gets no `--env-file`.
+- **One way to write a file, one to ask the project's own addresses** (23 Nov 2026, the maintainer's choice among the
+  points of an analysis). Writing beside and moving into place was written out four times, and two files were written
+  without it (the day of the last notification and the list of MPs): all go through `state_base.write_text` and
+  `_write`. The site's files and the counter are asked by `mreza.py`. Left to their own parts: the broadcast, the
+  Assembly's pages, Whisper's server, the bucket, the voices' numbers. A made-up day's outputs compared before and
+  after: the same.

@@ -19,7 +19,7 @@ import time
 import urllib.parse
 import urllib.request
 
-from . import config
+from . import config, mreza
 from .names import latin
 from .state import Tracker
 from .stream import _BROWSER_HEADERS
@@ -208,9 +208,7 @@ class Watcher(threading.Thread):
         import json
         while not self.halt.is_set():
             try:
-                req = urllib.request.Request(config.WAIT_URL, headers={"User-Agent": "zailiprotiv-uzivo"})
-                with urllib.request.urlopen(req, timeout=30) as resp:
-                    self.tracker.use_waiting(json.loads(resp.read().decode("utf-8")))
+                self.tracker.use_waiting(json.loads(mreza.site(config.WAIT_URL)))
             except Exception as exc:
                 log.debug("notices not fetched (%s)", exc)
             try:

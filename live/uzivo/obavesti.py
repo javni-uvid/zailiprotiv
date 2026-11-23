@@ -8,12 +8,12 @@ from __future__ import annotations
 import json
 import logging
 import threading
-import urllib.request
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import config
+from . import config, mreza
+from .state_base import _write
 
 log = logging.getLogger("obavesti")
 FRAMES = 3  # frames of a live broadcast in a row (about 15 s) before it counts as begun
@@ -83,24 +83,16 @@ class Bell:
             log.warning("notification not sent (%s)", exc)
 
     def _post(self, od: int, what: str = "sednica") -> dict:
-        req = urllib.request.Request(self.api + "/p/salji", data=json.dumps({"od": od, "vrsta": what}).encode(), method="POST",
-                                     headers={"authorization": "Bearer " + self.token, "content-type": "application/json",
-                                              "user-agent": "zailiprotiv-mikrofon"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read().decode("utf-8"))
+        return mreza.counter(self.api + "/p/salji", self.token, {"od": od, "vrsta": what})
 
     def admin(self, endpoint: str, on: bool = True) -> bool:
         """The maintainer's device told (or no longer told) when this service is down while a sitting is on: the
         counter keeps it (/p/admin), asked with the token, which the page never sees."""
         if not (self.token and self.api.startswith("https://")):
             return False
-        req = urllib.request.Request(self.api + ("/p/admin" if on else "/p/admin/odjava"),
-                                     data=json.dumps({"endpoint": endpoint}).encode(), method="POST",
-                                     headers={"authorization": "Bearer " + self.token, "content-type": "application/json",
-                                              "user-agent": "zailiprotiv-mikrofon"})
         try:
-            with urllib.request.urlopen(req, timeout=15) as r:
-                return r.status == 200
+            mreza.counter(self.api + ("/p/admin" if on else "/p/admin/odjava"), self.token, {"endpoint": endpoint}, timeout=15)
+            return True
         except Exception as exc:
             log.warning("admin device not kept (%s)", exc)
             return False
@@ -117,7 +109,6 @@ class Bell:
 
     def _keep(self, day: str, what: str = "dan") -> None:
         try:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(json.dumps({**self._kept(), what: day}), encoding="utf-8")
+            _write(self.path, {**self._kept(), what: day})
         except OSError:
             log.warning("the day of the notification not kept")

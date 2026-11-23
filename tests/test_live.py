@@ -338,6 +338,7 @@ def test_a_slow_sound_does_not_hold_up_the_frames(monkeypatch, tmp_path):
     from uzivo import stream
     let_go, kept = threading.Event(), []
     frames: list[tuple[int, float]] = []
+    mine = lambda path: Path(path).read_bytes()[:1] == b"s"  # not what an earlier test's reading was still at  # noqa: E731
 
     def get(self, url, timeout=20):
         if url == "https://v/zvuk":
@@ -357,9 +358,9 @@ def test_a_slow_sound_does_not_hold_up_the_frames(monkeypatch, tmp_path):
     monkeypatch.setattr(stream, "_ffmpeg_last_frame", lambda path: frames.append((len(frames), time.time())))
     monkeypatch.setattr(stream.prepis, "on", lambda: True)
     monkeypatch.setattr(stream.slusaj, "on", lambda: True)
-    monkeypatch.setattr(stream.prepis, "keep", lambda path, at, dur, program=None: kept.append(at))
+    monkeypatch.setattr(stream.prepis, "keep", lambda path, at, dur, program=None: mine(path) and kept.append(at))
     added = []
-    monkeypatch.setattr(stream.slusaj.PLAYLIST, "add", lambda path, dur, n, at, video="": added.append(n))
+    monkeypatch.setattr(stream.slusaj.PLAYLIST, "add", lambda path, dur, n, at, video="": mine(path) and added.append(n))
     p = stream.HlsPoller("https://v/playlist", {}, "https://v/zvuk")
     try:
         end = time.time() + 15
@@ -1957,3 +1958,31 @@ def test_a_test_container_has_none_of_the_live_services_secrets():
     compose = (live / "docker-compose.test.yml").read_text(encoding="utf-8")
     empty = set(re.findall(r'^ {6}([A-Z0-9_]+): "(?:\$\{TEST_[A-Z_]+:-\})?"', compose, re.M))
     assert secret <= empty, secret - empty
+
+
+def test_the_service_keeps_every_file_by_the_one_writer(tmp_path):
+    """Written beside and moved into place, so that a crash leaves the old file or the new one, never half of one; no
+    other part writes a kept file itself (the sound's pieces and the day's reading in zvuk_dana are work files)."""
+    from uzivo.state_base import _write, write_text
+    write_text(tmp_path / "a" / "x.json", "ž")
+    _write(tmp_path / "a" / "x.json", {"ž": 1})
+    assert (tmp_path / "a" / "x.json").read_text(encoding="utf-8") == '{"ž": 1}' and len(list((tmp_path / "a").iterdir())) == 1
+    own = {"state_base.py", "slusaj.py", "zvuk_dana.py"}
+    live = Path(__file__).parents[1] / "live" / "uzivo"
+    assert not [f.name for f in live.glob("*.py") if f.name not in own and ".write_text(" in f.read_text(encoding="utf-8")]
+
+
+def test_the_counter_is_asked_with_the_token_and_the_site_without(monkeypatch):
+    import io
+    from uzivo import mreza
+    asked = []
+
+    def opened(req, timeout=0):
+        asked.append((req.get_method(), req.full_url, dict(req.header_items()), req.data, timeout))
+        return io.BytesIO('{"ok": "ž"}'.encode())
+    monkeypatch.setattr(mreza.urllib.request, "urlopen", opened)
+    assert mreza.site("https://zailiprotiv.rs/podaci.json") == '{"ok": "ž"}'
+    assert mreza.counter("https://b.rs/m/spisak", "t") == {"ok": "ž"}
+    assert mreza.counter("https://b.rs/p/salji", "t", {"od": 0}, timeout=15) == {"ok": "ž"}
+    assert [a[0] for a in asked] == ["GET", "GET", "POST"] and asked[2][3] == b'{"od": 0}' and asked[2][4] == 15
+    assert "Authorization" not in asked[0][2] and asked[1][2]["Authorization"] == asked[2][2]["Authorization"] == "Bearer t"

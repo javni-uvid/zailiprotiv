@@ -32,7 +32,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import config
-from .state_base import SAID_LEAD
+from .state_base import SAID_LEAD, _write
 
 log = logging.getLogger("uzivo.sudija")
 
@@ -356,10 +356,7 @@ class Judge(threading.Thread):
         f = self._file(self.day)
         if f:
             try:
-                f.parent.mkdir(parents=True, exist_ok=True)
-                tmp = f.with_suffix(".tmp")
-                tmp.write_text(json.dumps(self.kept, ensure_ascii=False), encoding="utf-8")
-                tmp.replace(f)
+                _write(f, self.kept)
             except OSError:
                 pass
         self.tracker.use_summary(self.day, self.kept)

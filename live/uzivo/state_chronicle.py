@@ -60,10 +60,7 @@ class Chronicle:
             f = self._events_file(self.day)
             if f:
                 try:
-                    f.parent.mkdir(parents=True, exist_ok=True)
-                    tmp = f.with_suffix(".tmp")
-                    tmp.write_text(json.dumps(self.events, ensure_ascii=False), encoding="utf-8")
-                    tmp.replace(f)
+                    _write(f, self.events)
                 except OSError:
                     pass
             return True

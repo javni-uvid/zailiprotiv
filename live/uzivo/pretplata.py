@@ -16,13 +16,12 @@ import logging
 import socket
 import threading
 import urllib.error
-import urllib.request
 from datetime import date, datetime, timedelta
 from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import config, mejl, mere
+from . import config, mejl, mere, mreza
 from .state_base import _write
 
 log = logging.getLogger("uzivo.pretplata")
@@ -71,11 +70,7 @@ def deadline(day: date) -> datetime:
 
 
 def _call(path: str, body: dict | None = None) -> dict:
-    req = urllib.request.Request(COUNTER + path, data=json.dumps(body).encode() if body is not None else None,
-                                 headers={"authorization": "Bearer " + config.PUSH_TOKEN, "content-type": "application/json",
-                                          "user-agent": "zailiprotiv-uzivo"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.loads(r.read().decode())
+    return mreza.counter(COUNTER + path, config.PUSH_TOKEN, body, timeout=60, agent="zailiprotiv-uzivo")
 
 
 def send(messages: list[dict]) -> tuple[int, list]:

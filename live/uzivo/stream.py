@@ -357,13 +357,13 @@ class HlsPoller(threading.Thread):
                     continue
                 try:
                     heard = data if data is not None else self._sound(n)
-                    if not heard:
+                    if not heard or self._halt.is_set():
                         continue
                     with open(path, "wb") as f:
                         f.write(heard)
                     if prepis.on():
                         prepis.keep(path, read_at, dur, program)  # the segment's sound, for the transcript
-                    if slusaj.on():
+                    if slusaj.on() and not self._halt.is_set():  # a reading that ended adds nothing to the next one's
                         slusaj.PLAYLIST.add(path, dur, n, read_at, video)  # and for listening live
                 except Exception:
                     log.debug("segment %d: its sound not taken", n, exc_info=True)
