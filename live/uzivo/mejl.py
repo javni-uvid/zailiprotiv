@@ -15,13 +15,16 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+from . import config
 from .mere import MP, Measure, Roll
 from .names import cyrillic, given_first
 
 SITE = "https://zailiprotiv.rs/"
 LIVE = "https://mikrofon.zailiprotiv.rs/"
 METHOD = "kako-racunamo#sazetak-dana"
-SUPPORT = "podrzi"  # the page "Podrži"; one line in every mail (23 Nov 2026, the maintainer: a call, never a lock)
+SUPPORT = "podrzi"  # the page "Podrži"; a card in the middle of every mail (23 Nov 2026, the maintainer: a call, never a lock)
+SUPPORT_TITLE = "Za ili Protiv pravi jedan čovek, uz nadzor mačka Časlava."
+SUPPORT_LINE = "Sajt i ovaj mejl su besplatni i bez reklama. Ako ti koriste, podrži ih."
 FROM = "sazetak@zailiprotiv.rs"
 CONTACT = "kontakt@zailiprotiv.rs"
 BELGRADE = ZoneInfo("Europe/Belgrade")
@@ -37,6 +40,7 @@ LISTS = {"Aleksandar Vučić - Srbija pobeđuje": "#3730a3", "Studentska lista":
 OTHER_LIST = "#0f9d8a"
 INK, MUTED, LINE, SOFT, ZA, PROTIV, STOP, PAPER, BACK = ("#111111", "#5b616b", "#e3e5e8", "#f6f7f9", "#1f5fa8",
                                                         "#c2410c", "#dc2626", "#ffffff", "#eef0f3")
+DARK, WARM, PALE = "#111318", "#ff9a52", "#c9ced6"  # the support card's own, as the live page's card that offers the mail
 SERIF = "Georgia, 'Times New Roman', serif"
 SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 
@@ -107,6 +111,9 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
                                            + (", ".join(given_first(p.name) for p in m.kome) or "ime nije izgovoreno"))
                                          for m in measures]
         lines.append("")
+    ask = [t("PODRŽI ZA ILI PROTIV"), t(f"  {SUPPORT_TITLE}"), t(f"  {SUPPORT_LINE}"), "  " + support, ""]
+    if decisions or measures:  # in the middle of the mail, before what was said
+        lines += ask
     if speakers:
         lines.append(t("KO JE ŠTA REKAO"))
         for mp, said in people:
@@ -115,8 +122,9 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
             if said:
                 lines.append(t(f"    {said}"))
         lines.append("")
-    lines += [t("Ceo dan, ko je govorio i snimci:") + " " + day_page, t("Mikrofon uživo:") + " " + live, "",
-              t("Za ili Protiv je besplatan i bez reklama. Podrži ga:") + " " + support, "", "-- ",
+    if not (decisions or measures):
+        lines += ask
+    lines += [t("Ceo dan, ko je govorio i snimci:") + " " + day_page, t("Mikrofon uživo:") + " " + live, "", "-- ",
               t("Kako nastaje ovaj sažetak:") + " " + method,
               t("Dobijaš ga jer si se prijavio na mikrofon.zailiprotiv.rs.")]
     if unsubscribe:
@@ -176,6 +184,25 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
                  for m in measures]
         parts.append(head("Opomene i mere", f"· {len(measures)}"))
         parts.append("<tr><td>" + timeline(items) + "</td></tr>")
+    # The call for support, where the mail turns from what was decided to what was said (23 Nov 2026, the maintainer:
+    # "izrazi podrži i stavi ga na sredinu"): a dark card, the one thing in the mail that asks something of the reader.
+    # The amounts lead to their codes on the page; a heart as a letter, nothing loaded, nothing that says who pressed.
+    pill = (f"display:inline-block;{font}font-size:15px;font-weight:bold;text-decoration:none;white-space:nowrap;"
+            "border-radius:999px;padding:10px 12px;margin:0 5px 8px 0;")
+    amounts = "".join(f'<a href="{html.escape(support)}#din-{a}" style="{pill}background:{PAPER};color:{INK};border:1px solid {PAPER}">'
+                      f'{a} {e("din")}</a>' for a in config.SUPPORT_AMOUNTS)
+    other = e("ili koliko želiš") if amounts else e("Podrži sajt")
+    card = (f'<tr><td style="padding:22px 0 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'bgcolor="{DARK}" style="background:{DARK};border-radius:14px"><tr><td style="padding:22px 20px 16px">'
+            f'<div style="{font}font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:bold;color:{WARM}">'
+            f'<span style="font-size:17px;vertical-align:-1px">&#9829;&#65038;</span> {e("Podrži Za ili Protiv")}</div>'
+            f'<div style="font-family:{SERIF};font-size:21px;line-height:1.25;font-weight:bold;color:{PAPER};padding:8px 0 6px">{e(SUPPORT_TITLE)}</div>'
+            f'<div style="{font}font-size:15px;line-height:1.5;color:{PALE};padding:0 0 16px">{e(SUPPORT_LINE)}</div>'
+            f'<div>{amounts}<a href="{html.escape(support)}" style="display:inline-block;{font}font-size:15px;font-weight:bold;'
+            f'color:{PAPER};padding:10px 4px;margin:0 0 8px;white-space:nowrap">{other} →</a></div>'
+            "</td></tr></table></td></tr>")
+    if parts:
+        parts.append(card)
     if speakers:
         parts.append(head("Ko je šta rekao", "· po redu kojim su govorili"))
         items = []
@@ -198,6 +225,9 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
                     + (f'<div style="font-size:14px;line-height:1.45;margin-top:3px">{e(said)}</div>' if said else ""))
             items.append(("", "rec", body, colour))
         parts.append("<tr><td>" + timeline(items).replace("width:40px", "width:0px;padding-right:0") + "</td></tr>")
+
+    if card not in parts:  # a day without a decision or a measure: after what was said
+        parts.append(card)
 
     stat_cells = "".join(
         f'<td valign="top" style="padding:12px 10px;{"border-left:1px solid " + LINE + ";" if i else ""}">'
@@ -231,7 +261,6 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
 <tr><td style="padding:0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{SOFT};border-radius:10px"><tr>{stat_cells}</tr></table></td></tr>
 {"".join(parts)}
 <tr><td style="padding:10px 0 0">{button(day_page, "Ceo dan na sajtu", True)}{button(live, "Mikrofon uživo", False)}</td></tr>
-<tr><td style="{font}font-size:14px;line-height:1.5;color:{INK};border-top:1px solid {LINE};padding:14px 0 0;margin-top:8px">{e("Za ili Protiv je besplatan i bez reklama.")} <a href="{html.escape(support)}" style="color:{INK};font-weight:bold">{e("Podrži ga →")}</a></td></tr>
 </table></td></tr>
 <tr><td style="{font}font-size:12px;line-height:1.6;color:{MUTED};padding:16px 8px 0;text-align:center">
 {" &nbsp;·&nbsp; ".join(foot)}<br>{e("Dobijaš ovaj mejl jer si se prijavio na mikrofon.zailiprotiv.rs.")}<br>{e("Za ili Protiv")} · {CONTACT}</td></tr>

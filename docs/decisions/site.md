@@ -319,7 +319,7 @@ show otherwise, unlike the six principles above). A change to a page is checked 
 - **"Podrži": readers' support by bank transfer** (22 Nov 2026, the maintainer's decision, after readers asked for
   donations; ads ruled out by principle 5). `podrzi.html` (`pages_support.py`, `support.html`) from `settings.json`
   `support` (account, payee and place, payment code 289, purpose, amounts, an optional PayPal link): three NBS IPS
-  QR codes (300, 500 and 1000 din, the payer can change the amount; the amount is mandatory in the NBS's form),
+  QR codes (200, 500 and 1000 din since 23 Nov 2026, 300 before; the payer can change the amount; the amount is mandatory in the NBS's form),
   drawn as SVG in the page (nothing from elsewhere) and kept as PNG to load from a phone's gallery, and the payment
   order's fields. The codes' text checked with the NBS's validator (text and image) on 22 Nov 2026. The page says
   the account is the maintainer's own, that support buys nothing (principle 1) and that who paid is not published.

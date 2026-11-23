@@ -71,3 +71,8 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   primer" (`/mejl/primer`, `/cir/mejl/primer`) is the last day's mail by the same code, public once its summary is,
   with a line on top that it is a sample and that a model writes the summary; with a word in two scripts there is none.
   An hour or more at the rostrum is said in hours ("3 h 26 min").
+- **The call for support is a card in the middle of the mail** (23 Nov 2026, the maintainer: "ulepšaj i izrazi podrži u
+  mejlu i stavi ga više negde na sredini"; until then one line at the end). Dark as the live page's card that offers the
+  mail, between the decisions and measures and "Ko je šta rekao" (after it, on a day with neither): a heart as a letter,
+  who makes it, and the page's amounts (`settings.json`, `support.amounts`: 200, 500, 1000), each a link to its code
+  (`podrzi#din-500`), plus "ili koliko želiš". Still nothing loaded, nothing that tells who pressed, nothing locked.
