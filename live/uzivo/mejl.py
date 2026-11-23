@@ -42,7 +42,7 @@ INK, MUTED, LINE, SOFT, ZA, PROTIV, STOP, PAPER, BACK = ("#111111", "#5b616b", "
                                                         "#c2410c", "#dc2626", "#ffffff", "#eef0f3")
 # The dark top's and the support card's own, as the live page's card that offers the mail; "za" legible on it.
 DARK, WARM, PALE, ZA_DARK = "#111318", "#ff9a52", "#c9ced6", "#7cc0f5"
-TITLE_MAX = 100  # a day's title longer than this is no title (the model is asked for 80)
+TITLE_MAX = 100  # a day's title longer than this is no title (the model is asked for 60)
 SERIF = "Georgia, 'Times New Roman', serif"
 SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 

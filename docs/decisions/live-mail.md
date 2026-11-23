@@ -79,7 +79,8 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
 - **The mail's top, and the day in figures** (23 Nov 2026, the maintainer: "sredi izgled mejla, pogotovo kako predstavljamo
   summary i taj početak"; how many decisions and speakers "mi je nebitno, možda neke druge random zabavne statistike").
   A dark top with the day as a leaf of a calendar (as the live page's card) and the day in one line: "naslov", asked of
-  the model (80 letters, the main decision, no votes' figures, no speaker's claims; over 100 it is not used and
+  the model (60 letters, one decision as a short sentence, nothing listed, no figures (the maintainer, the same day, on
+  "…, potpredsednika je šest"), no speaker's claims; over 100 it is not used and
   "kratko" stands there as before). With decisions their list is the summary, so "kratko" stays only for the preview and
   the plain text. A vote is a bar of the hall and its figures. "Dan u brojevima" (`brojevi.py`): the code's, not the
   model's; how long and how many words, and two of six others turned by the date alone. The words are the same every
