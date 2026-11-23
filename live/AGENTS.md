@@ -703,3 +703,8 @@ presided (not done).
   as the confirmation is; the mail reader's own button (List-Unsubscribe-Post) still leaves at once. The texts no
   longer say "jednim klikom". A confirming mail that failed to go lets the address ask again (it had been told all day to
   look in its box). `tests/test_pretplata.py` runs the worker's own code in Node against a table in memory.
+- **The sound never holds up the picture** (23 Nov 2026, found in a look at the code): the reader fetched each
+  segment's sound in the loop that reads the frames, up to three tries of ten seconds when YouTube's sound-only track
+  was slow, and the frames meanwhile were skipped (`newest > nxt`). The sound is now taken by a thread of its own
+  (`HlsPoller._hear_loop`), in order, with the moment its frame was read; two minutes of it may wait, beyond which
+  the oldest is let go.
