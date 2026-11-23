@@ -1518,9 +1518,11 @@ def test_the_day_is_one_line_of_time_with_a_mark_for_each_kind():
     assert "Одлука" in page_._steps(snap, cyr=True, tz=TZ)
 
 
-def test_the_notice_of_when_the_assembly_goes_on_is_said_on_top():
+def test_the_notice_of_when_the_assembly_goes_on_is_said_on_top(monkeypatch):
     """22 Nov 2026, the maintainer: say that part as when the Assembly goes on."""
+    from datetime import datetime
     from uzivo import page as page_
+    monkeypatch.setattr(page_, "_now", lambda: datetime(2026, 11, 23, 12, 0, tzinfo=TZ))  # said only until that hour
     assert page_._resumes("Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova.") == "u utorak, 24. novembra, u 10.00"
     assert page_._resumes("Narodna skupština je izabrala predsednika.") == ""
     snap = {"stanje": "nema_prenosa", "provereno": 1, "sada": None, "sazvano": None, "bez_potpisa": None, "dan": "2026-11-19",
@@ -1986,3 +1988,31 @@ def test_the_counter_is_asked_with_the_token_and_the_site_without(monkeypatch):
     assert mreza.counter("https://b.rs/p/salji", "t", {"od": 0}, timeout=15) == {"ok": "ž"}
     assert [a[0] for a in asked] == ["GET", "GET", "POST"] and asked[2][3] == b'{"od": 0}' and asked[2][4] == 15
     assert "Authorization" not in asked[0][2] and asked[1][2]["Authorization"] == asked[2][2]["Authorization"] == "Bearer t"
+
+
+def test_before_a_sitting_a_pasted_link_announces_it_and_past_the_hour_it_does_not(monkeypatch):
+    """23 Nov 2026, the maintainer: the link's picture before a sitting is the announcement, not who spoke how long."""
+    from datetime import datetime
+    from uzivo import page, picture
+    snap = Tracker(None, "Europe/Belgrade").snapshot()
+    snap = {**snap, "stanje": "nema_prenosa", "dan": "2026-11-19", "ranije": True,
+            "obavestenja": [{"od": "2026-11-20", "do": "2026-11-24", "url": "https://www.parlament.gov.rs/x.html",
+                             "tekst": "Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova."}],
+            "dnevni_red": {"tacke": [{"n": 5, "tekst": "Izbor članova radnih tela Narodne skupštine", "stanje": "na_redu"}]}}
+    monkeypatch.setattr(page, "_now", lambda: datetime(2026, 11, 24, 9, 59, tzinfo=TZ))
+    title, line = page.og_text(snap, cyr=False, tz=TZ)
+    assert title == "Skupština nastavlja sa radom u utorak, 24. novembra, u 10.00"
+    assert line == ("Na redu: Izbor članova radnih tela Narodne skupštine. "
+                    "Uživo: ko govori, opomene, glasanja i snimak svakog govora.")
+    assert "Скупштина наставља са радом у уторак" in page.og_text(snap, cyr=True, tz=TZ)[0]
+    before = page._og(snap, cyr=False, url="https://mikrofon.zailiprotiv.rs/", tz=TZ)
+    assert "slika.png?v=najava-2026-11-20" in before and "Najviše vremena" not in before
+    a = picture.render(snap, cyr=False, tz=TZ, host="mikrofon.zailiprotiv.rs")
+    assert a[:8] == b"\x89PNG\r\n\x1a\n" and picture.render(snap, cyr=True, tz=TZ) != a
+    monkeypatch.setattr(page, "_now", lambda: datetime(2026, 11, 24, 10, 0, tzinfo=TZ))
+    assert page.announced(snap) == ("", {}) and "najava" not in page._og(snap, cyr=False, url="https://mikrofon.zailiprotiv.rs/", tz=TZ)
+    assert "goes-on" not in page._status(snap, cyr=False)  # the evening of the sitting doesn't say it goes on that morning
+    # a notice of December speaking of January; somebody on the air: no announcement
+    jan = {**snap, "obavestenja": [{"od": "2026-12-28", "tekst": "Narodna skupština nastavlja sa radom u utorak, 12. januara 2027. godine, u 10.00 časova."}]}
+    monkeypatch.setattr(page, "_now", lambda: datetime(2026, 12, 30, 9, 0, tzinfo=TZ))
+    assert page.announced(jan)[0] and not page.announced({**jan, "stanje": "govori"})[0]

@@ -13,6 +13,9 @@ TEXT = {
     "status_live": "Uživo",
     "status_off": "Ne zaseda",
     "goes_on": "Skupština nastavlja sa radom %1.",
+    "og_goes_on": "Skupština nastavlja sa radom %1",  # a pasted link and its picture, before the announced hour
+    "og_head": "Najava",
+    "og_live": "Uživo: ko govori, opomene, glasanja i snimak svakog govora",
     "parts": "Delovi dana",
     "speaks": "govori",
     "longer": "duže od {p}% današnjih govora",
