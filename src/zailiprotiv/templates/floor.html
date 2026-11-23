@@ -70,8 +70,9 @@
 {% if c.measures %}
 <section id="mere">
   <h2>Mere predsedavajućeg <span class="count">{{ c.measures|length }}</span></h2>
+  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}#deo"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
   <ul class="floor measures" data-more="10">
-  {% for e in c.measures %}
+  {% for e in shown %}
     {% set role = e.chair.speaker|latin|lower %}
     <li id="{{ e.id }}">
       <details>
@@ -96,10 +97,11 @@
     </li>
   {% endfor %}
   </ul>
+  {% if pages|length > 1 %}<nav class="page-menu pager" aria-label="Strana">Strana: {% for n in pages %}<a href="{{ n }}#deo"{% if loop.index0 == page_now %} aria-current="page"{% endif %}>{{ loop.index }}</a>{% endfor %}</nav>{% endif %}
   <p class="label">Rečenica uz meru je ona kojom je predsedavajući izriče, doslovno; razlog stoji samo ako ga je sam izgovorio. Ime uz meru stoji kad ga predsedavajući izgovori uz meru, a nosi ga jedan od onih koji su na sednici govorili ili dobacivali. Kad ime uz meru ne izgovori, a beleške pokazuju kome se obraća (oslovljava ga neposredno pre, jedan poslanik dobacuje u zagradama, ili je mera izrečena odmah posle nečijeg govora), ime stoji sa oznakom „po kontekstu“ i razlogom: to je vrlo verovatno, ne sigurno, i broji se odvojeno. Zvanična evidencija izrečenih mera postoji u Skupštini (Poslovnik, član 108), ali nije objavljena. Klikni na meru za govor pre nje i sve reči predsedavajućeg.</p>
 </section>
 {% endif %}
-<section id="sednice">
+{% if not page_now %}<section id="sednice">
   <h2>Po sednicama, {{ c.years }} <span class="count">{{ c.sittings }} {{ plural(c.sittings, "pročitana", "pročitane", "pročitanih") }}</span></h2>
   <div class="scroll">
   <table class="groups">
@@ -110,7 +112,7 @@
   </table>
   </div>
   <p class="label">{{ term("povreda-poslovnika", "Ukazivanje na Poslovnik") }}: govor poslanika koji na početku pominje povredu Poslovnika ili njegov član. Pauze i prekidi: mesta gde predsedavajući određuje pauzu ili prekida sednicu. Broj ne govori ko je za šta odgovoran: mere izriče predsedavajući.</p>
-</section>
+</section>{% endif %}
 
 {% endif %}
 {% if part == "razmene" %}
