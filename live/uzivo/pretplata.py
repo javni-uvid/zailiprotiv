@@ -21,7 +21,7 @@ from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import config, mejl, mere, mreza
+from . import brojevi, config, mejl, mere, mreza
 from .state_base import _write
 
 log = logging.getLogger("uzivo.pretplata")
@@ -247,8 +247,9 @@ def day_mail(tracker):
                 name = mp.name if mp else t.get("ime", "")
                 spoke[name] = spoke.get(name, 0) + int(t.get("sekundi") or 0)
         measures = mere.measures(lines, kept.get("delovi") or [], roll, TZ)
+        numbers = brojevi.kept(base, day, kept["dan"].get("tok") or [], lines, TZ)
         other = f"{(config.PUBLIC_URL or 'https://mikrofon.zailiprotiv.rs').rstrip('/')}/{'' if cyr else 'cir/'}"
-        return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other)
+        return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other, numbers=numbers)
     return build
 
 

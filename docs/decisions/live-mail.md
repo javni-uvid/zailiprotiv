@@ -76,3 +76,14 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   mail, between the decisions and measures and "Ko je šta rekao" (after it, on a day with neither): a heart as a letter,
   who makes it, and the page's amounts (`settings.json`, `support.amounts`: 200, 500, 1000), each a link to its code
   (`podrzi#din-500`), plus "ili koliko želiš". Still nothing loaded, nothing that tells who pressed, nothing locked.
+- **The mail's top, and the day in figures** (23 Nov 2026, the maintainer: "sredi izgled mejla, pogotovo kako predstavljamo
+  summary i taj početak"; how many decisions and speakers "mi je nebitno, možda neke druge random zabavne statistike").
+  A dark top with the day as a leaf of a calendar (as the live page's card) and the day in one line: "naslov", asked of
+  the model (80 letters, the main decision, no votes' figures, no speaker's claims; over 100 it is not used and
+  "kratko" stands there as before). With decisions their list is the summary, so "kratko" stays only for the preview and
+  the plain text. A vote is a bar of the hall and its figures. "Dan u brojevima" (`brojevi.py`): the code's, not the
+  model's; how long and how many words, and two of six others turned by the date alone. The words are the same every
+  day and nobody's (courtesy, the Rules); no figure is of a person or a list; counted only when the transcript covers the
+  day (a silence of 20 minutes nobody called a break means it was off). The subject no longer counts decisions: it says
+  what is in the mail, the code's words still. 19 Nov, read from the recording, has its figures in
+  `/data/brojevi/2026-11-19.json`.
