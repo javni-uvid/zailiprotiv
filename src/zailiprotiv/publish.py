@@ -57,7 +57,7 @@ def structured(text: str, site: str, here: str, address: str) -> str:
              "url": site, "logo": site + "logo.png", "email": "kontakt@zailiprotiv.rs",
              "description": "Nezavisan sajt koji iz primarnih izvora Narodne skupštine Srbije pokazuje zakone i kako je glasao "
                             "svaki poslanik, od 2012. Ista pravila za sve, bez ocena.",
-             "sameAs": ["https://www.instagram.com/zailiprotiv/", "https://github.com/javni-uvid/zailiprotiv"]}]}
+             "sameAs": ["https://www.instagram.com/zailiprotiv.rs/", "https://github.com/javni-uvid/zailiprotiv"]}]}
     else:
         crumbs, h1 = _CRUMBS.search(text), _H1.search(text)
         if crumbs and h1:

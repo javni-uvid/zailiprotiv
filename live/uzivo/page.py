@@ -1320,7 +1320,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 <details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p></details>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="https://www.instagram.com/zailiprotiv/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
 </body>
