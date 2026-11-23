@@ -161,7 +161,7 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   it is now indigo (`--g-av`: #3730a3, #818cf8 in the dark theme), as far from "za" as the red of "Studentska
   lista" is from the orange of "protiv", and the three still differ in lightness for colour-blind readers. The
   live page wears the same (`--c-av`, `page.HEX`). "O projektu" says the project is independent (the
-  maintainer's words); the names of the people behind it wait.
+  maintainer's words); the names of the people behind it waited until 23 Nov.
 - **The new pages looked at against the rules** (20 Nov 2026: `poslovnik-clanovi`, `u-proceduri`, a day of
   "Ko koliko govori", `varnice-svi`, the quiz; 320, 390 and 1280 px, both scripts and both themes). None is wider
   than its screen, each has six to eight letter sizes of the scale, no text is under 4.5:1. One page was changed,
@@ -352,6 +352,8 @@ show otherwise, unlike the six principles above). A change to a page is checked 
 - **"Podrži" on top, and a card worth a look** (22 Nov 2026, the maintainer): the header's tools have "Podrži" (a heart,
   its word on a wide screen) beside the search; the home page's card has the site's mark, the promise (free, no ads,
   nothing from others), a button and the amounts, with no colour but the mark's (design rule 2).
+- **"O projektu" names who makes the site** (23 Nov 2026, the maintainer: "ubaci o projektu i moje ime"): Marko
+  Pomorišac, as "Podrži" and "Politika o privatnosti" already did; until then it named the organisation only.
 - **Časlav in a heart beside "Podrži"** (23 Nov 2026, the maintainer: "stavi obavezno Časlava umesto crnog srca"): the
   live page's picture (`caslav-srce.webp`, 6 KB) in the head of every page, in place of the black heart. On a phone the
   script's switch is "Ћир" / "Lat", as on the live page: at 360 px in Cyrillic the heart stood over the site's name.
