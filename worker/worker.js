@@ -114,7 +114,11 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   // the way to the live page by where it was taken: the menu, the home page's strip, the announcement before a
   // sitting, the bar of a sitting, an MP at the rostrum (22 Nov 2026)
   "sajt.mikrofon-meni", "sajt.mikrofon-pocetna", "sajt.mikrofon-najava", "sajt.mikrofon-traka",
-  "sajt.mikrofon-poslanik"]);
+  "sajt.mikrofon-poslanik",
+  // the page "Podrži" (23 Nov 2026): the way to it (the menu's heart, the footer, the home page's box), opened, opened
+  // from the live page, the codes in view, a code's picture saved, the account's details copied, PayPal opened
+  "podrzi.klik-meni", "podrzi.klik-podnozje", "podrzi.klik-pocetna", "podrzi.otvori", "podrzi.od-mikrofona",
+  "podrzi.kod", "podrzi.slika", "podrzi.kopiraj", "podrzi.paypal"]);
 
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {

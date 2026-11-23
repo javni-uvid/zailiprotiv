@@ -122,6 +122,11 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   them came to 1.3 MB in Cyrillic, over `publish.check`'s limit, and nothing was published for an hour and a half.
   They are paged as the exchanges are (`replike-11-s2.html`), a measure linked on the page it stands on, the table by
   sitting on the first.
+- **The page "Podrži" counted as the other uses** (23 Nov 2026, the maintainer: "dodaj trekere na donacije stranu da
+  znamo ko kad klikće"): the way to it (the menu, the footer, the home page), opened, opened from the live page, the
+  codes in view, a code's picture saved, the account copied, PayPal opened, each a sum per day (`podrzi.*`,
+  worker/README.md). Who, and the hour, are not kept: principle 5 and the privacy page. The link in the day's mail
+  stays one address for all and uncounted, as the privacy page promises.
 - **One scale of letter sizes; a number beside what it is compared with** (20 Nov 2026, the maintainer's choice of
   points 1–5 of a look at the design against portals of this kind: TheyWorkForYou, ProPublica's Represent and its
   principles for news graphics, Stanford's credibility guidelines, GOV.UK, NN/g). A page had 16–24 sizes of

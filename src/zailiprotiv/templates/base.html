@@ -28,7 +28,7 @@
     <a href="{{ root }}replike.html">Varnice</a>
     <a href="{{ root }}nedelje.html">Skupština</a>
     {% if live_page %}<a class="nav-live{% if live %} on{% endif %}" href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="meni"><i aria-hidden="true"></i>Uživo</a>{% endif %}
-    <span class="nav-tools">{% if support %}<a class="nav-support" href="{{ root }}podrzi.html" aria-label="Podrži sajt" title="Podrži sajt"><svg class="heart" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.2C1.1 8.6 3 5 6.6 5c2.1 0 3.6 1.2 4.4 2.6h2C13.8 6.2 15.3 5 17.4 5 21 5 22.9 8.6 21.5 11.8 19.5 16.4 12 21 12 21z" fill="currentColor"/></svg><span class="wide-only">Podrži</span></a>{% endif %}<a class="nav-search" href="{{ root }}pretraga.html" aria-label="Pretraga" title="Pretraga"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>{% if cyrillic %}<a class="script-switch" href="#pismo" hreflang="sr-Cyrl">Ћирилица</a>{% endif %}</span>
+    <span class="nav-tools">{% if support %}<a class="nav-support" data-don="meni" href="{{ root }}podrzi.html" aria-label="Podrži sajt" title="Podrži sajt"><svg class="heart" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.2C1.1 8.6 3 5 6.6 5c2.1 0 3.6 1.2 4.4 2.6h2C13.8 6.2 15.3 5 17.4 5 21 5 22.9 8.6 21.5 11.8 19.5 16.4 12 21 12 21z" fill="currentColor"/></svg><span class="wide-only">Podrži</span></a>{% endif %}<a class="nav-search" href="{{ root }}pretraga.html" aria-label="Pretraga" title="Pretraga"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>{% if cyrillic %}<a class="script-switch" href="#pismo" hreflang="sr-Cyrl">Ћирилица</a>{% endif %}</span>
     <a class="nav-cta" href="{{ root }}glasaj.html">Glasaj<span class="wide-only"> i ti</span></a>
   </nav>
 </header>
@@ -62,7 +62,7 @@
     <nav class="foot-col" aria-label="Projekat">
       <h2>Projekat</h2>
       <a href="{{ root }}o-projektu.html">O projektu</a>
-      {% if support %}<a href="{{ root }}podrzi.html">Podrži sajt</a>{% endif %}
+      {% if support %}<a data-don="podnozje" href="{{ root }}podrzi.html">Podrži sajt</a>{% endif %}
       <a href="{{ root }}kako-racunamo.html">Kako računamo</a>
       <a href="{{ root }}privatnost.html">Politika o privatnosti</a>
       <a href="{{ root }}podaci.html">Podaci</a>

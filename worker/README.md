@@ -45,7 +45,10 @@ result), `pretraga.klik` (a result opened), and the field on the home page and "
 words searched for; `sajt.snimak` (a recording played on a day page), `sajt.mikrofon` (a link to the live page
 taken; `sajt.mikrofon-meni`, `-pocetna`, `-najava`, `-traka`, `-poslanik` by where: the menu, the home page's
 strip, the announcement before a sitting, the bar of a sitting, an MP at the rostrum); from the live page `mikrofon.obavesti-moze`, `-klik`, `-odbijeno`, `-greska` (the notification's offer
-shown, pressed, refused at the browser's question, failed). Nothing else is stored with it, not even
+shown, pressed, refused at the browser's question, failed). The page "Podrži" (23 Nov 2026):
+`podrzi.klik-meni`, `-podnozje`, `-pocetna` (the way to it from the site), `podrzi.otvori`, `podrzi.od-mikrofona`
+(opened from the live page), `podrzi.kod` (the codes in view), `podrzi.slika` (a code's picture saved),
+`podrzi.kopiraj` (the account's details copied), `podrzi.paypal`. Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.
 
