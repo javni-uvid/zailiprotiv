@@ -204,3 +204,11 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   the others and "Dodaj na početni ekran: ikonica pored ostalih, bez prodavnice."; "Obavesti me kad sednica počne" with
   a bell and "I kad sažetak dana bude spreman." (the same address gets both). The iPhone's line opens with the mark of
   Safari's "Podeli". Icons are lines in the page itself; nothing is loaded.
+- **The top of the page: a card of the sitting, the header in one row** (23 Nov 2026, the maintainer's choice B of three,
+  and "Časlav u srcu"). Before a sitting the card has the day as a leaf of a calendar, "Sednica sutra u 10 h" (danas,
+  sutra, the weekday within a week, else the date; the Assembly's own words as its title), the next two items not done,
+  its page, and a bell that presses the notification's own button (shown only while that one would be, and then
+  instead of it). On the air the same card with a red tile "Uživo", the item and who presides; the speaker stays where
+  they were. The heading over it is "Skupština uživo", small: the page's `<title>` keeps "ko sada govori", which is
+  searched for, and which the page said in large letters when nobody spoke. Two lines on the recording instead of four.
+  "Podrži" has the cat in a heart (`/caslav.webp`, 6 KB, the page's own), and on a phone the script's switch is "Ћир".

@@ -1530,9 +1530,19 @@ def test_the_notice_of_when_the_assembly_goes_on_is_said_on_top(monkeypatch):
             "obavestenja": [{"od": "2026-11-20", "do": "2026-11-24", "tekst": "Narodna skupština nastavlja sa radom u utorak, 24. novembra 2026. godine, u 10.00 časova.",
                              "izvor": "sajt Narodne skupštine", "url": "https://www.parlament.gov.rs/x", "adresa": ""}]}
     html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert '<p class="goes-on">Skupština nastavlja sa radom u utorak, 24. novembra, u 10.00.' in html and 'class="news"' not in html
+    assert "Sednica sutra u 10 h" in html and "Skupština nastavlja sa radom u utorak, 24. novembra, u 10.00." in html
+    assert "<span>uto</span><b>24</b><span>nov</span>" in html and 'class="st-bell"' in html and 'class="news"' not in html
+    for now, said in ((datetime(2026, 11, 24, 9, 0, tzinfo=TZ), "Sednica danas u 10 h"),
+                      (datetime(2026, 11, 20, 9, 0, tzinfo=TZ), "Sednica u utorak u 10 h")):
+        monkeypatch.setattr(page_, "_now", lambda now=now: now)
+        assert said in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Седница у уторак у 10 ч" in fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    monkeypatch.setattr(page_, "_now", lambda: datetime(2026, 11, 23, 12, 0, tzinfo=TZ))
     assert "Скупштина наставља са радом у уторак, 24. новембра, у 10.00." in fragment(snap, cyr=True, site="", tz=TZ)
-    assert 'class="news"' in fragment({**snap, "stanje": "govori", "sada": None}, cyr=False, site="", tz=TZ)  # a sitting on: as it is
+    assert 'class="news"' in fragment({**snap, "stanje": "govori", "sada": None}, cyr=False, site="", tz=TZ)  # on the air before that hour: as it is
+    monkeypatch.setattr(page_, "_now", lambda: datetime(2026, 11, 24, 11, 0, tzinfo=TZ))  # its hour come: no news, whoever is on
+    for stanje in ("govori", "nema_prenosa"):
+        assert 'class="news"' not in fragment({**snap, "stanje": stanje, "sada": None}, cyr=False, site="", tz=TZ)
 
 def test_a_steps_line_leads_to_what_the_rules_say_of_it():
     """20 Nov 2026, the maintainer's choice: the sitting's steps by the Rules of Procedure. A step's line leads to its
@@ -1619,7 +1629,8 @@ def test_the_first_line_says_what_is_now_and_the_agenda_stands_open():
     snap = {"stanje": "nepoznato", "provereno": 1, "sada": None, "sazvano": None, "bez_potpisa": None, "dan": "2026-11-19",
             "ranije": False, "danas": [], "dnevni_red": agenda, "hronika": []}
     live = page_(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert '<div class="status"><p><span class="pill"><i aria-hidden="true"></i>Uživo</span><span class="status-on">u toku: 2. Druga</span></p></div>' in live
+    assert '<div class="status st-card st-live"><p class="st-tile"><i aria-hidden="true"></i><span>Uživo</span></p>' in live
+    assert '<p class="st-when"><span class="st-h">u toku:</span> 2. Druga</p>' in live
     assert '<details class="agenda" id="dnevni-red" open>' in live and "hero-cta" not in live
     off = page_({**snap, "stanje": "nema_prenosa", "datoteke": [{"url": "https://x/1.mp4", "od": 1795089600, "trajanje": 60},
                                                                  {"url": "https://x/2.mp4", "od": 1795093200, "trajanje": 60}]},
