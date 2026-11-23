@@ -5,6 +5,7 @@
 !live/ulaz.sh
 !live/uzivo
 !src/zailiprotiv/static/fonts
+!src/zailiprotiv/og
 !src/zailiprotiv/templates/mikrofon.js
 !src/zailiprotiv/templates/mikrofon.css
 !src/zailiprotiv/cyrillic.py

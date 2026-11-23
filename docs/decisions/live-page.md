@@ -212,3 +212,9 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   they were. The heading over it is "Skupština uživo", small: the page's `<title>` keeps "ko sada govori", which is
   searched for, and which the page said in large letters when nobody spoke. Two lines on the recording instead of four.
   "Podrži" has the cat in a heart (`/caslav.webp`, 6 KB, the page's own), and on a phone the script's switch is "Ћир".
+- **The announcement's picture** (23 Nov 2026, the maintainer, on how the link looked on Reddit: can it look better). Dark
+  as the card that offers the mail: the day as a leaf of a calendar, "Sednica Skupštine / u utorak u 10 h", the item
+  next, and the three things the page gives with a mark each (following live, only the sound, the day's mail). In
+  Literata, the site's own letters (`src/zailiprotiv/og`, now in the image); the other pictures keep DejaVu. The day
+  by its name, never "sutra", since a service keeps a picture past midnight; nothing looks like a button; the top right
+  corner is empty, where Reddit puts its own. The address is `?v=najava2-…`: a new look needs a new one.

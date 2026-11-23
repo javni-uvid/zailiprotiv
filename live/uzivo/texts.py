@@ -20,7 +20,10 @@ TEXT = {
     "st_day": "Sednica %1 u %2",
     "st_bell": "Obavesti me kad počne",
     "og_goes_on": "Skupština nastavlja sa radom %1",  # a pasted link and its picture, before the announced hour
-    "og_head": "Najava",
+    "og_sitting": "Sednica Skupštine",
+    "og_follow": "Prati uživo",  # on the announcement's picture, with a mark each
+    "og_listen": "Slušaj samo zvuk",
+    "og_mail": "Sažetak dana na mejl",
     "og_live": "Uživo: ko govori, opomene, glasanja i snimak svakog govora",
     "parts": "Delovi dana",
     "speaks": "govori",
