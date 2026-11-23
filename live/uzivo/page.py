@@ -17,6 +17,11 @@ from .steps import steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
 
 
+# A bell, and the mark Safari's "Podeli" has (a box with an arrow up), drawn as lines in the text's colour.
+BELL = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.6 2H4.4z"/><path d="M10 21h4"/>'
+        '<path d="M12 5V3"/></svg>')
+SHARE = ('<svg class="ic-share" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9H6v12h12V9h-2"/><path d="M12 15V3"/>'
+         '<path d="M8.5 6.5 12 3l3.5 3.5"/></svg>')
 ARC = ('<svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/>'
        '<path class="m-protiv" d="M 89.6 30.8 A 46 46 0 0 1 106 66"/></svg>')
 
@@ -1212,12 +1217,14 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     day = fragment(snap, cyr=cyr, site=site, tz=tz)
     # "Obavesti me kad sednica počne": under the speaker's box while a broadcast is on; between sittings above the
     # day, which had put it half a phone's screens down, under the last day's summary (20 Nov 2026: one device asked)
+    # each with a tile of its own, the app's as it will stand on the home screen, and what it gives under its name
+    # (23 Nov 2026, the maintainer: that the page becomes an app was not said)
     add = f"""<section class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
-<div class="ah-row"><button type="button" class="add-btn nt nt-on" hidden>{t("nt_on")}</button><button type="button" class="add-btn add add-go" hidden>{t("add_home")}</button></div>
+<div class="ah-row"><button type="button" class="add-btn nt nt-on" hidden><span class="ah-tile">{BELL}</span><span class="ah-t"><b>{t("nt_on")}</b><span>{t("nt_on_sub")}</span></span></button><button type="button" class="add-btn add add-go" hidden><span class="ah-tile ah-app">{ARC}</span><span class="ah-t"><b>{t("add_home")}</b><span>{t("add_home_sub")}</span></span></button></div>
 <p class="nt-done" hidden>{t("nt_done")} <button type="button" class="nt-off">{t("nt_off")}</button></p>
 <p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
 <p class="nt-err meta" hidden>{t("nt_err")}</p>
-<p class="add-ios meta" hidden>{t("add_ios")}</p>
+<p class="add-ios meta" hidden>{SHARE} {t("add_ios")}</p>
 </section>
 """
     # "Sažetak dana na mejl" (23 Nov 2026, the maintainer's decision): the address goes to the counter, sealed there for

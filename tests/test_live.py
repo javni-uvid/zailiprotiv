@@ -2016,3 +2016,17 @@ def test_before_a_sitting_a_pasted_link_announces_it_and_past_the_hour_it_does_n
     jan = {**snap, "obavestenja": [{"od": "2026-12-28", "tekst": "Narodna skupština nastavlja sa radom u utorak, 12. januara 2027. godine, u 10.00 časova."}]}
     monkeypatch.setattr(page, "_now", lambda: datetime(2026, 12, 30, 9, 0, tzinfo=TZ))
     assert page.announced(jan)[0] and not page.announced({**jan, "stanje": "govori"})[0]
+
+
+def test_the_app_and_the_notification_say_what_they_give_with_a_mark_each():
+    """23 Nov 2026, the maintainer: say that the page becomes an app, and mark both buttons."""
+    from uzivo import page
+    snap = Tracker(None, "Europe/Belgrade").snapshot()
+    html = page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs", push_key="k")
+    for words in ("Mikrofon kao aplikacija", "Dodaj na početni ekran: ikonica pored ostalih, bez prodavnice.",
+                  "Obavesti me kad sednica počne", "I kad sažetak dana bude spreman."):
+        assert words in html
+    assert html.count('class="ah-tile') == 2 and 'class="ic-share"' in html
+    for cls in ("nt-on", "add-go", "nt-off", "add-ios"):  # what the page's script looks for
+        assert f" {cls}" in html or f'"{cls}' in html
+    assert "Микрофон као апликација" in page.page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
