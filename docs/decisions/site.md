@@ -118,6 +118,10 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   for the name: the MP's mandate ended within 10 days of the election (32), or the year of birth is the same, looked
   up by hand in `data/vlada_isti.json` (20; another site only checks who is who, principle 2); Marko Blagojević is
   two people. The President of the Republic waits for a primary source.
+- **The chair's measures, twenty to a page** (23 Nov 2026): read again (#133), the Eleventh's with the words around
+  them came to 1.3 MB in Cyrillic, over `publish.check`'s limit, and nothing was published for an hour and a half.
+  They are paged as the exchanges are (`replike-11-s2.html`), a measure linked on the page it stands on, the table by
+  sitting on the first.
 - **One scale of letter sizes; a number beside what it is compared with** (20 Nov 2026, the maintainer's choice of
   points 1–5 of a look at the design against portals of this kind: TheyWorkForYou, ProPublica's Represent and its
   principles for news graphics, Stanford's credibility guidelines, GOV.UK, NN/g). A page had 16–24 sizes of

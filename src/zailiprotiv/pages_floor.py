@@ -441,8 +441,14 @@ def count(*, debates: dict, people: dict, convs: list, items_by_conv: dict, phot
         for chunk, name in zip(parts, names):
             for e in chunk:
                 e["page"] = name
-        for e in c["measures"]:
-            e["page"] = c["page"]
+        # The chair's measures with the words around them, PER_PAGE to a page too (23 Nov 2026: read again, the
+        # Eleventh's 1.3 MB in Cyrillic stopped the publishing).
+        held = [c["measures"][k:k + PER_PAGE] for k in range(0, len(c["measures"]), PER_PAGE)] or [[]]
+        at = [c["page"] if k == 0 else c["page"].replace(".html", f"-s{k + 1}.html") for k in range(len(held))]
+        c["measure_pages"] = list(zip(held, at))
+        for chunk, name in c["measure_pages"]:
+            for e in chunk:
+                e["page"] = name
         chunks[c["n"]] = list(zip(parts, names))
     everyone = together(by_conv) if len(by_conv) > 1 else None  # all of them together: a tab beside the convocations'
     invoked = invoked_articles(everyone["invoked"], by_conv, rules) if everyone else []
@@ -475,9 +481,12 @@ def render(floor: Floor, *, env, common, out: Path) -> None:
     by_conv = floor.by_conv
     for c in by_conv:
         names = [name for _, name in floor.chunks[c["n"]]]
-        for part, name in (("mere", c["page"]), ("ko", c["page_who"])):
-            (out / name).write_text(env.get_template("floor.html").render(**common, c=c, by_conv=by_conv, part=part, all_page=ALL if len(by_conv) > 1 else "", root=""),
-                                    encoding="utf-8")
+        (out / c["page_who"]).write_text(env.get_template("floor.html").render(
+            **common, c=c, by_conv=by_conv, part="ko", all_page=ALL if len(by_conv) > 1 else "", root=""), encoding="utf-8")
+        for k, (chunk, name) in enumerate(c["measure_pages"]):
+            (out / name).write_text(env.get_template("floor.html").render(
+                **common, c=c, by_conv=by_conv, part="mere", shown=chunk, pages=[n for _, n in c["measure_pages"]], page_now=k,
+                all_page=ALL if len(by_conv) > 1 else "", root=""), encoding="utf-8")
         for k, (chunk, name) in enumerate(floor.chunks[c["n"]]):
             (out / name).write_text(env.get_template("floor.html").render(
                 **common, c=c, by_conv=by_conv, part="razmene", shown=chunk, pages=names, page_now=k,

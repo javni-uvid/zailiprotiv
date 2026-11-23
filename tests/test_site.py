@@ -868,3 +868,30 @@ def test_every_use_a_page_sends_is_one_the_counter_takes():
     sent |= {"mikrofon." + w for w in re.findall(r'use\("([a-z-]+)"\)', live)}
     assert {"pretraga.polje-ceo", "sajt.snimak", "sajt.mikrofon", "mikrofon.obavesti-odbijeno"} <= sent
     assert sent <= events, sent - events
+
+
+def test_the_chairs_measures_are_paged_and_linked_where_they_stand(tmp_path, monkeypatch):
+    """More measures than a page holds: the rest on numbered pages, an MP's page linking each where it stands, the
+    table by sitting on the first only (23 Nov 2026: one page of them passed the 1 MB limit and stopped publishing)."""
+    from zailiprotiv import pages_floor
+    monkeypatch.setattr(pages_floor, "PER_PAGE", 1)
+    d = data(tmp_path)
+    notes = d / "transcripts" / "1.json"
+    store = json.loads(notes.read_text())
+    mp = {"day": 1, "speaker": "НЕНАД АБРАМОВИЋ", "chair": False, "part": "general", "items": [1], "text": "један два три"}
+    warn = {"day": 1, "speaker": "ПРЕДСЕДНИК", "chair": True, "part": "general", "items": [1],
+            "text": "Изричем опомену Ненаду Абрамовићу."}
+    store["speeches"] = {"0": mp, "1": warn, "2": mp, "3": {**warn, "text": "Изричем другу опомену Ненаду Абрамовићу."}}
+    notes.write_text(json.dumps(store))
+    d.rename(tmp_path / "one")
+    (tmp_path / "root").mkdir()
+    (tmp_path / "one").rename(tmp_path / "root" / "14")
+    out = tmp_path / "site"
+    site.build(tmp_path / "root", out)
+    first, second = ((out / n).read_text(encoding="utf-8") for n in ("replike.html", "replike-s2.html"))
+    assert 'id="sednice"' in first and 'id="sednice"' not in second
+    for page in (first, second):
+        assert 'href="replike.html#deo"' in page and 'href="replike-s2.html#deo"' in page and page.count('class="measure-main"') == 1
+    links = re.findall(r'href="\.\./(replike(?:-s2)?\.html)#([^"]+)"', (out / "poslanik" / "abramovic-nenad.html").read_text(encoding="utf-8"))
+    assert {p for p, _ in links} == {"replike.html", "replike-s2.html"}
+    assert all(f'id="{i}"' in (out / p).read_text(encoding="utf-8") for p, i in links)
