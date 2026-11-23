@@ -15,6 +15,10 @@ _SAID = re.compile(r'(<meta (?:name="description"|property="og:description") con
 _BRAND = (" — Za ili Protiv", " — За или Против")
 
 
+# The site's other names, as people search for it, the preferred first (Google's site names take a list in order).
+NAMES = ["Za ili Protiv Skupština", "За или Против", "zailiprotiv", "zailiprotiv.rs"]
+
+
 def fit_head(text: str) -> str:
     """A page's title and description cut to what search engines show (about 65 and 160 characters, Bing's advice):
     a long title loses the site's name at its end, a long description is cut between words."""
@@ -47,9 +51,9 @@ def structured(text: str, site: str, here: str, address: str) -> str:
     data = None
     if address == "":  # the site's name: on the home page only (the Cyrillic one is a page of the site, not its home)
         data = {"@context": "https://schema.org", "@graph": [
-            {"@type": "WebSite", "@id": site + "#site", "name": "Za ili Protiv", "alternateName": "zailiprotiv.rs",
+            {"@type": "WebSite", "@id": site + "#site", "name": "Za ili Protiv", "alternateName": NAMES,
              "url": site, "inLanguage": "sr", "publisher": {"@id": site + "#org"}},
-            {"@type": "Organization", "@id": site + "#org", "name": "Za ili Protiv", "alternateName": "zailiprotiv.rs",
+            {"@type": "Organization", "@id": site + "#org", "name": "Za ili Protiv", "alternateName": NAMES,
              "url": site, "logo": site + "logo.png", "email": "kontakt@zailiprotiv.rs",
              "description": "Nezavisan sajt koji iz primarnih izvora Narodne skupštine Srbije pokazuje zakone i kako je glasao "
                             "svaki poslanik, od 2012. Ista pravila za sve, bez ocena.",

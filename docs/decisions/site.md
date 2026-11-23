@@ -314,6 +314,14 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   pages of their own. They stay linked and open; links on them are followed. Read the effect with `inspect` in
   December: whether the MPs' and laws' pages leave "discovered" sooner.
 
+- **The site searched for by its name** (23 Nov 2026, the maintainer saw it for "zailiprotiv" and not for "za ili
+  protiv"). Search Console to 20 Nov: "za ili protiv" 211 times shown, 163 clicks, position 2.2, the same place as
+  "zailiprotiv" (140, 112, 2.2), 184 of the 211 in Serbia; 21-23 Nov had too few of either to tell. `search.py`
+  (**visits**, `search`) now also gives the searches for the name day by day to the newest day, which page and from
+  where. The home page's structured data names the other forms (`publish.NAMES`: Google takes a list, the preferred
+  first) beside the domain. The rest is outside the pages: a phrase in common use, a domain two weeks old; links and
+  mentions under the name (profiles in `sameAs`) are what tells Google it is a name.
+
 ## Support
 
 - **"Podrži": readers' support by bank transfer** (22 Nov 2026, the maintainer's decision, after readers asked for
