@@ -23,8 +23,8 @@ SITE = "https://zailiprotiv.rs/"
 LIVE = "https://mikrofon.zailiprotiv.rs/"
 METHOD = "kako-racunamo#sazetak-dana"
 SUPPORT = "podrzi"  # the page "Podrži"; a card in the middle of every mail (23 Nov 2026, the maintainer: a call, never a lock)
-SUPPORT_TITLE = "Ovaj mejl pravi jedan čovek, uz nadzor mačka Časlava."
-SUPPORT_LINE = "Besplatan je i bez reklama. Ako ti koristi, podrži rad na njemu."
+SUPPORT_TITLE = "Za ili Protiv pravi jedan čovek, uz nadzor mačka Časlava."
+SUPPORT_LINE = "Sajt i ovaj mejl su besplatni i bez reklama. Ako ti koriste, podrži ih."
 FROM = "sazetak@zailiprotiv.rs"
 CONTACT = "kontakt@zailiprotiv.rs"
 BELGRADE = ZoneInfo("Europe/Belgrade")
@@ -187,13 +187,13 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     # The call for support, where the mail turns from what was decided to what was said (23 Nov 2026, the maintainer:
     # "izrazi podrži i stavi ga na sredinu"): a dark card, the one thing in the mail that asks something of the reader.
     # The amounts lead to their codes on the page; a heart as a letter, nothing loaded, nothing that says who pressed.
-    pill = (f"display:inline-block;{font}font-size:16px;font-weight:bold;text-decoration:none;white-space:nowrap;"
-            "border-radius:999px;padding:10px 17px;margin:0 6px 8px 0;")
+    pill = (f"display:inline-block;{font}font-size:15px;font-weight:bold;text-decoration:none;white-space:nowrap;"
+            "border-radius:999px;padding:10px 12px;margin:0 5px 8px 0;")
     amounts = "".join(f'<a href="{html.escape(support)}#din-{a}" style="{pill}background:{PAPER};color:{INK};border:1px solid {PAPER}">'
                       f'{a} {e("din")}</a>' for a in config.SUPPORT_AMOUNTS)
     other = e("ili koliko želiš") if amounts else e("Podrži sajt")
     card = (f'<tr><td style="padding:22px 0 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-            f'bgcolor="{DARK}" style="background:{DARK};border-radius:14px"><tr><td style="padding:22px 22px 16px">'
+            f'bgcolor="{DARK}" style="background:{DARK};border-radius:14px"><tr><td style="padding:22px 20px 16px">'
             f'<div style="{font}font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:bold;color:{WARM}">'
             f'<span style="font-size:17px;vertical-align:-1px">&#9829;&#65038;</span> {e("Podrži Za ili Protiv")}</div>'
             f'<div style="font-family:{SERIF};font-size:21px;line-height:1.25;font-weight:bold;color:{PAPER};padding:8px 0 6px">{e(SUPPORT_TITLE)}</div>'
