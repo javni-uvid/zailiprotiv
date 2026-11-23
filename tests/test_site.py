@@ -895,3 +895,88 @@ def test_the_chairs_measures_are_paged_and_linked_where_they_stand(tmp_path, mon
     links = re.findall(r'href="\.\./(replike(?:-s2)?\.html)#([^"]+)"', (out / "poslanik" / "abramovic-nenad.html").read_text(encoding="utf-8"))
     assert {p for p, _ in links} == {"replike.html", "replike-s2.html"}
     assert all(f'id="{i}"' in (out / p).read_text(encoding="utf-8") for p, i in links)
+
+
+def test_a_lighter_page_is_the_same_page():
+    """Indentation and the end tags of cells and rows go; a script, a style and what is inside a cell stay as they are."""
+    from html.parser import HTMLParser
+
+    from zailiprotiv import publish
+    page = """<table class="roll" id="roll">
+      <thead><tr><th>Poslanik</th><th>Glas</th></tr></thead>
+      <tbody>
+        <tr><td><a href="x">A  b</a></td><td class="num"></td></tr>
+
+        <tr><td>c <details><summary>d</summary><ul class="plain"><li>e</li> <li>f</li></ul></details></td> <td>g</td></tr>
+      </tbody>
+    </table>
+    <script>
+      var a = "</td> <td>";
+    </script>
+    <p>h
+       i</p>"""
+    out = publish.lighter(page)
+    assert "</td> <td>\";\n    </script>" in out and "<li>e</li> <li>f</li>" in out
+    assert "</tr>" not in out and out.count("</td>") == 1  # only the one inside the script
+
+    class Cells(HTMLParser):
+        """The rows as the HTML standard reads them: a cell ends where the next begins."""
+        def __init__(self):
+            super().__init__()
+            self.rows, self.raw = [], False
+
+        def handle_starttag(self, tag, attrs):
+            if tag == "tr":
+                self.rows.append([])
+            elif tag in ("td", "th"):
+                self.rows[-1].append([dict(attrs), ""])
+            self.raw = tag == "script"
+
+        def handle_endtag(self, tag):
+            self.raw = False
+
+        def handle_data(self, data):
+            if self.rows and self.rows[-1] and not self.raw and "h\n" not in data:
+                self.rows[-1][-1][1] += data
+
+    def cells(text):
+        p = Cells()
+        p.feed(text.split("</table>")[0])
+        return [[(a, " ".join(t.split())) for a, t in r] for r in p.rows]
+    assert cells(out) == cells(page) and len(cells(out)) == 3
+    assert publish.lighter(out) == out  # the fast path of "pages" lightens nothing twice
+
+
+def test_the_chamber_is_a_group_a_vote_with_every_seat_in_its_place():
+    from zailiprotiv import site
+    counts = {"za": 144, "protiv": 38}
+    got = site.chamber_groups(counts)
+    assert [(k, len(run)) for k, run in got] == [("za", 144), ("ostali", 68), ("protiv", 38)]
+    assert [(float(x), float(y), k) for k, run in got for x, y in run] == site.hemicycle(counts)
+    assert [k for k, _ in site.chamber_groups({"za": 250})] == ["za"]
+
+
+def test_a_change_of_markup_alone_tells_the_search_engines_nothing(tmp_path, monkeypatch):
+    import json
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parents[1] / "tools"))
+    import indexnow
+    site_, store, listing = tmp_path / "s", tmp_path / "c.json", tmp_path / "l.txt"
+    site_.mkdir()
+    urls = ["https://zailiprotiv.rs/a", "https://zailiprotiv.rs/b"]
+    sitemap = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>{u}</loc></url>" for u in urls) + "</urlset>"
+
+    def run(a, b):
+        (site_ / "sitemap.xml").write_text(sitemap, encoding="utf-8")
+        (site_ / "a.html").write_text(f"<main>{a}</main>", encoding="utf-8")
+        (site_ / "b.html").write_text(f"<main>{b}</main>", encoding="utf-8")
+        monkeypatch.setattr(sys, "argv", ["indexnow", "list", str(site_), str(store), str(listing)])
+        indexnow.main()
+        return listing.read_text(encoding="utf-8").split()
+    store.write_text(json.dumps({u: ["hash of the markup", "2026-11-01"] for u in urls}), encoding="utf-8")
+    assert run("<p>x</p>", "y") == []  # another way of making the hash: the days stay
+    assert (site_ / "sitemap.xml").read_text(encoding="utf-8").count("<lastmod>2026-11-01</lastmod>") == 2
+    assert run("<p>\n  x", "y") == []
+    assert run("x", "z") == [urls[1]]
+    assert run('<a href="q">x</a>', "z") == [urls[0]]

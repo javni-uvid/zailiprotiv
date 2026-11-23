@@ -42,3 +42,25 @@ the change. The principles and the rules of work are in AGENTS.md.
   speech is searched for harsh words only when it holds one of the list's stems as plain text (`pages_floor.harsh`);
   an MP's words are counted once each before their stems (`profiles.distinctive`). Built before and after on the
   same data: all 19,180 files the same but for the time of building (538 s → 407 s on the maintainer's computer).
+- **The site's size** (23 Nov 2026, the maintainer's request): GitHub Pages publishes no site over 1 GB, and the site
+  was 833 MB (748 MiB on 18 Nov, 793 on 23 Nov), half of it the Cyrillic twins. Nothing is taken off the pages:
+  - every page without indentation and without the end tags of table cells and rows, which the HTML standard lets go
+    (`publish.lighter`; not in scripts and styles, not list items, whose spaces show). A step of its own after the
+    search index (`zailiprotiv lighten`): Pagefind runs the cells' words together without their end tags ("117SPS"),
+    found by comparing the two indexes;
+  - the chamber's seats in a group per vote, the vote written once (`site.chamber_groups`): drawn the same, byte for
+    byte in Edge at three densities; a path with round ends was a quarter of the size and left out, as its points are
+    drawn rougher;
+  - the roll call's rows without `data-g` and `data-v`, which its cells say already: the script reads the cells. The
+    filter by group had found nothing on the Cyrillic pages, where the cells and the filter are Cyrillic and `data-g`
+    was not;
+  - an MP's every vote without a class on the day and the vote that the stylesheet can give.
+
+  The day written once for a day's laws was tried and left out: on a phone it goes out of sight.
+
+  Together 112 MB fewer (a build of the repository's own data: 727 to 615 MB of pages; every page's words and links,
+  the search index and 900 pages read as a browser reads them the same, the pictures the same in Edge to the
+  pixel). The search engines are told of a page when its words or links changed (`tools/indexnow.py`,
+  `said`), no longer its markup. **pages** warns over 850 MB. The next steps, if it grows on: the `-glasovi` pages
+  (noindex, some 250 MB) to a bucket with the notes' pages, or the Cyrillic edition elsewhere; both change addresses, so
+  the maintainer decides.

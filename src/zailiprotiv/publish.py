@@ -75,6 +75,37 @@ def structured(text: str, site: str, here: str, address: str) -> str:
     return text.replace("</head>", f'<script type="application/ld+json">{blob}</script>\n</head>', 1)
 
 
+_RAW = re.compile(r"(<(script|style|pre|textarea)\b.*?</\2>)", re.S | re.I)
+_INDENT = re.compile(r"\n[ \t\r\n]+")
+_CELL_END = re.compile(r"</t[dh]>\s*(?=<t[dh][\s>]|</tr>)")
+_ROW_END = re.compile(r"\s*</tr>\s*(?=<tr[\s>]|</(?:tbody|thead|tfoot|table)>)")
+
+
+def lighter(text: str) -> str:
+    """The same page in fewer bytes (23 Nov 2026: the site neared GitHub Pages' limit of 1 GB): without indentation,
+    which a browser reads as one space, and without the end tags of table cells and rows, which the HTML standard
+    lets go before the next one or the table's end. What a browser makes of the page is the same; the search (Pagefind)
+    runs the cells' words together without those tags, so this comes after it (`lighten`)."""
+    parts = _RAW.split(text)  # text, (a script or style whole, its name), text, …
+    for i in range(0, len(parts), 3):
+        parts[i] = _ROW_END.sub("", _CELL_END.sub("", _INDENT.sub("\n", parts[i])))
+    return "".join(p for i, p in enumerate(parts) if i % 3 != 2)
+
+
+def _lighten_file(name: str) -> int:
+    f = Path(name)
+    text = f.read_text(encoding="utf-8")
+    light = lighter(text)
+    if light != text:
+        f.write_text(light, encoding="utf-8", newline="")
+    return len(text.encode()) - len(light.encode())
+
+
+def lighten(out: Path) -> int:
+    """Every page of a built and indexed site made lighter; the bytes saved."""
+    return sum(_pool_map(_lighten_file, [str(f) for f in out.rglob("*.html")]))
+
+
 # What a worker of clean_urls needs, set once per process (the folders are many: sent once, not with every file).
 _CLEAN: dict = {}
 

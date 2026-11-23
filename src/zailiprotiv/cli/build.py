@@ -18,6 +18,13 @@ def website(args) -> int:
     return 1 if bad else 0
 
 
+def lighten(args) -> int:
+    """A built site's pages in fewer bytes, after the search index is made of them (publish.lighter)."""
+    from zailiprotiv import publish
+    print(f"lighten: {publish.lighten(Path(args.site)) / 1e6:.0f} MB saved")
+    return 0
+
+
 def static_patch(args) -> int:
     """static/ into a site built before: the pages workflow's fast path when a push changes nothing else."""
     from zailiprotiv import site

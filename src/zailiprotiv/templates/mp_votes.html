@@ -73,7 +73,7 @@
       <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
       <tbody>
       {% for r in c.record %}
-        <tr><td class="nowrap">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }} nowrap">{{ vote_label[r.vote] }}</td></tr>
+        <tr><td>{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
       {% endfor %}
       </tbody>
     </table>

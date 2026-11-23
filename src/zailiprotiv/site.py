@@ -9,6 +9,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import html
+import itertools
 import json
 import re
 import urllib.parse
@@ -312,6 +313,14 @@ def hemicycle(counts: dict, rows=((60, 17), (75, 21), (90, 25), (105, 29), (120,
         kind = "za" if i < za else ("protiv" if i >= total - protiv else "ostali")
         out.append((round(170 + r * math.cos(t), 1), round(172 - r * math.sin(t), 1), kind))
     return out
+
+
+def chamber_groups(counts: dict) -> list[tuple[str, list[tuple[str, str]]]]:
+    """The chamber's seats in runs of one vote, left to right, each seat as its place: the vote is written once for a
+    run, and a place without a needless ".0". Drawn exactly as 250 circles each with its vote, in a third fewer bytes
+    (a path with round ends took a quarter, but browsers draw its points rougher, seen 23 Nov 2026)."""
+    num = lambda v: f"{v:.1f}".removesuffix(".0")  # noqa: E731
+    return [(kind, [(num(x), num(y)) for x, y, _ in run]) for kind, run in itertools.groupby(hemicycle(counts), lambda s: s[2])]
 
 
 def qid(text: str) -> str:
@@ -899,7 +908,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # A name the Assembly used for more than one law (the same law amended again): its pages' titles carry the day.
     named = Counter(a["law"]["title"] for a in law_pages)
     env.globals.update(
-        hemicycle=hemicycle,
+        chamber_groups=chamber_groups,
         family_bar=family.bar, family_foot=family.foot,
         family_url=family.sites()["family"]["url"]["lat"], family_url_cir=family.sites()["family"]["url"]["cyr"],  # Javni uvid's bar and footer block, the same on every site
         votes_api=settings.get("votes_api", ""),  # the visitors' votes counter (worker/)
