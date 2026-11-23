@@ -207,12 +207,8 @@ class Tracker(Said, Chronicle, View):
         f = self._file(self.day)
         if not f:
             return
-        f.parent.mkdir(parents=True, exist_ok=True)
-        tmp = f.with_suffix(".tmp")
-        tmp.write_text(json.dumps({"day": self.day, "turns": self.turns, "cover": self.cover, "open": self.open,
-                                   "status": self.status, "last_frame": self.last_frame}, ensure_ascii=False),
-                       encoding="utf-8")
-        tmp.replace(f)
+        _write(f, {"day": self.day, "turns": self.turns, "cover": self.cover, "open": self.open,
+                   "status": self.status, "last_frame": self.last_frame})
 
     # --- readings ---
     def _close(self) -> None:

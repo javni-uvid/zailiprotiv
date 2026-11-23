@@ -6,13 +6,18 @@ import json
 from pathlib import Path
 
 
-def _write(f: Path, data) -> None:
+def write_text(f: Path, text: str) -> None:
     """A file written whole or not at all: beside it first, then put in its place (a crash mid-write used to
     leave half a file, read back as nothing, and the next write kept only what came after)."""
     f.parent.mkdir(parents=True, exist_ok=True)
     tmp = f.with_suffix(".tmp")
-    tmp.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    tmp.write_text(text, encoding="utf-8")
     tmp.replace(f)
+
+
+def _write(f: Path, data) -> None:
+    """The same for data kept as JSON. Every file the service keeps is written by one of the two."""
+    write_text(f, json.dumps(data, ensure_ascii=False))
 
 
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"

@@ -6,16 +6,16 @@ import logging
 import os
 import threading
 import time
-import urllib.request
 from pathlib import Path
 
 from PIL import Image
 
-from . import config
+from . import config, mreza
 from .caption import differs, role, who
 from .names import Roster
 from .ocr import caption
 from .state import Tracker
+from .state_base import write_text
 from .stream import VIDEO, NotLive, resolve_input, start_ffmpeg
 
 log = logging.getLogger("worker")
@@ -37,12 +37,9 @@ class RosterKeeper:
         if time.time() - self.fetched > config.ROSTER_HOURS * 3600:
             self.fetched = time.time()
             try:
-                req = urllib.request.Request(config.ROSTER_URL, headers={"User-Agent": "zailiprotiv-uzivo"})
-                with urllib.request.urlopen(req, timeout=30) as resp:
-                    text = resp.read().decode("utf-8")
+                text = mreza.site(config.ROSTER_URL)
                 self.roster = Roster.from_json(text)
-                self.cache.parent.mkdir(parents=True, exist_ok=True)
-                self.cache.write_text(text, encoding="utf-8")
+                write_text(self.cache, text)
                 log.info("roster: %d MPs", len(self.roster.people))
             except Exception as exc:  # the last good list stays
                 log.warning("roster not fetched (%s); keeping %d MPs", exc, len(self.roster.people))
@@ -50,9 +47,7 @@ class RosterKeeper:
                 for url, use in ((config.DAY_URL, self.tracker.use_recording), (config.WAIT_URL, self.tracker.use_waiting),
                                  (config.FACTS_URL, self.tracker.use_facts)):
                     try:
-                        req = urllib.request.Request(url, headers={"User-Agent": "zailiprotiv-uzivo"})
-                        with urllib.request.urlopen(req, timeout=30) as resp:
-                            use(json.loads(resp.read().decode("utf-8")))
+                        use(json.loads(mreza.site(url)))
                     except Exception as exc:  # the last good copy stays
                         log.warning("%s not fetched (%s)", url, exc)
             if self.tracker:

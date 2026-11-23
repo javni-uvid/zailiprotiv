@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .state_base import SAID_LEAD
+from .state_base import SAID_LEAD, _write
 
 
 class Said:
@@ -40,10 +40,7 @@ class Said:
             f = self._said_file(day)
             if f:
                 try:
-                    f.parent.mkdir(parents=True, exist_ok=True)
-                    tmp = f.with_suffix(".tmp")
-                    tmp.write_text(json.dumps(self.said, ensure_ascii=False), encoding="utf-8")
-                    tmp.replace(f)
+                    _write(f, self.said)
                 except OSError:
                     pass
 
