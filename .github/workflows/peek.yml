@@ -32,8 +32,7 @@ jobs:
           for u in ${IN_URLS}; do
             echo "=== $u"
             curl -sS -L --max-time 60 -A "Mozilla/5.0 (zailiprotiv.rs peek)" "$u" -o page.html -w "%{http_code} %{size_download} bytes\n" || continue
-            if [ "${IN_RAW}" = "true" ]; then sed 's/></>
-</g' page.html | head -c "${IN_CHARS}"; echo; continue; fi  # a line too long is lost from the log
+            if [ "${IN_RAW}" = "true" ]; then sed 's/></>\n</g' page.html | head -c "${IN_CHARS}"; echo; continue; fi  # a line too long is lost from the log
             python3 - "${IN_CHARS}" <<'PY'
           import re, sys, html
           t = open("page.html", encoding="utf-8", errors="replace").read()
