@@ -32,6 +32,14 @@ jobs:
           for u in ${IN_URLS}; do
             echo "=== $u"
             curl -sS -L --max-time 60 -A "Mozilla/5.0 (zailiprotiv.rs peek)" "$u" -o page.html -w "%{http_code} %{size_download} bytes\n" || continue
+            case "$(head -c 2 page.html)" in
+              PK) rm -rf z && mkdir z && python3 -m zipfile -e page.html z && find z -type f -print0 | head -z -n 1 | xargs -0 -I{} cp {} page.html ;;
+            esac
+            if [ "$(head -c 4 page.html)" = "%PDF" ]; then  # a PDF's text; a scan is read by OCR
+              command -v pdftotext >/dev/null || { sudo apt-get update -qq; sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp >/dev/null; }
+              pdftotext -layout page.html page.txt; [ "$(tr -d '[:space:]' < page.txt | wc -c)" -gt 400 ] || { pdftoppm -r 200 -gray page.html pg; for p in pg-*.pgm; do tesseract "$p" stdout -l srp 2>/dev/null; done > page.txt; rm -f pg-*.pgm; }
+              head -c "${IN_CHARS}" page.txt; echo; continue
+            fi
             if [ "${IN_RAW}" = "true" ]; then sed 's/></>\n</g' page.html | head -c "${IN_CHARS}"; echo; continue; fi  # a line too long is lost from the log
             python3 - "${IN_CHARS}" <<'PY'
           import re, sys, html
