@@ -47,7 +47,7 @@ class FakeMail:
         return mejl.Mail("Skupština, četvrtak 19. novembar: 6 odluka", "tekst " + out, "<html><body>" + out + "</body></html>")
 
 
-def test_to_all_only_with_the_days_code_once_and_never_after_eight(tmp_path, monkeypatch):
+def test_to_all_only_with_the_days_code_once_and_never_after_noon(tmp_path, monkeypatch):
     monkeypatch.setattr(pretplata.config, "MAIL_KEY", KEY)
     sent = []
     monkeypatch.setattr(pretplata, "send", lambda msgs: (sent.extend(msgs), (len(msgs), []))[1])
@@ -78,6 +78,110 @@ def test_the_maintainer_gets_the_day_first_and_a_word_in_two_scripts_stops_it(tm
     assert m.ready(date(2026, 11, 19)) and not m.ready(date(2026, 11, 19))  # once a day
     assert sent[0]["to"] == "urednik@primer.rs" and "NE MOŽE SVIMA" in sent[0]["text"] and "Pošalji svima" not in sent[0]["html"]
     assert m.to_all(date(2026, 11, 19), pretplata.link_key(date(2026, 11, 19))) == ("dvopis", 0)
+
+
+@pytest.fixture
+def outbox(tmp_path, monkeypatch):
+    """A mailer with fifty readers and the counter replaced: what it was asked to send, and how it answers."""
+    monkeypatch.setattr(pretplata.config, "MAIL_KEY", KEY)
+    monkeypatch.setattr(pretplata.config, "MAIL_EDITOR", "urednik@primer.rs")
+    monkeypatch.setattr(pretplata.config, "PUSH_TOKEN", "t")
+    monkeypatch.setattr(pretplata, "unseal", lambda key, s: s)
+    monkeypatch.setattr(pretplata, "deadline", lambda d: pretplata.datetime(2999, 1, 1, tzinfo=pretplata.TZ))
+
+    class Box:
+        got: list = []
+        fail = None  # how the next calls fail: called with the batch's number and messages
+        calls = 0
+        mailer = pretplata.Mailer(tmp_path, FakeMail())
+
+    box = Box()
+    box.got = []
+
+    def call(path, body=None):
+        if path == "/m/spisak":
+            import time
+            time.sleep(0.1)
+            return {"primaoci": [{"id": f"r{i}", "adresa": f"c{i}@primer.rs", "odjava": "https://x"} for i in range(50)]}
+        box.calls += 1
+        wrong = (box.fail(box.calls) if box.fail else None) or []
+        box.got += [m["to"] for i, m in enumerate(body["poruke"]) if i not in wrong]
+        return {"poslato": len(body["poruke"]) - len(wrong), "greske": [{"i": i, "code": "X"} for i in wrong]}
+
+    monkeypatch.setattr(pretplata, "_call", call)
+    return box
+
+
+DAY = date(2026, 11, 24)
+
+
+def test_the_button_pressed_twice_at_once_sends_once(outbox):
+    import threading
+    out = []
+    ts = [threading.Thread(target=lambda: out.append(outbox.mailer.to_all(DAY, pretplata.link_key(DAY)))) for _ in range(2)]
+    [t.start() for t in ts]
+    [t.join() for t in ts]
+    assert sorted(out) == [("ok", 50), ("u_toku", 0)] and len(outbox.got) == 50
+
+
+def test_a_sending_broken_in_the_middle_goes_on_where_it_stopped(outbox):
+    def timeout(n):
+        if n == 2:
+            raise TimeoutError("timed out")
+    outbox.fail = timeout
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("deo", 20)
+    # a new run of the service; the batch whose call timed out may have gone, so it is not sent again
+    outbox.mailer = pretplata.Mailer(outbox.mailer.folder, FakeMail())
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("nesigurno", 30)
+    assert len(outbox.got) == len(set(outbox.got)) == 30
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("vec", 30)
+
+
+def test_a_batch_the_counter_refused_and_a_message_that_failed_are_sent_on_the_next_click(outbox):
+    import urllib.error
+
+    def refuse(n):
+        if n == 1:
+            return [3]
+        if n == 2:
+            raise urllib.error.HTTPError("u", 429, "limit", None, None)
+    outbox.fail = refuse
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("deo", 19)
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("ok", 50)
+    assert sorted(outbox.got) == sorted(f"c{i}@primer.rs" for i in range(50))
+    kept = (outbox.mailer.folder / f"{DAY}.json").read_text(encoding="utf-8")
+    assert "@" not in kept  # readers are kept by the counter's row, never by address
+
+
+def test_the_maintainers_mail_that_did_not_go_is_tried_again(outbox):
+    outbox.fail = lambda n: [0]
+    assert not outbox.mailer.ready(DAY)
+    outbox.fail = None
+    assert outbox.mailer.ready(DAY) and not outbox.mailer.ready(DAY)
+
+
+def test_a_word_in_two_scripts_mended_frees_the_day(outbox):
+    good = outbox.mailer.build
+    outbox.mailer.build = lambda day, cyr, out: mejl.Mail("Skupština", "Čupić je izn\u0435o načela", "<html><body>x</body></html>")
+    assert outbox.mailer.ready(DAY) and not outbox.mailer.ready(DAY)
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("dvopis", 0)
+    outbox.mailer.build = good
+    assert outbox.mailer.ready(DAY) and not outbox.mailer.ready(DAY)
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("ok", 50)
+
+
+def test_no_key_no_code_and_a_day_without_a_summary_is_not_marked_as_sent(outbox, monkeypatch):
+    good = outbox.mailer.build
+    outbox.mailer.build = lambda day, cyr, out: None
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("prazno", 0)
+    outbox.mailer.build = good
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("ok", 50)
+    monkeypatch.setattr(pretplata.config, "MAIL_KEY", "")
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("kod", 0)
+
+
+def test_the_days_mail_goes_until_noon_the_next_day():
+    assert pretplata.deadline(DAY).isoformat()[:16] == "2026-11-25T12:00"
 
 
 def test_the_worker_serves_sign_up_confirmation_and_unsubscription():

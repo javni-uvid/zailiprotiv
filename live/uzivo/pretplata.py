@@ -2,9 +2,9 @@
 
 The counter keeps the addresses sealed for the maintainer's key (`worker/mejl.js`); only this service, with
 MEJL_KLJUC in live/.env, opens them, and only to send. When the day's summary is on the page (`obavesti.Bell`), the
-mail of the day goes to MEJL_UREDNIK alone, with a link to send it to everyone; the link works until 8 the next
-morning, and once. A mail with a word in two scripts (`mejl.mixed_words`) goes to the maintainer saying so, and to
-nobody else.
+mail of the day goes to MEJL_UREDNIK alone, with a link to send it to everyone; the link works until noon the
+next day, and once. A mail with a word in two scripts (`mejl.mixed_words`) goes to the maintainer saying so, and to
+nobody else until that is mended.
 """
 from __future__ import annotations
 
@@ -13,6 +13,9 @@ import hashlib
 import hmac
 import json
 import logging
+import socket
+import threading
+import urllib.error
 import urllib.request
 from datetime import date, datetime, timedelta
 from html import escape
@@ -20,6 +23,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import config, mejl, mere
+from .state_base import _write
 
 log = logging.getLogger("uzivo.pretplata")
 COUNTER = "https://glasovi.zailiprotiv.rs"
@@ -61,8 +65,9 @@ def link_key(day: date) -> str:
 
 
 def deadline(day: date) -> datetime:
-    """A day's mail goes to all until 8 the morning after."""
-    return datetime.combine(day + timedelta(days=1), datetime.min.time(), TZ).replace(hour=8)
+    """A day's mail goes to all until noon the day after (until 23 Nov 2026 until 8: a day ended late left the
+    maintainer, who gets the mail at 7, an hour)."""
+    return datetime.combine(day + timedelta(days=1), datetime.min.time(), TZ).replace(hour=12)
 
 
 def _call(path: str, body: dict | None = None) -> dict:
@@ -83,54 +88,96 @@ def send(messages: list[dict]) -> tuple[int, list]:
     return sent, failed
 
 
+def _not_sent(exc: Exception) -> bool:
+    """Whether a call that failed surely sent nothing: the counter refused it, or was never reached. A timeout or a
+    5xx is neither: some of its messages may have gone."""
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code < 500
+    return isinstance(exc, urllib.error.URLError) and isinstance(exc.reason, (ConnectionRefusedError, socket.gaierror))
+
+
 class Mailer:
-    """The day's mail: once to the maintainer when the summary is ready, then to all on his link, once."""
+    """The day's mail: to the maintainer when the summary is ready, then to all on his link.
+
+    What went is kept per reader (the counter's row id, never the address), written before and after every batch, so
+    that a break in the middle loses nobody and nobody gets the day twice: a batch is "nesigurni" while its call is
+    out, then each of its readers is sent or failed. The next click goes on with those not yet sent; the uncertain
+    (at most one batch) are never sent again (23 Nov 2026)."""
 
     def __init__(self, folder: Path, build):
         self.folder = Path(folder)  # /data/mejl: what went, by day
         self.build = build          # day, cyr, unsubscribe link → mejl.Mail of that day, or None
+        self._lock = threading.Lock()  # one sending at a time: the button pressed twice is one sending
 
     def _state(self, day: date) -> dict:
         f = self.folder / f"{day.isoformat()}.json"
         return json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
 
     def _keep(self, day: date, state: dict) -> None:
-        self.folder.mkdir(parents=True, exist_ok=True)
-        (self.folder / f"{day.isoformat()}.json").write_text(json.dumps(state, ensure_ascii=False), encoding="utf-8")
+        _write(self.folder / f"{day.isoformat()}.json", state)
 
     def ready(self, day: date) -> bool:
-        """The day's summary is on the page: the maintainer gets the mail and the link, once a day."""
-        if not (config.MAIL_KEY and config.MAIL_EDITOR and config.PUSH_TOKEN) or self._state(day).get("uredniku"):
+        """The day's summary is on the page: the maintainer gets the mail and the link. Asked again every few minutes
+        (sudija.Judge._tell): once it went it goes no more, unless it said a word is in two scripts and that has
+        changed since; one that did not go is tried again."""
+        if not (config.MAIL_KEY and config.MAIL_EDITOR and config.PUSH_TOKEN) or not self._lock.acquire(blocking=False):
             return False
-        m = self.build(day, False, "")
-        if m is None:
-            return False
-        slips = mejl.mixed_words(m.text)
-        link = f"{config.PUBLIC_URL.rstrip('/')}/mejl/posalji?dan={day.isoformat()}&k={link_key(day)}"
-        note = (f"<p><b>Ne može svima:</b> reč u dva pisma ({', '.join(slips)}). Ispravi sažetak dana, pa će stići novi.</p>"
-                if slips else f'<p><a href="{link}"><b>Pošalji svima</b></a> (do 8 ujutru, jednom).</p>')
-        top = f'<div style="font-family:sans-serif;padding:12px;background:#fbf0dc">{note}</div>'
-        sent, failed = send([{"to": config.MAIL_EDITOR, "subject": "[za tebe] " + m.subject,
-                              "html": _with_top(m.html, top),
-                              "text": ("NE MOŽE SVIMA: " + ", ".join(slips) if slips else "Pošalji svima: " + link) + "\n\n" + m.text}])
-        self._keep(day, {"uredniku": datetime.now(TZ).isoformat(), "greske": failed, "dvopis": slips})
-        log.info("mejl %s: uredniku %s", day, "poslat" if sent else f"nije poslat {failed}")
-        return bool(sent)
+        try:
+            state = self._state(day)
+            if state.get("uredniku") and not state.get("dvopis"):
+                return False
+            m = self.build(day, False, "")
+            if m is None:
+                return False
+            slips = mejl.mixed_words(m.text)
+            if state.get("uredniku") and slips == state["dvopis"]:
+                return False
+            link = f"{config.PUBLIC_URL.rstrip('/')}/mejl/posalji?dan={day.isoformat()}&k={link_key(day)}"
+            note = (f"<p><b>Ne može svima:</b> reč u dva pisma ({escape(', '.join(slips))}). Ispravi sažetak dana, pa će stići novi.</p>"
+                    if slips else f'<p><a href="{escape(link)}"><b>Pošalji svima</b></a> (do podneva, jednom).</p>')
+            top = f'<div style="font-family:sans-serif;padding:12px;background:#fbf0dc">{note}</div>'
+            sent, failed = send([{"to": config.MAIL_EDITOR, "subject": "[za tebe] " + m.subject,
+                                  "html": _with_top(m.html, top),
+                                  "text": ("NE MOŽE SVIMA: " + ", ".join(slips) if slips else "Pošalji svima: " + link) + "\n\n" + m.text}])
+            if sent:
+                state.update(uredniku=datetime.now(TZ).isoformat(), dvopis=slips)
+                self._keep(day, state)
+            log.info("mejl %s: uredniku %s", day, "poslat" if sent else f"nije poslat {failed}")
+            return bool(sent)
+        finally:
+            self._lock.release()
 
     def to_all(self, day: date, code: str) -> tuple[str, int]:
-        """The maintainer's link: (what happened, how many went)."""
-        if not hmac.compare_digest(code, link_key(day)):
+        """The maintainer's link: (what happened, how many have the day's mail in all)."""
+        if not config.MAIL_KEY or not hmac.compare_digest(code.encode(), link_key(day).encode()):
             return "kod", 0
+        if not self._lock.acquire(blocking=False):
+            return "u_toku", 0
+        try:
+            return self._to_all(day)
+        finally:
+            self._lock.release()
+
+    def _to_all(self, day: date) -> tuple[str, int]:
         state = self._state(day)
-        if state.get("svima"):
-            return "vec", state.get("poslato", 0)
-        if state.get("dvopis"):
+        done = list(state.get("poslati") or [])
+        if state.get("zavrseno"):
+            return "vec", len(done)
+        first = self.build(day, False, "")
+        if first is None:
+            return "prazno", 0
+        if mejl.mixed_words(first.text):
             return "dvopis", 0
         if datetime.now(TZ) > deadline(day):
-            return "kasno", 0
-        people = _call("/m/spisak").get("primaoci", [])
-        messages, seen = [], set()
-        for p in people:
+            return "kasno", len(done)
+        try:
+            people = _call("/m/spisak").get("primaoci", [])
+        except Exception as exc:  # nothing begun: the same click later
+            log.warning("mejl %s: spisak nije stigao (%s)", day, exc)
+            return "brojac", len(done)
+        unsure = list(state.get("nesigurni") or [])
+        waiting, seen = [], set()
+        for p in sorted(people, key=lambda p: p["id"] not in done and p["id"] not in unsure):  # those who have it first
             try:
                 to = unseal(config.MAIL_KEY, p["adresa"])
             except Exception:  # noqa: BLE001 — sealed for another key: never sent, never shown
@@ -138,16 +185,39 @@ class Mailer:
             if to.lower() in seen:
                 continue
             seen.add(to.lower())
-            m = self.build(day, bool(p.get("cir")), p["odjava"])
-            if m:
+            if p["id"] not in done and p["id"] not in unsure:
+                waiting.append((p, to))
+        state.setdefault("svima", datetime.now(TZ).isoformat())
+        failed: list[dict] = []
+        broken = False
+        for i in range(0, len(waiting), BATCH):
+            batch = waiting[i:i + BATCH]
+            ids = [p["id"] for p, _ in batch]
+            messages = []
+            for p, to in batch:
+                m = self.build(day, bool(p.get("cir")), p["odjava"]) or first
                 messages.append({"to": to, "subject": m.subject, "html": m.html, "text": m.text, "odjava": p["odjava"]})
-        state.update(svima=datetime.now(TZ).isoformat())
-        self._keep(day, state)  # before sending: a second click never sends twice
-        sent, failed = send(messages)
-        state.update(poslato=sent, greske=failed)
+            state.update(poslati=done, nesigurni=unsure + ids)
+            self._keep(day, state)  # before the call: whatever happens to it, these are not sent a second time
+            try:
+                _, wrong = send(messages)
+            except Exception as exc:
+                broken = True
+                if not _not_sent(exc):
+                    unsure += ids
+                log.warning("mejl %s: prekid (%s)", day, exc)
+                break
+            bad = {w.get("i") for w in wrong}
+            failed += [{"id": ids[w["i"]], "code": str(w.get("code", ""))} for w in wrong if w.get("i") in range(len(ids))]
+            done += [x for j, x in enumerate(ids) if j not in bad]
+        state.update(poslati=done, nesigurni=unsure, greske=failed)
+        if not broken and not failed:
+            state["zavrseno"] = datetime.now(TZ).isoformat()
         self._keep(day, state)
-        log.info("mejl %s: svima %d od %d", day, sent, len(messages))
-        return "ok", sent
+        log.info("mejl %s: svima %d, nije proslo %d, nesigurno %d", day, len(done), len(failed), len(unsure))
+        if broken or failed:
+            return "deo", len(done)
+        return ("nesigurno" if unsure else "ok"), len(done)
 
 
 def _with_top(html: str, top: str) -> str:
@@ -202,13 +272,18 @@ def page_ask(day: str, code: str) -> str:
         return _PAGE.format(body="<h1>Link nije ispravan</h1>")
     when = f"{d.day}. {mejl.MONTHS_OF[d.month - 1]}"
     return _PAGE.format(body=f"<h1>Sažetak dana, {escape(when)}</h1><p>Mejl ide svima koji su potvrdili prijavu, jednom, "
-                             f"do 8 ujutru sledećeg dana.</p><form method=\"post\"><input type=\"hidden\" name=\"dan\" "
+                             f"do podneva sledećeg dana.</p><form method=\"post\"><input type=\"hidden\" name=\"dan\" "
                              f"value=\"{escape(day)}\"><input type=\"hidden\" name=\"k\" value=\"{escape(code[:64])}\">"
                              f"<button>Pošalji svima</button></form>")
 
 
 def page_done(what: str, n: int) -> str:
     text = {"ok": f"Poslato: {n}.", "vec": f"Već je poslato ({n}); drugi put se ne šalje.",
-            "kasno": "Prošlo je 8 ujutru: taj dan se ne šalje.", "dvopis": "Sažetak ima reč u dva pisma: ne šalje se.",
+            "deo": f"Poslato do sada: {n}. Nije završeno: otvori link iz mejla i klikni ponovo, nastavlja gde je stalo.",
+            "nesigurno": f"Poslato: {n}. Za deo čitalaca veza je pukla usred slanja, pa se ne zna da li im je stiglo; "
+                         "njima se ne šalje drugi put.",
+            "u_toku": "Slanje je već u toku.", "brojac": "Brojač ne odgovara, ništa nije poslato: probaj ponovo za koji minut.",
+            "prazno": "Sažetak tog dana još ne postoji.",
+            "kasno": "Prošlo je podne: taj dan se više ne šalje.", "dvopis": "Sažetak ima reč u dva pisma: ne šalje se.",
             "kod": "Link nije ispravan."}.get(what, "Nije poslato.")
     return _PAGE.format(body=f"<h1>Sažetak dana</h1><p>{escape(text)}</p>")

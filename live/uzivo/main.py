@@ -202,7 +202,7 @@ def mail_ask(dan: str = "", k: str = "") -> HTMLResponse:
 
 @app.post("/mejl/posalji")
 async def mail_send(request: Request) -> HTMLResponse:
-    """The button: the day's mail to everyone confirmed, once, until 8 the next morning (pretplata.Mailer.to_all)."""
+    """The button: the day's mail to everyone confirmed, once, until noon the next day (pretplata.Mailer.to_all)."""
     from urllib.parse import parse_qs
     form = parse_qs((await request.body()).decode("utf-8", "replace")[:500])
     dan, k = (form.get("dan") or [""])[0], (form.get("k") or [""])[0]
