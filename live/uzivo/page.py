@@ -84,8 +84,9 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
     for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:
-        if snap["stanje"] == "nema_prenosa" and _resumes(n.get("tekst", "")):
-            continue  # said in the line on top (_status)  # the newest of what the Assembly has decided, as its own site says it (the site's data/obavestenja.json)
+        start = _resume_start(n)
+        if _resumes(n.get("tekst", "")) and (snap["stanje"] == "nema_prenosa" or (start and _now() >= start)):
+            continue  # said by the card on top (_status), or its hour has come: no news while the sitting is on  # the newest of what the Assembly has decided, as its own site says it (the site's data/obavestenja.json)
         text = escape(_name(n["tekst"], cyr))
         more = ""
         if str(n.get("url", "")).startswith("https://"):
@@ -187,14 +188,24 @@ def _status(snap: dict, *, cyr: bool) -> str:
     if chair and chair.get("ime"):  # who presides, by the voice (22 Nov 2026), said how
         what += (f'<span class="status-chair">{t("presides")}: {escape(_name(given_first(chair["ime"]), cyr))} '
                  f'<span class="meta">({t("by_short_glas")})</span></span>')
-    goes_on = ""
-    when, notice = announced(snap)
-    if when:
-        src = (f' <a href="{escape(notice["url"])}">{t("steps_site")} ↗</a>'
+    _, notice, start = announcement(snap)
+    if start:  # the sitting's card: the day as a leaf of a calendar, when, what is next (23 Nov 2026, the maintainer's
+        # choice of three); the bell presses the notification's own button (live.js), shown while that one would be
+        src = (f'<p class="st-src"><a href="{escape(notice["url"])}">{t("steps_site")} ↗</a></p>'
                if str(notice.get("url", "")).startswith("https://") else "")
-        goes_on = f'<p class="goes-on">{escape(_fill(_t("goes_on", cyr), _name(when, cyr)))}{src}</p>'
-    if goes_on:  # when it goes on, large, under the mark; what is next under that
-        return f'<div class="status"><p>{pill}</p>{goes_on}<p>{what}</p></div>'
+        rest = [x for x in items if x.get("stanje") != "gotova"][:2]
+        lines = "".join(f'<li>{escape(_short_item(x, cyr))}</li>' for x in rest)
+        month = MONTHS[start.month - 1][:3]
+        return (f'<div class="status st-card"><p class="st-tile" aria-hidden="true"><span>{escape(_name(_WD[start.weekday()], cyr))}</span>'
+                f'<b>{start.day}</b><span>{escape(_name(month, cyr))}</span></p><div class="st-in">'
+                f'<p class="st-when" title="{escape(_name(_fill(TEXT["goes_on"], announced(snap)[0]), cyr))}">{escape(_said_soon(start, cyr))}</p>'
+                f'{f"<ul>{lines}</ul>" if lines else ""}{src}</div>'
+                f'<button type="button" class="st-bell">{BELL}<span>{t("st_bell")}</span></button></div>')
+    if on and snap["stanje"] != "nema_prenosa":  # on the air: the same card, the tile says so
+        head = f'{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}:'
+        chair_ = what[what.index('<span class="status-chair">'):] if "status-chair" in what else ""
+        return (f'<div class="status st-card st-live"><p class="st-tile"><i aria-hidden="true"></i><span>{t("status_live")}</span></p>'
+                f'<div class="st-in"><p class="st-when"><span class="st-h">{head}</span> {escape(_short_item(on, cyr))}</p>{chair_}</div></div>')
     return f'<div class="status"><p>{pill}{what}</p></div>'
 
 
@@ -403,27 +414,52 @@ def _now() -> datetime:
     return datetime.now(ZoneInfo("Europe/Belgrade"))
 
 
-def announced(snap: dict) -> tuple[str, dict]:
-    """When the Assembly has said it goes on, and its notice, while nobody is on the air and that hour has not come
-    ("", {} otherwise): the page's line on top, and what a pasted link shows. Past the hour the notice is no news: the
-    evening of a sitting would say it goes on that morning (23 Nov 2026)."""
-    if snap.get("stanje") != "nema_prenosa":
-        return "", {}
-    newest = sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]
-    when = _resumes(newest[0].get("tekst", "")) if newest else ""
-    m = re.search(r", (\d{1,2})\. (\w+), u (\d{1,2})\.(\d{2})$", when)
+def _resume_start(notice: dict) -> datetime | None:
+    """The moment the Assembly's notice says it goes on: the first such day from the notice's own on (a notice in
+    December may speak of January); None when the notice says no day and hour."""
+    m = re.search(r", (\d{1,2})\. (\w+), u (\d{1,2})\.(\d{2})$", _resumes(notice.get("tekst", "")))
     if not m:
-        return "", {}
-    at = _now()
-    said = str(newest[0].get("od", ""))[:10]
-    try:  # the first such day from the notice's own on (a notice in December may speak of January)
-        day0 = datetime.strptime(said, "%Y-%m-%d").replace(tzinfo=at.tzinfo)
+        return None
+    try:
+        day0 = datetime.strptime(str(notice.get("od", ""))[:10], "%Y-%m-%d").replace(tzinfo=_now().tzinfo)
         start = day0.replace(month=MONTHS_OF.index(m[2]) + 1, day=int(m[1]), hour=int(m[3]), minute=int(m[4]))
-        if start.date() < day0.date():
-            start = start.replace(year=start.year + 1)
+        return start.replace(year=start.year + 1) if start.date() < day0.date() else start
     except ValueError:
-        return "", {}
-    return (when, newest[0]) if at < start else ("", {})
+        return None
+
+
+def announcement(snap: dict) -> tuple[str, dict, datetime | None]:
+    """When the Assembly has said it goes on (its words and the moment) and its notice, while nobody is on the air and
+    that hour has not come ("", {}, None otherwise): the card on top, and what a pasted link shows. Past the hour the
+    notice is no news: the evening of a sitting would say it goes on that morning (23 Nov 2026)."""
+    if snap.get("stanje") != "nema_prenosa":
+        return "", {}, None
+    newest = sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]
+    start = _resume_start(newest[0]) if newest else None
+    return (_resumes(newest[0]["tekst"]), newest[0], start) if start and _now() < start else ("", {}, None)
+
+
+def announced(snap: dict) -> tuple[str, dict]:
+    return announcement(snap)[:2]
+
+
+_WD = ("pon", "uto", "sre", "čet", "pet", "sub", "ned")
+_WD_ON = ("u ponedeljak", "u utorak", "u sredu", "u četvrtak", "u petak", "u subotu", "u nedelju")
+
+
+def _said_soon(start: datetime, cyr: bool) -> str:
+    """"Sednica sutra u 10 h": danas, sutra, within a week by its day, later by its date. The hour kept on one line."""
+    hour = f"{start.hour}\u00a0h" if not start.minute else f"{start.hour}.{start.minute:02d}\u00a0h"
+    days = (start.date() - _now().date()).days
+    if days <= 1:
+        return _name(_fill(TEXT["st_today" if days <= 0 else "st_tomorrow"], hour), cyr)
+    on = _WD_ON[start.weekday()] if days < 7 else f"{start.day}. {MONTHS_OF[start.month - 1]}"
+    return _name(_fill(TEXT["st_day"], on, hour), cyr)
+
+
+def _short_item(x: dict, cyr: bool) -> str:
+    """An item as the card has room for: without the Assembly's name at its end."""
+    return f'{x["n"]}. {_name(re.sub(r"\s+Narodne skupštine$", "", x["tekst"]), cyr)}'
 
 
 def next_item(snap: dict) -> dict | None:
@@ -1140,7 +1176,7 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         url, at = (parts[0]["url"], 0) if parts else (first["datoteka"], int(first["snimak"]))
         button = (f'<button type="button" class="play" data-file="{escape(url)}" data-t="{at}">▶ {t("play_day")}</button>'
                   f'<button type="button" class="play listen" data-zvuk data-file="{escape(url)}" data-t="{at}">🎧 {t("listen_day")}</button>')
-        note = t("archive_note") + " " + t("listen_note")
+        note = escape(_fill(_t("archive_note", cyr), _name(_on_day(snap.get("dan", "")), cyr))) + " " + t("listen_note")
         if len(parts) > 1:  # the day in several files: each one, by the hours it covers
             chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
                             f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'
@@ -1214,6 +1250,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
            f'<link rel="alternate" hreflang="sr-Latn" href="{escape(url)}">'
            f'<link rel="alternate" hreflang="sr-Cyrl" href="{escape(url + "cir/")}">') if url else ""
     brand = _brand(cyr)
+    sup = [escape(w) for w in _t("support_cta", cyr).split(" ", 1)]  # "Podrži", and " sajt" where there is room
     day = fragment(snap, cyr=cyr, site=site, tz=tz)
     # "Obavesti me kad sednica počne": under the speaker's box while a broadcast is on; between sittings above the
     # day, which had put it half a phone's screens down, under the last day's summary (20 Nov 2026: one device asked)
@@ -1263,10 +1300,10 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <style>{CSS}</style>
 </head>
 <body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
-<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="top-support" href="{escape(home + "podrzi")}">{t("support_cta")}</a><a href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}">{other_label}</a></span></header>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="top-support" href="{escape(home + "podrzi")}" aria-label="{t("support_cta")}"><img src="/caslav.webp" alt="" width="36" height="33"><span>{sup[0]}<span class="lg"> {sup[1]}</span></span></a><a class="top-script" href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}" aria-label="{other_label}"><span class="lg">{other_label}</span><span class="sm">{"Lat" if cyr else "Ћир"}</span></a></span></header>
 <main>
 <p class="sr" id="ko" aria-live="polite"></p>
-<section class="hero"><h1>{t("title")}</h1></section>
+<section class="hero"><h1>{t("h1")}</h1></section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
 {(add + day) if snap["stanje"] == "nema_prenosa" else (day + add)}
 <p class="rules-cta"><a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}"><b>{t("rules_cta")} →</b><span>{t("rules_sub")}</span></a></p>

@@ -366,6 +366,7 @@
   var part = function (k) { return box.querySelector("." + k); };
   function show(k, on) {
     var el = part(k); if (el) el.hidden = !on;
+    if (k === "nt") document.documentElement.toggleAttribute("data-nt", on);  // the card's bell is shown with it
     box.hidden = ![].some.call(box.querySelectorAll(".nt, .add, .nt-done, .nt-blocked, .nt-err, .add-ios"), function (c) { return !c.hidden; });
   }
   var home = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
@@ -401,6 +402,8 @@
   if (Notification.permission === "denied") { show("nt-blocked", true); return; }
   navigator.serviceWorker.getRegistration("/").then(function (r) { return r ? r.pushManager.getSubscription() : null; })
     .then(function (s) { state(!!s); if (!s) use("obavesti-moze"); }).catch(function () { state(false); });
+  // the bell on the sitting's card (drawn anew with the part, so listened for from above) presses the same button
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".st-bell")) part("nt-on").click(); });
   part("nt-on").addEventListener("click", function () {
     use("obavesti-klik");
     Notification.requestPermission().then(function (p) {

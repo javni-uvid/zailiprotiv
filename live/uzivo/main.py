@@ -388,6 +388,13 @@ def _fonts() -> dict[str, Path]:
     return {p.name: p for p in FONTS.iterdir() if p.is_file()} if FONTS.is_dir() else {}
 
 
+@app.get("/caslav.webp")
+def caslav() -> FileResponse:
+    """The cat in a heart beside "Podrži" (23 Nov 2026), served by the page itself."""
+    return FileResponse(Path(__file__).parent / "static" / "caslav.webp", media_type="image/webp",
+                        headers={"Cache-Control": "public, max-age=604800"})
+
+
 @app.get("/fonts/{name}")
 def font(name: str) -> FileResponse:
     path = _fonts().get(name)  # one of the folder's own files: no path is built from what was asked
