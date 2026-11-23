@@ -393,7 +393,7 @@ def offices_cmd(args) -> int:
 
     for conv, pages in offices.ARCHIVE.items():  # an earlier convocation's: its archive doesn't change
         path = common.ROOT / conv / "offices.json"
-        if path.exists():
+        if path.exists() or not path.parent.exists():  # a convocation the site doesn't cover isn't asked for
             continue
         found = offices.offices_of(speaker=None, vice=[], chairs=[], committees=read_parts(pages["committees"]),
                                    delegations=read_parts(pages["delegations"]), sources={})
@@ -401,6 +401,16 @@ def offices_cmd(args) -> int:
             path.write_text(offices.dumps(now.isoformat(), [{**o, "since": ""} for o in found], now.isoformat()),
                             encoding="utf-8")
         print(f"offices: {len(found)} in convocation {conv}'s archive")
+    # The Speakers and deputies of every convocation, with their days (one page; 23 Nov 2026): an earlier one's are
+    # added to its file, the newest's get the day they took office.
+    past = offices.history(get(offices.HISTORY))
+    for conv in offices.ARCHIVE:
+        path = common.ROOT / conv / "offices.json"
+        if past and path.exists():
+            kept = json.loads(path.read_text(encoding="utf-8"))
+            rows = offices.with_history([o for o in kept["offices"] if not o.get("dated")], past, conv)
+            if rows != kept["offices"]:
+                path.write_text(offices.dumps(kept["fetched"], rows, kept["parts_read"]), encoding="utf-8")
 
     conv = NEWEST
     path = common.ROOT / conv / "offices.json"
@@ -432,7 +442,7 @@ def offices_cmd(args) -> int:
     if not found and old["offices"]:
         print(f"offices: none read, {len(old['offices'])} kept; the file stays")
         return 1
-    found = offices.keep_since(old["offices"], found, today)
+    found = offices.with_history(offices.keep_since(old["offices"], found, today), past, conv)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(offices.dumps(now.isoformat(), found, read_at), encoding="utf-8")
     by = {}

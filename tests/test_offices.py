@@ -106,3 +106,45 @@ def test_since_kept():
     o = {"name": "A", "kind": "vice", "role": "потпредседник", "body": "Н"}
     assert offices.keep_since([{**o, "since": "2026-11-19"}], [o], "2026-11-20")[0]["since"] == "2026-11-19"
     assert offices.keep_since([], [o], "2026-11-20")[0]["since"] == "2026-11-20"
+
+
+HISTORY_PAGE = """<!-- OCP content start --><table>
+<tr><th>СКУПШТИНА</th><th>ПРЕДСЕДНИК</th><th>ПОТПРЕДСЕДНИЦИ</th><th>ГЕНЕРАЛНИ СЕКРЕТАР</th></tr>
+<tr><td>Народна скупштина Републике Србије <b>XI сазив</b> (3. јун 2016. године - 3. август 2020. године)</td>
+<td><b>од 6. јуна 2016.</b> Маја Гојковић</td>
+<td><b>од 6. јуна 2016.</b> Константин Арсеновић <b>(до 30. јануара 2017. године)</b>, Верољуб Арсић, проф. др Владимир Маринковић и Гордана Чомић</td>
+<td><b>од 6. јуна 2016. до 9. марта 2018.</b> Светислава Булајић</td></tr>
+<tr><td>Народна скупштина Републике Србије <b>XIV сазив</b> (од 6. фебруара 2024. године)</td>
+<td><b>од 20. марта 2024.</b> Ана Брнабић</td>
+<td><b>од 20. марта 2024.</b> Сандра Божић (до 7. маја 2024. године), Един Ђерлек, Невена Ђурић (од 19. марта 2025. године) и Дуња Симоновић Братић (од 16. јуна 2025. године)</td>
+<td>Срђан Смиљанић</td></tr></table><!-- OCP content end -->"""
+
+
+def test_speakers_and_deputies_of_every_convocation_with_their_days():
+    got = {(h["conv"], h["kind"], h["name"]): (h["since"], h["until"]) for h in offices.history(HISTORY_PAGE)}
+    assert got[("11", "speaker", "Маја Гојковић")] == ("2016-06-06", "")
+    assert got[("11", "vice", "Константин Арсеновић")] == ("2016-06-06", "2017-01-30")
+    assert got[("11", "vice", "проф. др Владимир Маринковић")] == ("2016-06-06", "")
+    assert got[("14", "vice", "Сандра Божић")] == ("2024-03-20", "2024-05-07")
+    assert got[("14", "vice", "Невена Ђурић")] == ("2025-03-19", "")  # later than the others
+    assert got[("14", "vice", "Дуња Симоновић Братић")] == ("2025-06-16", "")
+    assert len(got) == 10 and not any("Булајић" in k[2] for k in got)  # secretaries are not offices of MPs
+
+
+def test_an_earlier_convocations_offices_get_its_speaker_and_deputies():
+    past = offices.history(HISTORY_PAGE)
+    committee = {"name": "АНТИЋ ЗОРАН", "kind": "committee", "role": "члан", "body": "Одбор", "source": "x", "since": ""}
+    rows = offices.with_history([committee], past, "14")
+    assert [r["kind"] for r in rows].count("vice") == 4 and rows[-1] == committee
+    speaker = next(r for r in rows if r["kind"] == "speaker")
+    assert speaker["dated"] and speaker["since"] == "2024-03-20" and offices.say(speaker, lambda s: s) == "Председник Народне скупштине"
+    # the newest's, read from their own pages, keep their source and get the day of the office
+    now = [{"name": "АНА БРНАБИЋ", "kind": "speaker", "role": "Председник Народне скупштине", "body": "Народна скупштина",
+            "source": "своја страница", "since": "2026-11-20"}]
+    merged = offices.with_history(now, past, "14")
+    assert merged[0]["source"] == "своја страница" and merged[0]["since"] == "2024-03-20"
+    assert offices.with_history([committee], past, "12") == [committee]  # nothing known of it
+
+
+def test_the_archives_cover_every_convocation_before_the_newest():
+    assert sorted(offices.ARCHIVE, key=int) == ["9", "10", "11", "12", "13", "14"]

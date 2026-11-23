@@ -99,6 +99,14 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   its page at the Assembly, in one order for all (the Assembly's own offices, groups, committees, delegations;
   chairs first); on the live page, the first line about the speaker. A name two MPs of the newest convocation share
   gets no office. The Assembly's own words, its masculine titles included ("predsednik"), as for every MP.
+- **Offices of every convocation, with the convocation and the days where the Assembly gives them** (23 Nov 2026, the
+  maintainer: "pozicije koje je poslanik držao … u kom sazivu"). The committees and delegations of convocations 9 to
+  13 are read once from the Assembly's archive (`offices.ARCHIVE`, the same pages' shape as the Fourteenth's), and the
+  Speakers and deputy Speakers of every convocation since 1991, with the days they took office and left it, from its
+  own table (`offices.HISTORY`; a name matched by the MPs' key, titles taken off). The MP's page shows each office
+  under its convocation; only the Speaker's and deputies' rows have days ("od … do …"), because only that table gives
+  them, and the end only when it says it. Next: the Government (the Assembly's own decisions electing it, "Донета
+  акта", 2012-2025) and the President of the Republic.
 - **One scale of letter sizes; a number beside what it is compared with** (20 Nov 2026, the maintainer's choice of
   points 1–5 of a look at the design against portals of this kind: TheyWorkForYou, ProPublica's Represent and its
   principles for news graphics, Stanford's credibility guidelines, GOV.UK, NN/g). A page had 16–24 sizes of
