@@ -5,7 +5,8 @@ Decisions about the live page `mikrofon.zailiprotiv.rs` and its service: Whisper
 in short, is there. **Keep it current:** a decision is added at the end of this file, in the same commit, and one that
 changes an earlier one says so. Dates are the maintainer's decisions unless said otherwise.
 
-**Changed since written:** "What is being said" (19 Nov): the transcript is written down but not shown (the same day); only the line under the picture is on the page (22 Nov).
+**Changed since written:** "What is being said" (19 Nov): the transcript is written down but not shown (the same day); only the line under the picture is on the page (22 Nov). The second reading by a
+better model ("Corrections …", 19 Nov) is gone (23 Nov).
 
 - **What is being said, the day in numbers and cards, the broadcast on the page** (19 Nov 2026, the maintainer's
   choices after a look at skupstina.live; its chat, muting and model-written summaries were left out).
@@ -124,3 +125,7 @@ sound but the tokens' in the shortened one, a minute off by the twentieth minute
 over its own span in proportion. Checked on the first 20 min of 19 Nov against what the CPU had written: 89% of the
 words the same, a matched word's start 0.32 s apart at the median (0.84 s at the 90th percentile), the 20 min written
 in 50 s.
+- **The second reading is gone** (23 Nov 2026, the maintainer's choice among the points of an analysis): since 20 Nov
+  `large-v3-turbo` is the one model, so the better one's reading of a finished turn (`WHISPER_FINAL_MODEL`,
+  `step_whole`, `say_whole`, the keys `k<second>`, `prepis_ceo` in the snapshot) could not run. Nothing that could be
+  seen changed: every page and file the service writes for a made-up day compared before and after.

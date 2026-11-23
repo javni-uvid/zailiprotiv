@@ -66,7 +66,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     """The part of the page that changes: who speaks now, and today's turns."""
     t = lambda k: escape(_t(k, cyr))
     if not config.SHOW_TRANSCRIPT:  # the transcript is written down but not shown (config.SHOW_TRANSCRIPT)
-        bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci", "prepis_ceo")}
+        bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci")}
         snap = {**snap, "bez_potpisa": None, "sada": bare(snap["sada"]) if snap.get("sada") else snap.get("sada"),
                 "danas": [bare(d) for d in snap.get("danas") or []]}
     cur = snap.get("sada")
@@ -517,9 +517,8 @@ def transcript_page(data: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str 
         subject = f'Ispravka prepisa: {given_first(d["ime"]) or "bez potpisa"}, {data.get("dan", "")} {_clock(d["od"], tz)}'
         body = "Pogrešno napisano:\n\nTreba da piše:\n\n(Ispravljamo pravopis i imena, ne ono što je rečeno.)"
         mail = f'mailto:kontakt@zailiprotiv.rs?subject={quote(subject)}&body={quote(body)}'
-        second = f' · {t("said_second")}' if d.get("ceo") else ""
         rows.append(f'<article id="t{int(d["od"])}"><h2>{nm} <span class="meta">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}'
-                    f' · {_minutes(d["sekundi"])} {t("min")}{second}</span></h2><p>{text}</p>'
+                    f' · {_minutes(d["sekundi"])} {t("min")}</span></h2><p>{text}</p>'
                     f'<p class="meta"><a href="{escape(mail)}">{t("said_report")}</a></p></article>')
     body = "".join(rows) or f'<p class="meta">{t("said_none")}</p>'
     brand = _brand(cyr)

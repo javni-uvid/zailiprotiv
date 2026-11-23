@@ -52,7 +52,6 @@ TEXT = {
     "said_unsigned": "Bez potpisa: predsedavajući ili sala · automatski prepis, može da pogreši",
     "said_nobody": "Bez potpisa: predsedavajući ili sala",
     "said_report": "Prijavi grešku u prepisu",
-    "said_second": "drugo, tačnije čitanje",
     "said_fix": "Prepis prvo objavimo, pa ispravljamo: poznate greške u pravopisu i imenima popravljamo po spisku, a "
                 "grešku koju vidite možete da nam javite uz svaki govor. Ispravljamo kako je napisano, nikad šta je rečeno.",
     "said_back": "Nazad na „Ko sada govori“",

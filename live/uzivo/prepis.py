@@ -190,8 +190,6 @@ class Writer(threading.Thread):
         super().__init__(daemon=True)
         self.tracker, self.halt, self.write = tracker, stop, write
         self.hint = ""  # the names and terms Whisper is told to expect in the piece it is given (hint())
-        self.write_whole = None  # the better model's reading, for finished turns (WHISPER_FINAL_MODEL)
-        self._whole: dict[int, list[str]] = {}  # a long turn's second reading so far, by the turn's first second
 
     def _model(self):
         """The writer: the graphics card's server when one is named (config.WHISPER_URL), the CPU while it does not
@@ -228,22 +226,6 @@ class Writer(threading.Thread):
             return " ".join(s.text.strip() for s in segments).strip()
         return write
 
-    def _final_model(self):
-        """The better model for the second reading of a finished turn (WHISPER_FINAL_MODEL); None when off."""
-        if not config.WHISPER_FINAL_MODEL or config.WHISPER_FINAL_MODEL == config.WHISPER_MODEL or config.CHAIR_ONLY:
-            return None
-        from faster_whisper import WhisperModel
-        import numpy as np
-        model = WhisperModel(config.WHISPER_FINAL_MODEL, device=config.WHISPER_DEVICE, compute_type=config.WHISPER_COMPUTE,
-                             cpu_threads=config.WHISPER_THREADS)
-
-        def write(raw: bytes) -> str:
-            samples = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
-            segments, _ = model.transcribe(samples, language="sr", beam_size=5, vad_filter=True,
-                                           condition_on_previous_text=False, initial_prompt=self.hint or None)
-            return " ".join(s.text.strip() for s in segments).strip()
-        return write
-
     TERMS = ("Narodna skupština Republike Srbije. Predsedavajući, narodni poslanici, poslanička grupa, Poslovnik, "
              "povreda Poslovnika, replika, dnevni red, amandman, pretres, glasanje.")
 
@@ -260,53 +242,12 @@ class Writer(threading.Thread):
                 names.append(n)
         return (self.TERMS + (" Govore: " + ", ".join(names[:28]) + "." if names else ""))[:900]
 
-    def step_whole(self, snap: dict, now: float) -> bool:
-        """The second reading: a finished turn's kept sound written down again by the better model, two minutes at a
-        time, and shown in place of the first reading once the whole turn is done. Only when the first reading has
-        nothing to do, so what is being said now is never kept waiting by it."""
-        kept = sorted((int(f.stem.split("-")[0]) / 1000 - int(f.stem.split("-")[1]) / 1000, int(f.stem.split("-")[1]) / 1000, f)
-                      for f in (Path(config.SOUND_PATH) / "kraj").glob("*.pcm"))
-        if not kept:
-            return False
-        cur = snap.get("sada") if snap["stanje"] == "govori" else None
-        for d in sorted(snap["danas"], key=lambda d: d["od"]):
-            if d.get("prepis_ceo"):
-                continue
-            mine = [x for x in kept if d["od"] - SAID_LEAD <= x[0] + x[1] / 2 <= d["do"] + TAIL]
-            if not mine or (cur and cur["ime"] == d["ime"] and cur["od"] - d["do"] < 150):
-                continue  # nothing kept, or the same speaker is on again and the two may yet be one turn
-            piece, total = [], 0.0
-            for x in mine:
-                piece.append(x)
-                total += x[1]
-                if total >= LONGEST:
-                    break
-            started = time.time()
-            text = latin(self.write_whole(b"".join(f.read_bytes() for _, _, f in piece)))
-            for _, _, f in piece:
-                f.unlink(missing_ok=True)
-            self._whole.setdefault(d["od"], []).append(text)
-            if len(piece) == len(mine):  # the turn's last piece: its second reading takes the first one's place
-                self.tracker.say_whole(d["od"], " ".join(self._whole.pop(d["od"])))
-            log.info("second reading: %.0f s of %s in %.0f s", total, d["ime"], time.time() - started)
-            return True
-        for start, length, f in kept:  # sound of no turn left to read again, or too old to matter
-            if now - start > 6 * 3600 or not any(d["od"] - SAID_LEAD <= start + length / 2 <= d["do"] + TAIL for d in snap["danas"] + ([cur] if cur else [])):
-                if now - start > LOST:
-                    f.unlink(missing_ok=True)
-        return False
-
     def step(self, now: float | None = None) -> bool:
         """One look at the kept sound; True when a piece was written down. A `now` given (the tests' clock) is also
         the day the state is read for, so that a fixed day is not taken for an earlier one after midnight."""
         given, now = now, time.time() if now is None else now
         files = waiting()
         if not files:
-            if self.write_whole:
-                snap = self.tracker.snapshot(given)
-                if not snap.get("ranije") and not snap.get("snimak"):
-                    self.hint = self.hint_for(snap)
-                    return self.step_whole(snap, now)
             return False
         while sum(x[1] for x in files) > MOST:  # behind by more than the computer will catch up with
             files.pop(0)[2].unlink(missing_ok=True)
@@ -340,11 +281,7 @@ class Writer(threading.Thread):
                 end = piece[-1][0] + piece[-1][1]
                 self.tracker.heard(given[-1], "prepis", end, end)
         for _, _, f in piece:
-            if self.write_whole and not chair:  # kept for the second reading, once the turn is over
-                (f.parent / "kraj").mkdir(exist_ok=True)
-                f.replace(f.parent / "kraj" / f.name)
-            else:
-                f.unlink(missing_ok=True)
+            f.unlink(missing_ok=True)
         log.info("%.0f s of %s written down in %.0f s (%d words)", sum(x[1] for x in piece), "the chair's sound" if chair else "sound",
                  time.time() - started, len(text.split()))
         return True
@@ -356,12 +293,6 @@ class Writer(threading.Thread):
                 log.info("transcript on: %s, %s%s", config.WHISPER_MODEL,
                          config.WHISPER_URL or f"{config.WHISPER_THREADS} threads",
                          ", the chair's sound only" if config.CHAIR_ONLY else "")
-                try:
-                    self.write_whole = self._final_model()
-                    if self.write_whole:
-                        log.info("second reading on: %s", config.WHISPER_FINAL_MODEL)
-                except Exception as exc:
-                    log.warning("second reading off (%s)", exc)
             except Exception as exc:  # no packages or no model: the service goes on without the transcript
                 log.warning("transcript off (%s)", exc)
                 config.WHISPER_MODEL = ""

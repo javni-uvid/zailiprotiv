@@ -956,7 +956,7 @@ def test_a_name_with_nothing_under_it_is_taken_on_its_second_frame():
     assert cur["ime"] == "Petrović Petar" and cur["od"] == int(now + 400) and t.turns[-1]["n"] == 2
 
 
-def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read_again(tmp_path, monkeypatch):
+def test_the_transcript_is_corrected_after_it_is_out(tmp_path, monkeypatch):
     from uzivo import config, ispravke, prepis
     from uzivo.page import transcript_page
     forms = ispravke.name_forms(["Petrović Petar", "Jovanović Marko"])
@@ -977,7 +977,6 @@ def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read
         (tmp_path / "zvuk" / f"{int((now + s_) * 1000)}-5000.pcm").write_bytes(b"\0" * 100)
     hints = []
     w = prepis.Writer(t, threading.Event(), write=lambda raw: hints.append(w.hint) or "Petrovic je rekao oktober.")
-    w.write_whole = lambda raw: "Petrović je rekao: oktobar, tačno."
     assert w.step(now=now + 62) is True
     assert "Poslovnik" in hints[0] and "Petar Petrović" in hints[0]  # the terms and today's speakers, told to Whisper
     assert next(iter(t.said.values())) == "Petrovic je rekao oktober."  # kept as written
@@ -987,7 +986,7 @@ def test_the_transcript_is_corrected_after_it_is_out_and_a_finished_turn_is_read
     while w.step(now=now + 131):
         pass
     page_ = transcript_page(t.transcript(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "Petrović je rekao: oktobar, tačno." in page_ and "drugo, tačnije čitanje" in page_  # the second reading took its place
+    assert "Petrović je rekao oktobar." in page_
     assert "mailto:kontakt@zailiprotiv.rs?subject=Ispravka%20prepisa" in page_ and "Prijavi grešku u prepisu" in page_
 
 
