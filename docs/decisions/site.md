@@ -323,7 +323,7 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   mentions under the name (profiles in `sameAs`) are what tells Google it is a name.
   The maintainer's two pictures of 23 Nov said it the other way round: "za ili protiv" gave the Cyrillic home page
   first of the plain results, while "zailiprotiv" was corrected by Google to "za ili protiv" and then showed the
-  live page 8th. All four home pages are in the index, read that morning (`search.py` `home_pages`). Google titles
+  live page 8th. The project's Instagram (its only profile) is in `sameAs` and in both footers (`rel="me"`, a plain link). All four home pages are in the index, read that morning (`search.py` `home_pages`). Google titles
   the home page by its h1, which has no name in it; the h1 is the maintainer's choice and waits for them.
 
 ## Support
