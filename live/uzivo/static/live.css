@@ -322,7 +322,8 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
 /* The top of the page (23 Nov 2026, the maintainer's choice B): the header in one row, the sitting as a card */
 .sm { display: none; } .top-script { white-space: nowrap; }
 @media (max-width: 560px) { .top { flex-wrap: nowrap; gap: 0 .6rem; } .top .lg { display: none; } .top .sm { display: inline; } .top-r { gap: .45rem; } .top-script { border: 1px solid var(--line); border-radius: 8px; padding: .25rem .5rem; text-decoration: none; font-weight: 600; font-size: var(--t-2); } }
-@media (max-width: 359px) { .top .brand { font-size: var(--t-5); } }
+@media (max-width: 430px) { .top .brand { font-size: var(--t-5); gap: .35rem; white-space: nowrap; } .top .brand-mark { width: 1.7rem; } .top-support { font-size: var(--t-2); gap: .25rem; padding: .1rem 0; } .top-support img { width: 1.9rem; } .top { gap: 0 .3rem; } .top-r { gap: .3rem; } .top-script { padding: .25rem .4rem; } }
+@media (max-width: 350px) { .top-support > span { display: none; } }
 .hero h1 { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: var(--t-1); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 .st-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 1rem; align-items: center; border: 1px solid var(--line); border-radius: 14px; padding: .9rem; margin-top: .6rem; }
 .st-card > .st-tile { display: grid; align-content: center; justify-items: center; gap: 0; width: 4.7rem; min-height: 5.1rem; margin: 0; border-radius: 10px; background: var(--fg); color: var(--bg); font-size: var(--t-1); font-weight: 700; line-height: 1.15; text-transform: uppercase; letter-spacing: .04em; }
