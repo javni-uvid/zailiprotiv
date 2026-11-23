@@ -21,6 +21,7 @@
 {% if profile %}{% set ns = namespace(q=none) %}{% for t in profile.points %}{% if t.citat and t.citat.tekst.split()|length <= 45 and (ns.q is none or t.citat.tekst|length < ns.q.tekst|length) %}{% set ns.q = t.citat %}{% endif %}{% endfor %}
 {% if ns.q %}<blockquote class="mp-line"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.ours or ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
 </div>
+{{ offices_part(offices) }}
 </div>
 
 {{ brief(mp.slug, facts) }}
@@ -31,7 +32,6 @@
   <p class="meta follow">{% if record %}Glasanja do {{ record[0].it.final.when[:10]|day }} · <a href="{{ mp.slug }}-glasovi.html">Svi glasovi</a> · {% endif %}<a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 </section>
 {{ floor_now_part(mp.slug) }}
-{{ offices_part(offices) }}
 
 {% set shown = by_conv|selectattr("present")|list %}
 {% set menu = [("funkcije", "Funkcije", offices), ("kljucna", "Izdvojena glasanja", key_votes),("aktivnost", "Aktivnost", shown or spoke or floor), ("govori", "Govori", floor|selectattr("spoken")|list), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list)] %}

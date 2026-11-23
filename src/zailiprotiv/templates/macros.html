@@ -184,15 +184,14 @@
 {% endif %}{% endmacro %}
 {# The MP's offices in the Assembly (offices.py): [(convocation, offices)], newest first, each linked to the page of
    the Assembly it is read from; the same list for every MP. #}
-{% macro offices_part(by_conv) %}{% if by_conv %}
-<section class="mp-offices" id="funkcije">
-<h2>Funkcije u Skupštini</h2>
-{% for c, rows in by_conv %}
-<h3>{{ c }}. saziv</h3>
-<ul class="plain">{% for o in rows %}<li><a href="{{ o.source }}">{{ o.text }}</a>{% if o.dated and o.since %} <span class="meta">od {{ o.since|day }}{% if o.until %} do {{ o.until|day }}{% endif %}</span>{% endif %}</li>{% endfor %}</ul>
-{% endfor %}
-<p class="label">Prema stranicama sastava na sajtu Narodne skupštine (predsednik, potpredsednici, predsednici poslaničkih grupa, odbori, delegacije), istim pravilom za svakog poslanika. Dan izbora te stranice ne navode, osim za predsednika i potpredsednike Skupštine; kraj mandata piše samo kad ga Skupština navodi, inače traje do kraja saziva.</p>
-</section>
+{% macro office_card(c) %}<li><span class="off-k">{{ c.label }}</span><a href="{{ c.source }}">{{ c.text }}</a><span class="off-m">{{ c.when }}</span></li>{% endmacro %}
+{% macro offices_part(rows) %}{% set cards = rows|office_cards %}{% if cards %}{% set rest = cards[office_cards_shown:] %}
+<div class="off" id="funkcije">
+<ul>{% for c in cards[:office_cards_shown] %}{{ office_card(c) }}{% endfor %}</ul>
+<details class="off-more"><summary>{% if rest %}još {{ rest|length }} {{ plural(rest|length, "funkcija", "funkcije", "funkcija") }}, i odakle je{% else %}odakle je{% endif %}</summary>
+{% if rest %}<ul>{% for c in rest %}{{ office_card(c) }}{% endfor %}</ul>{% endif %}
+<p class="label">Funkcije u Skupštini su sa stranica sastava i iz arhive Narodne skupštine, od 9. saziva (2012); dane izbora Skupština navodi samo za predsednika i potpredsednike. Članstvo u Vladi je iz odluka Skupštine o izboru Vlade i ministara, sa godinom izbora; kraj piše samo kad ga navodi odluka o razrešenju. Isto pravilo i isti redosled za svakog poslanika; funkcija u Vladi stoji samo kad je potvrđeno da je ista osoba (mandat poslanika je prestao kad je izabran u Vladu, ili je isto godište).</p></details>
+</div>
 {% endif %}{% endmacro %}
 {% macro next_steps(list_page, group) %}
 <nav class="mp-next" aria-label="Dalje">

@@ -357,6 +357,37 @@ def members_cmd(args) -> int:
     return 0
 
 
+def _government(get) -> None:
+    """The newest convocation's decisions electing or dismissing the Government's members (vlada.py), those not in
+    data/vlada.json yet; one that can't be read is named and left for the next reading."""
+    from zailiprotiv import bills, vlada
+    from zailiprotiv.config import NEWEST
+    path = common.ROOT / "vlada.json"
+    old = jsonfile.load(path, {}).get("decisions", [])
+    have = {d["url"] for d in old}
+    new = []
+    for title, url in vlada.decisions(get(vlada.LISTS[NEWEST])) if NEWEST in vlada.LISTS else []:
+        url = url.replace(" ", "%20")
+        if url in have:
+            continue
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                pdf = os.path.join(tmp, "odluka.pdf")
+                with open(pdf, "wb") as f:
+                    f.write(skupstina.fetch(url))
+                got = vlada.parse(bills.text_of(pdf))
+        except Exception as exc:  # a scan, or a wording not met before: for a person to look at
+            print(f"vlada: not read: {title} ({url}): {exc}")
+            continue
+        if got:
+            new.append({**got, "title": title, "url": url})
+        else:
+            print(f"vlada: not read: {title} ({url})")
+    if new:
+        path.write_text(vlada.dumps(vlada.merge(old, new)), encoding="utf-8")
+    print(f"vlada: {len(new)} new decisions, {len(old) + len(new)} in all")
+
+
 def offices_cmd(args) -> int:
     """Who holds which office in the newest convocation (the Speaker, the deputy Speakers, the groups' chairs, the
     committees, the delegations) → data/<N>/offices.json, and the Assembly's news → data/vesti.json (offices.py). The
@@ -437,6 +468,8 @@ def offices_cmd(args) -> int:
                     parts[o["kind"]].append(body)
                 body[2].append({k: o[k] for k in ("name", "role", "group") if k in o})
         read_at = old["parts_read"]
+    if again:
+        _government(get)
     found = offices.offices_of(speaker=speaker, vice=vice, chairs=chairs, committees=parts["committee"],
                                delegations=parts["delegation"], sources=sources)
     if not found and old["offices"]:
