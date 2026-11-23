@@ -17,6 +17,7 @@ and in `mikrofon-cekanje.json`, which the live service shows between sittings.
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -235,7 +236,9 @@ def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: di
         e: dict = {"lista": latin(r.get("group", "") or "")}
         # the name as the list writes it and the party that proposed the MP: the day's mail names every MP so
         # and shows the party of one in no group (live/uzivo/mere.py; 23 Nov 2026)
-        e["ime"] = " ".join(latin(w).capitalize() for w in (r.get("name") or "").split() if w.isupper())
+        # (pages_members.match gives the name as the site writes it, "Brnabić Ana"; a new MP who shares a name
+        # with an earlier one has the year after it, "Jovanović Aleksandar (1968)", which no sentence says)
+        e["ime"] = re.sub(r"\s*\(\d{4}\)$", "", latin(r.get("name") or "")).strip()
         if (r.get("party") or "").strip() not in ("", "-", "–"):
             e["stranka"] = latin(r["party"].strip())
         if r.get("photo"):

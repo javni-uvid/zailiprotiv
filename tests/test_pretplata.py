@@ -107,10 +107,15 @@ def test_the_live_page_offers_the_mail_and_the_form_works_without_the_script():
 
 def test_the_site_publishes_each_mps_name_and_party_for_the_mail():
     from zailiprotiv import pages_mikrofon
-    rows = [{"slug": "pastor-balint", "new": True, "name": "ПАСТОР проф. др БАЛИНТ", "group": "", "party": "СВМ-VMSZ"},
-            {"slug": "kamberi-saip", "new": True, "name": "КАМБЕРИ ШАИП", "group": "", "party": "-"}]
+    # the rows as pages_members.match gives them: the name already as the site writes it (23 Nov 2026: a test of
+    # Cyrillic capitals here passed while the site published no name at all)
+    rows = [{"slug": "pastor-balint", "new": False, "name": "Pastor Balint", "group": "", "party": "СВМ-VMSZ"},
+            {"slug": "kamberi-saip", "new": True, "name": "Kamberi Šaip", "group": "", "party": "-"},
+            {"slug": "jovanovic-aleksandar-1968", "new": True, "name": "Jovanović Aleksandar (1968)", "group": "Studentska lista", "party": "-"}]
     from zailiprotiv.translit import latin
-    out = pages_mikrofon.speakers(rows, {}, conv="15", spoken_={}, plain=str, latin=latin, day=str)
+    known = {"pastor-balint": {"tally": {}, "facts": [], "convs": ["14"]}}
+    out = pages_mikrofon.speakers(rows, known, conv="15", spoken_={}, plain=str, latin=latin, day=str)
+    assert out["jovanovic-aleksandar-1968"]["ime"] == "Jovanović Aleksandar"
     assert out["pastor-balint"]["ime"] == "Pastor Balint" and out["pastor-balint"]["stranka"] == "SVM-VMSZ"
     assert "stranka" not in out["kamberi-saip"]
     roll = pretplata.roll_of(out)
