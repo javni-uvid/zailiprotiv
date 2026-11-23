@@ -20,7 +20,7 @@ dependencies = [
 zailiprotiv = "zailiprotiv.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "cryptography>=44"]  # cryptography: the live service's mail (tests/test_mejl.py)
 
 [build-system]
 requires = ["hatchling"]

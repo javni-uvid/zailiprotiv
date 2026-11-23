@@ -155,4 +155,10 @@ VOTES_API = _setting("votes_api", "VOTES_API").rstrip("/")
 PUSH_KEY = _setting("push_key", "PUSH_KEY")
 PUSH_TOKEN = os.environ.get("PUSH_TOKEN", "").strip()
 PUSH_PATH = os.environ.get("PUSH_PATH", "/data/obavesti.json")
+# The day's summary by mail (23 Nov 2026; pretplata.py): the maintainer's key that opens the sealed addresses
+# (32 random bytes, base64; its public half is MEJL_JAVNI in worker/wrangler.toml) and his own address, where each
+# day's mail goes first with the link that sends it to all. Both in live/.env only; without them nothing is sent.
+MAIL_KEY = os.environ.get("MEJL_KLJUC", "").strip()
+MAIL_EDITOR = os.environ.get("MEJL_UREDNIK", "").strip()
+PUBLIC_URL = os.environ.get("PUBLIC_URL", "").strip()
 

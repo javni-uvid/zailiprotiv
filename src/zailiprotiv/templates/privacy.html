@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Politika o privatnosti — Za ili Protiv{% endblock %}
+{% block description %}Koje podatke o posetiocima Za ili Protiv čuva, zašto, koliko dugo i kod koga: sažetak dana na mejl, obaveštenja, glasovi posetilaca i brojanje poseta.{% endblock %}
+{% block main %}
+<p class="crumbs"><a href="o-projektu.html">O projektu</a></p>
+<h1>Politika o privatnosti</h1>
+<p class="lead">Sajt i stranica „Ko sada govori“ rade bez naloga i bez kolačića. Ovde piše šta ipak čuvamo kad nešto sam zatražiš, zašto, koliko dugo i kod koga.</p>
+
+<h2 id="rukovalac">Ko čuva podatke</h2>
+<p>Rukovalac podacima je <b>Marko Pomorišac</b>, koji vodi projekat Za ili Protiv. Za sva pitanja o tvojim podacima, za uvid, ispravku ili brisanje piši na <b>kontakt@zailiprotiv.rs</b>. Ako misliš da su ti prava povređena, možeš da podneseš pritužbu Povereniku za informacije od javnog značaja i zaštitu podataka o ličnosti (poverenik.rs).</p>
+
+<h2 id="mejl">Sažetak dana na mejl</h2>
+<p>Ako se na stranici „Ko sada govori“ prijaviš za sažetak dana, čuvamo:</p>
+<ul>
+  <li>tvoju e-adresu, <b>šifrovanu</b> čim stigne: brojač na Cloudflare-u može da je zapiše, ali ne i da je pročita; pročitati je može samo servis koji šalje sažetak, ključem koji postoji samo na računaru rukovaoca, i to samo da bi poslao mejl;</li>
+  <li>otisak adrese (heš sa tajnom), da druga prijava iste adrese ne napravi duplikat i da adresa ne dobija mejl za potvrdu češće od jednom dnevno;</li>
+  <li>pismo koje si izabrao (latinica ili ćirilica), kad si se prijavio i kad si potvrdio.</li>
+</ul>
+<p>Ne čuvamo ime, IP adresu ni bilo šta o tome da li si mejl otvorio: u mejlu nema slika ni linkova koji prate klikove.</p>
+<p><b>Osnov</b> je tvoj pristanak: prijava važi tek kad klikneš na dugme u mejlu za potvrdu. <b>Koliko dugo:</b> dok si prijavljen. Odjava je jednim klikom u svakom mejlu i odmah briše adresu; nepotvrđena prijava se briše posle 48 sati. Rezervne kopije baze kod Cloudflare-a čuvaju se do 30 dana, a u njima je adresa i dalje šifrovana. Adresu nikome ne dajemo i ne koristimo je ni za šta drugo.</p>
+<p><b>Ko je obrađuje za nas:</b> Cloudflare, Inc. (baza brojača i slanje mejla, sa adrese sazetak@mikrofon.zailiprotiv.rs). Cloudflare je u SAD i radi po svojim uslovima obrade podataka i standardnim ugovornim klauzulama.</p>
+
+<h2 id="obavestenja">Obaveštenje kad sednica počne</h2>
+<p>Ako uključiš obaveštenja na stranici „Ko sada govori“, brojač čuva samo adresu koju je tvoj pregledač dao za obaveštenja, dok ih ne isključiš. Obaveštenje šalje servis tvog pregledača (Gugl, Epl ili Mozila) i u njemu nema sadržaja. Više u <a href="kako-racunamo.html#posetioci">Kako računamo</a>.</p>
+
+<h2 id="glasovi">Glasovi posetilaca</h2>
+<p>Kad glasaš o zakonu, brojač čuva glas uz nasumičnu oznaku uređaja (kao heš), dan i heš mreže koji se menja svaki dan. Nema imena, IP adrese ni kolačića. Tačno šta se čuva piše u <a href="kako-racunamo.html#posetioci">Kako računamo</a>.</p>
+
+<h2 id="posete">Brojanje poseta</h2>
+<p>{% if analytics %}Posete broji Cloudflare Web Analytics: bez kolačića i bez praćenja pojedinaca, samo zbir poseta po stranici i brzina učitavanja.{% else %}Posete se ne broje.{% endif %} Brojač sajta broji i neke radnje (na primer koliko puta je pušten prenos), samo kao zbir po danu.</p>
+
+<h2 id="prava">Tvoja prava</h2>
+<p>Imaš pravo na uvid u podatke o sebi, ispravku, brisanje, ograničenje obrade i prigovor, i pravo da pristanak povučeš u svakom trenutku (za mejl: odjavom), po Zakonu o zaštiti podataka o ličnosti. Piši na kontakt@zailiprotiv.rs; odgovaramo najkasnije za 30 dana.</p>
+<p class="meta">Poslednja izmena: 23. novembar 2026. Kod koji sve ovo radi je javan: <a href="https://github.com/javni-uvid/zailiprotiv">github.com/javni-uvid/zailiprotiv</a> (worker/mejl.js, live/uzivo/pretplata.py).</p>
+{% endblock %}

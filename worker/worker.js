@@ -25,9 +25,12 @@
 //   POST /p/admin     ← {"endpoint"}, with the token: from the live service's /upozorenja (the maintainer's key):
 //                       this device is told when "Ko sada govori" is down while a sitting is on; /p/admin/odjava
 //   POST /p/vrsta     ← {"endpoint"}   from the page's service worker on a push: which notification it is
+//   /m, /m/potvrdi, /m/odjava, /m/spisak: the day's summary by mail, who asked for it (mejl.js)
 //
 // Only laws (and quotes) the site itself lists are counted (glasanje.json, read from the site and kept for an hour),
 // and one address can send only so often (Cloudflare's rate limiter; the address is not stored by us).
+import * as mejl from "./mejl.js";
+
 const SITE = "https://zailiprotiv.rs";
 const LIVE = "https://mikrofon.zailiprotiv.rs";
 // Mail goes out from the live page's own address (Cloudflare Email Service, the domain mikrofon.zailiprotiv.rs:
@@ -35,7 +38,7 @@ const LIVE = "https://mikrofon.zailiprotiv.rs";
 const MAIL_FROM = { email: "sazetak@mikrofon.zailiprotiv.rs", name: "Za ili Protiv" };
 const MAIL_REPLY = "kontakt@zailiprotiv.rs";
 const MAIL_BATCH = 20;  // messages a call: each is a call of Cloudflare's, as each push is
-const MAIL_TO = /^[^\s@<>()",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
+const MAIL_TO = mejl.ADDRESS;
 
 // One message to each address, made by the live service (`live/uzivo/mejl.py`): the subject, HTML and text as they
 // are, and the address that unsubscribes this reader in one click (also as List-Unsubscribe, where mail readers put
@@ -96,6 +99,8 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   "mikrofon.ekran", "mikrofon.dodaj", "mikrofon.dodato", "mikrofon.sledeca",
   // notifications turned on and off (the addresses themselves are in the table `push`)
   "mikrofon.obavesti", "mikrofon.odjavi",
+  // a sign-up for the day's summary by mail sent from the page (23 Nov 2026; the addresses are in the table `mejl`)
+  "mikrofon.mejl",
   // the site's search (20 Nov 2026, to learn whether a search by meaning is worth building): a search run, a search
   // that found nothing, a result opened. Never the words searched for.
   "pretraga.trazi", "pretraga.prazno", "pretraga.klik",
@@ -153,7 +158,7 @@ async function overview(env) {
   const push = await env.DB.batch([env.DB.prepare("SELECT COUNT(*) AS n FROM push"),
     env.DB.prepare("SELECT day, sent, gone FROM push_days ORDER BY day DESC LIMIT 14")]);
   return { day, devices_with_many_votes: busy.results[0].n, uses,
-           push: { devices: push[0].results[0].n, sent: push[1].results },
+           push: { devices: push[0].results[0].n, sent: push[1].results }, mejl: await mejl.count(env),
            laws: items.results.map((r) => ({ item: r.item, total: r.total, today: r.today, busiest_network: top[r.item] || 0 }))
              .sort((a, b) => b.today - a.today).slice(0, 200) };
 }
@@ -348,6 +353,7 @@ async function same(a, b) {  // the token compared by its hash, so the time take
 export default {
   async scheduled(event, env) {
     if (event.cron === "*/5 6-19 * * 1-5") return watch(env);
+    if (event.cron === "47 5-21 * * *") await mejl.cleanup(env);  // sign-ups not confirmed in 48 hours
     if (!env.DISPATCH_TOKEN) return;
     if (event.cron === "53 */6 * * *") await dispatch(env, "summaries.yml", {});
     else await dispatch(env, "votes.yml", { convocation: "14", scheduled: "true" });
@@ -358,6 +364,10 @@ export default {
     const origin = SITE;  // CORS names the site only; a POST from any other page is refused below
     const path = new URL(request.url).pathname;
     if (request.method === "OPTIONS") return reply({}, 204, origin);
+    if (path === "/m" || (path.startsWith("/m/") && path !== "/m/salji")) {
+      const res = await mejl.handle(request, env, path, from, same);
+      if (res) return res;
+    }
     if (request.method === "GET") {
       if (path === "/pregled") return reply(await overview(env), 200, origin, 300);
       if (path.startsWith("/z/")) {

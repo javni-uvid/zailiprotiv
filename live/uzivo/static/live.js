@@ -418,3 +418,19 @@
       .then(function () { state(false); use("odjavi"); }).catch(failed);
   });
 })();
+// "Sažetak dana na mejl": the form sent to the counter from the page (the reader stays here), and its answer shown.
+// Without the script the form goes there itself and the counter answers with a page of its own.
+(function () {
+  var form = document.querySelector(".ml-box");
+  if (!form || !window.fetch) return;
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var body = new URLSearchParams(new FormData(form)); body.set("js", "1");
+    var btn = form.querySelector("button"); btn.disabled = true;
+    fetch(form.action, { method: "POST", body: body }).then(function (r) { return r.ok; }, function () { return false; }).then(function (ok) {
+      form.querySelector(".ml-done").hidden = !ok; form.querySelector(".ml-err").hidden = ok;
+      if (ok) { form.querySelector(".ml-row").hidden = true; if (window.mikrofonUse) window.mikrofonUse("mejl"); }
+      btn.disabled = false;
+    });
+  });
+})();

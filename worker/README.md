@@ -84,4 +84,12 @@ If this happens often, the next step is Cloudflare Turnstile on `POST /z` (free;
 `POST /m/salji {"poruke": [{to, subject, html, text, odjava}]}`, with the push's token, is the live service's: up to
 20 messages a call, each sent as it is through Cloudflare Email Service (the binding `MEJL`, Workers Paid) from
 `sazetak@mikrofon.zailiprotiv.rs`, answers to `kontakt@zailiprotiv.rs`; `odjava` also as `List-Unsubscribe` (left out
-when Cloudflare does not allow the header). Answers `{poslato, greske: [{i, code}]}`. The subscribers' list comes next.
+when Cloudflare does not allow the header). Answers `{poslato, greske: [{i, code}]}`.
+
+Who asked for it (`mejl.js`, the table `mejl`): `POST /m {adresa, pismo}` from the live page only, rate-limited, sends
+a mail asking to confirm (once a day to one address; the answer is the same whether or not the address is there);
+`/m/potvrdi` confirms by a button on its page (mail scanners open links); `/m/odjava?i=&k=` deletes the row at once
+(the link in every mail, and List-Unsubscribe-Post). The address is sealed with `MEJL_JAVNI` (the public half of the
+maintainer's key; ECDH P-256, HKDF-SHA-256, AES-GCM): this worker writes it and can't read it. `GET /m/spisak`, with
+the push's token, gives the live service the confirmed rows, sealed, each with its unsubscribe link. Unconfirmed
+rows go after 48 hours (the hourly run); `/pregled` gives the counts only.

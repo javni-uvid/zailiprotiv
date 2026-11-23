@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, hronika, picture, prepis, slusaj, sudija, worker
+from . import config, hronika, picture, pretplata, prepis, slusaj, sudija, worker
 from .stream import VIDEO
 from .obavesti import Bell
 from .page import admin_page, fragment, listen_html, manifest, page, service_worker, transcript_page
@@ -26,6 +26,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s
 tracker = Tracker(config.STATE_PATH)
 _stop = threading.Event()
 bell = Bell()
+mailer = pretplata.Mailer(Path(config.STATE_PATH).parent / "mejl", pretplata.day_mail(tracker))
 _tz = ZoneInfo(config.TZ)
 FONTS = Path(__file__).parent / "static" / "fonts"
 URL = os.environ.get("PUBLIC_URL", "").strip()  # the page's own address, for canonical links
@@ -44,7 +45,7 @@ async def lifespan(_: FastAPI):
             glas.Listener(tracker, _stop).start()
     hronika.Watcher(tracker, _stop).start()
     if sudija.on():  # the model tells the day's steps and sums the day up (sudija.py); no key, no calls
-        sudija.Judge(tracker, _stop, bell=bell).start()
+        sudija.Judge(tracker, _stop, bell=bell, mailer=mailer).start()
     yield
     _stop.set()
 
@@ -189,6 +190,27 @@ def state_shared() -> JSONResponse:
 def days() -> JSONResponse:
     """The days this service has a record of, for the site's workflow that takes them in."""
     return JSONResponse({"dani": tracker.days_kept()}, headers=NO_STORE)
+
+
+@app.get("/mejl/posalji")
+def mail_ask(dan: str = "", k: str = "") -> HTMLResponse:
+    """The maintainer's link in the day's mail: a page with one button (mail scanners open links; sending to all must
+    be his click)."""
+    return HTMLResponse(pretplata.page_ask(dan, k), headers={"Cache-Control": "no-store", "Referrer-Policy": "no-referrer",
+                                                           "X-Robots-Tag": "noindex, nofollow"})
+
+
+@app.post("/mejl/posalji")
+async def mail_send(request: Request) -> HTMLResponse:
+    """The button: the day's mail to everyone confirmed, once, until 8 the next morning (pretplata.Mailer.to_all)."""
+    from urllib.parse import parse_qs
+    form = parse_qs((await request.body()).decode("utf-8", "replace")[:500])
+    dan, k = (form.get("dan") or [""])[0], (form.get("k") or [""])[0]
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", dan):
+        return HTMLResponse(pretplata.page_done("kod", 0), status_code=400)
+    from datetime import date
+    what, n = await asyncio.to_thread(mailer.to_all, date.fromisoformat(dan), k)
+    return HTMLResponse(pretplata.page_done(what, n), headers={"Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow"})
 
 
 @app.get("/sazetak")

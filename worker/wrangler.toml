@@ -28,6 +28,11 @@ simple = { limit = 40, period = 60 }
 name = "MEJL"
 allowed_sender_addresses = ["sazetak@mikrofon.zailiprotiv.rs"]
 
+[vars]
+# The public half of the maintainer's key (P-256): sign-ups are sealed with it (mejl.js); the private half is
+# MEJL_KLJUC in live/.env only, so that what this worker keeps can be read on the maintainer's computer alone.
+MEJL_JAVNI = '{"kty":"EC","crv":"P-256","x":"yoZ3BrUkPZPWbBDHw0Y7xJGBNBD19d3qZLpc9hSaMnU","y":"aV852Ye9oBE-b0i_cOQ0Ve-MmOgSLALolCiyPkOXnM0"}'
+
 # The clock GitHub's own schedule didn't keep (13 Nov 2026): every hour of the working day the worker starts the
 # votes workflow (reading the Assembly's site), and every six hours the model's writing. Times in UTC.
 [triggers]

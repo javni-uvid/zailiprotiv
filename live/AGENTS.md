@@ -659,3 +659,12 @@ MPs' addresses on the site, as the voices are kept: `cupic-aleksandar`, the six 
   finds to whom, said so: a name in the chair's sentence; the stretch's summary naming who got one at that minute;
   the chair saying later whom he warned; for a word taken away over time, the MP with the floor. Never guessed
   otherwise. Written on 19 Nov alone: to be checked on the next days before the live page and the day's page use it.
+- **Who gets the day's mail, and when** (23 Nov 2026, the maintainer's decisions: B, the maintainer first and all on
+  his click; the addresses kept by him, encrypted, his name on the privacy page). "Sažetak dana na mejl" on the page
+  (beside the notification's offer; a form to the counter that works without the script) asks the counter, which
+  seals the address for the maintainer's key and mails a confirmation (`worker/mejl.js`). When the day's summary is
+  on the page (`sudija.Judge._tell`), `pretplata.Mailer.ready` mails the day to `MEJL_UREDNIK` with a link
+  (`/mejl/posalji?dan=&k=`, the day signed with `MEJL_KLJUC`) to a page with one button; the button sends the day to
+  every confirmed address (`/m/spisak`, opened here with `MEJL_KLJUC`, each with its own unsubscribe link), once,
+  until 8 the next morning. A word in two scripts stops it: the maintainer is told, nobody else gets the day. Both
+  keys are in `live/.env` only; without them nothing is sent. What went is kept in `/data/mejl/<day>.json`.

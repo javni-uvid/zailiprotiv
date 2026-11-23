@@ -291,3 +291,10 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .gt-bar { height: .8rem; border-radius: 4px; background: color-mix(in srgb, var(--fg) 8%, transparent); overflow: hidden; } .gt-bar i { display: block; height: 100%; }
 .gt-n { margin: .3rem 0 0; font-size: var(--t-2); font-variant-numeric: tabular-nums; } .gt-n b { font-weight: 650; }
 .gt-how { margin: .9rem 0 0; font-size: var(--t-1); line-height: 1.45; max-width: 46rem; }
+/* "Sažetak dana na mejl" (23 Nov 2026): beside the notification's offer, the same order on the page */
+.ml-box { order: 36; margin: 1.2rem 0 0; border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
+.ml-box h2 { font-size: var(--t-4); margin: 0 0 .2rem; } .ml-box p { margin: .3rem 0; } .ml-box label { font-weight: 600; font-size: var(--t-2); }
+.ml-row { display: flex; flex-wrap: wrap; gap: .5rem; margin: .3rem 0; }
+.ml-row input[type=email] { flex: 1 1 14rem; min-width: 0; font: inherit; padding: .5rem .6rem; border: 1px solid var(--muted); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.ml-row .add-btn { min-height: 2.75rem; } .ml-done { color: var(--ok); font-weight: 600; } .ml-fine { font-size: var(--t-1); }
