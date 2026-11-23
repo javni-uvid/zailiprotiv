@@ -1940,3 +1940,18 @@ def test_the_floor_given_now_and_the_chair_by_voice(tmp_path, monkeypatch):
     assert snap["predsedava"] == {"ime": "Marković Marko", "adresa": "markovic-marko"} and snap["sada"] is None
     from uzivo.page import fragment
     assert "Predsedava: Marko Marković" in fragment(snap, cyr=False, site="", tz=TZ)
+
+
+def test_a_test_container_has_none_of_the_live_services_secrets():
+    """Every secret the service reads from its .env is emptied in the test's compose file (23 Nov 2026: a test had the
+    keys of the live sound's bucket). The page's own key stays: it opens the pages one looks at."""
+    import re
+    live = Path(__file__).parents[1] / "live"
+    read = set()
+    for f in (live / "uzivo").glob("*.py"):
+        read |= set(re.findall(r'environ(?:\.get\(|\[)"([A-Z0-9_]+)"', f.read_text(encoding="utf-8")))
+    secret = {n for n in read if re.search(r"KEY|TOKEN|KLJUC|TAJNA|SECRET|LOZINKA|R2_(ENDPOINT|BUCKET)|MEJL", n)} - {"PREPIS_KLJUC"}
+    assert {"MEJL_KLJUC", "ZVUK_R2_TAJNA", "PUSH_TOKEN", "ANTHROPIC_API_KEY"} <= secret
+    compose = (live / "docker-compose.test.yml").read_text(encoding="utf-8")
+    empty = set(re.findall(r'^ {6}([A-Z0-9_]+): "(?:\$\{TEST_[A-Z_]+:-\})?"', compose, re.M))
+    assert secret <= empty, secret - empty

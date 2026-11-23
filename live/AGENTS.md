@@ -708,3 +708,7 @@ presided (not done).
   was slow, and the frames meanwhile were skipped (`newest > nxt`). The sound is now taken by a thread of its own
   (`HlsPoller._hear_loop`), in order, with the moment its frame was read; two minutes of it may wait, beyond which
   the oldest is let go.
+- **A test has none of the live service's secrets but the page's key** (23 Nov 2026: `env_file: .env` gave every test
+  the bucket's keys and the mail's: during a sitting a test left running would have written its own segments over the
+  live playlist in R2). `docker-compose.test.yml` empties each by name; `tests/test_live.py` reads the code for what
+  looks like a secret and fails when one is not emptied there. A test container started by hand gets no `--env-file`.
