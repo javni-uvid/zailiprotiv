@@ -4,7 +4,7 @@ What each part of the project is guarded against, what is checked before a merge
 From the review of 20 Nov 2026 (the maintainer's request, after CodeQL's first 13 findings); measured against
 OpenSSF Scorecard's checks, GitHub's hardening guide for Actions, OWASP's secure headers and the CIS Docker
 benchmark. The rules for workflows are in AGENTS.md ("Workflows, safely"); the live service's own decisions in
-`live/AGENTS.md`.
+`live-service.md`.
 
 ## What there is to guard
 
@@ -35,7 +35,7 @@ The site is static and public, with no accounts and nothing private about a visi
   tag doesn't start. A new action is first allowed there (Settings → Actions → General), by the maintainer or
   an agent with their rights, and said in the pull request.
 - **The live service (`live/`).** Behind Cloudflare's tunnel with no port open to the network; not root, no
-  capabilities, images and packages named by content (`live/AGENTS.md`). What a request names never becomes a
+  capabilities, images and packages named by content (`live-service.md`). What a request names never becomes a
   path or markup. The maintainer's pages are opened by a key of 12 characters or more, compared in constant time.
 - **The counter (`worker/`).** Takes a vote only from the site's own pages (the `Origin`), for items it knows,
   within a rate limit per address; the tokens are compared in constant time; it answers other sites' scripts
@@ -64,7 +64,7 @@ checks pass; a security fix comes at once.
 - **yt-dlp is not pinned** in the live service's image (YouTube breaks it often).
 - **The key of `/upozorenja` travels in the address,** so it stays in the browser's history and Cloudflare's
   logs; the page sends no referrer and is never stored. It opens one device's outage alerts and the transcript.
-- **The live service's container has a writable root filesystem** (see `live/AGENTS.md`).
+- **The live service's container has a writable root filesystem** (see `live-service.md`).
 
 ## The headers every host sends
 

@@ -27,7 +27,7 @@ name. Every page is also in Cyrillic, under `cir/`.
    verdict of the site's own.
 
 `AGENTS.md` holds the principles in full and the rules of work; the decisions with their dates are in
-`docs/decisions/` by part, and `live/AGENTS.md` has those of the live page.
+`docs/decisions/` by part; `live/AGENTS.md` says in short what holds for the live page.
 
 ## Pages
 

@@ -1,6 +1,6 @@
 # Broadcasts and recordings
 
-Decisions about the broadcasts and recordings on the site; the live service's own are in live/AGENTS.md, moved word
+Decisions about the broadcasts and recordings on the site; the live service's own are in live-*.md, moved word
 for word from AGENTS.md on 20 Nov 2026 (the maintainer's decision, so that an agent reads the rules and only the
 decisions of the part it works on). **Keep it current:** a decision made or changed is added here, at the end of the
 section it belongs to, in the same commit as the change. The principles and the rules of work are in AGENTS.md.
@@ -19,7 +19,7 @@ its minute.
 
 `mikrofon.zailiprotiv.rs`: who is speaking in the Assembly now and who spoke today, read from the live broadcast by a
 service in Docker on the maintainer's computer, behind a Cloudflare tunnel (`live/`), with a worker in front of it
-(`live/edge/`). **Its decisions are in `live/AGENTS.md`** (20 Nov 2026: moved there, as this file had grown to
+(`live/edge/`). **Its decisions are in `live-*.md`**, in short in `live/AGENTS.md` (20 Nov 2026: moved there, as this file had grown to
 85 KB, more than half of it about that service, read by every agent whatever its task): the page and what it shows,
 the captions and names, the automatic transcript, the day's steps, notifications, testing and putting live. Read it
 before changing `live/`, the site's `mikrofon` page or the counter's push. What the site makes of the broadcast's
@@ -132,7 +132,7 @@ records and recordings stays here:
   spoke when, in this order: the caption while the broadcast shows it; the day's notes lined up with the sound
   (above), which once published replace whatever else the day had; and only for a day, or a part of one, with no
   notes yet, faces and voices (`live/uzivo/lice_glas.py` in `live/Dockerfile.analiza`, an image of its own on the
-  tested one, never live (voices live since 22 Nov 2026: live/AGENTS.md): YuNet and SFace for faces, 3D-Speaker's ERes2Net through sherpa-onnx for voices; only the
+  tested one, never live (voices live since 22 Nov 2026: live-speaker.md): YuNet and SFace for faces, 3D-Speaker's ERes2Net through sherpa-onnx for voices; only the
   numbers are kept, no picture). `ko.py` matches a voice for every speaker by one rule: a stretch of sound is named
   when its windows are on average 0.68 alike the mean of a speaker's windows in turns known by caption or notes
   (`STRETCH_MIN`; checked on 18 Nov, each file left out of the samples in turn: every stretch so named was right).
@@ -172,6 +172,6 @@ records and recordings stays here:
 - **The model tells the day's steps and sums the day up** (20 Nov 2026, the maintainer's decision after a trial on
   19 Nov): Claude Haiku over the automatic transcript is the source of "Šta se desilo danas", the rules the fallback,
   and writes a summary at each break and of the day, labelled as a model's from an automatic transcript; how, in
-  `live/AGENTS.md` ("The model tells the day's steps"). The key is in `live/.env` only.
+  `live-day.md` ("The model tells the day's steps"). The key is in `live/.env` only.
 - **A day's recording as sound only** (22 Nov 2026): the day pages (`govornici/<date>`) have "Slušaj samo zvuk" and
-  the lock screen's player with who speaks, as the live page (`live/AGENTS.md`).
+  the lock screen's player with who speaks, as the live page (`live-sound.md`).

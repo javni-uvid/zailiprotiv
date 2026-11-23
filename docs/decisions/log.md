@@ -42,3 +42,5 @@ the change. The principles and the rules of work are in AGENTS.md.
   the computer to fill, 2 GB of memory kept, and a refresh by hand; without an LLM only the search of pieces of text
   worked, which a plain index does as well. Before a third try: a lighter index of the same kind, each piece carrying
   its own source line, and a reason the agents would ask it more than they grep.
+- **23 Nov 2026:** `live/AGENTS.md` (77 KB, read whole by every agent in `live/`) split: the decisions word for word
+  into `docs/decisions/live-*.md` by part, what holds now in short in `live/AGENTS.md`.
