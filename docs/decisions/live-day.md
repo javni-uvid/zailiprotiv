@@ -121,3 +121,9 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   is counted is under "Kako ovo radi"; gone once the debate is closed. Counted from the debate's opening: a point of
   order before it had been counted that day. That day the chair told the same rule for the election of the committees
   (five hours, art. 97; art. 24, 192, 193), whose one debate has none in detail. `VREME_GRUPA_PRIKAZ=0` takes it off.
+- **A step is the chair's word, never an MP's** (24 Nov 2026, the maintainer, when "Izbor: gospodina Mavrića i Saru
+  Valentika" stood on the page with no vote held: an MP at the rostrum had told what the proposal of the committees
+  held). `steps._mps_words`: a model's step whose sentence falls more than 30 s inside an MP's turn is none, but for a
+  measure, which comes in the middle of a turn, and the giving of the floor. The prompts say the same. Of the 53 steps
+  of 19 Nov the rule drops one, a move to an item an MP spoke of. Measures an MP only spoke of are still kept
+  (four that day) and are to be judged apart.

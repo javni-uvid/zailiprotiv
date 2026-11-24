@@ -1864,6 +1864,25 @@ def test_the_line_under_the_picture(tmp_path, monkeypatch):
     assert "function captions()" in page_.SCRIPT and 'func: "seekTo"' in page_.SCRIPT  # set back when a phrase comes late
 
 
+def test_an_election_an_mp_speaks_of_is_no_step_and_the_chairs_is():
+    """24 Nov 2026: an MP told what the proposal of the committees held, and the page said there was an election."""
+    from uzivo.steps import model_steps
+    base = 1795510000
+    ev = lambda t, kind, text, **more: {"t": base + t, "vrsta": kind, "tekst": text, "izvor": "model", "vise": more}
+    said = "Saopštili da u odboru za spoljne poslove gde su izabrali gospodina Mavrića i Saru Valentika."
+    snap = {"provereno": base + 4000, "danas": [{"od": base + 100, "do": base + 700}], "sada": None, "dnevni_red": None,
+            "hronika": [ev(300, "Izbor", said, ko="gospodina Mavrića i Saru Valentika")]}
+    assert model_steps(snap) == []
+    chair = ev(720, "Izbor", "Narodna skupština je izabrala Aleksandra Čupića.", ko="Aleksandar Čupić")
+    assert [s["naslov"] for s in model_steps({**snap, "hronika": [chair]})] == ["Izbor"]
+    edge = ev(690, "Izbor", "Narodna skupština je izabrala Aleksandra Čupića.", ko="Aleksandar Čupić")
+    assert len(model_steps({**snap, "hronika": [edge]})) == 1  # a turn's end is known to some seconds only
+    measure = ev(300, "Mera predsedavajućeg", "Izričem vam opomenu.", napomena="opomena")
+    assert len(model_steps({**snap, "hronika": [measure]})) == 1  # a measure comes in the middle of a turn
+    on = {**snap, "danas": [], "sada": {"od": base + 100}, "hronika": snap["hronika"]}
+    assert model_steps(on) == []  # the turn still on
+
+
 def test_the_groups_time_left_stands_small_under_the_speaker(monkeypatch):
     """24 Nov 2026, the maintainer: smaller, under the speaker, no other words; the method under "Kako ovo radi"."""
     g = {"tacka": 5, "pojedinosti": False, "zakljucen": False,

@@ -152,6 +152,17 @@ def _borne(said: str, sentence: str) -> str:
     return said
 
 
+AMID = 30  # seconds from a turn's beginning and end within which a sentence may still be the chair's
+
+
+def _mps_words(kind: str, t: float, turns: list[tuple]) -> bool:
+    """Whether a step's sentence was said in the middle of an MP's turn, so it is the MP's and no step: the chair alone
+    opens a debate, puts to the vote, tells a result or an election, gives a break (24 Nov 2026: an MP telling what the
+    proposal of the committees held was shown as an election). A measure may come in the middle of a turn, and a turn
+    is given at its edge, so those two are not judged by it."""
+    return kind not in ("Mera predsedavajućeg", "Reč ima") and any(a + AMID <= t <= b - AMID for a, b in turns)
+
+
 def model_steps(snap: dict) -> list[dict]:
     """The day's steps when the model tells them (20 Nov 2026, the maintainer's decision: the model is the source,
     the rules the fallback): the model's steps and the Assembly's page; of the rules' steps only "Reč ima", which
@@ -182,7 +193,7 @@ def model_steps(snap: dict) -> list[dict]:
             out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": "", "url": "", "adresa": e.get("url", ""),
                         "rec": True, "model": True})
             continue
-        if src != "model" or kind not in MODEL_TITLES:
+        if src != "model" or kind not in MODEL_TITLES or _mps_words(kind, t, turns):
             continue
         more, sentence = e.get("vise") or {}, e.get("tekst", "")
         title, what = MODEL_TITLES[kind], ""
