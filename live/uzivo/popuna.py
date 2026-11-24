@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from . import hronika
-from .state_base import CHAIRS, REJOIN, REJOIN_WORDS, SURE_FRAMES, _write, write_text
+from .state_base import BREAK, CHAIRS, REJOIN, REJOIN_WORDS, SURE_FRAMES, _write, write_text
 
 MISSING = 0.4  # a turn is missing when less than this share of it is there: the chair's own words before the next floor
 SHORT_OF = 45  # and at least these seconds of a turn that is there, for it to be lengthened
@@ -52,6 +52,12 @@ def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[di
     given = floors(said, people)
     out = [dict(t) for t in turns if not (t.get("izvor") and t["seen"] - t["start"] < 1)]
     done: list[str] = []
+    breaks = sorted(int(k.lstrip("p")) for k, v in said.items() if k.lstrip("p").isdigit() and BREAK.search(v))
+    for t in out:  # no turn found without a caption goes over a break the chair declared
+        at = next((b for b in breaks if t["start"] <= b < t["seen"] - 1), None)
+        if t.get("izvor") and at is not None:
+            done.append(f'{t["name"]}: kraj {t["seen"] - at:.0f} s ranije, pauza')
+            t["seen"] = float(max(t["start"], at))
     for a, v in zip(out[:-1], out[1:]):
         if _alike(a, v, said):
             done.append(f'{v["name"]}: {v["seen"] - v["start"]:.0f} s po sličnom glasu -> {a["name"]}')
@@ -69,6 +75,9 @@ def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[di
                 at = int(k.lstrip("p")) if k.lstrip("p").isdigit() else 0
                 if began < at < end and hronika.named(v, follows["name"]):
                     end = min(end, at)
+        pause = next((b for b in breaks if b >= began), None)
+        if end is not None and pause is not None:
+            end = min(end, pause)
         if end is None or not 0 < end - t0 <= LONGEST:
             continue
         mine = [t for t in out if t["key"] == who.key and t["start"] <= end and t["seen"] >= began - 5]

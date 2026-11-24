@@ -2225,6 +2225,41 @@ def test_a_turn_by_a_voice_merely_alike_goes_back_to_whose_speech_it_was():
     assert len(day({})[0]) == 2  # no words kept: nothing is known of the seam
 
 
+def test_a_break_the_chair_declares_ends_a_turn_found_without_a_caption():
+    """24 Nov 2026, 18:08: the break's noise stood as Vjerica Radeta's speech for minutes, with the hall's words in it."""
+    from uzivo.popuna import fill
+    from uzivo.state_base import BREAK
+    for said_ in ("Ja ću sada da pozovem pauzu. Pauza deset minuta.", "Proglašavam pauzu do 15 sati i 10 minuta.",
+                  "za raspravu, proglašam pauzu od jednog sata,", "Pauza u trajanju od jednog sata."):
+        assert BREAK.search(said_), said_
+    for other in ("posle toga ćemo proglasiti pauzu.", "I odredili pauzu od sat vremena", "kada je pauza proglašena",
+                  "Vi ste tu pauzu napravili", "morali ste da proglasite pauzu", "i posle toliko dana pauze"):
+        assert not BREAK.search(other), other
+
+    def day(text: str) -> Tracker:
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        now = 1795519000.0
+        t.observe(None, now=now)
+        t.heard(next(p for p in ROSTER.people if p.slug == "markovic-marko"), "prepis", now + 10, now + 10)
+        for i in range(0, 120, 5):
+            t.observe(None, now=now + 10 + i)
+        t.say(now + 40, text)
+        return t
+    ended = day("Molim vas. Pauza deset minuta.")
+    assert not ended.open_turn() and ended.turns_now()[-1]["seen"] == 1795519040 and ended.snapshot(now=1795519130)["sada"] is None
+    assert day("Vi ste tu pauzu napravili.").open_turn()  # spoken of by a speaker: the turn goes on
+    # the fill gives nobody the break: not by the floor given before it, and a turn that ran into it is cut there
+    from uzivo.names import Person
+    people = [Person("a", "Radeta Vjerica", "radeta-vjerica", ""), Person("b", "Nikolić Nina", "nikolic-nina", "")]
+    said = {"1000": "Reč ima Vjerica Radeta, narodna poslanica.", "p1060": "Pauza deset minuta.", "1100": "Koga treba da bijemo?",
+            "p1700": "Reč ima Nina Nikolić, narodna poslanica."}
+    turn = {"key": "a", "name": "Radeta Vjerica", "slug": "radeta-vjerica", "group": "", "role": "", "start": 1030, "seen": 1250, "n": 4, "izvor": "prepis"}
+    other = {**turn, "key": "b", "name": "Nikolić Nina", "slug": "nikolic-nina", "start": 1720, "seen": 1900, "izvor": "potpis"}
+    out, done = fill([turn, other], said, people)
+    assert [round(t["seen"]) for t in out] == [1060, 1900] and any("pauza" in d for d in done)
+
+
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
     """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
     from uzivo import hronika

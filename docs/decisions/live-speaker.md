@@ -165,3 +165,8 @@ presided (not done).
   of another's whose voice is not known, at most 60 s, with words written down at the seam, none of them the chair's,
   and its speaker named by nobody in the 90 s before, is the speaker before's. On the day's record it hit one of 14
   turns by voice after another's (17:26:23), the other 13 were real changes.
+- **A break the chair declares ends a turn found without a caption** (24 Nov 2026, 18:08; `state_base.BREAK`): the floor had been
+  given a minute before, nobody's voice was known, and the break's noise went on as Vjerica Radeta's speech, the hall's
+  words in it. The turn ends where the piece with the words begins; `popuna` gives nobody the time over a break either. The
+  words are the chair's declaring it now, not a break announced for later or spoken of: on the day's transcripts three
+  breaks of three and none of ten other mentions.

@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import HOLD_VOICE, CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, REJOIN, REJOIN_WORDS
+from .state_base import HOLD_VOICE, CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, BREAK, REJOIN, REJOIN_WORDS
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -442,6 +442,21 @@ class Tracker(Said, Chronicle, View):
             self._close()
             self.status = UNKNOWN
             self._snap = None
+
+    def _break_called(self, ts: float, text: str) -> None:
+        """A turn found without a caption ends where the chair declared a break (24 Nov 2026, 18:08: the floor had just been
+        given, nobody's voice was known, and the break's noise went on as Vjerica Radeta's speech, the words of the hall
+        with it). Called with the lock held."""
+        cur = self.turns[-1] if self.turns else None
+        if not cur or not cur.get("izvor") or not cur["start"] <= ts < cur["seen"] + 1 or not BREAK.search(text):
+            return
+        cur["seen"] = max(cur["start"], ts)
+        cur.pop("zadrzan", None)
+        was, self.open = self.open, False
+        if was:
+            self.status = UNKNOWN
+        self._snap = None
+        self._save()
 
     def _mend(self) -> None:
         """The same speaker named again, joined once the words between are written down: they come half a minute after the
