@@ -846,7 +846,7 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str
     if not cur["adresa"]:
         out.append(f'<p class="meta">({t("not_listed")})</p>')
     if cur.get("izvor") in ("glas", "prepis"):  # found without a caption (22 Nov 2026): said how, and that it may err
-        out.append(f'<p class="meta how-found">{t("by_" + cur["izvor"])}</p>')
+        out.append(f'<p class="meta how-found">{t("by_found")}</p>')
     rok = cur.get("rok") or {}  # a reply's or a point of order's two minutes, where heard (rok.py)
     of = ""
     if rok:
