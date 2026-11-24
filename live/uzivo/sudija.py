@@ -32,7 +32,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import config
-from .state_base import SAID_LEAD, _write
+from .state_base import SAID_LEAD, _write, speakers_own
 
 log = logging.getLogger("uzivo.sudija")
 
@@ -210,11 +210,10 @@ def lines(rows: list[tuple[int, str, bool]], turns: list[dict], tz: ZoneInfo, sh
     out, last = [], None
     for ts, text, chair in rows:
         who = CHAIR
-        if not chair:
-            for d in turns:
-                if d["od"] - SAID_LEAD - 1 <= ts <= d["do"]:
-                    who = f'{d["ime"]} ({d.get("lista") or "bez liste"})'
-                    break
+        for d in turns:
+            if (speakers_own(ts, text, d["od"], d["do"]) if chair else d["od"] - SAID_LEAD - 1 <= ts <= d["do"]):
+                who = f'{d["ime"]} ({d.get("lista") or "bez liste"})'
+                break
         clock = dt.datetime.fromtimestamp(ts, tz).strftime("%H:%M:%S")
         out.append((ts, f"[{clock}] {who}: {shown(text)}" if who != last else f"[{clock}] {shown(text)}"))
         last = who
@@ -542,7 +541,8 @@ class Judge(threading.Thread):
         lists = {d["ime"]: d.get("lista") or "" for d in turns}
         said: dict[str, str] = {}
         for ts, piece, chair in rows:
-            who = next((d["ime"] for d in turns if d["od"] - SAID_LEAD - 1 <= ts <= d["do"]), None) if not chair else None
+            who = next((d["ime"] for d in turns if (speakers_own(ts, piece, d["od"], d["do"]) if chair
+                                                    else d["od"] - SAID_LEAD - 1 <= ts <= d["do"])), None)
             if who:
                 said[who] = said.get(who, "") + " " + self.tracker.shown(piece)
         user = (self._roster() + "Govornici za spisak \"govornici\":\n" + "\n".join(f"- {n} ({lists[n] or 'bez liste'})" for n in need)

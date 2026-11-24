@@ -140,3 +140,7 @@ presided (not done).
   gone, nothing naming her) and began again at 17:08:32, 646 s of it nobody's. `ocr.clock` had read 11:15, 11:21 and 11:26, right, and
   `Tracker.clocked` threw them away: more than two minutes were not believed. Two readings that agree and say the speech
   began within the same speaker's turn before (`CLOCK_JOIN`), no other's turn between, make one turn of them.
+- **The chair's pieces inside a mended turn are its speaker's** (24 Nov 2026, with the joining above): a piece written down
+  while the turn was cut is kept under the chair's key, so the day's summary (`sudija.lines`, the whole day's) and the
+  topic (`rezimei.spoken`) would have read the MP's words as the chair's. Well inside the turn and with no word only the
+  chair says, it is the speaker's (`state_base.speakers_own`). The kept transcript is not changed.

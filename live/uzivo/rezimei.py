@@ -20,7 +20,7 @@ import time
 from pathlib import Path
 
 from . import config, prepis, sudija
-from .state_base import _write
+from .state_base import SAID_LEAD, _write, speakers_own
 
 log = logging.getLogger("uzivo.rezimei")
 
@@ -138,7 +138,7 @@ class Writer(threading.Thread):
         for d in self.due(snap, now, prepis.waiting())[:1]:  # one at a time: a speech that has just ended goes first
             with self.tracker._lock:
                 said = dict(self.tracker._said_of(snap["dan"]))
-            text = self.tracker.shown(self.tracker._text(said, d["od"], d["do"]))
+            text = self.tracker.shown(spoken(said, d))
             old = next((k for k in self.kept if k["ime"] == d["ime"] and same(k, d)), None)
             tries = (old or {}).get("pokusaja", 0) + 1
             line, final = "", True
@@ -159,6 +159,14 @@ class Writer(threading.Thread):
             except Exception:
                 log.exception("the lines' look")
             self.halt.wait(8)
+
+
+def spoken(said: dict[str, str], d: dict) -> str:
+    """What was written down of a speech, in order: the pieces of its sound, and those kept as the chair's that are the
+    speaker's (state_base.speakers_own)."""
+    rows = [(int(k.lstrip("p")), k.startswith("p"), v) for k, v in said.items() if k.lstrip("p").isdigit()]
+    return " ".join(v for ts, chair, v in sorted(rows)
+                    if (speakers_own(ts, v, d["od"], d["do"]) if chair else d["od"] - SAID_LEAD - 1 <= ts <= d["do"]))
 
 
 def same(k: dict, d: dict) -> bool:

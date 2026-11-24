@@ -27,6 +27,13 @@ SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 # chair's before a reply were about to be the next speaker's)
 CHAIRS = re.compile(r"\breč ima|ima(te)? reč|dajem reč|po kom osnovu|\brepli[kc]|povred\w* poslovnik|izvolite|da li želite|"
                     r"poslaničk\w* grup\w* žel|\bmolim vas|\bmolim (da|bez)|\bupozor|izričem|prijavite se|zahvaljujem|hvala na|idemo dalje", re.I)
+def speakers_own(ts: float, text: str, start: float, end: float) -> bool:
+    """Whether a piece of sound in no turn when it was written (kept as the chair's) is the speaker's of a turn that came
+    to hold it later (a speech cut in two and mended): well inside the turn, and no word only the chair says in it
+    (24 Nov 2026: ten minutes of Milena Đorđijević's stood as the chair's, so the day's summary would have read them so)."""
+    return start + 8 <= ts <= end - 15 and not CHAIRS.search(text)
+
+
 REJOIN = 200  # seconds: the same speaker named again this soon, with speech going on between and no floor given to another
 REJOIN_WORDS = 1.2  # words a second of it, for speech to have gone on (a speaker's pace is some two)
 HEARD_SHORT = 12  # seconds: a turn found by the chair's words alone and as short as this is no turn (24 Nov 2026: 2 s, 8 s)
