@@ -314,7 +314,8 @@ def test_the_live_page_offers_the_mail_and_the_form_works_without_the_script():
     snap = Tracker(None).snapshot()
     html = page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"),
                      api="https://glasovi.zailiprotiv.rs")
-    assert '<form class="ml-box" id="mejl" method="post" action="https://glasovi.zailiprotiv.rs/m">' in html
+    assert '<form class="ml-box" method="post" action="https://glasovi.zailiprotiv.rs/m">' in html
+    assert '<details class="ml" id="mejl">' in html and 'class="ml-x" hidden' in html and 'class="ml-back" hidden' in html  # put away by the reader
     assert 'name="adresa"' in html and 'name="pismo" value="lat"' in html and "https://zailiprotiv.rs/privatnost" in html
     assert "<form class=\"ml-box\"" not in page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
     cyr = page.page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"), api="https://glasovi.zailiprotiv.rs")

@@ -36,9 +36,9 @@
       var side = [].filter.call(li.children, function (m) {
         return /\b(meta|label)\b/.test(m.className) && m.tagName === "SPAN" && !/^[·\d]/.test(m.textContent.trim());
       })[0];
-      var who = name ? name.textContent.trim() : (li.textContent.replace(/^[\s\d:–-]+/, "").split("·")[0].trim());
+      var who = name ? name.textContent.trim() : (li.getAttribute("data-ime") || li.textContent.replace(/^[\s\d:–-]+/, "").split("·")[0].trim());
       var said = li.querySelector("details.prepis p");
-      out.push({ t: +a.getAttribute("data-t") || 0, who: who, side: side ? side.textContent.trim() : "",
+      out.push({ t: +a.getAttribute("data-t") || 0, who: who, side: li.getAttribute("data-strana") || (side ? side.textContent.trim() : ""),
                  said: said ? said.textContent.trim() : "", li: li });
     });
     return out.sort(function (x, y) { return x.t - y.t; });

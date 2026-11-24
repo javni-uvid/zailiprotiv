@@ -161,7 +161,7 @@ def test_page_both_scripts():
     assert "Петар Петровић" in cyr and "https://zailiprotiv.rs/cir/poslanik/petrovic-petar" in cyr
     assert "<title>За или Против: Јутрић, Кафица, Скупштиница · Скупштина уживо</title>" in cyr
     # the Rules of Procedure, always under the day (20 Nov 2026: the new convocation's readers asked to find it)
-    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojmovi"' in lat and "Sednica po Poslovniku" in lat
+    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojmovi"' in lat and ">Poslovnik<" in lat
     assert 'href="https://zailiprotiv.rs/cir/poslovnik-clanovi#pojmovi"' in cyr
     for html in (lat, cyr):  # nothing from elsewhere but links
         assert "<script src" not in html and "googleapis" not in html
@@ -227,7 +227,7 @@ def test_turns_link_to_the_recording_and_stay_until_the_next_sitting(tmp_path):
     assert not snap["ranije"]
     assert snap["danas"][0]["snimak"] == 595 and snap["danas"][0]["video"] == "abc"  # (120 - 1) × 5 s
     html = fragment(snap, cyr=False, site="", tz=TZ)
-    assert "youtube.com/watch?v=abc&amp;t=595s" in html and "snimak 9:55" in html
+    assert "youtube.com/watch?v=abc&amp;t=595s" in html and 'class="time tp"' in html
     # The broadcast over: its YouTube video goes private, so no link into it (18 Nov 2026).
     t.tick(now=day1 + 200)
     assert all(d["snimak"] is None for d in t.snapshot(now=day1 + 200)["danas"])
@@ -673,8 +673,7 @@ def test_the_speaker_has_the_name_and_the_clock_and_no_box_under_them():
     # the box under the speaker is off (24 Nov 2026, the maintainer); the name is the way to the MP's page
     assert '<a href="https://zailiprotiv.rs/poslanik/petrovic-petar">' in html
     assert 'class="o"' not in html and "2. put za govornicom" not in html and "sazivi 13–14" not in html
-    assert "Vreme za govornicom po listama" in html and 'href="#t1794920610"' in html and 'id="t1794920610"' in html
-    assert 'class="l1 on"' in html  # the turn now on, marked in the day's strip
+    assert 'id="t1794920610"' in html and 'class="st-c"' not in html  # the strip and the cards are off since 24 Nov 2026
     t.observe(marko, now=now + 840)
     t.observe(marko, now=now + 845)
     html = fragment(t.snapshot(now=now + 846), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
@@ -696,7 +695,7 @@ def test_a_speaker_on_no_list_is_counted_apart_in_the_days_time_by_list():
     snap = t.snapshot(now=now + 46)
     assert [d["lista"] for d in snap["danas"]] == ["", "Lista za primer"]
     html = fragment(snap, cyr=False, site="", tz=TZ)
-    assert "Vlada i gosti" in html and 'class="lx"' in html
+    assert "Ana Anić" in html  # the strip of the day, which said "Vlada i gosti", is off since 24 Nov 2026
 
 
 def test_a_half_read_name_is_the_sitting_mp_it_is_nearest_to():
@@ -761,7 +760,7 @@ def test_the_day_in_one_sentence_the_summary_while_nobody_is_on_and_the_link_pre
     assert title == "Skupština uživo: ko sada govori" and "Petrović" not in text  # a card is kept: nobody's name on it
     assert og_text({**snap, "stanje": UNKNOWN, "sada": None}, cyr=False, tz=TZ) == (title, text)
     html = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
-    assert 'property="og:image" content="https://mikrofon.zailiprotiv.rs/slika.png?v=' in html and '<p class="hl">' in html
+    assert 'property="og:image" content="https://mikrofon.zailiprotiv.rs/slika.png?v=' in html and 'class="hl"' not in html  # off since 24 Nov 2026
     assert 'name="twitter:card" content="summary_large_image"' in html
     t.observe(None, now=now + 800)
     t.observe(None, now=now + 860)
@@ -827,8 +826,8 @@ def test_the_day_in_numbers_and_in_cards():
             t.observe(who_, now=now + s_)
     html = fragment(t.snapshot(now=now + 701), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "tiles" not in html and "Danas su govorili" not in html and "Svi govori, redom" in html  # off since 24 Nov 2026
-    assert 'class="share-now st-open"' in html and html.count('<section class="st-c">') >= 5
-    assert "Najduži govor bez prekida" in html and "Najviše puta za govornicom" in html and "3 <small>puta</small>" in html
+    assert "st-open" not in html and "Najviše vremena" not in html  # the cards and the headline are off since 24 Nov 2026 (the maintainer)
+    assert 'class="th">' in html and html.index("<li class=\"th\">") < html.index('id="t')  # the turns under the hour they began in
 
 
 def test_the_sound_is_found_in_a_format_of_its_own_when_the_picture_has_none():
@@ -1415,7 +1414,7 @@ def test_between_sittings_the_notification_offer_stands_above_the_day_and_the_sp
     assert "Jovan Jovanović" in tot and 'poslanik/"' not in tot  # no page known: the name alone
     assert 'href="https://zailiprotiv.rs/cir/poslanik/petrovic-petar"' in page.page(snap, cyr=True, site=site, tz=tz)
     on = page.page({**snap, "stanje": "govori"}, cyr=False, site=site, tz=tz)
-    assert on.count('class="add-home"') == 1 and on.index('class="add-home"') > on.index('id="deo"')
+    assert on.count('class="add-home"') == 1 and on.index('class="add-home"') < on.index('id="deo"')  # pills under the player
 
 
 def test_the_days_steps_follow_the_order_of_the_assemblys_work():
@@ -1611,7 +1610,7 @@ def test_the_day_is_one_line_of_time_with_a_mark_for_each_kind():
     assert "Ovo je dugačak pasus" not in html and "Izabran je Aleksandar Čupić" not in html  # the summary told the election
     assert '<b class="v-za">za 140</b>, <b class="v-protiv">protiv 97</b>, glasalo 237' in html
     measures = [r for r in rows if "mk-mera" in r]
-    assert len(measures) == 2 and ">Opomena<" in measures[1] and "Bakiću" in measures[1] and "mk-mera-teska" in measures[0]
+    assert len(measures) == 2 and "Opomena" in measures[1] and "Bakiću" in measures[1] and "mk-mera-teska" in measures[0]
     assert '<i aria-hidden="true">3</i>' in html and "Prelazak na 3. tačku dnevnog reda" in html and "Pretres je otvoren" in html
     assert '<details class="chip"><summary>automatski · može da pogreši</summary>' in html and "Claude Haiku" in html
     assert "Aleksandar Čupić" in page_._steps({**snap, "sazetak": None}, cyr=False, tz=TZ)  # no summary: the step tells it
@@ -1772,7 +1771,7 @@ def test_the_days_speakers_five_stand_the_rest_open_and_no_bar_of_lists():
     assert "Ostali govornici (3)" in more and more.count('class="tr"') == 3
     assert '<h3 class="sub">Vreme za govornicom po listama' not in html  # in the cards only
     css = page_.CSS
-    assert 'main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }' in css
+    assert 'main:has(#deo[data-stanje="nema_prenosa"]) > .pills { order: 4; }' in css
 
 
 def test_the_speaker_stands_beside_the_small_picture_and_the_picture_stays_on_top():
@@ -1958,7 +1957,7 @@ def test_a_turn_found_without_a_caption_has_its_place_in_the_broadcast():
     d = snap["danas"][0]
     assert d["video"] == "dQw4w9WgXcQ" and abs(d["snimak"] - (5010 - 5 * config.RECORDING_LEAD)) <= 1
     html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert 'data-yt="dQw4w9WgXcQ"' in html and "▶ snimak" in html
+    assert 'data-yt="dQw4w9WgXcQ"' in html and "class=\"time tp\"" in html and "▶ " in html
     t.turns[0]["start"] -= 6000  # before this broadcast began: another video, no place
     t._snap = None
     assert t.snapshot(now + 100)["danas"][0]["snimak"] is None
@@ -2123,6 +2122,54 @@ def test_a_turn_of_the_chairs_words_and_two_seconds_is_none():
     turn = lambda sec, how: {"n": 4, "start": 100, "seen": 100 + sec, "izvor": how, "role": ""}
     assert not counted(turn(2, "prepis")) and not counted(turn(8, "prepis")) and counted(turn(20, "prepis"))
     assert counted(turn(2, "potpis")) and counted(turn(2, "glas"))  # seen or heard: it stays
+
+
+def test_an_exchange_is_a_reply_the_chair_gave_and_what_it_takes_up():
+    """24 Nov 2026, the maintainer's choice of three: the words said, as a conversation. Chosen by what happened (a reply
+    the chair gave) and by the words both share, never by tone; only pieces wholly inside a turn, as the seams are the
+    next speaker's (a sentence of one had stood as the other's in the day's try)."""
+    from uzivo.razmene import find
+    turn = lambda name, a, b, lista: {"ime": name, "adresa": "", "lista": lista, "od": a, "do": b, "sekundi": b - a}
+    turns = [turn("Petrović Petar", 1000, 1200, "A"), turn("Marković Marko", 1230, 1300, "B")]
+    said = {"p1205": "Reč ima narodni poslanik Marko Marković. Replika.",
+            "1040": "Tržište je rastureno i korenite sistemske promene nisu napravljene.",
+            "1245": "On govori o korenitim sistemskim promenama u celoj zemlji."}
+    said |= {str(1060 + 30 * i): f"Nešto drugo se govori u sali redom {i}." for i in range(4)}
+    assert find(said, turns) == [] or find(said, turns)[0]["odgovor"]["ime"] == "Marković Marko"
+    many = [turn(f"Poslanik {i}", 2000 + 300 * i, 2200 + 300 * i, "C") for i in range(14)]
+    far = {str(2020 + 300 * i): f"Reč o temi {i}, a onda sve dalje po redu danas ovde." for i in range(14)}
+    got = find({**said, **far}, turns + many)
+    assert got and got[0]["prvi"]["ime"] == "Petrović Petar" and "korenite sistemske" in got[0]["prvi"]["tekst"]
+    assert got[0]["odgovor"]["tekst"].startswith("On govori")
+    no_reply = {**said, "p1205": "Reč ima narodni poslanik Marko Marković."}
+    assert find({**no_reply, **far}, turns + many) == []  # the chair gave no reply: no exchange
+    edge = {**said, "1190": "Korenite sistemske promene su sve što je rečeno na kraju govora."}
+    assert "kraju govora" not in str(find({**edge, **far}, turns + many))  # a piece over the turn's end is the next speaker's
+
+
+def test_the_measures_sentence_and_the_list_by_hour_are_on_the_page():
+    """24 Nov 2026: the chair's sentence of a measure under its step, the turns under the hour they began in."""
+    base = 1795510000
+    ev = {"t": base + 5000, "vrsta": "Mera predsedavajućeg", "tekst": "Ja vam izričem opomenu.", "izvor": "model", "vise": {"napomena": "opomena"}}
+    turn = {"ime": "Petrović Petar", "adresa": "petrovic-petar", "uloga": "", "grupa": "PG A", "lista": "PG A", "od": base + 100, "do": base + 400,
+            "sekundi": 300, "video": "", "snimak": None, "foto": "12.jpg", "rezime": "O budžetu."}
+    snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nepoznato", "provereno": base + 9000, "hronika": [ev], "danas": [turn],
+            "razmene": [{"t": base + 6000, "prvi": {"ime": "Petrović Petar", "adresa": "", "lista": "PG A", "tekst": "Prva rečenica.", "t": base + 5990},
+                         "odgovor": {"ime": "Marković Marko", "adresa": "", "lista": "PG B", "tekst": "Druga rečenica.", "t": base + 6010}}]}
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Ja vam izričem opomenu." in html and "automatski prepis" in html and "<b>Predsedavajući</b>" in html
+    assert "Prva rečenica." in html and "<b>Petar Petrović</b>" in html and "Replika" in html
+    assert '<img class="tf" src="https://zailiprotiv.rs/foto/12.jpg"' in html and "O budžetu." in html and '<li class="th">' in html
+    assert "Poslovnik" in html and "st-title" in html
+    monkey = fragment({**snap, "hronika": [], "razmene": []}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "class=\"q" not in monkey
+
+
+def test_the_mails_card_can_be_put_away():
+    """24 Nov 2026, the maintainer: for who does not want to see it, or has signed up; kept in that browser alone."""
+    from uzivo.page import SCRIPT
+    assert 'localStorage.setItem("mejl-sklonjen", "1")' in SCRIPT and 'localStorage.removeItem("mejl-sklonjen")' in SCRIPT
+    assert "mejl-prijavljen" in SCRIPT  # signing up puts it away too
 
 
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
@@ -2513,13 +2560,12 @@ def test_the_app_and_the_notification_say_what_they_give_with_a_mark_each():
     from uzivo import page
     snap = Tracker(None, "Europe/Belgrade").snapshot()
     html = page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs", push_key="k")
-    for words in ("Mikrofon kao aplikacija", "Dodaj na početni ekran: ikonica pored ostalih, bez prodavnice.",
-                  "Obavesti me kad sednica počne", "I kad se nastavi posle duge pauze i kad sažetak dana bude spreman."):
+    for words in ("Dodaj kao aplikaciju", "Obavesti me", 'aria-label="Obavesti me kad sednica počne"'):  # pills, 24 Nov 2026
         assert words in html
-    assert html.count('class="ah-tile') == 2 and 'class="ic-share"' in html
+    assert html.count('class="pill-b') >= 2 and 'class="ic-share"' in html
     for cls in ("nt-on", "add-go", "nt-off", "add-ios"):  # what the page's script looks for
         assert f" {cls}" in html or f'"{cls}' in html
-    assert "Микрофон као апликација" in page.page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Додај као апликацију" in page.page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
 
 
 def test_what_a_search_engine_takes_of_the_page():

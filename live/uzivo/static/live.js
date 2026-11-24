@@ -450,8 +450,21 @@
     var btn = form.querySelector("button"); btn.disabled = true;
     fetch(form.action, { method: "POST", body: body }).then(function (r) { return r.ok; }, function () { return false; }).then(function (ok) {
       form.querySelector(".ml-done").hidden = !ok; form.querySelector(".ml-err").hidden = ok;
-      if (ok) { form.querySelector(".ml-row").hidden = true; if (window.mikrofonUse) window.mikrofonUse("mejl"); }
+      if (ok) { form.querySelector(".ml-row").hidden = true; if (window.mikrofonUse) window.mikrofonUse("mejl"); document.dispatchEvent(new Event("mejl-prijavljen")); }
       btn.disabled = false;
     });
   });
+})();
+// "Sažetak dana na mejl" put away, at the reader's word (24 Nov 2026, the maintainer): kept in this browser only, and
+// taken back from the line at the foot. Signing up puts it away too. Nothing is sent.
+(function () {
+  var box = document.querySelector("details.ml"), x = document.querySelector(".ml-x"), back = document.querySelector(".ml-back");
+  if (!box || !x || !back) return;
+  function read() { try { return localStorage.getItem("mejl-sklonjen") === "1"; } catch (e) { return false; } }
+  function keep(on) { try { if (on) localStorage.setItem("mejl-sklonjen", "1"); else localStorage.removeItem("mejl-sklonjen"); } catch (e) {} }
+  function show(away) { box.hidden = away; x.hidden = away; back.hidden = !away; document.documentElement.toggleAttribute("data-ml-off", away); }
+  show(read() && location.hash !== "#mejl");
+  x.addEventListener("click", function () { keep(true); show(true); if (window.mikrofonUse) window.mikrofonUse("mejl-skloni"); });
+  back.querySelector("button").addEventListener("click", function () { keep(false); show(false); box.open = true; box.scrollIntoView({ block: "center" }); });
+  document.addEventListener("mejl-prijavljen", function () { keep(true); });
 })();

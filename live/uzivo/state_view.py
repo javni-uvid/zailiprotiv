@@ -33,6 +33,21 @@ class View:
         sec = int(d["od"] - began["od"])
         return {**d, "video": began["video"], "snimak": sec} if sec >= 0 else d
 
+    def _exchanges(self, done: list[dict]) -> list[dict]:
+        """What was said and what was replied to it (razmene.py), looked for anew when the day has grown, not more than
+        every two minutes."""
+        memo = self._memo.setdefault("razmene", {"n": -1, "at": 0.0, "nadjeno": []})
+        now = time.time()
+        if now - memo["at"] >= 120 and len(self.said) != memo["n"]:
+            from .razmene import find
+            try:
+                memo["nadjeno"] = find(self.said, done)
+            except Exception:
+                import logging
+                logging.getLogger("razmene").exception("exchanges not found")
+            memo["n"], memo["at"] = len(self.said), now
+        return memo["nadjeno"]
+
     def _broadcast(self) -> dict | None:
         """The broadcast on now and when it began, counted back from the newest frame's place: {"video", "od"}."""
         p = self.place
@@ -149,6 +164,10 @@ class View:
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
             self._lists(done, current, recorded)
+            for d in done:
+                if d.get("adresa") in self.facts and self.facts[d["adresa"]].get("foto"):
+                    d["foto"] = self.facts[d["adresa"]]["foto"]
+            exchanges = self._exchanges(done) if day == self.day and not recorded and config.SHOW_QUOTES else []
             if self.lines[0] == day and self.lines[1]:
                 from .rezimei import shown as line_of
                 for d in done:
@@ -185,7 +204,7 @@ class View:
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
                     "vreme_grupa": groups, "predsedava": self._presiding_shown(),
-                    "prenos": self._broadcast() if self.status != NO_STREAM else None}
+                    "razmene": exchanges, "prenos": self._broadcast() if self.status != NO_STREAM else None}
 
     def _presiding_shown(self) -> dict | None:
         """Who presides, by the voice, while a broadcast is on and the chair was heard in the last quarter of an hour."""
