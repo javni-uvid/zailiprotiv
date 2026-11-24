@@ -43,6 +43,8 @@ CROP_HEIGHT = _f("CROP_HEIGHT", 0.14)
 OUTLINED_TOP = _f("OUTLINED_TOP", 0.808)
 OUTLINED_HEIGHT = _f("OUTLINED_HEIGHT", 0.134)
 OUTLINED_WIDTH = _f("OUTLINED_WIDTH", 0.9)  # a list's name runs to about 0.87
+# The clock beside that caption, "0:15": how long the turn has gone on. Its place as a share of the frame.
+CLOCK_BOX = (0.66, 0.10, 0.92, 0.22)
 OCR_LANG = os.environ.get("OCR_LANG", "srp")
 WHITE_THRESHOLD = _i("WHITE_THRESHOLD", 190)  # the caption is white text
 TOPHAT_MIN = _i("TOPHAT_MIN", 40)  # how far the text must stand out from what is around it

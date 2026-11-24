@@ -2015,6 +2015,34 @@ def test_the_name_before_the_word_and_a_measure_only_spoken_of():
     assert not given("ja sam dao opomene poslanici Anji Brnabić")
 
 
+def test_the_broadcasts_clock_says_when_a_turn_began():
+    """24 Nov 2026: the caption has a clock beside it ("0:15"), how long the turn has gone on; the floor given at 11:59:54
+    was a speech begun at 12:00:24."""
+    now = 1795519000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    petar = next(p for p in ROSTER.people if p.slug == "petrovic-petar")
+    t.observe(None, now=now)
+    t.heard(petar, "prepis", now - 100, now - 100)
+    t.observe(None, now=now)
+    t.heard(marko, "prepis", now + 10, now + 10)  # the chair's words, a moment early
+    t.heard(marko, "potpis", now + 45, now + 45)
+    t.clocked(marko, now + 45, 15)  # began at now + 30
+    assert t.turns_now()[-1]["start"] == now + 10  # one reading is not yet sure
+    t.clocked(marko, now + 50, 20)
+    assert abs(t.turns_now()[-1]["start"] - (now + 30)) <= 1
+    t.clocked(marko, now + 55, 900)  # a reading that does not agree
+    t.clocked(marko, now + 60, 30)
+    assert abs(t.turns_now()[-1]["start"] - (now + 30)) <= 1
+    t.heard(petar, "potpis", now + 200, now + 200)
+    t.clocked(petar, now + 200, 5)
+    t.clocked(petar, now + 205, 10)  # a later turn begins at now + 195; the one before ends there at the latest
+    turns = t.turns_now()
+    assert abs(turns[-1]["start"] - (now + 195)) <= 1 and turns[-2]["seen"] <= now + 196
+    assert t.clocked(marko, now + 1000, 5) is None  # no turn of theirs open: nothing
+
+
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
     """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
     from uzivo import hronika
