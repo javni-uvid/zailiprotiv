@@ -152,7 +152,7 @@ TEXT = {
     "ml_privacy": "Politika o privatnosti",
     "nt_on": "Obavesti me kad sednica počne",
     "nt_on_sub": "I kad se nastavi posle duge pauze i kad sažetak dana bude spreman.",
-    "nt_how": "Obaveštenje, kome ga uključi: kad prenos počne, kad se sednica nastavi posle pauze duže od 20 minuta (najviše dvaput dnevno) i kad sažetak dana bude spreman; kod nas ostaje samo adresa za njega.",
+    "nt_how": "Obaveštenje, kome ga uključi: kad prenos počne, kad se sednica nastavi posle pauze duže od 20 minuta i kad sažetak dana bude spreman; kod nas ostaje samo adresa za njega.",
     "nt_off": "Isključi obaveštenja",
     "nt_blocked": "Obaveštenja za ovu stranicu su isključena u podešavanjima pregledača.",
     "nt_err": "Uključivanje nije uspelo; pokušajte ponovo malo kasnije.",

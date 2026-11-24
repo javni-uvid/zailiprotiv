@@ -88,8 +88,8 @@ The project's promises to its readers. Never change them without the maintainer.
      button and loads nothing from either; the page and "O projektu" say so. The links work without the script;
      the script plays only archive files and YouTube ids it recognises;
    - **notifications from `mikrofon.zailiprotiv.rs`, only to who asks** (20 Nov 2026): one when a sitting's
-     broadcast begins, once a day; one when it goes on after a break of over 20 minutes, at most twice a day
-     (24 Nov 2026); one when the day's summary is out; carried by the browser's own push service (Google, Apple, Mozilla).
+     broadcast begins, once a day; one each time it goes on after a break of over 20 minutes (24 Nov
+     2026, no limit); one when the day's summary is out; carried by the browser's own push service (Google, Apple, Mozilla).
      The push has no content (the page's service worker writes the words), and the counter keeps only the
      address the browser gave, until it is turned off; the page and the method page say so;
    - **the day's summary by mail, only to who asks** (22–23 Nov 2026): after a sitting day, from

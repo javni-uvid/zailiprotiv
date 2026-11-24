@@ -17,7 +17,7 @@
 //   POST /p           ← {"endpoint": "<push address>", "cir": bool}   from the live page: notify this device when a
 //                                                                     sitting's broadcast begins
 //   POST /p/odjava    ← {"endpoint": "<push address>"}                no more notifications for it
-//   POST /p/salji     ← {"od": <row>, "vrsta": "sednica"|"sazetak"|"nastavak", "broj": 1|2 of a "nastavak"}, with "authorization: Bearer <PUSH_TOKEN>"
+//   POST /p/salji     ← {"od": <row>, "vrsta": "sednica"|"sazetak"|"nastavak", "broj": 1… of a "nastavak"}, with "authorization: Bearer <PUSH_TOKEN>"
 //                       from the live service: send the day's notification of a sitting begun, or of the day's
 //                       summary out (each once a day), a batch at a time; answers with where the next batch starts
 //   POST /m/salji     ← {"poruke": [{"to", "subject", "html", "text", "odjava"}, …]}, with the token: from the live
@@ -251,7 +251,7 @@ async function authorization(env, endpoint) {
 }
 async function sendPush(env, from, what = "sednica", nth = 1) {
   // the sitting's beginning and the day's summary (20 Nov 2026), each once a day; the summary's day kept as "s:<day>".
-  // A sitting gone on after a long break (24 Nov 2026), at most twice a day: "n1:<day>" and "n2:<day>"
+  // A sitting gone on after a long break (24 Nov 2026), each break once: "n1:<day>", "n2:<day>" …
   const day = (what === "sazetak" ? "s:" : what === "nastavak" ? `n${nth}:` : "") + today();
   if (!from) {  // the first batch: once a day, whatever the live service asks
     const r = await env.DB.prepare("INSERT OR IGNORE INTO push_days (day) VALUES (?)").bind(day).run();
@@ -396,7 +396,7 @@ export default {
         const b = JSON.parse(await request.text());
         od = Math.max(0, parseInt(b.od, 10) || 0);
         if (b.vrsta === "sazetak" || b.vrsta === "nastavak") what = b.vrsta;
-        if (b.broj === 2) nth = 2;
+        if (Number.isInteger(b.broj) && b.broj > 1 && b.broj <= 50) nth = b.broj;
       } catch (e) { od = 0; }
       return reply(await sendPush(env, od, what, nth), 200, origin);
     }
