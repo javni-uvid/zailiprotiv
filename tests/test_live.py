@@ -1224,6 +1224,10 @@ def test_the_live_page_says_less_and_its_folds_are_closed(monkeypatch):
     for words in ("učitava se tek na klik", "Samo zvuk je naš", "kod nas ostaje samo adresa"):
         assert words not in top and words in how
     assert "ne vidi u potpisu" not in html and "listen-live" in top and "Isključi obaveštenja" in top
+    snap["provereno"] = 1795515045
+    assert 'id="checked"' not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)  # nothing above it
+    now = {"ime": "Petrović Petar", "adresa": "petrovic-petar", "od": 1795515000, "do": 1795515040, "sekundi": 40, "lista": "PG A"}
+    assert 'id="checked"' in fragment({**snap, "stanje": "govori", "sada": now}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
 
 
 def test_the_end_of_a_long_break_is_found_from_speech(tmp_path):
