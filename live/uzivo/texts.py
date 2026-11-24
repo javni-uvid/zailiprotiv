@@ -150,7 +150,7 @@ TEXT = {
     "ml_sample_back": "Prijavi se na mikrofonu",
     "ml_label": "E-adresa",
     "ml_button": "Prijavi me",
-    "ml_done": "Poslali smo mejl za potvrdu. Prijava važi kad klikneš na dugme u njemu.",
+    "ml_done": "Poslali smo ti mejl. Otvori ga i klikni na dugme „Da, prijavi me“: bez toga prijava ne važi. Odgovor na mejl je ne potvrđuje.",
     "ml_err": "Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.",
     "ml_fine": "Bez praćenja, odjava u svakom mejlu.",
     "ml_privacy": "Politika o privatnosti",
