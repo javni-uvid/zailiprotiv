@@ -97,3 +97,5 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   `nastavak`; the counter keeps "n1:<day>", "n2:<day>"); a push not delivered in 15 minutes is dropped. A silence with no
   break said is none (the transcript was off). The promise of principle 5, "at most once a day", changed with it, on the
   button, the method page and the privacy page; a device that asked before gets it too, and can be turned off there.
+  A caption counts only when it is read for sure (`counted`): in the silent hall of that break the picture's noise was
+  read as an MP's name for one frame.

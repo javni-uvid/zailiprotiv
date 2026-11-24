@@ -104,7 +104,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         if snap["stanje"] == "nema_prenosa":  # the line on top says so ("Ne zaseda")
             out.append(countdown(snap, cyr=cyr, tz=tz))
         else:
-            out.append(f'<p class="state">{t("unknown" if snap["stanje"] == "nepoznato" else "none")}</p>')
+            if snap["stanje"] != "nepoznato":
+                out.append(f'<p class="state">{t("none")}</p>')
         out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz, site=site))
     if snap["provereno"]:
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
@@ -241,7 +242,7 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
     title = s(a.get("naslov", ""))
     if str(a.get("url", "")).startswith("https://"):
         title = f'<a href="{escape(a["url"])}">{title}</a>'
-    return (f'<details class="agenda" id="dnevni-red" open><summary>{head}</summary><p class="meta">{title}</p>'
+    return (f'<details class="agenda" id="dnevni-red"><summary>{head}</summary><p class="meta">{title}</p>'
             f'<ol>{"".join(rows)}</ol>{_chip(t("ag_src"), t("ag_note"))}</details>')
 
 
@@ -1166,7 +1167,7 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         button = (f'<button type="button" class="play facade" data-yt="{escape(live)}" data-t="0" data-e="mikrofon.pusti">'
                   f'<img src="{img}" alt="" width="1200" height="630" decoding="async">'
                   f'<span>▶ {t("play_live")}</span></button>')
-        note = t("yt_live_note")
+        note = ""  # what loads and when is told under "Kako ovo radi" (24 Nov 2026, the maintainer: fewer texts)
         # the speaker on the picture, written by the script from the part while the broadcast plays (22 Nov 2026)
         onair = '<p class="on-air" hidden aria-hidden="true"><b></b><span class="oa-side"></span><span class="oa-clk"></span></p>'
         # the line under the picture (22 Nov 2026): the script writes the part's newest lines in, after the delay
@@ -1174,8 +1175,7 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
                   f'<p class="cc-n">{t("cc_note")}</p></div>')
         from . import slusaj
         if config.LISTEN_PUBLIC and slusaj.fresh(time.time()):  # only the sound, ours (slusaj.py; 22 Nov 2026)
-            note = (f'<button type="button" class="play listen-live" data-uzivo="{escape(slusaj.address())}">🎧 {t("listen_live")}</button> '
-                    + note + " " + t("listen_live_note"))
+            note = (f'<button type="button" class="play listen-live" data-uzivo="{escape(slusaj.address())}">🎧 {t("listen_live")}</button>')
     else:
         onair = ""
         parts = snap.get("datoteke") or []
@@ -1192,7 +1192,8 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
                             for i, p in enumerate(parts, 1))
             return (f'<section class="player">{_stage(button, onair, cyr)}<p class="meta" data-nosnippet>{note}</p>'
                     f'<details class="parts-more"><summary>{t("parts")} ({len(parts)})</summary><ul class="parts">{chips}</ul></details></section>')
-    return f'<section class="player">{_stage(button, onair, cyr)}<p class="meta" data-nosnippet>{note}</p></section>'
+    return (f'<section class="player">{_stage(button, onair, cyr)}'
+            + (f'<p class="meta" data-nosnippet>{note}</p>' if note else "") + "</section>")
 
 
 def _stage(button: str, onair: str, cyr: bool) -> str:
@@ -1274,7 +1275,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     # (23 Nov 2026, the maintainer: that the page becomes an app was not said)
     add = f"""<section class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
 <div class="ah-row"><button type="button" class="add-btn nt nt-on" hidden><span class="ah-tile">{BELL}</span><span class="ah-t"><b>{t("nt_on")}</b><span>{t("nt_on_sub")}</span></span></button><button type="button" class="add-btn add add-go" hidden><span class="ah-tile ah-app">{ARC}</span><span class="ah-t"><b>{t("add_home")}</b><span>{t("add_home_sub")}</span></span></button></div>
-<p class="nt-done" hidden>{t("nt_done")} <button type="button" class="nt-off">{t("nt_off")}</button></p>
+<p class="nt-done" hidden><button type="button" class="nt-off">{t("nt_off")}</button></p>
 <p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
 <p class="nt-err meta" hidden>{t("nt_err")}</p>
 <p class="add-ios meta" hidden>{SHARE} {t("add_ios")}</p>
@@ -1327,7 +1328,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="rules-cta"><a href="{escape(home + "podrzi")}"><b>{t("support_cta")} →</b><span>{t("support_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p></details>
+<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p></details>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>

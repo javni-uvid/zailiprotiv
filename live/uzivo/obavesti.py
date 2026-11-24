@@ -15,7 +15,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import config, mreza
-from .state_base import _write
+from .state_base import _write, counted
 
 log = logging.getLogger("obavesti")
 FRAMES = 3  # frames of a live broadcast in a row (about 15 s) before it counts as begun
@@ -36,7 +36,8 @@ def resumed(said: dict[str, str], turns: list[dict], events: list[dict], now: fl
     19 Nov 2026 they were said twice with no break before them, and the first words after one are not always those.
     A silence with no break said is none: the transcript was off."""
     pieces = sorted(int(k.lstrip("p")) for k, v in said.items() if k.lstrip("p").isdigit() and len(v.split()) >= WORDS)
-    on = [(float(t["start"]), float(t["seen"])) for t in turns if t.get("n", 0) >= 2]
+    # a caption read for sure: the picture's noise was once read as an MP's name in the silent hall (24 Nov 2026, 11:10)
+    on = [(float(t["start"]), float(t["seen"])) for t in turns if counted(t)]
     heard = sorted([(float(t), t + 20.0) for t in pieces] + on)
     if not heard:
         return 0
