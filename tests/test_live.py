@@ -2655,3 +2655,38 @@ def test_a_speech_that_has_ended_gets_its_topic_checked_twice(tmp_path, monkeypa
                           cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert '<p class="rz">O sastavu odbora.</p>' in html and "Claude Haiku" in html
     assert html.index("Svi govori, redom") < html.index("sub\">Ko je koliko") if "Ko je koliko" in html else True
+
+
+def test_the_shared_links_picture_is_the_speaker_or_the_break(monkeypatch):
+    """24 Nov 2026, the maintainer: dark, with the portrait when the site gives it; "Pauza do …" only with an hour the
+    chair said; never the time spoken by list."""
+    pytest.importorskip("PIL")
+    from PIL import Image
+    from uzivo import picture
+    from uzivo import page as page_
+    from datetime import datetime
+    at = lambda h, m: int(datetime(2026, 11, 24, h, m, tzinfo=TZ).timestamp())
+    got = []
+    monkeypatch.setattr(picture, "_face", lambda name: got.append(name) or Image.new("RGB", (150, 209), "#456"))
+    base = {"dan": "2026-11-24", "ranije": False, "danas": [], "dnevni_red": None, "hronika": [], "obavestenja": [], "sazetak": None, "provereno": at(15, 0)}
+    cur = {"ime": "Jović Jova", "od": at(14, 0), "sekundi": 60, "lista": "Lista za primer", "o": {"foto": "12.jpg"}}
+    talk = picture.render({**base, "stanje": SPEAKING, "sada": cur}, cyr=False, tz=TZ, host="mikrofon.zailiprotiv.rs")
+    assert talk[:8] == b"\x89PNG\r\n\x1a\n" and got == ["12.jpg"]
+    assert Image.open(__import__("io").BytesIO(talk)).size == (1200, 630)
+    monkeypatch.setattr(picture, "_face", lambda name: None)  # without a portrait it is drawn all the same
+    assert picture.render({**base, "stanje": SPEAKING, "sada": cur}, cyr=True, tz=TZ)[:4] == b"\x89PNG"
+    pause = {"t": at(14, 10), "vrsta": "Pauza", "izvor": "model", "tekst": "Proglašavam pauzu do 15 sati i 10 minuta.", "url": ""}
+    state = {**base, "stanje": "nepoznato", "sada": None, "hronika": [pause]}
+    assert page_.pause_until(state, TZ) == "15:10"
+    assert page_.pause_until({**state, "hronika": [{**pause, "tekst": "pauzu od jednog sata"}]}, TZ) == ""
+    assert page_.pause_until({**state, "danas": [{"od": at(15, 10), "do": at(15, 12)}]}, TZ) == ""
+    assert picture.render(state, cyr=False, tz=TZ)[:4] == b"\x89PNG"
+    assert picture.render({**base, "stanje": "nepoznato", "sada": None, "ranije": True}, cyr=False, tz=TZ)[:4] == b"\x89PNG"
+
+
+def test_a_portraits_name_never_becomes_an_address(monkeypatch):
+    pytest.importorskip("PIL")
+    from uzivo import picture
+    monkeypatch.setattr(picture.urllib.request, "urlopen", lambda *a, **k: (_ for _ in ()).throw(AssertionError("asked")))
+    for bad in ("", "../x.jpg", "a/b.jpg", "x?y.jpg"):
+        assert picture._face(bad) is None

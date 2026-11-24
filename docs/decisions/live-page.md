@@ -275,4 +275,10 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   picture there nor the picture itself; the choice of several drafts). Our mark, "Za ili Protiv" and "Uživo · iz Skupštine"
   while nobody speaks or it is not known who (draft c4); while it is known, the portrait, name and list of the
   speaker's head, put by the script (`live.js`, poster), so the player is not drawn again. No picture loads before the press
-  but the portrait the head already loads. The shared link's picture itself (`/slika.png`) is unchanged for now.
+  but the portrait the head already loads. The shared link's picture is the next point.
+- **The picture of a shared link, dark like the announcement** (24 Nov 2026, the maintainer: the white one with the time by
+  list "mi se ne sviđa"). `picture.render`: while the speaker is known, the portrait (from the site's `/foto/`, kept an
+  hour in memory, left out when it does not come), the name, the list and its colour; in a break "Pauza do 15:10" (the
+  hour only when the chair said a clock) with the item next; otherwise the sitting's day. No time spoken by list. All in
+  the middle (196–1004 px), as Reddit's app cuts; the address changes (`s3-`) so that services take the new one.
+  The story's picture (`render_tall`) is as it was.

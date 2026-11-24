@@ -787,6 +787,16 @@ def _resumes_at(text: str, after: float, tz: ZoneInfo) -> str:
     return f"{h}:{mi:02d}" if 0 < (end - start).total_seconds() <= 6 * 3600 else ""
 
 
+def pause_until(snap: dict, tz: ZoneInfo) -> str:
+    """The hour the break that is on ends at, as the chair said it ("" when none is, or no clock was said). Only while
+    nobody has spoken and no step was heard since."""
+    said = next((e for e in snap.get("hronika") or [] if e.get("vrsta") == "Pauza" and e.get("izvor") == "model"), None)
+    if not said or snap.get("stanje") == "govori" or any(d["do"] > said["t"] + 30 for d in snap.get("danas") or []) \
+            or any(e.get("izvor") != "sajt" and e["t"] > said["t"] + 60 for e in steps_shown(snap)):
+        return ""
+    return _resumes_at(said.get("tekst", ""), said["t"], tz)
+
+
 def _break(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
     """The stretch just ended, while its break lasts (24 Nov 2026, the maintainer's request): the model's paragraph,
     as its own; what the code counts beside it, not the model (the chair's measures of the stretch, the votes that
@@ -1159,7 +1169,7 @@ def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
         return ""
     title, line = og_text(snap, cyr=cyr, tz=tz)
     cur = snap.get("sada") if snap["stanje"] == "govori" else None
-    mark = int(cur["od"]) if cur else f'{snap.get("dan", "")}-{len(snap.get("danas") or [])}'
+    mark = f's3-{int(cur["od"])}' if cur else f's3-{snap.get("dan", "")}-{len(snap.get("danas") or [])}-{pause_until(snap, tz)}'
     if announced(snap)[0]:  # another picture, so another address: a service keeps a picture by its address
         mark = f'najava3-{announced(snap)[1].get("od", "")}'
     img = f'{url}{"cir/" if cyr else ""}slika.png?v={mark}'
