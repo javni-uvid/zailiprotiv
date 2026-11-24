@@ -168,8 +168,6 @@ TEXT = {
     "app_name": "Mikrofon",
     "version": "Verzija",
     "sd_text": "Ko je koliko govorio u Skupštini:",
-    "og_now": "Sada govori: %1",
-    "og_since": "za govornicom od %1",
     "lists": "Vreme za govornicom po listama",
     "gt_head": "Preostalo vreme poslaničkih grupa",
     "gt_estimate": "procena",

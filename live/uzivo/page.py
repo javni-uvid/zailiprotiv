@@ -1135,30 +1135,23 @@ self.addEventListener("pushsubscriptionchange", function (e) {{
 
 
 def og_text(snap: dict, *, cyr: bool, tz: ZoneInfo) -> tuple[str, str]:
-    """The link preview's title and line: who is on and since when, or the sentence of the day, or what the page is."""
+    """The link preview's title and line: what the page is, always the same (24 Nov 2026, the maintainer: a service keeps
+    a link's card, so who speaks goes stale), and before a sitting when it goes on."""
     when, _ = announced(snap)
     if when:  # before a sitting: when it goes on, what is next and what is here then (23 Nov 2026, the maintainer: not
         # who spoke how long on the last day, which is what a link pasted before a sitting had been saying)
         nxt = next_item(snap)
         what = f'{_t("ag_next", cyr).capitalize()}: {_name(nxt["tekst"], cyr)}. ' if nxt else ""
         return _fill(_t("og_goes_on", cyr), _name(when, cyr)), f'{what}{_t("og_live", cyr)}.'
-    cur = snap.get("sada")
-    turns = (snap.get("danas") or []) + ([cur] if snap["stanje"] == "govori" and cur else [])
-    line = headline(turns, cyr=cyr, when=_when(snap, cyr)) or _t("lead", cyr)
-    if snap["stanje"] == "govori" and cur:
-        side = cur.get("lista", "").strip("*") or cur.get("uloga") or cur.get("grupa") or ""
-        title = _fill(_t("og_now", cyr), _name(given_first(cur["ime"]), cyr)) + (f" ({_name(side, cyr)})" if side else "")
-        return title, _fill(_t("og_since", cyr), _clock(cur["od"], tz)) + ". " + line
-    return _t("title", cyr), line
+    return _t("title", cyr), f'{_t("og_live", cyr)}.'
 
 
 def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
     """What a pasted link shows (X, Viber, Facebook): the title and line above and the picture of the moment
-    (`picture.py`). The picture's address changes with the turn, since some services keep a picture by its address."""
+    (`picture.py`). Nothing in it goes stale; the picture's address changes only with what is drawn on it."""
     if not url:
         return ""
     title, line = og_text(snap, cyr=cyr, tz=tz)
-    cur = snap.get("sada") if snap["stanje"] == "govori" else None
     mark = "s4"  # the still picture is always the same (picture.render)
     if announced(snap)[0]:  # another picture, so another address: a service keeps a picture by its address
         mark = f'najava3-{announced(snap)[1].get("od", "")}'

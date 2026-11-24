@@ -758,7 +758,8 @@ def test_the_day_in_one_sentence_the_summary_while_nobody_is_on_and_the_link_pre
     assert line.startswith("Najviše vremena za govornicom danas: Petar Petrović, 10 min")
     assert "Највише времена за говорницом данас: Петар Петровић, 10 мин" in headline(every, cyr=True)
     title, text = og_text(snap, cyr=False, tz=TZ)
-    assert title.startswith("Sada govori: Petar Petrović") and "za govornicom od" in text and "Najviše vremena" in text
+    assert title == "Skupština uživo: ko sada govori" and "Petrović" not in text  # a card is kept: nobody's name on it
+    assert og_text({**snap, "stanje": UNKNOWN, "sada": None}, cyr=False, tz=TZ) == (title, text)
     html = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
     assert 'property="og:image" content="https://mikrofon.zailiprotiv.rs/slika.png?v=' in html and '<p class="hl">' in html
     assert 'name="twitter:card" content="summary_large_image"' in html
