@@ -131,7 +131,9 @@ def resolve(words: list[str], people: dict[str, str], measure: dict | None = Non
     said = set().union(*(_stems(w) for w in words))
     named = [n for n, surname in people.items() if surname in said]
     if len(words) > 1:
-        named = [n for n in named if n.split()[0].lower()[:4] in {w.lower()[:4] for w in words}]
+        # a short first name in another case keeps all but its last letter ("Ани Брнабић" is Ана)
+        first = lambda n: {n.split()[0].lower()[:4]} | ({n.split()[0].lower()[:-1]} if 3 <= len(n.split()[0]) <= 4 else set())
+        named = [n for n in named if first(n) & ({w.lower()[:4] for w in words} | {w.lower()[:-1] for w in words if 3 <= len(w) <= 4})]
         if len(named) > 1 and len({n.split()[-1].lower() for n in named}) == 1:  # one misspelt: "АЛЕКСАНДР ЈОВАНОВИЋ"
             longest = max(named, key=len)
             if all(abs(len(n) - len(longest)) <= 1 for n in named):
@@ -206,9 +208,29 @@ def measures(speeches: list[dict]) -> list[dict]:
             if several:
                 for name in re.findall(rf"{_CAP}\s+{_CAP}(?:-{_CAP})?", several.group(1)):
                     out.append({**row, "name": name})
+            elif _ALSO.search(text[a:hi]) and (told := _account(speeches, i)):
+                # "изричем вам и сад опомену и вама": to more than one, whom the chair names in his own account soon
+                # after ("Ја сам дао опомене посланици Ани Брнабић и посланику Миленку Јованову", 19 Nov 2026)
+                out.extend({**row, "name": name} for name in told)
             else:
                 out.append(row)
     return out
+
+
+_ACCOUNT = re.compile(rf"(?:(?:[Дд]ао|[Дд]ала|[Ии]зрекао|[Ии]зрекла) сам|[Сс]ам (?:дао|дала|изрекао|изрекла)) опомене\s+((?:(?:народн\w+\s+)?(?:посланици|посланику|посланицима)\s+)?"
+                      rf"{_CAP}\s+{_CAP}(?:-{_CAP})?(?:(?:,\s*|\s+и\s+)(?:(?:народн\w+\s+)?(?:посланици|посланику)\s+)?{_CAP}\s+{_CAP}(?:-{_CAP})?){{1,4}})")
+ACCOUNT_WITHIN = 30  # speeches after the measure in which the chair's own account of it is looked for, the same day
+
+
+def _account(speeches: list[dict], i: int) -> list[str]:
+    """The names in the chair's own account, soon after, of the warnings just given: "дао сам опомене … и …"."""
+    for s in speeches[i + 1:i + 1 + ACCOUNT_WITHIN]:
+        if s.get("chair") and s.get("day") == speeches[i].get("day"):
+            m = _ACCOUNT.search(s["text"])
+            if m:
+                return [n for n in re.findall(rf"{_CAP}\s+{_CAP}(?:-{_CAP})?", m.group(1))
+                        if not re.match(r"(?i:народн|посланиц|посланик)", n)]
+    return []
 
 
 def _same(text: str, first: tuple, second: tuple) -> bool:

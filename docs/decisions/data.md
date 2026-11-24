@@ -143,6 +143,15 @@ as the change. The principles and the rules of work are in AGENTS.md.
   Milenko Jovanov, and that both would be taken back if he had called the break first, which the notes do not settle).
   Of the 145 measures of all convocations it changes only this. Jovanov's is not put to him: nothing in the measure's
   own sentence names him, and a rule taking names from the chair's later account is not made yet.
+- **A measure to more than one, named by the chair's own account** (24 Nov 2026, the maintainer: "da i da"; `_account`): a measure
+  that says it goes to another too and names nobody takes its names from the chair's account in the next 30 speeches of
+  that day ("Ја сам дао опомене посланици Ани Брнабић и посланику Миленку Јованову"): one each. Of the 146 measures of
+  every convocation it changes this one alone (Brnabić by name instead of by context, and Jovanov's). A short first name in
+  another case is the same person ("Ани" is Ана). The chair said both would be taken back had he called the break first;
+  the notes do not settle it, and the measures stand as pronounced.
+- **A sentence of the model's summary of 19 Nov corrected by hand against the notes** (24 Nov 2026, the maintainer): it said the
+  chair asked whether the two had got warnings, and a break of ten minutes; he gave them, and the break was of fifteen.
+  In `data/ispravke.json`. The service's own copy (`/sazetak/2026-11-19.json`) is as it was.
 - **Varnice** (13 Nov 2026; `pages_floor.py`, no model): the chair's measures (warning, taking the floor away,
   removal; `MEASURES`, with talk about measures left out), exchanges of replies (two speakers taking turns four times
   or more, no speech over 400 words), points of order, harsh words (a fixed list), who speaks most. A measure goes to

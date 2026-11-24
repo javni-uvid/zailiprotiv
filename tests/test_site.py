@@ -346,6 +346,13 @@ def test_a_measure_to_another_one_too_in_the_same_address_is_its_own():
     assert [m["sentence"][:22] for m in found] == ["Изричем вам опомену зб", "Изричем вам и сад опом"]
     people = f.present([mp, both, {"speaker": "АНА БРНАБИЋ", "text": "Говор.", "chair": False, "day": 3}])
     assert f.by_context(found[1], people)[0].upper() == "АНА БРНАБИЋ" and f.by_context(found[0], people)[0].upper() == "АЛЕКСАНДАР ВУЧИЋ"
+    # the chair's own account soon after names both it went to; without it, by context as above
+    heckler = {"speaker": "МИЛЕНКО ЈОВАНОВ", "text": "Говор.", "chair": False, "day": 3}
+    account = chair("Настављамо седницу. Ја сам дао опомене посланици Ани Брнабић и посланику Миленку Јованову.")
+    people = f.present([mp, both, heckler, {"speaker": "АНА БРНАБИЋ", "text": "Говор.", "chair": False, "day": 3}])
+    told = f.measures([mp, both, heckler, account])
+    assert [f.to_whom(m, people) for m in told[1:]] == ["АНА БРНАБИЋ", "МИЛЕНКО ЈОВАНОВ"] and len(told) == 3
+    assert len(f.measures([mp, both, heckler, {**account, "day": 4}])) == 2  # an account of another day is not of this measure
     again = chair("Изричем вам опомену због овога. Молим вас. Изричем вам опомену, рекао сам.")
     assert len(f.measures([mp, again])) == 1  # told again with nobody else in it: one
 
