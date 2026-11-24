@@ -67,14 +67,20 @@
   "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4": {
-  "pokusaja": 2,
+  "pokusaja": 3,
   "kadrova": 3,
-  "provereno": "2026-11-24T13:48:57+00:00"
+  "provereno": "2026-11-24T16:57:24+00:00"
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410a.mp4": {
   "od": 1795522712,
   "trajanje": 3149,
   "kadrova": 10,
   "slaze_se": 10
+ },
+ "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410b.mp4": {
+  "od": 1795529474,
+  "trajanje": 7243,
+  "kadrova": 7,
+  "slaze_se": 7
  }
 }
