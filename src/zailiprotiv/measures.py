@@ -69,6 +69,7 @@ _OBLIGED = re.compile(r"морам|дужн|желим|треба", re.I)
 # "Имам опомену, у реду је" the MP, "Све је у реду, имате опомену" the chair: the earlier one told, not a new one
 _CONFIRMS = re.compile(r"имам опомену[^.!?]{0,60}[.!?]?\s*$", re.I)
 _ORDINAL = re.compile(r"\b(?:друг[ауе]\b|трећ[ауе]\b|четврт[ауе]\b|поново|још једну|две|три)", re.I)
+_ALSO = re.compile(r"\bи (?:вама|вас|њему|њој|њима)\b", re.I)  # the measure goes to another one too
 _HECKLE = re.compile(rf"\(((?:{_CAP}[ -]?){{2,4}}):")
 _NEAR_HECKLE = re.compile(rf"\(((?:{_CAP}[ -]?){{2,4}}):[^()]{{0,200}}\)[^()]{{0,90}}$")  # the last heckle, right before the measure
 _AFTER_HECKLE = re.compile(rf"^[\s.!?…\"“”]*\(((?:{_CAP}[ -]?){{2,4}}):")  # the first heckle right after the measure
@@ -221,6 +222,8 @@ def _same(text: str, first: tuple, second: tuple) -> bool:
     a, b = ordinal(first), ordinal(second)
     if b and b != a:
         return False  # "другу опомену", "још једну": a new one
+    if _ALSO.search(text[second[2]:second[3] + len(re.match(r"[^.!?]*", text[second[3]:]).group(0))]):
+        return False  # "изричем вам и сад опомену и вама": to someone else as well (19 Nov 2026)
     def own(f):  # its own part of the sentence, up to the other measure when the two are in one ("изричем … Обрадовићу, … Костићу изричем")
         whole = sentence(text, f[2], f[3])
         start = text.find(whole, max(0, f[2] - len(whole)))
