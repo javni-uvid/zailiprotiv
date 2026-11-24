@@ -392,6 +392,7 @@ class Judge(threading.Thread):
         self.tz = ZoneInfo(config.TZ)
         self.day, self.kept = "", {}
         self.last_call = 0.0
+        self.began = time.time()  # when this run began: after a restart the last frame is not known (_summaries)
         self.mailed = 0.0  # when the day's mail to the maintainer was last tried
 
     # --- what is kept per day: the pieces already read, the stretches summed up, the day ---
@@ -597,7 +598,11 @@ class Judge(threading.Thread):
         breaks = [e["t"] for e in list(self.tracker.events) if e.get("izvor") == "model"
                   and e.get("vrsta") in ("Pauza", "Kraj rada") and e["t"] >= start and quiet(e["t"])
                   and any(start <= r[0] <= e["t"] for r in rows)]
-        ended = not live and now - (snap.get("provereno") or now) >= END_QUIET
+        # A run begun after the broadcast ended knows no frame of it (24 Nov 2026: restarted at 19:31, two minutes after the
+        # end; "no frame yet" was taken for now, so the day would never have ended, nor its mail gone): then the day ends
+        # END_QUIET after the last word written down, and no sooner than END_QUIET after the run began (a restart in a break
+        # finds its stream again within that).
+        ended = not live and now - (snap.get("provereno") or max(rows[-1][0], self.began)) >= END_QUIET
         done = self.kept.get("dan") is not None
         cut = None
         if breaks:

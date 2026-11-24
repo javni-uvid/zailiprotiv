@@ -187,3 +187,7 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   step was told within five minutes of it, at the chair's words that move the work on or the first turn after the break. And
   a turn found by the chair's words alone, under five seconds, is none (`counted`): the floor passed on at once.
 - **Words in the steps** (24 Nov 2026): see `live-page.md`, "The page as the maintainer chose it".
+- **A day ends after a restart too** (24 Nov 2026): the service was restarted two minutes after the broadcast ended, so it had
+  read no frame of it, and `_summaries` took "no frame" for now: the day never ended, no summary and no mail. With no
+  frame known it is END_QUIET after the last word written down, and after the run began (so a restart in a break does
+  not end the day).

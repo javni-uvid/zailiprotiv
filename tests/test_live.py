@@ -3064,3 +3064,25 @@ def test_a_held_speaker_is_known_again_in_a_few_windows(tmp_path):
     assert lis.again(refs) is None
     lis.f = [v * 0.3] * 6
     assert lis.again(refs) is None
+
+
+def test_the_day_ends_after_a_restart_that_read_no_frame(tmp_path, monkeypatch):
+    """24 Nov 2026: restarted at 19:31, two minutes after the broadcast ended, the service knew no frame and the day's
+    summary, and its mail, would never have come. Not sooner than END_QUIET after the run began: a restart in a break."""
+    from uzivo import sudija
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    monkeypatch.setattr(config, "DAY_MODEL", "")
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    base = 1795082400
+    t.day = t._day(base)
+    t.say(base + 10, "Govorio sam o penzijama i o budžetu za sledeću godinu.")
+    turns = [{"ime": "Petrović Petar", "lista": "Lista", "od": base + 5, "do": base + 200}]
+    monkeypatch.setattr(t, "snapshot", lambda now=None: {"dan": t.day, "ranije": False, "stanje": NO_STREAM, "danas": turns,
+                                                         "sada": None, "provereno": 0})
+    day = json.dumps({"kratko": "Dan.", "ukratko": "Govorilo se.", "odluke": [], "tok": [], "govornici": []})
+    j = sudija.Judge(t, threading.Event(), ask=lambda system, user, *rest: day if system is not sudija.EVENTS else json.dumps({"dogadjaji": []}))
+    j.began = base + 3600  # an hour after the last word
+    j.step(now=base + 3600 + sudija.END_QUIET - 5)
+    assert j.kept["dan"] is None  # a restart in a break does not end the day
+    j.step(now=base + 3600 + sudija.END_QUIET + 5)
+    assert j.kept["dan"]["kratko"] == "Dan."
