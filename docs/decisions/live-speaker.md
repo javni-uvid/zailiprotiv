@@ -135,3 +135,8 @@ presided (not done).
   Đorđijević's, known from two windows of the same speech, matched those seconds and then no more, and a speech of ten minutes
   ended at 56 s. Of the 55 voices known ten had 2–16 windows, most of them of the speeches cut short that day. The
   windows go on being gathered; until then the turn goes as of a voice not known.
+- **The broadcast's clock joins a speech cut in two** (24 Nov 2026, the maintainer: "iz režije bio sat … ali mi nismo
+  ispravili od kad je govorila"). Milena Đorđijević had the floor from 16:57 and on; her turn ended at 16:57:46 (a caption
+  gone, nothing naming her) and began again at 17:08:32, 646 s of it nobody's. `ocr.clock` had read 11:15, 11:21 and 11:26, right, and
+  `Tracker.clocked` threw them away: more than two minutes were not believed. Two readings that agree and say the speech
+  began within the same speaker's turn before (`CLOCK_JOIN`), no other's turn between, make one turn of them.

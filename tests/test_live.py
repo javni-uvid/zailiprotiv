@@ -2759,3 +2759,41 @@ def test_the_shared_links_picture_says_nothing_that_goes_stale():
     assert len(drawn) == 1 and Image.open(io.BytesIO(drawn.pop())).size == (1200, 630)
     assert picture.render(states[0], cyr=True, tz=TZ) != picture.render(states[0], cyr=False, tz=TZ)
     assert all("slika.png?v=s4" in page_._og(s_, cyr=False, url="https://mikrofon.zailiprotiv.rs/", tz=TZ) for s_ in states)
+
+
+def test_the_broadcasts_clock_joins_a_speech_cut_in_two():
+    """24 Nov 2026, the maintainer, of Milena Đorđijević: the floor given at 16:56:50, the turn ended at 16:57:46, the caption
+    back at 17:08:32 with 11:26 on the clock: one speech. Never another's turn, nor one begun after."""
+    now = 1795519000.0
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    petar = next(p for p in ROSTER.people if p.slug == "petrovic-petar")
+
+    def cut(other=None):
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        t.observe(None, now=now)
+        t.heard(petar, "prepis", now, now)
+        t.heard(marko, "prepis", now + 10, now + 10)
+        t.turns[-1]["seen"] = now + 66
+        t._close()
+        if other:
+            t.heard(other, "prepis", now + 300, now + 320)
+            t._close()
+        t.heard(marko, "potpis", now + 712, now + 712)
+        return t
+    t = cut()
+    assert len(t.turns) == 3
+    t.clocked(marko, now + 712, 686)  # one reading is not yet sure
+    assert len(t.turns) == 3
+    t.clocked(marko, now + 717, 691)  # began at now + 26, in the turn before
+    last = t.turns_now()[-1]
+    assert len(t.turns) == 2 and last["key"] == marko.key and t.open
+    assert abs(last["start"] - (now + 26)) <= 1 and last["seen"] >= now + 712 and last["izvor"] == "potpis"
+    t = cut(petar)  # another spoke between: not joined
+    t.clocked(marko, now + 712, 686)
+    t.clocked(marko, now + 717, 691)
+    assert len(t.turns) == 4 and t.turns_now()[-1]["start"] == now + 712
+    t = cut()  # the clock says a speech of its own, begun after: not joined
+    t.clocked(marko, now + 712, 5)
+    t.clocked(marko, now + 717, 10)
+    assert len(t.turns) == 3 and abs(t.turns_now()[-1]["start"] - (now + 707)) <= 1
