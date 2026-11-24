@@ -21,6 +21,8 @@ def _write(f: Path, data) -> None:
 
 
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
+REJOIN = 200  # seconds: the same speaker named again this soon, with speech going on between and no floor given to another
+REJOIN_WORDS = 1.2  # words a second of it, for speech to have gone on (a speaker's pace is some two)
 HEARD_SHORT = 12  # seconds: a turn found by the chair's words alone and as short as this is no turn (24 Nov 2026: 2 s, 8 s)
 SURE_FRAMES = 4  # a turn with no line under the name read in any frame is kept only from this many frames on
 
