@@ -129,6 +129,17 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   (four that day) and are to be judged apart.
 - **A reply longer than two minutes is not the group's time** (24 Nov 2026): one of 142 s had been counted. A turn heard to
   be a reply or a point of order (`rok.short`) is left out up to 180 s.
+- **The groups' time, checked against the day's turns** (24 Nov 2026, the maintainer: "proveri da li je tačna
+  informacija koliko koja lista ima vremena"; the page said 7 minutes left for one list while its MPs kept getting the
+  floor). The frame held: the chair told the same five hours by art. 97 at the debate's opening. Two things counted
+  too much, both mended by one rule for every group. **The chair's "po kom osnovu?"** when giving the floor tells a
+  reply or a point of order as the words themselves do (`rok._BASIS`, for the groups' time only; the clock by the
+  speaker still wants the kind heard): four turns of 126 to 145 s had been the group's. **The representative's 20
+  minutes** (art. 96) are apart from the group's time by the Assembly's own clock, as its notes show ("iskoristili ste
+  vreme ovlašćenog predstavnika. Imate još od vremena grupe 7,24"); we do not hear which turn uses them, so each
+  group has them added to its share (`vreme.REPRESENTATIVE`), as the 15 minutes of the debate in detail are. Still
+  not known: a reply let run past three minutes, one with no word of the chair's heard, two short replies in a row
+  shown as one turn (`MERGE_SECONDS`); the Assembly said no figure that day to check the sum against.
 - **A measure an MP only speaks of is no step** (24 Nov 2026, the maintainer): the mail's rule (`mere.given`) holds for the
   page's steps too. On 19 Nov's 13 model's measures it keeps the eight given and drops the five not.
 - **The day's summary, and so the mail, by a stronger model from the whole transcript** (24 Nov 2026, the maintainer:

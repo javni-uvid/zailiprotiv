@@ -189,7 +189,7 @@ TEXT = {
     "gt_none": "vreme je potrošeno",
     "gt_rules": "Šta kaže Poslovnik",
     "rk_how": "Uz sat govornika stoji „/ 2 min“ kad iz prepisa čujemo da je replika ili povreda Poslovnika: obe najviše dva minuta (članovi 103. i 104. Poslovnika). Prepoznaje se automatski, po rečima predsedavajućeg ili govornika, i može da pogreši; za ostale govore vreme ne znamo.",
-    "gt_how": "Preostalo vreme poslaničkih grupa je naša procena, isto pravilo za svaku grupu: 5 sati ukupno, podeljeno prema broju poslanika (član 97. Poslovnika), a u pretresu u pojedinostima još 15 minuta za predsednika grupe (član 158). Grupe su liste sa spiska poslanika. Brojimo, od otvaranja pretresa, govore poslanika duže od dva minuta, dok govornika prepoznajemo; replike, ukazivanja na Poslovnik, predlagač i Vlada ne ulaze. Ne znamo da li je postupak skraćen (tada je vreme upola kraće) ni da li je grupama dato više vremena; službeno vreme meri Skupština.",
+    "gt_how": "Preostalo vreme poslaničkih grupa je naša procena, isto pravilo za svaku grupu: 5 sati ukupno, podeljeno prema broju poslanika (član 97. Poslovnika), i još 20 minuta za predsednika ili predstavnika grupe (član 96), a u pretresu u pojedinostima 15 (član 158). Grupe su liste sa spiska poslanika. Brojimo, od otvaranja pretresa, govore poslanika duže od dva minuta, dok govornika prepoznajemo; replike, ukazivanja na Poslovnik, predlagač i Vlada ne ulaze; replikom ili ukazivanjem smatramo i govor do tri minuta pred koji predsedavajući pita „po kom osnovu“. Ne znamo da li je postupak skraćen (tada je vreme upola kraće) ni da li je grupama dato više vremena; službeno vreme meri Skupština.",
     "no_list": "Vlada i gosti",
     "other_lists": "poslanici manjih lista i van grupa",
     "timeline": "Tok dana",

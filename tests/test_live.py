@@ -2276,6 +2276,11 @@ def test_a_reply_longer_than_two_minutes_is_not_the_groups_time():
     rows = [{**turn(100, 600)}, {**turn(1000, 142), "kratko": True}]
     g = groups_time(item=4, start=start, seats={"A": 10}, turns=rows, events=[], now=start + 4000)
     assert g["grupe"][0]["potroseno"] == 600
+    # the chair's "po kom osnovu?" tells it too, for the groups' time only: the clock by the speaker wants the kind heard
+    from uzivo.rok import limit
+    asked = {"p" + str(start + 1980): "Reč ima narodni poslanik Petar Petrović, po kom osnovu?"}
+    assert short(asked, turn(2000, 145), 180) and not short(asked, turn(2000, 272), 180)
+    assert limit(asked, start + 2000, 30) is None
 
 
 def test_the_groups_time_runs_from_the_debates_opening():
@@ -2294,7 +2299,7 @@ def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
     """22 Nov 2026, readers asked how much time each party has left: five hours for the groups by their MPs (art. 97),
     replies and points of order (two minutes at most) left out, the debate in detail counted afresh (art. 158)."""
     from uzivo import page as page_
-    from uzivo.vreme import CHAIR_MORE, TOTAL, groups_time
+    from uzivo.vreme import CHAIR_MORE, REPRESENTATIVE, TOTAL, groups_time
     start = 1795089600
     turn = lambda at, sec, g: {"od": start + at, "do": start + at + sec, "sekundi": sec, "lista": g}
     seats = {"Studentska lista": 140, "Aleksandar Vučić - Srbija pobeđuje": 102}
@@ -2303,13 +2308,13 @@ def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
              turn(3500, 300, "*")]
     g = groups_time(item=4, start=start, seats=seats, turns=turns, events=[], now=start + 4000)
     sl, av = g["grupe"]
-    assert sl["lista"] == "Studentska lista" and sl["ima"] == round(TOTAL * 140 / 242) and sl["potroseno"] == 600
+    assert sl["lista"] == "Studentska lista" and sl["ima"] == round(TOTAL * 140 / 242) + REPRESENTATIVE and sl["potroseno"] == 600
     assert sl["govora"] == 1 and av["potroseno"] == 900 and not g["pojedinosti"]
     # a debate closed and another opened: the debate in detail, counted from its opening, the chairs' 15 minutes more
     events = [{"t": start + 1950, "vrsta": "Pretres zaključen"}, {"t": start + 3000, "vrsta": "Pretres otvoren"}]
     d = groups_time(item=4, start=start, seats=seats, turns=turns + [turn(3100, 400, "Studentska lista")], events=events,
                     now=start + 4000)
-    assert d["pojedinosti"] and d["grupe"][0]["potroseno"] == 400 and d["grupe"][0]["ima"] == sl["ima"] + CHAIR_MORE
+    assert d["pojedinosti"] and d["grupe"][0]["potroseno"] == 400 and d["grupe"][0]["ima"] == sl["ima"] - REPRESENTATIVE + CHAIR_MORE
     assert groups_time(item=4, start=start, seats=seats, turns=[turn(100, 90, "Studentska lista")], events=[], now=start + 200) is None
     html = page_._group_time({"vreme_grupa": g}, cyr=False)
     assert "Preostalo vreme poslaničkih grupa" in html and "procena" in html
