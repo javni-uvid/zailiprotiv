@@ -244,3 +244,5 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   jumps; a line under it says the speaker (the list by its colour), the clock and the two minutes where heard, with the transcript's
   one line and ×. On a wide screen the small picture stays. YouTube's own controls stay as they are (no overlay of
   ours over its player).
+- **A step's time leads to its moment** (24 Nov 2026, the maintainer, for the reprimands; the same for every step heard): the
+  broadcast on now, or the archive's recording of the day (`page._moment`); plain text when neither holds it.

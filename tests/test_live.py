@@ -1923,6 +1923,23 @@ def test_a_caption_of_seconds_names_the_speaker_and_the_turn_goes_on():
     assert "by_potpis" not in __import__("uzivo.texts", fromlist=["TEXT"]).TEXT  # no word on how: a caption said it
 
 
+def test_a_steps_time_leads_to_its_moment():
+    """24 Nov 2026, the maintainer: a press on the reprimand's time leads to that part of the broadcast."""
+    from uzivo.steps import model_steps
+    base = 1795510000
+    ev = {"t": base + 5000, "vrsta": "Mera predsedavajućeg", "tekst": "Ja vam izričem opomenu.", "izvor": "model", "vise": {"napomena": "opomena"}}
+    snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "govori", "provereno": base + 9000, "hronika": [ev],
+            "prenos": {"video": "dQw4w9WgXcQ", "od": base}}
+    assert model_steps(snap)
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<a class="time" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&amp;t=5000s" data-yt="dQw4w9WgXcQ" data-t="5000"' in html
+    none = fragment({**snap, "prenos": None}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<span class="time">' in none and 'class="time" href' not in none  # nothing to lead to
+    part = {"url": "https://arhiva.videonet.co.rs/a.mp4", "od": base + 4000, "trajanje": 3000}
+    arch = fragment({**snap, "stanje": "nema_prenosa", "prenos": None, "datoteke": [part]}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="1000"' in arch
+
+
 def test_a_turn_found_without_a_caption_has_its_place_in_the_broadcast():
     """24 Nov 2026, the maintainer: in "Svi govori redom" a way back to the moment; found turns had no place."""
     now = 1795519000.0
