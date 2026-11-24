@@ -23,7 +23,7 @@ class View:
                 "video": t.get("video") or "", "snimak": rec, **({"izvor": t["izvor"]} if t.get("izvor") else {})}
 
     def _last_day(self) -> tuple[str, list[dict]]:
-        """The latest earlier day with turns: its list stays on the page until someone is read at the next sitting."""
+        """The latest earlier day with turns: its list stays on the page until the next sitting's broadcast is on."""
         if not self.days or not self.days.exists():
             return "", []
         for f in sorted(self.days.glob("*.json"), reverse=True):
@@ -115,7 +115,9 @@ class View:
                 recorded, parts = True, [p for p in rec.get("datoteke") or []
                                          if p.get("url") and p.get("od") and p.get("trajanje")]
                 done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
-            elif not done and not current:
+            elif not done and not current and (self.status == NO_STREAM or self.day != today):
+                # Not once today's broadcast is on (24 Nov 2026): the chair alone spoke, and the page went on telling
+                # what happened on 19 November under "Uživo".
                 day, turns = self._last_day()
                 day, done = (day, [self._out(t) for t in self._named(turns)]) if turns else (self.day, [])
                 rec = self.recording
