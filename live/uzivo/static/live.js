@@ -41,10 +41,17 @@
   // The speaker beside the small picture (the styles show it only there, 24 Nov 2026): the name, the list and the clock of the part, the list's
   // colour beside them (22 Nov 2026, the maintainer). Only on YouTube's broadcast, whose speaker is the part's.
   var stage = document.querySelector(".player .stage"), oa = stage && stage.querySelector(".on-air");
+  // The player shows an earlier moment (a step's time, "▶ snimak", or set back by hand): the part's speaker is not the
+  // one on the picture (24 Nov 2026). By the player's own clock of the broadcast; before it tells it, by where it began.
+  function past() {
+    var f = stage.querySelector("iframe");
+    if (shows && Date.now() - shows.at < 5000) return Date.now() / 1000 - shows.t > 120;
+    return !!f && /[?&]start=[1-9]/.test(f.src);
+  }
   function onAir() {
     if (!oa) return;
     var d = document.getElementById("deo"), w = d && d.querySelector(".sp-head .who"), k = d && d.querySelector(".sp-head .clk");
-    var on = !!(w && k && d.getAttribute("data-stanje") === "govori" && stage.querySelector("iframe"));
+    var on = !!(w && k && d.getAttribute("data-stanje") === "govori" && stage.querySelector("iframe") && !past());
     if (oa.hidden === on) oa.hidden = !on;
     if (!on) return;
     var side = d.querySelector(".sp-head .side"), cls = "on-air" + (d.className ? " " + d.className : "");
