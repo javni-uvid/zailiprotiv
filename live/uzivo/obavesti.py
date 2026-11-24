@@ -97,7 +97,7 @@ class Bell:
         if now.timestamp() - self.looked < LOOK or not HOURS[0] <= now.hour < HOURS[1]:
             return False
         self.looked = now.timestamp()
-        since = resumed(*tracker.heard(), now.timestamp())
+        since = resumed(*tracker.day_heard(), now.timestamp())
         if not since:
             return False
         day, kept = now.date().isoformat(), self._kept().get("nastavak")

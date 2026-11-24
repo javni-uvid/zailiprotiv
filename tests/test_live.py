@@ -1245,6 +1245,19 @@ def test_the_end_of_a_long_break_is_found_from_speech(tmp_path):
     assert resumed(said, [long], events, back + 45) == 0
 
 
+def test_the_bell_hears_the_end_of_a_break_from_the_tracker_itself(tmp_path):
+    """24 Nov 2026: the tracker had a `heard` already (a voice's turn), and the bell's failed on every look; the test
+    with a stand-in for the tracker did not see it."""
+    from datetime import datetime as dt_
+    from uzivo.obavesti import Bell
+    posts = []
+    said, events, end, back = _break(tmp_path)
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    t.day, t.said, t.events = "2026-11-24", said, events
+    bell = Bell(str(tmp_path / "o.json"), token="t", api="https://glasovi.example", post=lambda od, *w: posts.append((od, *w)) or {"sent": 1})
+    assert bell.heard(t, dt_.fromtimestamp(back + 45, TZ), wait=True) and posts == [(0, "nastavak", 1)]
+
+
 def test_the_end_of_a_break_is_told_once_and_twice_a_day_at_most(tmp_path):
     from datetime import datetime as dt_
     from uzivo.obavesti import Bell
@@ -1254,7 +1267,7 @@ def test_the_end_of_a_break_is_told_once_and_twice_a_day_at_most(tmp_path):
     said, events, end, back = _break(tmp_path)
 
     class Heard:
-        def heard(self):
+        def day_heard(self):
             return said, [], events
     at = lambda s: dt_.fromtimestamp(back + s, TZ)
     b = bell()
