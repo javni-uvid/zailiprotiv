@@ -170,3 +170,8 @@ presided (not done).
   words in it. The turn ends where the piece with the words begins; `popuna` gives nobody the time over a break either. The
   words are the chair's declaring it now, not a break announced for later or spoken of: on the day's transcripts three
   breaks of three and none of ten other mentions.
+- **A speaker announced with no "reč ima" has the floor** (24 Nov 2026, the maintainer: "uradi sve bitne stvari sa liste";
+  `hronika._FLOOR`): "Imamo još jednog govornika za danas, to je gospodin narodni poslanik Ahmedin Škrijelj" (his five
+  minutes stood as nobody's and were entered by hand) and "sledeći govornik, odnosno govornica je profesor doktor Marija
+  Lesjak". On the day's transcript the words find these two floors more (74 for 72), both right, and lose none.
+  Petar Mitov's floor of 12:07 was not in the live transcript at all, so no words could find it.
