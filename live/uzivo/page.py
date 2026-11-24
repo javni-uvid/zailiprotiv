@@ -64,6 +64,22 @@ def _recording(d: dict, cyr: bool) -> str:
             f'{escape(_t("recording", cyr))} {_hms(d["snimak"])}</a>')
 
 
+def _moment(snap: dict, at: float, text: str, cyr: bool) -> str:
+    """A time of the day as a link to that moment: of the broadcast on now (YouTube's video) or of the day's recording
+    in the archive; the time alone when neither holds it."""
+    on = snap.get("prenos") or {}
+    if on.get("video") and snap.get("stanje") != "nema_prenosa" and at >= on.get("od", 0):
+        sec = int(at - on["od"])
+        href, data = f'https://www.youtube.com/watch?v={on["video"]}&t={sec}s', f'data-yt="{escape(on["video"])}"'
+    else:
+        part = next((p for p in snap.get("datoteke") or [] if p["od"] <= at < p["od"] + p["trajanje"]), None)
+        if not part:
+            return f'<span class="time">{escape(text)}</span>'
+        sec = int(at - part["od"])
+        href, data = f'{part["url"]}#t={sec}', f'data-file="{escape(part["url"])}"'
+    return f'<a class="time" href="{escape(href)}" {data} data-t="{sec}" title="{escape(_t("recording_title", cyr))}">{escape(text)}</a>'
+
+
 TURNS_SHOWN = 8  # of a day's turns, the latest this many are listed open; the earlier ones are folded under them
 
 
@@ -339,8 +355,9 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
             title = f'<a href="{escape(href)}" title="{t("steps_rules")}">{title}</a>'
         return title
 
-    def li(when: str, mark: tuple[str, str], body: str, cls: str = "") -> str:
-        return (f'<li class="{mark[0]}{" " + cls if cls else ""}"><span class="time">{escape(when)}</span>'
+    def li(when: str, mark: tuple[str, str], body: str, cls: str = "", at: float = 0) -> str:
+        time_ = _moment(snap, at, when, cyr) if at else f'<span class="time">{escape(when)}</span>'
+        return (f'<li class="{mark[0]}{" " + cls if cls else ""}">{time_}'
                 f'<i aria-hidden="true">{mark[1]}</i><div>{body}</div></li>')
 
     def step(e: dict) -> str:
@@ -349,14 +366,14 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
             who = s(who)
             if e.get("adresa") and str(e["adresa"]).replace("-", "").isalnum():
                 who = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + e["adresa"])}">{who}</a>'
-            return li(_clock(e["t"], tz), _step_mark(e), f'<p class="st-floor">{s(head)}: <b>{who}</b></p>', "st-rec")
+            return li(_clock(e["t"], tz), _step_mark(e), f'<p class="st-floor">{s(head)}: <b>{who}</b></p>', "st-rec", e["t"])
         title, what = rules(e), s(e["opis"]) if e["opis"] else ""
         if e.get("naslov") == "Mera predsedavajućeg":  # the kind as the title ("Opomena"), to whom under it
             kind, _, whom = (e.get("opis") or "").partition(" · ")
             if kind.strip():
                 title, what = rules(e, s(kind.strip()[:1].upper() + kind.strip()[1:])), s(whom.strip())
         return li(_clock(e["t"], tz), _step_mark(e),
-                  f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{what}</p>' if what else ""))
+                  f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{what}</p>' if what else ""), at=e["t"])
 
     rows: list[tuple[int, str]] = []  # (minute of the sitting day, the line)
     for o in decisions:

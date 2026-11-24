@@ -27,11 +27,16 @@ class View:
         seconds) given the one its time has: the newest frame's place, counted back by the seconds. Only in the video
         of that frame, and not before it began (24 Nov 2026, the maintainer: "da ljudi mogu da se vrate na taj
         trenutak")."""
-        p = self.place
-        if d.get("snimak") is not None or not p:
+        began = self._broadcast()
+        if d.get("snimak") is not None or not began:
             return d
-        sec = int((p["sq"] - config.RECORDING_LEAD) * p["seg"] - (p["t"] - d["od"]))
-        return {**d, "video": p["video"], "snimak": sec} if sec >= 0 else d
+        sec = int(d["od"] - began["od"])
+        return {**d, "video": began["video"], "snimak": sec} if sec >= 0 else d
+
+    def _broadcast(self) -> dict | None:
+        """The broadcast on now and when it began, counted back from the newest frame's place: {"video", "od"}."""
+        p = self.place
+        return {"video": p["video"], "od": p["t"] - (p["sq"] - config.RECORDING_LEAD) * p["seg"]} if p else None
 
     def _last_day(self) -> tuple[str, list[dict]]:
         """The latest earlier day with turns: its list stays on the page until the next sitting's broadcast is on."""
@@ -173,7 +178,8 @@ class View:
                                 for e in (self.events if day == self.day else self._events_load(day))[-150:][::-1]],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
-                    "vreme_grupa": groups, "predsedava": self._presiding_shown()}
+                    "vreme_grupa": groups, "predsedava": self._presiding_shown(),
+                    "prenos": self._broadcast() if self.status != NO_STREAM else None}
 
     def _presiding_shown(self) -> dict | None:
         """Who presides, by the voice, while a broadcast is on and the chair was heard in the last quarter of an hour."""
