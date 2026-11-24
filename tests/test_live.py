@@ -2210,6 +2210,39 @@ def test_a_caption_of_seconds_teaches_the_voice(tmp_path):
     assert L.voices.n["markovic-marko"] == n  # the same seconds once
 
 
+def test_a_voice_known_from_a_few_seconds_neither_names_nor_ends_a_turn(tmp_path):
+    """24 Nov 2026, 16:57: Milena Đorđijević's voice was known from two windows of the same speech, matched those seconds
+    and then no more, and a speech of ten minutes ended at 56 s."""
+    np = pytest.importorskip("numpy")
+    import threading as th
+    from uzivo import glas
+    a, b = np.zeros(512, np.float32), np.zeros(512, np.float32)
+    a[0] = 1
+    b[0], b[1] = 0.5, 0.866  # the same speaker further on: below VOICE_MIN, above CHANGE
+
+    def turn(count: int) -> tuple:
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        now = 1795100000.0
+        t.observe(None, now=now)
+        marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+        t.heard(marko, "potpis", now, now)
+        f = tmp_path / f"v{count}.npz"
+        np.savez_compressed(f, slugs=np.array(["markovic-marko"]), vecs=np.stack([a]), counts=np.array([count]))
+        L = glas.Listener(t, th.Event(), embed=lambda x: a, path=f)
+        for n in (20, 40):
+            L.t, L.f = [now + 1.5 * i for i in range(n)], [a] * min(n, 20) + [b] * max(0, n - 20)
+            t.observe(None, now=now + 1.5 * n)
+            L.judge()
+            L.changed()
+        return t.open_turn(), L
+    still, L = turn(glas.LEAST - 1)
+    assert still and not still.get("po_glasu") and L.voices.refs() == {}
+    L.voices.add("markovic-marko", np.stack([a]))
+    assert list(L.voices.refs()) == ["markovic-marko"]  # known well enough from here on
+    assert turn(glas.LEAST)[0] is None  # a voice known well that is gone ends the turn, as before
+
+
 def test_a_voice_that_ends_before_the_floor_passed_on_does_not_end_the_turn():
     """24 Nov 2026, 12:18:54: the chair gave Jovo Bakić the floor, the last seconds of the speaker before came after,
     and the reply of 50 s stood as that speaker's."""
@@ -2362,7 +2395,7 @@ def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch)
     a, b = np.zeros(512, np.float32), np.zeros(512, np.float32)
     a[0], b[1] = 1, 1
     voices = tmp_path / "glasovi.npz"
-    np.savez_compressed(voices, slugs=np.array(["markovic-marko", "jovanovic-marko"]), vecs=np.stack([a, b]), counts=np.array([10, 10]))
+    np.savez_compressed(voices, slugs=np.array(["markovic-marko", "jovanovic-marko"]), vecs=np.stack([a, b]), counts=np.array([30, 30]))
     L = glas.Listener(t, th.Event(), embed=lambda s: a if s[0] > 0 else b, path=voices)
     for i in range(2):  # the hall quiet first: what the loudness is measured against
         (tmp_path / "zvuk" / f"{int((now + 36 + 4 * i) * 1000)}-4000.pcm").write_bytes(np.zeros(4 * 16000, np.int16).tobytes())
@@ -2477,7 +2510,7 @@ def test_the_floor_given_now_and_the_chair_by_voice(tmp_path, monkeypatch):
     assert snap["stanje"] != "govori" and t.turns_now()[-1]["seen"] <= now + 1 + 1.5 * 16
     # the chair's voice: a presiding officer's, said on top
     monkeypatch.setattr(config, "VOICE_SKIP", {"markovic-marko"})
-    np.savez_compressed(tmp_path / "v.npz", slugs=np.array(["markovic-marko"]), vecs=np.stack([b]), counts=np.array([5]))
+    np.savez_compressed(tmp_path / "v.npz", slugs=np.array(["markovic-marko"]), vecs=np.stack([b]), counts=np.array([30]))
     L = glas.Listener(t, th.Event(), embed=lambda x: b, path=tmp_path / "v.npz")
     L.t, L.f = [now + 50 + 1.5 * i for i in range(16)], [b] * 16
     t.observe(None, now=now + 75)
