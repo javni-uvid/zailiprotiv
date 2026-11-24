@@ -107,6 +107,12 @@ def place(speeches: list[dict], got: list[tuple[str, str, float]]) -> list[dict]
                 b -= 1
             if got[a][1] == got[b][1]:
                 s.update(datoteka=got[a][1], od=got[a][2], do=got[b][2])
+            else:  # from one file into the next (24 Nov 2026: an hour's speech of 19 Nov had no place, its last words
+                # being the next file's): the part in each, when a run of it is in each and no file lies between
+                turn_at = next(j for j in range(a, b + 1) if got[j][1] != got[a][1])
+                if got[turn_at][1] == got[b][1] and any(p < turn_at for _, p in runs) and any(p >= turn_at for _, p in runs):
+                    s.update(datoteka=got[a][1], od=got[a][2], do=got[turn_at - 1][2],
+                             dalje={"datoteka": got[b][1], "od": got[turn_at][2], "do": got[b][2]})
         out.append(s)
     return between(out)
 
@@ -125,6 +131,28 @@ def between(speeches: list[dict]) -> list[dict]:
         if (words and words < SHORT and "datoteka" in before and before.get("datoteka") == after.get("datoteka")):
             s.update(datoteka=before["datoteka"], od=before["do"], do=before["do"] + words / RATE)
     return speeches
+
+
+def roll_call(text: str) -> bool:
+    """A list read out (a vote by name: "Абрамовић Ненад – Стојан Раденовић; …"), no speech: it holds its place among
+    the others and is not listed as anyone's (19 Nov 2026: the secretary read for 75 minutes)."""
+    return text.count(";") >= 15 and text.count("–") >= 15
+
+
+def nearest(name: str, keys: dict) -> str | None:
+    """The key of the one listed name the notes' misspelt name is near ("Јова Бакић", "Петар Митев"): as many words, each
+    at least 0.75 alike, clearly nearer than any other; None when no listed name is, or two are."""
+    from difflib import SequenceMatcher
+    mine = sorted(name.lower().split())
+    scored = []
+    for k in keys:
+        theirs = sorted(k.lower().split())
+        if len(theirs) == len(mine):
+            scored.append((min(SequenceMatcher(None, a, b).ratio() for a, b in zip(mine, theirs)), k))
+    scored.sort(reverse=True)
+    if scored and scored[0][0] >= 0.75 and (len(scored) == 1 or scored[0][0] - scored[1][0] >= 0.05):
+        return scored[0][1]
+    return None
 
 
 LEAD = 5     # a turn's place in its file: this many seconds before its first word, as everywhere on the site
@@ -153,20 +181,21 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
         if "datoteka" not in s:
             last_speaker = None
             continue
-        base = start.get(s["datoteka"])
-        t = {**who(s["speaker"]), "od": int(base + s["od"]) if base is not None else None,
-             "do": int(base + s["do"]) if base is not None else None, "okvira": s["sidra"], "video": "",
-             "snimak": int(max(0, s["od"] - LEAD)), "datoteka": s["datoteka"], "beleske": [s["key"]],
-             "_od": s["od"], "_do": s["do"]}
-        prev = out[-1] if out else None
-        if (prev and last_speaker == s["speaker"] and prev["datoteka"] == t["datoteka"]
-                and t["_od"] - prev["_do"] <= MERGE):
-            prev["do"], prev["_do"] = t["do"], t["_do"]
-            prev["okvira"] += t["okvira"]
-            prev["beleske"] += t["beleske"]
-        else:
-            out.append(t)
-        last_speaker = s["speaker"]
+        for part in [s] + ([s["dalje"]] if s.get("dalje") else []):
+            base = start.get(part["datoteka"])
+            t = {**who(s["speaker"]), "od": int(base + part["od"]) if base is not None else None,
+                 "do": int(base + part["do"]) if base is not None else None, "okvira": s["sidra"], "video": "",
+                 "snimak": int(max(0, part["od"] - LEAD)), "datoteka": part["datoteka"], "beleske": [s["key"]],
+                 "_od": part["od"], "_do": part["do"]}
+            prev = out[-1] if out else None
+            if (prev and last_speaker == s["speaker"] and prev["datoteka"] == t["datoteka"]
+                    and t["_od"] - prev["_do"] <= MERGE):
+                prev["do"], prev["_do"] = t["do"], t["_do"]
+                prev["okvira"] += t["okvira"]
+                prev["beleske"] += t["beleske"]
+            else:
+                out.append(t)
+            last_speaker = s["speaker"]
     for t in out:
         t.pop("_od"), t.pop("_do")
     return out

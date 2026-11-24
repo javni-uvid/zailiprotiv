@@ -37,34 +37,34 @@
   "slaze_se": 10
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4": {
-  "pokusaja": 3,
-  "kadrova": 10,
-  "provereno": "2026-11-19T14:28:02+00:00"
+  "od": 1795079040,
+  "trajanje": 9254,
+  "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910a.mp4": {
-  "pokusaja": 3,
-  "kadrova": 1,
-  "provereno": "2026-11-19T14:49:07+00:00"
+  "od": 1795088294,
+  "trajanje": 3589,
+  "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4": {
-  "pokusaja": 3,
-  "kadrova": 1,
-  "provereno": "2026-11-19T19:48:52+00:00"
+  "od": 1795099321,
+  "trajanje": 7992,
+  "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4": {
-  "pokusaja": 3,
-  "kadrova": 0,
-  "provereno": "2026-11-19T21:48:59+00:00"
+  "od": 1795107313,
+  "trajanje": 7217,
+  "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4": {
-  "pokusaja": 3,
-  "kadrova": 0,
-  "provereno": "2026-11-20T05:48:31+00:00"
+  "od": 1795114530,
+  "trajanje": 8399,
+  "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910e.mp4": {
-  "pokusaja": 3,
-  "kadrova": 0,
-  "provereno": "2026-11-20T07:18:22+00:00"
+  "od": 1795122930,
+  "trajanje": 6285,
+  "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4": {
   "pokusaja": 1,
