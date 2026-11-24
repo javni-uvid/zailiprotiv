@@ -2059,7 +2059,7 @@ def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch)
     assert snap["sada"]["sekundi"] == 30
     from uzivo.page import fragment
     html = fragment(snap, cyr=False, site="", tz=TZ)
-    assert "Po rečima predsedavajućeg („Reč ima“), jer prenos ne prikazuje ime" in html
+    assert '<p class="meta how-found">prepoznavanje govornika može da pogreši</p>' in html and "jer prenos ne prikazuje ime" not in html
     # voices (numpy, which the live image has and the site's tests may not): Marko's sample known; his voice for 24 s
     # ends Petar's turn and begins his
     np = pytest.importorskip("numpy")

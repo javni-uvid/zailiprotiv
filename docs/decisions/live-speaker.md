@@ -99,3 +99,5 @@ presided (not done).
   came after the chair's "reč ima" and ended the new turn in its first second (12:18:54). Such a voice now only
   lengthens the turn it was of (`Tracker.heard`).
 - **"(po glasu)" off the presiding line** (24 Nov, the maintainer): how it is known is under "Kako ovo radi".
+- **"prepoznavanje govornika može da pogreši"**, small, in place of the sentence on how the speaker was known (24 Nov 2026,
+  the maintainer); how is under "Kako ovo radi". A name read off a caption has no such line.
