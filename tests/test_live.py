@@ -2205,6 +2205,26 @@ def test_the_mails_card_can_be_put_away():
     assert "mejl-prijavljen" in SCRIPT  # signing up puts it away too
 
 
+def test_a_turn_by_a_voice_merely_alike_goes_back_to_whose_speech_it_was():
+    """24 Nov 2026, 17:26:23: Nikola Selaković's last 24 s stood as Miroslav Petrašinović's, found by voice alone."""
+    from uzivo.popuna import fill
+
+    def day(words: dict, izvor="glas", long=24):
+        a = {"key": "a", "name": "Selaković Nikola", "slug": "a", "group": "", "role": "", "start": 1000, "seen": 1117,
+             "n": 4, "izvor": "potpis", "natpis": 1002}
+        b = {"key": "b", "name": "Petrašinović Miroslav", "slug": "b", "group": "", "role": "", "start": 1117,
+             "seen": 1117 + long, "n": 4, "izvor": izvor, "po_glasu": True}
+        return fill([a, b], words, [])
+    words = {"1065": "Pored Zgrade Narodne Biblioteke doneli su vaši prethodnici.", "1095": "Godinama, deceniju i po. I za kraj.",
+             "1125": "Od jedne decenije nego smo ga otvorili."}
+    out, done = day(words)
+    assert [(t["name"], t["seen"]) for t in out] == [("Selaković Nikola", 1141)] and len(done) == 1
+    assert len(day({**words, "p1110": "Hvala, vreme je isteklo."})[0]) == 2  # the chair spoke at the seam: a real change
+    assert len(day({**words, "1040": "Da čujemo, Miroslav Petrašinović."})[0]) == 2  # named shortly before
+    assert len(day(words, long=90)[0]) == 2 and len(day(words, izvor="potpis")[0]) == 2  # long, or a caption: as it was
+    assert len(day({})[0]) == 2  # no words kept: nothing is known of the seam
+
+
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
     """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
     from uzivo import hronika

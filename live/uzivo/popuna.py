@@ -16,6 +16,7 @@ from .state_base import CHAIRS, REJOIN, REJOIN_WORDS, SURE_FRAMES, _write, write
 MISSING = 0.4  # a turn is missing when less than this share of it is there: the chair's own words before the next floor
 SHORT_OF = 45  # and at least these seconds of a turn that is there, for it to be lengthened
 NEW = 25  # seconds a turn not there must come to, to be written
+AT_SEAM, ALIKE, UNNAMED = 5, 60, 90  # seconds: see `_alike`
 LONGEST = 1500  # no turn longer than this comes of the chair's words alone
 
 
@@ -31,11 +32,31 @@ def floors(said: dict[str, str], people: list) -> list[tuple[float, float, objec
     return out
 
 
+def _alike(a: dict, v: dict, said: dict[str, str]) -> bool:
+    """Whether turn `v`, found by voice alone right at the end of another's turn `a`, is `a` going on, a voice merely alike
+    (24 Nov 2026, 17:26: 24 s of Nikola Selaković's under Miroslav Petrašinović's name): short, no word of the chair's at the
+    seam, and nobody having named its speaker in the minute and a half before. Words alone do not tell: of the 14
+    such turns of that day the other 13 were real, and one of them had no word of the chair's at the seam."""
+    if (v.get("izvor") != "glas" or v.get("natpis") or a["key"] == v["key"] or a.get("izvor") not in ("prepis", "potpis")
+            or a.get("po_glasu") or not -1 <= v["start"] - a["seen"] <= AT_SEAM or v["seen"] - v["start"] > ALIKE):
+        return False
+    near = [(int(k.lstrip("p")), k, t) for k, t in said.items() if k.lstrip("p").isdigit()]
+    if any(a["seen"] - 35 <= at <= v["start"] + 8 and (k[0] == "p" or CHAIRS.search(t)) for at, k, t in near):
+        return False
+    spoken = [t for at, k, t in near if a["seen"] - 35 <= at <= v["start"] + 8]
+    return bool(spoken) and not any(hronika.named(t, v["name"]) for at, k, t in near if a["seen"] - UNNAMED <= at <= v["start"] + 10)
+
+
 def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[dict], list[str]]:
     """The turns with what is missing, oldest first, and what was done, a line each."""
     given = floors(said, people)
     out = [dict(t) for t in turns if not (t.get("izvor") and t["seen"] - t["start"] < 1)]
     done: list[str] = []
+    for a, v in zip(out[:-1], out[1:]):
+        if _alike(a, v, said):
+            done.append(f'{v["name"]}: {v["seen"] - v["start"]:.0f} s po sličnom glasu -> {a["name"]}')
+            a["seen"], v["start"] = v["seen"], v["seen"] - 0.5  # of no length: dropped below
+    out = [t for t in out if not (t.get("izvor") and t["seen"] - t["start"] < 1)]
     for i, (began, t0, who) in enumerate(given):
         nxt = given[i + 1][0] if i + 1 < len(given) else None
         others = [t["start"] for t in out if t["start"] > t0 and t["key"] != who.key]

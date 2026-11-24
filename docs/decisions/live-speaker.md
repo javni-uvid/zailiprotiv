@@ -161,3 +161,7 @@ presided (not done).
   gains nothing that was not said. The same speaker is known again from AGAIN windows (some 8 s). The chair's words
   written down, another's voice or the chair's end it at once. Cost: the name may stand up to 30 s after a speech that ended in
   silence. Not measured on the sound itself, which is not kept.
+- **`popuna` gives back what a voice merely alike took** (24 Nov 2026; `popuna._alike`): a turn by voice alone, right at the end
+  of another's whose voice is not known, at most 60 s, with words written down at the seam, none of them the chair's,
+  and its speaker named by nobody in the 90 s before, is the speaker before's. On the day's record it hit one of 14
+  turns by voice after another's (17:26:23), the other 13 were real changes.
