@@ -205,3 +205,7 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
 - **A summary already in the day's file is taken, not written again** (24 Nov 2026, the maintainer): the service kept the day
   in memory, so a summary made by hand while it ran would have been written over at the day's end. Before the model is
   asked for the day, the file is read (`Judge._written`).
+- **The record that stands keeps the archive's files** (24 Nov 2026, the maintainer asked why the recordings had gone;
+  `state_view._filed`): with the earlier copy set aside the page had no file of the archive and no "▶" beside a turn (the
+  broadcast's video is private once it ends). The files the site's copy knows are shown, and each turn begun inside one
+  has its place in it; a turn outside them has no link until the site has read that part.
