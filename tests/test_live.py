@@ -1920,6 +1920,27 @@ def test_a_caption_of_seconds_names_the_speaker_and_the_turn_goes_on():
     assert "by_potpis" not in __import__("uzivo.texts", fromlist=["TEXT"]).TEXT  # no word on how: a caption said it
 
 
+def test_a_turn_found_without_a_caption_has_its_place_in_the_broadcast():
+    """24 Nov 2026, the maintainer: in "Svi govori redom" a way back to the moment; found turns had no place."""
+    now = 1795519000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    at = lambda sq: {"video": "dQw4w9WgXcQ", "sq": sq, "seg": 5.0}
+    t.observe(None, now=now, at=at(1000))  # 5000 s into the broadcast
+    t.heard(marko, "prepis", now + 10, now + 10)
+    t.observe(None, now=now + 60, at=at(1012))
+    t.unheard(now + 70)
+    snap = t.snapshot(now + 100)
+    d = snap["danas"][0]
+    assert d["video"] == "dQw4w9WgXcQ" and abs(d["snimak"] - (5010 - 5 * config.RECORDING_LEAD)) <= 1
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'data-yt="dQw4w9WgXcQ"' in html and "▶ snimak" in html
+    t.turns[0]["start"] -= 6000  # before this broadcast began: another video, no place
+    t._snap = None
+    assert t.snapshot(now + 100)["danas"][0]["snimak"] is None
+
+
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
     """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
     from uzivo import hronika

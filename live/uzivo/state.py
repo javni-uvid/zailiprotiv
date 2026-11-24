@@ -79,6 +79,7 @@ class Tracker(Said, Chronicle, View):
         self._snapping = threading.Lock()  # one thread computes a snapshot at a time
         self._frames = 0  # frames read so far: a snapshot begun before the latest is not kept
         self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
+        self.place: dict = {}  # the newest frame's place in the broadcast: {"t", "video", "sq", "seg"}
         self._resumed = 0.0  # when this run took up the last one's open turn (a restart; RESUME_SECONDS)
         self._migrate()
         self._load()
@@ -238,6 +239,8 @@ class Tracker(Said, Chronicle, View):
             else:
                 self.cover.append([now, now])
             self.last_frame = now
+            if at.get("video") and at.get("sq") is not None and at.get("seg"):
+                self.place = {"t": now, "video": at["video"], "sq": at["sq"], "seg": at["seg"]}
             if self.status == NO_STREAM:
                 self.status = UNKNOWN
             cur = self.turns[-1] if self.turns else None
