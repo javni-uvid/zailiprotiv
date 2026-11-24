@@ -126,6 +126,8 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .add-home { order: 6; }
 details.how { order: 90; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 1.5rem; } details.how > summary { font-family: var(--serif); font-size: var(--t-5); } details.how p { margin: 0 0 1rem; }
 .said-sec:empty { display: none; } .said-sec .said-now { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; }
 .pz-next { margin: 0 0 .9rem; }
+.br { border: 2px solid var(--fg); border-radius: 10px; padding: 1rem 1.1rem; margin: 1rem 0 0; } .br h2 { margin-top: 0; } .br p { margin: .5rem 0 0; } .br-text { font-size: var(--t-3); line-height: 1.5; } .br-when { font-weight: 650; }
+.br ul { list-style: none; margin: .7rem 0 0; padding: .6rem 0 0; border-top: 1px solid var(--line); font-size: var(--t-2); } .br li { margin: .2rem 0; }
 /* The top of the page (19 Nov 2026, the maintainer's request: the old line of text was cramped): what the page is in
    a few words, and one clear way to the site. Then the newest notice, then the broadcast. */
 .hero { margin: 1rem 0 0; } .hero h1 { font-family: var(--serif); font-size: var(--t-6); line-height: 1.15; letter-spacing: -.015em; margin: 0; }

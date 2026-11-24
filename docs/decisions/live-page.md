@@ -248,3 +248,13 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   broadcast on now, or the archive's recording of the day (`page._moment`); plain text when neither holds it.
   Its line under the pinned picture does not name the speaker while the player shows a moment over two minutes back
   (`past` in live.js): the name would be another's than the picture's.
+- **What happened, in a break** (24 Nov 2026, the maintainer: "bilo bi dobro na pauzama da objavimo", then "pusti okvir
+  ovakav odmah"; it brings back, for a break only, the paragraph taken off on 22 Nov in "The day is one list"). While
+  nobody speaks after a break, in the speaker's place (`page._break`): the model's paragraph of the stretch just
+  ended, the votes of it that add up, the chair's measures of it counted by the code from the shown steps (no names),
+  and the hour the chair said the break ends, read only from a clock ("do 15 sati i 10 minuta"), never worked out from
+  a length. Gone once anyone has spoken or a step was heard after the break; never an earlier day's, never beside the
+  day's summary. It comes some eleven minutes into the break (`sudija.BREAK_QUIET`). No notification, no mail.
+  **What each speaker spoke about is left out**: of 24 Nov's lines read against the transcript one said the opposite
+  of what was said (an MP who denied taking part in a control "spoke of her own part" in it), which the check of names
+  and numbers cannot see. They wait for a check of the sense.

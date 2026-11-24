@@ -215,6 +215,7 @@ class View:
         parts = [p for p in kept.get("delovi") or [] if p.get("ukratko")]
         if parts:
             return {"vrsta": "deo", "do": parts[-1].get("do"), "ukratko": parts[-1]["ukratko"],
+                    "t_od": parts[-1].get("t_od"), "t_do": parts[-1].get("t_do"),
                     "tok": parts[-1].get("tok"), "ranije": [p["ukratko"] for p in parts[:-1]]}
         return None
 
