@@ -209,3 +209,7 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   `state_view._filed`): with the earlier copy set aside the page had no file of the archive and no "▶" beside a turn (the
   broadcast's video is private once it ends). The files the site's copy knows are shown, and each turn begun inside one
   has its place in it; a turn outside them has no link until the site has read that part.
+- **The whole day's reply has room** (24 Nov 2026): the first real call was cut off at 32,000 tokens (effort "high", 39 speakers
+  with their sentences), so that evening's summary and mail were Haiku's from the stretches, with the wrong line the change was
+  made for. Now 100,000 and "medium": tried by hand on that day, 152,000 tokens in and 20,000 out a call, two calls (a number not
+  in the transcript the first time), 5.5 minutes. A measure's name only when the chair said it in giving it.

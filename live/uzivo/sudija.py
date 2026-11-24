@@ -145,6 +145,8 @@ greši u imenima, brojevima i rečima. Oznaka reda: [HH:MM:SS] Ime (lista): teks
    prepisane SLOVO PO SLOVO, sa greškama prepisa, 8 do 60 reči ukupno, svaka posebno u listi. Samo u "oslonac" ide doslovan
    tekst.
 11. Odluke i glasanja samo kako ih je saopštio predsedavajući, ne kako ih poslanik u govoru pominje. Upozorenje NIJE mera.
+   Uz meru (opomena, oduzimanje reči) ime piši samo kad ga je predsedavajući izgovorio dok ju je izricao; inače "poslaniku
+   ili poslanici" bez imena i bez pogađanja roda.
    Glasanje je stavka u "odluke" sa poljem "glasanje": {{"za": n, "protiv": n, "uzdrzano": n, "nevazece": n,
    "nije_glasalo": n, "glasalo": n, "prisutno": n}}, samo ono što je izgovoreno, ostalo null; brojevi jednog glasanja se ne
    mešaju s drugim. "glasalo" je za + protiv + uzdržano (+ nevažeći). U "sta" nema brojeva glasova.
@@ -563,7 +565,9 @@ class Judge(threading.Thread):
         note = ""
         for _ in range(2):
             try:
-                s = reply_json(self.ask(WHOLE, user + note, 32000, "high", config.DAY_MODEL))
+                # 100,000 and "medium": on 24 Nov 2026 the reply was cut off at 32,000 with "high" (the reasoning counts), and the
+                # day fell back to the stretches; with these it took 20,000
+                s = reply_json(self.ask(WHOLE, user + note, 100000, "medium", config.DAY_MODEL))
             except Exception as exc:
                 log.warning("the whole day not written (%s)", exc)
                 break
