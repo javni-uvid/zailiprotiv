@@ -140,6 +140,19 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   group has them added to its share (`vreme.REPRESENTATIVE`), as the 15 minutes of the debate in detail are. Still
   not known: a reply let run past three minutes, one with no word of the chair's heard, two short replies in a row
   shown as one turn (`MERGE_SECONDS`); the Assembly said no figure that day to check the sum against.
+- **The time the chair says is where the count goes on from** (24 Nov 2026, the maintainer the same evening: the
+  groups' time is to be measured as carefully as who speaks). At 18:43:40 the chair gave the floor with "po pretresu,
+  sad ću vam reći vreme, 23 minuta 21 sekunda"; our count for that list stood at 3 minutes left and a quarter of an
+  hour later at "preko za 16 min", while the MP still spoke by the Assembly's clock: 20 minutes too much counted.
+  `vreme.told`: a piece of the chair's that gives one sitting MP the floor and says the time left (minutes with
+  seconds, or minutes after "još"/"preostalo"; three minutes at the least, no more than the group can have) sets
+  that group's count: what was said, less its turns since. The Assembly's own figure, so it stands over ours; the
+  row carries `receno` (when, how much). The other check found the same day, in the notes of 19 Nov ("Osamnaest
+  minuta imate još", the debate on the vice-presidents): by the notes' words, the group's speeches but for the
+  proposer's and the replies come to 100-116 minutes (150-130 words a minute) against 108 by the chair's word, so
+  the rule counts the right speeches; counted in seconds of the record it was far over, the placed speeches holding
+  the chair's interruptions and the hall's noise too. Open: how our seconds run over the Assembly's clock (which
+  stops when the microphone does), to be measured on the kept days.
 - **A measure an MP only speaks of is no step** (24 Nov 2026, the maintainer): the mail's rule (`mere.given`) holds for the
   page's steps too. On 19 Nov's 13 model's measures it keeps the eight given and drops the five not.
 - **A warning with its reason, by the Rules' list** (24 Nov 2026, the maintainer, of three ways shown to make "Šta se

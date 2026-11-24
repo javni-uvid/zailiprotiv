@@ -2434,6 +2434,29 @@ def test_a_reply_longer_than_two_minutes_is_not_the_groups_time():
     assert limit(asked, start + 2000, 30) is None
 
 
+def test_the_time_the_chair_says_is_where_the_groups_count_goes_on_from():
+    """24 Nov 2026, 18:43: "po pretresu, sad ću vam reći vreme, 23 minuta 21 sekunda" while our count stood at 3 minutes
+    left, and at "preko za 16 min" a quarter of an hour on."""
+    from uzivo.vreme import groups_time, told
+    start = 1795515829
+    people = [p for p in ROSTER.people if p.slug in ("petrovic-petar", "markovic-marko")]
+    a, b = people[0].group, people[1].group
+    said = {"p" + str(start + 5000): f"Dajem reč narodnom poslaniku {given_first(people[0].name)}. Samo se prijavite, po pretresu, "
+                                     "sad ću vam reći vreme, 23 minuta 21 sekunda.",
+            "p" + str(start + 5100): f"Reč ima {given_first(people[1].name)}, replika, dva minuta.",   # a reply's time: none
+            str(start + 5200): "Imali smo 23 minuta 21 sekunda i ništa nismo rekli.",                      # nobody given the floor
+            "p" + str(start + 5300): f"Reč ima {given_first(people[1].name)}, preostalo vam je 900 minuta."}  # more than it can have
+    got = told(said, people)
+    assert [(t, g, left) for t, g, left in got if g == a] == [(start + 5000, a, 23 * 60 + 21)]
+    turn = lambda at, sec, g: {"od": start + at, "do": start + at + sec, "sekundi": sec, "lista": g}
+    turns = [turn(100, 7000 - 2500, a), turn(5010, 600, a), turn(5700, 100, a), turn(5900, 300, b)]
+    g = groups_time(item=5, start=start, seats={a: 102, b: 140}, turns=turns, events=[], now=start + 7000, told=got)
+    mine = next(r for r in g["grupe"] if r["lista"] == a)
+    assert mine["ima"] - mine["potroseno"] == 23 * 60 + 21 - 600 and mine["receno"] == {"t": start + 5000, "sek": 1401}
+    other = next(r for r in g["grupe"] if r["lista"] == b)
+    assert other["potroseno"] == 300 and "receno" not in other
+
+
 def test_the_groups_time_runs_from_the_debates_opening():
     """24 Nov 2026: a point of order of 136 s between the move to the item and the debate's opening had been counted;
     and a decision's one debate ("jedinstveni pretres", art. 192) has no debate in detail after it."""

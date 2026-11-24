@@ -25,11 +25,37 @@ for every group:
   its chair's or representative's minutes more."""
 from __future__ import annotations
 
+import re
+
 TOTAL = 5 * 3600  # art. 97: the groups' time in all, the basic procedure
 REPRESENTATIVE = 20 * 60  # art. 96: each group's chair or representative, in the debate in principle, apart from TOTAL
 CHAIR_MORE = 15 * 60  # art. 158: each group's chair, in the debate in detail
 REPLY_OVER = 180  # seconds: a turn heard to be a reply or a point of order is none of the group's up to this long
 REPLY = 125  # seconds: a turn this long or shorter is taken for a reply or a point of order (two minutes, art. 103, 104)
+
+
+# The time left as the chair says it when giving the floor ("po pretresu, sad ću vam reći vreme, 23 minuta 21 sekunda"):
+# minutes with seconds, or minutes after "još"/"preostalo". The Assembly's own clock, so it is where the count goes on from.
+_TOLD = re.compile(r"\b(\d{1,3}) minut\w*,? (?:i )?(\d{1,2}) sekund|\b(?:još|preostal\w+|ostal\w+)(?: vam)?(?: je)? (\d{1,3}) minut", re.I)
+
+
+def told(said: dict[str, str], people: list) -> list[tuple[int, str, int]]:
+    """(when, the group, seconds left) each time the chair's words give one sitting MP the floor and say the time
+    left in the same piece. Nothing where two MPs are named, where the MP has no group, or where no time is said."""
+    from . import hronika
+    out = []
+    for k, text in said.items():
+        key = k.lstrip("p")
+        m = _TOLD.search(text) if key.isdigit() else None
+        if not m:
+            continue
+        given = hronika.floor(text, people, now_only=True)
+        if len(given) != 1 or not given[0].group:
+            continue
+        left = int(m.group(1)) * 60 + int(m.group(2)) if m.group(1) else int(m.group(3)) * 60
+        if left >= 180:  # under three minutes it is a reply's time, not the group's
+            out.append((int(key), given[0].group, left))
+    return sorted(out)
 
 
 def phase(events: list[dict], start: int) -> tuple[int, bool, bool]:
@@ -51,7 +77,7 @@ def phase(events: list[dict], start: int) -> tuple[int, bool, bool]:
 
 
 def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dict], events: list[dict],
-                now: int) -> dict | None:
+                now: int, told: list[tuple[int, str, int]] = ()) -> dict | None:
     """The groups' time in the debate of item `item`, moved to at `start`: {"tacka", "od", "pojedinosti",
     "zakljucen", "grupe": [{"lista", "mesta", "ima", "potroseno", "govora"}]}, the groups with most MPs first. None
     without groups or without a turn counted."""
@@ -70,5 +96,15 @@ def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dic
         return None
     rows = [{"lista": g, "mesta": n, "ima": round(TOTAL * n / whole) + (CHAIR_MORE if detail else REPRESENTATIVE),
              "potroseno": used[g][0], "govora": used[g][1]} for g, n in seats.items()]
+    for r in rows:
+        # The chair said how much the group has left (24 Nov 2026: 23 min 21 s said while our count stood at 3 min,
+        # and at "over by 16 min" a quarter of an hour later): from there on the count is what was said, less the
+        # group's turns since. The newest such word in this debate; one that says more than the group can have is none.
+        said = [(t, left) for t, g, left in told if g == r["lista"] and begun <= t <= now and left <= r["ima"]]
+        if said:
+            t0, left = said[-1]
+            since = sum(d["sekundi"] for d in turns if (d.get("lista") or "") == r["lista"] and d["od"] >= t0 - 5
+                        and d["sekundi"] > REPLY and not d.get("kratko"))
+            r["potroseno"], r["receno"] = r["ima"] - left + since, {"t": t0, "sek": left}
     rows.sort(key=lambda r: (-r["mesta"], r["lista"]))
     return {"tacka": item, "od": begun, "pojedinosti": detail, "zakljucen": closed, "grupe": rows}

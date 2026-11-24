@@ -258,7 +258,7 @@ class View:
         """The groups' time in the debate of the item under way (vreme.py), over every day of that debate: today's
         turns as listed, the earlier days' from their files (kept once read: a past day does not change)."""
         from .rok import short
-        from .vreme import REPLY_OVER, groups_time
+        from .vreme import REPLY_OVER, groups_time, told
         n, start = int(self.item.get("n") or 0), int(self.item.get("t") or 0)
         agenda = self._agenda()
         if not n or not start or not self.roster or not agenda or not any(
@@ -285,7 +285,12 @@ class View:
                 cache[f.stem] = (mark(past, self._said_load(f.stem)), self._events_load(f.stem))
             turns += cache[f.stem][0]
             events += cache[f.stem][1]
-        return groups_time(item=n, start=start, seats=seats, turns=turns, events=events, now=int(self.last_frame or time.time()))
+        heard = self._memo.setdefault("receno", {"n": -1, "nadjeno": []})  # the time left as the chair said it, today
+        if heard["n"] != len(self.said):
+            sitting = [p for p in self.roster.people if p.slug in self.roster.current and p.group in seats]
+            heard["n"], heard["nadjeno"] = len(self.said), told(self.said, sitting)
+        return groups_time(item=n, start=start, seats=seats, turns=turns, events=events, now=int(self.last_frame or time.time()),
+                           told=heard["nadjeno"])
 
     @staticmethod
     def _today(done: list[dict], current: dict, day: str) -> None:
