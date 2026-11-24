@@ -232,3 +232,4 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   under its button, where "Isključi obaveštenja" alone stays. They are under "Kako ovo radi", since principle 5 wants the
   page to say what loads when and what of a reader is kept. The agenda is closed until pressed; what the reader opens
   stays open when the part is replaced. Changes the agenda standing open (22 Nov).
+  "Provereno pre …" stands only under something checked: a speaker, a countdown, the break's card (24 Nov).

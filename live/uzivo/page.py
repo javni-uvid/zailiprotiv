@@ -100,14 +100,18 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     if snap["stanje"] == "govori" and cur:
         head, box, said = _speaker(cur, cyr=cyr, site=site, tz=tz)
         out.append(head + '</section><section class="sp">' + box)
+        above = head + box
     else:
+        above = ""
         if snap["stanje"] == "nema_prenosa":  # the line on top says so ("Ne zaseda")
-            out.append(countdown(snap, cyr=cyr, tz=tz))
-        else:
-            if snap["stanje"] != "nepoznato":
-                out.append(f'<p class="state">{t("none")}</p>')
-        out.append('</section><section class="sp">' + _pause(snap, cyr=cyr, tz=tz, site=site))
-    if snap["provereno"]:
+            above = countdown(snap, cyr=cyr, tz=tz)
+        elif snap["stanje"] != "nepoznato":
+            above = f'<p class="state">{t("none")}</p>'
+        out.append(above)
+        pause = _pause(snap, cyr=cyr, tz=tz, site=site)
+        out.append('</section><section class="sp">' + pause)
+        above += pause
+    if snap["provereno"] and above:  # when it was checked, of what stands above it; with nothing there it says nothing
         out.append(f'<p class="meta" id="checked">{t("checked")} <span>0</span> {t("s")}</p>')
     if not said and snap.get("bez_potpisa"):  # nobody's caption on: the chair's words (or the hall's), named as no one's
         u = snap["bez_potpisa"]
