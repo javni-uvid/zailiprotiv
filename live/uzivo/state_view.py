@@ -22,6 +22,17 @@ class View:
                 "od": int(t["start"]), "do": int(t["seen"]), "sekundi": int(t["seen"] - t["start"]),
                 "video": t.get("video") or "", "snimak": rec, **({"izvor": t["izvor"]} if t.get("izvor") else {})}
 
+    def _placed(self, d: dict) -> dict:
+        """A turn with no place of its own in the broadcast (found by the chair's words, the voice or a caption of
+        seconds) given the one its time has: the newest frame's place, counted back by the seconds. Only in the video
+        of that frame, and not before it began (24 Nov 2026, the maintainer: "da ljudi mogu da se vrate na taj
+        trenutak")."""
+        p = self.place
+        if d.get("snimak") is not None or not p:
+            return d
+        sec = int((p["sq"] - config.RECORDING_LEAD) * p["seg"] - (p["t"] - d["od"]))
+        return {**d, "video": p["video"], "snimak": sec} if sec >= 0 else d
+
     def _last_day(self) -> tuple[str, list[dict]]:
         """The latest earlier day with turns: its list stays on the page until the next sitting's broadcast is on."""
         if not self.days or not self.days.exists():
@@ -106,6 +117,9 @@ class View:
             # A turn read in a single frame is shown while it lasts, and left out of the day's list after.
             done = [self._out(t) for t in self._named(
                 [t for t in self.turns if counted(t) and not (self.open and t is self.turns[-1])])]
+            if self.status != NO_STREAM:
+                done = [self._placed(d) for d in done]
+                current = self._placed(current) if current else None
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
             recorded, parts = False, []
             rec = self.recording

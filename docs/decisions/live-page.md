@@ -235,3 +235,7 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   page to say what loads when and what of a reader is kept. The agenda is closed until pressed; what the reader opens
   stays open when the part is replaced. Changes the agenda standing open (22 Nov).
   "Provereno pre …" stands only under something checked: a speaker, a countdown, the break's card (24 Nov).
+- **A way back to every turn** (24 Nov 2026, the maintainer): "▶ snimak" stood only by turns whose caption was read, as they
+  had a place in the broadcast; a turn found by the chair's words, the voice or a caption of seconds gets the one its
+  time has (`View._placed`), in the video on now. Gone with the broadcast, when YouTube's video goes private; the day's
+  recording in the archive has its own.
