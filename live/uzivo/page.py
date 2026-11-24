@@ -1199,15 +1199,13 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         # our own picture of the moment (picture.py) with ▶; a press loads the player, playing, and is counted.
         # Nothing from YouTube loads before it: the page opens faster on a phone.
         # What it shows (24 Nov 2026, the maintainer's choice, in place of the picture for a shared link): our mark and
-        # name; while the speaker is known, the script puts the portrait, name and list the part has (live.js, poster).
+        # name, always (the speaker stood here for minutes: the maintainer, the same day, "skloni to ko govori").
         word = ('<b class="fx-word"><span class="m-z">За</span> или <span class="m-p">Против</span></b>' if cyr else
                 '<b class="fx-word"><span class="m-z">Za</span> ili <span class="m-p">Protiv</span></b>')
         text = t("play_live")
         button = (f'<button type="button" class="play facade" data-yt="{escape(live)}" data-t="0" data-e="mikrofon.pusti" '
                   f'data-text="▶ {text}" aria-label="{text}">'
                   f'<span class="fx fx-calm" aria-hidden="true">{ARC}{word}<span class="fx-live"><i></i>{t("status_live")} · {t("fx_where")}</span></span>'
-                  f'<span class="fx fx-sp" aria-hidden="true"><img class="fx-ph" alt="" width="94" height="131" hidden>'
-                  f'<span class="fx-tx"><span class="fx-live"><i></i>{t("fx_now")}</span><b class="fx-who"></b><span class="fx-side"></span></span></span>'
                   f'<span class="fx-pill" aria-hidden="true">▶ {text}</span></button>')
         note = ""  # what loads and when is told under "Kako ovo radi" (24 Nov 2026, the maintainer: fewer texts)
         # the speaker on the picture, written by the script from the part while the broadcast plays (22 Nov 2026)

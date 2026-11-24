@@ -215,7 +215,7 @@ TEXT = {
     "og_foot_pause": "ukratko do pauze i obaveštenje kad se nastavi",
     "og_foot_then": "ko je govorio, šta se desilo i snimak svakog govora",
     "fx_where": "iz Skupštine",
-    "fx_now": "Sada govori",
+    "fx_now": "Sada govori",  # the shared link's picture (picture.py)
     "listen_live": "Slušaj samo zvuk",
     "listen_live_note": "Samo zvuk je naš: svira i kad je ekran zaključan, i kasni oko pola minuta za prenosom.",
     "presides": "Predsedava",

@@ -484,7 +484,7 @@ def test_the_player_is_a_button_until_clicked():
     assert 'data-yt="abcdefghijk"' in live and 'data-e="mikrofon.pusti"' in live and "slika.png" not in live and "fx-calm" in live
     assert "<iframe" not in live and "youtube" not in live
     assert "Против" in player({**day, "stanje": SPEAKING}, cyr=True, live="abcdefghijk")
-    assert " src=" not in live  # the portrait is put by the script, from the part the page already has
+    assert " src=" not in live and "fx-sp" not in live  # our mark alone, whoever speaks
     assert player({**day, "danas": []}, cyr=False) == ""
     frag = fragment(day, cyr=False, site="", tz=TZ)
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in frag  # each turn opens in the player
