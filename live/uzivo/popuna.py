@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from . import hronika
-from .state_base import SURE_FRAMES, _write, write_text
+from .state_base import REJOIN, REJOIN_WORDS, SURE_FRAMES, _write, write_text
 
 MISSING = 0.4  # a turn is missing when less than this share of it is there: the chair's own words before the next floor
 SHORT_OF = 45  # and at least these seconds of a turn that is there, for it to be lengthened
@@ -57,6 +57,18 @@ def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[di
                         "seg": None})
         done.append(f"{who.name}: {int(have)} s -> {int(gap)} s")
     out.sort(key=lambda t: t["start"])
+    kept: list[dict] = []  # the same speaker, speech going on between and no floor to another: one turn (as Tracker._went_on)
+    for t in out:
+        a = kept[-1] if kept else None
+        gap = t["start"] - a["seen"] if a else 0
+        if a and a["key"] == t["key"] and a.get("izvor") and 8 <= gap <= REJOIN:
+            words = sum(len(v.split()) for k, v in said.items() if k.lstrip("p").isdigit() and a["seen"] - 5 <= int(k.lstrip("p")) < t["start"])
+            if words >= REJOIN_WORDS * gap and not any(a["seen"] - 5 < f[0] < t["start"] and f[2].key != t["key"] for f in given):
+                done.append(f'{t["name"]}: dva dela u jedan, {gap:.0f} s izmedju')
+                a["seen"] = max(a["seen"], t["seen"])
+                continue
+        kept.append(t)
+    out = kept
     for a, b in zip(out, out[1:]):  # no turn runs into the next
         if a["seen"] > b["start"] and a["key"] != b["key"]:
             done.append(f'{a["name"]}: kraj {a["seen"] - b["start"]:.0f} s ranije')

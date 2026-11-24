@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted
+from .state_base import SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, REJOIN, REJOIN_WORDS
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -360,6 +360,16 @@ class Tracker(Said, Chronicle, View):
                 if how == "glas":
                     cur["po_glasu"] = True
                     cur["start"] = min(cur["start"], start) if start > cur["start"] - 30 else cur["start"]
+            elif not self.open and cur and cur["key"] == person.key and self._went_on(cur, start):
+                # a turn ended by a voice not recognised (or the chair's), the speaker going on: the same turn
+                # (24 Nov 2026, 15:47: 139 s of Aleksandra Ilić's stood as nobody's, her speech cut in two)
+                cur["seen"] = max(cur["seen"], seen)
+                if how == "glas":
+                    cur["po_glasu"] = True
+                if how == "potpis":
+                    cur["izvor"] = "potpis"
+                    cur.setdefault("natpis", start)
+                self.open = True
             else:
                 if self.open and cur:
                     cur["seen"] = min(cur["seen"], max(cur["start"], start))
@@ -398,6 +408,19 @@ class Tracker(Said, Chronicle, View):
             cur["start"] = min(began, cur["seen"])
             self._snap = None
             self._save()
+
+    def _went_on(self, turn: dict, start: float) -> bool:
+        """Whether speech went on from a turn's end to `start` (the words written down between), no floor given to
+        anyone else: then the same speaker named again is the same turn. Called with the lock held."""
+        gap = start - turn["seen"]
+        if not (turn.get("izvor") and 8 <= gap <= REJOIN):
+            return False
+        said = sum(len(v.split()) for k, v in self.said.items()
+                   if k.lstrip("p").isdigit() and turn["seen"] - 5 <= int(k.lstrip("p")) < start)
+        if said < REJOIN_WORDS * gap:
+            return False
+        return not any(e.get("vrsta") == "Reč ima" and turn["seen"] - 5 < e["t"] < start and e.get("url") != turn["slug"]
+                       for e in self.events[-60:])
 
     def unheard(self, at: float) -> None:
         """Another voice (the chair's) has the floor from `at`: a turn found without a caption ends there."""

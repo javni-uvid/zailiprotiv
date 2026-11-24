@@ -1962,6 +1962,27 @@ def test_a_turn_found_without_a_caption_has_its_place_in_the_broadcast():
     assert t.snapshot(now + 100)["danas"][0]["snimak"] is None
 
 
+def test_a_speaker_named_again_after_speech_that_went_on_is_the_same_turn():
+    """24 Nov 2026, 15:47: the voice of an MP was taken for another's, and 139 s of her speech were nobody's."""
+    now = 1795519000.0
+    def tracker(words, floor=False):
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        t.observe(None, now=now)
+        marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+        t.heard(marko, "potpis", now + 5, now + 5)
+        t.observe(None, now=now + 100)
+        t.unheard(now + 100)
+        t.said = {f"p{int(now + 105 + 10 * i)}": "rec " * words for i in range(13)}
+        t.events = [{"t": now + 150, "vrsta": "Reč ima", "tekst": "Petrović Petar", "izvor": "prepis", "url": "petrovic-petar"}] if floor else []
+        t.heard(marko, "potpis", now + 240, now + 240)
+        return t
+    t = tracker(20)
+    assert len(t.turns_now()) == 1 and t.turns_now()[0]["seen"] >= now + 240 and t.open_turn()  # it went on: one turn
+    assert len(tracker(4).turns_now()) == 2  # silence, or the chair's few words: not his time
+    assert len(tracker(20, floor=True).turns_now()) == 2  # the floor was given to another between
+
+
 def test_a_voice_not_recognised_does_not_end_a_turn():
     """24 Nov 2026, 14:02: Miroslav Andrić's voice was on the list and not recognised; 80 s of his stood as 0 s."""
     now = 1795519000.0
@@ -1993,6 +2014,10 @@ def test_the_days_turns_are_filled_from_the_chairs_words_by_one_rule():
     assert by == {"Andrić Miroslav": 80, "Đajić Zoran": 580}  # the one of 0 s lengthened, the one missing written
     assert [round(t["seen"] - t["start"]) for t in out if t["name"] == "Bakić Jovo"] == [70, 180]  # a whole one left as it was
     assert len(done) == 2 and fill(out, said, people)[1] == []  # a second run does nothing
+    cut_two = [turn("bakic jovo", "Bakić Jovo", 5000, 5100), turn("bakic jovo", "Bakić Jovo", 5240, 5400)]
+    spoke = {str(5100 + 10 * i): "rec " * 20 for i in range(14)}
+    assert [round(t["seen"] - t["start"]) for t in fill(cut_two, spoke, people)[0]] == [400]  # one turn, speech between
+    assert len(fill(cut_two, {}, people)[0]) == 2
     mixed = [turn("bakic jovo", "Bakić Jovo", 5000, 5100), turn("andric miroslav", "Andrić Miroslav", 5060, 5200)]
     cut, said_ = fill(mixed, {}, people)
     assert [round(t["seen"]) for t in cut] == [5060, 5200] and len(said_) == 1  # none runs into the next

@@ -126,3 +126,6 @@ presided (not done).
 - **Voices of 19 November** (24 Nov 2026): from the notes lined up with that day's recording (`govor`), 16 MPs not known
   before; the samples of the windows within each turn, the stray ones left out. A turn held out and named by the others'
   voices: 126 right, none wrong, 3 undecided (44 MPs, 144 turns of the three days). `/data/glasovi.npz` then 51 MPs.
+- **The same speaker named again after speech that went on is the same turn** (24 Nov 2026, the cycle's finding: Aleksandra
+  Ilić's speech cut in two, 139 s nobody's): within 200 s, at least 1.2 words a second written down between, no floor given to
+  another (`Tracker._went_on`). A voice not recognised or the chair's had ended it.
