@@ -129,3 +129,20 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   `_write`. The site's files and the counter are asked by `mreza.py`. Left to their own parts: the broadcast, the
   Assembly's pages, Whisper's server, the bucket, the voices' numbers. A made-up day's outputs compared before and
   after: the same.
+- **What the tracker is told is kept, to go through a day again** (24 Nov 2026, the maintainer: "uzmi najbolji
+  pristup", after ten rules for who speaks went live in a day, each on one to three examples, and the measure
+  (`zailiprotiv tacnost`) could score only a finished record: nothing the rules decide from was kept). `dnevnik.py`:
+  every call that takes something in (a frame read, a floor given by the chair's words, a voice, the broadcast's
+  clock, a piece of the transcript, a step) is a line of `/data/ulazi/<day>.jsonl` with its second, written before
+  the call runs, by a wrapper put on in `main.py`; no other part of the service knows of it, and a line that cannot
+  be written is never in the call's way. `python -m uzivo.dnevnik <day> <out.json>` tells a new tracker the day's
+  lines over again, the clock at each line's second, and writes the record the rules as they now are come to, which
+  `zailiprotiv tacnost <day> --zapis` scores once the day's notes are out. Only on the service's computer, never
+  served; thirty days kept; `ULAZI_CUVAJ=0` keeps none. Appended a line at a time, unlike the files read back whole
+  (a line torn by a stop is skipped). What it cannot show: the voices and the chair's words were found beside the
+  tracker as it then was, so a rule that would have made them find something else is not seen. The pictures of the
+  captions are not kept (a rule for reading them cannot be tried again yet). **The order of work it serves, the
+  maintainer's: no rule for who speaks is changed or put live during a sitting, but for a false claim about a person
+  on the page; a rule is told a kept day again and scored before it goes live.** Seen the same day in the frames:
+  the broadcast shows a speaker's caption only now and then (some 15 s, minutes apart; none in two stretches of four
+  minutes watched), so a turn cannot end where the caption does.

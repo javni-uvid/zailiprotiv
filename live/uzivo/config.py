@@ -142,6 +142,9 @@ LISTEN_PUBLIC = os.environ.get("SLUSAJ_JAVNO", "0").strip() == "1"
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 VERSION = os.environ.get("VERZIJA", "").strip()  # the commit the image was built from (mikrofon.ps1; Dockerfile)
 FRAME_PATH = os.environ.get("FRAME_PATH", "/tmp/uzivo/frame.jpg")
+# What the tracker is told (frames read, floors given, voices), a line each, kept beside the day's files so a day can be
+# gone through again by new rules (dnevnik.py); "0" keeps none.
+KEEP_INPUTS = os.environ.get("ULAZI_CUVAJ", "1").strip() == "1"
 STATE_PATH = os.environ.get("STATE_PATH", "/data/stanje.json")  # today's turns, kept across restarts
 
 
