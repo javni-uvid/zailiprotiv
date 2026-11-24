@@ -1785,6 +1785,9 @@ def test_the_speaker_stands_beside_the_small_picture_and_the_picture_stays_on_to
     archive = player(day, cyr=False, tz=TZ)
     assert 'class="mini-x"' in archive and "on-air" not in archive  # the archive's speaker is not the part's
     assert ".player:not(.mini) .on-air { display: none; }" in CSS  # nothing over the picture
+    # on a phone pinned as wide as the screen, the speaker in one line under it (24 Nov 2026, the maintainer)
+    assert 'matchMedia("(max-width: 720px)")' in SCRIPT and ".player.mini .screen { grid-column: 1 / -1; width: 100%" in CSS
+    assert '<span class="oa-rk">' in live
     assert "function onAir()" in SCRIPT and "function mini(on)" in SCRIPT and ".player.mini .stage { position: fixed" in CSS
 
 

@@ -239,3 +239,8 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   had a place in the broadcast; a turn found by the chair's words, the voice or a caption of seconds gets the one its
   time has (`View._placed`), in the video on now. Gone with the broadcast, when YouTube's video goes private; the day's
   recording in the archive has its own.
+- **The picture pinned across the screen on a phone** (24 Nov 2026, the maintainer, after seeing skupstina.live's: "možemo"):
+  under 720 px it keeps its width and is pinned at the top as soon as its top edge reaches it, so it neither shrinks nor
+  jumps; a line under it says the speaker (the list by its colour), the clock and the two minutes where heard, with the transcript's
+  one line and ×. On a wide screen the small picture stays. YouTube's own controls stay as they are (no overlay of
+  ours over its player).

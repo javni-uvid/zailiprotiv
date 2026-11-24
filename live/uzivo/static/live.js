@@ -53,6 +53,8 @@
     put(oa.querySelector("b"), w.textContent.trim());
     put(oa.querySelector(".oa-side"), side ? side.textContent.trim() : "");
     put(oa.querySelector(".oa-clk"), hms(seconds(k)));
+    var rk = d.querySelector(".sp-head .rk");  // a reply's two minutes, where heard
+    put(oa.querySelector(".oa-rk"), rk ? rk.textContent.trim().split("·")[0].trim() : "");
   }
   // The line under the picture (22 Nov 2026): the part's newest lines of the automatic transcript, each shown the
   // page's delay after it first came (the viewer's player is behind the broadcast), the last two, while YouTube's
@@ -176,6 +178,8 @@
   window.addEventListener("hashchange", unfold); unfold();
   // The picture kept on top while the page is read: once it plays and its place has gone up out of sight, it stands
   // in a band at the top, small, the speaker beside it; its place keeps its height. × puts it back until the next ▶.
+  // On a phone (24 Nov 2026, the maintainer) the picture stays as wide as the screen, pinned as soon as its top edge
+  // reaches the top, so nothing jumps, with the speaker in one line under it.
   var player = stage && stage.parentNode, back = stage && stage.querySelector(".mini-x"), seen = true, away = false;
   function mini(on) {
     if (!player || on === player.classList.contains("mini")) return;
@@ -183,9 +187,16 @@
     player.classList.toggle("mini", on);
     back.hidden = !on;
   }
+  var phone = window.matchMedia && window.matchMedia("(max-width: 720px)"), top = null;
   function check() { mini(!seen && !away && !!stage.querySelector("iframe, video")); }
   if (player && "IntersectionObserver" in window) {
-    new IntersectionObserver(function (es) { seen = es[0].isIntersecting || es[0].boundingClientRect.top > 0; check(); }).observe(player);
+    // a line at the player's top: out of sight upwards is when its top edge has gone, the whole of it on a wide screen
+    top = document.createElement("div");
+    top.className = "pin";
+    player.insertBefore(top, player.firstChild);
+    var gone = function (r, what) { return !r.isIntersecting && r.boundingClientRect[what] <= 0; };
+    new IntersectionObserver(function (es) { if (phone && phone.matches) { seen = !gone(es[0], "top"); check(); } }).observe(top);
+    new IntersectionObserver(function (es) { if (!(phone && phone.matches)) { seen = es[0].isIntersecting || es[0].boundingClientRect.top > 0; check(); } }).observe(player);
     document.addEventListener("click", function (e) {
       if (!e.target.closest) return;
       if (e.target.closest(".mini-x")) { away = true; mini(false); return; }

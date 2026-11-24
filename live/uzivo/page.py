@@ -1134,7 +1134,7 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
                   f'<span>▶ {t("play_live")}</span></button>')
         note = ""  # what loads and when is told under "Kako ovo radi" (24 Nov 2026, the maintainer: fewer texts)
         # the speaker on the picture, written by the script from the part while the broadcast plays (22 Nov 2026)
-        onair = '<p class="on-air" hidden aria-hidden="true"><b></b><span class="oa-side"></span><span class="oa-clk"></span></p>'
+        onair = '<p class="on-air" hidden aria-hidden="true"><b></b><span class="oa-side"></span><span class="oa-clk"></span><span class="oa-rk"></span></p>'
         # the line under the picture (22 Nov 2026): the script writes the part's newest lines in, after the delay
         onair += (f'<div class="cc" hidden aria-hidden="true" data-delay="{int(config.CAPTION_DELAY)}"><p class="cc-t"><span></span></p>'
                   f'<p class="cc-n">{t("cc_note")}</p></div>')
