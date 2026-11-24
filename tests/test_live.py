@@ -2080,6 +2080,11 @@ def test_the_name_before_the_word_and_a_measure_only_spoken_of():
     assert got("Imamo povredu poslovnika, Vera Radović, je li po povredi?") == ["radovic-vera"]
     assert got("Povredu poslovnika je počinio Vera Radović.") == []  # the name not right after it
     assert got("Da li želite prvo dajem Aleksandru Mirkoviću?") == ["mirkovic-aleksandar"]
+    # the speaker announced with no "reč ima" (24 Nov 2026: Ahmedin Škrijelj's speech of five minutes stood as nobody's)
+    people += [Person("e", "Škrijelj Ahmedin", "skrijelj-ahmedin", ""), Person("f", "Lesjak Marija", "lesjak-marija", "")]
+    assert got("Imamo još jednog govornika za danas, to je gospodin narodni posljednik Ahmedin Škrijelj.") == ["skrijelj-ahmedin"]
+    assert got("Idemo dalje, sljedeći govornik, odnosno govornica je profesor doktor Marija Lesjak.") == ["lesjak-marija"]
+    assert got("Prethodni govornik je rekao da Ahmedin Škrijelj nije u pravu.") == []  # said of a speaker, not an announcement
     assert got("Zlatko Kokanović, reč o kojoj govorim nije ta.") == [] and got("Zlatko Kokanović je rekao reč.") == []
     assert given("Ja vam izričem opomenu, imali ste...") and given("Izričajam opomenu.")
     assert not given("Zato ste mu dali opomenu, izrekli ste je.") and not given("vi ste njega opomenuli pa ste ga opomenuli i drugi put")

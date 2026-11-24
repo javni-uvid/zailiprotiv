@@ -88,6 +88,9 @@ _TITLE = r"(?=(?:narodn\w*|poslani\w*|kolega|kolegi\w*|gospodine|gospođo|gospod
 _FLOOR = re.compile(r"(?=\b(?:(?<![^\W_])(?<!\S)(?:^)ima " + _TITLE + r"|reč ima|ima reč|dajem reč|reč dajem|pravo na repliku(?: ima)?|rečima[,:]? " + _TITLE
                     + r"|replik\w*[,:]? (?:ima )?" + _TITLE + r"|povreda poslovnika[,:]? (?:reč ima |ima reč )?" + _TITLE
                     + r"|izvolite[,:]? " + _TITLE + r"|sledeći (?:je |govornik |na listi )*" + _TITLE
+                    # the speaker announced with no "reč ima" (24 Nov 2026: "Imamo još jednog govornika za danas, to je gospodin
+                    # narodni poslanik Ahmedin Škrijelj"; "Sledeći govornik, odnosno govornica je prof. dr Marija Lesjak")
+                    + r"|(?:još jedn\w+|slj?edeć\w+|naredn\w+) govorni(?:k|ka|ca)(?: za danas)?,? (?:odnosno govornica )?(?:to )?je (?:(?:prof|dr|doktor|profesor)\w*\.? )*(?=\w)"
                     + r")\b([^.!?]{0,90}))")
 
 
