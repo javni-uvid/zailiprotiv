@@ -66,6 +66,7 @@ class Tracker(Said, Chronicle, View):
         self.roster: Roster | None = None  # the site's list of MPs, to name turns read before it knew them
         self.events: list[dict] = []  # the day's steps, a line each (hronika.py)
         self.item: dict = {}  # the agenda item the chair last moved to, as heard: {"n", "t"}
+        self.lines: tuple[str, list] = ("", [])  # the line on each speech of the day (rezimei.py): (day, as kept)
         self.summary: tuple[str, dict] = ("", {})  # the model's summaries of the day (sudija.py): (day, as kept)
         try:
             kept_item = Path(path).parent / "tacka.json" if path else None
@@ -107,6 +108,12 @@ class Tracker(Said, Chronicle, View):
         """The model's summaries of a day (sudija.py): its stretches and the day, as kept in /data/sazetak/."""
         with self._lock:
             self.summary = (day, kept)
+            self._snap = None
+
+    def use_lines(self, day: str, kept: list) -> None:
+        """The line on each speech of a day (rezimei.py)."""
+        with self._lock:
+            self.lines = (day, kept)
             self._snap = None
 
     def summary_of(self, day: str) -> dict:

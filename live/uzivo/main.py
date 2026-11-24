@@ -46,6 +46,9 @@ async def lifespan(_: FastAPI):
     hronika.Watcher(tracker, _stop).start()
     if sudija.on():  # the model tells the day's steps and sums the day up (sudija.py); no key, no calls
         sudija.Judge(tracker, _stop, bell=bell, mailer=mailer).start()
+        if config.SPEECH_LINES:  # a line on each speech when it ends (rezimei.py)
+            from . import rezimei
+            rezimei.Writer(tracker, _stop).start()
     yield
     _stop.set()
 

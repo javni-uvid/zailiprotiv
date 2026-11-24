@@ -2564,3 +2564,53 @@ def test_the_day_is_summed_up_by_the_stronger_model_from_the_whole_transcript(tm
     assert j._whole(rows, turns) is None  # the stretches tell the day
     from uzivo import page as page_
     assert page_._model({"model": "claude-opus-5-5"}) == "Claude Opus" and page_._model({}) == "Claude Haiku"
+
+
+def test_a_speech_that_has_ended_gets_its_topic_checked_twice(tmp_path, monkeypatch):
+    """24 Nov 2026, the maintainer: a line by Haiku under each speech when it ends, the topic only; what it rests on
+    must be in the speech, a second call judges it, and one that fails twice is left out."""
+    from uzivo import rezimei, sudija
+    from uzivo import page as page_
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    base = 1795082400
+    t.day = t._day(base)
+    words = "Govorim o sastavu odbora i o tome ko u njima sedi, jer to je važno za kontrolu vlasti u ovoj zemlji, i zato pitam ko je o tome odlučio danas."
+    t.say(base + 10, words)
+    speech = {"ime": "Jović Jova", "od": base + 5, "do": base + 200, "sekundi": 195, "lista": "Lista", "grupa": "Lista", "uloga": "", "adresa": ""}
+    short = {**speech, "ime": "Kratki Kosta", "od": base + 205, "do": base + 225, "sekundi": 20}
+    snap = {"dan": t.day, "ranije": False, "snimak": False, "danas": [short, speech]}
+    monkeypatch.setattr(t, "snapshot", lambda now=None: snap)
+    monkeypatch.setattr(rezimei.prepis, "waiting", lambda: [])
+    answers, asked = [], []
+
+    def ask(system, user):
+        asked.append(system)
+        if system is rezimei.CHECK:
+            return json.dumps({"tacno": answers.pop(0), "razlog": "pretpostavlja"})
+        return json.dumps({"rezime": "O sastavu odbora.", "oslonac": "Govorim o sastavu odbora i o tome ko u njima sedi"})
+
+    w = rezimei.Writer(t, threading.Event(), ask=ask)
+    assert w.due(snap, base + 210, []) == []  # ended ten seconds ago: not yet
+    assert w.due(snap, base + 260, [(base + 100, 5, None)]) == []  # its sound still waits to be written down
+    answers[:] = [False, True]
+    w.step(now=base + 300)
+    assert [k["rezime"] for k in w.kept] == ["O sastavu odbora."] and asked.count(rezimei.LINE) == 2
+    assert rezimei.shown(w.kept, speech) == "O sastavu odbora." and rezimei.shown(w.kept, short) == ""
+    asked.clear()
+    w.step(now=base + 400)  # kept: not asked again; the short speech never
+    assert asked == []
+    stored = (tmp_path / "rezimei" / f"{t.day}.json").read_text(encoding="utf-8")
+    assert "Govorim o sastavu" not in stored  # the transcript's sentence is never kept
+
+    for bad in ("Govori o odborima.", "O odboru 5.", "O „odboru“.", "O " + "reč " * 25):
+        w2 = rezimei.Writer(t, threading.Event(), ask=lambda s, u, bad=bad: json.dumps({"rezime": bad, "oslonac": words[:60], "tacno": True}))
+        assert w2.line(words) == ("", True), bad
+    w3 = rezimei.Writer(t, threading.Event(), ask=lambda s, u: json.dumps({"rezime": "O odborima.", "oslonac": "ovo nikad nije rečeno ovde", "tacno": True}))
+    assert w3.line(words) == ("", True)
+
+    html = page_.fragment({"stanje": "nepoznato", "provereno": base + 900, "sada": None, "ranije": False, "dan": t.day, "dnevni_red": None,
+                           "hronika": [], "sazetak": None, "danas": [{**speech, "rezime": "O sastavu odbora."}]},
+                          cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<p class="rz">O sastavu odbora.</p>' in html and "Claude Haiku" in html
+    assert html.index("Svi govori, redom") < html.index("sub\">Ko je koliko") if "Ko je koliko" in html else True

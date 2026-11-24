@@ -110,6 +110,7 @@ TEXT = {
     "br_resume": "Nastavak po najavi u %1",
     "br_measures": "Mere predsedavajućeg",
     "br_src": "Pasus je napisao model (Claude Haiku) iz automatskog prepisa zvuka, ne iz stenograma: može da pogreši i nije citat. Glasanja je pročitao model, a prikazuju se samo kad se brojevi sabiraju. Mere broji program iz koraka dana, prepoznatih automatski. Kad Skupština objavi stenografske beleške, one su izvor.",
+    "rz_src": "Temu ispod govora napisao je model (Claude Haiku) iz automatskog prepisa tog govora, kad se govor završi: o čemu je govor, ne šta je rečeno. Rečenica iz koje se tema vidi mora da stoji u prepisu, a model je još jednom proverava; može da pogreši i nije citat. Govor bez teme: nije prošla proveru ili je kraći od pola minuta. Zvaničan tekst je stenogram Skupštine.",
     "nt_res": "Sednica je nastavljena",
     "nt_res_body": "Pauza je gotova. Prenos uživo i ko sada govori u Skupštini.",
     "nt_sum": "Sažetak dana je spreman",

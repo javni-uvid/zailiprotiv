@@ -90,10 +90,13 @@ _RULES = """PRAVILA (obavezna)
    inače ga izostavi.
 7. Jezik: srpski, latinica, jednostavne rečenice."""
 
+# A stretch's summary lists no speakers (24 Nov 2026): each speech has its own line (rezimei.py)
+_STRETCH_RULES = _RULES[:_RULES.index("3. Isto pravilo")] + "3. Ne praviš spisak govornika i ne prepričavaš pojedine govore: to je posebno.\n" + _RULES[_RULES.index("4. Bez navodnika"):]
+
 SUMMARY = f"""Pišeš sažetak dela sednice Narodne skupštine Srbije iz AUTOMATSKOG prepisa (Whisper). Prepis greši u
 imenima, brojevima i rečima. Oznaka reda: [HH:MM:SS] Ime (lista): tekst; "{CHAIR}" je predsedavajući ili sala.
 
-{_RULES}
+{_STRETCH_RULES}
 8. "tok": šta je Skupština radila, hronološki: tačke dnevnog reda, pretres, glasanja i odluke (samo kako ih je saopštio
    predsedavajući, ne kako ih poslanik u govoru pominje; sa brojevima kako su
    saopšteni), pauze, mere predsedavajućeg (opomena, oduzimanje reči, udaljenje; upozorenje NIJE mera), svaka stavka
@@ -106,7 +109,7 @@ imenima, brojevima i rečima. Oznaka reda: [HH:MM:SS] Ime (lista): tekst; "{CHAI
 
 IZLAZ: samo JSON, bez ikakvog drugog teksta:
 {{"od": "HH:MM", "do": "HH:MM", "ukratko": "2 do 4 rečenice: šta je Skupština u ovom delu radila i odlučila",
- "tok": [{{"vreme": "HH:MM", "sta": "...", "glasanje": null}}], "govornici": [{{"ime": "...", "lista": "...", "o_cemu": "..."}}]}}"""
+ "tok": [{{"vreme": "HH:MM", "sta": "...", "glasanje": null}}]}}"""
 
 DAY = f"""Pišeš sažetak celog dana sednice Narodne skupštine Srbije iz sažetaka njegovih delova, napisanih iz
 AUTOMATSKOG prepisa. Ne dodaješ ništa čega nema u tim sažecima.
@@ -124,7 +127,7 @@ IZLAZ: samo JSON, bez ikakvog drugog teksta:
  "odluke": [{{"vreme": "HH:MM", "sta": "odluka ili izbor, bez brojeva glasova", "glasanje": null}}],
  "tok": [{{"vreme": "HH:MM", "sta": "..."}}],
  "govornici": [{{"ime": "...", "lista": "...", "o_cemu": "jedna rečenica, do 35 reči, za ceo dan"}}]}}
-"tok" ima najviše 20 stavki; u "govornici" je svaki govornik iz delova, jednom, redom prvog javljanja."""
+"tok" ima najviše 20 stavki; u "govornici" je svaki govornik iz delova i iz spiska govora, jednom, redom prvog javljanja."""
 
 
 WHOLE = f"""Pišeš sažetak celog dana sednice Narodne skupštine Srbije iz AUTOMATSKOG prepisa (Whisper) celog dana. Prepis
@@ -615,9 +618,13 @@ class Judge(threading.Thread):
                 return
             parts = [p for p in self.kept["delovi"] if not p.get("izostavljen")]
             if parts:
-                speakers = {g["ime"] for p in parts for g in p.get("govornici") or []}
+                lined = [{"ime": d["ime"], "lista": d.get("lista") or "", "o_cemu": d["rezime"]}
+                         for d in sorted(turns, key=lambda d: d["od"]) if d.get("rezime")]
+                speakers = {g["ime"] for p in parts for g in p.get("govornici") or []} | {g["ime"] for g in lined}
                 user = "Sažeci delova dana:\n" + json.dumps(
                     [{k: v for k, v in p.items() if not k.startswith("t_")} for p in parts], ensure_ascii=False)
+                if lined:  # what each spoke about, speech by speech (rezimei.py): the stretches list no speakers
+                    user += "\nGovori, redom:\n" + json.dumps(lined, ensure_ascii=False)
                 try:
                     reply = reply_json(self.ask(DAY, user, 16000, "medium"))
                 except Exception as exc:

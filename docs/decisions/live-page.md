@@ -258,3 +258,13 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   **What each speaker spoke about is left out**: of 24 Nov's lines read against the transcript one said the opposite
   of what was said (an MP who denied taking part in a control "spoke of her own part" in it), which the check of names
   and numbers cannot see. They wait for a check of the sense.
+- **A line on each speech, when it ends; all the speeches first in the day** (24 Nov 2026, the maintainer: "svi govori
+  redom idu gore, pridodaj svakom tom govoru haiku sažetak kad se govor završi"). "Svi govori, redom" stands right under
+  the day's numbers; the day's strip and "Ko je koliko govorio" under it. Under each speech of half a minute or more,
+  within a minute or two of its end, stands one line by Haiku from that speech's transcript alone (`rezimei.py`), by one
+  rule for all: **the topic only** ("O sastavu odbora"), no claim, name or number (the maintainer's choice the same day:
+  with claims, some one line in seven of the trial was wrong or stated an accusation as a fact). A sentence it rests on must be in the speech word for word, and a second call judges the line against the
+  speech; one that fails twice is left out. This because Haiku's lines on a whole stretch had turned a denial into its
+  opposite that day; both calls are the same model's, so it lowers the odds and proves nothing. Labelled at the heading
+  and on the method page. The stretch's summary at a break lists no speakers any more; if the day's summary by Opus
+  fails, the day's lines are given to the one made of the stretches.
