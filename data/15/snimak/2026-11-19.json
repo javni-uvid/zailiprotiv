@@ -1,31 +1,11 @@
 {
  "dan": "2026-11-19",
- "izvor": "glas",
- "napomena": "Ko je kad govorio: dok je prenos prikazivao potpis, iz potpisa (zapis stranice „Ko sada govori“); posle toga, dok Skupština ne objavi stenografske beleške ovog dana, po glasu: svaki deo zvuka snimka u arhivi upoređen je sa glasom govornika iz govora čije je ime poznato iz potpisa ovog saziva, isto pravilo za svakoga, a ime stoji samo kad je glas dovoljno sličan (provereno na 18. novembru: svaki tako imenovan deo bio je tačan). Govornik bez uzorka glasa ostaje neimenovan, pa vreme dana nije potpuno. Kad beleške budu objavljene, dan se piše ponovo iz njih. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi videonet.co.rs, 'snimak' mesto u njemu u sekundama, pet sekundi pre početka. Sat delova snimka: zas2026111910.mp4: po glasu u jutarnjim govorima sa potpisom (preklapanje 3326 s); zas2026111910a.mp4: nadovezano na prvi deo; zas2026111910b.mp4: ručno: tri Pastorova potpisa pročitana usput (16:52:56, 19:02:41, 22:16:52) padaju u njegov glas u tri dela snimka kad popodne počinje u 15:42 i delovi idu jedan za drugim; predsedavajući na kraju 10a kaže „Dva sata pauze“; zas2026111910c.mp4: nadovezano na prethodni deo (ručno); zas2026111910d.mp4: nadovezano na prethodni deo (ručno); zas2026111910e.mp4: nadovezano na prethodni deo (ručno).",
+ "izvor": "govor",
+ "napomena": "Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa zvukom snimka dana u arhivi videonet.co.rs: snimak je automatski zapisan reč po reč (Whisper), a svaki govor iz beleški nađen u tom zapisu po nizovima od četiri reči koji se jednom javljaju i u beleškama i u zapisu, istim redom; govor traje od prve do poslednje svoje reči. Isto pravilo za svakog govornika; govor za koji nisu nađena bar dva takva niza nema mesto, osim sasvim kratkog (manje od osam reči, kao „Ne želim.“) između dva govora koji ga imaju: on stoji odmah posle prethodnog. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi, 'snimak' mesto u njemu u sekundama, pet sekundi pre prve reči. ",
  "pokriveno": [
   {
-   "od": 1795079040,
-   "do": 1795088294
-  },
-  {
-   "od": 1795088294,
-   "do": 1795091883
-  },
-  {
-   "od": 1795099321,
-   "do": 1795107313
-  },
-  {
-   "od": 1795107313,
-   "do": 1795114530
-  },
-  {
-   "od": 1795114530,
-   "do": 1795122930
-  },
-  {
-   "od": 1795122930,
-   "do": 1795129215
+   "od": 1795079246,
+   "do": 1795128999
   }
  ],
  "govori": [
@@ -34,189 +14,196 @@
    "adresa": "mrdic-ugljesa",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795079224,
-   "do": 1795079615,
-   "okvira": 72,
+   "od": 1795079246,
+   "do": 1795079668,
+   "okvira": 617,
    "video": "",
-   "sq_od": 201,
-   "sq_do": 279,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 201,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 179
+   "beleske": [
+    "54098/00155"
+   ]
   },
   {
    "ime": "Rističević Marijan",
    "adresa": "risticevic-marijan",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795079635,
-   "do": 1795080094,
-   "okvira": 86,
+   "od": 1795079671,
+   "do": 1795080130,
+   "okvira": 594,
    "video": "",
-   "sq_od": 283,
-   "sq_do": 375,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 626,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 590
+   "beleske": [
+    "54098/00157"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
-   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795080114,
-   "do": 1795081400,
-   "okvira": 246,
+   "od": 1795080156,
+   "do": 1795081408,
+   "okvira": 1695,
    "video": "",
-   "sq_od": 379,
-   "sq_do": 636,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 1111,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 1069
+   "beleske": [
+    "54098/00159"
+   ]
   },
   {
    "ime": "Radin Milan",
    "adresa": "radin-milan",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795081480,
-   "do": 1795081754,
-   "okvira": 48,
+   "od": 1795081519,
+   "do": 1795081793,
+   "okvira": 388,
    "video": "",
-   "sq_od": 652,
-   "sq_do": 707,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 2474,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 2435
+   "beleske": [
+    "54098/00161"
+   ]
   },
   {
    "ime": "Petrašinović Miroslav",
    "adresa": "petrasinovic-miroslav",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795081775,
-   "do": 1795082074,
-   "okvira": 52,
+   "od": 1795081811,
+   "do": 1795082114,
+   "okvira": 540,
    "video": "",
-   "sq_od": 711,
-   "sq_do": 771,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 2766,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 2730
+   "beleske": [
+    "54098/00163"
+   ]
   },
   {
    "ime": "Krkobabić Stefan",
    "adresa": "krkobabic-stefan",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795082135,
-   "do": 1795082385,
-   "okvira": 47,
+   "od": 1795082175,
+   "do": 1795082422,
+   "okvira": 340,
    "video": "",
-   "sq_od": 783,
-   "sq_do": 833,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 3130,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 3090
+   "beleske": [
+    "54098/00165"
+   ]
   },
   {
    "ime": "Jovanović Nataša",
    "adresa": "jovanovic-natasa",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795082405,
-   "do": 1795082710,
-   "okvira": 59,
+   "od": 1795082441,
+   "do": 1795082750,
+   "okvira": 539,
    "video": "",
-   "sq_od": 837,
-   "sq_do": 898,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 3396,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 3360
+   "beleske": [
+    "54098/00167"
+   ]
   },
   {
    "ime": "Brnabić Ana",
    "adresa": "brnabic-ana",
-   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795082854,
-   "do": 1795083014,
-   "okvira": 32,
+   "od": 1795082864,
+   "do": 1795083055,
+   "okvira": 248,
    "video": "",
-   "sq_od": 927,
-   "sq_do": 959,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 3819,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 3809
-  },
-  {
-   "ime": "Jovanov Milenko",
-   "adresa": "jovanov-milenko",
-   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
-   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795083129,
-   "do": 1795083350,
-   "okvira": 41,
-   "video": "",
-   "sq_od": 982,
-   "sq_do": 1026,
-   "segment": 5.0,
-   "po": "potpis",
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 4084
-  },
-  {
-   "ime": "Bakić Jovo",
-   "adresa": "bakic-jovo",
-   "grupa": "Studentska lista",
-   "uloga": "Studentska lista",
-   "od": 1795083489,
-   "do": 1795084630,
-   "okvira": 229,
-   "video": "",
-   "sq_od": 1054,
-   "sq_do": 1282,
-   "segment": 5.0,
-   "po": "potpis",
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 4444
-  },
-  {
-   "ime": "Vučić Aleksandar",
-   "adresa": "vucic-aleksandar",
-   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
-   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795084675,
-   "do": 1795088310,
-   "okvira": 718,
-   "video": "",
-   "sq_od": 1291,
-   "sq_do": 2018,
-   "segment": 5.0,
-   "po": "potpis",
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
-   "snimak": 5630
+   "beleske": [
+    "54098/00169"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
    "adresa": "jovanov-milenko",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795099411,
-   "do": 1795099451,
-   "okvira": 2,
+   "od": 1795083160,
+   "do": 1795083390,
+   "okvira": 373,
    "video": "",
-   "snimak": 85,
+   "snimak": 4115,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
+   "beleske": [
+    "54098/00171"
+   ]
+  },
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "bakic-jovo",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795083475,
+   "do": 1795084666,
+   "okvira": 1052,
+   "video": "",
+   "snimak": 4430,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
+   "beleske": [
+    "54098/00173",
+    "54098/00175"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795084712,
+   "do": 1795088292,
+   "okvira": 4951,
+   "video": "",
+   "snimak": 5667,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910.mp4",
+   "beleske": [
+    "54098/00177"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795088321,
+   "do": 1795088324,
+   "okvira": 4951,
+   "video": "",
+   "snimak": 22,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910a.mp4",
+   "beleske": [
+    "54098/00177"
+   ]
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795099412,
+   "do": 1795099451,
+   "okvira": 65,
+   "video": "",
+   "snimak": 86,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00182"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
@@ -224,77 +211,204 @@
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795100020,
-   "do": 1795100084,
-   "okvira": 2,
+   "do": 1795100081,
+   "okvira": 113,
    "video": "",
    "snimak": 694,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00185"
+   ]
   },
   {
    "ime": "Štimac Aleksandra",
    "adresa": "stimac-aleksandra",
    "grupa": "Studentska lista",
    "uloga": "Studentska lista",
-   "od": 1795100237,
-   "do": 1795100875,
-   "okvira": 2,
+   "od": 1795100238,
+   "do": 1795100872,
+   "okvira": 866,
    "video": "",
-   "snimak": 911,
+   "snimak": 912,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00187"
+   ]
+  },
+  {
+   "ime": "Dimović Feđa",
+   "adresa": "dimovic-fedja",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795100894,
+   "do": 1795100971,
+   "okvira": 81,
+   "video": "",
+   "snimak": 1568,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00189",
+    "54098/00191",
+    "54098/00193"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
    "adresa": "jovanov-milenko",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795100992,
-   "do": 1795101893,
-   "okvira": 2,
+   "od": 1795100993,
+   "do": 1795101368,
+   "okvira": 483,
    "video": "",
-   "snimak": 1666,
+   "snimak": 1667,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
-  },
-  {
-   "ime": "Mitov Petar",
-   "adresa": "mitov-petar",
-   "grupa": "",
-   "uloga": "Studentska lista",
-   "od": 1795101995,
-   "do": 1795102072,
-   "okvira": 2,
-   "video": "",
-   "snimak": 2669,
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00195",
+    "54098/00197",
+    "54098/00199",
+    "54098/00201"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
    "adresa": "jovanov-milenko",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795102121,
-   "do": 1795102222,
-   "okvira": 2,
+   "od": 1795101375,
+   "do": 1795101895,
+   "okvira": 768,
    "video": "",
-   "snimak": 2795,
+   "snimak": 2049,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00205"
+   ]
+  },
+  {
+   "ime": "Mavrić Adem",
+   "adresa": "mavric-adem",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795101958,
+   "do": 1795101975,
+   "okvira": 19,
+   "video": "",
+   "snimak": 2632,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00207",
+    "54098/00209"
+   ]
   },
   {
    "ime": "Mitov Petar",
    "adresa": "mitov-petar",
    "grupa": "",
    "uloga": "Studentska lista",
-   "od": 1795102234,
-   "do": 1795102273,
+   "od": 1795101990,
+   "do": 1795102071,
+   "okvira": 77,
+   "video": "",
+   "snimak": 2664,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00213",
+    "54098/00215"
+   ]
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795102127,
+   "do": 1795102159,
+   "okvira": 53,
+   "video": "",
+   "snimak": 2801,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00217"
+   ]
+  },
+  {
+   "ime": "Jovanov Milenko",
+   "adresa": "jovanov-milenko",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795102168,
+   "do": 1795102220,
+   "okvira": 91,
+   "video": "",
+   "snimak": 2842,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00221",
+    "54098/00223",
+    "54098/00225",
+    "54098/00227"
+   ]
+  },
+  {
+   "ime": "Mavrić Adem",
+   "adresa": "mavric-adem",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795102226,
+   "do": 1795102231,
    "okvira": 2,
    "video": "",
-   "snimak": 2908,
+   "snimak": 2900,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00229"
+   ]
+  },
+  {
+   "ime": "Mitov Petar",
+   "adresa": "mitov-petar",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795102235,
+   "do": 1795102275,
+   "okvira": 36,
+   "video": "",
+   "snimak": 2909,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00231"
+   ]
+  },
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "bakic-jovo",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795102310,
+   "do": 1795102316,
+   "okvira": 2,
+   "video": "",
+   "snimak": 2984,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00233"
+   ]
+  },
+  {
+   "ime": "Štimac Aleksandra",
+   "adresa": "stimac-aleksandra",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795102921,
+   "do": 1795103043,
+   "okvira": 154,
+   "video": "",
+   "snimak": 3595,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00236"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
@@ -302,12 +416,14 @@
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795103081,
-   "do": 1795103218,
-   "okvira": 2,
+   "do": 1795103216,
+   "okvira": 163,
    "video": "",
    "snimak": 3755,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00238"
+   ]
   },
   {
    "ime": "Štimac Aleksandra",
@@ -316,24 +432,31 @@
    "uloga": "Studentska lista",
    "od": 1795103233,
    "do": 1795103299,
-   "okvira": 2,
+   "okvira": 117,
    "video": "",
    "snimak": 3907,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00240",
+    "54098/00242"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
    "adresa": "jovanov-milenko",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795103312,
-   "do": 1795103443,
-   "okvira": 2,
+   "od": 1795103314,
+   "do": 1795103440,
+   "okvira": 178,
    "video": "",
-   "snimak": 3986,
+   "snimak": 3988,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00244",
+    "54098/00246",
+    "54098/00248"
+   ]
   },
   {
    "ime": "Brnabić Ana",
@@ -341,12 +464,14 @@
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795103455,
-   "do": 1795103533,
-   "okvira": 2,
+   "do": 1795103532,
+   "okvira": 124,
    "video": "",
    "snimak": 4129,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00250"
+   ]
   },
   {
    "ime": "Pastor Balint",
@@ -354,51 +479,176 @@
    "grupa": "",
    "uloga": "SVM-VMSZ",
    "od": 1795103563,
-   "do": 1795103900,
-   "okvira": 2,
+   "do": 1795103899,
+   "okvira": 431,
    "video": "",
    "snimak": 4237,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00252",
+    "54098/00254"
+   ]
   },
   {
    "ime": "Zukorlić Usame",
    "adresa": "zukorlic-usame",
    "grupa": "",
    "uloga": "SPP",
-   "od": 1795103912,
-   "do": 1795104047,
-   "okvira": 2,
+   "od": 1795103908,
+   "do": 1795104046,
+   "okvira": 110,
    "video": "",
-   "snimak": 4586,
+   "snimak": 4582,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00256"
+   ]
   },
   {
    "ime": "Tandir Samir",
    "adresa": "tandir-samir",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795104070,
-   "do": 1795104631,
-   "okvira": 2,
+   "od": 1795104063,
+   "do": 1795104161,
+   "okvira": 82,
    "video": "",
-   "snimak": 4744,
+   "snimak": 4737,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00258",
+    "54098/00260"
+   ]
+  },
+  {
+   "ime": "Tandir Samir",
+   "adresa": "tandir-samir",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795104166,
+   "do": 1795104629,
+   "okvira": 358,
+   "video": "",
+   "snimak": 4840,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00264",
+    "54098/00266",
+    "54098/00268"
+   ]
   },
   {
    "ime": "Jovanov Milenko",
    "adresa": "jovanov-milenko",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795104667,
-   "do": 1795104796,
+   "od": 1795104668,
+   "do": 1795104795,
+   "okvira": 176,
+   "video": "",
+   "snimak": 5342,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00270"
+   ]
+  },
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "bakic-jovo",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795104809,
+   "do": 1795104826,
    "okvira": 2,
    "video": "",
-   "snimak": 5341,
+   "snimak": 5483,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00272"
+   ]
+  },
+  {
+   "ime": "Drašković Dražen",
+   "adresa": "draskovic-drazen",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795104835,
+   "do": 1795104969,
+   "okvira": 179,
+   "video": "",
+   "snimak": 5509,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00274",
+    "54098/00276"
+   ]
+  },
+  {
+   "ime": "Radović Vera",
+   "adresa": "radovic-vera",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795104987,
+   "do": 1795105034,
+   "okvira": 48,
+   "video": "",
+   "snimak": 5661,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00278"
+   ]
+  },
+  {
+   "ime": "Neškoivić Aleksandar",
+   "adresa": "neskoivic-aleksandar",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795105054,
+   "do": 1795105055,
+   "okvira": 5,
+   "video": "",
+   "snimak": 5728,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00280"
+   ]
+  },
+  {
+   "ime": "Stojković Miloš",
+   "adresa": "stojkovic-milos",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795105072,
+   "do": 1795105392,
+   "okvira": 309,
+   "video": "",
+   "snimak": 5746,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00282",
+    "54098/00284",
+    "54098/00286",
+    "54098/00288",
+    "54098/00290",
+    "54098/00292",
+    "54098/00294",
+    "54098/00296"
+   ]
+  },
+  {
+   "ime": "Stojković Miloš",
+   "adresa": "stojkovic-milos",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795105407,
+   "do": 1795105564,
+   "okvira": 227,
+   "video": "",
+   "snimak": 6081,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00300"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
@@ -406,51 +656,200 @@
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795105589,
-   "do": 1795107166,
-   "okvira": 2,
+   "do": 1795105872,
+   "okvira": 344,
    "video": "",
    "snimak": 6263,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00302",
+    "54098/00304"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795107406,
-   "do": 1795107872,
-   "okvira": 2,
+   "od": 1795105878,
+   "do": 1795106468,
+   "okvira": 970,
    "video": "",
-   "snimak": 88,
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "snimak": 6552,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00308",
+    "54098/00310",
+    "54098/00312",
+    "54098/00314",
+    "54098/00316",
+    "54098/00318",
+    "54098/00320",
+    "54098/00322"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795109159,
-   "do": 1795109497,
-   "okvira": 2,
+   "od": 1795106491,
+   "do": 1795107196,
+   "okvira": 1066,
    "video": "",
-   "snimak": 1841,
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "snimak": 7165,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00329",
+    "54098/00331",
+    "54098/00333",
+    "54098/00335",
+    "54098/00337",
+    "54098/00339",
+    "54098/00341",
+    "54098/00343"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795109623,
-   "do": 1795109666,
-   "okvira": 2,
+   "od": 1795107214,
+   "do": 1795107221,
+   "okvira": 11,
    "video": "",
-   "snimak": 2305,
+   "snimak": 7888,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
+   "beleske": [
+    "54098/00347"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795107358,
+   "do": 1795107401,
+   "okvira": 35,
+   "video": "",
+   "snimak": 40,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00349"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795107410,
+   "do": 1795107870,
+   "okvira": 578,
+   "video": "",
+   "snimak": 92,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00353",
+    "54098/00355",
+    "54098/00357",
+    "54098/00360"
+   ]
+  },
+  {
+   "ime": "Mavrić Adem",
+   "adresa": "mavric-adem",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795107905,
+   "do": 1795107918,
+   "okvira": 10,
+   "video": "",
+   "snimak": 587,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00362"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795107918,
+   "do": 1795107953,
+   "okvira": 28,
+   "video": "",
+   "snimak": 600,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00363",
+    "54098/00365",
+    "54098/00367"
+   ]
+  },
+  {
+   "ime": "Štimac Aleksandra",
+   "adresa": "stimac-aleksandra",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795109109,
+   "do": 1795109144,
+   "okvira": 43,
+   "video": "",
+   "snimak": 1791,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00370"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795109116,
+   "do": 1795109495,
+   "okvira": 549,
+   "video": "",
+   "snimak": 1798,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00372"
+   ]
+  },
+  {
+   "ime": "Nikolić Mirjana",
+   "adresa": "nikolic-mirjana",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795109576,
+   "do": 1795109610,
+   "okvira": 48,
+   "video": "",
+   "snimak": 2258,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00374",
+    "54098/00376"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795109620,
+   "do": 1795109665,
+   "okvira": 67,
+   "video": "",
+   "snimak": 2302,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00378"
+   ]
   },
   {
    "ime": "Drecun Milovan",
@@ -458,38 +857,48 @@
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795109705,
-   "do": 1795109864,
-   "okvira": 2,
+   "do": 1795109863,
+   "okvira": 214,
    "video": "",
    "snimak": 2387,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00380",
+    "54098/00382",
+    "54098/00384"
+   ]
   },
   {
    "ime": "Radeta Vjerica",
    "adresa": "radeta-vjerica",
-   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
-   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "grupa": "",
+   "uloga": "",
    "od": 1795109935,
-   "do": 1795110188,
-   "okvira": 2,
+   "do": 1795110381,
+   "okvira": 562,
    "video": "",
    "snimak": 2617,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00386",
+    "54098/00388"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795110436,
-   "do": 1795111342,
-   "okvira": 2,
+   "od": 1795110440,
+   "do": 1795111340,
+   "okvira": 1264,
    "video": "",
-   "snimak": 3118,
+   "snimak": 3122,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00390",
+    "54098/00392"
+   ]
   },
   {
    "ime": "Pastor Balint",
@@ -497,51 +906,91 @@
    "grupa": "",
    "uloga": "SVM-VMSZ",
    "od": 1795111358,
-   "do": 1795111466,
-   "okvira": 2,
+   "do": 1795111465,
+   "okvira": 130,
    "video": "",
    "snimak": 4040,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00394"
+   ]
   },
   {
    "ime": "Đukanović Vladimir",
    "adresa": "djukanovic-vladimir",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795111496,
-   "do": 1795112062,
-   "okvira": 2,
+   "od": 1795111494,
+   "do": 1795112079,
+   "okvira": 827,
    "video": "",
-   "snimak": 4178,
+   "snimak": 4176,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00396",
+    "54098/00398"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795112132,
-   "do": 1795112861,
-   "okvira": 2,
+   "od": 1795112133,
+   "do": 1795112878,
+   "okvira": 1179,
    "video": "",
-   "snimak": 4814,
+   "snimak": 4815,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00400",
+    "54098/00402",
+    "54098/00404",
+    "54098/00406"
+   ]
+  },
+  {
+   "ime": "Dimović Feđa",
+   "adresa": "dimovic-fedja",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795112878,
+   "do": 1795113178,
+   "okvira": 213,
+   "video": "",
+   "snimak": 5560,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00407",
+    "54098/00409",
+    "54098/00411",
+    "54098/00413",
+    "54098/00415",
+    "54098/00417",
+    "54098/00419",
+    "54098/00421",
+    "54098/00423"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795113185,
-   "do": 1795113566,
-   "okvira": 2,
+   "od": 1795113187,
+   "do": 1795113565,
+   "okvira": 538,
    "video": "",
-   "snimak": 5867,
+   "snimak": 5869,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00425",
+    "54098/00427",
+    "54098/00429",
+    "54098/00431",
+    "54098/00433",
+    "54098/00435"
+   ]
   },
   {
    "ime": "Šoškić Dejan",
@@ -550,24 +999,28 @@
    "uloga": "Studentska lista",
    "od": 1795113613,
    "do": 1795113658,
-   "okvira": 2,
+   "okvira": 63,
    "video": "",
    "snimak": 6295,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00437"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795113671,
-   "do": 1795113773,
-   "okvira": 2,
+   "od": 1795113673,
+   "do": 1795113772,
+   "okvira": 186,
    "video": "",
-   "snimak": 6353,
+   "snimak": 6355,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00439"
+   ]
   },
   {
    "ime": "Drecun Milovan",
@@ -575,38 +1028,108 @@
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795113796,
-   "do": 1795113839,
-   "okvira": 2,
+   "do": 1795113854,
+   "okvira": 41,
    "video": "",
    "snimak": 6478,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00441"
+   ]
   },
   {
    "ime": "Kostov Risto",
    "adresa": "kostov-risto",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795113869,
-   "do": 1795114199,
-   "okvira": 2,
+   "od": 1795113867,
+   "do": 1795114197,
+   "okvira": 433,
    "video": "",
-   "snimak": 6551,
+   "snimak": 6549,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00443"
+   ]
+  },
+  {
+   "ime": "Radulović Uroš",
+   "adresa": "radulovic-uros",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795114215,
+   "do": 1795114526,
+   "okvira": 445,
+   "video": "",
+   "snimak": 6897,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
+    "54098/00445",
+    "54098/00447"
+   ]
+  },
+  {
+   "ime": "Šoškić Dejan",
+   "adresa": "soskic-dejan",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795114543,
+   "do": 1795114586,
+   "okvira": 59,
+   "video": "",
+   "snimak": 8,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00449"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795114609,
-   "do": 1795114866,
-   "okvira": 2,
+   "od": 1795114605,
+   "do": 1795114864,
+   "okvira": 430,
    "video": "",
-   "snimak": 74,
+   "snimak": 70,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00451"
+   ]
+  },
+  {
+   "ime": "Radulović Uroš",
+   "adresa": "radulovic-uros",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795114886,
+   "do": 1795114908,
+   "okvira": 35,
+   "video": "",
+   "snimak": 351,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00453"
+   ]
+  },
+  {
+   "ime": "Radović Vera",
+   "adresa": "radovic-vera",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795114930,
+   "do": 1795115003,
+   "okvira": 55,
+   "video": "",
+   "snimak": 395,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00455",
+    "54098/00457",
+    "54098/00459",
+    "54098/00461"
+   ]
   },
   {
    "ime": "Mrdić Uglješa",
@@ -614,25 +1137,30 @@
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795115064,
-   "do": 1795115284,
-   "okvira": 2,
+   "do": 1795115283,
+   "okvira": 319,
    "video": "",
    "snimak": 529,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00463",
+    "54098/00465"
+   ]
   },
   {
    "ime": "Brnabić Ana",
    "adresa": "brnabic-ana",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795115308,
-   "do": 1795116088,
-   "okvira": 2,
+   "od": 1795115305,
+   "do": 1795116091,
+   "okvira": 956,
    "video": "",
-   "snimak": 773,
+   "snimak": 770,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00467"
+   ]
   },
   {
    "ime": "Rističević Marijan",
@@ -640,158 +1168,252 @@
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795116117,
-   "do": 1795116559,
-   "okvira": 2,
+   "do": 1795116558,
+   "okvira": 525,
    "video": "",
    "snimak": 1582,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00469"
+   ]
   },
   {
    "ime": "Jovanović Nataša",
    "adresa": "jovanovic-natasa",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795116580,
-   "do": 1795117005,
-   "okvira": 2,
+   "od": 1795116574,
+   "do": 1795117002,
+   "okvira": 638,
    "video": "",
-   "snimak": 2045,
+   "snimak": 2039,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00471"
+   ]
   },
   {
    "ime": "Mirković Aleksandar",
    "adresa": "mirkovic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795117015,
-   "do": 1795117416,
-   "okvira": 2,
+   "od": 1795117016,
+   "do": 1795117414,
+   "okvira": 664,
    "video": "",
-   "snimak": 2480,
+   "snimak": 2481,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00473"
+   ]
   },
   {
    "ime": "Bakarec Nebojša",
    "adresa": "bakarec-nebojsa",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795117435,
-   "do": 1795117870,
-   "okvira": 2,
+   "od": 1795117436,
+   "do": 1795117867,
+   "okvira": 569,
    "video": "",
-   "snimak": 2900,
+   "snimak": 2901,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00475"
+   ]
   },
   {
    "ime": "Petrašinović Miroslav",
    "adresa": "petrasinovic-miroslav",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795117888,
-   "do": 1795118244,
-   "okvira": 2,
+   "od": 1795117889,
+   "do": 1795118241,
+   "okvira": 569,
    "video": "",
-   "snimak": 3353,
+   "snimak": 3354,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00477"
+   ]
   },
   {
-   "ime": "Vučić Aleksandar",
-   "adresa": "vucic-aleksandar",
+   "ime": "Balać Vladimir",
+   "adresa": "balac-vladimir",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795118282,
-   "do": 1795118351,
-   "okvira": 4,
+   "od": 1795118271,
+   "do": 1795118656,
+   "okvira": 455,
    "video": "",
-   "sq_od": 8012,
-   "sq_do": 8026,
-   "segment": 5.0,
-   "po": "potpis",
+   "snimak": 3736,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "snimak": 3746
+   "beleske": [
+    "54098/00479"
+   ]
+  },
+  {
+   "ime": "Balać Vladimir",
+   "adresa": "balac-vladimir",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795118667,
+   "do": 1795118839,
+   "okvira": 214,
+   "video": "",
+   "snimak": 4132,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00483",
+    "54098/00485",
+    "54098/00487",
+    "54098/00489",
+    "54098/00491"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795118865,
-   "do": 1795119954,
-   "okvira": 2,
+   "od": 1795118859,
+   "do": 1795119951,
+   "okvira": 1759,
    "video": "",
-   "snimak": 4330,
+   "snimak": 4324,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00493",
+    "54098/00495"
+   ]
   },
   {
    "ime": "Tasić Knežević Nataša",
    "adresa": "tasic-knezevic-natasa",
    "grupa": "Aleksandar Vučić - Srbija pobeđuje",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795119985,
-   "do": 1795120660,
-   "okvira": 2,
+   "od": 1795119988,
+   "do": 1795120658,
+   "okvira": 905,
    "video": "",
-   "snimak": 5450,
+   "snimak": 5453,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00497"
+   ]
   },
   {
    "ime": "Hubač Željko",
    "adresa": "hubac-zeljko",
    "grupa": "",
    "uloga": "Studentska lista",
-   "od": 1795120762,
-   "do": 1795120806,
-   "okvira": 2,
+   "od": 1795120685,
+   "do": 1795120804,
+   "okvira": 72,
    "video": "",
-   "snimak": 6227,
+   "snimak": 6150,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00499",
+    "54098/00501",
+    "54098/00503",
+    "54098/00505",
+    "54098/00507"
+   ]
+  },
+  {
+   "ime": "Tasić Knežević Nataša",
+   "adresa": "tasic-knezevic-natasa",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795120826,
+   "do": 1795120868,
+   "okvira": 61,
+   "video": "",
+   "snimak": 6291,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00509"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795120959,
-   "do": 1795121599,
-   "okvira": 2,
+   "od": 1795120924,
+   "do": 1795121639,
+   "okvira": 823,
    "video": "",
-   "snimak": 6424,
+   "snimak": 6389,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00511",
+    "54098/00513"
+   ]
   },
   {
    "ime": "Bakić Jovo",
    "adresa": "bakic-jovo",
    "grupa": "",
    "uloga": "Studentska lista",
-   "od": 1795121641,
-   "do": 1795122052,
-   "okvira": 2,
+   "od": 1795121642,
+   "do": 1795122050,
+   "okvira": 400,
    "video": "",
-   "snimak": 7106,
+   "snimak": 7107,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00515",
+    "54098/00517"
+   ]
+  },
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "bakic-jovo",
+   "grupa": "",
+   "uloga": "Studentska lista",
+   "od": 1795122066,
+   "do": 1795122084,
+   "okvira": 28,
+   "video": "",
+   "snimak": 7531,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00521"
+   ]
   },
   {
    "ime": "Vučić Aleksandar",
    "adresa": "vucic-aleksandar",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795122109,
-   "do": 1795122928,
-   "okvira": 2,
+   "od": 1795122110,
+   "do": 1795122821,
+   "okvira": 1112,
    "video": "",
-   "snimak": 7574,
+   "snimak": 7575,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00523",
+    "54098/00525",
+    "54098/00527"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795122839,
+   "do": 1795122928,
+   "okvira": 145,
+   "video": "",
+   "snimak": 8304,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910d.mp4",
+   "beleske": [
+    "54098/00531"
+   ]
   },
   {
    "ime": "Pastor Balint",
@@ -799,25 +1421,45 @@
    "grupa": "",
    "uloga": "SVM-VMSZ",
    "od": 1795123017,
-   "do": 1795123206,
-   "okvira": 2,
+   "do": 1795123205,
+   "okvira": 234,
    "video": "",
    "snimak": 82,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910e.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00533",
+    "54098/00535"
+   ]
   },
   {
    "ime": "Zukorlić Usame",
    "adresa": "zukorlic-usame",
    "grupa": "",
    "uloga": "SPP",
-   "od": 1795128810,
-   "do": 1795128979,
-   "okvira": 2,
+   "od": 1795128811,
+   "do": 1795128986,
+   "okvira": 154,
    "video": "",
-   "snimak": 5875,
+   "snimak": 5876,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910e.mp4",
-   "po": "glas"
+   "beleske": [
+    "54098/00542"
+   ]
+  },
+  {
+   "ime": "Đajić Zoran",
+   "adresa": "djajic-zoran",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795128997,
+   "do": 1795128999,
+   "okvira": 4,
+   "video": "",
+   "snimak": 6062,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910e.mp4",
+   "beleske": [
+    "54098/00544"
+   ]
   }
  ],
  "datoteke": [

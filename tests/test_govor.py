@@ -112,3 +112,25 @@ def test_a_part_starts_after_the_one_before_it():
     record = [{"adresa": "x", "od": 5150}, {"adresa": "x", "od": 5160}, {"adresa": "x", "od": 9150}, {"adresa": "x", "od": 9160}]
     got = govor.clock(files, st, record, {a: 5000})
     assert 8950 <= got[b][0] <= 9060
+
+
+def test_a_speech_across_two_files_has_a_place_in_each():
+    """24 Nov 2026: an hour's speech of 19 Nov ended in the next file of the archive and had no place."""
+    g = "https://arhiva.example/zas2.mp4"
+    first = "govorim danas o budžetu za školstvo i o tome kako se novac deli opštinama na jugu zemlje"
+    rest = "gde škole nemaju grejanje već treću godinu zaredom i gde nastavnici sami kupuju drva za zimu"
+    speeches = [{"key": "1", "chair": False, "speaker": "ПЕТАР ПЕТРОВИЋ", "text": first + " " + rest}]
+    placed = govor.place(speeches, heard(first, 3000) + heard(rest, 0, url=g))
+    assert placed[0]["datoteka"] == F and placed[0]["od"] == 3000 and placed[0]["dalje"]["datoteka"] == g
+    turns = govor.day(placed, [{"url": F, "od": 1_000_000}, {"url": g, "od": 1_010_000}],
+                      lambda s: {"ime": "Petrović Petar", "adresa": "petrovic-petar", "grupa": "", "uloga": ""})
+    assert [(t["datoteka"], t["od"]) for t in turns] == [(F, 1_003_000), (g, 1_010_000)]
+
+
+def test_a_vote_read_out_is_no_speech_and_a_misspelt_name_is_the_one_near():
+    roll = "; ".join(f"Презиме{i} Име – за" for i in range(20)) + ";"
+    assert govor.roll_call(roll) and not govor.roll_call("Поштовани, говорим о закону – и то дуго; хвала.")
+    keys = {"бакић јово": 1, "митов петар": 1, "јовановић петар": 1, "вучић александар": 1}
+    assert govor.nearest("бакић јова", keys) == "бакић јово" and govor.nearest("митев петар", keys) == "митов петар"
+    assert govor.nearest("смиљанић срђан", keys) is None  # nobody near
+    assert govor.nearest("бакић јова", {"бакић јово": 1, "бакић јоца": 1}) is None  # two as near

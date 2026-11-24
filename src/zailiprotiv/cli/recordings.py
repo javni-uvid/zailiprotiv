@@ -102,6 +102,9 @@ def govor_cmd(args) -> int:
     if not speeches or not day_files:
         print(f"govor {args.day}: {len(speeches)} speeches in the notes, {len(day_files)} files: nothing to do")
         return 1
+    for s in speeches:
+        if not s.get("chair") and govor.roll_call(s["text"]):
+            s["chair"] = True  # a vote read out by name is no speech
     placed = govor.place(speeches, govor.heard(Path(args.heard), day_files))
     # Each speaker as the site names them: the newest convocation's list of MPs, else the name as the notes give it.
     members = {mps.key(m["name"]): m for m in json.loads((conv_dir / "members.json").read_text(encoding="utf-8"))["members"]}
@@ -113,6 +116,8 @@ def govor_cmd(args) -> int:
 
     def who(speaker: str) -> dict:
         k = mps.key(speaker)
+        if k not in known and k not in members:  # misspelt in the notes: the one listed name near it
+            k = govor.nearest(k, {**known, **members}) or k
         if k in known:
             t = known[k]
             return {"ime": t["ime"], "adresa": t["adresa"], "grupa": t.get("grupa", ""), "uloga": t.get("uloga", "")}
