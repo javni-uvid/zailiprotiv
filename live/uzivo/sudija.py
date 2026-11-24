@@ -590,6 +590,21 @@ class Judge(threading.Thread):
                 pass
         return s
 
+    def _written(self) -> None:
+        """The day's summary taken from the day's file when one stands there that this run did not write (made by hand,
+        or by a run before): looked for before the model is asked, so the day is not written twice nor a written one
+        lost (24 Nov 2026)."""
+        f = self._file(self.day)
+        try:
+            kept = json.loads(f.read_text(encoding="utf-8")) if f and f.exists() else {}
+        except (OSError, ValueError):
+            return
+        if isinstance(kept.get("dan"), dict):
+            self.kept["dan"] = kept["dan"]
+            if len(kept.get("delovi") or []) >= len(self.kept["delovi"]):
+                self.kept["delovi"] = kept["delovi"]
+            self.tracker.use_summary(self.day, self.kept)
+
     def _summaries(self, snap, rows, turns, now: float, live: bool) -> None:
         if not rows:
             return
@@ -613,6 +628,8 @@ class Judge(threading.Thread):
                                    or sum(len(r[1].split()) for r in rows if r[0] > closed + 60) > 40):
             closed = None  # the work went on after it
         ended = not live and now - last >= (CLOSED_QUIET if closed is not None else END_QUIET)
+        if ended and self.kept.get("dan") is None:
+            self._written()
         done = self.kept.get("dan") is not None
         cut = None
         if breaks:
