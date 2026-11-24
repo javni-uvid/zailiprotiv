@@ -124,7 +124,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         elif snap["stanje"] != "nepoznato":
             above = f'<p class="state">{t("none")}</p>'
         out.append(above)
-        pause = _pause(snap, cyr=cyr, tz=tz, site=site)
+        pause = _break(snap, cyr=cyr, tz=tz) + _pause(snap, cyr=cyr, tz=tz, site=site)
         out.append('</section><section class="sp">' + pause)
         above += pause
     if snap["provereno"] and above:  # when it was checked, of what stands above it; with nothing there it says nothing
@@ -779,6 +779,57 @@ def _card_next(snap: dict, *, cyr: bool) -> tuple[str, str] | None:
         body += f'<p class="st-item"><small>{label}:</small> {item["n"]}. {n(item["tekst"])}</p>'
         read += item["tekst"]
     return body, read
+
+
+def _resumes_at(text: str, after: float, tz: ZoneInfo) -> str:
+    """The hour a break ends at, as the chair said it ("do 15 sati i 10 minuta" → "15:10"): only a clock after "do" or
+    "u", later than the break and within six hours of it. A length ("jednog sata") is no hour: "" then."""
+    m = re.search(r"\b(?:do|u)\s+(\d{1,2})(?:[.:](\d{2})|\s+(?:sati|sata|sat|časova|časa|čas|h)(?:\s+i\s+(\d{1,2})\s+minut\w*)?)", text.lower())
+    if not m:
+        return ""
+    h, mi = int(m.group(1)), int(m.group(2) or m.group(3) or 0)
+    if h > 23 or mi > 59:
+        return ""
+    start = datetime.fromtimestamp(after, tz)
+    end = start.replace(hour=h, minute=mi, second=0, microsecond=0)
+    return f"{h}:{mi:02d}" if 0 < (end - start).total_seconds() <= 6 * 3600 else ""
+
+
+def _break(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
+    """The stretch just ended, while its break lasts (24 Nov 2026, the maintainer's request): the model's paragraph,
+    as its own; what the code counts beside it, not the model (the chair's measures of the stretch, the votes that
+    add up), and the hour the chair said the break ends. Gone once anyone speaks or a step is heard after the break;
+    the day's summary never stands here. What a speaker spoke about is not here: those lines are not checked against
+    what was said."""
+    s = snap.get("sazetak")
+    if not (isinstance(s, dict) and s.get("vrsta") == "deo" and s.get("ukratko") and s.get("t_do")):
+        return ""
+    if snap.get("ranije") or snap["stanje"] == "govori" or snap.get("sada"):
+        return ""
+    a, b = s.get("t_od") or 0, s["t_do"]
+    steps = [e for e in steps_shown(snap) if e.get("izvor") != "sajt"]
+    if any(d["do"] > b + 30 for d in snap.get("danas") or []) or any(e["t"] > b + 60 for e in steps):
+        return ""  # the sitting went on
+    t = lambda k: escape(_t(k, cyr))
+    n = lambda x: escape(_name(str(x), cyr))
+    rows = ""
+    for e in s.get("tok") or []:
+        if isinstance(e, dict) and e.get("glasovi"):
+            rows += f'<li>{n(e.get("vreme", ""))} {n(e["sta"])}<p class="st-v">{_votes(e["glasovi"], e.get("glasanje"), cyr)}</p></li>'
+    kinds: dict[str, list] = {}
+    for e in sorted(steps, key=lambda e: e["t"]):
+        if e.get("naslov") == "Mera predsedavajućeg" and a <= e["t"] < b:
+            kind = (e.get("opis") or "").split(" · ")[0].strip() or _t("st_measure_other", False)
+            kinds.setdefault(kind, []).append(_clock(e["t"], tz))
+    if kinds:
+        told = "; ".join(f"{len(v)} × {n(k)} ({', '.join(v)})" for k, v in sorted(kinds.items(), key=lambda kv: (-len(kv[1]), kv[0])))
+        rows += f'<li><b>{t("br_measures")}:</b> {told}</li>'
+    said = next((e for e in reversed(snap.get("hronika") or []) if e.get("vrsta") == "Pauza" and e.get("izvor") == "model"
+                 and abs(e["t"] - b) <= 2), None)
+    hour = _resumes_at(said.get("tekst", ""), said["t"], tz) if said else ""
+    when = f'<p class="br-when">{escape(_fill(_t("br_resume", cyr), hour))}</p>' if hour else ""
+    return (f'<section class="br"><div class="sec-h"><h2>{t("br_h")} ({_clock(b, tz)})</h2>{_chip(t("dl_src"), t("br_src"))}</div>'
+            f'{when}<p class="br-text">{n(s["ukratko"])}</p>{f"<ul>{rows}</ul>" if rows else ""}</section>')
 
 
 def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:

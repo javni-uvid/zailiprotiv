@@ -2449,3 +2449,34 @@ def test_what_a_search_engine_takes_of_the_page():
     html = page(day, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
     assert '"@type": "WebSite", "name": "Mikrofon Za ili Protiv"' in html
     assert "application/ld+json" not in page(day, cyr=True, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
+
+
+def test_a_break_shows_what_happened_until_it():
+    """24 Nov 2026, the maintainer: while a break lasts, the model's paragraph of the stretch, the measures counted by
+    the code and the hour the chair said; never the speakers' lines; gone once the sitting goes on."""
+    from datetime import datetime
+    from uzivo import page as page_
+    at = lambda h, m: int(datetime(2026, 11, 24, h, m, tzinfo=TZ).timestamp())
+    ev = lambda t, kind, text, **more: {"t": t, "vrsta": kind, "tekst": text, "izvor": "model", "url": "", "vise": more}
+    b = at(14, 10)
+    snap = {"stanje": "nepoznato", "provereno": b + 900, "sada": None, "ranije": False, "dan": "2026-11-24",
+            "danas": [{"ime": "Petrović Petar", "od": at(14, 0), "do": at(14, 8), "sekundi": 480, "grupa": "", "adresa": ""}], "dnevni_red": None,
+            "hronika": [ev(b, "Pauza", "Proglašavam pauzu do 15 sati i 10 minuta."),
+                        ev(at(12, 10), "Mera predsedavajućeg", "Izričem vam opomenu.", napomena="opomena"),
+                        ev(at(9, 10), "Mera predsedavajućeg", "Izričem vam opomenu.", napomena="opomena")],
+            "sazetak": {"vrsta": "deo", "ukratko": "Raspravljalo se o odborima.", "t_od": at(11, 0), "t_do": b + 1,
+                        "tok": [{"vreme": "13:00", "sta": "Glasano o predlogu.", "glasovi": "za 136, protiv 2"}],
+                        "govornici": [{"ime": "Petrović Petar", "o_cemu": "o tajnoj temi"}]}}
+    html = page_._break(snap, cyr=False, tz=TZ)
+    assert "Raspravljalo se o odborima." in html and "u 15:10" in html and "Claude Haiku" in html
+    assert "1 × opomena (12:10)" in html and "09:10" not in html  # the stretch's measures only
+    assert '<b class="v-za">za 136</b>' in html and "tajnoj" not in html
+    assert page_._break(snap, cyr=False, tz=TZ) in page_.fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Распр" in page_._break(snap, cyr=True, tz=TZ)
+    later = {"ime": "Jović Jova", "od": b + 600, "do": b + 700, "sekundi": 100}
+    for gone in ({"danas": [later, *snap["danas"]]}, {"stanje": "govori"}, {"sada": later}, {"ranije": True},
+                 {"sazetak": {**snap["sazetak"], "vrsta": "dan"}}, {"sazetak": None}):
+        assert page_._break({**snap, **gone}, cyr=False, tz=TZ) == ""
+    for said, hour in (("Pauza do 15.30", "15:30"), ("nastavljamo u 16 časova", "16:00"), ("pauzu od jednog sata", ""),
+                       ("pauza do 12 sati", ""), ("pauza do 5 minuta", "")):
+        assert page_._resumes_at(said, b, TZ) == hour
