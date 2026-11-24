@@ -83,13 +83,17 @@ def find(text: str) -> list[tuple[str, str]]:
 # "sledeći (je)" when a title comes right after ("Povreda Poslovnika, narodni poslanik Feđa Dimović"; "Replika
 # gospodinu Vučiću" names whom it answers, so a dative is no title). A look ahead: two in one sentence are both found.
 _TITLE = r"(?=(?:narodn\w*|poslani\w*|kolega|kolegi\w*|gospodine|gospođo|gospodjo|gospodin|gospođa)\b)"
-_FLOOR = re.compile(r"(?=\b(?:reč ima|ima reč|dajem reč|reč dajem|pravo na repliku(?: ima)?|rečima[,:]? " + _TITLE
+# "Ima narodni poslanik Zoran Đajić" at a piece's beginning: "reč" was lost at the seam (24 Nov 2026: eleven minutes of
+# his stood as nobody's); only at the beginning, as inside a sentence "ima narodni poslanik" is said of anyone
+_FLOOR = re.compile(r"(?=\b(?:(?<![^\W_])(?<!\S)(?:^)ima " + _TITLE + r"|reč ima|ima reč|dajem reč|reč dajem|pravo na repliku(?: ima)?|rečima[,:]? " + _TITLE
                     + r"|replik\w*[,:]? (?:ima )?" + _TITLE + r"|povreda poslovnika[,:]? (?:reč ima |ima reč )?" + _TITLE
                     + r"|izvolite[,:]? " + _TITLE + r"|sledeći (?:je |govornik |na listi )*" + _TITLE
                     + r")\b([^.!?]{0,90}))")
 
 
 FLOOR_NEAR = 0.74  # how alike a heard word and a name's word must be at the least ("Jova" for Jovo)
+GIVEN_SURNAME = 0.6  # a given name heard whole: how alike the surname must then be ("Sanja Fritz" for Sanja Fric)
+GIVEN_CLEAR = 0.25  # and how far ahead of the next MP with that given name (or any)
 FLOOR_CLEAR = 0.08  # and how far ahead of the next nearest MP the nearest must be
 _TITLES = {"poslanik", "poslanica", "poslanice", "kolega", "koleginica", "gospodin", "gospodja", "profesor", "profesorka",
            "doktor", "doktorka", "dr", "prof", "ima", "rec", "narodni", "narodna", "gospodine", "gospodjo",
@@ -130,6 +134,16 @@ def floor(text: str, people: list, now_only: bool = False) -> list:
             scored = sorted(((min(max(alike(w, h) for h in heard) for w in ws), p) for ws, p in names), key=lambda x: -x[0])
             if scored and scored[0][0] >= FLOOR_NEAR and (len(scored) == 1 or scored[0][0] - scored[1][0] >= FLOOR_CLEAR):
                 hit = scored[0][1]
+        if hit is None and not hits:  # the given name whole, the surname near, right after it or before it
+            near = []
+            for ws, p in names:
+                if len(ws) == 2 and ws[1] in said:
+                    at = said.index(ws[1])
+                    beside = [said[k] for k in (at - 1, at + 1) if 0 <= k < len(said) and said[k] not in _TITLES]
+                    near.append((max((alike(ws[0], h) for h in beside), default=0.0), p))
+            near.sort(key=lambda x: -x[0])
+            if near and near[0][0] >= GIVEN_SURNAME and (len(near) == 1 or near[0][0] - near[1][0] >= GIVEN_CLEAR):
+                hit = near[0][1]
         if hit is None and not hits:
             for i, w in enumerate(said):
                 mine = [p for ws, p in names if w in ws[:-1] and len(w) >= 5]  # the site writes the surname first

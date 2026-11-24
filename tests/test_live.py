@@ -1920,6 +1920,44 @@ def test_a_caption_of_seconds_names_the_speaker_and_the_turn_goes_on():
     assert "by_potpis" not in __import__("uzivo.texts", fromlist=["TEXT"]).TEXT  # no word on how: a caption said it
 
 
+def test_the_floor_given_at_a_seam_and_a_surname_misheard():
+    """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
+    from uzivo import hronika
+    from uzivo.names import Person
+    people = [Person("a", "Đajić Zoran", "djajic-zoran", ""), Person("b", "Fric Sanja", "fric-sanja", ""),
+              Person("c", "Belić Sanja", "belic-sanja", ""), Person("d", "Petrović Ana", "petrovic-ana", "")]
+    got = lambda text: [p.slug for p in hronika.floor(text, people)]
+    assert got("Ima narodni poslanik Zoran Đajić, molim da se prijavi.") == ["djajic-zoran"]
+    assert got("Kaže da ima narodni poslanik Zoran Đajić u sali.") == []  # inside a sentence: said of him
+    assert got("Reč ima narodna poslanica Sanja Fritz, po komu osnu?") == ["fric-sanja"]
+    assert got("Reč ima narodna poslanica Sanja Belić.") == ["belic-sanja"]
+    assert got("Reč ima narodna poslanica Sanja Marković.") == [] and got("Reč ima Ana Nikolić.") == []
+
+
+def test_a_caption_of_seconds_teaches_the_voice(tmp_path):
+    """24 Nov 2026: the caption was not read, so no voice was learnt all day; its seconds are."""
+    np = pytest.importorskip("numpy")
+    import threading as th
+    from uzivo import glas
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    now = 1795100000.0
+    t.observe(None, now=now)
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    t.heard(marko, "prepis", now, now)
+    t.heard(marko, "potpis", now + 10, now + 10)
+    t.observe(None, now=now + 120)
+    a = np.zeros(512, np.float32)
+    a[0] = 1
+    L = glas.Listener(t, th.Event(), embed=lambda x: a, path=tmp_path / "v.npz")
+    L.t, L.f = [now + 1.5 * i for i in range(70)], [a] * 70
+    L.learn(t.turns_now())
+    n = L.voices.n["markovic-marko"]
+    assert 15 <= n <= 30  # from the caption to LEARN_ON, not the whole turn
+    L.learn(t.turns_now())
+    assert L.voices.n["markovic-marko"] == n  # the same seconds once
+
+
 def test_a_voice_that_ends_before_the_floor_passed_on_does_not_end_the_turn():
     """24 Nov 2026, 12:18:54: the chair gave Jovo Bakić the floor, the last seconds of the speaker before came after,
     and the reply of 50 s stood as that speaker's."""
