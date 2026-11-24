@@ -381,15 +381,15 @@ class Tracker(Said, Chronicle, View):
                 self._snap = None
 
     def voice_gone(self, last: float, newest: float, tracked: set) -> None:
-        """No voice heard for GAP: a turn found by voice, or by the chair's words for someone whose voice is known and
-        has had time to be heard, ends with the last voice heard."""
+        """No voice heard for GAP: a turn whose speaker's voice was recognised in it ends with the last voice heard.
+        Not one whose voice is only on the list: a voice not recognised does not say that nobody speaks (24 Nov 2026,
+        14:02: 80 s of Miroslav Andrić's stood as 0 s)."""
         with self._lock:
             cur = self.turns[-1] if self.turns else None
             if not (self.open and cur and cur.get("izvor")):
                 return
-            known = cur.get("po_glasu") or cur["slug"] in tracked
-            if known and newest - cur["start"] > 30 and newest - cur["seen"] > 8:
-                cur["seen"] = max(cur["start"], min(cur["seen"], last) if cur.get("po_glasu") else last)
+            if cur.get("po_glasu") and newest - cur["start"] > 30 and newest - cur["seen"] > 8:
+                cur["seen"] = max(cur["start"], min(cur["seen"], last))
                 self._close()
                 self.status = UNKNOWN
                 self._snap = None

@@ -2,6 +2,7 @@
 and read on the Assembly's page are shown, and as what. No HTML here: page._steps draws them."""
 from __future__ import annotations
 
+from .mere import given
 from .names import given_first
 
 # A step heard in the chair's words, as the page writes it: our own short line for the kind of step, never the
@@ -195,6 +196,8 @@ def model_steps(snap: dict) -> list[dict]:
             continue
         if src != "model" or kind not in MODEL_TITLES or _mps_words(kind, t, turns):
             continue
+        if kind == "Mera predsedavajućeg" and not given(e.get("tekst", "")):
+            continue  # spoken of by an MP, or told of afterwards
         more, sentence = e.get("vise") or {}, e.get("tekst", "")
         title, what = MODEL_TITLES[kind], ""
         if kind == "Tačka dnevnog reda":

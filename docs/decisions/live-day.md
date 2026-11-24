@@ -129,3 +129,5 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   (four that day) and are to be judged apart.
 - **A reply longer than two minutes is not the group's time** (24 Nov 2026): one of 142 s had been counted. A turn heard to
   be a reply or a point of order (`rok.short`) is left out up to 180 s.
+- **A measure an MP only speaks of is no step** (24 Nov 2026, the maintainer): the mail's rule (`mere.given`) holds for the
+  page's steps too. On 19 Nov's 13 model's measures it keeps the eight given and drops the five not.
