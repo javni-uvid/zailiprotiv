@@ -1211,6 +1211,21 @@ def _break(tmp, *, pause=True, minutes=60, after=(0, 20), words=12):
     return said, events, int(end), back
 
 
+def test_the_live_page_says_less_and_its_folds_are_closed(monkeypatch):
+    """24 Nov 2026, the maintainer: these texts off the page, the agenda closed; what loads and when, and what of a
+    reader is kept, stays told under "Kako ovo radi" (principle 5)."""
+    from uzivo import page as page_, slusaj
+    monkeypatch.setattr(config, "LISTEN_PUBLIC", True)
+    monkeypatch.setattr(slusaj, "fresh", lambda now: True)
+    monkeypatch.setattr(slusaj, "address", lambda: "https://zvuk.example/z.m3u8")
+    snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nepoznato"}
+    html = page_.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs", push_key="k", live="abc")
+    top, how = html.split('<details class="how">', 1)
+    for words in ("učitava se tek na klik", "Samo zvuk je naš", "kod nas ostaje samo adresa"):
+        assert words not in top and words in how
+    assert "ne vidi u potpisu" not in html and "listen-live" in top and "Isključi obaveštenja" in top
+
+
 def test_the_end_of_a_long_break_is_found_from_speech(tmp_path):
     from uzivo.obavesti import resumed
     said, events, end, back = _break(tmp_path)
@@ -1223,8 +1238,9 @@ def test_the_end_of_a_long_break_is_found_from_speech(tmp_path):
     short = _break(tmp_path, minutes=10)
     assert resumed(short[0], [], short[1], short[3] + 45) == 0  # ten minutes: nobody is woken
     quiet = {k: v for k, v in said.items() if int(k[1:]) < back}
-    turn = {"start": back + 5, "seen": back + 20, "n": 3}
+    turn = {"start": back + 5, "seen": back + 20, "n": 3, "role": "PG A"}
     assert resumed(quiet, [turn], events, back + 30) == end  # an MP read at the rostrum is enough
+    assert resumed(quiet, [{**turn, "role": "", "n": 1}], events, back + 30) == 0  # noise read as a name is not
     long = {"start": end - 60, "seen": end + 3000, "n": 600}  # an MP speaking through: no silence at all
     assert resumed(said, [long], events, back + 45) == 0
 
@@ -1697,7 +1713,7 @@ def test_the_first_line_says_what_is_now_and_the_agenda_stands_open():
     live = page_(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert '<div class="status st-card st-live"><p class="st-tile"><i aria-hidden="true"></i><span>Uživo</span></p>' in live
     assert '<p class="st-when"><span class="st-h">u toku:</span> 2. Druga</p>' in live
-    assert '<details class="agenda" id="dnevni-red" open>' in live and "hero-cta" not in live
+    assert '<details class="agenda" id="dnevni-red">' in live and "hero-cta" not in live
     off = page_({**snap, "stanje": "nema_prenosa", "datoteke": [{"url": "https://x/1.mp4", "od": 1795089600, "trajanje": 60},
                                                                  {"url": "https://x/2.mp4", "od": 1795093200, "trajanje": 60}]},
                 cyr=True, site="https://zailiprotiv.rs/", tz=TZ)

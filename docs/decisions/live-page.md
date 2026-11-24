@@ -227,3 +227,8 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   dole mi stoji info za 19 novembar"). The last day's turns and steps stood until a first MP was read, while the chair
   opened the sitting and gave the floor under "Uživo". Now from the first frame of today's broadcast the page is today's,
   with nobody yet; between sittings, and after midnight before any frame, the last day stays as before.
+- **Fewer texts, the agenda closed** (24 Nov 2026, the maintainer, with the sitting's first break on). Off the page: what loads on
+  a press and the sound's note under the player, "ime govornika sada ne vidi u potpisu", and what the notification brings
+  under its button, where "Isključi obaveštenja" alone stays. They are under "Kako ovo radi", since principle 5 wants the
+  page to say what loads when and what of a reader is kept. The agenda is closed until pressed; what the reader opens
+  stays open when the part is replaced. Changes the agenda standing open (22 Nov).
