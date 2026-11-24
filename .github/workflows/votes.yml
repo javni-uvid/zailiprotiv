@@ -95,6 +95,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           c="$CONV"
+          # The newest convocation, where the site is still on the one before it: its sittings' notes come after some
+          # days, a day at a time, and the chain below asks only for $CONV's. Asked for three times a day, reading
+          # again only a sitting with a new day's notes (24 Nov 2026: the notes of 19 Nov were up and nobody asked).
+          newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
+          case "$(date -u +%H)" in 06|12|18)
+            [ "$newest" = "$c" ] || gh workflow run transcripts.yml --ref main -f convocation="$newest" -f all=true -f more=true || true ;;
+          esac
           # Next in the chain: the notes of the debates, then the model's writing, which publishes the site. The live
           # page's records alone (data/*/uzivo/) change every hour of a sitting: they are kept, and start nothing.
           if ! git diff --cached -I'"fetched": "[^"]*"' -- data ':(exclude)data/*/uzivo/**' | grep -q '^@@'; then

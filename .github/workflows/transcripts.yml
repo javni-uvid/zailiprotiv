@@ -13,6 +13,10 @@ on:
       top:
         description: "How many of the laws with the largest share of votes against"
         default: "20"
+      more:
+        description: "Read again the sittings whose page links a day's notes not read yet"
+        type: boolean
+        default: false
       again:
         description: "Read sittings already read again"
         type: boolean
@@ -45,6 +49,7 @@ jobs:
           IN_CONVOCATION: ${{ inputs.convocation }}
           IN_ALL: ${{ inputs.all }}
           IN_AGAIN_FLAG: ${{ inputs.again && '--again' || '' }}
+          IN_MORE_FLAG: ${{ inputs.more && '--more' || '' }}
           IN_TOP: ${{ inputs.top }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -62,7 +67,7 @@ jobs:
             deadline=$(( $(date +%s) + 300 * 60 ))
             for c in $convs; do
               left=$(( ($deadline - $(date +%s)) / 60 )); [ "$left" -lt 1 ] && break
-              uv run zailiprotiv --convocation "$c" transcripts --all --minutes "$left" ${IN_AGAIN_FLAG} || true
+              uv run zailiprotiv --convocation "$c" transcripts --all --minutes "$left" ${IN_AGAIN_FLAG} ${IN_MORE_FLAG} || true
               uv run zailiprotiv notes-raw --push
             done
           else

@@ -239,3 +239,8 @@ issue #7 once the Fifteenth is current.
   "Varnice" has no page of its own for it yet, and its panel there and the home page give what the notes do count
   (speeches, points of order, harsh words, who leads in each; `newer15.counted`, put into the panel's mark after
   the counting, since those pages are made during it).
+- **The newest convocation's notes are asked for three times a day** (24 Nov 2026, the maintainer): the hourly **votes**
+  asks **transcripts** only for `config.CURRENT` (14), so the notes of 19 November, up on the Assembly's page, were never
+  read. **votes** now starts **transcripts** for `config.NEWEST` too, over every sitting with `--more`: the page is asked,
+  and the notes read again only when it links a day the record lacks. No model's writing follows (a run over every
+  sitting starts none).

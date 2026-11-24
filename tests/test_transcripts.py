@@ -91,3 +91,39 @@ def test_tools_installed_at_first_need(monkeypatch):
     assert t.tool("soffice") == "soffice" and ran == [("install-them", {"shell": True, "check": True})]
     have.add("soffice")
     assert t.tool("soffice") == "soffice" and len(ran) == 1  # there already: not installed again
+
+
+def test_a_sitting_read_before_is_read_again_when_a_day_is_added(tmp_path, monkeypatch):
+    """24 Nov 2026: the notes of 19 Nov were linked after the sitting had been read, and never read."""
+    import argparse
+    import json
+    from zailiprotiv import skupstina, transcripts
+    from zailiprotiv.cli import assembly
+    url = "https://www.parlament.gov.rs/a.5.43.html"
+    (tmp_path / "laws.json").write_text('{"laws": {}}', encoding="utf-8")
+    (tmp_path / "index.json").write_text(json.dumps({"sittings": {url: {}}}), encoding="utf-8")
+    (tmp_path / "votes").mkdir()
+    listed = [{"url": "https://x/1.docx", "day": 1}]
+    fetched = []
+    monkeypatch.setattr(skupstina, "fetch", lambda u: fetched.append(u) or b"x")
+    monkeypatch.setattr(transcripts, "days", lambda page, u: [dict(d) for d in listed])
+    monkeypatch.setattr(transcripts, "paragraphs", lambda body: ["a"])
+    monkeypatch.setattr(transcripts, "heading", lambda paras: {"date": "", "provisional": True})
+    monkeypatch.setattr(transcripts, "debate", lambda days: {"agenda": {}, "amendments": [], "speeches": [{"t": len(days)}]})
+    monkeypatch.setattr(assembly, "all_votes", lambda p: {})
+    args = argparse.Namespace(laws=str(tmp_path / "laws.json"), votes=str(tmp_path / "votes"), index=str(tmp_path / "index.json"),
+                              out=str(tmp_path / "out"), top=5, law=[], again=False, all=True, more=True, minutes=0)
+    assembly.notes_of_debate(args)
+    assert len(fetched) == 2  # the page and its one day's notes
+    fetched.clear()
+    assembly.notes_of_debate(args)
+    assert len(fetched) == 1  # nothing new: the page only
+    listed.append({"url": "https://x/2.docx", "day": 2})
+    fetched.clear()
+    assembly.notes_of_debate(args)
+    path = next((tmp_path / "out").glob("*.json"))
+    assert len(json.loads(path.read_text(encoding="utf-8"))["days"]) == 2 and len(fetched) == 3
+    fetched.clear()
+    args.more = False
+    assembly.notes_of_debate(args)
+    assert fetched == []  # as before without --more
