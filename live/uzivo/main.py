@@ -24,6 +24,9 @@ from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
 tracker = Tracker(config.STATE_PATH)
+if config.KEEP_INPUTS and Path(config.STATE_PATH).parent.is_dir():  # what it is told, kept to go through a day again
+    from . import dnevnik
+    dnevnik.attach(tracker, Path(config.STATE_PATH).parent / "ulazi")
 _stop = threading.Event()
 bell = Bell()
 mailer = pretplata.Mailer(Path(config.STATE_PATH).parent / "mejl", pretplata.day_mail(tracker))
