@@ -91,6 +91,10 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
                     seen, last_new, backoff = m, time.time(), 5.0
                     if bell:  # a sitting's broadcast has begun: the day's notification (obavesti.py)
                         bell.frame()
+                        try:
+                            bell.heard(tracker)  # … and one when it goes on after a long break
+                        except Exception:
+                            log.exception("the end of a break not looked for")
                     at = {"video": VIDEO.get("id", ""), "sq": getattr(proc, "frame_seq", None),
                           "seg": getattr(proc, "seg_dur", None)}
                     try:

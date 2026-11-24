@@ -272,6 +272,40 @@ def test_the_worker_serves_sign_up_confirmation_and_unsubscription():
     assert "if (from !== LIVE)" in m and "env.LIMIT" in m
 
 
+PUSHES = """
+import worker from %s;
+const days = new Set();
+const DB = { prepare: (sql) => ({ bind: (...a) => ({
+  run: async () => { if (sql.includes("INTO push_days")) { const isNew = !days.has(a[0]); days.add(a[0]); return { meta: { changes: isNew ? 1 : 0 } }; } return { meta: { changes: 0 } }; },
+  all: async () => ({ results: [] }), first: async () => null }),
+  all: async () => ({ results: [] }), first: async () => null, run: async () => ({ meta: { changes: 0 } }) }), batch: async () => [] };
+const env = { DB, PUSH_TOKEN: "t", VAPID_JWK: "{}" };
+const ask = async (body, token = "t") => {
+  const r = await worker.fetch(new Request("https://glasovi.zailiprotiv.rs/p/salji", { method: "POST",
+    headers: { authorization: "Bearer " + token }, body: JSON.stringify(body) }), env, { waitUntil() {} });
+  return [r.status, await r.json()];
+};
+const out = [];
+for (const b of [{ od: 0 }, { od: 0, vrsta: "sazetak" }, { od: 0, vrsta: "nastavak", broj: 1 }, { od: 0, vrsta: "nastavak", broj: 1 },
+  { od: 0, vrsta: "nastavak", broj: 2 }, { od: 0, vrsta: "nastavak", broj: 3 }]) out.push((await ask(b))[1]);
+out.push((await ask({ od: 0 }, "pogresan"))[0]);
+console.log(JSON.stringify(out));
+"""
+
+
+@pytest.mark.skipif(not shutil.which("node"), reason="needs Node, as the worker's code is JavaScript")
+def test_a_sitting_gone_on_is_pushed_twice_a_day_at_most_by_the_workers_own_code():
+    """24 Nov 2026: "n1:" and "n2:" beside the sitting's day and the summary's, each once; a third is none."""
+    script = PUSHES % json.dumps((ROOT / "worker" / "worker.js").as_uri())
+    ran = subprocess.run(["node", "--input-type=module", "-e", script], capture_output=True, text=True, encoding="utf-8")
+    assert ran.returncode == 0, ran.stderr
+    sitting, summary, first, again, second, third, refused = json.loads(ran.stdout)
+    day = sitting["day"]
+    assert (summary["day"], first["day"], second["day"]) == ("s:" + day, "n1:" + day, "n2:" + day)
+    assert not any(x.get("already") for x in (sitting, summary, first, second))
+    assert again["already"] and third["already"] and refused == 403
+
+
 def test_the_live_page_offers_the_mail_and_the_form_works_without_the_script():
     from zoneinfo import ZoneInfo
 

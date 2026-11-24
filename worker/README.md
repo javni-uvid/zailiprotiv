@@ -56,7 +56,7 @@ most once.
 
 `POST /p {endpoint, cir}` (from `https://mikrofon.zailiprotiv.rs` only) keeps a browser's push address in `push`;
 `POST /p/odjava {endpoint}` forgets it. Only addresses of the known push services are taken (Google, Mozilla, Apple,
-Microsoft). `POST /p/salji {od}`, with `authorization: Bearer <PUSH_TOKEN>`, is the live service's: the first call of
+Microsoft). `POST /p/salji {od, vrsta, broj}`, with `authorization: Bearer <PUSH_TOKEN>`, is the live service's: the first call of
 a day (`od` 0) records the day in `push_days` (a second one that day sends nothing), and each call sends a push with
 no content to 30 addresses after row `od`, signed with `VAPID_JWK`, forgets those the service answers 404 or 410
 for, and answers `{sent, gone, next}`. Secrets: `VAPID_JWK` (a P-256 private key as a JWK; its public half is

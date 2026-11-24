@@ -88,3 +88,12 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   day (a silence of 20 minutes nobody called a break means it was off). The subject no longer counts decisions: it says
   what is in the mail, the code's words still. 19 Nov, read from the recording, has its figures in
   `/data/brojevi/2026-11-19.json`.
+- **A notification when the sitting goes on after a long break** (24 Nov 2026, the maintainer's decision, in the hour's break
+  of the second sitting week: to everybody who asked for notifications, not behind a choice of its own, and from when they
+  begin to speak). `obavesti.resumed`: the chair said a break, nobody was heard for 20 minutes after it, and now an MP is
+  read at the rostrum or two pieces of the transcript in 90 s have 8 words or more. Not from the words "nastavljamo sa
+  radom": on 19 Nov they were said twice with no break before them. The rule on 19 Nov's steps: 15:42 and 18:24; the
+  breaks of five and ten minutes tell nobody. At most twice a day, from 7 to 22 h, a break once (`obavesti.json`,
+  `nastavak`; the counter keeps "n1:<day>", "n2:<day>"); a push not delivered in 15 minutes is dropped. A silence with no
+  break said is none (the transcript was off). The promise of principle 5, "at most once a day", changed with it, on the
+  button, the method page and the privacy page; a device that asked before gets it too, and can be turned off there.
