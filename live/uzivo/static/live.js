@@ -135,6 +135,19 @@
     if (heard !== null && now && now !== heard && line) line.textContent = now + (side ? ", " + side.textContent.trim() : "");
     heard = now;
   }
+  // The player before its press (24 Nov 2026): the speaker as the part has them, while one is known; else our mark.
+  function poster() {
+    var f = document.querySelector(".play.facade"), d = document.getElementById("deo");
+    if (!f || !d) return;
+    var who = d.querySelector(".sp-head .who"), side = d.querySelector(".sp-head .side"), ph = d.querySelector(".sp-head img.ph");
+    var on = d.getAttribute("data-stanje") === "govori" && !!who, img = f.querySelector(".fx-ph");
+    f.className = "play facade" + (on ? " has-sp " + d.className : "");
+    if (!on) return;
+    f.querySelector(".fx-who").textContent = who.textContent.trim();
+    f.querySelector(".fx-side").textContent = side ? side.textContent.trim() : "";
+    if (ph) { if (img.getAttribute("src") !== ph.getAttribute("src")) img.setAttribute("src", ph.getAttribute("src")); img.hidden = false; }
+    else { img.hidden = true; }
+  }
   // Asked again with the last answer's mark (ETag): an unchanged part comes back as a 304, from the browser's copy,
   // and is not put in again.
   var shown = null;
@@ -166,7 +179,7 @@
         var now = folds(true);
         Object.keys(now).forEach(function (k) { if (k in was) now[k].open = was[k]; });
         if (keep) { var again = document.querySelectorAll("#deo " + keep[0])[keep[1]]; if (again) again.focus({ preventScroll: true }); }
-        got = Date.now(); tick(); said();
+        got = Date.now(); tick(); said(); poster();
       })
       .catch(function () {});
   }
@@ -176,7 +189,7 @@
     var d = document.getElementById("deo");
     setTimeout(function () { load(); loop(); }, d && d.getAttribute("data-stanje") === "nema_prenosa" ? 30000 : 5000);
   })();
-  setInterval(tick, 1000); tick(); said();
+  setInterval(tick, 1000); tick(); said(); poster();
   // a turn folded away among the earlier ones is opened when a link leads to it
   function unfold() {
     var id = location.hash.slice(1), e = id && document.getElementById(id), d = e && e.closest("details");
