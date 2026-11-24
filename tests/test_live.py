@@ -2817,3 +2817,37 @@ def test_the_words_kept_as_the_chairs_inside_a_mended_turn_are_the_speakers():
     out = [l for _, l in sudija.lines(sudija.pieces(said), [d], TZ)]
     assert "Đorđijević Milena (Lista)" in out[0] and not any("bez potpisa" in l and "Biblioteka" in l for l in out)
     assert any("Reč ima poslanik Petrović" in l and "bez potpisa" in l for l in out)
+
+
+def test_a_speech_cut_by_a_silent_voice_is_joined_when_its_words_are_written():
+    """24 Nov 2026, Vjerica Radeta: 14 s of her speech nobody's, joined by the rule of words once they are there; not over the
+    chair's words, nor when another has the floor between."""
+    import time as _time
+    now = 1795532500.0
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    petar = next(p for p in ROSTER.people if p.slug == "petrovic-petar")
+
+    def cut():
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        t.day = t._day(now)
+        t.observe(None, now=now)
+        t.heard(marko, "glas", now, now + 100)
+        t._close()
+        t.heard(marko, "glas", now + 114, now + 150)
+        return t
+    words = " ".join(["reč"] * 40)
+    t = cut()
+    assert len(t.turns) == 2  # no words between yet
+    t.say(now + 100, words)
+    assert len(t.turns) == 1 and t.turns[0]["start"] == now and t.turns[0]["seen"] >= now + 150 and t.open
+    t = cut()
+    t.say(now + 100, "Reč ima poslanik. " + words, chair=True)  # the chair's words: a new turn
+    assert len(t.turns) == 2
+    t = cut()
+    t.say(now + 60, words)  # words, but long before the gap
+    assert len(t.turns) == 2
+    t = cut()
+    t.turns.insert(1, {**t.turns[0], "key": petar.key, "start": now + 102, "seen": now + 108})
+    t.say(now + 100, words)
+    assert len(t.turns) == 3
