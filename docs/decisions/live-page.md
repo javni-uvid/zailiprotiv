@@ -280,6 +280,6 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   mark and name large, "Skupština uživo", the address and what the page gives, with a mark each. Services keep a link's
   picture by its address, so nothing on it goes stale: no speaker, no break, no date; before a sitting the announcement,
   which names its day. Address `s4`. All in the middle (196–1004 px), as Reddit's app cuts. For some hours it had the
-  speaker's portrait and "Pauza do …", gone with it. The title and line beside it still say who speaks (`og_text`).
+  speaker's portrait and "Pauza do …", gone with it. Beside it the title and line (`og_text`) are the same always too, for the same reason (the maintainer, the same day).
 - **The player's button the largest thing on it** (24 Nov 2026, the maintainer): the mark and name in one small row above,
   the button large and white, with a ring.
