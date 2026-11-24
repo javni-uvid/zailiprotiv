@@ -2914,8 +2914,6 @@ def test_a_speech_cut_by_a_silent_voice_is_joined_when_its_words_are_written():
 def test_applause_does_not_end_a_speech_and_the_chairs_words_do(tmp_path):
     """24 Nov 2026, the maintainer: "ako bude pauza u govoru zbog tapšanja, ti prekineš govor". A turn known by voice is held
     for HOLD_VOICE; the same voice after it goes on as one turn, in seconds; the chair's words end it at once."""
-    import numpy as np
-    from uzivo import glas
     now = 1795532500.0
     marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
 
@@ -2940,7 +2938,22 @@ def test_applause_does_not_end_a_speech_and_the_chairs_words_do(tmp_path):
     t.say(now + 60, "Reč ima narodni poslanik.", chair=True)  # words long before the silence say nothing of it
     assert t.open
 
-    # known again in a few windows, only when it is the held turn's voice and clearly
+
+
+def test_a_held_speaker_is_known_again_in_a_few_windows(tmp_path):
+    """24 Nov 2026: only the held turn's own voice, and clearly; anyone else needs the whole rule."""
+    np = pytest.importorskip("numpy")
+    from uzivo import glas
+    now = 1795532500.0
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+
+    def tracker():
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        t.day = t._day(now)
+        t.observe(None, now=now)
+        t.heard(marko, "glas", now, now + 100)
+        return t
     v = np.array([1.0, 0, 0], dtype=np.float32)
     other = np.array([0, 1.0, 0], dtype=np.float32)
     lis = glas.Listener.__new__(glas.Listener)
