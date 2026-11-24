@@ -2,7 +2,7 @@
 read a few frames of a live broadcast in a row, in the day's working hours, it asks the site's counter (worker/) to
 send it to every device that asked for it on the page, at most once a day. The counter sends it a batch at a time
 (its free plan's limit on requests out), so this asks again with where the next batch starts until none is left.
-And one when the sitting goes on after a long break (24 Nov 2026, the maintainer's decision), at most twice a day:
+And one when the sitting goes on after a long break (24 Nov 2026, the maintainer's decision), as many as there are breaks:
 `resumed` finds it, from what was heard, as soon as they speak again.
 Only the standard library: the tests run it."""
 from __future__ import annotations
@@ -25,7 +25,7 @@ PAUSE = 1200  # seconds nobody is heard: a long break; the five or ten minutes' 
 WORDS = 8  # words in a piece of the transcript for it to be speech (a break's odd sound gave three, 24 Nov 2026)
 SURE = 90  # seconds from the first speech after a break in which a second must come
 FRESH = 900  # a sitting that went on longer ago than this is no news (the service was down)
-RESUMED_MOST = 2  # notifications of a sitting gone on, in a day
+RESUMED_MOST = 50  # in a day: no limit of ours (the maintainer), a stop against a fault
 LOOK = 15  # seconds between looks
 
 

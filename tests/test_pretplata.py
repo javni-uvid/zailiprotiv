@@ -294,16 +294,16 @@ console.log(JSON.stringify(out));
 
 
 @pytest.mark.skipif(not shutil.which("node"), reason="needs Node, as the worker's code is JavaScript")
-def test_a_sitting_gone_on_is_pushed_twice_a_day_at_most_by_the_workers_own_code():
-    """24 Nov 2026: "n1:" and "n2:" beside the sitting's day and the summary's, each once; a third is none."""
+def test_each_break_gone_on_is_pushed_once_by_the_workers_own_code():
+    """24 Nov 2026: "n1:", "n2:", "n3:" … beside the sitting's day and the summary's, each once, as many as there are breaks."""
     script = PUSHES % json.dumps((ROOT / "worker" / "worker.js").as_uri())
     ran = subprocess.run(["node", "--input-type=module", "-e", script], capture_output=True, text=True, encoding="utf-8")
     assert ran.returncode == 0, ran.stderr
     sitting, summary, first, again, second, third, refused = json.loads(ran.stdout)
     day = sitting["day"]
-    assert (summary["day"], first["day"], second["day"]) == ("s:" + day, "n1:" + day, "n2:" + day)
-    assert not any(x.get("already") for x in (sitting, summary, first, second))
-    assert again["already"] and third["already"] and refused == 403
+    assert (summary["day"], first["day"], second["day"], third["day"]) == ("s:" + day, "n1:" + day, "n2:" + day, "n3:" + day)
+    assert not any(x.get("already") for x in (sitting, summary, first, second, third))
+    assert again["already"] and refused == 403
 
 
 def test_the_live_page_offers_the_mail_and_the_form_works_without_the_script():

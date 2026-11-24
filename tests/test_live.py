@@ -1261,7 +1261,7 @@ def test_the_bell_hears_the_end_of_a_break_from_the_tracker_itself(tmp_path):
     assert bell.heard(t, dt_.fromtimestamp(back + 45, TZ), wait=True) and posts == [(0, "nastavak", 1)]
 
 
-def test_the_end_of_a_break_is_told_once_and_twice_a_day_at_most(tmp_path):
+def test_the_end_of_each_break_is_told_once_whatever_their_number(tmp_path):
     from datetime import datetime as dt_
     from uzivo.obavesti import Bell
     posts = []
@@ -1285,7 +1285,7 @@ def test_the_end_of_a_break_is_told_once_and_twice_a_day_at_most(tmp_path):
     third = again + 2 * 3600
     said.update({f"p{int(third + 20 * i)}": "rec " * 12 for i in range(3)})
     events.append({"t": int(again + 70), "vrsta": "Pauza", "tekst": "", "izvor": "model"})
-    assert not bell().heard(Heard(), dt_.fromtimestamp(third + 50, TZ), wait=True) and len(posts) == 2
+    assert bell().heard(Heard(), dt_.fromtimestamp(third + 50, TZ), wait=True) and posts[-1] == (0, "nastavak", 3)  # no limit
     off = Bell(str(tmp_path / "x.json"), token="", api="https://glasovi.example", post=lambda *a: posts.append(a) or {})
     assert not off.heard(Heard(), at(45), wait=True)  # no token (a test of the service): never
 
