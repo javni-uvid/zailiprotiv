@@ -149,6 +149,12 @@ class View:
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
             self._lists(done, current, recorded)
+            if self.lines[0] == day and self.lines[1]:
+                from .rezimei import shown as line_of
+                for d in done:
+                    line = line_of(self.lines[1], d)
+                    if line:
+                        d["rezime"] = line
             groups = self._group_time(done + ([current] if current else [])) if day == self.day and not recorded else None
             if current:
                 self._today(done, current, day)

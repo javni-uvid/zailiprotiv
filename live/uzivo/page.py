@@ -155,14 +155,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         if line and (snap["stanje"] == "govori" and cur):  # otherwise the summary above already says it
             out.append(f'<p class="hl">{escape(line)}</p>')
         out.append(_cards(snap, every, shade, cyr=cyr, site=site, tz=tz))
-        out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
-        out.append(_totals(every, cyr=cyr, site=site, shade=shade))
-        where = f'{site}{"cir/" if cyr else ""}'
-        more = [f'<a href="{escape(where)}govornici">{t("conv_page")} →</a>']
-        if snap.get("snimak") and snap.get("dan"):  # a day read from the recording has its page on the site
-            more.insert(0, f'<a href="{escape(where)}govornici/{escape(snap["dan"])}">{t("day_page")} →</a>')
-        out.append('<p class="more">' + " · ".join(more) + "</p>")
-        out.append(f'<h3 class="sub">{t("all_turns")}</h3>')
+        chip_ = _chip(t("dl_src"), t("rz_src")) if any(d.get("rezime") for d in snap["danas"]) else ""
+        out.append(f'<div class="sec-h"><h3 class="sub">{t("all_turns")}</h3>{chip_}</div>')
         rows = []
         for d in snap["danas"]:
             nm = escape(_name(given_first(d["ime"]), cyr))
@@ -175,7 +169,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
             if d.get("reci"):
                 side += (f' <a class="meta said" href="{"/cir" if cyr else ""}/prepis#t{int(d["od"])}">{t("said_link")}</a>')
             rows.append(f'<li id="t{int(d["od"])}"><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
-                        f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span>{_recording(d, cyr)}</li>')
+                        f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span>{_recording(d, cyr)}{f'<p class="rz">{escape(_name(d["rezime"], cyr))}</p>' if d.get("rezime") else ""}</li>')
         # A long day's list was half the page on a phone: the latest turns stand (the list is newest first), the
         # earlier ones open on a tap, and by themselves when the day's strip or an address leads to one of them
         # (the script's `unfold`).
@@ -184,6 +178,13 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         if fold:
             out.append(f'<details class="turns-more" id="raniji-govori"><summary>{t("turns_earlier")} ({len(rows) - TURNS_SHOWN})</summary>'
                        f'<ol class="turns">{"".join(rows[TURNS_SHOWN:])}</ol></details>')
+        out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
+        out.append(_totals(every, cyr=cyr, site=site, shade=shade))
+        where = f'{site}{"cir/" if cyr else ""}'
+        more = [f'<a href="{escape(where)}govornici">{t("conv_page")} →</a>']
+        if snap.get("snimak") and snap.get("dan"):  # a day read from the recording has its page on the site
+            more.insert(0, f'<a href="{escape(where)}govornici/{escape(snap["dan"])}">{t("day_page")} →</a>')
+        out.append('<p class="more">' + " · ".join(more) + "</p>")
     else:
         out.append(f'<p class="meta">{t("today_none")}</p>')
     out.append("</section></div>")

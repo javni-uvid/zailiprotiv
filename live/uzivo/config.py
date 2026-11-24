@@ -120,6 +120,8 @@ MODEL = os.environ.get("HAIKU_MODEL", "claude-haiku-5-5").strip()
 # after the sitting (24 Nov 2026, the maintainer's decision; everything during it stays with MODEL). Empty: MODEL
 # writes it from its own summaries of the stretches, as before.
 DAY_MODEL = os.environ.get("DAN_MODEL", "claude-opus-5-5").strip()
+# A line on each speech when it ends (rezimei.py, 24 Nov 2026), by MODEL, under the speech on the page; "0" turns it off.
+SPEECH_LINES = os.environ.get("REZIMEI", "1").strip() == "1"
 # Whether the model's summary of the day is on the page and at /sazetak/<day>.json; before that, /sazetak?k=<key>.
 SHOW_SUMMARY = os.environ.get("SAZETAK_PRIKAZ", "0").strip() == "1"
 # The groups' time left in the debate (vreme.py), on the page; "0" takes it off, counted all the same.
