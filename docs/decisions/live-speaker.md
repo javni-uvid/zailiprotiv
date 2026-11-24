@@ -154,3 +154,10 @@ presided (not done).
   In a turn whose own voice is not known, another's is taken only when the sound is liker it than the turn's before was,
   by 0.12; the chair's too. Tried on 17–19 Nov (142 speeches of 44 MPs): no real change of 83 refused, the one false
   change refused; on the broadcast's own sound of 17:24–17:26 the likeness grew by 0.07 at most.
+- **Applause does not end a speech** (24 Nov 2026, the maintainer: "mnogo često ako bude pauza u govoru zbog tapšanja, ti prekineš
+  govor kao da ne pričaju"). A turn known by its voice ended 8 s after the voice was last heard, and the speaker was known
+  again only after 20 s more of it: of the day's 113 turns 29 were the same speaker's next one, 14 of them within 30 s and
+  with none of the chair's words between. It is now held HOLD_VOICE (30 s); its end stays the last voice, so the record
+  gains nothing that was not said. The same speaker is known again from AGAIN windows (some 8 s). The chair's words
+  written down, another's voice or the chair's end it at once. Cost: the name may stand up to 30 s after a speech that ended in
+  silence. Not measured on the sound itself, which is not kept.

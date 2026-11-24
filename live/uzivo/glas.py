@@ -35,6 +35,7 @@ CHANGE, OWN_FROM, OWN_TO, CHANGE_SPAN = 0.45, 3.0, 15.0, 15.0
 # sound before it was, by this much; a speaker merely alike another is as alike all along. On 17-19 Nov 2026: no change
 # of 83 refused, the one false change (0.04) refused.
 JUMP = 0.12
+AGAIN = 4  # windows (some 8 s) in a row that tell the speaker of a held turn goes on
 LEARN_ON = 40.0  # seconds after a caption that stands for seconds whose sound is taken as its speaker's voice
 LEAST = 20  # windows a voice is known from before it names anyone or ends a turn: a few are only those seconds' own sound
 LEARN_EDGE = 5.0  # seconds at a turn's start and end not taken as its voice (the chair may still be speaking)
@@ -194,6 +195,10 @@ class Listener(threading.Thread):
         runs = stretches(np.array(self.t), np.stack(self.f), refs)
         newest = self.t[-1] + WIN
         if not runs or newest - runs[-1][2] > GAP:  # nobody's voice goes on: one found by voice has stopped
+            again = self.again(refs)
+            if again:  # after applause the speaker is known in a few seconds, not in MIN_RUN
+                self.tracker.heard(again[0], "glas", again[1], newest, tracked=set(refs))
+                return
             self.tracker.voice_gone((runs[-1][2] if runs else newest - GAP), newest, set(refs))
             return
         who, a, b, _ = runs[-1]
@@ -222,6 +227,21 @@ class Listener(threading.Thread):
             return True
         f = np.stack(self.f)
         return float((f[new] @ ref).mean() - (f[own] @ ref).mean()) >= JUMP
+
+    def again(self, refs: dict) -> tuple | None:
+        """(the MP of the turn on, since when): their voice again after a silence of it, in AGAIN windows in a row nearest to
+        theirs and at least VOICE_MIN alike. Only for the one whose turn is still held: anyone else needs MIN_RUN."""
+        cur = self.tracker.open_turn()
+        if not cur or not cur.get("po_glasu") or cur.get("slug") not in refs or len(self.t) < AGAIN:
+            return None
+        names = list(refs)
+        sims = np.stack(self.f[-AGAIN:]) @ np.stack([refs[n] for n in names]).T
+        mine = names.index(cur["slug"])
+        if not all(int(np.argmax(row)) == mine and row[mine] >= VOICE_MIN for row in sims):
+            return None
+        roster = self.tracker.roster
+        person = next((p for p in roster.people if p.slug == cur["slug"]), None) if roster else None
+        return (person, self.t[-AGAIN]) if person and self.t[-AGAIN] > cur["seen"] else None
 
     def changed(self) -> None:
         """A turn found by the chair's words, of someone whose voice is not known: ended when its voice changes."""
