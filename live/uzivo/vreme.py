@@ -103,8 +103,11 @@ def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dic
         said = [(t, left) for t, g, left in told if g == r["lista"] and begun <= t <= now and left <= r["ima"]]
         if said:
             t0, left = said[-1]
-            since = sum(d["sekundi"] for d in turns if (d.get("lista") or "") == r["lista"] and d["od"] >= t0 - 5
-                        and d["sekundi"] > REPLY and not d.get("kratko"))
+            # a turn's part after the word counts: the page joins a speaker's turns two minutes apart, so the turn
+            # given the floor with that word may have begun before it (the same evening: 23 minutes of it not taken off)
+            after = [min(d.get("do", d["od"] + d["sekundi"]), now) - max(d["od"], t0) for d in turns
+                     if (d.get("lista") or "") == r["lista"] and not d.get("kratko")]
+            since = sum(x for x in after if x > REPLY)
             r["potroseno"], r["receno"] = r["ima"] - left + since, {"t": t0, "sek": left}
     rows.sort(key=lambda r: (-r["mesta"], r["lista"]))
     return {"tacka": item, "od": begun, "pojedinosti": detail, "zakljucen": closed, "grupe": rows}

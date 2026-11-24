@@ -2449,10 +2449,11 @@ def test_the_time_the_chair_says_is_where_the_groups_count_goes_on_from():
     got = told(said, people)
     assert [(t, g, left) for t, g, left in got if g == a] == [(start + 5000, a, 23 * 60 + 21)]
     turn = lambda at, sec, g: {"od": start + at, "do": start + at + sec, "sekundi": sec, "lista": g}
-    turns = [turn(100, 7000 - 2500, a), turn(5010, 600, a), turn(5700, 100, a), turn(5900, 300, b)]
+    # the turn given the floor began before the word (joined with the speaker's turn before it): its part after counts
+    turns = [turn(100, 4000, a), turn(4900, 710, a), turn(5700, 100, a), turn(5900, 300, b)]
     g = groups_time(item=5, start=start, seats={a: 102, b: 140}, turns=turns, events=[], now=start + 7000, told=got)
     mine = next(r for r in g["grupe"] if r["lista"] == a)
-    assert mine["ima"] - mine["potroseno"] == 23 * 60 + 21 - 600 and mine["receno"] == {"t": start + 5000, "sek": 1401}
+    assert mine["ima"] - mine["potroseno"] == 23 * 60 + 21 - 610 and mine["receno"] == {"t": start + 5000, "sek": 1401}
     other = next(r for r in g["grupe"] if r["lista"] == b)
     assert other["potroseno"] == 300 and "receno" not in other
 
