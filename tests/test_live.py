@@ -2681,6 +2681,14 @@ def test_the_shared_links_picture_is_the_speaker_or_the_break(monkeypatch):
     assert page_.pause_until({**state, "hronika": [{**pause, "tekst": "pauzu od jednog sata"}]}, TZ) == ""
     assert page_.pause_until({**state, "danas": [{"od": at(15, 10), "do": at(15, 12)}]}, TZ) == ""
     assert picture.render(state, cyr=False, tz=TZ)[:4] == b"\x89PNG"
+    told = []
+    real = picture._t
+    monkeypatch.setattr(picture, "_t", lambda key, cyr: told.append(key) or real(key, cyr))
+    picture.render(state, cyr=False, tz=TZ)
+    assert "og_foot_pause" in told
+    told.clear()
+    picture.render({**state, "hronika": []}, cyr=False, tz=TZ)  # nobody known, but no break: not a break's words
+    assert "og_foot_pause" not in told and "og_foot_live" in told
     assert picture.render({**base, "stanje": "nepoznato", "sada": None, "ranije": True}, cyr=False, tz=TZ)[:4] == b"\x89PNG"
 
 
