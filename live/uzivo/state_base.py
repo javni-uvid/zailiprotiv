@@ -27,6 +27,12 @@ SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 # chair's before a reply were about to be the next speaker's)
 CHAIRS = re.compile(r"\breč ima|ima(te)? reč|dajem reč|po kom osnovu|\brepli[kc]|povred\w* poslovnik|izvolite|da li želite|"
                     r"poslaničk\w* grup\w* žel|\bmolim vas|\bmolim (da|bez)|\bupozor|izričem|prijavite se|zahvaljujem|hvala na|idemo dalje", re.I)
+# The chair declaring a break now, not one spoken of or announced for later ("posle toga ćemo proglasiti pauzu")
+BREAK = re.compile(r"\b(?:proglaš\w*m|određujem|pozivam|pravimo|dajem)(?: sada?)? pauzu\b"
+                   r"|\b(?:ću|ćemo) sada? da (?:pozovem|proglasim|odredim|napravimo) pauzu\b"
+                   r"|(?:^|[.!?]\s+)pauza (?:od |u trajanju od |do )?(?:\w+ ){1,2}(?:minut|sat|čas)", re.I)
+
+
 def speakers_own(ts: float, text: str, start: float, end: float) -> bool:
     """Whether a piece of sound in no turn when it was written (kept as the chair's) is the speaker's of a turn that came
     to hold it later (a speech cut in two and mended): well inside the turn, and no word only the chair says in it

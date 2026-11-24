@@ -39,6 +39,7 @@ class Said:
             self._snap = None
             self._mend()
             self._chair_spoke(ts, text)
+            self._break_called(ts, text)
             f = self._said_file(day)
             if f:
                 try:
