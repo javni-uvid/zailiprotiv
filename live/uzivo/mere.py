@@ -26,6 +26,13 @@ _GIVES = re.compile(r"izri[čc]\w*|izli[čc]\w*|izvrkao|izrkao|druga opomena|prv
                     r"|udalj\w* (vas )?sa sednic", re.I)
 _SPOKEN_OF = re.compile(r"\bste (mu |joj |ga |je |im )?(dali|izrekli|opomenuli)\b|\bopomenuli\b|\bdobili opomen", re.I)
 _RECAP = re.compile(r"\b((dao|izrekao) sam|sam (dao|izrekao)) (\w+ )?opomen", re.I)
+def given(text: str) -> bool:
+    """Whether the sentence gives a measure: not one spoken of by an MP, nor told of afterwards (checked on 19 Nov 2026:
+    of 13 model's measures the eight given are, the five not are not)."""
+    text = latin(text)
+    return bool(_GIVES.search(text)) and not _SPOKEN_OF.search(text) and not _RECAP.search(text)
+
+
 _TIME = re.compile(r"\b(\d{1,2}):(\d{2})\b")
 
 

@@ -106,3 +106,11 @@ presided (not done).
   learnt only from captions, and no caption was read until `ocr.outlined`: the windows of `natpis` seconds on are learnt
   too (`LEARN_ON`). The chair's "ima narodni poslanik X" at a piece's beginning gives the floor (`hronika._FLOOR`), and so
   does a given name heard whole with the surname near (`GIVEN_SURNAME`).
+- **A turn is not ended because its speaker's voice was not recognised** (24 Nov 2026, the maintainer: "popravi sve te
+  stvari"): `voice_gone` took anyone whose voice is on the list as known, so a speaker named by a caption or the chair's
+  words, whose voice was not recognised, had 0 s (Andrić 14:02, 80 s), 9 s and 15 s. Only a voice recognised in the turn counts.
+- **The day's record filled by one rule** (`popuna.py`, by hand, the service stopped, the file kept beside as it was): where the
+  chair gave the floor by name, the turn runs to the next floor given or another's turn, if less than 0.4 of it
+  is there and at least 45 s are missing (25 s for a turn not there at all); the rest is left as it was, as the chair's own
+  words stand before the next floor. Run on 24 Nov for what had been missed before that day's fixes.
+- **"Zlatko Kokanović, reč. Izvolite."** gives the floor (the name before the word, only with "izvolite" after it).

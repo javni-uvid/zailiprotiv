@@ -91,6 +91,9 @@ _FLOOR = re.compile(r"(?=\b(?:(?<![^\W_])(?<!\S)(?:^)ima " + _TITLE + r"|reč im
                     + r")\b([^.!?]{0,90}))")
 
 
+# "Zlatko Kokanović, reč. Izvolite.": the name before the word, only with "izvolite" after it (24 Nov 2026)
+_FLOOR_BEFORE = re.compile(r"([^.!?,]{4,40}),? reč[.,!] ?izvolite\b")
+
 FLOOR_NEAR = 0.74  # how alike a heard word and a name's word must be at the least ("Jova" for Jovo)
 GIVEN_SURNAME = 0.6  # a given name heard whole: how alike the surname must then be ("Sanja Fritz" for Sanja Fric)
 GIVEN_CLEAR = 0.25  # and how far ahead of the next MP with that given name (or any)
@@ -121,7 +124,7 @@ def floor(text: str, people: list, now_only: bool = False) -> list:
     alike = lambda a, b: 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
     out = []
     low = " ".join(latin(text).split()).lower()
-    for m in _FLOOR.finditer(low):
+    for m in sorted([*_FLOOR.finditer(low), *_FLOOR_BEFORE.finditer(low)], key=lambda m: m.start()):
         if now_only and _NEXT & {fold(w) for w in re.findall(r"[^\W\d_]+", low[:m.start()])[-4:]}:
             continue
         said = [fold(w) for w in re.findall(r"[^\W\d_]+", m.group(1))[:7]]

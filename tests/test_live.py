@@ -1962,6 +1962,52 @@ def test_a_turn_found_without_a_caption_has_its_place_in_the_broadcast():
     assert t.snapshot(now + 100)["danas"][0]["snimak"] is None
 
 
+def test_a_voice_not_recognised_does_not_end_a_turn():
+    """24 Nov 2026, 14:02: Miroslav Andrić's voice was on the list and not recognised; 80 s of his stood as 0 s."""
+    now = 1795519000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    t.observe(None, now=now)
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    t.heard(marko, "potpis", now + 5, now + 5)
+    t.observe(None, now=now + 60)
+    t.voice_gone(now + 1, now + 70, {marko.slug})  # his voice is known, nobody's was recognised
+    assert t.open_turn() and t.open_turn()["slug"] == "markovic-marko"
+    t.heard(marko, "glas", now + 60, now + 90)  # recognised: now its end counts
+    t.voice_gone(now + 90, now + 120, {marko.slug})
+    assert t.open_turn() is None and t.turns_now()[0]["seen"] == now + 90
+
+
+def test_the_days_turns_are_filled_from_the_chairs_words_by_one_rule():
+    from uzivo.names import Person
+    from uzivo.popuna import fill
+    people = [Person("andric miroslav", "Andrić Miroslav", "andric-miroslav", "A"), Person("bakic jovo", "Bakić Jovo", "bakic-jovo", "B"),
+              Person("djajic zoran", "Đajić Zoran", "djajic-zoran", "B")]
+    turn = lambda key, name, a, b: {"key": key, "name": name, "slug": key.replace(" ", "-"), "group": "", "start": a, "seen": b, "n": 4,
+                                     "izvor": "potpis", "role": ""}
+    said = {"p1000": "Reč ima narodni poslanik Miroslav Andrić.", "1020": "rec " * 30, "p1100": "Reč ima narodni poslanik Jovo Bakić.",
+            "1120": "rec " * 30, "p1200": "Reč ima narodni poslanik Zoran Đajić.", "1220": "rec " * 30, "p1800": "Reč ima Jovo Bakić."}
+    turns = [turn("andric miroslav", "Andrić Miroslav", 1020, 1020), turn("bakic jovo", "Bakić Jovo", 1120, 1190), turn("bakic jovo", "Bakić Jovo", 1820, 2000)]
+    out, done = fill(turns, said, people)
+    by = {t["name"]: round(t["seen"] - t["start"]) for t in out if t["name"] != "Bakić Jovo"}
+    assert by == {"Andrić Miroslav": 80, "Đajić Zoran": 580}  # the one of 0 s lengthened, the one missing written
+    assert [round(t["seen"] - t["start"]) for t in out if t["name"] == "Bakić Jovo"] == [70, 180]  # a whole one left as it was
+    assert len(done) == 2 and fill(out, said, people)[1] == []  # a second run does nothing
+
+
+def test_the_name_before_the_word_and_a_measure_only_spoken_of():
+    from uzivo import hronika
+    from uzivo.names import Person
+    from uzivo.mere import given
+    people = [Person("a", "Kokanović Zlatko", "kokanovic-zlatko", ""), Person("b", "Vučić Aleksandar", "vucic-aleksandar", "")]
+    got = lambda text: [p.slug for p in hronika.floor(text, people)]
+    assert got("Prijavila se još, verovatno, replika. Zlatko Kokanović, reč. Izvolite.") == ["kokanovic-zlatko"]
+    assert got("Zlatko Kokanović, reč o kojoj govorim nije ta.") == [] and got("Zlatko Kokanović je rekao reč.") == []
+    assert given("Ja vam izričem opomenu, imali ste...") and given("Izričajam opomenu.")
+    assert not given("Zato ste mu dali opomenu, izrekli ste je.") and not given("vi ste njega opomenuli pa ste ga opomenuli i drugi put")
+    assert not given("ja sam dao opomene poslanici Anji Brnabić")
+
+
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
     """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
     from uzivo import hronika
