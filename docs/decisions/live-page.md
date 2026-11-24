@@ -272,10 +272,9 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   spoken, turns, speakers in numbers said little; the headline, the cards and the list stay, the list is the heading of its
   own part. The heading stays only while nobody has spoken; the last day's heading with its date too.
 - **What stands on the player before its press** (24 Nov 2026, the maintainer, who liked neither the shared link's
-  picture there nor the picture itself; the choice of several drafts). Our mark, "Za ili Protiv" and "Uživo · iz Skupštine"
-  while nobody speaks or it is not known who (draft c4); while it is known, the portrait, name and list of the
-  speaker's head, put by the script (`live.js`, poster), so the player is not drawn again. No picture loads before the press
-  but the portrait the head already loads. The shared link's picture is the next point.
+  picture there nor the picture itself; the choice of several drafts, c4). Our mark, "Za ili Protiv" and "Uživo · iz
+  Skupštine", always: for half an hour the speaker's portrait and name stood there while one was known, and went the same day
+  ("skloni to ko govori"), as the speaker's head under the player says it already. Drawn in the page, nothing loads.
 - **The picture of a shared link, dark like the announcement** (24 Nov 2026, the maintainer: the white one with the time by
   list "mi se ne sviđa"). `picture.render`: while the speaker is known, the portrait (from the site's `/foto/`, kept an
   hour in memory, left out when it does not come), the name, the list and its colour; in a break "Pauza do 15:10" (the
