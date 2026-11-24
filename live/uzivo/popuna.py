@@ -73,7 +73,7 @@ def main(args: list[str]) -> int:
     print(len(data["turns"]), "->", len(turns))
     print("\n".join(done))
     if "--pisi" in args and done:
-        kept = f.with_suffix(".pre-popune.json")
+        kept = base / f"dan-{day}-pre-popune.json"  # not in dani/, where each file is a day
         if not kept.exists():
             write_text(kept, f.read_text(encoding="utf-8"))
         _write(f, {**data, "turns": turns})
