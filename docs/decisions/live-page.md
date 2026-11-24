@@ -283,3 +283,16 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   speaker's portrait and "Pauza do …", gone with it. Beside it the title and line (`og_text`) are the same always too, for the same reason (the maintainer, the same day).
 - **The player's button the largest thing on it** (24 Nov 2026, the maintainer): the mark and name in one small row above,
   the button large and white, with a ring.
+- **The page as the maintainer chose it of variants shown** (24 Nov 2026, "1C, 2A pa 2C, 3A, 4B, 5A i 5B"; the variants were an artifact):
+  - *Pills under the player*: the sound only, the notification, the app ("Slušaj", "Obavesti me", "Dodaj kao aplikaciju"), in place of
+    two cards and the line.
+  - *The mail's card* a slim row with a form folded in it and a cross; the reader's word, kept in this browser only
+    (`localStorage`, no cookie), and taken back at the foot; signing up puts it away.
+  - *"Šta se desilo danas"* with words: a measure's sentence as the chair said it, and exchanges (`razmene.py`): a reply the
+    chair gave and the sentence of the turn before it that it takes up, whole sentences of the automatic transcript,
+    said to be automatic, each with the moment. Never chosen by tone; only pieces of sound wholly inside a turn (a sentence
+    of one had stood as the other's in the day's try); the chair's warnings are paired with nobody. `RECI_PRIKAZ=0` takes
+    the words off. Changes "no step shows the transcript's wording" (live/AGENTS.md) for these two, without quotation marks. The pairs found are few (three of
+    24 Nov's 68 turns): a model could find more, each checked word for word in a piece inside its speaker's turn; not done.
+  - *The turns by the hour* with the portrait, the topic, the moment as a button; the headline, the day in cards and the strip are off.
+  - *The Rules* ("Poslovnik") as a mark beside each step and at the foot of the card and the page, in place of a card.

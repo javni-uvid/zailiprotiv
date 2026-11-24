@@ -347,3 +347,35 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
 .st-live { align-items: center; } .st-card.st-live > .st-tile { width: auto; min-height: 0; padding: .45rem .75rem; display: inline-flex; align-items: center; gap: .45rem; background: #dc2626; color: #fff; } .st-live .st-tile i { width: .55rem; height: .55rem; border-radius: 50%; background: #fff; }
 .st-live .st-when { font-family: inherit; font-size: var(--t-3); font-weight: 600; letter-spacing: 0; } .st-h { color: var(--muted); font-weight: 400; } .st-live .status-chair { display: block; font-size: var(--t-2); color: var(--muted); margin-top: .15rem; }
 @media (prefers-reduced-motion: no-preference) { .st-live .st-tile i { animation: beat 1.6s ease-in-out infinite; } }
+/* Pills under the player (24 Nov 2026, the maintainer): the sound, the notification, the app. */
+.pills { order: 11; display: flex; flex-wrap: wrap; gap: .5rem; margin: .7rem 0 0; } main:has(#deo[data-stanje="nema_prenosa"]) > .pills { order: 4; }
+.pills .add-home { display: contents; } .pills .add-home[hidden] { display: none; } .pills .add-home p { width: 100%; }
+.pill-b { font: 600 var(--t-2)/1.2 system-ui, sans-serif; display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; padding: .5rem .95rem; border: 1px solid var(--line); border-radius: 99px; background: var(--bg); color: var(--fg); cursor: pointer; }
+.pill-b:hover { border-color: var(--fg); } .pill-b:focus-visible { outline: 3px solid var(--za); outline-offset: 2px; } .pill-b[hidden] { display: none; }
+.pill-b svg { width: 1.15rem; height: auto; } .pill-b svg path { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; } .pill-m svg { width: 1.3rem; } .ah-row { display: contents; }
+.nt-off { min-height: 2.75rem; }
+/* The day's summary by mail: a slim row with the form folded in it and a cross (24 Nov 2026). */
+.ml { order: 36; position: relative; margin: 1rem 0 0; border: 1px solid var(--line); border-radius: 12px; } main:has(#deo[data-stanje="nema_prenosa"]) > .ml { order: 7; }
+.ml > summary { display: flex; align-items: center; gap: .7rem; padding: .5rem 3.2rem .5rem .9rem; cursor: pointer; list-style: none; min-height: 3.2rem; } .ml > summary::-webkit-details-marker { display: none; }
+.ml-n { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; } .ml-p { background: var(--za); color: #fff; font-weight: 600; font-size: var(--t-2); border-radius: 8px; padding: .6rem .9rem; }
+@media (prefers-color-scheme: dark) { .ml-p { color: #111318; } }
+.ml[open] > summary .ml-p { display: none; } .ml .ml-box { margin: 0; border-radius: 0 0 11px 11px; border-width: 1px 0 0; }
+.ml-x { order: 36; align-self: flex-end; position: relative; z-index: 1; width: 2.75rem; height: 2.75rem; margin: -3.1rem .2rem .35rem auto; border: 0; background: none; color: var(--muted); font-size: var(--t-5); cursor: pointer; }
+main:has(#deo[data-stanje="nema_prenosa"]) > .ml-x { order: 7; } .ml[open] + .ml-x { display: none; }
+.ml-back { order: 95; text-align: center; color: var(--muted); font-size: var(--t-2); margin: 1.2rem 0 0; } .ml-back button { font: inherit; background: none; border: 0; color: var(--fg); text-decoration: underline; cursor: pointer; min-height: 2.75rem; padding: 0 .4rem; }
+.ml[hidden], .ml-x[hidden], .ml-back[hidden] { display: none; }
+/* The words said in "Šta se desilo": the chair's, and a reply with what it replies to (24 Nov 2026). */
+.q { background: color-mix(in srgb, var(--fg) 4%, transparent); border-radius: 10px; padding: .5rem .7rem; margin: .4rem 0 0; } .q.q-c { background: none; border: 1px solid var(--line); }
+.q .qw { margin: 0; font-size: var(--t-1); display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; } .q .qw span { color: var(--muted); } .q .qp { margin-left: auto; } .q .qt { margin: .15rem 0 0; font-family: var(--serif); line-height: 1.45; }
+.qd { flex: none; width: .65rem; height: .65rem; border-radius: 3px; display: inline-block; } .qd.q-ch { background: var(--muted); border-radius: 50%; } .qd.l1 { background: var(--muted); } .qd.c-av { background: var(--c-av); } .qd.c-sl { background: var(--c-sl); } .qd.c-mn { background: var(--c-mn); }
+/* The Rules, beside a step and at the foot of the card. */
+.rk-l { display: inline-flex; align-items: center; gap: .3rem; font: 600 var(--t-1)/1.2 system-ui, sans-serif; border: 1px solid var(--line); border-radius: 7px; padding: .22rem .5rem; text-decoration: none; vertical-align: middle; } .rk-l svg { width: .95rem; height: .95rem; } .rk-l svg path { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.rk-f { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: .7rem; margin-top: .9rem; } .rk-f .rk-l { padding: .45rem .7rem; }
+/* The day's turns by the hour, the portrait, the topic, the moment as a button (24 Nov 2026). */
+.turns li.th { display: flex; align-items: center; gap: .6rem; padding: 1rem 0 .2rem; border: 0; font: 700 var(--t-1)/1 system-ui, sans-serif; color: var(--muted); } .turns li.th::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.turns li[id] { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0 .75rem; align-items: start; padding: .7rem 0; scroll-margin-top: 45vh; }
+.tf-w { width: 48px; height: 48px; border-radius: 50%; padding: 2px; display: grid; place-items: center; background: var(--muted); } .tf-w.c-av { background: var(--c-av); } .tf-w.c-sl { background: var(--c-sl); } .tf-w.c-mn { background: var(--c-mn); }
+.tf { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; background: var(--bg); color: var(--fg); display: grid; place-items: center; font-weight: 700; font-size: var(--t-2); border: 2px solid var(--bg); }
+.tn { margin: 0; font-weight: 700; } .tn .meta { font-weight: 400; } .turns .rz { color: var(--fg); } .ts { margin: .15rem 0 0; font-size: var(--t-1); }
+.turns a.tp, .turns .tp { align-self: start; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 .8rem; margin: 0; border: 1px solid var(--line); border-radius: 99px; font-size: var(--t-2); font-weight: 600; text-decoration: none; color: var(--fg); white-space: nowrap; } .turns span.tp { border-color: transparent; color: var(--muted); padding: 0; }
+

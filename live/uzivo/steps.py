@@ -232,7 +232,7 @@ def model_steps(snap: dict) -> list[dict]:
             continue
         last[key] = t
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": what, "url": "", "model": True,
-                    "pojam": STEP_TERM.get(kind, "")})
+                    "pojam": STEP_TERM.get(kind, ""), **({"recenica": sentence} if kind == "Mera predsedavajućeg" else {})})
     # Work resumed after a break is told too where the model did not (24 Nov 2026, 15:11: "pošto imamo kvorum, nastavljamo
     # pretres po petoj tački"): at the chair's words that move the work on, or the first turn, after the break.
     moves = [e["t"] for e in snap.get("hronika") or [] if e.get("izvor") == "prepis"

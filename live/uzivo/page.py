@@ -20,6 +20,7 @@ from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: 
 # A bell, and the mark Safari's "Podeli" has (a box with an arrow up), drawn as lines in the text's colour.
 BELL = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.6 2H4.4z"/><path d="M10 21h4"/>'
         '<path d="M12 5V3"/></svg>')
+BOOK = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>')
 SHARE = ('<svg class="ic-share" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9H6v12h12V9h-2"/><path d="M12 15V3"/>'
          '<path d="M8.5 6.5 12 3l3.5 3.5"/></svg>')
 ARC = ('<svg class="brand-mark" viewBox="0 0 120 76" aria-hidden="true"><path class="m-za" d="M 14 66 A 46 46 0 0 1 83 26.2"/>'
@@ -48,6 +49,48 @@ def _date(day: str) -> str:
 def _hms(sec: int) -> str:
     h, m, s = sec // 3600, sec % 3600 // 60, sec % 60
     return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def _turn(d: dict, snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
+    """A turn in the day's list (24 Nov 2026, the maintainer's choice of three): the portrait, the name, how long, the line
+    on its topic, and the moment it began as a button that plays it."""
+    t = lambda k: escape(_t(k, cyr))
+    name = escape(_name(given_first(d["ime"]), cyr))
+    nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + d["adresa"])}">{name}</a>' if d["adresa"] else name
+    side = d["uloga"] or d["grupa"] or d.get("lista") or ""
+    side = side if side != "*" else ""
+    foto = d.get("foto") or ""
+    if foto and str(foto).replace(".", "").replace("-", "").isalnum():
+        face = f'<img class="tf" src="{escape(site)}foto/{escape(foto)}" width="44" height="44" alt="" loading="lazy">'
+    else:
+        face = f'<span class="tf" aria-hidden="true">{escape(cyrillic("".join(w[:1] for w in given_first(d["ime"]).split()[:2])) if cyr else "".join(w[:1] for w in given_first(d["ime"]).split()[:2]))}</span>'
+    if d.get("snimak") is not None and (d.get("datoteka") or d.get("video")):  # its own place, in its own video or file
+        href = f'{d["datoteka"]}#t={d["snimak"]}' if d.get("datoteka") else f'https://www.youtube.com/watch?v={d["video"]}&t={d["snimak"]}s'
+        data = f'data-file="{escape(d["datoteka"])}"' if d.get("datoteka") else f'data-yt="{escape(d["video"])}"'
+        play = (f'<a class="time" href="{escape(href)}" {data} data-t="{int(d["snimak"])}" title="{escape(_t("recording_title", cyr))}">'
+                f'{_clock(d["od"], tz)}</a>')
+    else:
+        play = _moment(snap, d["od"], _clock(d["od"], tz), cyr)
+    play = play.replace('class="time"', 'class="time tp"', 1).replace(">" + _clock(d["od"], tz) + "<", f">▶ {_clock(d['od'], tz)}<", 1) if "href" in play else f'<span class="time tp">{_clock(d["od"], tz)}</span>'
+    how = f' · {t("by_short_" + d["izvor"])}' if d.get("izvor") in ("glas", "prepis") else ""
+    said = f' · <a class="said" href="{"/cir" if cyr else ""}/prepis#t{int(d["od"])}">{t("said_link")}</a>' if d.get("reci") else ""
+    topic = f'<p class="rz">{escape(_name(d["rezime"], cyr))}</p>' if d.get("rezime") else ""
+    shade = LIST_COLOURS.get(d.get("lista") or "", "l1")
+    return (f'<li id="t{int(d["od"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(side)}"><span class="tf-w {shade}">{face}</span>'
+            f'<div class="tm"><p class="tn">{nm} <span class="meta">{_minutes(d["sekundi"])} {t("min")}</span></p>{topic}'
+            f'<p class="ts meta">{escape(_name(side, cyr))}{how}{said}</p></div>{play}</li>')
+
+
+def _by_hour(turns: list[dict], rows: list[str], a: int, b: int, tz: ZoneInfo, cyr: bool) -> str:
+    """The rows `a` to `b` under the hour each began in ("16 h"), in the list's own order."""
+    out, last = ['<ol class="turns">'], None
+    for d, row in list(zip(turns, rows))[a:b]:
+        hour = datetime.fromtimestamp(d["od"], tz).hour
+        if hour != last:
+            out.append(f'<li class="th">{hour} {"ч" if cyr else "h"}</li>')
+            last = hour
+        out.append(row)
+    return "".join(out) + "</ol>"
 
 
 def _recording(d: dict, cyr: bool) -> str:
@@ -149,35 +192,17 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
         every = snap["danas"] + ([cur] if snap["stanje"] == "govori" and cur else [])
-        shade = _shades(every)
-        line = headline(every, cyr=cyr, when=_when(snap, cyr))
-        if line and (snap["stanje"] == "govori" and cur):  # otherwise the summary above already says it
-            out.append(f'<p class="hl">{escape(line)}</p>')
-        out.append(_cards(snap, every, shade, cyr=cyr, site=site, tz=tz))
+        shade = _shades(every)  # the headline, the day in cards and its strip are off (24 Nov 2026, the maintainer)
         chip_ = _chip(t("dl_src"), t("rz_src")) if any(d.get("rezime") for d in snap["danas"]) else ""
         out.append(f'<div class="sec-h"><h2>{t("all_turns")}</h2>{chip_}</div>')
-        rows = []
-        for d in snap["danas"]:
-            nm = escape(_name(given_first(d["ime"]), cyr))
-            if d["adresa"]:
-                nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + d["adresa"])}">{nm}</a>'
-            side = d["uloga"] or d["grupa"]
-            side = f' <span class="meta">{escape(_name(side, cyr))}</span>' if side else ""
-            if d.get("izvor") in ("glas", "prepis"):
-                side += f' <span class="meta">· {t("by_short_" + d["izvor"])}</span>'
-            if d.get("reci"):
-                side += (f' <a class="meta said" href="{"/cir" if cyr else ""}/prepis#t{int(d["od"])}">{t("said_link")}</a>')
-            rows.append(f'<li id="t{int(d["od"])}"><span class="time">{_clock(d["od"], tz)}–{_clock(d["do"], tz)}</span> {nm}{side}'
-                        f' <span class="meta">· {_minutes(d["sekundi"])} {t("min")}</span>{_recording(d, cyr)}{f'<p class="rz">{escape(_name(d["rezime"], cyr))}</p>' if d.get("rezime") else ""}</li>')
+        rows = [_turn(d, snap, cyr=cyr, site=site, tz=tz) for d in snap["danas"]]
         # A long day's list was half the page on a phone: the latest turns stand (the list is newest first), the
-        # earlier ones open on a tap, and by themselves when the day's strip or an address leads to one of them
-        # (the script's `unfold`).
+        # earlier ones open on a tap, and by themselves when an address leads to one of them (the script's `unfold`).
         fold = len(rows) > TURNS_SHOWN + 4
-        out.append('<ol class="turns">' + "".join(rows[:TURNS_SHOWN] if fold else rows) + "</ol>")
+        out.append(_by_hour(snap["danas"], rows, 0, TURNS_SHOWN if fold else len(rows), tz, cyr))
         if fold:
             out.append(f'<details class="turns-more" id="raniji-govori"><summary>{t("turns_earlier")} ({len(rows) - TURNS_SHOWN})</summary>'
-                       f'<ol class="turns">{"".join(rows[TURNS_SHOWN:])}</ol></details>')
-        out.append(_timeline(every, shade, cur if snap["stanje"] == "govori" else None, cyr=cyr, tz=tz))
+                       f'{_by_hour(snap["danas"], rows, TURNS_SHOWN, len(rows), tz, cyr)}</details>')
         out.append(_totals(every, cyr=cyr, site=site, shade=shade))
         where = f'{site}{"cir/" if cyr else ""}'
         more = [f'<a href="{escape(where)}govornici">{t("conv_page")} →</a>']
@@ -352,8 +377,15 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         title = text or s(e["naslov"])
         if e.get("pojam") and site:  # what the Rules say of this kind of step, on the site (steps.STEP_TERM)
             href = site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojam-" + e["pojam"]
-            title = f'<a href="{escape(href)}" title="{t("steps_rules")}">{title}</a>'
+            title += f' <a class="rk-l" href="{escape(href)}" title="{t("steps_rules")}">{BOOK}{t("rules_word")}</a>'
         return title
+
+    def quote(who: str, what: str, shade: str = "", side: str = "", tag: bool = True) -> str:
+        """Words said, as the automatic transcript has them: the speaker, the list's colour, a whole sentence. Without
+        quotation marks: the transcript is not a quote (live/AGENTS.md), and says it is automatic."""
+        dot = f'<i class="qd {shade}" aria-hidden="true"></i>' if shade else '<i class="qd q-ch" aria-hidden="true"></i>'
+        return (f'<div class="q{" q-c" if not shade else ""}"><p class="qw">{dot}<b>{s(given_first(who) if shade else who)}</b>{f" <span>{s(side)}</span>" if side else ""}{f'<span class="qp">{t("qt_auto")}</span>' if tag else ""}</p>'
+                f'<p class="qt">{s(what)}</p></div>')
 
     def li(when: str, mark: tuple[str, str], body: str, cls: str = "", at: float = 0) -> str:
         time_ = _moment(snap, at, when, cyr) if at else f'<span class="time">{escape(when)}</span>'
@@ -372,8 +404,15 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
             kind, _, whom = (e.get("opis") or "").partition(" · ")
             if kind.strip():
                 title, what = rules(e, s(kind.strip()[:1].upper() + kind.strip()[1:])), s(whom.strip())
+        said = quote(t("chair_word"), e["recenica"]) if e.get("recenica") and config.SHOW_QUOTES else ""
         return li(_clock(e["t"], tz), _step_mark(e),
-                  f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{what}</p>' if what else ""), at=e["t"])
+                  f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{what}</p>' if what else "") + said, at=e["t"])
+
+    def exchange(x: dict) -> str:
+        a, b = x["prvi"], x["odgovor"]
+        return li(_clock(x["t"], tz), ("mk-korak", ""), f'<p class="st-title">{t("reply_word")}</p>'
+                  + quote(a["ime"], a["tekst"], LIST_COLOURS.get(a["lista"], "l1"), a["lista"], False)
+                  + quote(b["ime"], b["tekst"], LIST_COLOURS.get(b["lista"], "l1"), b["lista"]), at=x["t"])
 
     rows: list[tuple[int, str]] = []  # (minute of the sitting day, the line)
     for o in decisions:
@@ -384,6 +423,8 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         if decisions and e.get("naslov") in ("Izbor", "Rezultat glasanja"):
             continue  # the day's summary has told them, checked (sudija.settle_votes)
         rows.append((_minute(_clock(e["t"], tz)), step(e)))
+    if config.SHOW_QUOTES:
+        rows += [(_minute(_clock(x["t"], tz)), exchange(x)) for x in snap.get("razmene") or []]
     rows.sort(key=lambda r: -r[0])
     links = "".join(f' <a href="{escape(u)}">{t("dl_record")} ↗</a>' for u in dict.fromkeys(
         str(e["url"]) for e in written) if u.startswith("https://"))
@@ -400,6 +441,9 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         if decisions:
             full = full.rstrip(".") + ". " + escape(_fill(_t("sum_note", cyr), _model(summary)))
         chip = _chip(t("dl_src"), full)
+        book = (f'<p class="dl-foot rk-f"><a class="rk-l" href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{BOOK}{t("rules_word")}</a> '
+                f'<span class="meta">{t("rules_short")}</span></p>') if site else ""
+        body += book
         if links:
             body += f'<p class="dl-foot">{links.strip()}</p>'
     # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
@@ -1196,9 +1240,6 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         # the line under the picture (22 Nov 2026): the script writes the part's newest lines in, after the delay
         onair += (f'<div class="cc" hidden aria-hidden="true" data-delay="{int(config.CAPTION_DELAY)}"><p class="cc-t"><span></span></p>'
                   f'<p class="cc-n">{t("cc_note")}</p></div>')
-        from . import slusaj
-        if config.LISTEN_PUBLIC and slusaj.fresh(time.time()):  # only the sound, ours (slusaj.py; 22 Nov 2026)
-            note = (f'<button type="button" class="play listen-live" data-uzivo="{escape(slusaj.address())}">🎧 {t("listen_live")}</button>')
     else:
         onair = ""
         parts = snap.get("datoteke") or []
@@ -1296,22 +1337,27 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     # day, which had put it half a phone's screens down, under the last day's summary (20 Nov 2026: one device asked)
     # each with a tile of its own, the app's as it will stand on the home screen, and what it gives under its name
     # (23 Nov 2026, the maintainer: that the page becomes an app was not said)
-    add = f"""<section class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
-<div class="ah-row"><button type="button" class="add-btn nt nt-on" hidden><span class="ah-tile">{BELL}</span><span class="ah-t"><b>{t("nt_on")}</b><span>{t("nt_on_sub")}</span></span></button><button type="button" class="add-btn add add-go" hidden><span class="ah-tile ah-app">{ARC}</span><span class="ah-t"><b>{t("add_home")}</b><span>{t("add_home_sub")}</span></span></button></div>
+    from . import slusaj
+    # Pills under the player (24 Nov 2026, the maintainer's choice): the sound only (ours, slusaj.py), the notification, the app
+    listen = (f'<button type="button" class="pill-b listen-live" data-uzivo="{escape(slusaj.address())}">🎧 {t("listen_pill")}</button>'
+              if live and snap["stanje"] != "nema_prenosa" and config.LISTEN_PUBLIC and slusaj.fresh(time.time()) else "")
+    pills = f"""<section class="pills">{listen}<div class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
+<div class="ah-row"><button type="button" class="pill-b nt nt-on" hidden aria-label="{t("nt_on")}">{BELL}<span>{t("nt_pill")}</span></button><button type="button" class="pill-b add add-go" hidden><span class="pill-m">{ARC}</span><span>{t("app_pill")}</span></button></div>
 <p class="nt-done" hidden><button type="button" class="nt-off">{t("nt_off")}</button></p>
 <p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
 <p class="nt-err meta" hidden>{t("nt_err")}</p>
 <p class="add-ios meta" hidden>{SHARE} {t("add_ios")}</p>
-</section>
+</div></section>
 """
+    add = ""
     # "Sažetak dana na mejl" (23 Nov 2026, the maintainer's decision): the address goes to the counter, sealed there for
     # the maintainer's key (worker/mejl.js); the form works without the script, which only keeps the reader on the page
     if api.startswith("https://"):
         # `#mejl` is its address on the page, for a link that leads straight to it; its three lines stand with the
         # mail's own marks (23 Nov 2026, the maintainer: a card that stands out)
         see = f' <a class="ml-see" href="{base}mejl/primer">{t("ml_sample")} →</a>' if sample else ""
-        add += f"""<form class="ml-box" id="mejl" method="post" action="{escape(api)}/m">
-<p class="ml-k">{t("ml_kicker")}</p>
+        add += f"""<details class="ml" id="mejl"><summary><span class="ml-n"><b>{t("ml_kicker")}</b><span class="meta">{t("ml_slim")}</span></span><span class="ml-p">{t("ml_button")}</span></summary>
+<form class="ml-box" method="post" action="{escape(api)}/m">
 <h2>{t("ml_title")}</h2>
 <ul class="ml-list"><li>{t("ml_1")}</li><li>{t("ml_2")}</li><li>{t("ml_3")}</li></ul>
 <p class="ml-when">{t("ml_when")}{see}</p>
@@ -1319,8 +1365,10 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <div class="ml-row"><input type="email" id="ml-adresa" name="adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="pismo" value="{"cir" if cyr else "lat"}"><button type="submit" class="ml-go">{t("ml_button")}</button></div>
 <p class="ml-done" role="status" hidden>{t("ml_done")}</p><p class="ml-err" role="alert" hidden>{t("ml_err")}</p>
 <p class="ml-fine">{t("ml_fine")} <a href="{escape(site)}privatnost">{t("ml_privacy")}</a></p>
-</form>
+</form></details><button type="button" class="ml-x" hidden aria-label="{t("ml_hide")}">×</button>
 """
+        mail_back = f'<p class="ml-back" hidden><span>{t("ml_off")}</span> <button type="button">{t("ml_show")}</button></p>\n'
+    mail_back = mail_back if api.startswith("https://") else ""
     how_time = (f'<p>{t("gt_how")} <a href="{escape(site)}{"cir/" if cyr else ""}poslovnik-clanovi#pojam-vreme-rasprave">{t("gt_rules")} →</a></p>'
                 if config.SHOW_GROUP_TIME else "")
     return f"""<!doctype html>
@@ -1348,14 +1396,14 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="sr" id="ko" aria-live="polite"></p>
 <section class="hero"><h1>{t("h1")}</h1></section>
 {player(snap, cyr=cyr, live=live, tz=tz)}
+{pills}
 {(add + day) if snap["stanje"] == "nema_prenosa" else (day + add)}
-<p class="rules-cta"><a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}"><b>{t("rules_cta")} →</b><span>{t("rules_sub")}</span></a></p>
 <p class="rules-cta"><a href="{escape(home + "podrzi")}"><b>{t("support_cta")} →</b><span>{t("support_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p>{how_time}</details>
+{mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p>{how_time}</details>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{t("rules_word")}</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
 </body>

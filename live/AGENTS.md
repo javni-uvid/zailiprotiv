@@ -23,7 +23,9 @@ that file in the same commit, and here only when a line below no longer holds.
 - **Nothing from elsewhere on the page** but what principle 5 names: the counter of visits, the player only on a click,
   notifications and the mail only to who asks.
 - **The automatic transcript is never a quote** and is off the page, but for the line under the picture, which says
-  it may err. A correction mends spellings only. No step shows the transcript's wording.
+  it may err, and the two kinds of words in "Šta se desilo" (24 Nov 2026, the maintainer: a measure's sentence, a reply and what it
+  takes up), marked "automatski prepis", with no quotation marks, whole sentences with the moment to hear them. A correction
+  mends spellings only. No other step shows the transcript's wording.
 - **Nobody is ever named from a face on the live page;** a voice or the chair's words name a speaker only while no
   caption does, by the rule checked against the notes, and the page says which it was. The presiding officers are
   never named as speakers by voice.

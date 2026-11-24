@@ -147,3 +147,4 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
 - **"Rad je nastavljen" after a break** (24 Nov 2026, the cycle's finding: the model told no end of the break to 15:10): where no
   step was told within five minutes of it, at the chair's words that move the work on or the first turn after the break. And
   a turn found by the chair's words alone, under five seconds, is none (`counted`): the floor passed on at once.
+- **Words in the steps** (24 Nov 2026): see `live-page.md`, "The page as the maintainer chose it".
