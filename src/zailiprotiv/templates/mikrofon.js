@@ -152,7 +152,7 @@
   // The button under the broadcast swaps: while our sound plays it offers the picture, while the picture plays the
   // sound, so that either is one press away (22 Nov 2026, the maintainer: "probati i jednu i drugu opciju").
   var swap = document.querySelector(".listen-live"), facade = document.querySelector(".play.facade");
-  var liveSound = swap ? swap.getAttribute("data-uzivo") : "", swapText = swap ? swap.innerHTML : "", watchText = facade ? "▶ " + ((facade.querySelector("span") || facade).textContent.replace(/^▶\s*/, "")) : "";
+  var liveSound = swap ? swap.getAttribute("data-uzivo") : "", swapText = swap ? swap.innerHTML : "", watchText = facade ? facade.getAttribute("data-text") || "" : "";
   function offer(picture) {
     if (!swap || !facade) return;
     if (picture) { swap.removeAttribute("data-uzivo"); swap.setAttribute("data-yt", facade.getAttribute("data-yt")); swap.setAttribute("data-t", "0"); swap.textContent = watchText; }

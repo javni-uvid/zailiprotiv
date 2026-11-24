@@ -210,6 +210,8 @@ TEXT = {
     "yt_note": "Klik učitava plejer sa Jutjuba (Gugl). Dok ne kliknete, sa Jutjuba se ništa ne učitava.",
     "yt_live_note": "Prenos sa Jutjuba (Gugl) učitava se tek na klik, bez kolačića.",
     "play_live": "Gledaj prenos",
+    "fx_where": "iz Skupštine",
+    "fx_now": "Sada govori",
     "listen_live": "Slušaj samo zvuk",
     "listen_live_note": "Samo zvuk je naš: svira i kad je ekran zaključan, i kasni oko pola minuta za prenosom.",
     "presides": "Predsedava",

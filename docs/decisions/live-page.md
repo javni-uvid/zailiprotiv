@@ -271,3 +271,8 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
 - **"Danas su govorili" and its three tiles off** (24 Nov 2026, the maintainer: "te tri ukratko kartice nam ne trebaju"): time
   spoken, turns, speakers in numbers said little; the headline, the cards and the list stay, the list is the heading of its
   own part. The heading stays only while nobody has spoken; the last day's heading with its date too.
+- **What stands on the player before its press** (24 Nov 2026, the maintainer, who liked neither the shared link's
+  picture there nor the picture itself; the choice of several drafts). Our mark, "Za ili Protiv" and "Uživo · iz Skupštine"
+  while nobody speaks or it is not known who (draft c4); while it is known, the portrait, name and list of the
+  speaker's head, put by the script (`live.js`, poster), so the player is not drawn again. No picture loads before the press
+  but the portrait the head already loads. The shared link's picture itself (`/slika.png`) is unchanged for now.

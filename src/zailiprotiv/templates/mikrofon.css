@@ -13,11 +13,17 @@
 li.now-playing { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
 .play { font: inherit; font-weight: 700; font-size: var(--t-4); padding: .8rem 1.4rem; border: 0; border-radius: 999px; background: #fff; color: #111; cursor: pointer; }
 .play:hover { transform: scale(1.04); }
-.play.facade { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border-radius: 0; background: #000; display: grid; place-items: center; }
+/* before the press: our mark and name, or the speaker, and the pill (24 Nov 2026). Dark in both themes, as a video is. */
+.play.facade { position: absolute; inset: 0; width: 100%; height: 100%; padding: 5% 6%; border-radius: 0; background: radial-gradient(120% 130% at 60% 100%, #1b212c, #0c0e12); color: #f1f1ee; display: grid; align-content: center; justify-items: center; gap: .7rem; --za: #7cc0f5; --protiv: #ff9a52; text-align: center; }
 .play.facade:hover { transform: none; }
-.play.facade img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
-.play.facade span { position: relative; padding: .8rem 1.4rem; border-radius: 999px; background: #fff; color: #111; }
-.play.facade:hover span, .play.facade:focus-visible span { transform: scale(1.04); }
+.fx { display: grid; justify-items: center; gap: .45rem; } .fx .brand-mark { width: 5.2rem; height: auto; } .fx .brand-mark path { fill: none; stroke-width: 16; } .fx .m-za { stroke: var(--za); } .fx .m-protiv { stroke: var(--protiv); }
+.fx-word { font-family: var(--serif); font-size: var(--t-6); line-height: 1.1; } .fx-word .m-z { color: var(--za); } .fx-word .m-p { color: var(--protiv); }
+.fx-live { display: inline-flex; align-items: center; gap: .4rem; font-size: var(--t-1); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; } .fx-live i { width: .6rem; height: .6rem; border-radius: 50%; background: #dc2626; }
+.fx-sp { display: none; grid-template-columns: auto 1fr; align-items: center; gap: 1rem; text-align: left; } .fx-ph { width: 5.2rem; height: 7.2rem; object-fit: cover; border-radius: 8px; } .fx-tx { display: grid; gap: .25rem; justify-items: start; min-width: 0; } .fx-who { font-family: var(--serif); font-size: var(--t-6); line-height: 1.1; } .fx-side { color: #a8adb8; font-size: var(--t-2); font-weight: 400; }
+.facade.has-sp .fx-calm { display: none; } .facade.has-sp .fx-sp { display: grid; } .facade.has-sp { border-left: 6px solid var(--lc, transparent); }
+.fx-pill { padding: .7rem 1.4rem; border-radius: 999px; background: #fff; color: #111; } .play.facade:hover .fx-pill, .play.facade:focus-visible .fx-pill { transform: scale(1.04); }
+@media (max-width: 420px) { .fx .brand-mark { width: 4rem; } .fx-ph { width: 3.9rem; height: 5.4rem; } .fx-who, .fx-word { font-size: var(--t-5); } .fx-pill { padding: .55rem 1.2rem; font-size: var(--t-3); } .play.facade { gap: .5rem; } }
+@media (max-width: 360px) { .fx-side { display: none; } .fx-who { font-size: var(--t-4); } .fx-ph { width: 3.2rem; height: 4.4rem; } .fx-pill { padding: .45rem 1rem; } }
 .parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
 .part { font: inherit; font-size: var(--t-2); font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
 .part.on { border-color: currentColor; font-weight: 700; }

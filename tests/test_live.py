@@ -481,9 +481,10 @@ def test_the_player_is_a_button_until_clicked():
     assert "<iframe" not in html and "<video" not in html and " src=" not in html  # nothing loads before a click
     live = player({**day, "stanje": SPEAKING}, cyr=False, live="abcdefghijk")
     # while a sitting is on, a facade: our picture of the moment and ▶; YouTube loads only on the press, counted
-    assert 'data-yt="abcdefghijk"' in live and 'data-e="mikrofon.pusti"' in live and 'src="/slika.png"' in live
+    assert 'data-yt="abcdefghijk"' in live and 'data-e="mikrofon.pusti"' in live and "slika.png" not in live and "fx-calm" in live
     assert "<iframe" not in live and "youtube" not in live
-    assert 'src="/cir/slika.png"' in player({**day, "stanje": SPEAKING}, cyr=True, live="abcdefghijk")
+    assert "Против" in player({**day, "stanje": SPEAKING}, cyr=True, live="abcdefghijk")
+    assert " src=" not in live  # the portrait is put by the script, from the part the page already has
     assert player({**day, "danas": []}, cyr=False) == ""
     frag = fragment(day, cyr=False, site="", tz=TZ)
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="7"' in frag  # each turn opens in the player
