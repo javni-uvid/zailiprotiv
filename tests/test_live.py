@@ -2453,9 +2453,28 @@ def test_the_time_the_chair_says_is_where_the_groups_count_goes_on_from():
     turns = [turn(100, 4000, a), turn(4900, 710, a), turn(5700, 100, a), turn(5900, 300, b)]
     g = groups_time(item=5, start=start, seats={a: 102, b: 140}, turns=turns, events=[], now=start + 7000, told=got)
     mine = next(r for r in g["grupe"] if r["lista"] == a)
-    assert mine["ima"] - mine["potroseno"] == 23 * 60 + 21 - 610 and mine["receno"] == {"t": start + 5000, "sek": 1401}
+    assert mine["ima"] - mine["potroseno"] == 23 * 60 + 21 - 610
+    # our own count at that moment is kept beside the chair's figure: 4000 s and the 100 s of the turn begun before it
+    assert mine["receno"] == {"t": start + 5000, "sek": 1401, "nase": mine["ima"] - 4100}
     other = next(r for r in g["grupe"] if r["lista"] == b)
     assert other["potroseno"] == 300 and "receno" not in other
+
+
+def test_the_proposers_word_is_none_of_the_groups_time():
+    """24 Nov 2026, from the notes of 19 Nov: the chair's "Osamnaest minuta imate još" fits the group's speeches without
+    the proposer's (100-116 min by their words against 108), not with them (130-150)."""
+    from uzivo.rok import proposer
+    from uzivo.vreme import groups_time
+    start = 1795089600
+    said = {"p" + str(start + 990): "Zahvaljujem. Reč ima predlagač, narodni poslanik Petar Petrović.",
+            "p" + str(start + 2990): "Reč ima narodni poslanik Petar Petrović.",
+            str(start + 4005): "Kao što je predlagač rekao, ovo je dobar predlog."}  # an MP speaking of the proposer
+    turn = lambda at, sec: {"od": start + at, "do": start + at + sec, "sekundi": sec, "lista": "A"}
+    assert proposer(said, turn(1000, 900)) and not proposer(said, turn(3000, 900)) and not proposer(said, turn(4000, 900))
+    assert proposer({"p" + str(start + 5990): "Reč ima gospodin Petar Petrović, predstavnik predlagača. Izvolite."}, turn(6000, 300))
+    rows = [{**turn(1000, 900), "predlagac": True}, turn(3000, 600)]
+    g = groups_time(item=4, start=start, seats={"A": 10}, turns=rows, events=[], now=start + 5000)
+    assert g["grupe"][0]["potroseno"] == 600 and g["grupe"][0]["govora"] == 1
 
 
 def test_the_groups_time_runs_from_the_debates_opening():

@@ -18,6 +18,8 @@ _ORDER = re.compile(r"\bpovred[aeu] (?:\w+ )?(?:poslovnik|poslani)|\breklamira\w
 _REPLY = re.compile(r"\brepli[kc]", re.I)
 # The chair's "po kom osnovu?" to who asks for the floor out of the list's order: a reply or a point of order, whichever
 # is answered. Only for the groups' time (short): the clock by the speaker still wants the kind heard.
+_PROPOSER = re.compile(r"(?:\breč ima|\bima reč|\bdajem reč)\W+(?:\w+\W+){0,3}?predlaga[čc]|\bpredlaga[čc]\w*,? (?:narodn\w+ )?poslani\w+ \w+ \w+,? (?:ima reč|izvolite)"
+                       r"|(?:reč ima|dajem reč)[^.?!]{0,90}?,\s*(?:predstavni\w+ )?predlaga[čc]", re.I)
 _BASIS = re.compile(r"\b(?:po|u) ko\w* osnov", re.I)
 
 
@@ -28,11 +30,9 @@ def short(said: dict[str, str], turn: dict, most: int) -> bool:
     return turn["sekundi"] <= most and limit(said, turn["od"], 0, basis=True) is not None
 
 
-def limit(said: dict[str, str], start: float, seconds: int, basis: bool = False) -> dict | None:
-    """{"vrsta": "replika" | "povreda" | "", "sek": LIMIT} of the turn begun at `start`, `seconds` long so far; None
-    when nothing heard tells. With `basis`, the chair's "po kom osnovu" tells too, with no kind."""
-    if seconds > LIMIT + OVER:
-        return None
+def _around(said: dict[str, str], start: float) -> str:
+    """What was heard as the turn begun at `start` was given the floor: the chair's pieces of the 45 s before it, and
+    any piece within 12 s of it."""
     heard = []
     for k, text in said.items():
         key = k.lstrip("p")
@@ -41,7 +41,21 @@ def limit(said: dict[str, str], start: float, seconds: int, basis: bool = False)
         at = int(key)
         if (k[:1] == "p" and start - BEFORE <= at <= start + 2) or (k[:1] != "p" and start - AFTER <= at <= start + AFTER):
             heard.append((at, text))
-    text = " ".join(t for _, t in sorted(heard))
+    return " ".join(t for _, t in sorted(heard))
+
+
+def proposer(said: dict[str, str], turn: dict) -> bool:
+    """Whether the chair gave the floor to the turn's speaker as the proposer ("Reč ima predlagač, narodni poslanik
+    ..."): the proposer speaks when asking, with no limit, outside the groups' time (Rules, art. 96), an MP too."""
+    return bool(_PROPOSER.search(_around(said, turn["od"])))
+
+
+def limit(said: dict[str, str], start: float, seconds: int, basis: bool = False) -> dict | None:
+    """{"vrsta": "replika" | "povreda" | "", "sek": LIMIT} of the turn begun at `start`, `seconds` long so far; None
+    when nothing heard tells. With `basis`, the chair's "po kom osnovu" tells too, with no kind."""
+    if seconds > LIMIT + OVER:
+        return None
+    text = _around(said, start)
     order, reply = bool(_ORDER.search(text)), bool(_REPLY.search(text))
     if not (order or reply or (basis and _BASIS.search(text))):
         return None
