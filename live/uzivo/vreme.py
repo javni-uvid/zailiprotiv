@@ -5,7 +5,10 @@ draws it.
 By the Rules of Procedure: in the basic procedure the groups have five hours in all for the debate in principle,
 shared in proportion to their MPs (art. 97); in the debate in detail as much again, and each group's chair 15 minutes
 more (art. 158); in the shortened procedure half (art. 99). The proposer and the Government speak outside the groups'
-time (art. 96), replies and points of order last two minutes at most (art. 103, 104).
+time (art. 96), replies and points of order last two minutes at most (art. 103, 104). Each group's chair or
+representative has 20 minutes besides (art. 96), kept apart from the group's time by the Assembly's own clock (the
+notes: "iskoristili ste vreme ovlašćenog predstavnika. Imate još od vremena grupe 7,24"); we do not hear which turn
+uses them, so they are added to what each group has (24 Nov 2026), as the 15 minutes of the debate in detail are.
 
 What we can know and what we cannot: the time is the time we know a speaker by the caption, the chair's words or the
 voice, not the Assembly's clock; we do not hear whether the item runs in the shortened procedure or whether the Assembly gave the
@@ -16,11 +19,14 @@ for every group:
   new one opened after it (the debate in detail) starts the count again;
 - a turn counts when it is a sitting MP's of a group the site names (its "lista") and lasts more than REPLY seconds
   (a reply or a point of order is two minutes at most), and is not heard to be one of these though it ran over them
-  (`rok.short`: up to REPLY_OVER seconds; 24 Nov 2026: a reply of 142 s was counted);
-- each group's share is the hours times its MPs over all the groups' MPs (MPs of no group are not shared out)."""
+  (`rok.short`: up to REPLY_OVER seconds; 24 Nov 2026: a reply of 142 s was counted), the chair's "po kom osnovu?"
+  when giving the floor telling it too;
+- each group's share is the hours times its MPs over all the groups' MPs (MPs of no group are not shared out), and
+  its chair's or representative's minutes more."""
 from __future__ import annotations
 
 TOTAL = 5 * 3600  # art. 97: the groups' time in all, the basic procedure
+REPRESENTATIVE = 20 * 60  # art. 96: each group's chair or representative, in the debate in principle, apart from TOTAL
 CHAIR_MORE = 15 * 60  # art. 158: each group's chair, in the debate in detail
 REPLY_OVER = 180  # seconds: a turn heard to be a reply or a point of order is none of the group's up to this long
 REPLY = 125  # seconds: a turn this long or shorter is taken for a reply or a point of order (two minutes, art. 103, 104)
@@ -62,7 +68,7 @@ def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dic
         used[g][1] += 1
     if not any(v[1] for v in used.values()):
         return None
-    rows = [{"lista": g, "mesta": n, "ima": round(TOTAL * n / whole) + (CHAIR_MORE if detail else 0),
+    rows = [{"lista": g, "mesta": n, "ima": round(TOTAL * n / whole) + (CHAIR_MORE if detail else REPRESENTATIVE),
              "potroseno": used[g][0], "govora": used[g][1]} for g, n in seats.items()]
     rows.sort(key=lambda r: (-r["mesta"], r["lista"]))
     return {"tacka": item, "od": begun, "pojedinosti": detail, "zakljucen": closed, "grupe": rows}
