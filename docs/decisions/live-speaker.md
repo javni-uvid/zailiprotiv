@@ -78,3 +78,11 @@ turn found without a caption. Replayed: 18 Nov against the notes (voices sampled
 the day against its reading by voice 6.3% -> 1.1%; the chair found as it was: Radenović, Macura from 12:42, Čupić
 from 13:32. The deputies get their voices once they speak with a caption; a measure of the chair could carry who
 presided (not done).
+- **No box under the speaker** (24 Nov 2026, the maintainer: needless): the day's numbers, the lines about the MP with
+  their turning, the way to the page and the pictures to share are off; the name, list, clock and the words being said
+  stay, and the name is the way to the MP's page. The counts behind it (`danas`, `saziv`, `duze`) stay in `stanje.json`.
+- **How long the turn may last, where heard** (24 Nov 2026, the maintainer; `rok.py`): a reply or a point of order has two
+  minutes (art. 103, 104), told by the chair's words when giving the floor or the speaker's first ones; "/ 2 min ·
+  replika" by the clock, "povreda Poslovnika", or the minutes alone when both words are heard; gone half a minute past
+  the limit. Other turns have none we know. On 24 Nov's first 18 turns: nine told, all of
+  136 s or less, and none of the three of 206 to 578 s; of the short ones not told some were cut in two by a reading.
