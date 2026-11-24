@@ -406,18 +406,9 @@ class Tracker(Said, Chronicle, View):
                 # the speech began in the turn before: one speech, cut in two where nothing named the speaker
                 # (24 Nov 2026, 16:57: Milena Đorđijević's, 646 s of it nobody's; the clock said 11:15 and more than
                 # two minutes were not believed)
-                self.turns.pop()
-                before["start"] = max(before["start"], began) if began > before["start"] else before["start"]
-                before["seen"] = max(before["seen"], cur["seen"])
-                before["n"] += cur["n"]
+                before["start"] = max(before["start"], began)
+                self._join(before, cur)
                 before["izvor"] = "potpis"
-                for k in ("natpis", "po_glasu"):
-                    if cur.get(k) and not before.get(k):
-                        before[k] = cur[k]
-                for k in ("sq_seen", "seg"):
-                    if cur.get(k) is not None:
-                        before[k] = cur[k]
-                self._snap = None
                 self._save()
                 return
             if abs(cur["start"] - began) > 120:
@@ -426,6 +417,30 @@ class Tracker(Said, Chronicle, View):
                 before["seen"] = max(before["start"], began)
             cur["start"] = min(began, cur["seen"])
             self._snap = None
+            self._save()
+
+    def _join(self, before: dict, cur: dict) -> None:
+        """The last turn made part of the same speaker's turn before it. Called with the lock held."""
+        self.turns.pop()
+        before["seen"] = max(before["seen"], cur["seen"])
+        before["n"] += cur["n"]
+        for k in ("natpis", "po_glasu"):
+            if cur.get(k) and not before.get(k):
+                before[k] = cur[k]
+        for k in ("sq_seen", "seg"):
+            if cur.get(k) is not None:
+                before[k] = cur[k]
+        self._snap = None
+
+    def _mend(self) -> None:
+        """The same speaker named again, joined once the words between are written down: they come half a minute after the
+        turn begins, when `_went_on` could not yet say that speech had gone on (24 Nov 2026, 17:32: Vjerica Radeta's,
+        14 s of it nobody's). Called with the lock held, after each piece."""
+        if len(self.turns) < 2:
+            return
+        before, cur = self.turns[-2], self.turns[-1]
+        if before["key"] == cur["key"] and cur.get("izvor") and before["seen"] < cur["start"] and self._went_on(before, cur["start"]):
+            self._join(before, cur)
             self._save()
 
     def _went_on(self, turn: dict, start: float) -> bool:

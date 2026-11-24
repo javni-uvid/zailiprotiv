@@ -144,3 +144,8 @@ presided (not done).
   while the turn was cut is kept under the chair's key, so the day's summary (`sudija.lines`, the whole day's) and the
   topic (`rezimei.spoken`) would have read the MP's words as the chair's. Well inside the turn and with no word only the
   chair says, it is the speaker's (`state_base.speakers_own`). The kept transcript is not changed.
+- **And joined once the words between are written** (24 Nov 2026, the maintainer, of Vjerica Radeta: "popravi po istom
+  principu"): the same speaker found again by voice 14 s after her turn's end began a new one, as the words between
+  come half a minute later and `_went_on` had nothing to judge by. After each piece of the transcript the last two turns are
+  judged by the same rule (`Tracker._mend`): within 200 s, at least 1.2 words a second, no word only the chair says, no
+  floor given to another.

@@ -37,6 +37,7 @@ class Said:
                 return
             self.said[("p" if chair else "") + str(int(ts))] = text
             self._snap = None
+            self._mend()
             f = self._said_file(day)
             if f:
                 try:
