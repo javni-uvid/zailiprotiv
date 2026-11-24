@@ -12,6 +12,16 @@ from .names import Person
 from .state_base import NO_STREAM, SAID_TAIL, counted
 
 
+def _filed(rec: dict, done: list[dict]) -> tuple[list[dict], list[dict]]:
+    """The archive's files of the site's day, and the turns with their place in the file each began in."""
+    parts = [p for p in rec.get("datoteke") or [] if p.get("url") and p.get("od") and p.get("trajanje")]
+    out = []
+    for d in done:
+        p = next((p for p in parts if p["od"] <= d["od"] < p["od"] + p["trajanje"]), None)
+        out.append({**d, "datoteka": p["url"], "snimak": int(d["od"] - p["od"])} if p else d)
+    return parts, out
+
+
 def _older(rec: dict, turns: list[dict]) -> bool:
     """Whether the site's day is the service's own record copied earlier ("izvor": "uzivo") and ends before the record
     does now: the copy is then behind, by the turns since and by what was mended since (24 Nov 2026: the copy of 17:56
@@ -170,6 +180,10 @@ class View:
                     day, recorded, parts = rec["dan"], True, [p for p in rec.get("datoteke") or []
                                                               if p.get("url") and p.get("od") and p.get("trajanje")]
                     done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
+            if not recorded and not current and rec and rec["dan"] == day and (self.status == NO_STREAM or day != today):
+                # the record stands (an earlier copy did not take its place), with the archive's files the site knows:
+                # each turn begun inside one gets its place in it (24 Nov 2026: the links to the recordings had gone)
+                parts, done = _filed(rec, done)
             if self.status == NO_STREAM:  # no broadcast: a link into its YouTube video would lead to a private video
                 done = [{**d, "snimak": None} if not d.get("datoteka") else d for d in done]
             if current and current["adresa"] in self.facts:

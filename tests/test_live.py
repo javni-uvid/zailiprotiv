@@ -430,6 +430,16 @@ def test_an_earlier_copy_of_the_services_own_day_does_not_take_its_place(tmp_pat
     t.use_recording({"dan": "2026-11-24", "izvor": "uzivo", "govori": [turn]})
     snap = t.snapshot(now=day1 + 3900)
     assert not snap["snimak"] and [d["ime"] for d in snap["danas"]] == ["Marković Marko", "Petrović Petar"]
+    # the archive's files the site knows stay: a turn begun inside one has its place in it, the others no link
+    part = {"url": "https://arhiva.example/a.mp4", "od": int(day1 + 3000), "trajanje": 1200}
+    t.use_recording({"dan": "2026-11-24", "izvor": "uzivo", "govori": [turn], "datoteke": [part]})
+    snap = t.snapshot(now=day1 + 3900)
+    assert snap["datoteke"] == [part] and not snap["snimak"]
+    marko, petar = snap["danas"]
+    assert marko["datoteka"] == part["url"] and marko["snimak"] == 600 and not petar.get("datoteka") and petar["snimak"] is None
+    from uzivo.page import fragment
+    assert 'data-file="https://arhiva.example/a.mp4"' in fragment(snap, cyr=False, site="", tz=TZ)
+    t.use_recording({"dan": "2026-11-24", "izvor": "uzivo", "govori": [turn]})
     nxt = datetime(2026, 11, 25, 8, 0, tzinfo=TZ).timestamp()
     assert len(Tracker(str(tmp_path / "stanje.json"), tz="Europe/Belgrade").snapshot(now=nxt)["danas"]) == 2  # the next morning too, kept across a restart
     later = {**turn, "ime": "Marković Marko", "adresa": "markovic-marko", "od": int(day1 + 3600), "do": int(day1 + 3610)}
