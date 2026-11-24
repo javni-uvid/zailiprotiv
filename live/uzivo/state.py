@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, REJOIN, REJOIN_WORDS
+from .state_base import CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, REJOIN, REJOIN_WORDS
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -398,11 +398,30 @@ class Tracker(Said, Chronicle, View):
                 return
             began = (was[1] + began) / 2
             cur = self.turns[-1] if self.turns else None
-            if not (self.open and cur and cur["key"] == person.key and cur.get("izvor")) or abs(cur["start"] - began) > 120:
+            if not (self.open and cur and cur["key"] == person.key and cur.get("izvor")):
                 return
             before = self.turns[-2] if len(self.turns) > 1 else None
-            if before and before["key"] == person.key and began < before["seen"] and before["start"] <= began:
-                return  # the same speaker's turn, cut in two by a reading: one clock for both
+            if before and before["key"] == person.key and before["start"] - CLOCK_JOIN <= began <= before["seen"] + 5 \
+                    and seconds <= LONGEST_CLOCK:
+                # the speech began in the turn before: one speech, cut in two where nothing named the speaker
+                # (24 Nov 2026, 16:57: Milena Đorđijević's, 646 s of it nobody's; the clock said 11:15 and more than
+                # two minutes were not believed)
+                self.turns.pop()
+                before["start"] = max(before["start"], began) if began > before["start"] else before["start"]
+                before["seen"] = max(before["seen"], cur["seen"])
+                before["n"] += cur["n"]
+                before["izvor"] = "potpis"
+                for k in ("natpis", "po_glasu"):
+                    if cur.get(k) and not before.get(k):
+                        before[k] = cur[k]
+                for k in ("sq_seen", "seg"):
+                    if cur.get(k) is not None:
+                        before[k] = cur[k]
+                self._snap = None
+                self._save()
+                return
+            if abs(cur["start"] - began) > 120:
+                return
             if before and before["seen"] > began:
                 before["seen"] = max(before["start"], began)
             cur["start"] = min(began, cur["seen"])
