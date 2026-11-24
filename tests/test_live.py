@@ -647,7 +647,7 @@ def test_one_frame_of_another_name_inside_a_speech_is_not_a_turn():
     assert [x["name"] for x in t.turns] == ["Petrović Petar", "Jovanović Marko"]
 
 
-def test_the_speaker_shows_the_day_so_far_lines_about_the_mp_and_the_way_to_the_page():
+def test_the_speaker_has_the_name_and_the_clock_and_no_box_under_them():
     t = Tracker(None, "Europe/Belgrade")
     t.roster = ROSTER
     t.use_facts({
@@ -669,16 +669,15 @@ def test_the_speaker_shows_the_day_so_far_lines_about_the_mp_and_the_way_to_the_
     assert cur["saziv"] == {"broj": "15", "sek": 3600 + 720, "n": 6}  # the site's days and today
     html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert 'src="https://zailiprotiv.rs/foto/12.jpg"' in html and 'data-sek="120"' in html
-    assert "2. put za govornicom · ukupno 12 min · 1. po vremenu od 2 govornika" in html
-    assert "15. saziv" in html and "1 h 12 min u 6 govora" in html
-    assert '<span class="src">sazivi 13–14</span>300 za · 12 protiv' in html and "87% prisustva" in html
-    assert 'class="cta" href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in html and 'class="share-now"' in html
+    # the box under the speaker is off (24 Nov 2026, the maintainer); the name is the way to the MP's page
+    assert '<a href="https://zailiprotiv.rs/poslanik/petrovic-petar">' in html
+    assert 'class="o"' not in html and "2. put za govornicom" not in html and "sazivi 13–14" not in html
     assert "Vreme za govornicom po listama" in html and 'href="#t1794920610"' in html and 'id="t1794920610"' in html
     assert 'class="l1 on"' in html  # the turn now on, marked in the day's strip
     t.observe(marko, now=now + 840)
     t.observe(marko, now=now + 845)
     html = fragment(t.snapshot(now=now + 846), cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "Лекар · Ниш · годиште 1980." in html and "/cir/poslanik/jovanovic-marko" in html and "Подели овај тренутак" in html
+    assert "/cir/poslanik/jovanovic-marko" in html and "Лекар" not in html
 
 
 def test_a_speaker_on_no_list_is_counted_apart_in_the_days_time_by_list():
@@ -1881,6 +1880,27 @@ def test_an_election_an_mp_speaks_of_is_no_step_and_the_chairs_is():
     assert len(model_steps({**snap, "hronika": [measure]})) == 1  # a measure comes in the middle of a turn
     on = {**snap, "danas": [], "sada": {"od": base + 100}, "hronika": snap["hronika"]}
     assert model_steps(on) == []  # the turn still on
+
+
+def test_a_replys_and_a_point_of_orders_two_minutes_stand_by_the_clock():
+    """24 Nov 2026, the maintainer: how long the turn may last, where the transcript tells what it is."""
+    from uzivo.rok import limit
+    start = 1795515909.0
+    chair = lambda text, at=-20: {f"p{int(start + at)}": text}
+    own = lambda text, at=5: {str(int(start + at)): text}
+    assert limit(chair("Reč ima poslanica Ana Brnabić. Povreda poslovnika člana 108."), start, 30) == {"vrsta": "povreda", "sek": 120}
+    assert limit(chair("Aleksandar Vučić, Replika. To će dva minuta da traje."), start, 30)["vrsta"] == "replika"
+    assert limit(own("Reklamiram povredu poslanika, predsedavajući"), start, 30)["vrsta"] == "povreda"
+    assert limit({**chair("Replika."), **own("povreda Poslovnika, član 27")}, start, 30) == {"vrsta": "", "sek": 120}
+    assert limit(own("Vi ste povredili Poslovnik, ali to je nešto na šta smo naučili."), start, 30) is None  # a speech
+    assert limit(chair("Reč ima narodni poslanik Petar Petrović."), start, 30) is None
+    assert limit(chair("Replika.", -600), start, 30) is None  # another turn's
+    assert limit(chair("Replika."), start, 200) is None  # long past two minutes: no such turn, or let on
+    snap = {"stanje": "govori", "provereno": start, "danas": [], "dan": "2026-11-24", "dnevni_red": None, "hronika": [],
+            "sada": {"ime": "Petrović Petar", "adresa": "petrovic-petar", "od": int(start), "do": int(start + 30), "sekundi": 30,
+                     "lista": "PG A", "rok": {"vrsta": "replika", "sek": 120}}}
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<span class="rk">/ 2 min · replika</span>' in html
 
 
 def test_the_groups_time_left_stands_small_under_the_speaker(monkeypatch):

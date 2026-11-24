@@ -827,10 +827,10 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 5, shade: dic
 
 
 def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str, str]:
-    """The speaker: the portrait (an MP's, from the Assembly, served by the site), the name, the list, a clock that
-    runs, and a box: the day so far and the convocation first (there for every speaker), then one line about the MP
-    at a time, each saying where it is from, the way to the MP's page and the picture to share. The same for every
-    speaker, by rules; a name not on the site's list gets the day's numbers only."""
+    """The speaker: the portrait (an MP's, from the Assembly, served by the site), the name (the way to the MP's page),
+    the list and a clock that runs, with how long the turn may last where that is heard (rok.py). The same for every
+    speaker, by rules. The box under it (the day's numbers, lines about the MP, the pictures to share) is off since
+    24 Nov 2026, the maintainer. Returns the head, the box (empty) and the words now."""
     t = lambda k: escape(_t(k, cyr))
     s = lambda x: escape(_name(x, cyr))
     o = cur.get("o") or {}
@@ -848,50 +848,21 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str
         out.append(f'<p class="meta">({t("not_listed")})</p>')
     if cur.get("izvor") in ("glas", "prepis"):  # found without a caption (22 Nov 2026): said how, and that it may err
         out.append(f'<p class="meta how-found">{t("by_" + cur["izvor"])}</p>')
+    rok = cur.get("rok") or {}  # a reply's or a point of order's two minutes, where heard (rok.py)
+    of = ""
+    if rok:
+        kind = t("rk_" + rok["vrsta"]) if rok.get("vrsta") else ""
+        of = f'<span class="rk">/ {rok["sek"] // 60} {t("min")}{" · " + kind if kind else ""}</span>  · '
     longer = (" · " + s(TEXT["longest"] if cur["duze"] >= 100 else TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
-               f'{_hms(max(0, cur["sekundi"]))}</b> <span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
-    head, out = "".join(out), []
-    out.append('<div class="o">')
-    today, line = cur.get("danas"), ""
-    if today:
-        bits = [TEXT["d_turn"].format(n=today["n"]), TEXT["d_total"].format(t=_dur(today["sek"], cyr))]
-        if today["od"] >= 2:
-            bits.append(TEXT["d_rank"].format(m=today["mesto"], n=today["od"]))
-        out.append(f'<dl class="nums"><div><dt>{t("d_today")}</dt><dd>{s(" · ".join(bits))}</dd></div>')
-        conv = cur.get("saziv")
-        if conv:
-            words = TEXT["d_conv_line"].format(t=_dur(conv["sek"], cyr), n=conv["n"],
-                                               w=TEXT["speeches_1"] if conv["n"] == 1 else TEXT["speeches_n"])
-            out.append(f'<div><dt>{escape(str(conv["broj"]))}. {t("d_conv")}</dt><dd>{s(words)}</dd></div>')
-        out.append("</dl>")
-        line = TEXT["sh_today"].format(t=_dur(today["sek"], cyr), n=today["n"]) if today["n"] > 1 else TEXT["sh_first"]
-    lines = [c for c in o.get("c") or [] if c.get("t")]
-    if not lines and o.get("f"):  # the site's file as it was before 19 Nov 2026
-        lines = [{"t": f, "iz": ""} for f in o["f"]]
-    if lines:
-        items = "".join(f'<li>{f"""<span class="src">{s(c["iz"])}</span>""" if c.get("iz") else ""}{s(c["t"])}</li>'
-                        for c in lines)
-        more = (f'<button type="button" class="rot-next" aria-label="{t("next_fact")}"><span class="rot-n">1/{len(lines)}'
-                f'</span> ›</button>') if len(lines) > 1 else ""
-        out.append(f'<div class="rot-w"><ul class="rot">{items}</ul>{more}</div>')
+               f'{_hms(max(0, cur["sekundi"]))}</b> {of}<span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
     said = ""
     if cur.get("prepis"):
         tail = cur["prepis"]
         tail = ("… " + tail.split(" ", 1)[-1]) if len(tail) >= 400 else tail  # cut at a word, not inside one
         said = (f'<div class="said-now"><p class="src">{t("said_now")}</p><p>{s(tail)}</p>'
                 f'<p class="meta"><a href="{"/cir" if cyr else ""}/prepis#t{int(cur["od"])}">{t("said_all")} →</a></p></div>')
-    when = _date(datetime.fromtimestamp(cur["do"], tz).strftime("%Y-%m-%d")) + f' u {_clock(cur["do"], tz)}'
-    data = {"head": _t("sh_head", cyr), "name": _name(given_first(cur["ime"]), cyr), "side": _name(side, cyr),
-            "already": _t("sh_already", cyr), "min": _t("min", cyr), "line": _name(line, cyr), "when": _name(when, cyr),
-            "note": _t("sh_note", cyr), "text": _t("sh_text", cyr), "done": _t("sh_done", cyr)}
-    attrs = " ".join(f'data-{k}="{escape(v)}"' for k, v in data.items())
-    cta = f'<a class="cta" href="{escape(page_)}">{t("o_more")} →</a> ' if page_ else ""
-    tall = (f' <button type="button" class="share-now share-day tall" data-src="{"/cir" if cyr else ""}/prica.png" '
-            f'data-text="{t("sd_text")}" data-done="{t("sh_done")}">{t("share_tall")}</button>')
-    out.append(f'<p class="acts">{cta}<button type="button" class="share-now" {attrs}>{t("share_now")}</button>{tall}</p>'
-               f'<p class="meta share-said" hidden></p></div>')
-    return head, "".join(out), said
+    return "".join(out), "", said
 
 
 def leaders(turns: list[dict]) -> list[tuple[str, int, str]]:
@@ -1325,7 +1296,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="rules-cta"><a href="{escape(home + "podrzi")}"><b>{t("support_cta")} →</b><span>{t("support_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p>{how_time}</details>
+<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("rk_how")}</p>{how_time}</details>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>

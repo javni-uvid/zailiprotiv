@@ -133,6 +133,8 @@ class View:
             groups = self._group_time(done + ([current] if current else [])) if day == self.day and not recorded else None
             if current:
                 self._today(done, current, day)
+                from .rok import limit
+                current["rok"] = limit(self._said_of(day), current["od"], current["sekundi"])
             # Not while the transcript is not shown (config.SHOW_TRANSCRIPT): /stanje.json carried the speaker's
             # last words and the chair's though the page showed none of them (20 Nov 2026).
             said = self._said_of(day) if config.SHOW_TRANSCRIPT else {}
