@@ -294,5 +294,9 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     of one had stood as the other's in the day's try); the chair's warnings are paired with nobody. `RECI_PRIKAZ=0` takes
     the words off. Changes "no step shows the transcript's wording" (live/AGENTS.md) for these two, without quotation marks. The pairs found are few (three of
     24 Nov's 68 turns): a model could find more, each checked word for word in a piece inside its speaker's turn; not done.
+    **Off since the same evening** (the maintainer: "vrati na prethodno stanje bez rečenica iz prepisa, dosta su netačne"):
+    `RECI_PRIKAZ` is "0" unless set, so the steps stand as before, with no sentence of the transcript, and no step shows
+    its wording again. The code stays; before the words come back, how a sentence is known to be rightly heard has to
+    be settled with the maintainer.
   - *The turns by the hour* with the portrait, the topic, the moment as a button; the headline, the day in cards and the strip are off.
   - *The Rules* ("Poslovnik") as a mark beside each step and at the foot of the card and the page, in place of a card.

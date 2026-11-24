@@ -124,8 +124,9 @@ DAY_MODEL = os.environ.get("DAN_MODEL", "claude-opus-5-5").strip()
 SPEECH_LINES = os.environ.get("REZIMEI", "1").strip() == "1"
 # Whether the model's summary of the day is on the page and at /sazetak/<day>.json; before that, /sazetak?k=<key>.
 SHOW_SUMMARY = os.environ.get("SAZETAK_PRIKAZ", "0").strip() == "1"
-# The words of the chair's measures and of the exchanges in "Šta se desilo" (24 Nov 2026); "0" takes them off.
-SHOW_QUOTES = os.environ.get("RECI_PRIKAZ", "1").strip() == "1"
+# The words of the chair's measures and of the exchanges in "Šta se desilo" (24 Nov 2026). Off the same day, by the
+# maintainer: the transcript's sentences were too often wrong; "1" puts them back.
+SHOW_QUOTES = os.environ.get("RECI_PRIKAZ", "0").strip() == "1"
 # The groups' time left in the debate (vreme.py), on the page; "0" takes it off, counted all the same.
 SHOW_GROUP_TIME = os.environ.get("VREME_GRUPA_PRIKAZ", "1").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
