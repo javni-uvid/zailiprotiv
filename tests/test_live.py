@@ -2274,6 +2274,36 @@ def test_a_voice_known_from_a_few_seconds_neither_names_nor_ends_a_turn(tmp_path
     assert turn(glas.LEAST)[0] is None  # a voice known well that is gone ends the turn, as before
 
 
+def test_a_voice_merely_alike_another_does_not_take_the_floor(tmp_path):
+    """24 Nov 2026, 17:26: Nikola Selaković's voice, not yet known, was some 0.58 like Miroslav Petrašinović's all along and a
+    little over the line for 24 s, which stood as Petrašinović's speech."""
+    np = pytest.importorskip("numpy")
+    import threading as th
+    from uzivo import glas
+
+    def like(x: float):  # a voice so like the known one
+        v = np.zeros(512, np.float32)
+        v[0], v[1] = x, (1 - x * x) ** 0.5
+        return v
+
+    def run(before: float, after: float) -> dict | None:
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        now = 1795100000.0
+        t.observe(None, now=now)
+        t.heard(next(p for p in ROSTER.people if p.slug == "petrovic-petar"), "potpis", now, now)
+        f = tmp_path / "v.npz"
+        np.savez_compressed(f, slugs=np.array(["markovic-marko"]), vecs=np.stack([like(1.0)]), counts=np.array([300]))
+        L = glas.Listener(t, th.Event(), embed=lambda x: like(1.0), path=f)
+        L.t = [now + 1.5 * i for i in range(60)]
+        L.f = [like(before)] * 40 + [like(after)] * 20
+        t.observe(None, now=now + 92)
+        L.judge()
+        return t.open_turn()
+    assert run(0.6, 0.69)["slug"] == "petrovic-petar"  # alike all along: the same speaker
+    assert run(0.3, 0.8)["slug"] == "markovic-marko"  # the voice is new in the turn: the floor passed on
+
+
 def test_a_voice_that_ends_before_the_floor_passed_on_does_not_end_the_turn():
     """24 Nov 2026, 12:18:54: the chair gave Jovo Bakić the floor, the last seconds of the speaker before came after,
     and the reply of 50 s stood as that speaker's."""
