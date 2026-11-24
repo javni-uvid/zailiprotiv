@@ -173,5 +173,18 @@ records and recordings stays here:
   19 Nov): Claude Haiku over the automatic transcript is the source of "Šta se desilo danas", the rules the fallback,
   and writes a summary at each break and of the day, labelled as a model's from an automatic transcript; how, in
   `live-day.md` ("The model tells the day's steps"). The key is in `live/.env` only.
+- **How right "who spoke when" is, measured** (24 Nov 2026, the maintainer: "kreni od merila", after a day of rules
+  for the live record each changed on one to three examples). `zailiprotiv tacnost [day] [--zapis file]`
+  (`tacnost.py`): a day's live record against the notes' speeches placed in the recording (`snimak/<day>.json`,
+  `"izvor": "govor"`), second by second inside what both cover: right, under a wrong name, missing, and named where
+  the notes place no speech; the speeches found (half of one right), and how far a found speech's beginning and end
+  are. The record's clock is shifted to where it agrees best (it runs behind the recording's) and the shift is told.
+  `--zapis` scores any record of either shape, the service's own file of a day too: **a rule for who speaks is tried
+  on the kept days and its score told in the pull request before it runs live; one that lowers a day's score does
+  not go in without the maintainer.** The first reading, of the records as the service made them then: 18 Nov 89.0%
+  right (293 s under a wrong name, 33 min missing, 33 of 43 speeches found, ends off by 8 s), 19 Nov 29.9% (the
+  captions stopped that afternoon; 73 s under a wrong name). A day has no truth until its notes are out and
+  `govor` has run: 24 Nov is to be read then. Known limits: a short speech the notes' words could not place counts
+  as "extra"; a name the record spells as another MP's is counted wrong, which it is.
 - **A day's recording as sound only** (22 Nov 2026): the day pages (`govornici/<date>`) have "Slušaj samo zvuk" and
   the lock screen's player with who speaks, as the live page (`live-sound.md`).
