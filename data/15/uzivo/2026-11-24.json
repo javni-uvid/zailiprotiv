@@ -4,8 +4,93 @@
  "pokriveno": [
   {
    "od": 1795510590,
-   "do": 1795513690
+   "do": 1795517295
   }
  ],
- "govori": []
+ "govori": [
+  {
+   "ime": "Brnabić Ana",
+   "adresa": "brnabic-ana",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795515865,
+   "do": 1795516001,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "glas"
+  },
+  {
+   "ime": "Radeta Vjerica",
+   "adresa": "radeta-vjerica",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795516057,
+   "do": 1795516162,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "glas"
+  },
+  {
+   "ime": "Đukanović Vladimir",
+   "adresa": "djukanovic-vladimir",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795516187,
+   "do": 1795516271,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "glas"
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795516379,
+   "do": 1795516586,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "prepis"
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795516621,
+   "do": 1795517127,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "glas"
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795517151,
+   "do": 1795517294,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "glas"
+  }
+ ]
 }
