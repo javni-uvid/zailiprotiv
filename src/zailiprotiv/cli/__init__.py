@@ -89,6 +89,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--law", action="append", default=[], help="a law by bill file or title (instead of --top)")
     p.add_argument("--again", action="store_true")
     p.add_argument("--all", action="store_true", help="every sitting of the convocation (data/<N>/index.json)")
+    p.add_argument("--more", action="store_true", help="a sitting read before is read again when its page links another day's notes")
     p.add_argument("--index", default=str(common.DATA / "index.json"))
     p.add_argument("--minutes", type=float, default=0, help="stop asking for new sittings after this long")
     p.set_defaults(run=notes_of_debate)

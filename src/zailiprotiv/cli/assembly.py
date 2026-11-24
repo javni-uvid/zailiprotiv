@@ -255,7 +255,8 @@ def download(args) -> int:
 def notes_of_debate(args) -> int:
     """The stenographic notes of the sittings where the laws with the most votes against (or the ones named) had
     their final vote, into data/<N>/transcripts/<sitting>.json: the agenda, every speech with the part of the debate
-    it was given in, and the amendments announced. A sitting already read is skipped unless --again."""
+    it was given in, and the amendments announced. A sitting already read is skipped unless --again, or --more and its
+    page links notes of a day the record lacks (the Assembly adds a sitting's days as they are ready)."""
     import hashlib
     from zailiprotiv.site import against_share
     store = json.loads(Path(args.laws).read_text(encoding="utf-8"))
@@ -277,7 +278,7 @@ def notes_of_debate(args) -> int:
     read = failed = 0
     for url in sittings:
         path = out / f"{sitting_id(url)}.json"
-        if path.exists() and not args.again:
+        if path.exists() and not args.again and not getattr(args, "more", False):
             continue
         if until and time.time() > until:  # the rest next run: what was read is kept
             print(f"time is up; {sum(1 for u in sittings if not (out / (sitting_id(u) + '.json')).exists())} sittings left for the next run")
@@ -285,6 +286,10 @@ def notes_of_debate(args) -> int:
         try:
             page = skupstina.fetch(url).decode("utf-8", "replace")
             listed = transcripts.days(page, url)
+            if path.exists() and not args.again:  # --more: only when a day's notes are new
+                had = {d["url"] for d in json.loads(path.read_text(encoding="utf-8")).get("days", [])}
+                if {d["url"] for d in listed} <= had:
+                    continue
             if not listed:
                 print(f"{url}: no stenographic notes linked")
                 if args.all:  # written down as read and empty, so the next run does not ask again
