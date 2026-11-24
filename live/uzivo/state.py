@@ -346,6 +346,7 @@ class Tracker(Said, Chronicle, View):
                 cur["seen"] = max(cur["seen"], seen)
                 if how == "potpis":  # a caption of ten seconds (ocr.outlined) said who it is: surer than the words
                     cur["izvor"] = "potpis"
+                    cur.setdefault("natpis", start)
                 if how == "glas":
                     cur["po_glasu"] = True
                     cur["start"] = min(cur["start"], start) if start > cur["start"] - 30 else cur["start"]
@@ -357,6 +358,8 @@ class Tracker(Said, Chronicle, View):
                 self.turns.append({"key": person.key, "name": person.name, "slug": person.slug, "group": person.group,
                                    "role": "", "start": begin, "seen": max(seen, begin), "n": SURE_FRAMES, "izvor": how,
                                    "video": "", "sq_start": None, "sq_seen": None, "seg": None})
+                if how == "potpis":
+                    self.turns[-1]["natpis"] = start
                 if how == "glas" or (tracked and person.slug in tracked and how != "prepis"):
                     self.turns[-1]["po_glasu"] = True
                 self.open = True

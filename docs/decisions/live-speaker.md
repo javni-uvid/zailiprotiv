@@ -101,3 +101,8 @@ presided (not done).
 - **"(po glasu)" off the presiding line** (24 Nov, the maintainer): how it is known is under "Kako ovo radi".
 - **"prepoznavanje govornika može da pogreši"**, small, in place of the sentence on how the speaker was known (24 Nov 2026,
   the maintainer); how is under "Kako ovo radi". A name read off a caption has no such line.
+- **Who speaks is known for too few voices** (24 Nov 2026, the maintainer: "dosta slabo nam radi prepoznavanje po glasu";
+  measured by then: 30 of 250 MPs, 77% of the day's words in a turn, eleven minutes of one MP's in none). Voices are
+  learnt only from captions, and no caption was read until `ocr.outlined`: the windows of `natpis` seconds on are learnt
+  too (`LEARN_ON`). The chair's "ima narodni poslanik X" at a piece's beginning gives the floor (`hronika._FLOOR`), and so
+  does a given name heard whole with the surname near (`GIVEN_SURNAME`).

@@ -31,6 +31,7 @@ KEEP = 600  # seconds of windows kept in memory
 # own later 15 s fall below 0.45 in 10% of cases (an interruption: the turn ends early, nobody is named), the next
 # speaker's stay above in 4% (the turn goes on wrongly).
 CHANGE, OWN_FROM, OWN_TO, CHANGE_SPAN = 0.45, 3.0, 15.0, 15.0
+LEARN_ON = 40.0  # seconds after a caption that stands for seconds whose sound is taken as its speaker's voice
 LEARN_EDGE = 5.0  # seconds at a turn's start and end not taken as its voice (the chair may still be speaking)
 
 
@@ -160,19 +161,24 @@ class Listener(threading.Thread):
         return made
 
     def learn(self, turns: list[dict]) -> None:
-        """The windows inside the turns the caption named (not those found by voice or by the chair's words)."""
+        """The windows inside the turns the caption named (not those found by voice or by the chair's words), and of a
+        turn whose caption stood for seconds (24 Nov 2026), from when it stood to LEARN_ON seconds on, while the turn
+        goes on: whoever it named is surely the speaker then, and an interruption comes later."""
         t = np.array(self.t)
         for d in turns:
-            if d.get("izvor") or not d.get("slug"):
+            if not d.get("slug") or (d.get("izvor") and d["izvor"] != "potpis"):
                 continue
-            a = max(d["start"] + LEARN_EDGE, self.learned.get(str(d["start"]), 0))
-            b = d["seen"] - LEARN_EDGE
+            key = str(d["start"])
+            a, b = max(d["start"] + LEARN_EDGE, self.learned.get(key, 0)), d["seen"] - LEARN_EDGE
+            if d.get("izvor") == "potpis":
+                a = max(d.get("natpis", d["start"]), self.learned.get(key, 0))
+                b = min(d["seen"] - LEARN_EDGE, d.get("natpis", d["start"]) + LEARN_ON)
             if b <= a or not len(t):
                 continue
             m = (t >= a) & (t + WIN <= b)
             if m.any():
                 self.voices.add(d["slug"], np.stack([self.f[i] for i in np.flatnonzero(m)]))
-            self.learned[str(d["start"])] = b
+            self.learned[key] = b
 
     def judge(self) -> None:
         """Who the newest stretch of voice is, told to the tracker."""
