@@ -276,7 +276,7 @@ def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
             for row in _wrap(d, _short_item(on, cyr), lit_text(34 * k), (M1 - M0) * k, 2):
                 y += 46
                 text(M0, y, row, lit_text, 34, SOFT)
-        foot = _t("og_foot_then" if snap.get("ranije") else "og_foot_pause", cyr)
+        foot = _t("og_foot_then" if snap.get("ranije") else "og_foot_pause" if hour else "og_foot_live", cyr)
     d.rectangle(box(M0, 492, M1, 494), fill=SOFT_LINE)
     name = host or "mikrofon.zailiprotiv.rs"
     text(M0, 558, name, lit, fit(name, lit, 54, M1 - M0), ON_DARK)
