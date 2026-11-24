@@ -19,7 +19,7 @@ _REPLY = re.compile(r"\brepli[kc]", re.I)
 # The chair's "po kom osnovu?" to who asks for the floor out of the list's order: a reply or a point of order, whichever
 # is answered. Only for the groups' time (short): the clock by the speaker still wants the kind heard.
 _PROPOSER = re.compile(r"(?:\breč ima|\bima reč|\bdajem reč)\W+(?:\w+\W+){0,3}?predlaga[čc]|\bpredlaga[čc]\w*,? (?:narodn\w+ )?poslani\w+ \w+ \w+,? (?:ima reč|izvolite)"
-                       r"|(?:reč ima|dajem reč)[^.?!]{0,90}?,\s*(?:predstavni\w+ )?predlaga[čc]", re.I)
+                       r"|(?:\breč ima|\bdajem reč)[^.?!]{0,90}?,\s*(?:predstavni\w+ )?predlaga[čc]", re.I)
 _BASIS = re.compile(r"\b(?:po|u) ko\w* osnov", re.I)
 
 
