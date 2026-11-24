@@ -223,3 +223,7 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   x = 196 and 1004 of the 1200, in larger letters and fewer words ("Skupština / u utorak u 10 h"; "Uživo", "Slušanje",
   "Mejl"), the marks from the left, since the bottom right is under the app's own. Changes the words of the entry
   above; `?v=najava3-…`.
+- **The last day leaves when the broadcast is on** (24 Nov 2026, the maintainer, on the sitting's first minutes: "krenulo je a
+  dole mi stoji info za 19 novembar"). The last day's turns and steps stood until a first MP was read, while the chair
+  opened the sitting and gave the floor under "Uživo". Now from the first frame of today's broadcast the page is today's,
+  with nobody yet; between sittings, and after midnight before any frame, the last day stays as before.

@@ -231,14 +231,19 @@ def test_turns_link_to_the_recording_and_stay_until_the_next_sitting(tmp_path):
     # The broadcast over: its YouTube video goes private, so no link into it (18 Nov 2026).
     t.tick(now=day1 + 200)
     assert all(d["snimak"] is None for d in t.snapshot(now=day1 + 200)["danas"])
-    # The next day, before anyone is read: the last sitting day's list, with its date.
+    # The next day, before the broadcast: the last sitting day's list, with its date.
     day2 = datetime(2026, 11, 19, 9, 0, tzinfo=TZ).timestamp()
     t2 = Tracker(str(path), tz="Europe/Belgrade")
     assert t.snapshot(now=day1 + 86400)["ranije"]  # past midnight, before any frame: no longer "today"
-    t2.observe(None, now=day2)
     snap = t2.snapshot(now=day2)
     assert snap["dan"] == "2026-11-18" and [d["ime"] for d in snap["danas"]] == ["Nikolić Nina", "Petrović Petar"]
     assert "Poslednji dan sednice, 18. novembar 2026." in fragment(snap, cyr=False, site="", tz=TZ)
+    # The broadcast on and the chair alone has spoken: today, with nobody yet, not the last day (24 Nov 2026).
+    t2.observe(None, now=day2)
+    snap = t2.snapshot(now=day2)
+    assert snap["dan"] == "2026-11-19" and not snap["ranije"] and snap["danas"] == []
+    html = fragment(snap, cyr=False, site="", tz=TZ)
+    assert "Poslednji dan sednice" not in html and "Danas još niko nije prepoznat u prenosu." in html
     # Someone read at the new sitting: today's list only.
     for i in range(2):
         t2.observe(Person(person_key("Nikolić Nina"), "Nikolić Nina", "nikolic-nina", "PG B"), now=day2 + 5 + 5 * i)
