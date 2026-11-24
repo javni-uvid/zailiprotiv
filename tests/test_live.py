@@ -2471,7 +2471,7 @@ def test_a_break_shows_what_happened_until_it():
     assert "Raspravljalo se o odborima." in html and "u 15:10" in html and "Claude Haiku" in html
     assert "1 × opomena (12:10)" in html and "09:10" not in html  # the stretch's measures only
     assert '<b class="v-za">za 136</b>' in html and "tajnoj" not in html
-    assert page_._break(snap, cyr=False, tz=TZ) in page_.fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert html in page_.fragment({**snap, "danas": []}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Распр" in page_._break(snap, cyr=True, tz=TZ)
     later = {"ime": "Jović Jova", "od": b + 600, "do": b + 700, "sekundi": 100}
     for gone in ({"danas": [later, *snap["danas"]]}, {"stanje": "govori"}, {"sada": later}, {"ranije": True},
