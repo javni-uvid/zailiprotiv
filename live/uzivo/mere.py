@@ -33,6 +33,32 @@ def given(text: str) -> bool:
     return bool(_GIVES.search(text)) and not _SPOKEN_OF.search(text) and not _RECAP.search(text)
 
 
+# Why a warning was given, by the Rules' own list (art. 109), told in our words where the chair's sentence says it
+# (24 Nov 2026, the maintainer: the day's steps fuller, with no sentence of the transcript shown). In the article's order.
+_REASONS = (
+    ("zbog prilaska govornici bez dozvole", r"pri[sš]l\w+ (ste |je )?(govornici )?bez (poziva|dozvole)"),
+    ("zbog govora bez date reči", r"bez (date|dobijene) re[cčć]i"),
+    ("zbog govora van teme", r"\b(niste|nije|nisi) u temi|\b(van|mimo|izvan) teme\b|vrati\w* (se )?na temu|ne vezuje\w* za temu"
+                             r"|nije na dnevnom redu"),
+    ("zbog dobacivanja", r"\bdobac(uje|ivanj)\w*|prekida\w* govornik|ometa\w* govornik"),
+    ("zbog neposrednog obraćanja drugom poslaniku", r"obra[cć]a\w* (se )?(direktno|neposredno|li[cč]no)"
+                                                    r"|(direktno|neposredno|li[cč]no) (se )?obra[cć]a|obratili (ste )?(se )?li[cč]no"),
+    ("zbog uvredljivih izraza", r"\buvred\w+|\bpsovk\w+|\bpsuje\w*"),
+    ("zbog iznošenja privatnog života", r"privatn\w+ [zž]ivot"),
+)
+_REASONS = tuple((label, re.compile(rx, re.I)) for label, rx in _REASONS)
+
+
+def reason(text: str) -> str:
+    """Why the measure was given, when the sentence that gives it says exactly one of the Rules' reasons (art. 109);
+    "" when none is heard or more than one (the sentence may hold another's words too). Never the transcript's wording."""
+    text = latin(text)
+    if not given(text):
+        return ""
+    hit = [label for label, rx in _REASONS if rx.search(text)]
+    return hit[0] if len(hit) == 1 else ""
+
+
 _TIME = re.compile(r"\b(\d{1,2}):(\d{2})\b")
 
 

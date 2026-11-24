@@ -2056,6 +2056,32 @@ def test_the_name_before_the_word_and_a_measure_only_spoken_of():
     assert not given("ja sam dao opomene poslanici Anji Brnabić")
 
 
+def test_a_measure_has_its_reason_by_the_rules_list_and_never_the_transcripts_words():
+    """24 Nov 2026, the maintainer: the day's steps fuller with no sentence of the transcript: why a warning was given,
+    one of the Rules' reasons (art. 109) in our words, where the chair's sentence says exactly one."""
+    from uzivo import page as page_
+    from uzivo.mere import reason
+    from uzivo.steps import steps_shown
+    assert reason("Dakle, izričem vam opomenu zato što uporno govorite bez date reči.") == "zbog govora bez date reči"
+    assert reason("Druga opomena, druga opomena, i dalje niste u temi.") == "zbog govora van teme"
+    assert reason("Izričano mi sad opomenu i vama, prišli ste bez poziva.") == "zbog prilaska govornici bez dozvole"
+    assert reason("Ja vam izričem opomenu, imali ste...") == "" and reason("Izričem vam opomenu zbog ovoga.") == ""
+    assert reason("Izričem vam opomenu, niste u temi i dobacujete.") == ""  # two heard: none
+    assert reason("Zato ste mu dali opomenu, govorio je bez date reči.") == ""  # spoken of, not given
+    now = 1795518700.0
+    ev = lambda dt, text: {"t": now - dt, "vrsta": "Mera predsedavajućeg", "tekst": text, "izvor": "model", "url": "",
+                           "vise": {"napomena": "opomena"}}
+    said = "Dakle, izričem vam opomenu zato što uporno govorite bez date reči."
+    snap = {"provereno": now, "sada": None, "danas": [], "dnevni_red": None,
+            "hronika": [ev(6000, "Izričem vam opomenu, niste u temi."), ev(100, "poslednji put vas upozorio. Izričem opomenu."), ev(80, said)]}
+    rows = [r for r in steps_shown(snap) if r["naslov"] == "Mera predsedavajućeg"]
+    # said again with its reason within a minute: one step, with the reason; another reason earlier: another step
+    assert sorted((r["t"], r.get("razlog")) for r in rows) == [(now - 6000, "zbog govora van teme"), (now - 100, "zbog govora bez date reči")]
+    html = page_._steps(snap, cyr=False, tz=TZ)
+    assert "zbog govora bez date reči" in html and "uporno govorite" not in html
+    assert "због говора без дате речи" in page_._steps(snap, cyr=True, tz=TZ)
+
+
 def test_the_broadcasts_clock_says_when_a_turn_began():
     """24 Nov 2026: the caption has a clock beside it ("0:15"), how long the turn has gone on; the floor given at 11:59:54
     was a speech begun at 12:00:24."""
