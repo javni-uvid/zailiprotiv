@@ -7,11 +7,12 @@ shared in proportion to their MPs (art. 97); in the debate in detail as much aga
 more (art. 158); in the shortened procedure half (art. 99). The proposer and the Government speak outside the groups'
 time (art. 96), replies and points of order last two minutes at most (art. 103, 104).
 
-What we can know and what we cannot: the time is the time a speaker's name is in the broadcast's caption, not the
-Assembly's clock; we do not hear whether the item runs in the shortened procedure or whether the Assembly gave the
+What we can know and what we cannot: the time is the time we know a speaker by the caption, the chair's words or the
+voice, not the Assembly's clock; we do not hear whether the item runs in the shortened procedure or whether the Assembly gave the
 groups more time (art. 97, para. 3), so the page shows the basic procedure's five hours and says so. The same rule
 for every group:
-- the debate runs from the chair's move to the item (`Tracker.item`, kept across days) to now; a debate closed and a
+- the debate runs from its opening by the chair, or where none was heard from the move to the item (`Tracker.item`,
+  kept across days), to now (24 Nov 2026: a point of order between the two had been counted); a debate closed and a
   new one opened after it (the debate in detail) starts the count again;
 - a turn counts when it is a sitting MP's of a group the site names (its "lista") and lasts more than REPLY seconds
   (a reply or a point of order is two minutes at most);
@@ -26,7 +27,7 @@ REPLY = 125  # seconds: a turn this long or shorter is taken for a reply or a po
 def phase(events: list[dict], start: int) -> tuple[int, bool, bool]:
     """From the events of the item's days: when the debate being counted began, whether it is the debate in detail
     (a debate closed and another opened after it), and whether it has been closed."""
-    begun, detail, closed = start, False, False
+    begun, detail, closed, opened = start, False, False, False
     for e in sorted(events, key=lambda e: e["t"]):
         if e["t"] < start:
             continue
@@ -34,7 +35,10 @@ def phase(events: list[dict], start: int) -> tuple[int, bool, bool]:
         if kind == "Pretres zaključen":
             closed = True
         elif kind == "Pretres otvoren" and closed:
-            begun, detail, closed = e["t"], True, False
+            # "jedinstveni pretres" (a decision, art. 192) has no debate in detail, so no more time for it
+            begun, detail, closed = e["t"], "jedinstven" not in e.get("tekst", "").lower(), False
+        elif kind == "Pretres otvoren" and not opened:
+            begun, opened = e["t"], True
     return begun, detail, closed
 
 
