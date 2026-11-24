@@ -191,9 +191,8 @@ def _status(snap: dict, *, cyr: bool) -> str:
         what = (f'<span class="status-on">{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}: '
                 f'{on["n"]}. {escape(_name(on["tekst"], cyr))}</span>')
     chair = snap.get("predsedava") if snap["stanje"] != "nema_prenosa" else None
-    if chair and chair.get("ime"):  # who presides, by the voice (22 Nov 2026), said how
-        what += (f'<span class="status-chair">{t("presides")}: {escape(_name(given_first(chair["ime"]), cyr))} '
-                 f'<span class="meta">({t("by_short_glas")})</span></span>')
+    if chair and chair.get("ime"):  # who presides, by the voice (22 Nov 2026); how is under "Kako ovo radi" (24 Nov)
+        what += f'<span class="status-chair">{t("presides")}: {escape(_name(given_first(chair["ime"]), cyr))}</span>'
     _, notice, start = announcement(snap)
     if start:  # the sitting's card: the day as a leaf of a calendar, when, what is next (23 Nov 2026, the maintainer's
         # choice of three); the bell presses the notification's own button (live.js), shown while that one would be
@@ -1296,7 +1295,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="rules-cta"><a href="{escape(home + "podrzi")}"><b>{t("support_cta")} →</b><span>{t("support_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("rk_how")}</p>{how_time}</details>
+<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p>{how_time}</details>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>

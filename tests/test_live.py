@@ -1882,6 +1882,63 @@ def test_an_election_an_mp_speaks_of_is_no_step_and_the_chairs_is():
     assert model_steps(on) == []  # the turn still on
 
 
+def test_an_outlined_caption_counts_only_with_the_mps_own_list_under_the_name():
+    """24 Nov 2026: the caption stood higher, its letters ringed, and was cut in two; a name counts with its list."""
+    from uzivo.caption import Caption, sure
+    from uzivo.names import Person, Roster
+    people = [Person("bakic jovo", "Bakić Jovo", "bakic-jovo", "Studentska lista"),
+              Person("aleksandar vucic", "Vučić Aleksandar", "vucic-aleksandar", "Aleksandar Vučić - Srbija pobeđuje")]
+    roster = Roster(people)
+    roster.current = {"bakic-jovo", "vucic-aleksandar"}
+    read_ = lambda name, role: sure(Caption(name, role, False, False), roster, 0.8)
+    assert read_("Јово Еакић", "Ступентека писта").slug == "bakic-jovo"  # as read from the broadcast
+    assert read_("Александар Вучић.", "Александар Вучић - Србија побеђуј").slug == "vucic-aleksandar"
+    assert read_("Јово Бакић", "Александар Вучић - Србија") is None  # another's list: no such caption
+    assert read_("Јово Бакић", "") is None and read_("", "Студентска листа") is None
+    assert read_("Марић Лазар", "Студентска листа") is None  # not a sitting MP's name with their list
+    assert read_("Александар Вучић", 'Студентска листа') is None
+    # a list read alone names no one: the list's line of another's caption was read as Vučić, the name cut off
+    from uzivo.caption import who
+    assert who(Caption("Александар Вучић - Срб", "", False, False), roster, 0.8) is None
+    assert who(Caption("Јово Бакић", "", False, False), roster, 0.8).slug == "bakic-jovo"
+    assert who(Caption("Александар Вучић", "Александар Вучић - Србија побеђује", True, True), roster, 0.8).slug == "vucic-aleksandar"
+
+
+def test_a_caption_of_seconds_names_the_speaker_and_the_turn_goes_on():
+    """24 Nov 2026: the caption stood ten seconds at a turn's start; the turn must not end with it."""
+    now = 1795519000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    t.observe(None, now=now)
+    t.heard(marko, "prepis", now + 2, now + 2)  # the chair's words
+    t.heard(marko, "potpis", now + 10, now + 10)  # his caption
+    for s_ in range(15, 120, 5):
+        t.observe(None, now=now + s_)
+    cur = t.open_turn()
+    assert cur["slug"] == "markovic-marko" and cur["izvor"] == "potpis" and len(t.turns_now()) == 1
+    assert "by_potpis" not in __import__("uzivo.texts", fromlist=["TEXT"]).TEXT  # no word on how: a caption said it
+
+
+def test_a_voice_that_ends_before_the_floor_passed_on_does_not_end_the_turn():
+    """24 Nov 2026, 12:18:54: the chair gave Jovo Bakić the floor, the last seconds of the speaker before came after,
+    and the reply of 50 s stood as that speaker's."""
+    now = 1795519000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    petar = next(p for p in ROSTER.people if p.slug == "petrovic-petar")
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+    t.observe(None, now=now)
+    t.heard(petar, "glas", now, now + 60)
+    t.heard(marko, "prepis", now + 80, now + 80)
+    t.heard(petar, "glas", now + 40, now + 78, tracked={petar.slug})  # the voice windows lag
+    t.observe(None, now=now + 100)
+    cur = t.open_turn()
+    assert cur["slug"] == "markovic-marko" and len(t.turns_now()) == 2 and t.turns_now()[0]["seen"] == now + 78
+    t.heard(petar, "glas", now + 130, now + 140)  # a voice that goes on past it is the next turn
+    assert t.open_turn()["slug"] == "petrovic-petar" and t.turns_now()[1]["seen"] >= now + 100
+
+
 def test_a_replys_and_a_point_of_orders_two_minutes_stand_by_the_clock():
     """24 Nov 2026, the maintainer: how long the turn may last, where the transcript tells what it is."""
     from uzivo.rok import limit
@@ -1917,6 +1974,18 @@ def test_the_groups_time_left_stands_small_under_the_speaker(monkeypatch):
     assert "član 97" in how and "poslovnik-clanovi#pojam-vreme-rasprave" in how
     monkeypatch.setattr(config, "SHOW_GROUP_TIME", False)
     assert "gt-sec" not in draw()
+
+
+def test_a_reply_longer_than_two_minutes_is_not_the_groups_time():
+    from uzivo.rok import short
+    from uzivo.vreme import groups_time
+    start = 1795089600
+    said = {str(start + 1005): "Javio sam se za repliku, hvala."}
+    turn = lambda at, sec: {"od": start + at, "do": start + at + sec, "sekundi": sec, "lista": "A"}
+    assert short(said, turn(1000, 142), 180) and not short(said, turn(1000, 300), 180) and not short(said, turn(5000, 142), 180)
+    rows = [{**turn(100, 600)}, {**turn(1000, 142), "kratko": True}]
+    g = groups_time(item=4, start=start, seats={"A": 10}, turns=rows, events=[], now=start + 4000)
+    assert g["grupe"][0]["potroseno"] == 600
 
 
 def test_the_groups_time_runs_from_the_debates_opening():
@@ -2121,7 +2190,8 @@ def test_the_floor_given_now_and_the_chair_by_voice(tmp_path, monkeypatch):
     snap = t.snapshot(now + 75)
     assert snap["predsedava"] == {"ime": "Marković Marko", "adresa": "markovic-marko"} and snap["sada"] is None
     from uzivo.page import fragment
-    assert "Predsedava: Marko Marković" in fragment(snap, cyr=False, site="", tz=TZ)
+    html = fragment(snap, cyr=False, site="", tz=TZ)
+    assert "Predsedava: Marko Marković</span>" in html and "po glasu" not in html  # how is under "Kako ovo radi"
 
 
 def test_a_test_container_has_none_of_the_live_services_secrets():

@@ -210,6 +210,7 @@ TEXT = {
     "listen_live": "Slušaj samo zvuk",
     "listen_live_note": "Samo zvuk je naš: svira i kad je ekran zaključan, i kasni oko pola minuta za prenosom.",
     "presides": "Predsedava",
+    "pr_how": "Ko predsedava prepoznajemo po glasu, automatski; može da pogreši.",
     "by_glas": "Prepoznat po glasu, jer prenos ne prikazuje ime; automatski, može da pogreši.",
     "by_prepis": "Po rečima predsedavajućeg („Reč ima“), jer prenos ne prikazuje ime; automatski, može da pogreši.",
     "by_short_glas": "po glasu",

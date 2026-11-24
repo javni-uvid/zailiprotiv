@@ -18,6 +18,11 @@ _ORDER = re.compile(r"\bpovred[aeu] (?:\w+ )?(?:poslovnik|poslani)|\breklamira\w
 _REPLY = re.compile(r"\brepli[kc]", re.I)
 
 
+def short(said: dict[str, str], turn: dict, most: int) -> bool:
+    """Whether a finished turn was heard to be a reply or a point of order, and lasted no longer than `most`."""
+    return turn["sekundi"] <= most and limit(said, turn["od"], 0) is not None
+
+
 def limit(said: dict[str, str], start: float, seconds: int) -> dict | None:
     """{"vrsta": "replika" | "povreda" | "", "sek": LIMIT} of the turn begun at `start`, `seconds` long so far; None
     when nothing heard tells."""

@@ -15,12 +15,14 @@ for every group:
   kept across days), to now (24 Nov 2026: a point of order between the two had been counted); a debate closed and a
   new one opened after it (the debate in detail) starts the count again;
 - a turn counts when it is a sitting MP's of a group the site names (its "lista") and lasts more than REPLY seconds
-  (a reply or a point of order is two minutes at most);
+  (a reply or a point of order is two minutes at most), and is not heard to be one of these though it ran over them
+  (`rok.short`: up to REPLY_OVER seconds; 24 Nov 2026: a reply of 142 s was counted);
 - each group's share is the hours times its MPs over all the groups' MPs (MPs of no group are not shared out)."""
 from __future__ import annotations
 
 TOTAL = 5 * 3600  # art. 97: the groups' time in all, the basic procedure
 CHAIR_MORE = 15 * 60  # art. 158: each group's chair, in the debate in detail
+REPLY_OVER = 180  # seconds: a turn heard to be a reply or a point of order is none of the group's up to this long
 REPLY = 125  # seconds: a turn this long or shorter is taken for a reply or a point of order (two minutes, art. 103, 104)
 
 
@@ -54,7 +56,7 @@ def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dic
     used: dict[str, list[int]] = {g: [0, 0] for g in seats}
     for d in turns:
         g = d.get("lista") or ""
-        if g not in used or d["od"] < begun or d["sekundi"] <= REPLY:
+        if g not in used or d["od"] < begun or d["sekundi"] <= REPLY or d.get("kratko"):
             continue
         used[g][0] += d["sekundi"]
         used[g][1] += 1

@@ -127,3 +127,5 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   measure, which comes in the middle of a turn, and the giving of the floor. The prompts say the same. Of the 53 steps
   of 19 Nov the rule drops one, a move to an item an MP spoke of. Measures an MP only spoke of are still kept
   (four that day) and are to be judged apart.
+- **A reply longer than two minutes is not the group's time** (24 Nov 2026): one of 142 s had been counted. A turn heard to
+  be a reply or a point of order (`rok.short`) is left out up to 180 s.
