@@ -2147,8 +2147,9 @@ def test_an_exchange_is_a_reply_the_chair_gave_and_what_it_takes_up():
     assert "kraju govora" not in str(find({**edge, **far}, turns + many))  # a piece over the turn's end is the next speaker's
 
 
-def test_the_measures_sentence_and_the_list_by_hour_are_on_the_page():
-    """24 Nov 2026: the chair's sentence of a measure under its step, the turns under the hour they began in."""
+def test_the_measures_sentence_and_the_list_by_hour_are_on_the_page(monkeypatch):
+    """24 Nov 2026: the chair's sentence of a measure under its step, the turns under the hour they began in. The
+    sentences only where they are turned on (RECI_PRIKAZ=1): off since the same day, the transcript erring too often."""
     base = 1795510000
     ev = {"t": base + 5000, "vrsta": "Mera predsedavajućeg", "tekst": "Ja vam izričem opomenu.", "izvor": "model", "vise": {"napomena": "opomena"}}
     turn = {"ime": "Petrović Petar", "adresa": "petrovic-petar", "uloga": "", "grupa": "PG A", "lista": "PG A", "od": base + 100, "do": base + 400,
@@ -2156,6 +2157,10 @@ def test_the_measures_sentence_and_the_list_by_hour_are_on_the_page():
     snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nepoznato", "provereno": base + 9000, "hronika": [ev], "danas": [turn],
             "razmene": [{"t": base + 6000, "prvi": {"ime": "Petrović Petar", "adresa": "", "lista": "PG A", "tekst": "Prva rečenica.", "t": base + 5990},
                          "odgovor": {"ime": "Marković Marko", "adresa": "", "lista": "PG B", "tekst": "Druga rečenica.", "t": base + 6010}}]}
+    assert not config.SHOW_QUOTES
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Ja vam izričem opomenu." not in html and "Prva rečenica." not in html and "Druga rečenica." not in html
+    monkeypatch.setattr(config, "SHOW_QUOTES", True)
     html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Ja vam izričem opomenu." in html and "automatski prepis" in html and "<b>Predsedavajući</b>" in html
     assert "Prva rečenica." in html and "<b>Petar Petrović</b>" in html and "Replika" in html
