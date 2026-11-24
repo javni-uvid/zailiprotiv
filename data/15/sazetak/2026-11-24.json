@@ -1,0 +1,62 @@
+{
+ "dan": null,
+ "delovi": [
+  {
+   "od": "10:00",
+   "do": "10:07",
+   "ukratko": "Skupština je nastavila prvu konstitutivnu sednicu 15. saziva. Predsedavajući je utvrdio kvorum na osnovu prisutnih poslanika, odao minut ćutanja preminulom vladiki Irineju Buloviću i pozdravio studente na Galeriji. Zatim je proglasio pauzu od jednog sata, jer materijali za nastavak sednice i za raspravu nisu bili spremni.",
+   "tok": [
+    {
+     "vreme": "10:00",
+     "sta": "Predsedavajući je otvorio nastavak prve konstitutivne sednice i konstatovao da je prema službenoj evidenciji prisutno 133 narodnih poslanika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:01",
+     "sta": "Predsedavajući je pozvao poslanike da ubace identifikacione kartice u elektronske jedinice radi utvrđivanja broja prisutnih u sali.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:01",
+     "sta": "Predsedavajući je konstatovao da je elektronskim sistemom utvrđeno 196 prisutnih poslanika, odnosno prisutna većina od ukupnog broja poslanika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:02",
+     "sta": "Predsedavajući je pozvao poslanicu Biljanu Pantić Piliju da se ponovo javi za reč. Poslanik Milenko Jovanov se javio povodom povrede Poslovnika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:03",
+     "sta": "Predsedavajući je zatražio minut ćutanja zbog smrti vladike Irineja Bulovića, koji je preminuo tokom noći. Minut ćutanja je ponovljen u [10:04].",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:05",
+     "sta": "Predsedavajući je konstatovao da je elektronskim sistemom utvrđeno 202 prisutna poslanika, odnosno prisutna većina, i da postoje uslovi za rad Narodne skupštine u smislu člana 88 stav pet Poslovnika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:05",
+     "sta": "Predsedavajući je pozdravio studente, članove delegacije Studentskog pokreta i studentsku organizaciju Protona Elektrotehničkog fakulteta Univerziteta u Beogradu, koji prate deo sednice sa galerije.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:06",
+     "sta": "Predsedavajući je zahvalio studentima kao simbolu stradanja i promena u društvu i pomenuo Milana Jovanovića, kao žrtvu nasilja nad novinarom, koji je takođe preminuo danas.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:07",
+     "sta": "Predsedavajući je proglasio pauzu od jednog sata, jer materijali za nastavak sednice i za raspravu nisu bili spremni, a konsultacije sa manjinskim grupama su završene pre nepunih pola sata.",
+     "glasanje": null
+    }
+   ],
+   "govornici": [],
+   "t_od": 1795510829,
+   "t_do": 1795511250
+  }
+ ],
+ "greske": 0,
+ "model": "claude-haiku-5-5"
+}
