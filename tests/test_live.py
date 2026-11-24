@@ -2286,7 +2286,7 @@ def test_a_voice_merely_alike_another_does_not_take_the_floor(tmp_path):
         v[0], v[1] = x, (1 - x * x) ** 0.5
         return v
 
-    def run(before: float, after: float) -> dict | None:
+    def run(before: float, after: float, between: float) -> dict | None:
         t = Tracker(None, "Europe/Belgrade")
         t.roster = ROSTER
         now = 1795100000.0
@@ -2296,12 +2296,12 @@ def test_a_voice_merely_alike_another_does_not_take_the_floor(tmp_path):
         np.savez_compressed(f, slugs=np.array(["markovic-marko"]), vecs=np.stack([like(1.0)]), counts=np.array([300]))
         L = glas.Listener(t, th.Event(), embed=lambda x: like(1.0), path=f)
         L.t = [now + 1.5 * i for i in range(60)]
-        L.f = [like(before)] * 40 + [like(after)] * 20
+        L.f = [like(before)] * 33 + [like(between)] * 7 + [like(after)] * 20  # a pause over GAP between: a stretch of its own
         t.observe(None, now=now + 92)
         L.judge()
         return t.open_turn()
-    assert run(0.6, 0.69)["slug"] == "petrovic-petar"  # alike all along: the same speaker
-    assert run(0.3, 0.8)["slug"] == "markovic-marko"  # the voice is new in the turn: the floor passed on
+    assert run(0.64, 0.69, 0.5)["slug"] == "petrovic-petar"  # alike all along: the same speaker
+    assert run(0.3, 0.8, 0.3)["slug"] == "markovic-marko"  # the voice is new in the turn: the floor passed on
 
 
 def test_a_voice_that_ends_before_the_floor_passed_on_does_not_end_the_turn():
