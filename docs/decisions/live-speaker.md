@@ -119,3 +119,10 @@ presided (not done).
   into the next; the archive's reading (`arhiva.reader`) reads the caption of 24 Nov too, else tomorrow's placing of
   the day's recording would have named nobody; a restart waits for the chair's words to end too (`mikrofon.ps1`,
   `titl`); and `popuna --reci` adds words a restart missed, as Whisper wrote them from the broadcast.
+- **The broadcast's clock beside the caption** (24 Nov 2026, the maintainer: "1, 2 i 3 odmah"; `ocr.clock`, `Tracker.clocked`):
+  "0:15", how long the turn has gone on, so when it began; the chair's words had put starts 30 s early or 15 s late. Two
+  of four readings agree, and two frames' within 3 s. On 120 frames 36 were read, all in order with the time. Read
+  only with a caption read (four OCR passes).
+- **Voices of 19 November** (24 Nov 2026): from the notes lined up with that day's recording (`govor`), 16 MPs not known
+  before; the samples of the windows within each turn, the stray ones left out. A turn held out and named by the others'
+  voices: 126 right, none wrong, 3 undecided (44 MPs, 144 turns of the three days). `/data/glasovi.npz` then 51 MPs.

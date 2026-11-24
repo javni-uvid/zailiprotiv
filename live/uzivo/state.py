@@ -370,6 +370,28 @@ class Tracker(Said, Chronicle, View):
             self._snap = None
             self._save()
 
+    def clocked(self, person: Person, now: float, seconds: int) -> None:
+        """The broadcast's own clock beside a caption ("0:15"): the turn of who it names began that long ago. Taken when
+        two readings of the same speaker agree within 3 s, for a turn begun up to two minutes before: one reading may
+        err. The turn before ends where this one begins, if it ran past it."""
+        with self._lock:
+            began = now - seconds
+            was, self._clock = getattr(self, "_clock", None), (person.key, began)
+            if not was or was[0] != person.key or abs(was[1] - began) > 3:
+                return
+            began = (was[1] + began) / 2
+            cur = self.turns[-1] if self.turns else None
+            if not (self.open and cur and cur["key"] == person.key and cur.get("izvor")) or abs(cur["start"] - began) > 120:
+                return
+            before = self.turns[-2] if len(self.turns) > 1 else None
+            if before and before["key"] == person.key and began < before["seen"] and before["start"] <= began:
+                return  # the same speaker's turn, cut in two by a reading: one clock for both
+            if before and before["seen"] > began:
+                before["seen"] = max(before["start"], began)
+            cur["start"] = min(began, cur["seen"])
+            self._snap = None
+            self._save()
+
     def unheard(self, at: float) -> None:
         """Another voice (the chair's) has the floor from `at`: a turn found without a caption ends there."""
         with self._lock:

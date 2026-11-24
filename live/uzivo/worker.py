@@ -13,7 +13,7 @@ from PIL import Image
 from . import config, mreza
 from .caption import differs, role, sure, who
 from .names import Roster
-from .ocr import caption, outlined
+from .ocr import caption, clock, outlined
 from .state import Tracker
 from .state_base import write_text
 from .stream import VIDEO, NotLive, resolve_input, start_ffmpeg
@@ -113,7 +113,14 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
                             log.exception("the outlined caption not read")
                             hit = None
                         if hit:  # it stands about ten seconds at a turn's start: found, not a caption that stays on
-                            tracker.heard(hit[1], "potpis", time.time(), time.time())
+                            at_ = time.time()
+                            tracker.heard(hit[1], "potpis", at_, at_)
+                            try:
+                                sec = clock(frame)  # "0:15" beside it: when the turn began
+                                if sec is not None:
+                                    tracker.clocked(hit[1], at_, sec)
+                            except Exception:
+                                log.exception("the clock not read")
                     tracker.observe(person, under,
                                     other=differs(cap, tracker.current(), config.MATCH), at=at)
                     log.info("%s | %s | %s -> %s", person.name if person else "-", cap.name_line[:40],
