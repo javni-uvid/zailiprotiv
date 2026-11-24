@@ -31,6 +31,10 @@ KEEP = 600  # seconds of windows kept in memory
 # own later 15 s fall below 0.45 in 10% of cases (an interruption: the turn ends early, nobody is named), the next
 # speaker's stay above in 4% (the turn goes on wrongly).
 CHANGE, OWN_FROM, OWN_TO, CHANGE_SPAN = 0.45, 3.0, 15.0, 15.0
+# Another's voice heard in a turn whose own voice is not known: taken only when it is liker that voice than the turn's
+# sound before it was, by this much; a speaker merely alike another is as alike all along. On 17-19 Nov 2026: no change
+# of 83 refused, the one false change (0.04) refused.
+JUMP = 0.12
 LEARN_ON = 40.0  # seconds after a caption that stands for seconds whose sound is taken as its speaker's voice
 LEAST = 20  # windows a voice is known from before it names anyone or ends a turn: a few are only those seconds' own sound
 LEARN_EDGE = 5.0  # seconds at a turn's start and end not taken as its voice (the chair may still be speaking)
@@ -196,6 +200,8 @@ class Listener(threading.Thread):
         roster = self.tracker.roster
         person = next((p for p in roster.people if p.slug == who), None) if roster else None
         cur = self.tracker.open_turn()
+        if cur and cur.get("slug") != who and not self._another(cur, refs[who], a, b):
+            return
         if person and who in config.VOICE_SKIP and not (cur and cur.get("slug") == who):
             # a presiding officer's voice, not at the rostrum: the chair; it ends a turn found without a caption
             self.tracker.presides(person, a, b)
@@ -204,6 +210,18 @@ class Listener(threading.Thread):
             self.tracker.heard(person, "glas", a, b, tracked=set(refs))
         else:
             self.tracker.unheard(a)
+
+    def _another(self, cur: dict, ref: np.ndarray, a: float, b: float) -> bool:
+        """Whether the voice `ref` heard from `a` to `b` is another than the open turn's: see JUMP. Of a turn whose voice
+        is known, or with too little heard before `a`, it is."""
+        if cur.get("izvor") not in ("prepis", "potpis") or cur.get("po_glasu"):
+            return True
+        t = np.array(self.t)
+        own, new = (t >= cur["start"] + OWN_FROM) & (t + WIN <= a), (t >= a) & (t + WIN <= b)
+        if own.sum() < 5 or not new.any():
+            return True
+        f = np.stack(self.f)
+        return float((f[new] @ ref).mean() - (f[own] @ ref).mean()) >= JUMP
 
     def changed(self) -> None:
         """A turn found by the chair's words, of someone whose voice is not known: ended when its voice changes."""

@@ -149,3 +149,8 @@ presided (not done).
   come half a minute later and `_went_on` had nothing to judge by. After each piece of the transcript the last two turns are
   judged by the same rule (`Tracker._mend`): within 200 s, at least 1.2 words a second, no word only the chair says, no
   floor given to another.
+- **A voice merely alike another does not take the floor** (24 Nov 2026, the cycle's finding; `glas.JUMP`): Nikola Selaković's,
+  not yet known, was some 0.58 like Miroslav Petrašinović's through the whole speech and 0.68 for 24 s, which stood as Petrašinović's.
+  In a turn whose own voice is not known, another's is taken only when the sound is liker it than the turn's before was,
+  by 0.12; the chair's too. Tried on 17–19 Nov (142 speeches of 44 MPs): no real change of 83 refused, the one false
+  change refused; on the broadcast's own sound of 17:24–17:26 the likeness grew by 0.07 at most.
