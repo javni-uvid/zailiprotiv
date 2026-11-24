@@ -246,3 +246,5 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   ours over its player).
 - **A step's time leads to its moment** (24 Nov 2026, the maintainer, for the reprimands; the same for every step heard): the
   broadcast on now, or the archive's recording of the day (`page._moment`); plain text when neither holds it.
+  Its line under the pinned picture does not name the speaker while the player shows a moment over two minutes back
+  (`past` in live.js): the name would be another's than the picture's.
