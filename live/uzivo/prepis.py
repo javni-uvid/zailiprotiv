@@ -116,6 +116,24 @@ def keep(segment: str, read_at: float, seconds: float, program: float | None = N
         log.debug("sound not kept", exc_info=True)
 
 
+LEFT = 900  # seconds: sound not written down by a run before this one and older than this is thrown away
+
+
+def left(now: float) -> int:
+    """What a run before this one left unwritten (the service was restarted; the sound is on its volume since 24 Nov 2026,
+    when a restart lost the chair's "proglašavam pauzu do 15 sati i 10 minuta"): too old to be of use is thrown away,
+    and half-written files. How many were."""
+    gone = 0
+    for f in Path(config.SOUND_PATH).glob("*"):
+        try:
+            if f.suffix == ".tmp" or (f.suffix == ".pcm" and now - int(f.stem.split("-")[0]) / 1000 > LEFT):
+                f.unlink()
+                gone += 1
+        except (OSError, ValueError):
+            continue
+    return gone
+
+
 def waiting() -> list[tuple[float, float, Path]]:
     """The kept files, oldest first: (the second the sound begins at, its length, the file)."""
     out = []
@@ -297,6 +315,8 @@ class Writer(threading.Thread):
                 log.warning("transcript off (%s)", exc)
                 config.WHISPER_MODEL = ""
                 return
+        if left(time.time()):
+            log.info("sound a run before left, too old, thrown away")
         while not self.halt.is_set():
             try:
                 busy = self.step()
