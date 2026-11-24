@@ -145,18 +145,17 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         when = _date(snap["dan"])
         chip = _chip(t("dl_recording"), t("from_recording")) if snap.get("snimak") else ""
         out.append(f'<div class="sec-h"><h2>{t("last_day")}, {escape(cyrillic(when) if cyr else when)}</h2>{chip}</div>')
-    else:
+    elif not snap["danas"]:  # with turns the list says itself (24 Nov 2026, the maintainer: no "Danas su govorili" over three tiles)
         out.append(f'<h2>{t("today")}</h2>')
     if snap["danas"]:
         every = snap["danas"] + ([cur] if snap["stanje"] == "govori" and cur else [])
         shade = _shades(every)
         line = headline(every, cyr=cyr, when=_when(snap, cyr))
-        out.append(_tiles(every, cyr=cyr))
         if line and (snap["stanje"] == "govori" and cur):  # otherwise the summary above already says it
             out.append(f'<p class="hl">{escape(line)}</p>')
         out.append(_cards(snap, every, shade, cyr=cyr, site=site, tz=tz))
         chip_ = _chip(t("dl_src"), t("rz_src")) if any(d.get("rezime") for d in snap["danas"]) else ""
-        out.append(f'<div class="sec-h"><h3 class="sub">{t("all_turns")}</h3>{chip_}</div>')
+        out.append(f'<div class="sec-h"><h2>{t("all_turns")}</h2>{chip_}</div>')
         rows = []
         for d in snap["danas"]:
             nm = escape(_name(given_first(d["ime"]), cyr))
@@ -514,20 +513,6 @@ def _group_time(snap: dict, *, cyr: bool) -> str:
                     f'<div class="gt-bar"><i class="{LIST_COLOURS.get(r["lista"], "l1")}" style="width:{share:.1f}%"></i></div></li>')
     return (f'<section class="gt-sec"><h2>{t("gt_head")} <span>{t("gt_estimate")}</span></h2>'
             f'<ul class="gt">{"".join(rows)}</ul></section>')
-
-
-def _tiles(turns: list[dict], *, cyr: bool) -> str:
-    """The day in four numbers: time on the floor, turns, speakers, and the words written down so far (when the
-    transcript is on)."""
-    t = lambda k: escape(_t(k, cyr))
-    if len(turns) < 2:
-        return ""
-    words = sum(d.get("reci", 0) for d in turns)
-    cells = [(_dur(sum(max(0, d["sekundi"]) for d in turns), cyr), t("n_time")), (len(turns), t("n_turns")),
-             (len({d["ime"] for d in turns}), t("n_people"))]
-    if words:
-        cells.append((f"{words:,}".replace(",", "."), t("n_words")))
-    return '<dl class="tiles">' + "".join(f'<div><dd>{escape(str(v))}</dd><dt>{k}</dt></div>' for v, k in cells) + "</dl>"
 
 
 def _cards(snap: dict, turns: list[dict], shade: dict[str, str], *, cyr: bool, site: str, tz: ZoneInfo) -> str:

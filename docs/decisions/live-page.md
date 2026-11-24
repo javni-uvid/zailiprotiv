@@ -268,3 +268,6 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   opposite that day; both calls are the same model's, so it lowers the odds and proves nothing. Labelled at the heading
   and on the method page. The stretch's summary at a break lists no speakers any more; if the day's summary by Opus
   fails, the day's lines are given to the one made of the stretches.
+- **"Danas su govorili" and its three tiles off** (24 Nov 2026, the maintainer: "te tri ukratko kartice nam ne trebaju"): time
+  spoken, turns, speakers in numbers said little; the headline, the cards and the list stay, the list is the heading of its
+  own part. The heading stays only while nobody has spoken; the last day's heading with its date too.

@@ -824,7 +824,7 @@ def test_the_day_in_numbers_and_in_cards():
         for s_ in range(a, b + 1, 5):
             t.observe(who_, now=now + s_)
     html = fragment(t.snapshot(now=now + 701), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert '<dl class="tiles">' in html and "<dd>5</dd><dt>govora</dt>" in html and "<dd>2</dd><dt>govornika</dt>" in html
+    assert "tiles" not in html and "Danas su govorili" not in html and "Svi govori, redom" in html  # off since 24 Nov 2026
     assert 'class="share-now st-open"' in html and html.count('<section class="st-c">') >= 5
     assert "Najduži govor bez prekida" in html and "Najviše puta za govornicom" in html and "3 <small>puta</small>" in html
 
