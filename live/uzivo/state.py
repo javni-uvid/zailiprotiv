@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, REJOIN, REJOIN_WORDS
+from .state_base import HOLD_VOICE, CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, REJOIN, REJOIN_WORDS
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -354,6 +354,7 @@ class Tracker(Said, Chronicle, View):
                 return
             if self.open and cur and cur["key"] == person.key:
                 cur["seen"] = max(cur["seen"], seen)
+                cur.pop("zadrzan", None)
                 if how == "potpis":  # a caption of ten seconds (ocr.outlined) said who it is: surer than the words
                     cur["izvor"] = "potpis"
                     cur.setdefault("natpis", start)
@@ -432,6 +433,16 @@ class Tracker(Said, Chronicle, View):
                 before[k] = cur[k]
         self._snap = None
 
+    def _chair_spoke(self, ts: float, text: str) -> None:
+        """A turn held through a silence of its voice ends when the chair's words are written down: the silence was
+        the end of the speech, not applause. Called with the lock held."""
+        cur = self.turns[-1] if self.turns else None
+        if self.open and cur and cur.get("zadrzan") and ts >= cur["zadrzan"] - 5 and CHAIRS.search(text):
+            cur["seen"] = max(cur["start"], cur.pop("zadrzan"))
+            self._close()
+            self.status = UNKNOWN
+            self._snap = None
+
     def _mend(self) -> None:
         """The same speaker named again, joined once the words between are written down: they come half a minute after the
         turn begins, when `_went_on` could not yet say that speech had gone on (24 Nov 2026, 17:32: Vjerica Radeta's,
@@ -475,7 +486,14 @@ class Tracker(Said, Chronicle, View):
             if not (self.open and cur and cur.get("izvor")):
                 return
             if cur.get("po_glasu") and newest - cur["start"] > 30 and newest - cur["seen"] > 8:
-                cur["seen"] = max(cur["start"], min(cur["seen"], last))
+                # Held a while (24 Nov 2026, the maintainer: "ako bude pauza u govoru zbog tapšanja, ti prekineš govor"):
+                # applause and the hall are no voice, and the speaker goes on after them. The end stays the last voice.
+                end = max(cur["start"], min(cur["seen"], last))
+                if newest - end < HOLD_VOICE:
+                    cur["zadrzan"] = end
+                    return
+                cur["seen"] = end
+                cur.pop("zadrzan", None)
                 self._close()
                 self.status = UNKNOWN
                 self._snap = None

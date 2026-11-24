@@ -2001,8 +2001,10 @@ def test_a_voice_not_recognised_does_not_end_a_turn():
     t.voice_gone(now + 1, now + 70, {marko.slug})  # his voice is known, nobody's was recognised
     assert t.open_turn() and t.open_turn()["slug"] == "markovic-marko"
     t.heard(marko, "glas", now + 60, now + 90)  # recognised: now its end counts
-    t.voice_gone(now + 90, now + 120, {marko.slug})
-    assert t.open_turn() is None and t.turns_now()[0]["seen"] == now + 90
+    t.voice_gone(now + 90, now + 110, {marko.slug})
+    assert t.open_turn() and t.turns_now()[0]["seen"] == now + 90  # held: it may be applause
+    t.voice_gone(now + 90, now + 121, {marko.slug})
+    assert t.open_turn() is None and t.turns_now()[0]["seen"] == now + 90  # the end is where the voice was
 
 
 def test_a_floor_passed_on_by_name_is_not_filled():
@@ -2907,3 +2909,47 @@ def test_a_speech_cut_by_a_silent_voice_is_joined_when_its_words_are_written():
     t.turns.insert(1, {**t.turns[0], "key": petar.key, "start": now + 102, "seen": now + 108})
     t.say(now + 100, words)
     assert len(t.turns) == 3
+
+
+def test_applause_does_not_end_a_speech_and_the_chairs_words_do(tmp_path):
+    """24 Nov 2026, the maintainer: "ako bude pauza u govoru zbog tapšanja, ti prekineš govor". A turn known by voice is held
+    for HOLD_VOICE; the same voice after it goes on as one turn, in seconds; the chair's words end it at once."""
+    import numpy as np
+    from uzivo import glas
+    now = 1795532500.0
+    marko = next(p for p in ROSTER.people if p.slug == "markovic-marko")
+
+    def tracker():
+        t = Tracker(None, "Europe/Belgrade")
+        t.roster = ROSTER
+        t.day = t._day(now)
+        t.observe(None, now=now)
+        t.heard(marko, "glas", now, now + 100)
+        return t
+    t = tracker()
+    t.voice_gone(now + 100, now + 112, {marko.slug})
+    assert t.open and t.turns[-1]["zadrzan"] == now + 100 and t.turns[-1]["seen"] == now + 100
+    t.heard(marko, "glas", now + 120, now + 130)  # he goes on after it
+    assert len(t.turns) == 1 and t.turns[0]["seen"] == now + 130 and "zadrzan" not in t.turns[0]
+    t = tracker()
+    t.voice_gone(now + 100, now + 112, {marko.slug})
+    t.say(now + 103, "Zahvaljujem. Reč ima narodni poslanik.", chair=True)
+    assert not t.open and t.turns[0]["seen"] == now + 100 and t.status == UNKNOWN
+    t = tracker()
+    t.voice_gone(now + 100, now + 112, {marko.slug})
+    t.say(now + 60, "Reč ima narodni poslanik.", chair=True)  # words long before the silence say nothing of it
+    assert t.open
+
+    # known again in a few windows, only when it is the held turn's voice and clearly
+    v = np.array([1.0, 0, 0], dtype=np.float32)
+    other = np.array([0, 1.0, 0], dtype=np.float32)
+    lis = glas.Listener.__new__(glas.Listener)
+    lis.tracker = tracker()
+    lis.t = [now + 105 + 1.5 * i for i in range(6)]
+    lis.f = [other, other, v, v, v, v]
+    refs = {marko.slug: v, "petrovic-petar": other}
+    assert lis.again(refs) == (marko, now + 108)
+    lis.f = [v, v, v, v, other, v]
+    assert lis.again(refs) is None
+    lis.f = [v * 0.3] * 6
+    assert lis.again(refs) is None

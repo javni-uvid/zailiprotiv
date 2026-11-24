@@ -36,6 +36,7 @@ def speakers_own(ts: float, text: str, start: float, end: float) -> bool:
 
 REJOIN = 200  # seconds: the same speaker named again this soon, with speech going on between and no floor given to another
 REJOIN_WORDS = 1.2  # words a second of it, for speech to have gone on (a speaker's pace is some two)
+HOLD_VOICE = 30  # seconds a turn known by voice is held when its voice is not heard: applause, the hall; its end stays where it was
 HEARD_SHORT = 12  # seconds: a turn found by the chair's words alone and as short as this is no turn (24 Nov 2026: 2 s, 8 s)
 CLOCK_JOIN = 60  # seconds: the broadcast's clock says the speech began this near the start of the same speaker's turn before
 LONGEST_CLOCK = 3600  # seconds: no clock longer than this joins two turns
