@@ -54,7 +54,8 @@ Srbije utvrđuješ SAMO proceduralne događaje sa ovog zatvorenog spiska:
 - "Glasanje": predsedavajući stavlja nešto na glasanje
 - "Rezultat glasanja": izgovoren rezultat (za, protiv, uzdržano, nije glasalo) ili odluka (usvojeno, nije usvojeno);
   "napomena" = rezultat brojevima tačno kako su izgovoreni
-- "Izbor": Skupština je nekoga izabrala ili imenovala; "ko" = ime i funkcija kako su izgovoreni
+- "Izbor": predsedavajući saopštava da je Skupština nekoga izabrala ili imenovala (glasanje je završeno); "ko" = ime i
+  funkcija kako su izgovoreni. Poslanik koji u govoru pominje predlog, kandidate ili raniji izbor NIJE izbor
 - "Pauza": predsedavajući proglašava pauzu (ne najavu da će je proglasiti kasnije); "do" = do kada ili koliko, ako je rečeno
 - "Nastavak rada": rad se nastavlja posle pauze ili sutradan
 - "Mera predsedavajućeg": izrečena opomena, oduzimanje reči ili udaljenje sa sednice; "kome" = ime ako je izgovoreno;
@@ -64,6 +65,8 @@ Srbije utvrđuješ SAMO proceduralne događaje sa ovog zatvorenog spiska:
 
 PRAVILA
 - Samo ono što je u datom delu izgovoreno; ništa iz znanja, ništa iz pretpostavke.
+- Događaj izgovara predsedavajući. Ono što poslanik (red sa imenom) u svom govoru prepričava, najavljuje ili pominje
+  nije događaj. U red sa imenom može ući i reč predsedavajućeg (opomena u toku govora): ona jeste događaj.
 - Svaki događaj ima "recenica": rečenicu ili deo rečenice iz prepisa PREPISAN SLOVO PO SLOVO (bez oznake vremena i
   imena), 5 do 40 reči. Ne ispravljaj greške prepisa u njoj.
 - "vreme": oznaka [HH:MM:SS] reda u kom je ta rečenica.
@@ -91,7 +94,8 @@ SUMMARY = f"""Pišeš sažetak dela sednice Narodne skupštine Srbije iz AUTOMAT
 imenima, brojevima i rečima. Oznaka reda: [HH:MM:SS] Ime (lista): tekst; "{CHAIR}" je predsedavajući ili sala.
 
 {_RULES}
-8. "tok": šta je Skupština radila, hronološki: tačke dnevnog reda, pretres, glasanja i odluke (sa brojevima kako su
+8. "tok": šta je Skupština radila, hronološki: tačke dnevnog reda, pretres, glasanja i odluke (samo kako ih je saopštio
+   predsedavajući, ne kako ih poslanik u govoru pominje; sa brojevima kako su
    saopšteni), pauze, mere predsedavajućeg (opomena, oduzimanje reči, udaljenje; upozorenje NIJE mera), svaka stavka
    sa vremenom [HH:MM].
 9. Ako je dat "dosadašnji sažetak", ne ponavljaj ga: pišeš samo ovaj deo.
