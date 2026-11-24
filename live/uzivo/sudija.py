@@ -38,6 +38,7 @@ log = logging.getLogger("uzivo.sudija")
 
 EVERY = 600  # seconds between calls while the broadcast is on
 LAG = 45  # a piece younger than this may still be followed by its sentence's end: it waits for the next call
+CLOSED_QUIET = 180  # no broadcast this long after the chair closed the day's work: the day is over (24 Nov 2026)
 END_QUIET = 1200  # no broadcast this long after a day with a transcript: the day is over
 BREAK_QUIET = 600  # a stretch is summed up at a break with nobody at the rostrum this long (not at a five-minute one)
 MAIL_EVERY = 300  # seconds between tries of the day's mail to the maintainer
@@ -602,7 +603,16 @@ class Judge(threading.Thread):
         # end; "no frame yet" was taken for now, so the day would never have ended, nor its mail gone): then the day ends
         # END_QUIET after the last word written down, and no sooner than END_QUIET after the run began (a restart in a break
         # finds its stream again within that).
-        ended = not live and now - (snap.get("provereno") or max(rows[-1][0], self.began)) >= END_QUIET
+        # The last frame is the run before's when this one read none (kept with the day): a restart after the end does not
+        # begin the wait anew. And when the chair closed the day's work (the model's "Kraj rada", nobody at the rostrum and
+        # nearly nothing said after it), CLOSED_QUIET is enough (the maintainer: the mail sooner).
+        last = snap.get("provereno") or getattr(self.tracker, "frame_before", 0) or max(rows[-1][0], self.began)
+        closed = next((e["t"] for e in reversed(list(self.tracker.events))
+                       if e.get("izvor") == "model" and e.get("vrsta") == "Kraj rada"), None)
+        if closed is not None and (any(b > closed + 60 for _, b in on)
+                                   or sum(len(r[1].split()) for r in rows if r[0] > closed + 60) > 40):
+            closed = None  # the work went on after it
+        ended = not live and now - last >= (CLOSED_QUIET if closed is not None else END_QUIET)
         done = self.kept.get("dan") is not None
         cut = None
         if breaks:

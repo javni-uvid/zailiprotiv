@@ -3114,3 +3114,44 @@ def test_the_day_ends_after_a_restart_that_read_no_frame(tmp_path, monkeypatch):
     assert j.kept["dan"] is None  # a restart in a break does not end the day
     j.step(now=base + 3600 + sudija.END_QUIET + 5)
     assert j.kept["dan"]["kratko"] == "Dan."
+
+
+def test_the_day_ends_sooner_when_the_chair_closed_it_and_a_restart_does_not_begin_the_wait_anew(tmp_path, monkeypatch):
+    """24 Nov 2026, the maintainer: the day's mail sooner."""
+    from uzivo import sudija
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    monkeypatch.setattr(config, "DAY_MODEL", "")
+    base = 1795082400
+    day = json.dumps({"kratko": "Dan.", "ukratko": "Govorilo se.", "odluke": [], "tok": [], "govornici": []})
+
+    def judge(closed, frame_before=0.0, provereno=0, words_after=0):
+        where = str(tmp_path / f"s{closed}{frame_before}{provereno}{words_after}" / "stanje.json")
+        monkeypatch.setattr(config, "STATE_PATH", where)  # each its own day's files
+        t = Tracker(where, "Europe/Belgrade")
+        t.day = t._day(base)
+        t.say(base + 10, "Govorio sam o penzijama i o budžetu za sledeću godinu.")
+        if words_after:
+            t.say(base + 400, "reč " * words_after)
+        if closed:
+            t.note(base + 250, "Kraj rada", "Zaključujem rad za danas.", "model")
+        t.frame_before = frame_before
+        turns = [{"ime": "Petrović Petar", "lista": "Lista", "od": base + 5, "do": base + 200}]
+        monkeypatch.setattr(t, "snapshot", lambda now=None: {"dan": t.day, "ranije": False, "stanje": NO_STREAM, "danas": turns,
+                                                             "sada": None, "provereno": provereno})
+        j = sudija.Judge(t, threading.Event(), ask=lambda system, user, *rest: day if system is not sudija.EVENTS else json.dumps({"dogadjaji": []}))
+        j.began = base + 5000
+        return j
+    j = judge(True, provereno=base + 300)
+    j.step(now=base + 300 + sudija.CLOSED_QUIET - 5)
+    assert j.kept["dan"] is None
+    j.step(now=base + 300 + sudija.CLOSED_QUIET + 5)
+    assert j.kept["dan"]["kratko"] == "Dan."  # closed by the chair: three minutes
+    j = judge(False, provereno=base + 300)
+    j.step(now=base + 300 + sudija.CLOSED_QUIET + 5)
+    assert j.kept["dan"] is None  # not closed: it may be a break
+    j = judge(True, provereno=base + 300, words_after=60)
+    j.step(now=base + 300 + sudija.CLOSED_QUIET + 5)
+    assert j.kept["dan"] is None  # the work went on after the words
+    j = judge(False, frame_before=base + 300)  # a restart long after: the wait is from the last frame, not from now
+    j.step(now=base + 5010)
+    assert j.kept["dan"]["kratko"] == "Dan."

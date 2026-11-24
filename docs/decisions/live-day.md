@@ -196,3 +196,9 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   ("izvor": "uzivo") and ends over two minutes before the record does now, the record stands. After the sitting the copy of
   17:56 was on the page, 33 turns short and with a name corrected at 18:10, and the next copy was hours away (the run
   takes an hour and a half, and one was waiting behind another). A day read from the whole recording stands as before.
+- **The day's summary sooner** (24 Nov 2026, the maintainer: can the mail be made faster; that evening it came 50 minutes
+  after the end, three restarts each beginning the 20 minutes anew). When the chair closed the day's work (the model's
+  "Kraj rada", nobody at the rostrum and under 40 words after it) and the broadcast is off, the day ends after `CLOSED_QUIET`
+  (3 min); otherwise after END_QUIET as before, so a break is not taken for the end. The wait counts from the last frame kept
+  with the day (`Tracker.frame_before`), whatever restarts come after. Agreed among the sessions too: nothing is put live
+  between a sitting's end and the day's mail.
