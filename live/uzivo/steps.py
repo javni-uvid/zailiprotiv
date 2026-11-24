@@ -20,6 +20,7 @@ STEP_TERM = {"Sednica otvorena": "otvaranje-sednice", "Nastavak rada": "radno-vr
              "Rezultat glasanja": "dan-za-glasanje", "Mera predsedavajućeg": "mere"}
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
+RESUMED_AFTER = 300  # seconds after a break for words or a turn to be its end
 STEP_IDLE = 600  # work is resumed when nobody was at the rostrum for this long before the chair says so
 _UNDER_WAY = {"Glasanje", "Glasanje zaključeno", "Pretres otvoren", "Pretres zaključen"}
 # Steps said in the same second, in the order the Assembly's work takes them.
@@ -232,4 +233,14 @@ def model_steps(snap: dict) -> list[dict]:
         last[key] = t
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": what, "url": "", "model": True,
                     "pojam": STEP_TERM.get(kind, "")})
+    # Work resumed after a break is told too where the model did not (24 Nov 2026, 15:11: "pošto imamo kvorum, nastavljamo
+    # pretres po petoj tački"): at the chair's words that move the work on, or the first turn, after the break.
+    moves = [e["t"] for e in snap.get("hronika") or [] if e.get("izvor") == "prepis"
+             and e.get("vrsta") in ("Nastavak rada", "Tačka dnevnog reda", "Pretres otvoren", "Reč ima")]
+    for p in [x for x in out if x["naslov"] == "Pauza"]:
+        after = [t for t in moves + [a for a, _ in turns] if t > p["t"] + RESUMED_AFTER]
+        if after and not any(p["t"] < x["t"] <= min(after) + 300 for x in out if x is not p and not x.get("rec")):
+            out.append({"t": min(after), "izvor": "prepis", "naslov": STEP_TITLES["Nastavak rada"], "opis": "", "url": "",
+                        "model": True, "pojam": STEP_TERM["Nastavak rada"]})
+    out.sort(key=lambda x: x["t"])
     return out[::-1]
