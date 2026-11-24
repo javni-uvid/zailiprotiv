@@ -131,3 +131,7 @@ presided (not done).
   another (`Tracker._went_on`). A voice not recognised or the chair's had ended it.
   Not when a word only the chair says is between (`CHAIRS`), nor a floor passed on by name before the next begins: a dry run
   over the day had joined 104 s of the chair's to the next speaker and given one MP 63 s of the chair's. Neither was live.
+- **A voice known from under 20 windows (30 s) is not used** (24 Nov 2026, the cycle's finding; `glas.LEAST`): Milena
+  Đorđijević's, known from two windows of the same speech, matched those seconds and then no more, and a speech of ten minutes
+  ended at 56 s. Of the 55 voices known ten had 2–16 windows, most of them of the speeches cut short that day. The
+  windows go on being gathered; until then the turn goes as of a voice not known.

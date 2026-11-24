@@ -32,6 +32,7 @@ KEEP = 600  # seconds of windows kept in memory
 # speaker's stay above in 4% (the turn goes on wrongly).
 CHANGE, OWN_FROM, OWN_TO, CHANGE_SPAN = 0.45, 3.0, 15.0, 15.0
 LEARN_ON = 40.0  # seconds after a caption that stands for seconds whose sound is taken as its speaker's voice
+LEAST = 20  # windows a voice is known from before it names anyone or ends a turn: a few are only those seconds' own sound
 LEARN_EDGE = 5.0  # seconds at a turn's start and end not taken as its voice (the chair may still be speaking)
 
 
@@ -72,7 +73,8 @@ class Voices:
                 self.sums[str(slug)], self.n[str(slug)] = v.astype(np.float64) * int(c), int(c)
 
     def refs(self) -> dict[str, np.ndarray]:
-        return {s: (v / (np.linalg.norm(v) + 1e-9)).astype(np.float32) for s, v in self.sums.items()}
+        """The voices known well enough to be used (LEAST): of one known from fewer, the turn goes on as of a voice not known."""
+        return {s: (v / (np.linalg.norm(v) + 1e-9)).astype(np.float32) for s, v in self.sums.items() if self.n[s] >= LEAST}
 
     def add(self, slug: str, f: np.ndarray) -> None:
         if not len(f):
