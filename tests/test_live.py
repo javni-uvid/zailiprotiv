@@ -2802,3 +2802,18 @@ def test_the_broadcasts_clock_joins_a_speech_cut_in_two():
     t.clocked(marko, now + 712, 5)
     t.clocked(marko, now + 717, 10)
     assert len(t.turns) == 3 and abs(t.turns_now()[-1]["start"] - (now + 707)) <= 1
+
+
+def test_the_words_kept_as_the_chairs_inside_a_mended_turn_are_the_speakers():
+    """24 Nov 2026, Milena Đorđijević: ten minutes written down under the chair's key while her turn was cut; read as
+    hers once the turn holds them, but for what only the chair says and for what is at its edges."""
+    from uzivo import rezimei, sudija
+    from uzivo.state_base import speakers_own
+    d = {"ime": "Đorđijević Milena", "lista": "Lista", "od": 1000, "do": 1900}
+    said = {"1004": "Poštovani,", "p1100": "Biblioteka Srbije je spomenik kulture.", "p1500": "Reč ima poslanik Petrović.",
+            "p1890": "Odbor nije odgovorio ni na jedno pitanje.", "1895": "Hvala.", "p2000": "Nastavljamo dalje."}
+    assert rezimei.spoken(said, d) == "Poštovani, Biblioteka Srbije je spomenik kulture. Hvala."  # not the chair's, nor the last seconds
+    assert speakers_own(1100, "Biblioteka je spomenik.", 1000, 1900) and not speakers_own(1003, "x", 1000, 1900)
+    out = [l for _, l in sudija.lines(sudija.pieces(said), [d], TZ)]
+    assert "Đorđijević Milena (Lista)" in out[0] and not any("bez potpisa" in l and "Biblioteka" in l for l in out)
+    assert any("Reč ima poslanik Petrović" in l and "bez potpisa" in l for l in out)
