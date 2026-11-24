@@ -44,6 +44,11 @@ class Said:
                 except OSError:
                     pass
 
+    def heard(self) -> tuple[dict[str, str], list[dict], list[dict]]:
+        """Today's transcript in pieces, turns and steps, copies: what the bell finds the end of a break from."""
+        with self._lock:
+            return dict(self.said), [dict(t) for t in self.turns], [dict(e) for e in self.events]
+
     def _said_of(self, day: str) -> dict[str, str]:
         if day == self.day:
             return self.said

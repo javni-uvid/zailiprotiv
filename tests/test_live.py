@@ -1198,6 +1198,66 @@ def test_the_notification_goes_out_once_a_day_when_a_broadcast_begins(tmp_path):
     assert not any(off.frame(morning, wait=True) for _ in range(5)) and asked == [0, 31]  # no token (the test): never
 
 
+def _break(tmp, *, pause=True, minutes=60, after=(0, 20), words=12):
+    """A day heard: the chair from 10:00 to 10:07, a break said, a silence, and speech `after` seconds past its end."""
+    from datetime import datetime as dt_
+    start = dt_(2026, 11, 24, 10, 0, tzinfo=TZ).timestamp()
+    said = {f"p{int(start + 20 * i)}": "rec " * 20 for i in range(21)}
+    said[f"p{int(start + 430)}"] = "Zadok, ne budućić."  # the odd sound in a break: no speech
+    end = start + 400 + 20  # the last piece with speech, and its twenty seconds
+    back = end + 60 * minutes
+    said.update({f"p{int(back + a)}": "rec " * words for a in after})
+    events = [{"t": int(start + 415), "vrsta": "Pauza", "tekst": "proglašavam pauzu", "izvor": "model"}] if pause else []
+    return said, events, int(end), back
+
+
+def test_the_end_of_a_long_break_is_found_from_speech(tmp_path):
+    from uzivo.obavesti import resumed
+    said, events, end, back = _break(tmp_path)
+    assert resumed(said, [], events, back + 45) == end  # the chair speaks again, whatever the words
+    assert resumed(said, [], events, back - 60) == 0  # still silent
+    assert resumed(said, [], events, back + 3600) == 0  # long ago: no news
+    assert resumed(*(lambda b: (b[0], [], b[1]))(_break(tmp_path, pause=False)), back + 45) == 0  # no break said
+    assert resumed(*(lambda b: (b[0], [], b[1]))(_break(tmp_path, after=(0,))), back + 45) == 0  # one piece is not sure yet
+    assert resumed(*(lambda b: (b[0], [], b[1]))(_break(tmp_path, words=3)), back + 45) == 0  # a word or two in the hall
+    short = _break(tmp_path, minutes=10)
+    assert resumed(short[0], [], short[1], short[3] + 45) == 0  # ten minutes: nobody is woken
+    quiet = {k: v for k, v in said.items() if int(k[1:]) < back}
+    turn = {"start": back + 5, "seen": back + 20, "n": 3}
+    assert resumed(quiet, [turn], events, back + 30) == end  # an MP read at the rostrum is enough
+    long = {"start": end - 60, "seen": end + 3000, "n": 600}  # an MP speaking through: no silence at all
+    assert resumed(said, [long], events, back + 45) == 0
+
+
+def test_the_end_of_a_break_is_told_once_and_twice_a_day_at_most(tmp_path):
+    from datetime import datetime as dt_
+    from uzivo.obavesti import Bell
+    posts = []
+    path = str(tmp_path / "o.json")
+    bell = lambda: Bell(path, token="t", api="https://glasovi.example", post=lambda od, *w: posts.append((od, *w)) or {"sent": 1})
+    said, events, end, back = _break(tmp_path)
+
+    class Heard:
+        def heard(self):
+            return said, [], events
+    at = lambda s: dt_.fromtimestamp(back + s, TZ)
+    b = bell()
+    assert b.heard(Heard(), at(45), wait=True) and posts == [(0, "nastavak", 1)]
+    assert not b.heard(Heard(), at(75), wait=True)  # the same break: once
+    assert not bell().heard(Heard(), at(90), wait=True) and len(posts) == 1  # a restart of the service too
+    again = back + 4 * 3600
+    said.update({f"p{int(back + 60 + 20 * i)}": "rec " * 12 for i in range(5)})
+    said.update({f"p{int(again + 20 * i)}": "rec " * 12 for i in range(3)})
+    events.append({"t": int(back + 150), "vrsta": "Pauza", "tekst": "", "izvor": "model"})
+    assert bell().heard(Heard(), dt_.fromtimestamp(again + 50, TZ), wait=True) and posts[-1] == (0, "nastavak", 2)
+    third = again + 2 * 3600
+    said.update({f"p{int(third + 20 * i)}": "rec " * 12 for i in range(3)})
+    events.append({"t": int(again + 70), "vrsta": "Pauza", "tekst": "", "izvor": "model"})
+    assert not bell().heard(Heard(), dt_.fromtimestamp(third + 50, TZ), wait=True) and len(posts) == 2
+    off = Bell(str(tmp_path / "x.json"), token="", api="https://glasovi.example", post=lambda *a: posts.append(a) or {})
+    assert not off.heard(Heard(), at(45), wait=True)  # no token (a test of the service): never
+
+
 def test_the_page_offers_the_notification_and_its_worker_writes_it():
     from uzivo.page import service_worker
     snap = {"stanje": "nema_prenosa", "provereno": 0, "sada": None, "danas": [], "dan": "2026-11-20"}
@@ -1205,6 +1265,7 @@ def test_the_page_offers_the_notification_and_its_worker_writes_it():
     assert 'data-key="BKEY"' in html and "Obavesti me kad sednica počne" in html
     assert 'data-key="' not in page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, push_key="BKEY")  # no counter: no offer
     sw = service_worker(True, "BKEY", "https://glasovi.zailiprotiv.rs/")
+    assert "Седница је настављена" in sw and 'k.vrsta === "nastavak"' in sw
     assert "Седница је почела" in sw and '"url": "/cir/"' in sw and '"api": "https://glasovi.zailiprotiv.rs"' in sw
     assert "addEventListener(\"fetch\"" not in sw  # it handles no requests
 
@@ -2040,7 +2101,7 @@ def test_the_app_and_the_notification_say_what_they_give_with_a_mark_each():
     snap = Tracker(None, "Europe/Belgrade").snapshot()
     html = page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs", push_key="k")
     for words in ("Mikrofon kao aplikacija", "Dodaj na početni ekran: ikonica pored ostalih, bez prodavnice.",
-                  "Obavesti me kad sednica počne", "I kad sažetak dana bude spreman."):
+                  "Obavesti me kad sednica počne", "I kad se nastavi posle duge pauze i kad sažetak dana bude spreman."):
         assert words in html
     assert html.count('class="ah-tile') == 2 and 'class="ic-share"' in html
     for cls in ("nt-on", "add-go", "nt-off", "add-ios"):  # what the page's script looks for

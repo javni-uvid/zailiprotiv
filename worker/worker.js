@@ -17,7 +17,7 @@
 //   POST /p           ← {"endpoint": "<push address>", "cir": bool}   from the live page: notify this device when a
 //                                                                     sitting's broadcast begins
 //   POST /p/odjava    ← {"endpoint": "<push address>"}                no more notifications for it
-//   POST /p/salji     ← {"od": <row>, "vrsta": "sednica"|"sazetak"}, with "authorization: Bearer <PUSH_TOKEN>"
+//   POST /p/salji     ← {"od": <row>, "vrsta": "sednica"|"sazetak"|"nastavak", "broj": 1|2 of a "nastavak"}, with "authorization: Bearer <PUSH_TOKEN>"
 //                       from the live service: send the day's notification of a sitting begun, or of the day's
 //                       summary out (each once a day), a batch at a time; answers with where the next batch starts
 //   POST /m/salji     ← {"poruke": [{"to", "subject", "html", "text", "odjava"}, …]}, with the token: from the live
@@ -249,9 +249,10 @@ async function authorization(env, endpoint) {
   h.catch(() => v.kept.delete(aud));
   return h;
 }
-async function sendPush(env, from, what = "sednica") {
-  // the sitting's beginning and the day's summary (20 Nov 2026), each once a day; the summary's day kept as "s:<day>"
-  const day = (what === "sazetak" ? "s:" : "") + today();
+async function sendPush(env, from, what = "sednica", nth = 1) {
+  // the sitting's beginning and the day's summary (20 Nov 2026), each once a day; the summary's day kept as "s:<day>".
+  // A sitting gone on after a long break (24 Nov 2026), at most twice a day: "n1:<day>" and "n2:<day>"
+  const day = (what === "sazetak" ? "s:" : what === "nastavak" ? `n${nth}:` : "") + today();
   if (!from) {  // the first batch: once a day, whatever the live service asks
     const r = await env.DB.prepare("INSERT OR IGNORE INTO push_days (day) VALUES (?)").bind(day).run();
     if (!r.meta.changes) return { day, already: true, next: null };
@@ -264,7 +265,7 @@ async function sendPush(env, from, what = "sednica") {
   await Promise.all(rows.map(async (r) => {
     try {
       const res = await fetch(r.endpoint, { method: "POST", headers: {
-        authorization: await authorization(env, r.endpoint), ttl: "3600", urgency: "high", "content-length": "0" } });
+        authorization: await authorization(env, r.endpoint), ttl: what === "nastavak" ? "900" : "3600", urgency: "high", "content-length": "0" } });
       if (res.status === 404 || res.status === 410) gone.push(r.endpoint);  // the device unsubscribed: forgotten
       else if (res.ok) sent++;
     } catch (e) { /* tried again never: one notification a day */ }
@@ -390,13 +391,14 @@ export default {
     if (path === "/p/salji") {  // the live service, with its token
       const auth = request.headers.get("authorization") || "";
       if (!env.PUSH_TOKEN || !env.VAPID_JWK || !(await same(auth, "Bearer " + env.PUSH_TOKEN))) return reply({ error: "token" }, 403, origin);
-      let od = 0, what = "sednica";
+      let od = 0, what = "sednica", nth = 1;
       try {
         const b = JSON.parse(await request.text());
         od = Math.max(0, parseInt(b.od, 10) || 0);
-        if (b.vrsta === "sazetak") what = "sazetak";
+        if (b.vrsta === "sazetak" || b.vrsta === "nastavak") what = b.vrsta;
+        if (b.broj === 2) nth = 2;
       } catch (e) { od = 0; }
-      return reply(await sendPush(env, od, what), 200, origin);
+      return reply(await sendPush(env, od, what, nth), 200, origin);
     }
     if (path === "/m/salji") {  // the live service, with its token: mail it made, sent as it is
       const auth = request.headers.get("authorization") || "";

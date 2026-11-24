@@ -2,6 +2,8 @@
 read a few frames of a live broadcast in a row, in the day's working hours, it asks the site's counter (worker/) to
 send it to every device that asked for it on the page, at most once a day. The counter sends it a batch at a time
 (its free plan's limit on requests out), so this asks again with where the next batch starts until none is left.
+And one when the sitting goes on after a long break (24 Nov 2026, the maintainer's decision), at most twice a day:
+`resumed` finds it, from what was heard, as soon as they speak again.
 Only the standard library: the tests run it."""
 from __future__ import annotations
 
@@ -19,6 +21,37 @@ log = logging.getLogger("obavesti")
 FRAMES = 3  # frames of a live broadcast in a row (about 15 s) before it counts as begun
 HOURS = (7, 22)  # local hours in which a beginning is told; a broadcast outside them wakes nobody
 BATCHES = 200  # at most this many batches (of 30) in one day's sending
+PAUSE = 1200  # seconds nobody is heard: a long break; the five or ten minutes' breaks wake nobody
+WORDS = 8  # words in a piece of the transcript for it to be speech (a break's odd sound gave three, 24 Nov 2026)
+SURE = 90  # seconds from the first speech after a break in which a second must come
+FRESH = 900  # a sitting that went on longer ago than this is no news (the service was down)
+RESUMED_MOST = 2  # notifications of a sitting gone on, in a day
+LOOK = 15  # seconds between looks
+
+
+def resumed(said: dict[str, str], turns: list[dict], events: list[dict], now: float) -> int:
+    """When the break that has just ended began to be silent, or 0: the chair said a break ("Pauza") about where the
+    silence begins, nobody was heard for PAUSE after it, and now somebody is: an MP read at the rostrum, or two pieces
+    of the transcript with speech in them, the chair's or anybody's. Not the chair's words "nastavljamo sa radom": on
+    19 Nov 2026 they were said twice with no break before them, and the first words after one are not always those.
+    A silence with no break said is none: the transcript was off."""
+    pieces = sorted(int(k.lstrip("p")) for k, v in said.items() if k.lstrip("p").isdigit() and len(v.split()) >= WORDS)
+    on = [(float(t["start"]), float(t["seen"])) for t in turns if t.get("n", 0) >= 2]
+    heard = sorted([(float(t), t + 20.0) for t in pieces] + on)
+    if not heard:
+        return 0
+    end, gap = heard[0][1], None
+    for a, b in heard[1:]:
+        if a - end >= PAUSE:
+            gap = (end, a)
+        end = max(end, b)
+    if not gap or not 0 <= now - gap[1] <= FRESH:
+        return 0
+    if not any(gap[1] <= a for a, _ in on) and sum(gap[1] <= t <= gap[1] + SURE for t in pieces) < 2:
+        return 0
+    if not any(e.get("vrsta") == "Pauza" and gap[0] - 300 <= e.get("t", 0) <= gap[1] for e in events):
+        return 0
+    return int(gap[0])
 
 
 class Bell:
@@ -28,6 +61,7 @@ class Bell:
         self.api = (config.VOTES_API if api is None else api).rstrip("/")
         self.post = post or self._post
         self.frames = 0
+        self.looked = 0.0
 
     def restart(self) -> None:
         """A new run of frames (the broadcast found again): count from nought."""
@@ -53,6 +87,30 @@ class Bell:
             t.join()
         return True
 
+    def heard(self, tracker, now: datetime | None = None, *, wait: bool = False) -> bool:
+        """While the broadcast is read: whether the sitting has gone on after a long break; True when that makes its
+        notification go out. A break is told once (kept by when its silence began, so a restart doesn't repeat it)."""
+        if not (self.token and self.api.startswith("https://")):
+            return False
+        now = now or datetime.now(ZoneInfo(config.TZ))
+        if now.timestamp() - self.looked < LOOK or not HOURS[0] <= now.hour < HOURS[1]:
+            return False
+        self.looked = now.timestamp()
+        since = resumed(*tracker.heard(), now.timestamp())
+        if not since:
+            return False
+        day, kept = now.date().isoformat(), self._kept().get("nastavak")
+        kept = kept if isinstance(kept, dict) and kept.get("dan") == day else {"dan": day, "pauze": []}
+        told = [int(x) for x in kept.get("pauze") or []]
+        if len(told) >= RESUMED_MOST or any(abs(x - since) < PAUSE for x in told):
+            return False
+        self._keep({"dan": day, "pauze": told + [since]}, "nastavak")
+        t = threading.Thread(target=self.send, args=("nastavak", len(told) + 1), daemon=True)
+        t.start()
+        if wait:
+            t.join()
+        return True
+
     def summary(self, day: str, *, wait: bool = False) -> bool:
         """The day's summary is out (sudija.py): every device that asked for the notifications is told, once a day,
         by the same counter; the counter keeps the day apart from the sitting's ("s:<day>")."""
@@ -65,12 +123,12 @@ class Bell:
             t.join()
         return True
 
-    def send(self, what: str = "sednica") -> None:
+    def send(self, what: str = "sednica", nth: int = 0) -> None:
         sent = gone = 0
         od = 0
         try:
             for _ in range(BATCHES):
-                r = self.post(od) if what == "sednica" else self.post(od, what)
+                r = self.post(od) if what == "sednica" else self.post(od, what, nth) if nth else self.post(od, what)
                 if r.get("already"):
                     log.info("notification: already sent today")
                     return
@@ -82,8 +140,8 @@ class Bell:
         except Exception as exc:  # the counter unreachable: no second try today, the day is kept
             log.warning("notification not sent (%s)", exc)
 
-    def _post(self, od: int, what: str = "sednica") -> dict:
-        return mreza.counter(self.api + "/p/salji", self.token, {"od": od, "vrsta": what})
+    def _post(self, od: int, what: str = "sednica", nth: int = 0) -> dict:
+        return mreza.counter(self.api + "/p/salji", self.token, {"od": od, "vrsta": what, **({"broj": nth} if nth else {})})
 
     def admin(self, endpoint: str, on: bool = True) -> bool:
         """The maintainer's device told (or no longer told) when this service is down while a sitting is on: the
@@ -107,7 +165,7 @@ class Bell:
     def _last(self, what: str = "dan") -> str:
         return str(self._kept().get(what, ""))
 
-    def _keep(self, day: str, what: str = "dan") -> None:
+    def _keep(self, day: str | dict, what: str = "dan") -> None:
         try:
             _write(self.path, {**self._kept(), what: day})
         except OSError:
