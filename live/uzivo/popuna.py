@@ -57,6 +57,10 @@ def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[di
                         "seg": None})
         done.append(f"{who.name}: {int(have)} s -> {int(gap)} s")
     out.sort(key=lambda t: t["start"])
+    for a, b in zip(out, out[1:]):  # no turn runs into the next
+        if a["seen"] > b["start"] and a["key"] != b["key"]:
+            done.append(f'{a["name"]}: kraj {a["seen"] - b["start"]:.0f} s ranije')
+            a["seen"] = max(a["start"], b["start"])
     return out, done
 
 
@@ -70,6 +74,12 @@ def main(args: list[str]) -> int:
     roster = Roster.from_json((base / "podaci.json").read_text(encoding="utf-8"))
     current = set(json.loads((base / "poslanici.json").read_text(encoding="utf-8")))
     turns, done = fill(data["turns"], said, [p for p in roster.people if p.slug in current])
+    if "--reci" in args:  # words a restart of the service missed, as Whisper wrote them from the broadcast: a piece
+        at, text = args[args.index("--reci") + 1:args.index("--reci") + 3]
+        key = "p" + str(int(at))
+        print("reci:", key, text)
+        if "--pisi" in args:
+            _write(base / "prepis" / f"{day}.json", {**said, key: text})
     print(len(data["turns"]), "->", len(turns))
     print("\n".join(done))
     if "--pisi" in args and done:

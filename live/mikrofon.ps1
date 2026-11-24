@@ -92,8 +92,10 @@ function Wait-Gap([int]$Minutes) {
     $said = $false
     while ((Get-Date) -lt $until) {
         try { $s = Invoke-RestMethod -Uri http://127.0.0.1:8000/stanje.json -TimeoutSec 5 } catch { return }
-        if ($s.stanje -ne "govori") { return }
-        if (-not $said) { Write-Host "Govori $($s.sada.ime): cekam kraj govora (najvise $Minutes min; -Odmah za odmah)..."; $said = $true }
+        # nor while the chair speaks: the words of the moment ("titl") are still fresh (24 Nov 2026: a restart in the
+        # second the chair gave a break lost the break, so nobody would have been told when it ended)
+        if ($s.stanje -ne "govori" -and -not @($s.titl).Count) { return }
+        if (-not $said) { Write-Host "Govori $($s.sada.ime) (ili predsedavajuci): cekam kraj govora (najvise $Minutes min; -Odmah za odmah)..."; $said = $true }
         Start-Sleep -Seconds 3
     }
     Write-Host "Govor traje duze od $Minutes min: menjam sada (stranica i govor se nastavljaju)."

@@ -114,3 +114,8 @@ presided (not done).
   is there and at least 45 s are missing (25 s for a turn not there at all); the rest is left as it was, as the chair's own
   words stand before the next floor. Run on 24 Nov for what had been missed before that day's fixes.
 - **"Zlatko Kokanović, reč. Izvolite."** gives the floor (the name before the word, only with "izvolite" after it).
+- **The day's whole look-over of 24 Nov** (the maintainer: "napravi ciklus u kojem ćeš ispravljati sve nepravilnosti"): the
+  floor given right after "povredu poslovnika, Ime Prezime" (whole words) and by "prvo dajem Ime Prezime"; no turn runs
+  into the next; the archive's reading (`arhiva.reader`) reads the caption of 24 Nov too, else tomorrow's placing of
+  the day's recording would have named nobody; a restart waits for the chair's words to end too (`mikrofon.ps1`,
+  `titl`); and `popuna --reci` adds words a restart missed, as Whisper wrote them from the broadcast.
