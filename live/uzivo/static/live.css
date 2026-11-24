@@ -159,10 +159,6 @@ main > .player { margin-top: 1rem; }
 .acts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
 .share-now { font: inherit; font-weight: 600; padding: .45rem .8rem; border-radius: 6px; border: 1px solid var(--fg);
   background: none; color: var(--fg); cursor: pointer; }
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: .6rem; margin: .4rem 0 1.2rem; }
-.tiles div { border: 1px solid var(--line); border-radius: 8px; padding: .6rem .8rem; }
-.tiles dd { margin: 0; font-family: var(--serif); font-weight: 700; font-size: var(--t-6); line-height: 1.2; font-variant-numeric: tabular-nums; }
-.tiles dt { color: var(--muted); font-size: var(--t-1); }
 .said-now { border-top: 1px solid var(--line); margin: .9rem 0; padding-top: .7rem; }
 .said-now p { margin: .2rem 0; } .said-now > p:nth-child(2) { font-size: var(--t-3); line-height: 1.5; }
 a.said { margin-left: .3rem; }
