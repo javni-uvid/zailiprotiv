@@ -151,7 +151,9 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   minuta imate još", the debate on the vice-presidents): by the notes' words, the group's speeches but for the
   proposer's and the replies come to 100-116 minutes (150-130 words a minute) against 108 by the chair's word, so
   the rule counts the right speeches; counted in seconds of the record it was far over, the placed speeches holding
-  the chair's interruptions and the hall's noise too. Open: how our seconds run over the Assembly's clock (which
+  the chair's interruptions and the hall's noise too. Of a turn that began before the word (the page joins a
+  speaker's turns two minutes apart) the part after it counts: put live without that, the list stood at the whole
+  23 minutes while its MP had spoken them. Open: how our seconds run over the Assembly's clock (which
   stops when the microphone does), to be measured on the kept days.
 - **A measure an MP only speaks of is no step** (24 Nov 2026, the maintainer): the mail's rule (`mere.given`) holds for the
   page's steps too. On 19 Nov's 13 model's measures it keeps the eight given and drops the five not.
