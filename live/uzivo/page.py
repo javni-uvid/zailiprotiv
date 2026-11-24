@@ -123,7 +123,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append('<ol class="cc-src" hidden>' + "".join(
             f'<li data-od="{c["od"]}"{f' data-pt="{c["pt"]}"' if c.get("pt") else ""}>{escape(_name(c["tekst"], cyr))}</li>'
             for c in snap["titl"]) + "</ol>")
-    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}{_group_time(snap, cyr=cyr, site=site)}<section class="day">')
+    out.append(f'</section><section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}{_group_time(snap, cyr=cyr, site=site) if config.SHOW_GROUP_TIME else ""}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
         chip = _chip(t("dl_recording"), t("from_recording")) if snap.get("snimak") else ""

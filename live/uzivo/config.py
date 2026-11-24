@@ -112,6 +112,8 @@ MODEL_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 MODEL = os.environ.get("HAIKU_MODEL", "claude-haiku-5-5").strip()
 # Whether the model's summary of the day is on the page and at /sazetak/<day>.json; before that, /sazetak?k=<key>.
 SHOW_SUMMARY = os.environ.get("SAZETAK_PRIKAZ", "0").strip() == "1"
+# The groups' time in the debate (vreme.py): counted all the same, off the page for now (24 Nov 2026, the maintainer).
+SHOW_GROUP_TIME = os.environ.get("VREME_GRUPA_PRIKAZ", "0").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)
 WHISPER_DEVICE = os.environ.get("WHISPER_DEVICE", "cpu").strip()
 WHISPER_COMPUTE = os.environ.get("WHISPER_COMPUTE", "int8").strip()

@@ -116,3 +116,5 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   is the debate in detail, counted afresh with each group's chair's 15 minutes more (art. 158). Not known, and said
   on the page: the shortened procedure (half, art. 99), more time given to the groups, the Assembly's own clock (we
   count the caption's time). Labelled "procena"; its term `vreme-rasprave` on the site's page of the Rules.
+  **Off the page since 24 Nov 2026** (the maintainer, for now): counted as before and in `stanje.json`, drawn only with
+  `VREME_GRUPA_PRIKAZ=1` in `live/.env`.

@@ -1863,6 +1863,16 @@ def test_the_line_under_the_picture(tmp_path, monkeypatch):
     assert "function captions()" in page_.SCRIPT and 'func: "seekTo"' in page_.SCRIPT  # set back when a phrase comes late
 
 
+def test_the_groups_time_is_off_the_page_until_turned_on(monkeypatch):
+    """24 Nov 2026, the maintainer: off the page for now, the counting stays."""
+    g = {"tacka": 5, "pojedinosti": False, "grupe": [{"lista": "PG A", "mesta": 100, "ima": 7000, "potroseno": 600, "govora": 1}]}
+    snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nepoznato", "vreme_grupa": g}
+    draw = lambda: fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Vreme poslaničkih grupa" not in draw()
+    monkeypatch.setattr(config, "SHOW_GROUP_TIME", True)
+    assert "Vreme poslaničkih grupa za 5. tačku" in draw()
+
+
 def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
     """22 Nov 2026, readers asked how much time each party has left: five hours for the groups by their MPs (art. 97),
     replies and points of order (two minutes at most) left out, the debate in detail counted afresh (art. 158)."""
