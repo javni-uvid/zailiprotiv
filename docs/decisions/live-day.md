@@ -191,3 +191,8 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   read no frame of it, and `_summaries` took "no frame" for now: the day never ended, no summary and no mail. With no
   frame known it is END_QUIET after the last word written down, and after the run began (so a restart in a break does
   not end the day).
+- **An earlier copy of the service's own day does not take its place** (24 Nov 2026, the cycle's finding; `state_view._older`):
+  between sittings the page lists the day the site holds; while that is the service's own record copied by the data run
+  ("izvor": "uzivo") and ends over two minutes before the record does now, the record stands. After the sitting the copy of
+  17:56 was on the page, 33 turns short and with a name corrected at 18:10, and the next copy was hours away (the run
+  takes an hour and a half, and one was waiting behind another). A day read from the whole recording stands as before.
