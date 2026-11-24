@@ -277,7 +277,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .player.mini .on-air { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: flex-start;
   gap: .1rem; padding: .1rem 0 .1rem .6rem; color: var(--fg); }
 .player.mini .on-air[hidden] { display: none; }
-.player.mini .on-air .oa-side { color: var(--muted); }
+.player.mini .on-air .oa-side { color: var(--muted); } .on-air .oa-rk:empty, .on-air .oa-side:empty { display: none; }
 .mini-x { flex: none; margin-left: auto; width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: 50%;
   background: var(--bg); color: var(--fg); font-size: var(--t-5); line-height: 1; cursor: pointer; }
 /* The line under the picture (22 Nov 2026): the automatic transcript's last two lines, the newest at the bottom. */
@@ -289,6 +289,18 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .player.mini .cc { order: 5; flex: 1 1 100%; margin: 0; padding: .3rem .55rem; border-radius: 4px; }
 .player.mini .cc-t { font-size: var(--t-2); }
 .player.mini .cc-n { display: none; }
+.pin { height: 1px; margin-bottom: -1px; }
+/* On a phone: the picture pinned as wide as the screen, the speaker in one line under it (24 Nov 2026, the maintainer). */
+@media (max-width: 720px) {
+  .player.mini .stage { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0; padding: env(safe-area-inset-top, 0px) 0 0; border-bottom: 0; }
+  .player.mini .screen { grid-column: 1 / -1; width: 100%; border-radius: 0; }
+  .player.mini .on-air { flex-direction: row; align-items: baseline; gap: .5rem; padding: .35rem .2rem .35rem .7rem; white-space: nowrap; overflow: hidden; }
+  .player.mini .on-air b { overflow: hidden; text-overflow: ellipsis; }
+  .player.mini .on-air .oa-side { display: none; }  /* the line's colour is the list's */
+  .player.mini .on-air .oa-clk { flex: none; margin-left: auto; } .player.mini .on-air .oa-rk { flex: none; color: var(--muted); font-size: var(--t-1); }
+  .player.mini .mini-x { margin: .2rem .5rem .2rem .2rem; width: 2.25rem; height: 2.25rem; }
+  .player.mini .cc { grid-column: 1 / -1; order: 5; border-radius: 0; padding: .3rem .7rem; } .player.mini .cc-t { height: 1.5em; line-height: 1.5; font-size: var(--t-2); }
+}
 /* The groups' time in the debate of the item under way (vreme.py), an estimate. */
 .clock .rk { font-weight: 600; font-variant-numeric: tabular-nums; }
 .gt-sec { order: 35; margin: .8rem 0 0; padding: .6rem .8rem .7rem; border: 1px solid var(--line); border-radius: 8px; }
