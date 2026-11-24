@@ -411,6 +411,34 @@ def test_a_day_kept_only_in_the_old_state_file_gets_its_own(tmp_path):
         assert snap["dan"] == "2026-11-17" and snap["ranije"] and [d["ime"] for d in snap["danas"]] == ["Petrović Petar"]
 
 
+def test_an_earlier_copy_of_the_services_own_day_does_not_take_its_place(tmp_path):
+    """24 Nov 2026: after the sitting the page listed the site's copy of the day taken at 17:56, without the turns since and
+    with a name corrected since; the data run that brings a new copy takes hours."""
+    from datetime import datetime
+    from uzivo.names import Person, person_key
+    t = Tracker(str(tmp_path / "stanje.json"), tz="Europe/Belgrade")
+    day1 = datetime(2026, 11, 24, 17, 0, tzinfo=TZ).timestamp()
+    a = Person(person_key("Petrović Petar"), "Petrović Petar", "petrovic-petar", "PG A")
+    b = Person(person_key("Marković Marko"), "Marković Marko", "markovic-marko", "PG B")
+    for i in range(3):
+        t.observe(a, "PG A", now=day1 + 5 * i)
+    for i in range(3):
+        t.observe(b, "PG B", now=day1 + 3600 + 5 * i)
+    t.tick(now=day1 + 3900)
+    turn = {"ime": "Petrović Petar", "adresa": "petrovic-petar", "grupa": "PG A", "uloga": "", "od": int(day1), "do": int(day1 + 10),
+            "okvira": 3, "video": "", "snimak": None}
+    t.use_recording({"dan": "2026-11-24", "izvor": "uzivo", "govori": [turn]})
+    snap = t.snapshot(now=day1 + 3900)
+    assert not snap["snimak"] and [d["ime"] for d in snap["danas"]] == ["Marković Marko", "Petrović Petar"]
+    nxt = datetime(2026, 11, 25, 8, 0, tzinfo=TZ).timestamp()
+    assert len(Tracker(str(tmp_path / "stanje.json"), tz="Europe/Belgrade").snapshot(now=nxt)["danas"]) == 2  # the next morning too, kept across a restart
+    later = {**turn, "ime": "Marković Marko", "adresa": "markovic-marko", "od": int(day1 + 3600), "do": int(day1 + 3610)}
+    t.use_recording({"dan": "2026-11-24", "izvor": "uzivo", "govori": [turn, later]})  # a copy that has the whole day: as before
+    assert t.snapshot(now=day1 + 3900)["snimak"]
+    t.use_recording({"dan": "2026-11-24", "izvor": "snimak", "govori": [turn]})  # read from the recording: another source
+    assert t.snapshot(now=day1 + 3900)["snimak"]
+
+
 def test_between_sittings_the_day_read_from_the_recording_takes_the_place_of_the_services_own(tmp_path):
     from datetime import datetime
     from uzivo.names import Person, person_key

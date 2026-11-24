@@ -12,6 +12,17 @@ from .names import Person
 from .state_base import NO_STREAM, SAID_TAIL, counted
 
 
+def _older(rec: dict, turns: list[dict]) -> bool:
+    """Whether the site's day is the service's own record copied earlier ("izvor": "uzivo") and ends before the record
+    does now: the copy is then behind, by the turns since and by what was mended since (24 Nov 2026: the copy of 17:56
+    stood on the page after the sitting, 33 turns short and with a name since corrected). A day read from the whole
+    recording is another source and stands."""
+    if rec.get("izvor") != "uzivo":
+        return False
+    last = max((t["seen"] for t in turns if counted(t)), default=0)
+    return max((t.get("do", 0) for t in rec.get("govori") or []), default=0) < last - 120
+
+
 class View:
     @staticmethod
     def _out(t: dict) -> dict:
@@ -143,7 +154,7 @@ class View:
             day = self.day  # the day of the last frame: past midnight with no frame yet, an earlier one
             recorded, parts = False, []
             rec = self.recording
-            if done and not current and self.status == NO_STREAM and rec and rec["dan"] == self.day:
+            if done and not current and self.status == NO_STREAM and rec and rec["dan"] == self.day and not _older(rec, self.turns):
                 # Today's sitting is over and the site has the day read from the recording: that list, with its
                 # links into the Assembly's archive (the YouTube video goes private after the broadcast, 18 Nov 2026).
                 recorded, parts = True, [p for p in rec.get("datoteke") or []
@@ -155,7 +166,7 @@ class View:
                 day, turns = self._last_day()
                 day, done = (day, [self._out(t) for t in self._named(turns)]) if turns else (self.day, [])
                 rec = self.recording
-                if rec and rec["dan"] < today and (not done or rec["dan"] >= day):
+                if rec and rec["dan"] < today and (not done or rec["dan"] >= day) and not (rec["dan"] == day and _older(rec, turns)):
                     day, recorded, parts = rec["dan"], True, [p for p in rec.get("datoteke") or []
                                                               if p.get("url") and p.get("od") and p.get("trajanje")]
                     done = [self._recorded(t) for t in rec["govori"] if t.get("okvira", 0) >= 2]
