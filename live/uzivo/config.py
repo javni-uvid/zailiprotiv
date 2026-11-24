@@ -39,6 +39,10 @@ CROP_LEFT = _f("CROP_LEFT", 0.0)
 CROP_TOP = _f("CROP_TOP", 0.86)
 CROP_WIDTH = _f("CROP_WIDTH", 0.62)
 CROP_HEIGHT = _f("CROP_HEIGHT", 0.14)
+# The caption as it looked on 24 Nov 2026: white letters with a dark ring and a light one, its two lines higher up.
+OUTLINED_TOP = _f("OUTLINED_TOP", 0.808)
+OUTLINED_HEIGHT = _f("OUTLINED_HEIGHT", 0.134)
+OUTLINED_WIDTH = _f("OUTLINED_WIDTH", 0.9)  # a list's name runs to about 0.87
 OCR_LANG = os.environ.get("OCR_LANG", "srp")
 WHITE_THRESHOLD = _i("WHITE_THRESHOLD", 190)  # the caption is white text
 TOPHAT_MIN = _i("TOPHAT_MIN", 40)  # how far the text must stand out from what is around it

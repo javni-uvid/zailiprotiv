@@ -11,9 +11,9 @@ from pathlib import Path
 from PIL import Image
 
 from . import config, mreza
-from .caption import differs, role, who
+from .caption import differs, role, sure, who
 from .names import Roster
-from .ocr import caption
+from .ocr import caption, outlined
 from .state import Tracker
 from .state_base import write_text
 from .stream import VIDEO, NotLive, resolve_input, start_ffmpeg
@@ -98,12 +98,23 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
                     at = {"video": VIDEO.get("id", ""), "sq": getattr(proc, "frame_seq", None),
                           "seg": getattr(proc, "seg_dur", None)}
                     try:
-                        cap = caption(Image.open(config.FRAME_PATH).convert("RGB"))
+                        frame = Image.open(config.FRAME_PATH).convert("RGB")
+                        cap = caption(frame)
                     except Exception:  # a broken frame or an OCR error: skip it
                         log.exception("frame not read")
                         continue
                     person = who(cap, roster.get(), config.MATCH)
-                    tracker.observe(person, role(cap.role_line, person, roster.get(), config.MATCH) if cap.role_clean else "",
+                    under = role(cap.role_line, person, roster.get(), config.MATCH) if cap.role_clean else ""
+                    if not person:  # the caption as it looked on 24 Nov 2026 (ocr.outlined)
+                        try:
+                            found = ((c, sure(c, roster.get(), config.MATCH)) for c in outlined(frame))
+                            hit = next(((c, p) for c, p in found if p), None)
+                        except Exception:
+                            log.exception("the outlined caption not read")
+                            hit = None
+                        if hit:  # it stands about ten seconds at a turn's start: found, not a caption that stays on
+                            tracker.heard(hit[1], "potpis", time.time(), time.time())
+                    tracker.observe(person, under,
                                     other=differs(cap, tracker.current(), config.MATCH), at=at)
                     log.info("%s | %s | %s -> %s", person.name if person else "-", cap.name_line[:40],
                              cap.role_line[:40], tracker.status)

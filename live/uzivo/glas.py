@@ -200,7 +200,7 @@ class Listener(threading.Thread):
     def changed(self) -> None:
         """A turn found by the chair's words, of someone whose voice is not known: ended when its voice changes."""
         cur = self.tracker.open_turn()
-        if not cur or cur.get("izvor") != "prepis" or cur.get("po_glasu") or not self.t:
+        if not cur or cur.get("izvor") not in ("prepis", "potpis") or cur.get("po_glasu") or not self.t:
             return
         t = np.array(self.t)
         own = (t >= cur["start"] + OWN_FROM) & (t + WIN <= cur["start"] + OWN_TO)

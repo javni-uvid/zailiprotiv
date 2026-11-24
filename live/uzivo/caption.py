@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 import difflib
 
-from .names import Person, Roster, latin, person_key, words
+from .names import Person, Roster, latin, normalize, person_key, words
 
 Word = tuple[str, float]  # a word and how sure OCR was of it (0-100)
 
@@ -76,6 +76,8 @@ def who(cap: Caption, roster: Roster, threshold: float) -> Person | None:
     if not cap.name_line:
         return None
     mp = roster.match(cap.name_line, threshold)
+    if mp and not cap.role_line and any(set(words(mp.name)) <= set(words(g)) for g in roster.groups):
+        return None  # one line, and the name is in a list's name ("Aleksandar Vučić - Srbija …"): the list, not a speaker
     if mp:
         return mp
     if cap.name_clean:
@@ -85,6 +87,18 @@ def who(cap: Caption, roster: Roster, threshold: float) -> Person | None:
         name = " ".join(given_surname[-1:] + given_surname[:-1])  # "Surname Given", as the site lists names
         return Person(person_key(name), name)
     return None
+
+
+def sure(cap: Caption, roster: Roster, threshold: float) -> Person | None:
+    """The sitting MP a caption names, only when the line under the name is their own list: two lines read apart that
+    agree, so noise read as a name is none."""
+    mp = roster.match(cap.name_line, threshold) if cap.name_line and cap.role_line else None
+    if not mp or not mp.group or (roster.current and mp.slug not in roster.current):
+        return None
+    line = normalize(tidy(cap.role_line))
+    like = {g: difflib.SequenceMatcher(None, line, normalize(g)).ratio() for g in roster.groups}
+    best = max(like, key=like.get, default="")
+    return mp if best == mp.group and like[best] >= 0.65 else None
 
 
 def _found(want: list[str], got: list[str], threshold: float) -> float:

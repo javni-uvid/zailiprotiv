@@ -325,15 +325,27 @@ class Tracker(Said, Chronicle, View):
 
     def heard(self, person: Person, how: str, start: float, seen: float, tracked: set | None = None) -> None:
         """Someone found speaking without a caption: by the chair's words giving them the floor ("prepis") or by
-        their voice ("glas"). A caption on rules; the same speaker goes on; another one ends the turn before (not
+        their voice ("glas"), or a caption that stands only for seconds ("potpis", 24 Nov 2026). A caption on rules; the same speaker goes on; another one ends the turn before (not
         before its own start) and begins theirs. `tracked`: whose voices are known, so that a turn of theirs lasts as
         long as the voice does, and one of someone else's as long as nothing else is heard."""
         with self._lock:
             if self.status == NO_STREAM or (self.open and self.turns and not self.turns[-1].get("izvor")):
                 return
             cur = self.turns[-1] if self.turns else None
+            if (how == "glas" and self.open and cur and cur["key"] != person.key and cur.get("izvor") in ("prepis", "potpis")
+                    and seen <= cur["start"] + 3):
+                # the last seconds of the speaker before, heard only now (the windows lag): the floor has passed on.
+                # 24 Nov 2026, 12:18:54: they ended Jovo Bakić's reply in the second it began, and it went to the
+                # speaker before
+                before = next((x for x in reversed(self.turns[:-1]) if x["key"] == person.key), None)
+                if before and before.get("izvor") and cur["start"] - before["seen"] <= 30:
+                    before["seen"] = max(before["seen"], min(seen, cur["start"]))
+                    self._save()
+                return
             if self.open and cur and cur["key"] == person.key:
                 cur["seen"] = max(cur["seen"], seen)
+                if how == "potpis":  # a caption of ten seconds (ocr.outlined) said who it is: surer than the words
+                    cur["izvor"] = "potpis"
                 if how == "glas":
                     cur["po_glasu"] = True
                     cur["start"] = min(cur["start"], start) if start > cur["start"] - 30 else cur["start"]

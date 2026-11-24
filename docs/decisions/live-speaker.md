@@ -86,3 +86,16 @@ presided (not done).
   replika" by the clock, "povreda Poslovnika", or the minutes alone when both words are heard; gone half a minute past
   the limit. Other turns have none we know. On 24 Nov's first 18 turns: nine told, all of
   136 s or less, and none of the three of 206 to 578 s; of the short ones not told some were cut in two by a reading.
+- **The caption of 24 Nov 2026** (the maintainer asked why no name was read; checked on the broadcast's frames): two
+  lines of white letters with a dark ring and a light one, for about ten seconds at a turn's start, higher than before
+  (0.81 to 0.94 of the height; the crop begins at 0.86), so the name line was cut off and only the list came through.
+  `ocr.outlined` reads that place too when the first reading names nobody, at two sizes after taking the light ring off;
+  it counts only a sitting MP whose own list is under the name (`caption.sure`); a list read alone names nobody: of
+  120 frames after the chair's words the old crop read Vučić in two captions of other MPs of the list (one frame each,
+  so no turn came of it). It is taken as found, like
+  the chair's words (`heard`, "potpis"), since it goes after ten seconds and the turn goes on. On those frames it named
+  eight turns' speakers (12 readings), none wrong. Each caption's clock ("0:15") is not read.
+- **A voice that ended before the floor passed on** (24 Nov): the windows lag, so the last seconds of the speaker before
+  came after the chair's "reč ima" and ended the new turn in its first second (12:18:54). Such a voice now only
+  lengthens the turn it was of (`Tracker.heard`).
+- **"(po glasu)" off the presiding line** (24 Nov, the maintainer): how it is known is under "Kako ovo radi".
