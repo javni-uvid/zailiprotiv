@@ -38,7 +38,7 @@
     }
     if (b.textContent !== out) b.textContent = out;
   }
-  // The speaker on the broadcast's picture while it plays: the name, the list and the clock of the part, the list's
+  // The speaker beside the small picture (the styles show it only there, 24 Nov 2026): the name, the list and the clock of the part, the list's
   // colour beside them (22 Nov 2026, the maintainer). Only on YouTube's broadcast, whose speaker is the part's.
   var stage = document.querySelector(".player .stage"), oa = stage && stage.querySelector(".on-air");
   function onAir() {

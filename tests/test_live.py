@@ -1774,9 +1774,9 @@ def test_the_days_speakers_five_stand_the_rest_open_and_no_bar_of_lists():
     assert 'main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }' in css
 
 
-def test_the_speaker_stands_on_the_picture_and_the_picture_stays_on_top():
-    """22 Nov 2026, the maintainer: the name, list and clock on the broadcast's picture; the picture kept small on
-    top while the page is read, with a way to put it back."""
+def test_the_speaker_stands_beside_the_small_picture_and_the_picture_stays_on_top():
+    """22 Nov 2026, the maintainer: the picture kept small on top while the page is read, with a way to put it back and
+    the speaker beside it; not over the picture itself since 24 Nov 2026."""
     from uzivo.page import player, SCRIPT, CSS
     snap = {"stanje": "govori", "danas": [], "datoteke": []}
     live = player(snap, cyr=False, live="dQw4w9WgXcQ", tz=TZ)
@@ -1785,6 +1785,7 @@ def test_the_speaker_stands_on_the_picture_and_the_picture_stays_on_top():
     day = {"stanje": NO_STREAM, "datoteke": [{"url": "https://arhiva.videonet.co.rs/a.mp4", "od": 0, "trajanje": 60}], "danas": []}
     archive = player(day, cyr=False, tz=TZ)
     assert 'class="mini-x"' in archive and "on-air" not in archive  # the archive's speaker is not the part's
+    assert ".player:not(.mini) .on-air { display: none; }" in CSS  # nothing over the picture
     assert "function onAir()" in SCRIPT and "function mini(on)" in SCRIPT and ".player.mini .stage { position: fixed" in CSS
 
 

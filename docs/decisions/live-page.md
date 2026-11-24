@@ -186,6 +186,8 @@ not over the archive's recording, whose moment is not the part's. Once a recordi
 out of sight, the picture stands small in a band at the top with the speaker beside it, so the page is read while
 it is watched; its place keeps its height, the player is not moved (an iframe moved reloads), and × puts it back
 until the next ▶. To measure after a sitting week against 20 Nov: the share in view 5 and 15 minutes.
+  **Not over the picture since 24 Nov 2026** (the maintainer): the name, list and clock stand only beside the small picture
+  on top. YouTube's own full screen never showed them (it enlarges its frame, not the page's parts).
 - **"Podrži sajt" on the page** (22 Nov 2026, the maintainer): a box like the Rules' above the link to the site,
   leading to the site's `podrzi` (`support_cta`, `support_sub`).
 - **The site's mark on the home screen, no microphone in the header, "Podrži sajt" on top** (22 Nov 2026, the
