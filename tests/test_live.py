@@ -2061,11 +2061,25 @@ def test_a_break_ended_is_a_step_where_the_model_did_not_say_so():
     assert [s["naslov"] for s in model_steps(still)] == ["Pauza"]  # the break goes on
 
 
+def test_sound_a_run_before_left_is_written_down_unless_too_old(tmp_path, monkeypatch):
+    """24 Nov 2026: a restart lost the chair's words of a break; what is left on the volume is taken up, the old thrown away."""
+    from uzivo import prepis
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path))
+    now = 1795520000.0
+    fresh, old = tmp_path / f"{int((now - 30) * 1000)}-4000.pcm", tmp_path / f"{int((now - 1000) * 1000)}-4000.pcm"
+    for f in (fresh, old, tmp_path / f"{int(now * 1000)}-4000.tmp"):
+        f.write_bytes(b"x" * 4000)
+    assert prepis.left(now) == 2 and [f for _, _, f in prepis.waiting()] == [fresh]
+    assert prepis.left(now) == 0
+    compose = (Path(__file__).resolve().parents[1] / "live" / "docker-compose.yml").read_text(encoding="utf-8")
+    assert "SOUND_PATH: /data/zvuk" in compose
+
+
 def test_a_turn_of_the_chairs_words_and_two_seconds_is_none():
     """24 Nov 2026, 15:11: "Reč ima doktor Milica Jovanović … Narodna poslanica, Ana Brnabić": the floor passed on at once."""
     from uzivo.state_base import counted
     turn = lambda sec, how: {"n": 4, "start": 100, "seen": 100 + sec, "izvor": how, "role": ""}
-    assert not counted(turn(2, "prepis")) and counted(turn(20, "prepis"))
+    assert not counted(turn(2, "prepis")) and not counted(turn(8, "prepis")) and counted(turn(20, "prepis"))
     assert counted(turn(2, "potpis")) and counted(turn(2, "glas"))  # seen or heard: it stays
 
 

@@ -9,6 +9,7 @@ services:
       # Whisper on the graphics card (live/whisper-gpu.ps1); while it does not answer the CPU writes. A WHISPER_URL in
       # .env, empty too, wins.
       WHISPER_URL: "${WHISPER_URL-http://host.docker.internal:8178}"
+      SOUND_PATH: /data/zvuk    # the sound not written down yet, on the volume: a restart loses none of it
     env_file: .env
     extra_hosts:
       - "host.docker.internal:host-gateway"   # the computer itself, where Whisper's server on the graphics card runs

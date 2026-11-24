@@ -90,11 +90,17 @@ function Wait-Page([int]$Port, [string]$Version, [int]$Seconds = 90) {
 function Wait-Gap([int]$Minutes) {
     $until = (Get-Date).AddMinutes($Minutes)
     $said = $false
+    $quiet = $null
     while ((Get-Date) -lt $until) {
         try { $s = Invoke-RestMethod -Uri http://127.0.0.1:8000/stanje.json -TimeoutSec 5 } catch { return }
         # nor while the chair speaks: the words of the moment ("titl") are still fresh (24 Nov 2026: a restart in the
         # second the chair gave a break lost the break, so nobody would have been told when it ended)
-        if ($s.stanje -ne "govori" -and -not @($s.titl).Count) { return }
+        # (24 Nov 2026, later: in a debate the chair always speaks, so waiting for silence ran out the time and the restart
+        # fell mid-speech; twenty seconds after a turn's end is enough, as the sound not written down survives it)
+        if ($s.stanje -ne "govori") {
+            if (-not $quiet) { $quiet = Get-Date }
+            if (-not @($s.titl).Count -or ((Get-Date) - $quiet).TotalSeconds -ge 20) { return }
+        } else { $quiet = $null }
         if (-not $said) { Write-Host "Govori $($s.sada.ime) (ili predsedavajuci): cekam kraj govora (najvise $Minutes min; -Odmah za odmah)..."; $said = $true }
         Start-Sleep -Seconds 3
     }

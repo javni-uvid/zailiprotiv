@@ -129,3 +129,7 @@ in 50 s.
   `large-v3-turbo` is the one model, so the better one's reading of a finished turn (`WHISPER_FINAL_MODEL`,
   `step_whole`, `say_whole`, the keys `k<second>`, `prepis_ceo` in the snapshot) could not run. Nothing that could be
   seen changed: every page and file the service writes for a made-up day compared before and after.
+- **The sound not written down yet is on the volume** (24 Nov 2026, the cycle's finding): it was in the container's /tmp, so
+  each restart lost the seconds not transcribed (the break to 15:10 was lost so). `SOUND_PATH=/data/zvuk`; a piece is deleted as
+  soon as it is written down, and what a run left behind is taken up unless over 15 minutes old. A restart waits 20 s after a
+  turn's end at most (`mikrofon.ps1`).
