@@ -1864,14 +1864,32 @@ def test_the_line_under_the_picture(tmp_path, monkeypatch):
     assert "function captions()" in page_.SCRIPT and 'func: "seekTo"' in page_.SCRIPT  # set back when a phrase comes late
 
 
-def test_the_groups_time_is_off_the_page_until_turned_on(monkeypatch):
-    """24 Nov 2026, the maintainer: off the page for now, the counting stays."""
-    g = {"tacka": 5, "pojedinosti": False, "grupe": [{"lista": "PG A", "mesta": 100, "ima": 7000, "potroseno": 600, "govora": 1}]}
+def test_the_groups_time_left_stands_small_under_the_speaker(monkeypatch):
+    """24 Nov 2026, the maintainer: smaller, under the speaker, no other words; the method under "Kako ovo radi"."""
+    g = {"tacka": 5, "pojedinosti": False, "zakljucen": False,
+         "grupe": [{"lista": "PG A", "mesta": 100, "ima": 7200, "potroseno": 600, "govora": 1}]}
     snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nepoznato", "vreme_grupa": g}
-    draw = lambda: fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert "Vreme poslaničkih grupa" not in draw()
-    monkeypatch.setattr(config, "SHOW_GROUP_TIME", True)
-    assert "Vreme poslaničkih grupa za 5. tačku" in draw()
+    draw = lambda **more: fragment({**snap, **more}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    html = draw()
+    assert html.index('class="sp"') < html.index('class="gt-sec"') < html.index('class="said-sec"')
+    assert "PG A</span><b>1 h 50 min</b>" in html and "procena" in html and "potrošeno" not in html
+    assert "gt-sec" not in draw(vreme_grupa={**g, "zakljucen": True})  # the debate closed: no time left to tell
+    how = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ).split('<details class="how">', 1)[1]
+    assert "član 97" in how and "poslovnik-clanovi#pojam-vreme-rasprave" in how
+    monkeypatch.setattr(config, "SHOW_GROUP_TIME", False)
+    assert "gt-sec" not in draw()
+
+
+def test_the_groups_time_runs_from_the_debates_opening():
+    """24 Nov 2026: a point of order of 136 s between the move to the item and the debate's opening had been counted;
+    and a decision's one debate ("jedinstveni pretres", art. 192) has no debate in detail after it."""
+    from uzivo.vreme import phase
+    ev = lambda t, kind, text="": {"t": t, "vrsta": kind, "tekst": text}
+    assert phase([], 100) == (100, False, False)
+    assert phase([ev(600, "Pretres otvoren"), ev(605, "Pretres otvoren")], 100) == (600, False, False)
+    one = [ev(600, "Pretres otvoren", "otvaram jedinstveni pretres"), ev(900, "Pretres zaključen")]
+    assert phase(one, 100) == (600, False, True)
+    assert phase(one + [ev(950, "Pretres otvoren", "otvaram jedinstveni pretres")], 100) == (950, False, False)
 
 
 def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
@@ -1895,10 +1913,9 @@ def test_the_groups_time_in_the_debate_is_an_estimate_by_one_rule():
                     now=start + 4000)
     assert d["pojedinosti"] and d["grupe"][0]["potroseno"] == 400 and d["grupe"][0]["ima"] == sl["ima"] + CHAIR_MORE
     assert groups_time(item=4, start=start, seats=seats, turns=[turn(100, 90, "Studentska lista")], events=[], now=start + 200) is None
-    html = page_._group_time({"vreme_grupa": g}, cyr=False, site="https://zailiprotiv.rs/")
-    assert "Vreme poslaničkih grupa za 4. tačku" in html and "procena" in html and "ostalo oko" in html
-    assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojam-vreme-rasprave"' in html and "član 97" in html
-    assert "Време посланичких група" in page_._group_time({"vreme_grupa": g}, cyr=True, site="https://zailiprotiv.rs/")
+    html = page_._group_time({"vreme_grupa": g}, cyr=False)
+    assert "Preostalo vreme poslaničkih grupa" in html and "procena" in html
+    assert "Преостало време посланичких група" in page_._group_time({"vreme_grupa": g}, cyr=True)
     assert page_._group_time({}, cyr=False) == ""
 
 
