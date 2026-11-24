@@ -1993,6 +1993,9 @@ def test_the_days_turns_are_filled_from_the_chairs_words_by_one_rule():
     assert by == {"Andrić Miroslav": 80, "Đajić Zoran": 580}  # the one of 0 s lengthened, the one missing written
     assert [round(t["seen"] - t["start"]) for t in out if t["name"] == "Bakić Jovo"] == [70, 180]  # a whole one left as it was
     assert len(done) == 2 and fill(out, said, people)[1] == []  # a second run does nothing
+    mixed = [turn("bakic jovo", "Bakić Jovo", 5000, 5100), turn("andric miroslav", "Andrić Miroslav", 5060, 5200)]
+    cut, said_ = fill(mixed, {}, people)
+    assert [round(t["seen"]) for t in cut] == [5060, 5200] and len(said_) == 1  # none runs into the next
 
 
 def test_the_name_before_the_word_and_a_measure_only_spoken_of():
@@ -2002,6 +2005,10 @@ def test_the_name_before_the_word_and_a_measure_only_spoken_of():
     people = [Person("a", "Kokanović Zlatko", "kokanovic-zlatko", ""), Person("b", "Vučić Aleksandar", "vucic-aleksandar", "")]
     got = lambda text: [p.slug for p in hronika.floor(text, people)]
     assert got("Prijavila se još, verovatno, replika. Zlatko Kokanović, reč. Izvolite.") == ["kokanovic-zlatko"]
+    people += [Person("c", "Radović Vera", "radovic-vera", ""), Person("d", "Mirković Aleksandar", "mirkovic-aleksandar", "")]
+    assert got("Imamo povredu poslovnika, Vera Radović, je li po povredi?") == ["radovic-vera"]
+    assert got("Povredu poslovnika je počinio Vera Radović.") == []  # the name not right after it
+    assert got("Da li želite prvo dajem Aleksandru Mirkoviću?") == ["mirkovic-aleksandar"]
     assert got("Zlatko Kokanović, reč o kojoj govorim nije ta.") == [] and got("Zlatko Kokanović je rekao reč.") == []
     assert given("Ja vam izričem opomenu, imali ste...") and given("Izričajam opomenu.")
     assert not given("Zato ste mu dali opomenu, izrekli ste je.") and not given("vi ste njega opomenuli pa ste ga opomenuli i drugi put")

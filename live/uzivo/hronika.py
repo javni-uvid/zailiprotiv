@@ -94,6 +94,10 @@ _FLOOR = re.compile(r"(?=\b(?:(?<![^\W_])(?<!\S)(?:^)ima " + _TITLE + r"|reč im
 # "Zlatko Kokanović, reč. Izvolite.": the name before the word, only with "izvolite" after it (24 Nov 2026)
 _FLOOR_BEFORE = re.compile(r"([^.!?,]{4,40}),? reč[.,!] ?izvolite\b")
 
+# a name right after "povreda/povredu poslovnika" with no title, whole words only ("imamo povredu poslovnika, Vera Radović")
+_FLOOR_WHOLE = re.compile(r"\bpovred[au] poslovnika,? ([^.!?]{4,40})")
+_FLOOR_FIRST = re.compile(r"\b(?:prvo dajem|dajem prvo)(?: reč)? ([^.!?]{4,40})")
+
 FLOOR_NEAR = 0.74  # how alike a heard word and a name's word must be at the least ("Jova" for Jovo)
 GIVEN_SURNAME = 0.6  # a given name heard whole: how alike the surname must then be ("Sanja Fritz" for Sanja Fric)
 GIVEN_CLEAR = 0.25  # and how far ahead of the next MP with that given name (or any)
@@ -124,7 +128,8 @@ def floor(text: str, people: list, now_only: bool = False) -> list:
     alike = lambda a, b: 1.0 if a == b else SequenceMatcher(None, a, b).ratio()
     out = []
     low = " ".join(latin(text).split()).lower()
-    for m in sorted([*_FLOOR.finditer(low), *_FLOOR_BEFORE.finditer(low)], key=lambda m: m.start()):
+    for m in sorted([*_FLOOR.finditer(low), *_FLOOR_BEFORE.finditer(low), *_FLOOR_FIRST.finditer(low),
+                     *_FLOOR_WHOLE.finditer(low)], key=lambda m: m.start()):
         if now_only and _NEXT & {fold(w) for w in re.findall(r"[^\W\d_]+", low[:m.start()])[-4:]}:
             continue
         said = [fold(w) for w in re.findall(r"[^\W\d_]+", m.group(1))[:7]]
@@ -133,6 +138,10 @@ def floor(text: str, people: list, now_only: bool = False) -> list:
         heard = said + [a + b for a, b in zip(said, said[1:])]
         hits = [p for ws, p in names if set(ws) <= set(said)]
         hit = hits[0] if len(hits) == 1 else None
+        if m.re is _FLOOR_WHOLE:
+            if hit is not None and set(fold(w) for w in hit.name.split()) <= set(said[:3]) and hit not in out:
+                out.append(hit)
+            continue
         if hit is None and not hits:
             scored = sorted(((min(max(alike(w, h) for h in heard) for w in ws), p) for ws, p in names), key=lambda x: -x[0])
             if scored and scored[0][0] >= FLOOR_NEAR and (len(scored) == 1 or scored[0][0] - scored[1][0] >= FLOOR_CLEAR):

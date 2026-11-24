@@ -104,20 +104,23 @@ def frame(url: str, t: float):
     return Image.open(io.BytesIO(out.stdout)).convert("RGB")
 
 
-def reader(names: list[tuple[str, str]]):
-    """A function from a frame to the speaker key its caption names, among the day's speakers [(name, slug)]: the live
-    page's own reading (needs numpy, pytesseract and Tesseract's Serbian)."""
+def reader(names: list[tuple]):
+    """A function from a frame to the speaker key its caption names, among the day's speakers [(name, slug, group)]: the
+    live page's own reading (needs numpy, pytesseract and Tesseract's Serbian), the caption as it looked on 24 Nov 2026
+    too (`ocr.outlined`: it stands ten seconds at a turn's start, its name counted only with its own list under it)."""
     if str(LIVE) not in sys.path:
         sys.path.insert(0, str(LIVE))
     from uzivo import config
-    from uzivo.caption import who
+    from uzivo.caption import sure, who
     from uzivo.names import Person, Roster, person_key
-    from uzivo.ocr import caption
-    roster = Roster([Person(person_key(n), n, s) for n, s in names])
-    keys = {person_key(n) for n, _ in names}
+    from uzivo.ocr import caption, outlined
+    roster = Roster([Person(person_key(n[0]), n[0], n[1], *n[2:3]) for n in names])
+    keys = {person_key(n[0]) for n in names}
 
     def read(img) -> str | None:
         p = who(caption(img), roster, config.MATCH)
+        if not p:
+            p = next((x for x in (sure(c, roster, config.MATCH) for c in outlined(img)) if x), None)
         return p.key if p and p.key in keys else None
     return read
 
@@ -226,7 +229,7 @@ def run(root: Path, conv: str, *, now: str | None = None, read_frames=None, prob
             continue
         record = json.loads(rec_path.read_text(encoding="utf-8"))
         rec_turns = [(_key(t["ime"]), t["od"], t["do"]) for t in record.get("govori", []) if t.get("okvira", 0) >= 2]
-        names = sorted({(t["ime"], t.get("adresa", "")) for t in record.get("govori", []) if t.get("okvira", 0) >= 2})
+        names = sorted({(t["ime"], t.get("adresa", ""), t.get("grupa", "")) for t in record.get("govori", []) if t.get("okvira", 0) >= 2})
         if not rec_turns:
             continue
         for p in parts:
