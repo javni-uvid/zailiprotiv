@@ -257,7 +257,7 @@ class View:
     def _group_time(self, today: list[dict]) -> dict | None:
         """The groups' time in the debate of the item under way (vreme.py), over every day of that debate: today's
         turns as listed, the earlier days' from their files (kept once read: a past day does not change)."""
-        from .rok import short
+        from .rok import proposer, short
         from .vreme import REPLY_OVER, groups_time, told
         n, start = int(self.item.get("n") or 0), int(self.item.get("t") or 0)
         agenda = self._agenda()
@@ -268,7 +268,8 @@ class View:
         for p in self.roster.people:
             if p.slug in self.roster.current and p.group in self.roster.groups:
                 seats[p.group] = seats.get(p.group, 0) + 1
-        mark = lambda rows, said: [{**d, "kratko": True} if short(said, d, REPLY_OVER) else d for d in rows]
+        mark = lambda rows, said: [{**d, "kratko": True} if short(said, d, REPLY_OVER) else
+                                   {**d, "predlagac": True} if proposer(said, d) else d for d in rows]
         turns, events = mark(today, self.said), list(self.events)
         first = self._day(start)
         cache = self._memo.setdefault("past_days", {})

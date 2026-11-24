@@ -88,8 +88,8 @@ def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dic
     used: dict[str, list[int]] = {g: [0, 0] for g in seats}
     for d in turns:
         g = d.get("lista") or ""
-        if g not in used or d["od"] < begun or d["sekundi"] <= REPLY or d.get("kratko"):
-            continue
+        if g not in used or d["od"] < begun or d["sekundi"] <= REPLY or d.get("kratko") or d.get("predlagac"):
+            continue  # a reply or a point of order, or the proposer's word (no limit, art. 96: none of the group's)
         used[g][0] += d["sekundi"]
         used[g][1] += 1
     if not any(v[1] for v in used.values()):
@@ -105,9 +105,12 @@ def groups_time(*, item: int, start: int, seats: dict[str, int], turns: list[dic
             t0, left = said[-1]
             # a turn's part after the word counts: the page joins a speaker's turns two minutes apart, so the turn
             # given the floor with that word may have begun before it (the same evening: 23 minutes of it not taken off)
-            after = [min(d.get("do", d["od"] + d["sekundi"]), now) - max(d["od"], t0) for d in turns
-                     if (d.get("lista") or "") == r["lista"] and not d.get("kratko")]
+            mine = [d for d in turns if (d.get("lista") or "") == r["lista"] and not d.get("kratko") and not d.get("predlagac")]
+            after = [min(d.get("do", d["od"] + d["sekundi"]), now) - max(d["od"], t0) for d in mine]
             since = sum(x for x in after if x > REPLY)
-            r["potroseno"], r["receno"] = r["ima"] - left + since, {"t": t0, "sek": left}
+            # what our own count said was left at that moment, kept beside the chair's figure: how far off we were
+            ours = r["ima"] - sum(min(d.get("do", d["od"] + d["sekundi"]), t0) - d["od"] for d in mine
+                                  if begun <= d["od"] < t0 and d["sekundi"] > REPLY)
+            r["potroseno"], r["receno"] = r["ima"] - left + since, {"t": t0, "sek": left, "nase": ours}
     rows.sort(key=lambda r: (-r["mesta"], r["lista"]))
     return {"tacka": item, "od": begun, "pojedinosti": detail, "zakljucen": closed, "grupe": rows}
