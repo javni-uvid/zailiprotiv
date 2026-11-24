@@ -136,6 +136,13 @@ as the change. The principles and the rules of work are in AGENTS.md.
   one address. To whom: those who only heckled count too; a name misspelt by a letter is one person; someone named and
   not found is never replaced by whoever spoke before; the likely ones by the order in `by_context`. Before: 100
   measures, 42 with a name, 36 likely, 22 nobody's; after: 139, 70, 66 and 3. Counts per MP change with it.
+- **The measures of 19 Nov 2026 read from its notes** (24 Nov 2026, the maintainer; the notes came that day): the six the
+  rules found read with their context, all to whom the notes show. One missed: "Изричем вам и сад опомену и вама, пришли
+  сте без позива", taken for the one before told again; a measure that says it goes to another too ("и вама", `_ALSO`) is its
+  own, by context Ana Brnabić's (her heckle right before; the chair said after the break that he had warned her and
+  Milenko Jovanov, and that both would be taken back if he had called the break first, which the notes do not settle).
+  Of the 145 measures of all convocations it changes only this. Jovanov's is not put to him: nothing in the measure's
+  own sentence names him, and a rule taking names from the chair's later account is not made yet.
 - **Varnice** (13 Nov 2026; `pages_floor.py`, no model): the chair's measures (warning, taking the floor away,
   removal; `MEASURES`, with talk about measures left out), exchanges of replies (two speakers taking turns four times
   or more, no speech over 400 words), points of order, harsh words (a fixed list), who speaks most. A measure goes to

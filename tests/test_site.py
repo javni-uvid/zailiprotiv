@@ -333,6 +333,23 @@ def test_a_measure_without_a_name_is_placed_by_context_only_when_the_notes_show_
     assert f.by_context(f.measures([said, later])[0]) is None  # too far from the speech to say
 
 
+def test_a_measure_to_another_one_too_in_the_same_address_is_its_own():
+    """19 Nov 2026, the notes: "Изричем вам опомену због овога. … Изричем вам и сад опомену и вама, пришли сте без позива."
+    The second was taken for the first told again."""
+    from zailiprotiv import measures as f
+    mp = {"speaker": "АЛЕКСАНДАР ВУЧИЋ", "text": "Нисте ни испосник као што су вас представљали, али…", "chair": False, "day": 3}
+    chair = lambda text: {"speaker": "ПРЕДСЕДНИК", "text": text, "chair": True, "day": 3}
+    both = chair("Изричем вам опомену због овога. (Народни посланици добацују с места.) Молим посланицу Ану Брнабић да се врати "
+                 "на место. (Ана Брнабић: И кад су ме гађали нисам дала ниједну опомену.) Изричем вам и сад опомену и вама, "
+                 "пришли сте без позива. (Ана Брнабић: Још једну ми дај.) Проглашавам паузу од 15 минута.")
+    found = f.measures([mp, both])
+    assert [m["sentence"][:22] for m in found] == ["Изричем вам опомену зб", "Изричем вам и сад опом"]
+    people = f.present([mp, both, {"speaker": "АНА БРНАБИЋ", "text": "Говор.", "chair": False, "day": 3}])
+    assert f.by_context(found[1], people)[0].upper() == "АНА БРНАБИЋ" and f.by_context(found[0], people)[0].upper() == "АЛЕКСАНДАР ВУЧИЋ"
+    again = chair("Изричем вам опомену због овога. Молим вас. Изричем вам опомену, рекао сам.")
+    assert len(f.measures([mp, again])) == 1  # told again with nobody else in it: one
+
+
 def test_the_measures_as_the_chairs_said_them_in_every_convocation():
     """23 Nov 2026: every measure in the notes read with its context; the sentences are the notes' own."""
     from zailiprotiv import measures as f
