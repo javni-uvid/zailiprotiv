@@ -1,21 +1,17 @@
 """The picture of the moment, 1200×630: what a pasted link shows (og:image). Dark, in the announcement's manner, in the
-site's letters (24 Nov 2026, the maintainer): the speaker with the portrait and the list's colour, a break with the hour
-it ends, or the day of the sitting; never who spoke how long. Drawn with Pillow."""
+site's letters (24 Nov 2026, the maintainer): the same always, nothing that goes stale, or the announcement before a sitting. Drawn with
+Pillow."""
 from __future__ import annotations
 
 import io
-import threading
-import time
-import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from PIL import Image, ImageDraw, ImageFont
 
 from .names import cyrillic, given_first
-from . import config
 from .page import (_WD, HEX, TEXT, _clock, _date, _dur, _name, _said_on, _shades, _short_item, _t, _when, announcement,
-                   headline, leaders, next_item, pause_until)
+                   headline, leaders, next_item)
 from .texts import MONTHS
 
 W, H, P = 1200, 630, 64
@@ -95,6 +91,30 @@ def _wrap(d: ImageDraw.ImageDraw, text: str, font, width: int, lines: int) -> li
     return out
 
 
+def _gives(d: ImageDraw.ImageDraw, k: int, M0: int, M1: int, text, wide, cyr: bool) -> None:
+    """What the page gives, with a mark each: the last row of both pictures."""
+    def box(x0, y0, x1, y1):
+        return [x0 * k, y0 * k, x1 * k, y1 * k]
+
+    d.rectangle(box(M0, 480, M1, 482), fill=SOFT_LINE)
+    size, x, cy = 46, M0, 550
+    for n, key in enumerate(("og_follow", "og_listen", "og_mail")):
+        b = _t(key, cyr)
+        if n == 0:  # on the air
+            d.ellipse(box(x, cy - 18, x + 36, cy + 18), fill=LIVE)
+        elif n == 1:  # headphones
+            d.arc(box(x + 2, cy - 24, x + 46, cy + 24), start=180, end=360, fill=ZA_D, width=6 * k)
+            for ex in (x, x + 35):
+                d.rounded_rectangle(box(ex, cy - 3, ex + 13, cy + 22), radius=5 * k, fill=ZA_D)
+        else:  # an envelope
+            d.rounded_rectangle(box(x, cy - 18, x + 50, cy + 18), radius=4 * k, outline=PROTIV_D, width=5 * k)
+            d.line([(q * k, c * k) for q, c in ((x + 3, cy - 14), (x + 25, cy + 5), (x + 47, cy - 14))],
+                   fill=PROTIV_D, width=5 * k)
+        x += (36, 48, 50)[n] + 14
+        text(x, cy, b, lit, size, ON_DARK, "lm")
+        x += wide(b, lit, size) + 40
+
+
 def _announcement(snap: dict, start, *, cyr: bool, host: str) -> bytes:
     """Before a sitting: the day as a leaf of a calendar, when, what is next and what the page gives then, with a mark
     each (23 Nov 2026, the maintainer: the link's picture to look better on Reddit). The day by its name and never
@@ -153,59 +173,17 @@ def _announcement(snap: dict, start, *, cyr: bool, host: str) -> bytes:
         for row in rows:
             text(left, y, row, lit_text, 34, SOFT)
             y += 44
-    # what the page gives, with a mark each
-    d.rectangle(box(M0, 480, M1, 482), fill=SOFT_LINE)
-    size, x, cy = 46, M0, 550
-    for n, key in enumerate(("og_follow", "og_listen", "og_mail")):
-        b = _t(key, cyr)
-        if n == 0:  # on the air
-            d.ellipse(box(x, cy - 18, x + 36, cy + 18), fill=LIVE)
-        elif n == 1:  # headphones
-            d.arc(box(x + 2, cy - 24, x + 46, cy + 24), start=180, end=360, fill=ZA_D, width=6 * k)
-            for ex in (x, x + 35):
-                d.rounded_rectangle(box(ex, cy - 3, ex + 13, cy + 22), radius=5 * k, fill=ZA_D)
-        else:  # an envelope
-            d.rounded_rectangle(box(x, cy - 18, x + 50, cy + 18), radius=4 * k, outline=PROTIV_D, width=5 * k)
-            d.line([(q * k, c * k) for q, c in ((x + 3, cy - 14), (x + 25, cy + 5), (x + 47, cy - 14))],
-                   fill=PROTIV_D, width=5 * k)
-        x += (36, 48, 50)[n] + 14
-        text(x, cy, b, lit, size, ON_DARK, "lm")
-        x += wide(b, lit, size) + 40
+    _gives(d, k, M0, M1, text, wide, cyr)
     out = io.BytesIO()
     im.resize((W, H), Image.LANCZOS).save(out, "PNG", optimize=True)
     return out.getvalue()
 
 
-_faces: dict[str, tuple[float, Image.Image | None]] = {}
-_faces_lock = threading.Lock()
-
-
-def _face(name: str) -> Image.Image | None:
-    """An MP's portrait as the site serves it, kept in memory (an hour; a minute when it did not come). None without
-    one: the picture is then drawn without it."""
-    if not name or not str(name).replace(".", "").replace("-", "").isalnum():
-        return None
-    with _faces_lock:
-        kept = _faces.get(name)
-        if kept and time.time() - kept[0] < (3600 if kept[1] else 60):
-            return kept[1]
-        try:
-            req = urllib.request.Request(f"{config.SITE}foto/{name}", headers={"User-Agent": "zailiprotiv-uzivo"})
-            with urllib.request.urlopen(req, timeout=4) as r:
-                im = Image.open(io.BytesIO(r.read(400_000)))
-                im.load()
-                im = im.convert("RGB")
-        except Exception:  # a picture is never worth failing for
-            im = None
-        if len(_faces) > 60:
-            _faces.clear()
-        _faces[name] = (time.time(), im)
-        return im
-
-
 def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
+    """What a pasted link shows. A service keeps it for hours or days by its address, so it says nothing that goes stale
+    (24 Nov 2026, the maintainer): no speaker, no break. Before a sitting the announcement, which names its day."""
     when, _, start = announcement(snap)
-    if when:  # before a sitting: the announcement alone, no figures of the last day (23 Nov 2026)
+    if when:
         return _announcement(snap, start, cyr=cyr, host=host)
     k = 2
     im = Image.new("RGB", (W * k, H * k), DARK)
@@ -223,64 +201,22 @@ def render(snap: dict, *, cyr: bool, tz: ZoneInfo, host: str = "") -> bytes:
             size -= 2
         return size
 
-    def box(x0, y0, x1, y1):
-        return [x0 * k, y0 * k, x1 * k, y1 * k]
-
-    d.arc(box(M0, 46, M0 + 72, 118), start=180, end=300, fill=ZA_D, width=17 * k)
-    d.arc(box(M0, 46, M0 + 72, 118), start=314, end=360, fill=PROTIV_D, width=17 * k)
-    x = M0 + 92
+    # the mark and the name, large: this is whose link it is
+    d.arc([M0 * k, 70 * k, (M0 + 132) * k, 202 * k], start=180, end=300, fill=ZA_D, width=31 * k)
+    d.arc([M0 * k, 70 * k, (M0 + 132) * k, 202 * k], start=314, end=360, fill=PROTIV_D, width=31 * k)
+    x = M0 + 166
     for word, color in ((("За", ZA_D), (" или ", ON_DARK), ("Против", PROTIV_D)) if cyr else
                         (("Za", ZA_D), (" ili ", ON_DARK), ("Protiv", PROTIV_D))):
-        text(x, 82, word, lit, 48, color)
-        x += wide(word, lit, 48)
-    cur = snap.get("sada") if snap.get("stanje") == "govori" else None
-    if cur:
-        o = cur.get("o") or {}
-        shade = _shades((snap.get("danas") or []) + [cur]).get(cur.get("lista") or "", "lx")
-        left, face = M0, _face(str(o.get("foto") or ""))
-        if face:
-            fw, fh = 226, 315
-            r = max(fw / face.width, fh / face.height)
-            f = face.resize((round(face.width * r * k), round(face.height * r * k)), Image.LANCZOS)
-            cut = (f.width - fw * k) // 2
-            im.paste(f.crop((cut, 0, cut + fw * k, fh * k)), (M0 * k, 130 * k))
-            d.rectangle(box(M0, 445, M0 + fw, 455), fill=HEX.get(shade, "#999999"))
-            left = M0 + fw + 40
-        room = M1 - left
-        d.ellipse(box(left, 152, left + 26, 178), fill=LIVE)
-        text(left + 40, 174, _t("fx_now", cyr).upper(), lit, 34, SOFT)
-        words = _name(given_first(cur["ime"]), cyr).split(" ")
-        rows = [" ".join(words[:1]), " ".join(words[1:])] if len(words) > 1 else [" ".join(words)]
-        size = min(fit(r, lit, 84, room, 40) for r in rows)
-        y = 174
-        for row in rows:
-            y += size + 10
-            text(left, y, row, lit, size, ON_DARK)
-        side = cur.get("lista", "").strip("*") or cur.get("uloga") or cur.get("grupa") or ""
-        if side:
-            for row in _wrap(d, _name(side, cyr), lit_text(34 * k), room * k, 2):
-                y += 54
-                text(left, y, row, lit_text, 34, SOFT)
-        foot = _t("og_foot_live", cyr)
-    else:
-        when_day = _date(snap["dan"]) if snap.get("dan") else ""
-        if when_day:
-            text(M0, 196, (cyrillic(when_day) if cyr else when_day).upper(), lit, 32, SOFT)
-        hour = pause_until(snap, tz) if not snap.get("ranije") else ""
-        head = f"{_t('og_pause', cyr)} {hour}" if hour else _t("og_sitting", cyr)
-        text(M0, 310, head, lit, fit(head, lit, 104, M1 - M0), ON_DARK)
-        items = (snap.get("dnevni_red") or {}).get("tacke") or []
-        on = next((x for x in items if x.get("stanje") == "u_toku"), None) or next_item(snap)
-        if on and not snap.get("ranije"):
-            y = 340
-            for row in _wrap(d, _short_item(on, cyr), lit_text(34 * k), (M1 - M0) * k, 2):
-                y += 46
-                text(M0, y, row, lit_text, 34, SOFT)
-        foot = _t("og_foot_then" if snap.get("ranije") else "og_foot_pause" if hour else "og_foot_live", cyr)
-    d.rectangle(box(M0, 492, M1, 494), fill=SOFT_LINE)
+        text(x, 132, word, lit, 78, color)
+        x += wide(word, lit, 78)
+    head = _t("og_still", cyr)
+    text(M0, 282, head, lit, fit(head, lit, 88, M1 - M0), ON_DARK)
+    sub = _t("og_still_line", cyr)
+    text(M0, 348, sub, lit_text, fit(sub, lit_text, 36, M1 - M0), SOFT)
     name = host or "mikrofon.zailiprotiv.rs"
-    text(M0, 558, name, lit, fit(name, lit, 54, M1 - M0), ON_DARK)
-    text(M0, 602, foot, lit_text, fit(foot, lit_text, 30, M1 - M0, 18), SOFT)
+    text(M0, 452, name, lit, fit(name, lit, 46, M1 - M0), ON_DARK)
+    d.rectangle([M0 * k, 480 * k, M1 * k, 482 * k], fill=SOFT_LINE)
+    _gives(d, k, M0, M1, text, wide, cyr)
     out = io.BytesIO()
     im.resize((W, H), Image.LANCZOS).save(out, "PNG", optimize=True)
     return out.getvalue()

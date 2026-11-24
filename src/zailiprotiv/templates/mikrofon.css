@@ -16,11 +16,11 @@ li.now-playing { outline: 2px solid currentColor; outline-offset: 3px; border-ra
 /* before the press: our mark and name, and the pill (24 Nov 2026). Dark in both themes, as a video is. */
 .play.facade { position: absolute; inset: 0; width: 100%; height: 100%; padding: 5% 6%; border-radius: 0; background: radial-gradient(120% 130% at 60% 100%, #1b212c, #0c0e12); color: #f1f1ee; display: grid; align-content: center; justify-items: center; gap: .7rem; --za: #7cc0f5; --protiv: #ff9a52; text-align: center; }
 .play.facade:hover { transform: none; }
-.fx { display: grid; justify-items: center; gap: .45rem; } .fx .brand-mark { width: 5.2rem; height: auto; } .fx .brand-mark path { fill: none; stroke-width: 16; } .fx .m-za { stroke: var(--za); } .fx .m-protiv { stroke: var(--protiv); }
-.fx-word { font-family: var(--serif); font-size: var(--t-6); line-height: 1.1; } .fx-word .m-z { color: var(--za); } .fx-word .m-p { color: var(--protiv); }
+.fx { display: grid; justify-items: center; gap: .4rem; } .fx-brand { display: inline-flex; align-items: center; gap: .5rem; opacity: .85; } .fx .brand-mark { width: 1.9rem; height: auto; } .fx .brand-mark path { fill: none; stroke-width: 16; } .fx .m-za { stroke: var(--za); } .fx .m-protiv { stroke: var(--protiv); }
+.fx-word { font-family: var(--serif); font-size: var(--t-4); line-height: 1.1; } .fx-word .m-z { color: var(--za); } .fx-word .m-p { color: var(--protiv); }
 .fx-live { display: inline-flex; align-items: center; gap: .4rem; font-size: var(--t-1); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; } .fx-live i { width: .6rem; height: .6rem; border-radius: 50%; background: #dc2626; }
-.fx-pill { padding: .7rem 1.4rem; border-radius: 999px; background: #fff; color: #111; } .play.facade:hover .fx-pill, .play.facade:focus-visible .fx-pill { transform: scale(1.04); }
-@media (max-width: 420px) { .fx .brand-mark { width: 4rem; } .fx-word { font-size: var(--t-5); } .fx-pill { padding: .55rem 1.2rem; font-size: var(--t-3); } .play.facade { gap: .5rem; } }
+.fx-pill { display: inline-flex; align-items: center; gap: .6rem; padding: 1rem 2.2rem; border-radius: 999px; background: #fff; color: #111; font-size: var(--t-6); font-weight: 800; line-height: 1.1; box-shadow: 0 0 0 6px rgba(255,255,255,.16); } .play.facade:hover .fx-pill, .play.facade:focus-visible .fx-pill { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(255,255,255,.22); }
+@media (max-width: 420px) { .fx-pill { padding: .85rem 1.7rem; font-size: var(--t-5); } .play.facade { gap: .8rem; } }
 .parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
 .part { font: inherit; font-size: var(--t-2); font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
 .part.on { border-color: currentColor; font-weight: 700; }

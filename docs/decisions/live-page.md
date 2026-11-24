@@ -275,9 +275,11 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   picture there nor the picture itself; the choice of several drafts, c4). Our mark, "Za ili Protiv" and "Uživo · iz
   Skupštine", always: for half an hour the speaker's portrait and name stood there while one was known, and went the same day
   ("skloni to ko govori"), as the speaker's head under the player says it already. Drawn in the page, nothing loads.
-- **The picture of a shared link, dark like the announcement** (24 Nov 2026, the maintainer: the white one with the time by
-  list "mi se ne sviđa"). `picture.render`: while the speaker is known, the portrait (from the site's `/foto/`, kept an
-  hour in memory, left out when it does not come), the name, the list and its colour; in a break "Pauza do 15:10" (the
-  hour only when the chair said a clock) with the item next; otherwise the sitting's day. No time spoken by list. All in
-  the middle (196–1004 px), as Reddit's app cuts; the address changes (`s3-`) so that services take the new one.
-  The story's picture (`render_tall`) is as it was.
+- **The picture of a shared link, dark and always the same** (24 Nov 2026, the maintainer: the white one with the time by list
+  "mi se ne sviđa"; and, the same day, no speaker on it, "kad je podeljeno može biti statično"). `picture.render`: our
+  mark and name large, "Skupština uživo", the address and what the page gives, with a mark each. Services keep a link's
+  picture by its address, so nothing on it goes stale: no speaker, no break, no date; before a sitting the announcement,
+  which names its day. Address `s4`. All in the middle (196–1004 px), as Reddit's app cuts. For some hours it had the
+  speaker's portrait and "Pauza do …", gone with it. The title and line beside it still say who speaks (`og_text`).
+- **The player's button the largest thing on it** (24 Nov 2026, the maintainer): the mark and name in one small row above,
+  the button large and white, with a ring.
