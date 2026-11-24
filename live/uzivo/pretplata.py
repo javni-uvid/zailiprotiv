@@ -108,6 +108,23 @@ class Mailer:
         f = self.folder / f"{day.isoformat()}.json"
         return json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
 
+    def _basis(self, day: date) -> str:
+        """For the maintainer's mail only (24 Nov 2026): what each speaker's line rests on in the transcript, word for
+        word, the lines that rest on none first; or that the stronger model did not write the day (sudija._whole)."""
+        if not config.DAY_MODEL:
+            return ""
+        f = self.folder.parent / "osnova" / f"{day.isoformat()}.json"
+        try:
+            kept = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return "<p><b>Pažnja:</b> sažetak je napisao slabiji model iz sažetaka delova. Proveri rečenice po govorniku.</p>"
+        weak = kept.get("bez_oslonca") or []
+        rows = "".join(f"<li><b>{escape(n)}</b>{' (OSLONAC NIJE NAĐEN)' if n in weak else ''}: "
+                       f"{escape(' … '.join(str(x) for x in said))}</li>"
+                       for n, said in sorted((kept.get("oslonac") or {}).items(), key=lambda kv: kv[0] not in weak))
+        return (f"<p>Na čemu počivaju rečenice o govornicima ({escape(str(kept.get('model', '')))}, iz automatskog prepisa; "
+                f"samo za tebe){': bez oslonca ' + str(len(weak)) if weak else ''}</p><ul>{rows}</ul>")
+
     def _keep(self, day: date, state: dict) -> None:
         _write(self.folder / f"{day.isoformat()}.json", state)
 
@@ -130,7 +147,7 @@ class Mailer:
             link = f"{config.PUBLIC_URL.rstrip('/')}/mejl/posalji?dan={day.isoformat()}&k={link_key(day)}"
             note = (f"<p><b>Ne može svima:</b> reč u dva pisma ({escape(', '.join(slips))}). Ispravi sažetak dana, pa će stići novi.</p>"
                     if slips else f'<p><a href="{escape(link)}"><b>Pošalji svima</b></a> (do podneva, jednom).</p>')
-            top = f'<div style="font-family:sans-serif;padding:12px;background:#fbf0dc">{note}</div>'
+            top = f'<div style="font-family:sans-serif;padding:12px;background:#fbf0dc">{note}{self._basis(day)}</div>'
             sent, failed = send([{"to": config.MAIL_EDITOR, "subject": "[za tebe] " + m.subject,
                                   "html": _with_top(m.html, top),
                                   "text": ("NE MOŽE SVIMA: " + ", ".join(slips) if slips else "Pošalji svima: " + link) + "\n\n" + m.text}])

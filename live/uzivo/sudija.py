@@ -127,6 +127,37 @@ IZLAZ: samo JSON, bez ikakvog drugog teksta:
 "tok" ima najviše 20 stavki; u "govornici" je svaki govornik iz delova, jednom, redom prvog javljanja."""
 
 
+WHOLE = f"""Pišeš sažetak celog dana sednice Narodne skupštine Srbije iz AUTOMATSKOG prepisa (Whisper) celog dana. Prepis
+greši u imenima, brojevima i rečima. Oznaka reda: [HH:MM:SS] Ime (lista): tekst; red bez imena nastavlja prethodnog;
+"{CHAIR}" je predsedavajući ili sala.
+
+{_RULES}
+8. U "govornici" su tačno oni sa datog spiska govornika, svaki jednom, istim imenom i redom.
+9. Smisao je preči od kratkoće. Ko nešto poriče, piše se da poriče; ko odgovara na tuđu tvrdnju, piše se da odgovara i
+   šta on sam kaže; tuđa tvrdnja o njemu nikad se ne piše kao njegova ni kao činjenica. U red sa imenom može ući i reč
+   predsedavajućeg ili drugog poslanika na početku i kraju: ono što očigledno nije govornikovo ne pripisuješ mu. Kad iz
+   prepisa nije jasno šta je rekao, piši samo temu.
+10. Uz svakog govornika ide "oslonac": jedna ili dve rečenice iz NJEGOVIH redova na kojima tvoja rečenica počiva,
+   prepisane SLOVO PO SLOVO, sa greškama prepisa, 8 do 60 reči ukupno, svaka posebno u listi. Samo u "oslonac" ide doslovan
+   tekst.
+11. Odluke i glasanja samo kako ih je saopštio predsedavajući, ne kako ih poslanik u govoru pominje. Upozorenje NIJE mera.
+   Glasanje je stavka u "odluke" sa poljem "glasanje": {{"za": n, "protiv": n, "uzdrzano": n, "nevazece": n,
+   "nije_glasalo": n, "glasalo": n, "prisutno": n}}, samo ono što je izgovoreno, ostalo null; brojevi jednog glasanja se ne
+   mešaju s drugim. "glasalo" je za + protiv + uzdržano (+ nevažeći). U "sta" nema brojeva glasova.
+
+IZLAZ: samo JSON, bez ikakvog drugog teksta:
+{{"naslov": "najviše 60 znakova: JEDNA, glavna odluka dana (izbor ili usvojen akt pre odluke o toku sednice), kao cela
+   kratka rečenica kojom bi je neko prepričao (na primer: Petar Petrović je novi ministar), bez nabrajanja, bez brojeva,
+   bez ocene i bez tvrdnji govornika; kad odluke nema, tačka o kojoj se raspravljalo",
+ "kratko": "jedna ili dve rečenice, najviše 280 znakova: šta je Skupština tog dana odlučila",
+ "ukratko": "jedan pasus, 4 do 7 rečenica: tok dana i odluke",
+ "odluke": [{{"vreme": "HH:MM", "sta": "odluka ili izbor, bez brojeva glasova", "glasanje": null}}],
+ "tok": [{{"vreme": "HH:MM", "sta": "..."}}],
+ "govornici": [{{"ime": "...", "lista": "...", "o_cemu": "jedna rečenica, do 35 reči, za ceo dan", "oslonac": ["..."]}}]}}
+"tok" ima najviše 20 stavki."""
+SPOKE = 120  # seconds on the floor in the day from which a speaker is in its summary
+
+
 def on() -> bool:
     return bool(config.MODEL_KEY)
 
@@ -224,6 +255,20 @@ def check_summary(s: dict | None, speakers: set[str], text: str) -> list[str]:
     return errs
 
 
+def unsupported(s: dict, said: dict[str, str]) -> list[str]:
+    """The speakers of a whole day's summary whose line rests on no sentence of their own: none given, or one not in
+    what was heard in their turns, word for word (`said`: by name, all their pieces joined)."""
+    out = []
+    for g in s.get("govornici") or []:
+        if not isinstance(g, dict):
+            continue
+        given = [norm(str(x)) for x in g.get("oslonac") or []] if isinstance(g.get("oslonac"), list) else []
+        body = norm(said.get(g.get("ime"), ""))
+        if not given or any(len(x) < 12 or x not in body for x in given):
+            out.append(str(g.get("ime")))
+    return out
+
+
 VOTE_KEYS = ("za", "protiv", "uzdrzano", "nevazece", "nije_glasalo", "glasalo", "prisutno")
 VOTE_WORDS = (("za", "za"), ("protiv", "protiv"), ("uzdrzano", "uzdržano"), ("nevazece", "nevažeći"),
               ("glasalo", "glasalo"), ("nije_glasalo", "nije glasalo"), ("prisutno", "prisutno"))
@@ -313,14 +358,20 @@ def settle_votes(s: dict) -> dict:
     return s
 
 
-def ask_claude(system: str, user: str, max_tokens: int = 16000, effort: str = "low") -> str:
-    """One call to the model: the rules as a cached system prompt, the material as the message."""
+def ask_claude(system: str, user: str, max_tokens: int = 16000, effort: str = "low", model: str = "") -> str:
+    """One call to the model: the rules as a cached system prompt, the material as the message. A long one (the whole
+    day, DAY_MODEL) is streamed, as it takes minutes."""
     import anthropic
-    client = anthropic.Anthropic(api_key=config.MODEL_KEY, max_retries=3, timeout=120)
-    reply = client.messages.create(
-        model=config.MODEL, max_tokens=max_tokens,
-        system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": user}], output_config={"effort": effort})
+    long = bool(model)
+    client = anthropic.Anthropic(api_key=config.MODEL_KEY, max_retries=3, timeout=600 if long else 120)
+    call = dict(model=model or config.MODEL, max_tokens=max_tokens,
+                system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+                messages=[{"role": "user", "content": user}], output_config={"effort": effort})
+    if long:
+        with client.messages.stream(**call) as stream:
+            reply = stream.get_final_message()
+    else:
+        reply = client.messages.create(**call)
     if reply.stop_reason == "refusal":
         raise RuntimeError("the model declined")
     if reply.stop_reason == "max_tokens":  # cut off: no whole JSON to read (the 19 Nov replay, long stretches at 6000)
@@ -359,7 +410,8 @@ class Judge(threading.Thread):
         self.tracker.use_summary(day, self.kept)
 
     def _save(self) -> None:
-        self.kept["model"] = config.MODEL
+        whole = self.kept.get("dan")
+        self.kept["model"] = (whole.get("model") if isinstance(whole, dict) else "") or config.MODEL
         f = self._file(self.day)
         if f:
             try:
@@ -471,6 +523,68 @@ class Judge(threading.Thread):
             reply["govornici"] = [g for g in reply["govornici"] if isinstance(g, dict) and g.get("ime") in speakers]
         return reply
 
+    def _whole(self, rows, turns) -> dict | None:
+        """The day's summary by DAY_MODEL from the whole transcript; None when it is off or did not work (the day is
+        then told from the stretches, as before). What each speaker's line rests on is kept apart, for the maintainer's
+        mail only (/data/osnova): the automatic transcript is never a quote, so it goes to no page and no reader."""
+        if not config.DAY_MODEL:
+            return None
+        block = lines(rows, turns, self.tz, self.tracker.shown)
+        text = "\n".join(l for _, l in block)
+        talk: dict[str, int] = {}
+        for d in turns:
+            talk[d["ime"]] = talk.get(d["ime"], 0) + max(0, d["do"] - d["od"])
+        first = {d["ime"]: d["od"] for d in sorted(turns, key=lambda d: -d["od"])}
+        need = sorted((n for n, s in talk.items() if s >= SPOKE), key=lambda n: first[n])
+        lists = {d["ime"]: d.get("lista") or "" for d in turns}
+        said: dict[str, str] = {}
+        for ts, piece, chair in rows:
+            who = next((d["ime"] for d in turns if d["od"] - SAID_LEAD - 1 <= ts <= d["do"]), None) if not chair else None
+            if who:
+                said[who] = said.get(who, "") + " " + self.tracker.shown(piece)
+        user = (self._roster() + "Govornici za spisak \"govornici\":\n" + "\n".join(f"- {n} ({lists[n] or 'bez liste'})" for n in need)
+                + "\n\nPrepis dana:\n" + text)
+
+        def look(s):
+            hard = check_summary({k: v for k, v in (s or {}).items() if k != "govornici"} | {"govornici": [
+                {k: v for k, v in g.items() if k != "oslonac"} for g in (s or {}).get("govornici") or [] if isinstance(g, dict)]}, set(need), text) if s else ["nema odgovora"]
+            names = [g.get("ime") for g in (s or {}).get("govornici") or [] if isinstance(g, dict)]
+            soft = [f"govornik {n!r} nije na spisku" for n in need if n not in names]
+            weak = unsupported(s, said) if s else []
+            soft += [f"oslonac za {n!r} nije doslovno u njegovim redovima" for n in weak]
+            return hard, soft + check_votes(s), weak
+
+        best = None
+        note = ""
+        for _ in range(2):
+            try:
+                s = reply_json(self.ask(WHOLE, user + note, 32000, "high", config.DAY_MODEL))
+            except Exception as exc:
+                log.warning("the whole day not written (%s)", exc)
+                break
+            hard, soft, weak = look(s)
+            if not hard and (best is None or len(soft) < best[1]):
+                best = (s, len(soft), weak)
+            if not hard and not soft:
+                break
+            note = "\n\nPrethodni odgovor nije prošao proveru: " + "; ".join(hard + soft) + ". Napiši ga ponovo po pravilima."
+        if best is None:
+            log.warning("the whole day's summary left out")
+            return None
+        s, _, weak = best
+        basis = {g["ime"]: g.get("oslonac") or [] for g in s.get("govornici") or [] if isinstance(g, dict)}
+        for g in s.get("govornici") or []:
+            if isinstance(g, dict):
+                g.pop("oslonac", None)
+                g["lista"] = lists.get(g.get("ime"), g.get("lista", ""))
+        f = self._file(self.day)
+        if f:
+            try:
+                _write(f.parent.parent / "osnova" / f.name, {"model": config.DAY_MODEL, "oslonac": basis, "bez_oslonca": weak})
+            except OSError:
+                pass
+        return s
+
     def _summaries(self, snap, rows, turns, now: float, live: bool) -> None:
         if not rows:
             return
@@ -494,6 +608,11 @@ class Judge(threading.Thread):
             self.kept["delovi"].append(part or {"t_od": start, "t_do": cut, "ukratko": "", "izostavljen": True})
             self._save()
         if not done and ended and self.kept["delovi"]:
+            whole = self._whole(rows, turns)
+            if whole:
+                self.kept["dan"] = {**settle_votes(whole), "t": int(now), "model": config.DAY_MODEL}
+                self._save()
+                return
             parts = [p for p in self.kept["delovi"] if not p.get("izostavljen")]
             if parts:
                 speakers = {g["ime"] for p in parts for g in p.get("govornici") or []}
