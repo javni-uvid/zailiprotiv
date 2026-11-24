@@ -398,7 +398,7 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
                      f'<ol class="steps">{"".join(r[1] for r in rest)}</ol></details>')
         full = t("steps_model" if any(e.get("model") for e in heard) else "steps_said")
         if decisions:
-            full = full.rstrip(".") + ". " + t("sum_note")
+            full = full.rstrip(".") + ". " + escape(_fill(_t("sum_note", cyr), _model(summary)))
         chip = _chip(t("dl_src"), full)
         if links:
             body += f'<p class="dl-foot">{links.strip()}</p>'
@@ -731,6 +731,12 @@ def manifest(cyr: bool) -> dict:
                       icon("/ikona-maskable-512.png", 512, "maskable")]}
 
 
+def _model(summary: dict) -> str:
+    """Who wrote the day's summary, as the page names it: "claude-opus-5-5" → "Claude Opus"."""
+    parts = str(summary.get("model") or config.MODEL).split("-")
+    return f"Claude {parts[1].capitalize()}" if len(parts) > 1 else "Claude Haiku"
+
+
 def _cards_of_the_day(snap: dict, card, *, cyr: bool) -> list[str]:
     """What happened, as cards: the model's sentence of the day (said to be the model's); each agenda item the
     sitting's page has as finished that day, with the sentence of fact kept with it (three at most, the rest as a
@@ -740,7 +746,7 @@ def _cards_of_the_day(snap: dict, card, *, cyr: bool) -> list[str]:
     out = []
     s = snap.get("sazetak")
     if isinstance(s, dict) and s.get("vrsta") == "dan" and s.get("kratko"):
-        out.append(card(t("st_brief"), f'<p class="st-text">{n(s["kratko"])}</p><p class="st-src">{t("st_brief_src")}</p>', s["kratko"]))
+        out.append(card(t("st_brief"), f'<p class="st-text">{n(s["kratko"])}</p><p class="st-src">{escape(_fill(_t("st_brief_src", cyr), _model(s)))}</p>', s["kratko"]))
     done = [x for x in (snap.get("dnevni_red") or {}).get("tacke") or []
             if x.get("stanje") == "gotova" and x.get("izvor") == "sajt" and x.get("kada") == snap.get("dan")]
     for x in done[:3]:

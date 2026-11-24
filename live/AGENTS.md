@@ -28,7 +28,9 @@ that file in the same commit, and here only when a line below no longer holds.
   caption does, by the rule checked against the notes, and the page says which it was. The presiding officers are
   never named as speakers by voice.
 - **The model** (`sudija.py`) tells only what was said, by a set list of steps each resting on a sentence found word
-  for word; a vote that does not add up goes without its figures. Its words are labelled as a model's.
+  for word; a vote that does not add up goes without its figures. Its words are labelled as a model's. The day's summary is a
+  stronger model's (`DAY_MODEL`), from the whole transcript, after the sitting; what its lines rest on goes to the
+  maintainer only.
 - **A name in the mail or the measures is the list's, never guessed.**
 - **The readers' addresses** are opened only here, only to send, and never written down: what went is kept by the
   counter's row id. To all only on the maintainer's click, until noon the next day.

@@ -131,3 +131,16 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   be a reply or a point of order (`rok.short`) is left out up to 180 s.
 - **A measure an MP only speaks of is no step** (24 Nov 2026, the maintainer): the mail's rule (`mere.given`) holds for the
   page's steps too. On 19 Nov's 13 model's measures it keeps the eight given and drops the five not.
+- **The day's summary, and so the mail, by a stronger model from the whole transcript** (24 Nov 2026, the maintainer:
+  "držimo haiku u toku sednice, kada pravimo sažetak za mejl to ide preko opusa"). Haiku's line on one MP that day said
+  the opposite of what was said, and the day's summary, made of the stretches' summaries, would only have copied it. Now
+  `sudija._whole` sends the day's whole transcript to `DAY_MODEL` (Claude Opus 5.5; `DAN_MODEL` empty turns it off)
+  once, after the sitting (END_QUIET), in place of the call on the stretches; the steps and the breaks' summaries stay
+  Haiku's. Each speaker's line must rest on a sentence of their own, copied word for word and found by the code in their
+  turns (`sudija.unsupported`); a reply that fails is asked once more, and a line whose sentence is still not found
+  stays, marked to the maintainer. The sentences are in `/data/osnova` and on top of the maintainer's own mail, never on
+  a page or in a reader's mail (the automatic transcript is never a quote). Finding the sentence does not prove the line
+  says the same: the maintainer reads it before the click. When the call fails or the summary names a speaker or a
+  number wrongly twice, the day is told from the stretches as before and the maintainer's mail says so. What wrote it is
+  kept (`model`) and said on the live page and the day page. Measured 24 Nov to 14:10: 62,688 tokens; a day costs some
+  0.8-1.6 $ by estimate (the output not measured).

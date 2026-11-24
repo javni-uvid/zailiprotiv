@@ -2480,3 +2480,47 @@ def test_a_break_shows_what_happened_until_it():
     for said, hour in (("Pauza do 15.30", "15:30"), ("nastavljamo u 16 časova", "16:00"), ("pauzu od jednog sata", ""),
                        ("pauza do 12 sati", ""), ("pauza do 5 minuta", "")):
         assert page_._resumes_at(said, b, TZ) == hour
+
+
+def test_the_day_is_summed_up_by_the_stronger_model_from_the_whole_transcript(tmp_path, monkeypatch):
+    """24 Nov 2026, the maintainer: Haiku during the sitting, Opus for the day's summary; each speaker's line rests on
+    a sentence of their own, kept for the maintainer only; when it does not work, the stretches tell the day."""
+    from uzivo import sudija
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    monkeypatch.setattr(config, "DAY_MODEL", "claude-opus-5-5")
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    base = 1795082400
+    t.day = t._day(base)
+    t.say(base + 10, "Nisam učestvovala u kontroli tog projekta i to vam kažem.")
+    t.say(base + 250, "Proglašavam pauzu od deset minuta.", chair=True)
+    turns = [{"ime": "Jović Jova", "lista": "Lista za primer", "od": base + 5, "do": base + 200},
+             {"ime": "Kratki Kosta", "lista": "Lista", "od": base + 205, "do": base + 225}]
+    rows, j = sudija.pieces(dict(t._said_of(t.day))), None
+    seen = []
+
+    def day(basis):
+        return json.dumps({"kratko": "K.", "ukratko": "U.", "odluke": [], "tok": [], "govornici": [
+            {"ime": "Jović Jova", "lista": "nešto", "o_cemu": "Poricala učešće.", "oslonac": [basis]}]})
+
+    def ask_bad_then_good(system, user, *rest):
+        seen.append((system, user, rest))
+        return day("Ovo nikad nije rekla niko ovde" if len(seen) == 1 else "Nisam učestvovala u kontroli tog projekta")
+
+    j = sudija.Judge(t, threading.Event(), ask=ask_bad_then_good)
+    j._load(t.day)
+    s = j._whole(rows, turns)
+    assert len(seen) == 2 and seen[0][0] is sudija.WHOLE and seen[0][2][-1] == "claude-opus-5-5"
+    assert "Kratki" not in seen[0][1].split("Prepis dana")[0] and "oslonac za 'Jović Jova'" in seen[1][1]
+    assert "oslonac" not in json.dumps(s) and s["govornici"][0]["lista"] == "Lista za primer"
+    kept = json.loads((tmp_path / "osnova" / f"{t.day}.json").read_text(encoding="utf-8"))
+    assert kept["bez_oslonca"] == [] and kept["oslonac"]["Jović Jova"][0].startswith("Nisam")
+    j.ask = lambda system, user, *rest: day("Ovo nikad nije rekla niko ovde")  # never found: kept, and said to the maintainer
+    assert j._whole(rows, turns)["govornici"]
+    assert json.loads((tmp_path / "osnova" / f"{t.day}.json").read_text(encoding="utf-8"))["bez_oslonca"] == ["Jović Jova"]
+
+    def boom(*a):
+        raise RuntimeError("no")
+    j.ask = boom
+    assert j._whole(rows, turns) is None  # the stretches tell the day
+    from uzivo import page as page_
+    assert page_._model({"model": "claude-opus-5-5"}) == "Claude Opus" and page_._model({}) == "Claude Haiku"
