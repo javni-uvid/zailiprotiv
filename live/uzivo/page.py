@@ -403,7 +403,9 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         if e.get("naslov") == "Mera predsedavajućeg":  # the kind as the title ("Opomena"), to whom under it
             kind, _, whom = (e.get("opis") or "").partition(" · ")
             if kind.strip():
-                title, what = rules(e, s(kind.strip()[:1].upper() + kind.strip()[1:])), s(whom.strip())
+                # to whom, and why where the chair's sentence said one of the Rules' reasons (mere.reason)
+                title = rules(e, s(kind.strip()[:1].upper() + kind.strip()[1:]))
+                what = " · ".join(s(x) for x in (whom.strip(), e.get("razlog") or "") if x)
         said = quote(t("chair_word"), e["recenica"]) if e.get("recenica") and config.SHOW_QUOTES else ""
         return li(_clock(e["t"], tz), _step_mark(e),
                   f'<p class="st-title">{title}</p>' + (f'<p class="st-what">{what}</p>' if what else "") + said, at=e["t"])
@@ -1401,7 +1403,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="rules-cta"><a href="{escape(home + "podrzi")}"><b>{t("support_cta")} →</b><span>{t("support_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-{mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p>{how_time}</details>
+{mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p><p>{t("why_how")}</p>{how_time}</details>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{t("rules_word")}</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>

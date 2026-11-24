@@ -142,6 +142,15 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   shown as one turn (`MERGE_SECONDS`); the Assembly said no figure that day to check the sum against.
 - **A measure an MP only speaks of is no step** (24 Nov 2026, the maintainer): the mail's rule (`mere.given`) holds for the
   page's steps too. On 19 Nov's 13 model's measures it keeps the eight given and drops the five not.
+- **A warning with its reason, by the Rules' list** (24 Nov 2026, the maintainer, of three ways shown to make "Šta se
+  desilo danas" fuller once the transcript's sentences were off: "uradi samo 2"). `mere.reason`: where the sentence that
+  gives the measure says exactly one of the reasons art. 109 lists (at the rostrum without leave, speaking without the
+  floor, off the item, heckling, addressing another MP, insults, private life), the step says it in our words ("zbog
+  govora bez date reči"), never the transcript's; none heard, or two, and nothing is said. By rule, not by the model:
+  a set list, the same for everybody, and a misheard word cannot come out. The chair saying the measure again with
+  its reason within a minute (`WHY_SOON`) is the same step; a measure for another reason is another. Of the 13
+  measures given on 19 and 24 Nov five have a reason, each read against its sentence. To whom is as before (a name
+  the sentence bears). "Kako ovo radi" says so.
 - **The day's summary, and so the mail, by a stronger model from the whole transcript** (24 Nov 2026, the maintainer:
   "držimo haiku u toku sednice, kada pravimo sažetak za mejl to ide preko opusa"). Haiku's line on one MP that day said
   the opposite of what was said, and the day's summary, made of the stretches' summaries, would only have copied it. Now

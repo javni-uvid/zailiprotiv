@@ -2,7 +2,7 @@
 and read on the Assembly's page are shown, and as what. No HTML here: page._steps draws them."""
 from __future__ import annotations
 
-from .mere import given
+from .mere import given, reason
 from .names import given_first
 
 # A step heard in the chair's words, as the page writes it: our own short line for the kind of step, never the
@@ -18,6 +18,7 @@ STEP_TERM = {"Sednica otvorena": "otvaranje-sednice", "Nastavak rada": "radno-vr
              "Kraj rada": "radno-vreme", "Tačka dnevnog reda": "dnevni-red", "Pretres otvoren": "tok-pretresa",
              "Pretres zaključen": "tok-pretresa", "Glasanje": "dan-za-glasanje", "Glasanje zaključeno": "dan-za-glasanje",
              "Rezultat glasanja": "dan-za-glasanje", "Mera predsedavajućeg": "mere"}
+WHY_SOON = 60  # seconds: a measure said again this soon with its reason is the same measure
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
 RESUMED_AFTER = 300  # seconds after a break for words or a turn to be its end
@@ -228,11 +229,24 @@ def model_steps(snap: dict) -> list[dict]:
             if not ok:
                 continue
         key = title + "|" + what
-        if kind not in _UNDER_WAY and kind != "Rezultat glasanja" and t - last.get(key, -10 ** 9) < STEP_SAME:
+        why = reason(sentence) if kind == "Mera predsedavajućeg" else ""
+        if why:
+            # the chair says the measure, then says it again with its reason: the same step, now with the reason; a
+            # measure for another reason is another step
+            same = next((x for x in reversed(out) if x["naslov"] == title and x["opis"] == what and not x.get("razlog") and t - x["t"] <= WHY_SOON), None)
+            if same:
+                same["razlog"] = why
+                last[key + "|" + why] = t
+                continue
+            if t - last.get(key + "|" + why, -10 ** 9) < STEP_SAME:
+                continue
+            last[key + "|" + why] = t
+        elif kind not in _UNDER_WAY and kind != "Rezultat glasanja" and t - last.get(key, -10 ** 9) < STEP_SAME:
             continue
         last[key] = t
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": what, "url": "", "model": True,
-                    "pojam": STEP_TERM.get(kind, ""), **({"recenica": sentence} if kind == "Mera predsedavajućeg" else {})})
+                    "pojam": STEP_TERM.get(kind, ""),
+                    **({"recenica": sentence, **({"razlog": why} if why else {})} if kind == "Mera predsedavajućeg" else {})})
     # Work resumed after a break is told too where the model did not (24 Nov 2026, 15:11: "pošto imamo kvorum, nastavljamo
     # pretres po petoj tački"): at the chair's words that move the work on, or the first turn, after the break.
     moves = [e["t"] for e in snap.get("hronika") or [] if e.get("izvor") == "prepis"
