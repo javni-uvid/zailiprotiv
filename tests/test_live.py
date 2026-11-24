@@ -2043,6 +2043,32 @@ def test_the_broadcasts_clock_says_when_a_turn_began():
     assert t.clocked(marko, now + 1000, 5) is None  # no turn of theirs open: nothing
 
 
+def test_a_break_ended_is_a_step_where_the_model_did_not_say_so():
+    """24 Nov 2026: after the break to 15:10 the chair said "pošto imamo kvorum, nastavljamo pretres po petoj tački", and
+    no step told it; the break before it was told by the move to an item at once."""
+    from uzivo.steps import model_steps
+    base = 1795510000
+    ev = lambda t, kind, text, src="prepis", **more: {"t": base + t, "vrsta": kind, "tekst": text, "izvor": src, **({"vise": more} if more else {})}
+    snap = {"provereno": base + 9000, "sada": None, "danas": [{"od": base + 100, "do": base + 500}, {"od": base + 4000, "do": base + 4400}],
+            "dnevni_red": {"tacke": [{"n": 5, "tekst": "Izbor"}]},
+            "hronika": [ev(600, "Pauza", "Proglašavam pauzu do 15 sati i 10 minuta.", "model", do="15 sati i 10 minuta"),
+                        ev(3900, "Tačka dnevnog reda", "nastavljamo pretres po petoj tački")]}
+    titles = [(s["t"] - base, s["naslov"]) for s in model_steps(snap)]
+    assert titles == [(3900, "Rad je nastavljen"), (600, "Pauza")]
+    told = {**snap, "hronika": snap["hronika"] + [ev(3910, "Tačka dnevnog reda", "Prelazimo na petu tačku.", "model", tacka="5")]}
+    assert [s["naslov"] for s in model_steps(told)] == ["Prelazak na 5. tačku dnevnog reda", "Pauza"]  # said already, once
+    still = {**snap, "danas": snap["danas"][:1], "hronika": snap["hronika"][:1]}
+    assert [s["naslov"] for s in model_steps(still)] == ["Pauza"]  # the break goes on
+
+
+def test_a_turn_of_the_chairs_words_and_two_seconds_is_none():
+    """24 Nov 2026, 15:11: "Reč ima doktor Milica Jovanović … Narodna poslanica, Ana Brnabić": the floor passed on at once."""
+    from uzivo.state_base import counted
+    turn = lambda sec, how: {"n": 4, "start": 100, "seen": 100 + sec, "izvor": how, "role": ""}
+    assert not counted(turn(2, "prepis")) and counted(turn(20, "prepis"))
+    assert counted(turn(2, "potpis")) and counted(turn(2, "glas"))  # seen or heard: it stays
+
+
 def test_the_floor_given_at_a_seam_and_a_surname_misheard():
     """24 Nov 2026: "Ima narodni poslanik Zoran Đajić" at a piece's beginning, and "Sanja Fritz" for Sanja Fric."""
     from uzivo import hronika

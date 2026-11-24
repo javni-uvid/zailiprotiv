@@ -21,6 +21,7 @@ def _write(f: Path, data) -> None:
 
 
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
+HEARD_SHORT = 5  # seconds: a turn found by the chair's words alone and as short as this is no turn (24 Nov 2026)
 SURE_FRAMES = 4  # a turn with no line under the name read in any frame is kept only from this many frames on
 
 
@@ -29,6 +30,8 @@ def counted(t: dict) -> bool:
     (the list or office, which every real caption has) read at least once, or long enough to be no chance reading.
     19 Nov 2026: two turns of two frames each, no second line, named an MP who had not spoken; something else on the
     screen had been read as a name. The same rule for every name."""
+    if t.get("izvor") == "prepis" and t.get("seen", 0) - t.get("start", 0) < HEARD_SHORT:
+        return False  # only the chair's words, and nobody heard after them: the floor was taken back or passed on at once
     return t.get("n", 0) >= 2 and bool(t.get("role") or t.get("n", 0) >= SURE_FRAMES)
 
 
