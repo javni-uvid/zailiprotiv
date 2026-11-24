@@ -2,6 +2,8 @@
 transcript's margins, and writing a file whole."""
 from __future__ import annotations
 
+import re
+
 import json
 from pathlib import Path
 
@@ -21,6 +23,10 @@ def _write(f: Path, data) -> None:
 
 
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
+# words only the chair says: with one of them between, the same speaker named again begins anew (24 Nov 2026: 104 s of the
+# chair's before a reply were about to be the next speaker's)
+CHAIRS = re.compile(r"\breč ima|ima(te)? reč|dajem reč|po kom osnovu|\brepli[kc]|povred\w* poslovnik|izvolite|da li želite|"
+                    r"poslaničk\w* grup\w* žel|\bmolim vas|\bmolim (da|bez)|\bupozor|izričem|prijavite se|zahvaljujem|hvala na|idemo dalje", re.I)
 REJOIN = 200  # seconds: the same speaker named again this soon, with speech going on between and no floor given to another
 REJOIN_WORDS = 1.2  # words a second of it, for speech to have gone on (a speaker's pace is some two)
 HEARD_SHORT = 12  # seconds: a turn found by the chair's words alone and as short as this is no turn (24 Nov 2026: 2 s, 8 s)

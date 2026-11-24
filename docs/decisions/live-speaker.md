@@ -129,3 +129,5 @@ presided (not done).
 - **The same speaker named again after speech that went on is the same turn** (24 Nov 2026, the cycle's finding: Aleksandra
   Ilić's speech cut in two, 139 s nobody's): within 200 s, at least 1.2 words a second written down between, no floor given to
   another (`Tracker._went_on`). A voice not recognised or the chair's had ended it.
+  Not when a word only the chair says is between (`CHAIRS`), nor a floor passed on by name before the next begins: a dry run
+  over the day had joined 104 s of the chair's to the next speaker and given one MP 63 s of the chair's. Neither was live.

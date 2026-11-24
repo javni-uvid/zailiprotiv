@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, REJOIN, REJOIN_WORDS
+from .state_base import SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, REJOIN, REJOIN_WORDS
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -415,9 +415,9 @@ class Tracker(Said, Chronicle, View):
         gap = start - turn["seen"]
         if not (turn.get("izvor") and 8 <= gap <= REJOIN):
             return False
-        said = sum(len(v.split()) for k, v in self.said.items()
-                   if k.lstrip("p").isdigit() and turn["seen"] - 5 <= int(k.lstrip("p")) < start)
-        if said < REJOIN_WORDS * gap:
+        between = [v for k, v in self.said.items()
+                   if k.lstrip("p").isdigit() and turn["seen"] - 5 <= int(k.lstrip("p")) < start]
+        if sum(len(v.split()) for v in between) < REJOIN_WORDS * gap or any(CHAIRS.search(v) for v in between):
             return False
         return not any(e.get("vrsta") == "Reč ima" and turn["seen"] - 5 < e["t"] < start and e.get("url") != turn["slug"]
                        for e in self.events[-60:])

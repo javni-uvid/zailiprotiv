@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from . import hronika
-from .state_base import REJOIN, REJOIN_WORDS, SURE_FRAMES, _write, write_text
+from .state_base import CHAIRS, REJOIN, REJOIN_WORDS, SURE_FRAMES, _write, write_text
 
 MISSING = 0.4  # a turn is missing when less than this share of it is there: the chair's own words before the next floor
 SHORT_OF = 45  # and at least these seconds of a turn that is there, for it to be lengthened
@@ -40,6 +40,14 @@ def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[di
         nxt = given[i + 1][0] if i + 1 < len(given) else None
         others = [t["start"] for t in out if t["start"] > t0 and t["key"] != who.key]
         end = min([x for x in (nxt, min(others, default=None)) if x is not None], default=None)
+        # the chair named whoever comes next before they began: the floor passed on there ("Reč ima doktor Milica Jovanović …
+        # Narodna poslanica, Ana Brnabić", 24 Nov 2026)
+        follows = min((t for t in out if t["start"] > t0 and t["key"] != who.key), key=lambda t: t["start"], default=None)
+        if end is not None and follows is not None:
+            for k, v in said.items():
+                at = int(k.lstrip("p")) if k.lstrip("p").isdigit() else 0
+                if began < at < end and hronika.named(v, follows["name"]):
+                    end = min(end, at)
         if end is None or not 0 < end - t0 <= LONGEST:
             continue
         mine = [t for t in out if t["key"] == who.key and t["start"] <= end and t["seen"] >= began - 5]
@@ -62,8 +70,8 @@ def fill(turns: list[dict], said: dict[str, str], people: list) -> tuple[list[di
         a = kept[-1] if kept else None
         gap = t["start"] - a["seen"] if a else 0
         if a and a["key"] == t["key"] and a.get("izvor") and 8 <= gap <= REJOIN:
-            words = sum(len(v.split()) for k, v in said.items() if k.lstrip("p").isdigit() and a["seen"] - 5 <= int(k.lstrip("p")) < t["start"])
-            if words >= REJOIN_WORDS * gap and not any(a["seen"] - 5 < f[0] < t["start"] and f[2].key != t["key"] for f in given):
+            between = [v for k, v in said.items() if k.lstrip("p").isdigit() and a["seen"] - 5 <= int(k.lstrip("p")) < t["start"]]
+            if sum(len(v.split()) for v in between) >= REJOIN_WORDS * gap and not any(CHAIRS.search(v) for v in between) and not any(a["seen"] - 5 < f[0] < t["start"] and f[2].key != t["key"] for f in given):
                 done.append(f'{t["name"]}: dva dela u jedan, {gap:.0f} s izmedju')
                 a["seen"] = max(a["seen"], t["seen"])
                 continue
