@@ -167,6 +167,15 @@ def floor(text: str, people: list, now_only: bool = False) -> list:
     return out
 
 
+def named(text: str, name: str) -> bool:
+    """Whether every word of an MP's name ("Brnabić Ana") is in the text, each near one ("Ana Brnavić")."""
+    from difflib import SequenceMatcher
+    from .ispravke import fold
+    heard = [fold(w) for w in re.findall(r"[^\W\d_]+", latin(text))]
+    words = [fold(w) for w in name.split()]
+    return all(any(SequenceMatcher(None, w, h).ratio() >= 0.8 for h in heard) for w in words)
+
+
 _TAGS = re.compile(r"<script.*?</script>|<style.*?</style>|<[^>]+>", re.S)
 
 

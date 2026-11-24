@@ -1981,6 +1981,11 @@ def test_a_speaker_named_again_after_speech_that_went_on_is_the_same_turn():
     assert len(t.turns_now()) == 1 and t.turns_now()[0]["seen"] >= now + 240 and t.open_turn()  # it went on: one turn
     assert len(tracker(4).turns_now()) == 2  # silence, or the chair's few words: not his time
     assert len(tracker(20, floor=True).turns_now()) == 2  # the floor was given to another between
+    t = tracker(20)
+    for words in ("Da li predsednici poslaničkih grupa žele reč? Aleksandar Vučić, replika.", "Reč ima narodni poslanik.", "Upozoravam vas."):
+        from uzivo.state_base import CHAIRS
+        assert CHAIRS.search(words)  # the chair's words: never the speaker's time
+    assert not CHAIRS.search("Pomenuti izveštaji ovog komiteta ukazuju na stanje ljudskih prava.")
 
 
 def test_a_voice_not_recognised_does_not_end_a_turn():
@@ -1997,6 +2002,16 @@ def test_a_voice_not_recognised_does_not_end_a_turn():
     t.heard(marko, "glas", now + 60, now + 90)  # recognised: now its end counts
     t.voice_gone(now + 90, now + 120, {marko.slug})
     assert t.open_turn() is None and t.turns_now()[0]["seen"] == now + 90
+
+
+def test_a_floor_passed_on_by_name_is_not_filled():
+    """24 Nov 2026, 15:11: "Reč ima doktor Milica Jovanović … Narodna poslanica, Ana Brnabić": the first had no turn."""
+    from uzivo.names import Person
+    from uzivo.popuna import fill
+    people = [Person("jovanovic milica", "Jovanović Milica", "jovanovic-milica", "A"), Person("brnabic ana", "Brnabić Ana", "brnabic-ana", "B")]
+    said = {"p1000": "Reč ima doktorka Milica Jovanović.", "p1005": "Narodna poslanica, Ana Brnavić. Ja se izvinjam.", "p1030": "rec " * 60}
+    turns = [{"key": "brnabic ana", "name": "Brnabić Ana", "slug": "brnabic-ana", "group": "", "start": 1080, "seen": 1400, "n": 4, "izvor": "potpis", "role": ""}]
+    assert fill(turns, said, people) == (turns, [])
 
 
 def test_the_days_turns_are_filled_from_the_chairs_words_by_one_rule():
