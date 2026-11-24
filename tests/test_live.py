@@ -3160,3 +3160,31 @@ def test_the_day_ends_sooner_when_the_chair_closed_it_and_a_restart_does_not_beg
     j = judge(False, frame_before=base + 300)  # a restart long after: the wait is from the last frame, not from now
     j.step(now=base + 5010)
     assert j.kept["dan"]["kratko"] == "Dan."
+
+
+def test_a_days_summary_already_in_the_file_is_not_written_again(tmp_path, monkeypatch):
+    """24 Nov 2026: made by hand while the service ran, it is taken at the day's end, and the model is not asked."""
+    from uzivo import sudija
+    monkeypatch.setattr(config, "STATE_PATH", str(tmp_path / "stanje.json"))
+    monkeypatch.setattr(config, "DAY_MODEL", "")
+    t = Tracker(str(tmp_path / "stanje.json"), "Europe/Belgrade")
+    base = 1795082400
+    t.day = t._day(base)
+    t.say(base + 10, "Govorio sam o penzijama i o budžetu za sledeću godinu.")
+    turns = [{"ime": "Petrović Petar", "lista": "Lista", "od": base + 5, "do": base + 200}]
+    monkeypatch.setattr(t, "snapshot", lambda now=None: {"dan": t.day, "ranije": False, "stanje": NO_STREAM, "danas": turns,
+                                                         "sada": None, "provereno": base + 300})
+    asked = []
+
+    def ask(system, user, *rest):
+        asked.append(system)
+        return json.dumps({"dogadjaji": []}) if system is sudija.EVENTS else json.dumps({"ukratko": "Deo.", "tok": []})
+    j = sudija.Judge(t, threading.Event(), ask=ask)
+    j.step(now=base + 400)  # the day loaded, the pieces read; not yet ended
+    f = tmp_path / "sazetak" / f"{t.day}.json"
+    kept = json.loads(f.read_text(encoding="utf-8"))
+    kept["dan"] = {"kratko": "Rukom.", "ukratko": "Napisano rukom.", "odluke": [], "t": base + 500}
+    f.write_text(json.dumps(kept), encoding="utf-8")
+    j.step(now=base + 300 + sudija.END_QUIET + 5)
+    assert j.kept["dan"]["kratko"] == "Rukom." and sudija.DAY not in asked and sudija.SUMMARY not in asked
+    assert json.loads(f.read_text(encoding="utf-8"))["dan"]["kratko"] == "Rukom."

@@ -202,3 +202,6 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   (3 min); otherwise after END_QUIET as before, so a break is not taken for the end. The wait counts from the last frame kept
   with the day (`Tracker.frame_before`), whatever restarts come after. Agreed among the sessions too: nothing is put live
   between a sitting's end and the day's mail.
+- **A summary already in the day's file is taken, not written again** (24 Nov 2026, the maintainer): the service kept the day
+  in memory, so a summary made by hand while it ran would have been written over at the day's end. Before the model is
+  asked for the day, the file is read (`Judge._written`).
