@@ -100,3 +100,7 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   button, the method page and the privacy page; a device that asked before gets it too, and can be turned off there.
   A caption counts only when it is read for sure (`counted`): in the silent hall of that break the picture's noise was
   read as an MP's name for one frame.
+- **The confirming mail says what to press** (24 Nov 2026, the maintainer: two readers answered it rather than press; 22 of 86
+  were not confirmed): the subject and the first line say to press the button, and once more on the page it opens, the button is as wide as the mail ("Da, prijavi
+  me"), the mail says an answer does not confirm, and the link stands under it for a reader whose button does not work;
+  the page it leads to says "Poslednji korak", as it has a button of its own (scanners open links).

@@ -48,29 +48,33 @@ export async function seal(jwk, text) {
 }
 
 const WORDS = {
-  lat: { subject: "Potvrdi prijavu na sažetak dana", brand: "Za ili Protiv",
+  lat: { subject: "Potvrdi prijavu: klikni na dugme u ovom mejlu", brand: "Za ili Protiv",
+         head: "Potvrdi prijavu", lead: "Klikni na dugme, pa još jednom na stranici koja se otvori. Bez toga ti sažetak dana ne stiže.",
+         reply: "Ne odgovaraj na ovaj mejl: odgovor ne potvrđuje prijavu. Ako dugme ne radi, otvori ovaj link:",
          ask: "Neko, verovatno ti, prijavio je ovu adresu za sažetak dana sednice Narodne skupštine sa mikrofon.zailiprotiv.rs: posle svakog dana sednice, šta je odlučeno, ko je dobio opomenu i ko je šta rekao.",
-         button: "Potvrdi prijavu", not: "Ako nisi ti, ne radi ništa: bez potvrde adresu brišemo za 48 sati i više ti ne pišemo.",
+         button: "Da, prijavi me", not: "Ako nisi ti, ne radi ništa: bez potvrde adresu brišemo za 48 sati i više ti ne pišemo.",
          privacy: "Politika o privatnosti",
-         confirmTitle: "Potvrdi prijavu", confirmText: "Jedan klik i sažetak dana stiže na tvoju adresu posle svakog dana sednice.",
+         confirmTitle: "Poslednji korak", confirmText: "Klikni na dugme da potvrdiš prijavu. Tek tada ti sažetak dana stiže posle svakog dana sednice.",
          done: "Prijava je potvrđena", doneText: "Sažetak stiže posle sledećeg dana sednice. Odjava je u svakom mejlu.",
          gone: "Link je istekao", goneText: "Prijava nije potvrđena u 48 sati ili je već potvrđena. Prijavi se ponovo na mikrofonu.",
          fail: "Mejl nije poslat", failText: "Nismo uspeli da pošaljemo mejl za potvrdu. Probaj ponovo malo kasnije.",
          outAsk: "Odjavi se", outAskText: "Jedan klik i tvoja adresa se briše: sažetak dana ti više ne stiže.",
          out: "Odjavljen si", outText: "Tvoja adresa je obrisana i više ti ne pišemo.",
-         check: "Proveri sanduče", checkText: "Poslali smo mejl za potvrdu. Prijava važi kad klikneš na dugme u njemu.",
+         check: "Proveri sanduče", checkText: "Poslali smo ti mejl. Otvori ga i klikni na dugme „Da, prijavi me“: bez toga prijava ne važi. Odgovor na mejl je ne potvrđuje.",
          bad: "Adresa nije ispravna", back: "Nazad na mikrofon" },
-  cir: { subject: "Потврди пријаву на сажетак дана", brand: "За или Против",
+  cir: { subject: "Потврди пријаву: кликни на дугме у овом мејлу", brand: "За или Против",
+         head: "Потврди пријаву", lead: "Кликни на дугме, па још једном на страници која се отвори. Без тога ти сажетак дана не стиже.",
+         reply: "Не одговарај на овај мејл: одговор не потврђује пријаву. Ако дугме не ради, отвори овај линк:",
          ask: "Неко, вероватно ти, пријавио је ову адресу за сажетак дана седнице Народне скупштине са mikrofon.zailiprotiv.rs: после сваког дана седнице, шта је одлучено, ко је добио опомену и ко је шта рекао.",
-         button: "Потврди пријаву", not: "Ако ниси ти, не ради ништа: без потврде адресу бришемо за 48 сати и више ти не пишемо.",
+         button: "Да, пријави ме", not: "Ако ниси ти, не ради ништа: без потврде адресу бришемо за 48 сати и више ти не пишемо.",
          privacy: "Политика о приватности",
-         confirmTitle: "Потврди пријаву", confirmText: "Један клик и сажетак дана стиже на твоју адресу после сваког дана седнице.",
+         confirmTitle: "Последњи корак", confirmText: "Кликни на дугме да потврдиш пријаву. Тек тада ти сажетак дана стиже после сваког дана седнице.",
          done: "Пријава је потврђена", doneText: "Сажетак стиже после следећег дана седнице. Одјава је у сваком мејлу.",
          gone: "Линк је истекао", goneText: "Пријава није потврђена у 48 сати или је већ потврђена. Пријави се поново на микрофону.",
          fail: "Мејл није послат", failText: "Нисмо успели да пошаљемо мејл за потврду. Пробај поново мало касније.",
          outAsk: "Одјави се", outAskText: "Један клик и твоја адреса се брише: сажетак дана ти више не стиже.",
          out: "Одјављен си", outText: "Твоја адреса је обрисана и више ти не пишемо.",
-         check: "Провери сандуче", checkText: "Послали смо мејл за потврду. Пријава важи кад кликнеш на дугме у њему.",
+         check: "Провери сандуче", checkText: "Послали смо ти мејл. Отвори га и кликни на дугме „Да, пријави ме“: без тога пријава не важи. Одговор на мејл је не потврђује.",
          bad: "Адреса није исправна", back: "Назад на микрофон" },
 };
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -100,11 +104,14 @@ function confirmMail(w, link) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fff;border-top:4px solid #111;border-radius:14px">
 <tr><td style="padding:24px 24px 22px;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55;color:#111">
 <div style="font-family:Georgia,serif;font-size:19px;font-weight:bold"><span style="color:#1f5fa8">${w === WORDS.cir ? "За" : "Za"}</span> ${w === WORDS.cir ? "или" : "ili"} <span style="color:#c2410c">${w === WORDS.cir ? "Против" : "Protiv"}</span></div>
-<p style="margin:16px 0">${esc(w.ask)}</p>
-<a href="${esc(link)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:bold;padding:11px 18px;border-radius:999px">${esc(w.button)}</a>
-<p style="margin:16px 0 0;font-size:13px;color:#5b616b">${esc(w.not)} <a href="${PRIVACY}" style="color:#5b616b">${esc(w.privacy)}</a></p>
+<h1 style="margin:18px 0 6px;font-family:Georgia,serif;font-size:26px;line-height:1.2">${esc(w.head)}</h1>
+<p style="margin:0 0 16px;font-size:17px">${esc(w.lead)}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" bgcolor="#1f5fa8" style="border-radius:10px">
+<a href="${esc(link)}" style="display:block;background:#1f5fa8;color:#fff;text-decoration:none;font-size:20px;font-weight:bold;padding:17px 18px;border-radius:10px">${esc(w.button)}</a></td></tr></table>
+<p style="margin:14px 0 0;font-size:14px;color:#333"><b>${esc(w.reply.split(".")[0])}.</b>${esc(w.reply.slice(w.reply.indexOf(".") + 1))} <a href="${esc(link)}" style="color:#1f5fa8;word-break:break-all">${esc(link)}</a></p>
+<p style="margin:16px 0 0;font-size:13px;color:#5b616b">${esc(w.ask)} ${esc(w.not)} <a href="${PRIVACY}" style="color:#5b616b">${esc(w.privacy)}</a></p>
 </td></tr></table></td></tr></table></body></html>`;
-  const text = `${w.ask}\n\n${w.button}: ${link}\n\n${w.not}\n${w.privacy}: ${PRIVACY}\n`;
+  const text = `${w.head}: ${w.lead}\n\n${w.button}: ${link}\n\n${w.reply.split(".")[0]}.\n\n${w.ask} ${w.not}\n${w.privacy}: ${PRIVACY}\n`;
   return { html, text };
 }
 
