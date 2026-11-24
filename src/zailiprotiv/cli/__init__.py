@@ -15,7 +15,7 @@ from zailiprotiv.cli.assembly import (
     offices_cmd, photos_cmd, poslovnik_cmd, votes,
 )
 from zailiprotiv.cli.recordings import (
-    arhiva_cmd, glas_dan_cmd, govor_cmd, prepis_cmd, uzivo_pull, videos_cmd,
+    arhiva_cmd, glas_dan_cmd, govor_cmd, prepis_cmd, tacnost_cmd, uzivo_pull, videos_cmd,
 )
 from zailiprotiv.cli.writing import (
     debates_batch, debates_export, debates_import, export, import_summaries, profiles_batch, profiles_export,
@@ -175,6 +175,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--note", default="", help="added to the day's note (how each file's start was found, when by hand)")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(run=govor_cmd)
+    p = commands.add_parser("tacnost", help="how right the live record of who spoke when is, against the notes' speeches")
+    p.add_argument("day", nargs="?", default="", help="one sitting day, YYYY-MM-DD; every day with notes when left out")
+    p.add_argument("--zapis", default="", help="a record to score in place of the day's live one (the site's shape or the service's file)")
+    p.set_defaults(run=tacnost_cmd)
     p = commands.add_parser("glas-dan", help="a day with no notes yet, from captions and voices → data/<N>/snimak/")
     p.add_argument("day")
     p.add_argument("stretches", help="the stretches named by voice (ko.py, in the analysis image)")

@@ -54,7 +54,7 @@ name. Every page is also in Cyrillic, under `cir/`.
   time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a
   link to share it and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`).
   With the model's summary of the day from the live page ("Sažetak dana", labelled). A day whose broadcast shows no speaker's caption is read from what was said: the notes lined up with the
-  recording written down word by word (`zailiprotiv govor <day> <folder>`, the words from `live/uzivo/zvuk_dana.py`).
+  recording written down word by word (`zailiprotiv govor <day> <folder>`, the words from `live/uzivo/zvuk_dana.py`). How right the live record of who spoke when was on such a day: `zailiprotiv tacnost [day]`.
 - **Glasaj i ti:** the visitor's ballot ("Moj listić", kept in the browser) beside the Assembly's results and the
   MPs and groups that voted the same; a quiz on the laws that divided the chamber and one per area; the newest bills
   to vote on before the Assembly does.

@@ -165,6 +165,22 @@ def govor_cmd(args) -> int:
     return 0
 
 
+def tacnost_cmd(args) -> int:
+    """How right the live page's record of who spoke when is (tacnost.py): each day that has the notes' speeches placed
+    in its recording (snimak/<day>.json, "izvor": "govor") against the live record of that day, or against args.zapis
+    (a record made by a rule being tried). Prints the score; changes nothing."""
+    from zailiprotiv import tacnost
+    conv_dir = common.ROOT / common.CONVOCATION
+    days = [args.day] if args.day else sorted(f.stem for f in (conv_dir / "snimak").glob("*.json"))
+    seen = 0
+    for d in days:
+        s = tacnost.day(conv_dir, d, Path(args.zapis) if args.zapis else None)
+        if s or args.day:
+            print(tacnost.told(d, s))
+            seen += bool(s)
+    return 0 if seen else 1
+
+
 def glas_dan_cmd(args) -> int:
     """A sitting day with no notes yet, from captions and voices (govor.voice_day; 20 Nov 2026): the live record's
     turns the caption gave, and where there were none, the stretches ko.py named by voice (args.stretches, written
