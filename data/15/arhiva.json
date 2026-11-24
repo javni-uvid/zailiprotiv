@@ -67,8 +67,14 @@
   "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4": {
-  "pokusaja": 1,
-  "kadrova": 0,
-  "provereno": "2026-11-24T12:48:38+00:00"
+  "pokusaja": 2,
+  "kadrova": 3,
+  "provereno": "2026-11-24T13:48:57+00:00"
+ },
+ "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410a.mp4": {
+  "od": 1795522712,
+  "trajanje": 3149,
+  "kadrova": 10,
+  "slaze_se": 10
  }
 }

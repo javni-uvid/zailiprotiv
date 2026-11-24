@@ -55,6 +55,152 @@
    "govornici": [],
    "t_od": 1795510829,
    "t_do": 1795511250
+  },
+  {
+   "od": "11:23",
+   "do": "14:10",
+   "ukratko": "Skupština je nastavila sednicu i prešla na petu tačku dnevnog reda, izbor članova i zamenika članova odbora. Poslanici su u jedinstvenom pretresu, uz brojne povrede poslovnika i replike, raspravljali o sastavu odbora i o zastupljenosti poslaničkih grupa. Predsedavajući je izrekao opomene i u 14:10 proglasio pauzu do 15:10.",
+   "tok": [
+    {
+     "vreme": "11:23",
+     "sta": "Nastavak rada; prelazak na pretres o petoj tački dnevnog reda, izbor članova radnih tela.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:24",
+     "sta": "Povreda poslovnika (član 107) u vezi sa izjavama o studentima i kragujevačkim žrtvama; traženo izvinjenje predsedniku Skupštine.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:26",
+     "sta": "Predsedavajući pita da li poslanici žele da se izjasne o povredi poslovnika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:31",
+     "sta": "Predsedavajući navodi da je primljen predlog odluke o izboru članova i zamenika članova odbora i otvara jedinstveni pretres (član 192).",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:59",
+     "sta": "Predsedavajući saopštava da su obe poslaničke grupe podnele prijave za reč u pisanom obliku i daje reč poslanici Sari Valentik.",
+     "glasanje": null
+    },
+    {
+     "vreme": "12:07",
+     "sta": "Predlog da se poslaničkoj grupi oduzmu dva minuta zbog zloupotrebe povrede poslovnika; predsedavajući to nije prihvatio.",
+     "glasanje": null
+    },
+    {
+     "vreme": "12:10",
+     "sta": "Predsedavajući izriče opomenu poslaniku koji je uporno govorio bez date reči.",
+     "glasanje": null
+    },
+    {
+     "vreme": "12:12",
+     "sta": "Predsedavajući upozorava poslanika na govor bez date reči.",
+     "glasanje": null
+    },
+    {
+     "vreme": "12:50",
+     "sta": "Predsedavajući navodi da će dozvoliti još jedan krug replika i da se tu prekida rasprava o replikama.",
+     "glasanje": null
+    },
+    {
+     "vreme": "13:24",
+     "sta": "Predsedavajući izriče opomenu poslanici koja se obratila lično drugoj poslanici.",
+     "glasanje": null
+    },
+    {
+     "vreme": "14:03",
+     "sta": "Predsedavajući pita da li Skupština želi da se izjasni o prijavi povrede poslovnika zbog jednog izlaganja.",
+     "glasanje": null
+    },
+    {
+     "vreme": "14:10",
+     "sta": "Predsedavajući proglašava pauzu do 15 sati i 10 minuta.",
+     "glasanje": null
+    }
+   ],
+   "govornici": [
+    {
+     "ime": "Brnabić Ana",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorila je o kragujevačkim žrtvama kao simbolu stradanja i tražila od predsednika Skupštine izvinjenje; kasnije se javljala na povrede poslovnika i replike."
+    },
+    {
+     "ime": "Radeta Vjerica",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorila je o pauzi, prisustvu studenata u Skupštini i o ponašanju predsedavajućeg; tražila je da se pitanja odbora razmatraju po poslovniku."
+    },
+    {
+     "ime": "Đukanović Vladimir",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Tvrdio je da je predsedavajući obmanuo javnost o pozivu studenata i tražio dokaze; kasnije je govorio o vođenju sednice i izricanju opomena."
+    },
+    {
+     "ime": "Vučić Aleksandar",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o odborima i zastupljenosti opozicije, citirao međunarodne dokumente, o bezbednosti građana i o sporu oko projekta pruge; više puta je koristio replike."
+    },
+    {
+     "ime": "Jovanov Milenko",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Ukazivao je na povrede poslovnika i Ustava u govorima poslanika većine, i na to kako je predsedavajući vodio sednicu."
+    },
+    {
+     "ime": "Vujadinović Milimir",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o istorijskim temama, o odnosu prema Srpskoj pravoslavnoj crkvi i o pozivu na razum u političkom radu."
+    },
+    {
+     "ime": "Đajić Zoran",
+     "lista": "nije navedeno u prepisu",
+     "o_cemu": "Nabrajao je nadležnosti pojedinih odbora i tvrdio da u prethodnim sazivima nisu vršili svoju kontrolnu funkciju; izneo je niz optužbi prema vlasti."
+    },
+    {
+     "ime": "Fric Sanja",
+     "lista": "Studentska lista",
+     "o_cemu": "Govorila je o svom učešću u revizionoj komisiji za projekat pruge Novi Sad - Subotica i o nadležnostima predsednika Srbije u tom projektu."
+    },
+    {
+     "ime": "Krizmanić Imre",
+     "lista": "Studentska lista",
+     "o_cemu": "Odgovarao je na tvrdnje o svom radu u vezi sa projektom Rio Tinta i naveo da je istraživanje platio Rio Tinto po cenovniku."
+    },
+    {
+     "ime": "Nedeljković Marina",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Objasnila je da Srpska radikalna stranka neće učestvovati u radu odbora, navodeći svoje iskustvo u skupštinama i na fakultetu."
+    },
+    {
+     "ime": "Šćepanović Katarina",
+     "lista": "Studentska lista",
+     "o_cemu": "Govorila je o dobacivanjima prema studentima, o slučaju deteta u školi na Voždovcu i o stanju u školama i institucijama."
+    },
+    {
+     "ime": "Kuburović Nina",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorila je o odanosti i poslušnosti u politici, o odboru za poljoprivredu i o subvencijama poslaniku Kokanoviću."
+    },
+    {
+     "ime": "Lesjak Marija",
+     "lista": "Studentska lista",
+     "o_cemu": "Govorila je o ulozi skupštinskih odbora u kontroli vlasti, o radu odbora za zdravlje i zaštitu životne sredine i o izborima u Novom Sadu."
+    },
+    {
+     "ime": "Vučinić Dina",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Odgovarala je na izlaganje poslanice Lesjak o izborima za mesne zajednice i o finansiranju projekata i udruženja."
+    },
+    {
+     "ime": "Krkobabić Stefan",
+     "lista": "Aleksandar Vučić - Srbija pobeđuje",
+     "o_cemu": "Govorio je o potrebi dijaloga i reprezentativnosti poslaničke grupe u odborima i pozvao na nove konsultacije i ponovno razmatranje predloga."
+    }
+   ],
+   "t_od": 1795511250,
+   "t_do": 1795525858
   }
  ],
  "greske": 0,
