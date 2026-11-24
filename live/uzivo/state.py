@@ -47,6 +47,7 @@ class Tracker(Said, Chronicle, View):
         self.tz = ZoneInfo(tz or config.TZ)
         self.status = NO_STREAM
         self.last_frame = 0.0
+        self.frame_before = 0.0
         self.turns: list[dict] = []  # oldest first; the last may be open
         self.cover: list[list[float]] = []  # [from, to]: frames kept coming
         self.day = ""
@@ -204,6 +205,7 @@ class Tracker(Said, Chronicle, View):
         except (OSError, ValueError):
             return
         last = float(kept.get("last_frame") or 0)
+        self.frame_before = last  # the last frame the run before read today: when the broadcast ended, if it has (sudija)
         if kept.get("status") not in (SPEAKING, UNKNOWN) or not 0 <= now - last <= config.RESUME_SECONDS:
             return
         self.status, self.last_frame, self._resumed = kept["status"], last, now
