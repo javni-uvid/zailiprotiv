@@ -80,6 +80,15 @@ as the change. The principles and the rules of work are in AGENTS.md.
   hand (`data/obavestenja.json`) still stands for it. `next_start` takes it beside a sitting convened, the nearest still to
   come first. **Not from the Assembly's calendar**: its page gives the entries of one chosen day only (today's), the
   rest by a script, and the calendar in the margin of every page the same; the sitting's page is read every hour anyway.
+- **The Rules end with their last block** (25 Nov 2026, found by the worker on the Rules' page). The reading took
+  every paragraph of the page after the first chapter began, so the margin's calendar and news and the foot of the page were
+  kept as paragraphs of article 298, from the first version on; the margin changed, and 24 and 25 Nov each got a "version".
+  `poslovnik._Parser` takes only what stands inside a `<div class="block">`: on the page of 25 Nov nothing of the Rules is
+  outside one and nothing else inside, and read so it is the version of 20 Nov in 297 articles and all the chapters,
+  298 being its one paragraph. The two files are removed (compared field by field, nothing but 298's tail differed),
+  that tail is off 20 Nov's, and its fingerprint is counted again. No retelling had been hidden: no term rests on 298.
+  But article 298 is among those invoked, so from 20 to 25 Nov `poslovnik-clanovi#clan-298` showed the margin as the
+  Rules' text. A term resting on it would have lost its retelling at the first news item.
 
 ## Laws
 

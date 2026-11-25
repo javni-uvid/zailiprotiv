@@ -3,7 +3,8 @@
 from them and checks the order of a sitting's steps against them; amendments are followed).
 
 The source is the Assembly's own consolidated text (пречишћени текст), the page "Цео Пословник" (PAGE): each chapter
-a `<div class="block">` with its `<h3>` ("II. КОНСТИТУИСАЊЕ НАРОДНЕ СКУПШТИНЕ"), sections as `<p class="preamble">`,
+a `<div class="block">` with its `<h3>` ("II. КОНСТИТУИСАЊЕ НАРОДНЕ СКУПШТИНЕ"), sections as `<p class="preamble">`
+in blocks of their own; nothing of the Rules stands outside a block, and nothing else of the page in one,
 each article "Члан N." in bold, its paragraphs (ставови) the `<p>`s after it. The chapters' own pages are linked
 from the site's menu (`/…/пословник-(пречишћени-текст)/<title>.<id>.html`), so an article leads to its chapter there.
 
@@ -40,18 +41,21 @@ _TO_CYRILLIC = str.maketrans({"a": "а", "e": "е", "o": "о", "c": "с", "p": "
 
 
 class _Parser(HTMLParser):
-    """Collects, in order: chapters (h3), sections (p.preamble), article heads (a bold "Члан N.") and paragraphs."""
+    """Collects, in order: chapters (h3), sections (p.preamble), article heads (a bold "Члан N.") and paragraphs, only
+    inside a `<div class="block">` (25 Nov 2026: after the last one come the margin's calendar and news and the foot,
+    which had been taken as paragraphs of article 298)."""
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.items: list[tuple[str, str]] = []
-        self._tag, self._buf, self._started = None, [], False
+        self._tag, self._buf = None, []
+        self._divs: list[bool] = []  # the open divs, whether each is a block
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
-        if tag == "div" and a.get("class") == "block":
-            self._started = True
-        if not self._started:
+        if tag == "div":
+            self._divs.append(a.get("class") == "block")
+        if not any(self._divs):
             return
         if tag == "h3":
             self._tag, self._buf = "h3", []
@@ -65,6 +69,11 @@ class _Parser(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "br" and self._tag:
             self._buf.append("\n")
+            return
+        if tag == "div" and self._divs:
+            self._divs.pop()
+            if not any(self._divs):
+                self._tag = None  # a paragraph left open ends with its block
             return
         if self._tag and ((tag == "h3" and self._tag == "h3") or (tag == "p" and self._tag in ("p", "preamble"))):
             # A paragraph is usually one <p>; one article (261) is a single <p> of lines broken by <br/>, its head
