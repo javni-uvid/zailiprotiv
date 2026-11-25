@@ -449,17 +449,49 @@ def offices_cmd(args) -> int:
     def read_parts(bodies):
         return [(t, url, offices.members(get(url))) for t, url in bodies]  # named as the list names it
 
-    for conv, pages in offices.ARCHIVE.items():  # an earlier convocation's: its archive doesn't change
-        path = common.ROOT / conv / "offices.json"
-        if path.exists() or not path.parent.exists():  # a convocation the site doesn't cover isn't asked for
-            continue
-        bodies = {k: offices.parts(get(u), u) for k, u in pages.items()}
-        found = offices.offices_of(speaker=None, vice=[], chairs=[], committees=read_parts(bodies["committees"]),
-                                   delegations=read_parts(bodies["delegations"]), sources={})
-        if found:
-            path.write_text(offices.dumps(now.isoformat(), [{**o, "since": ""} for o in found], now.isoformat()),
-                            encoding="utf-8")
-        print(f"offices: {len(found)} in convocation {conv}'s archive")
+    def read_lists(lists):
+        """Each list's bodies, and every body listed with the number of members the list gives (0: none given)."""
+        bodies, said = {}, {}
+        for k, u in lists.items():
+            page = get(u)
+            bodies[k], many = offices.parts(page, u), offices.numbers(page, u)
+            said.update({url: many.get(url, 0) for _, url in bodies[k]})
+        return bodies, said
+
+    def fewer(parts, said):
+        """The bodies whose pages gave fewer members than listed, with how many; each difference said in the log."""
+        out = {}
+        for rows in parts.values():
+            for t, url, got in rows:
+                n = sum(m["role"] != "заменик члана" for m in got)  # the committees' lists count no deputies
+                if n != said[url]:
+                    print(f"  {t}: {n} read, {said[url]} listed ({url})")
+                if n < said[url]:
+                    out[url] = said[url] - n
+        return out
+
+    # An earlier convocation's archive doesn't change: read once, one a run. Its file has "listed" since 25 Nov 2026;
+    # one without was read by the reader that passed over some rows. Rows are only added: were one to be lost, the
+    # file keeps its own, says which, and no other archive is read until that is looked at.
+    files = {c: common.ROOT / c / "offices.json" for c in offices.ARCHIVE if (common.ROOT / c).exists()}
+    archives = {c: jsonfile.load(p, {"offices": []}) for c, p in files.items()}
+    todo = [] if any(a.get("lost") for a in archives.values()) else [c for c, a in archives.items() if "listed" not in a]
+    for conv in todo[:1]:
+        bodies, said = read_lists(offices.ARCHIVE[conv])
+        parts = {k: read_parts(bodies[k]) for k in bodies}
+        missed = fewer(parts, said)
+        found = [{**o, "since": ""} for o in offices.offices_of(speaker=None, vice=[], chairs=[], committees=parts["committees"],
+                                                                delegations=parts["delegations"], sources={})]
+        before = [o for o in archives[conv]["offices"] if not o.get("dated")]
+        added, lost = offices.compare(before, found)
+        if found or before:
+            rows = [o for o in archives[conv]["offices"] if o.get("dated")] + (before if lost else found)
+            files[conv].write_text(offices.dumps(now.isoformat(), rows, now.isoformat(), said, missed, lost), encoding="utf-8")
+        print(f"offices: convocation {conv}'s archive: {len(before)} kept before, {len(found)} read, {len(added)} added, {len(lost)} lost")
+        for o in added:
+            print(f"  added: {o['body']}: {o['name']}, {o['role']}")
+        for o in lost:
+            print(f"::warning::offices: would be lost in convocation {conv}: {o['body']}: {o['name']}, {o['role']}. The file keeps its rows.")
     # The Speakers and deputies of every convocation, with their days (one page; 23 Nov 2026): an earlier one's are
     # added to its file, the newest's get the day they took office.
     past = offices.history(get(offices.HISTORY))
@@ -469,7 +501,8 @@ def offices_cmd(args) -> int:
             kept = json.loads(path.read_text(encoding="utf-8"))
             rows = offices.with_history([o for o in kept["offices"] if not o.get("dated")], past, conv)
             if rows != kept["offices"]:
-                path.write_text(offices.dumps(kept["fetched"], rows, kept["parts_read"]), encoding="utf-8")
+                path.write_text(offices.dumps(kept["fetched"], rows, kept["parts_read"], kept.get("listed"),
+                                              kept.get("unread"), kept.get("lost")), encoding="utf-8")
 
     conv = NEWEST
     path = common.ROOT / conv / "offices.json"
@@ -477,26 +510,14 @@ def offices_cmd(args) -> int:
     sources = {"speaker": offices.SPEAKER, "vice": offices.VICE, "group": offices.GROUP_CHAIRS}
     speaker = offices.person(get(offices.SPEAKER))
     vice, chairs = offices.blocks(get(offices.VICE)), offices.blocks(get(offices.GROUP_CHAIRS))
-    lists = {k: (u, get(u)) for k, u in (("committee", offices.COMMITTEES), ("delegation", offices.DELEGATIONS))}
-    bodies = {k: offices.parts(page, u) for k, (u, page) in lists.items()}
-    said = {}  # every body listed, with the number of members the list gives (0: none given)
-    for k, (u, page) in lists.items():
-        many = offices.numbers(page, u)
-        said.update({url: many.get(url, 0) for _, url in bodies[k]})
+    bodies, said = read_lists({"committee": offices.COMMITTEES, "delegation": offices.DELEGATIONS})
     last = dt.datetime.fromisoformat(old["parts_read"]) if old.get("parts_read") else None
     missed = old.get("unread", {})
     again = (fresh or last is None or said != old.get("listed")
              or (now - last).total_seconds() > (offices.DAY if missed else offices.WEEK))
     if again:
         parts = {k: read_parts(bodies[k]) for k in bodies}
-        missed = {}
-        for k in parts:
-            for t, url, got in parts[k]:
-                n = sum(m["role"] != "заменик члана" for m in got)  # the committees' lists count no deputies
-                if n != said[url]:
-                    print(f"  {t}: {n} read, {said[url]} listed ({url})")
-                if n < said[url]:
-                    missed[url] = said[url] - n
+        missed = fewer(parts, said)
         parts = {k: offices.keep_unread(old["offices"], said, parts[k], k) for k in parts}
         read_at = now.isoformat()
     else:  # the committees and delegations as last read

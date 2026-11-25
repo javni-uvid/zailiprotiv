@@ -268,3 +268,57 @@ def test_what_was_listed_stands_on_lines_of_its_own():
     text = offices.dumps("f", [{"name": "А"}], "r", {"u": 10}, {"u": 10})
     assert json.loads(text) == {"fetched": "f", "parts_read": "r", "listed": {"u": 10}, "unread": {"u": 10}, "offices": [{"name": "А"}]}
     assert [line for line in text.splitlines() if "fetched" in line] == ['{"fetched": "f",']
+
+
+def _archive_run(tmp_path, monkeypatch, capsys, kept: dict[str, list[dict]]):
+    """`offices` with archives whose lists name one committee each, with the Fifteenth's page; what it printed."""
+    from zailiprotiv.config import NEWEST
+    for c, rows in kept.items():
+        (tmp_path / c).mkdir(exist_ok=True)
+        if not (tmp_path / c / "offices.json").exists():
+            (tmp_path / c / "offices.json").write_text(offices.dumps("f", rows, "r"), encoding="utf-8")
+    (tmp_path / NEWEST).mkdir(exist_ok=True)
+    asked = []
+
+    def fetch(url):
+        asked.append(url)
+        for c, pages in offices.ARCHIVE.items():
+            if url == pages["committees"]:
+                number = url.split(".")[-2]
+                return WRAP.format(f'<table><tr><td><a href="/a.7.{number}.html">Одбор</a></td>'
+                                   '<td class="members_number"><b>10</b></td></tr></table>').encode()
+        return (COMMITTEE15 if "/a.7." in url else "").encode()
+    monkeypatch.setattr(common, "ROOT", tmp_path)
+    monkeypatch.setattr(assembly.skupstina, "fetch", fetch)
+    monkeypatch.setattr(assembly, "_government", lambda get: None)
+    capsys.readouterr()
+    assert assembly.offices_cmd(SimpleNamespace(unread=False)) == 0
+    return capsys.readouterr().out, sum("/a.7." in u for u in asked)
+
+
+def test_an_archive_is_read_again_once_one_a_run_and_only_gains(tmp_path, monkeypatch, capsys):
+    def rows(c):
+        url = f"https://www.parlament.gov.rs/a.7.{offices.ARCHIVE[c]['committees'].split('.')[-2]}.html"
+        return [{"name": m["name"], "kind": "committee", "role": m["role"], "body": "Одбор", "group": m["group"],
+                 "source": url, "since": ""} for m in offices.committee(COMMITTEE15)]
+    speaker = {"name": "Ана Брнабић", "kind": "speaker", "role": "Председник Народне скупштине", "body": "Народна скупштина",
+               "source": "x", "since": "2024-03-20", "until": "", "dated": True}
+    kept = {"13": rows("13")[:-2], "14": [speaker] + rows("14")}
+    out, n = _archive_run(tmp_path, monkeypatch, capsys, kept)
+    assert "convocation 13's archive: 18 kept before, 20 read, 2 added, 0 lost" in out and n == 1
+    assert "added: Одбор: СИБИНОВИЋ МИКИЦА, члан" in out
+    out, n = _archive_run(tmp_path, monkeypatch, capsys, kept)
+    assert "convocation 14's archive: 20 kept before, 20 read, 0 added, 0 lost" in out and n == 1
+    got = json.loads((tmp_path / "14" / "offices.json").read_text(encoding="utf-8"))
+    assert got["offices"] == [speaker] + rows("14") and got["unread"] == {} and list(got["listed"].values()) == [10]
+    assert _archive_run(tmp_path, monkeypatch, capsys, kept)[1] == 0
+
+
+def test_an_archive_that_would_lose_a_row_keeps_its_own_and_stops_the_rest(tmp_path, monkeypatch, capsys):
+    mine = [{"name": "АНТИЋ ЗОРАН", "kind": "committee", "role": "члан", "body": "Одбор", "source": "x", "since": ""}]
+    out, n = _archive_run(tmp_path, monkeypatch, capsys, {"13": mine, "14": mine})
+    assert "::warning::offices: would be lost in convocation 13: Одбор: АНТИЋ ЗОРАН, члан" in out and n == 1
+    got = json.loads((tmp_path / "13" / "offices.json").read_text(encoding="utf-8"))
+    assert got["offices"] == mine and got["lost"] == mine
+    assert _archive_run(tmp_path, monkeypatch, capsys, {"13": mine, "14": mine})[1] == 0
+    assert "listed" not in json.loads((tmp_path / "14" / "offices.json").read_text(encoding="utf-8"))

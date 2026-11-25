@@ -25,6 +25,7 @@ import html as htmllib
 import json
 import re
 import urllib.parse
+from collections import Counter
 
 from zailiprotiv.config import BASE
 
@@ -254,11 +255,28 @@ def keep_since(old: list[dict], found: list[dict], today: str) -> list[dict]:
     return [{**o, "since": had.get(k(o), today)} for o in found]
 
 
+def compare(old: list[dict], found: list[dict]) -> tuple[list[dict], list[dict]]:
+    """The rows of `found` that `old` hasn't and the rows of `old` that `found` hasn't; a row that stands twice counts
+    twice."""
+    def left(a, b):
+        have = Counter((o["name"], o["kind"], o["role"], o["body"], o.get("group"), o["source"]) for o in b)
+        out = []
+        for o in a:
+            k = (o["name"], o["kind"], o["role"], o["body"], o.get("group"), o["source"])
+            if have[k]:
+                have[k] -= 1
+            else:
+                out.append(o)
+        return out
+    return left(found, old), left(old, found)
+
+
 def dumps(fetched: str, offices: list[dict], read_parts: str, listed: dict[str, int] | None = None,
-          unread: dict[str, int] | None = None) -> str:
+          unread: dict[str, int] | None = None, lost: list[dict] | None = None) -> str:
     """data/<N>/offices.json: one office to a line, so a change shows as a small diff. `listed`: the bodies as listed
-    when their pages were last read, with the numbers of members (None: an archive's, read once); `unread`: those of
-    them whose page gave fewer, with how many are missing. They stand on lines of their own: the workflow's commit passes over a change of
+    when their pages were last read, with the numbers of members (None: an archive's as read before 25 Nov 2026); `unread`: those of
+    them whose page gave fewer, with how many are missing; `lost`: an
+    archive's rows a later reading did not find, which the file keeps. They stand on lines of their own: the workflow's commit passes over a change of
     "fetched" alone, and a reading that is not kept would be made again every hour."""
     rows = ",\n".join(json.dumps(o, ensure_ascii=False, sort_keys=True) for o in offices)
     if listed is None:
@@ -267,8 +285,9 @@ def dumps(fetched: str, offices: list[dict], read_parts: str, listed: dict[str, 
 
     def one(d):
         return json.dumps(d, ensure_ascii=False, sort_keys=True)
+    gone = f'"lost": {one(lost)},\n' if lost else ""
     return (f'{{"fetched": {json.dumps(fetched)},\n"parts_read": {json.dumps(read_parts)},\n"listed": {one(listed)},\n'
-            f'"unread": {one(unread or {})},\n"offices": [\n{rows}\n]}}\n')
+            f'"unread": {one(unread or {})},\n{gone}"offices": [\n{rows}\n]}}\n')
 
 
 def dumps_news(fetched: str, items: list[dict]) -> str:
