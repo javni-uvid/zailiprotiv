@@ -116,7 +116,6 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .add-home { order: 6; }
 .tot-more[open] > summary::after, .dl-more[open] > summary::after, details.how[open] > summary::after, .agenda[open] > summary::after, .turns-more[open] > summary::after,
 .nx-ag[open] > summary::after, .parts-more[open] > summary::after { transform: rotate(-135deg); margin-bottom: -.25rem; }
 .parts-more { border-top: 1px solid var(--line); margin-top: .4rem; }
-.dl-foot { margin: .5rem 0 0; font-size: var(--t-2); } .dl-foot a { color: inherit; }
 /* Where something is from: a small label beside the heading; a tap opens the whole sentence under it. */
 .sec-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .6rem; }
 .sec-h h2 { margin-bottom: 0; }
@@ -353,6 +352,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
 .pills .add-home { display: contents; } .pills .add-home[hidden] { display: none; } .pills .add-home p { width: 100%; }
 .pill-b { font: 600 var(--t-2)/1.2 system-ui, sans-serif; display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; padding: .5rem .95rem; border: 1px solid var(--line); border-radius: 99px; background: var(--bg); color: var(--fg); cursor: pointer; }
 .pill-b:hover { border-color: var(--fg); } .pill-b:focus-visible { outline: 3px solid var(--za); outline-offset: 2px; } .pill-b[hidden] { display: none; }
+.listen-live > span { text-align: left; } .pill-b small { display: block; font-weight: 400; font-size: var(--t-1); color: var(--muted); }
 .pill-b svg { width: 1.15rem; height: auto; } .pill-b svg path { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; } .pill-m svg { width: 1.3rem; } .ah-row { display: contents; }
 .nt-off { min-height: 2.75rem; }
 /* The day's summary by mail: a slim row with the form folded in it and a cross (24 Nov 2026). */
@@ -369,9 +369,8 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-x { order: 7; } .ml[open] + .ml
 .q { background: color-mix(in srgb, var(--fg) 4%, transparent); border-radius: 10px; padding: .5rem .7rem; margin: .4rem 0 0; } .q.q-c { background: none; border: 1px solid var(--line); }
 .q .qw { margin: 0; font-size: var(--t-1); display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; } .q .qw span { color: var(--muted); } .q .qp { margin-left: auto; } .q .qt { margin: .15rem 0 0; font-family: var(--serif); line-height: 1.45; }
 .qd { flex: none; width: .65rem; height: .65rem; border-radius: 3px; display: inline-block; } .qd.q-ch { background: var(--muted); border-radius: 50%; } .qd.l1 { background: var(--muted); } .qd.c-av { background: var(--c-av); } .qd.c-sl { background: var(--c-sl); } .qd.c-mn { background: var(--c-mn); }
-/* The Rules, beside a step and at the foot of the card. */
+/* The Rules, beside a step. */
 .rk-l { display: inline-flex; align-items: center; gap: .3rem; font: 600 var(--t-1)/1.2 system-ui, sans-serif; border: 1px solid var(--line); border-radius: 7px; padding: .22rem .5rem; text-decoration: none; vertical-align: middle; } .rk-l svg { width: .95rem; height: .95rem; } .rk-l svg path { fill: none; stroke: currentColor; stroke-width: 1.8; }
-.rk-f { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: .7rem; margin-top: .9rem; } .rk-f .rk-l { padding: .45rem .7rem; }
 /* The day's turns by the hour, the portrait, the topic, the moment as a button (24 Nov 2026). */
 .turns li.th { display: flex; align-items: center; gap: .6rem; padding: 1rem 0 .2rem; border: 0; font: 700 var(--t-1)/1 system-ui, sans-serif; color: var(--muted); } .turns li.th::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
 .turns li[id] { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0 .75rem; align-items: start; padding: .7rem 0; scroll-margin-top: 45vh; }
