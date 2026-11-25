@@ -306,3 +306,5 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   letters under "Slušaj". The line of the Rules at the foot of the steps and the link to the Assembly's record are gone (of
   the Rules' mark of 24 Nov that beside a step stays): the Rules stay at the page's foot, the Assembly's page of the sitting
   under the agenda.
+  **The Rules' mark at the foot of the steps is back, without the words** (the same day, the maintainer: "Želim da poslovnik ostane u
+  sta se desilo danas kao kartica ta trenutno gde ljudi mogu kliknuti"; #245 had taken it off with them).

@@ -443,6 +443,9 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         if decisions:
             full = full.rstrip(".") + ". " + escape(_fill(_t("sum_note", cyr), _model(summary)))
         chip = _chip(t("dl_src"), full)
+        if site:
+            body += (f'<p class="dl-foot rk-f"><a class="rk-l" href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">'
+                     f'{BOOK}{t("rules_word")}</a></p>')
     # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
     head = t("steps")
     if snap.get("ranije") and snap.get("dan"):
