@@ -205,3 +205,7 @@ presided (not done).
   the one chosen on this replay (0.4 to 0.6 and no bar: the same to a point of a percent). Not scored: 24 and 25 Nov (no notes
   yet), and Whisper's words are those written afterwards from the recording, some better than the live ones. Tried
   without (3): 17 Nov 35.3%; with a voice judging its own turn: 19 Nov 88.0%.
+- **A caption with a surname unread is the sitting MP's** (25 Nov 2026; `Roster._shorter`). "Biljana Pantić" was Biljana
+  Pantić Pilja: whole for a former MP of those two words, which took some 80 s of hers on 18 Nov (the list was not yet the
+  service's then). Words that are the name of one sitting MP but for one word are that MP's, before any former MP is looked
+  for; two such MPs, nobody's of them. Not scored by the replay, whose captions are as they were read.

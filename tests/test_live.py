@@ -2749,6 +2749,21 @@ def test_the_days_own_voice_is_learnt_from_the_chairs_words(tmp_path, monkeypatc
     assert L3.today == {}
 
 
+def test_a_name_with_a_surname_unread_is_the_sitting_mps_not_a_former_ones():
+    """18 Nov 2026: "Biljana Pantić" was Biljana Pantić Pilja; a former MP of those two words took the turn."""
+    from uzivo.names import Person, Roster, person_key
+    people = [Person(person_key(n), n, s, "Lista") for n, s in (
+        ("Pantić Pilja Biljana", "pantic-pilja-biljana"), ("Pantić Biljana", "pantic-biljana"), ("Pantić Marić Biljana", "pantic-maric-biljana"))]
+    r = Roster(people)
+    r.current = frozenset({"pantic-pilja-biljana"})
+    assert r.match("Biljana Pantić", 0.8).slug == "pantic-pilja-biljana"
+    assert r.match("Biljana Pantić Pilja", 0.8).slug == "pantic-pilja-biljana"
+    r.current = frozenset({"pantic-pilja-biljana", "pantic-maric-biljana"})  # two sitting MPs: not either's
+    assert r.match("Biljana Pantić", 0.8).slug == "pantic-biljana"
+    r.current = frozenset({"pantic-biljana", "pantic-pilja-biljana"})  # sitting herself: whole words win
+    assert r.match("Biljana Pantić", 0.8).slug == "pantic-biljana"
+
+
 def test_listening_live_a_playlist_of_the_broadcasts_own_sound(tmp_path, monkeypatch):
     """22 Nov 2026, the maintainer's trial: each fetched segment's sound into a live HLS playlist of our own, copied
     as it is with its timestamps, the last WINDOW kept, a gap marked; a player reads it as one stream."""

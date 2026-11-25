@@ -109,10 +109,19 @@ class Roster:
             return None
         now = [p for p in self.people if p.slug in self.current] if self.current else []
         for pool in ([now] if now else []) + [self.people]:
-            hit = self._strict(got, pool, threshold)
+            hit = self._strict(got, pool, threshold) or (self._shorter(got, now, threshold) if now and pool is now else None)
             if hit:
                 return hit
         return self._nearest(got, now) if now else None
+
+    def _shorter(self, got: list[str], pool: list[Person], threshold: float) -> Person | None:
+        """The one sitting MP whose name is the words read and one more (25 Nov 2026: "Biljana Pantić" on 18 Nov was Biljana
+        Pantić Pilja, and a former MP of the two words took her 80 s); two such MPs: none."""
+        if len(got) < 2:
+            return None
+        hits = [p for p in pool if len(words(p.name)) == len(got) + 1
+                and all(x >= threshold for x in self._pair(got, words(p.name), lambda w, g: difflib.SequenceMatcher(None, w, g).ratio()))]
+        return hits[0] if len(hits) == 1 else None
 
     @staticmethod
     def _pair(want: list[str], got: list[str], one) -> list[float]:

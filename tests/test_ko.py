@@ -93,6 +93,19 @@ def test_a_captions_clock_set_beside_the_files_by_the_sound():
     assert ko.clock_shift(late[:3], [f]) == 0  # too few to say
 
 
+def test_a_captions_name_of_no_sitting_mp_is_the_near_sitting_ones():
+    from uzivo.names import Person, person_key
+    from zailiprotiv.cli.recordings import _sitting
+    people = [Person(person_key(n), n, s, g) for n, s, g in (
+        ("Šoškić Dejan", "soskic-dejan", "Studentska lista"), ("Pantić Pilja Biljana", "pantic-pilja-biljana", "Lista dva"))]
+    turn = lambda ime, adresa, uloga: {"ime": ime, "adresa": adresa, "uloga": uloga, "grupa": ""}
+    assert _sitting(turn("Stošić Dejan", "stosic-dejan", "Studentska lista"), people)["adresa"] == "soskic-dejan"
+    assert _sitting(turn("Pantić Biljana", "pantic-biljana", "Lista dva"), people)["adresa"] == "pantic-pilja-biljana"
+    assert _sitting(turn("Stošić Dejan", "stosic-dejan", "Lista dva"), people)["adresa"] == "stosic-dejan"  # another's list
+    assert _sitting(turn("Stošić Dejan", "stosic-dejan", "ministar finansija"), people)["adresa"] == "stosic-dejan"
+    assert _sitting(turn("Šoškić Dejan", "soskic-dejan", "Lista dva"), people)["adresa"] == "soskic-dejan"  # sitting: as read
+
+
 def test_the_days_samples_leave_out_the_ends_of_a_turn(tmp_path):
     t, f = sound((A, 10), (B, 60), (A, 10))
     np.savez(tmp_path / "zas1.glas.npz", t=t.astype(np.float32), feat=f)
