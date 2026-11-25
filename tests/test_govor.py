@@ -166,3 +166,19 @@ def test_a_speaker_seen_first_on_a_day_without_groups_has_the_lists_group(tmp_pa
     turns = json.loads((c / "snimak" / "2026-11-24.json").read_text(encoding="utf-8"))["govori"]
     assert [(t["ime"], t["grupa"], t["uloga"]) for t in turns] == [("Radeta Vjerica", "Lista A", ""),
                                                                   ("Bakić Jovo", "", "Lista s potpisa")]
+
+
+def test_a_file_the_archive_cut_inside_has_a_clock_for_each_stretch():
+    """24 Nov 2026: 12 minutes of the first file were published 70 minutes late, the break being cut out of it."""
+    f = {"url": "u", "od": 5000, "delovi": [{"sek": 0, "od": 1000}, {"sek": 100, "od": 5000}]}
+    assert [govor.start_at(f, s) for s in (0, 99.9, 100, 500)] == [1000, 1000, 5000, 5000]
+    assert govor.start_at({"url": "u", "od": 7}, 3) == 7
+    speech = lambda key, who, a, b: {"key": key, "speaker": who, "text": "x", "chair": False, "datoteka": "u",
+                                     "od": a, "do": b, "sidra": 3}
+    turns = govor.day([speech("1", "А", 10, 60), speech("2", "А", 110, 150), speech("3", "А", 200, 220)], [f],
+                      lambda s: {"ime": s, "adresa": "", "grupa": "", "uloga": ""})
+    # one speaker on both sides of the cut is two turns; each opens at its own second of the file
+    assert [(t["od"], t["do"], t["snimak"]) for t in turns] == [(1010, 1060, 5), (5110, 5220, 105)]
+    assert govor.stretches(f, 900) == [{"url": "u", "od": 1000, "trajanje": 100},
+                                       {"url": "u", "od": 5000, "trajanje": 900, "preskoceno": 100}]
+    assert govor.stretches({"url": "u", "od": 7}, 900) == [{"url": "u", "od": 7, "trajanje": 900}]

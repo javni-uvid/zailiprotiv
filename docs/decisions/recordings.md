@@ -274,3 +274,17 @@ records and recordings stays here:
   clearly nearer than any other; its test has this very name), gives the turn to him; that one turn changes. Not put into
   `data/mp_aliases.json`: the notes' page in Latin would then write "Petar Mitov" over the speech, and the notes stay as
   the Assembly wrote them. Until then the notes' own count of speeches (`debates.resolve`) gives that one speech to nobody.
+- **An archive file may be cut inside; its clock is then a stretch's** (25 Nov 2026, found by the live page's worker from YouTube's
+  uncut video). The first file of 24 Nov holds the sitting's beginning (from 10:00:39), and at second 735-736 jumps over the
+  break to 11:23: placed as one stretch that evening, its first 12 minutes were published 70 minutes late (Milenko Jovanov at
+  11:13:15 for 10:02:55) for some two hours. 32 speeches had agreed on one start, and the one that stood far from any of them
+  was not looked at. `delovi` in `arhiva.json` gives each stretch its start, `govor.start_at` reads it.
+  - **How a file is looked at for a cut:** its words against the service's own transcript of the day, in windows of five minutes:
+    one offset all along, or a jump. On 24 and 25 Nov (every file) one offset within 2 s (a last window 7 s), but for this jump.
+    On 19 Nov the service wrote almost nothing: the fourth file agrees within 32 s (late by that much), which leaves no
+    room for a longer cut in the two before it that it follows without a break; the first agrees with the record's turns
+    along its length (some 35 s); the second and the last have only the picture, hall in every frame of their silences.
+    18 Nov: the record's turns along each file, and in the first the clock in the picture. 17 Nov: no
+    transcript and one record's end; its silences over a minute are one, the anthem and the ceremony in every frame; a cut
+    inside speech is not ruled out by anything but the notes, whose speeches are all there in order.
+  - Placing by the median alone hides such a part: look at each speech that does not agree.

@@ -4,7 +4,7 @@
  "napomena": "Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa zvukom snimka dana u arhivi videonet.co.rs: snimak je automatski zapisan reč po reč (Whisper), a svaki govor iz beleški nađen u tom zapisu po nizovima od četiri reči koji se jednom javljaju i u beleškama i u zapisu, istim redom; govor traje od prve do poslednje svoje reči. Isto pravilo za svakog govornika; govor za koji nisu nađena bar dva takva niza nema mesto, osim sasvim kratkog (manje od osam reči, kao „Ne želim.“) između dva govora koji ga imaju: on stoji odmah posle prethodnog. Predsedavajući nije u spisku. 'datoteka' je snimak u arhivi, 'snimak' mesto u njemu u sekundama, pet sekundi pre prve reči. ",
  "pokriveno": [
   {
-   "od": 1795515195,
+   "od": 1795510975,
    "do": 1795544801
   }
  ],
@@ -14,8 +14,8 @@
    "adresa": "jovanov-milenko",
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
-   "od": 1795515195,
-   "do": 1795515256,
+   "od": 1795510975,
+   "do": 1795511036,
    "okvira": 42,
    "video": "",
    "snimak": 131,
@@ -1619,8 +1619,14 @@
  "datoteke": [
   {
    "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4",
+   "od": 1795510839,
+   "trajanje": 736
+  },
+  {
+   "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4",
    "od": 1795515059,
-   "trajanje": 7666
+   "trajanje": 7666,
+   "preskoceno": 736
   },
   {
    "url": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410a.mp4",
