@@ -363,8 +363,8 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     left out, the summary having told them, checked), and every step heard: an agenda item (its number in the mark),
     a debate, a vote, a break, each measure of the chair (a red square). The first eight stand, the rest fold.
     What the Assembly writes about the day is not told a second time: its sentence per finished item is in the
-    agenda (`tacke.json`), and its page of the sitting is linked; only when nothing was heard are its sentences the
-    line. Where it is from is one label beside the heading."""
+    agenda (`tacke.json`), whose title leads to its page of the sitting; only when nothing was heard are its sentences
+    the line. Where it is from is one label beside the heading."""
     every = steps_shown(snap)
     heard = [e for e in every if e["izvor"] != "sajt"]
     written = [e for e in every if e["izvor"] == "sajt"]
@@ -430,8 +430,6 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     if config.SHOW_QUOTES:
         rows += [(_minute(_clock(x["t"], tz)), exchange(x)) for x in snap.get("razmene") or []]
     rows.sort(key=lambda r: -r[0])
-    links = "".join(f' <a href="{escape(u)}">{t("dl_record")} ↗</a>' for u in dict.fromkeys(
-        str(e["url"]) for e in written) if u.startswith("https://"))
     if not rows and written:  # nothing heard: the Assembly's sentences, whole, in the order they stood
         body = '<ol class="steps">' + "".join(li("", ("mk-odluka", ""), f'<p class="st-said">{s(e["opis"])}</p>') for e in written) + "</ol>"
         chip = _chip(t("steps_site"), escape(_fill(_t("steps_published", cyr), _clock(max(e["t"] for e in written), tz))))
@@ -445,11 +443,6 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
         if decisions:
             full = full.rstrip(".") + ". " + escape(_fill(_t("sum_note", cyr), _model(summary)))
         chip = _chip(t("dl_src"), full)
-        book = (f'<p class="dl-foot rk-f"><a class="rk-l" href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{BOOK}{t("rules_word")}</a> '
-                f'<span class="meta">{t("rules_short")}</span></p>') if site else ""
-        body += book
-        if links:
-            body += f'<p class="dl-foot">{links.strip()}</p>'
     # between sittings, the last sitting day's steps, under its date (20 Nov 2026: after midnight the list was gone)
     head = t("steps")
     if snap.get("ranije") and snap.get("dan"):
@@ -1388,7 +1381,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     # (23 Nov 2026, the maintainer: that the page becomes an app was not said)
     from . import slusaj
     # Pills under the player (24 Nov 2026, the maintainer's choice): the sound only (ours, slusaj.py), the notification, the app
-    listen = (f'<button type="button" class="pill-b listen-live" data-uzivo="{escape(slusaj.address())}">🎧 {t("listen_pill")}</button>'
+    listen = (f'<button type="button" class="pill-b listen-live" data-uzivo="{escape(slusaj.address())}">🎧 <span>{t("listen_pill")}<small>{t("listen_locked")}</small></span></button>'
               if live and snap["stanje"] != "nema_prenosa" and config.LISTEN_PUBLIC and slusaj.fresh(time.time()) else "")
     pills = f"""<section class="pills">{listen}<div class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
 <div class="ah-row"><button type="button" class="pill-b nt nt-on" hidden aria-label="{t("nt_on")}">{BELL}<span>{t("nt_pill")}</span></button><button type="button" class="pill-b add add-go" hidden><span class="pill-m">{ARC}</span><span>{t("app_pill")}</span></button></div>

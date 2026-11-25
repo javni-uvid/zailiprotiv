@@ -1132,11 +1132,11 @@ def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines
     cir = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Рад је настављен" in cir and "Прелазак на 2. тачку дневног реда" in cir
     # what the Assembly wrote is not told a second time on the day's list (its sentence per item is in the
-    # agenda): its page is linked; with nothing heard, its sentences are the list
+    # agenda, which links its page); with nothing heard, its sentences are the list
     days = html.split('<section class="steps-sec">')[1].split("</section>")[0]
     assert "izabrala potpredsednike" not in days and "Zvanično" not in html
     assert days.split('<ol class="steps">')[1].count("<li") == 2
-    assert 'href="https://www.parlament.gov.rs/x">Zapis sednice na sajtu Skupštine ↗</a>' in days
+    assert "Zapis sednice na sajtu Skupštine" not in html and "kvorum, replika" not in html  # off, 25 Nov 2026
     only = fragment({**snap, "hronika": snap["hronika"][:1]}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert '<p class="st-said">Narodna skupština je izabrala potpredsednike.</p>' in only and "<time" not in only
     assert "Skupština piše posle događaja" in only  # where from: in the label beside the heading
@@ -1309,6 +1309,7 @@ def test_the_live_page_says_less_and_its_folds_are_closed(monkeypatch):
     top, how = html.split('<details class="how">', 1)
     for words in ("učitava se tek na klik", "Samo zvuk je naš", "kod nas ostaje samo adresa"):
         assert words not in top and words in how
+    assert "🎧 <span>Slušaj<small>radi i sa zaključanim telefonom</small></span>" in top  # 25 Nov 2026, the maintainer
     assert "ne vidi u potpisu" not in html and "listen-live" in top and "Isključi obaveštenja" in top
     snap["provereno"] = 1795515045
     assert 'id="checked"' not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)  # nothing above it

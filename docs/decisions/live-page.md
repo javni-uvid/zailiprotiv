@@ -300,3 +300,9 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     be settled with the maintainer.
   - *The turns by the hour* with the portrait, the topic, the moment as a button; the headline, the day in cards and the strip are off.
   - *The Rules* ("Poslovnik") as a mark beside each step and at the foot of the card and the page, in place of a card.
+- **"Slušaj" says it works locked; two lines off under the steps** (25 Nov 2026, the maintainer: "Pod slušaj treba naznačiti da
+  može da radi sa zaključanim telefonom (u što kraćem tekstu)"; "Skloni ovaj tekst: kvorum, replika, opomena, iz teksta
+  Poslovnika Skupštine / Zapis sednice na sajtu Skupštine"). The pill itself says "radi i sa zaključanim telefonom" in small
+  letters under "Slušaj". The line of the Rules at the foot of the steps and the link to the Assembly's record are gone (of
+  the Rules' mark of 24 Nov that beside a step stays): the Rules stay at the page's foot, the Assembly's page of the sitting
+  under the agenda.
