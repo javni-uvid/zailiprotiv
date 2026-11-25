@@ -226,5 +226,11 @@ records and recordings stays here:
   to voices learnt that day (18 Nov: 401 s wrong); trimming a piece's ends to its own voice (18 Nov 0.9 points less right);
   a bar of 0.75 (18 Nov: 1017 s wrong). Not measured: a day whose captions stand for ten seconds (24 Nov: no notes yet),
   and Whisper was told the names of 17-18 Nov's speakers when those recordings were written down.
+- **A caption's name of no sitting MP is the near sitting one's** (25 Nov 2026; `cli/recordings._sitting`). In a kept
+  record, a caption with a sitting list under it and a name of an MP not sitting (18 Nov, before the service had the new
+  list: Šoškić read as Stošić, a former MP) is the sitting MP of that list the name is near by the live page's own matching; a
+  minister or a guest has no list under the name and stays as read. Scored with the rule above, voices of earlier days
+  only: 17 and 19 Nov unchanged, 18 Nov 94.9 to 95.4% right and 269 to 157 s wrong (54 of them the notes' own "Mitev" for
+  Petar Mitov: `govor` run again on 18 Nov would place him, not done here). Of all other days' voices: 182 to 157 s.
 - **A day's recording as sound only** (22 Nov 2026): the day pages (`govornici/<date>`) have "Slušaj samo zvuk" and
   the lock screen's player with who speaks, as the live page (`live-sound.md`).

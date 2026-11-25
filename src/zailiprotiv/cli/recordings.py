@@ -251,7 +251,8 @@ def glas_dan_cmd(args) -> int:
 
     # The captions' turns, by the live page's rule (okvira 2 or more: counted); of a caption that stands for seconds
     # only its first seconds are a caption seen. What the live service found by voice or the chair's words is no caption.
-    caps = [t for t in rec if t.get("okvira", 0) >= 2 and t.get("adresa") and t.get("izvor") in (None, "potpis")]
+    caps = [_sitting(t, people) for t in rec
+            if t.get("okvira", 0) >= 2 and t.get("adresa") and t.get("izvor") in (None, "potpis")]
     seen = [(t["adresa"], t["od"], min(t["do"], t["od"] + CAPTION_STANDS) if t.get("izvor") else t["do"]) for t in caps]
     got = ko.named([{"url": f["url"], "od": starts[f["url"]][0], "t": sound[f["url"]][0], "f": sound[f["url"]][1]} for f in files],
                    refs, seen, floor, live_config.VOICE_SKIP)
@@ -274,6 +275,20 @@ def glas_dan_cmd(args) -> int:
         target.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         print(f"wrote {target.as_posix()}")
     return 0
+
+
+def _sitting(turn: dict, people: list) -> dict:
+    """A caption's turn under the name of an MP not sitting, with a sitting list under it, as the sitting MP the name is
+    near (25 Nov 2026: before the service had the new list, 18 Nov's Šoškić was read as a former MP, Stošić). By the live
+    page's own matching; a minister or a guest has no list under the name and is left as read."""
+    from uzivo import config as live_config
+    from uzivo.names import Roster
+    if any(p.slug == turn["adresa"] for p in people) or turn.get("uloga") not in {p.group for p in people}:
+        return turn
+    roster = Roster([p for p in people if p.group == turn["uloga"]])
+    roster.current = frozenset(p.slug for p in roster.people)
+    hit = roster.match(turn["ime"], live_config.MATCH)
+    return {**turn, "ime": hit.name, "adresa": hit.slug, "grupa": hit.group} if hit else turn
 
 
 CAPTION_STANDS = 40  # seconds: a caption that comes up at a turn's start only (24 Nov 2026) is of these (glas.LEARN_ON)
