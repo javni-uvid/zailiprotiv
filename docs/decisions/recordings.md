@@ -248,3 +248,17 @@ records and recordings stays here:
   nobody renews is dropped too. With one file of the archive for the day, the archive's places alone, as before. The page's process
   has it from `sada.json` (`citac`). The turns' times, the steps' times, the player's button and a link to a speech take the
   same place; nothing loads before a press but for a link to a speech. A wrong or missing file leaves the page with no links.
+- **The files of 24 Nov are placed by what was said, not by captions** (25 Nov 2026; the conductor, when the maintainer
+  asked whether the archive is available). Two of five had no place: a caption stands some ten seconds at a turn's start
+  that day, a frame is read every 30 s of a file's first hour, and 3 and 4 frames were named. The day's notes were found
+  in the files' words (`govor.place`: 164 of 182 MPs' speeches) and each speech's beginning set against its speaker's turn
+  in the record; a file begins at the median. The first begins at 11:10:59 (32 speeches, 13 speakers), the fourth at
+  17:12:18 (14, 9). The neighbours were a check only: the first ends 1 s before the second begins, the third 2 s before
+  the fourth. The picture agrees: the caption's name and the speech's running clock ("0:26" at 28 s of Vujadinović's) in
+  ten speeches, one to five a file. A frame of the whole hall, with no caption, says nothing (Đajić, Šćepanović, Tasić
+  Knežević and others looked at so).
+  - **The other three were off and are corrected by the same measure**: the second by +14 s, the third by +18 s, the
+    fifth by -64 s. Their links opened 11 and 14 s into a speech and a minute before it; now 5 s before its first word.
+  - Suspected, not proven: since the record's turns begin with the sound, `refine` puts a caption's first frame, some 15
+    s into a speech, at the turn's beginning. (It does not explain the fifth's minute.) A file placed by few frames since
+    24 Nov is suspect for it: the 25th's, by four.
