@@ -323,3 +323,10 @@ records and recordings stays here:
   are no longer under another speaker's name), so such a speech's time is a little short. The days' totals: 17 Nov 11 s
   less, 18 Nov 448 s, 19 Nov 171 s, 24 Nov 196 s, 25 Nov 2 s. Less is said, nothing false, the same for everyone (the
   conductor, approving it).
+- **Applause after a speech's last sentence is not its speaker's time** (26 Nov 2026, the maintainer, of the doubtful
+  cases: "zavrsni aplauz se zaista ne racuna u vreme, jedino ako aplauz bude tokom govora samog"; of applause inside a
+  speech: "dok ide aplauz vreme i dalje tece za tog govornika"). So a speech ends at its speaker's last word, as `govor`
+  does since the rule above; applause, noise, waiting for the hall and the chair's short words inside a speech, after
+  which the same speaker goes on, are the speaker's time, one turn ("svo vreme treba biti kartica za tandira"), until the
+  chair speaks at length and gives the floor on ("za rec su se javili"). His words in full are kept with the doubtful
+  cases (`ko-govori-primeri/ODLUKE-ODRZAVAOCA.md`). How far the day files keep this is measured next.

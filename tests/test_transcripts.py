@@ -127,3 +127,30 @@ def test_a_sitting_read_before_is_read_again_when_a_day_is_added(tmp_path, monke
     args.more = False
     assembly.notes_of_debate(args)
     assert fetched == []  # as before without --more
+
+
+def test_a_heading_inside_a_line_and_a_roll_call_glued_on_are_split_off_with_every_word_kept():
+    """25 Nov 2026: the notes of 24 Nov hold "…повреда Пословника.АНА БРНАБИЋ: …" in the chair's speech, and those of
+    19 Nov the rest of a roll call glued onto Ana Brnabić's answer. A heading of one word that is no role, or one after
+    no sentence's end, splits nothing; no other key moves; run again, nothing changes."""
+    from zailiprotiv import transcripts
+    roll = "\n".join(f"Презиме{c} Име – Марија Бјелобрк, Сара Валентик;" for c in "абвгдђежзијклљмнњопрс")
+    sp = {
+        "00001": {"day": 1, "speaker": "СРЂАН СМИЉАНИЋ", "chair": False, "part": "other", "items": [], "text": roll},
+        "00002": {"day": 1, "speaker": "АНА БРНАБИЋ", "chair": False, "part": "other", "items": [],
+                  "text": "Нећу да учествујем у овој фарси. Хвала вам.\n63/1МВ/МЈ22.35 – 22.45\n" + roll},
+        "00003": {"day": 1, "speaker": "ПРЕДСЕДНИК", "chair": True, "part": "other", "items": [],
+                  "text": "Молим вас, само објасните која је повреда Пословника.АНА БРНАБИЋ: Члан 107 – поштовање. Да.\n"
+                          "Дакле, понављајте за мном. ЗАКОН: није говорник. Рекао је ПРЕДСЕДНИК СКУПШТИНЕ: ништа"},
+    }
+    got = transcripts.mended(sp)
+    assert list(got) == ["00001", "00002", "00002a", "00003", "00003a"]
+    assert got["00002"]["text"] == "Нећу да учествујем у овој фарси. Хвала вам.\n63/1МВ/МЈ22.35 – 22.45"
+    assert got["00002a"]["speaker"] == "СРЂАН СМИЉАНИЋ" and got["00002a"]["text"] == roll
+    assert got["00003"]["text"] == "Молим вас, само објасните која је повреда Пословника."
+    assert got["00003a"]["speaker"] == "АНА БРНАБИЋ" and not got["00003a"]["chair"]
+    assert got["00003a"]["text"].startswith("Члан 107") and got["00003a"]["text"].endswith("СКУПШТИНЕ: ништа")
+    assert transcripts.mended(got) == got
+    # a list in a speech with no roll call read before it that day stays the speaker's
+    alone = {k: v for k, v in sp.items() if k != "00001"}
+    assert transcripts.mended(alone)["00002"] == sp["00002"]
