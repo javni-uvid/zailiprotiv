@@ -3532,3 +3532,47 @@ def test_the_sitting_goes_on_tomorrow_is_the_days_end_and_a_break_stays_a_break(
     old = {"provereno": now + 900, "sada": None, "dnevni_red": None, "danas": [], "hronika": [
         {"t": now, "vrsta": "Pauza", "tekst": "Nastavak sednice sutra u 10.", "izvor": "prepis", "url": ""}]}
     assert [e["naslov"] for e in steps.steps_shown(old)] == ["Kraj rada za danas"]
+
+
+def test_the_sittings_notification_waits_for_the_graphic_to_go_down(tmp_path):
+    """25 Nov 2026, the maintainer: the broadcast's graphic stood before the sittings of 24 Nov (09:55:35 to 10:00:24) and 25 Nov
+    (09:51:12 to 10:03:20), and "Sednica je počela" went at the third frame of it."""
+    from datetime import datetime as dt_
+    from uzivo.obavesti import SLATE, Bell
+    at = lambda d, clock: dt_(2026, 11, d, *(int(x) for x in clock.split(":")), tzinfo=TZ)  # noqa: E731
+    for day, began, down in ((24, "09:55:35", "10:00:24"), (25, "09:51:12", "10:03:20")):
+        posts = []
+        bell = Bell(str(tmp_path / f"{day}.json"), token="t", api="https://glasovi.example", post=lambda od: posts.append(od) or {})
+        t, end, told = at(day, began).timestamp(), at(day, down).timestamp(), []
+        while t < end + 60 and not told:
+            if bell.frame(dt_.fromtimestamp(t, TZ), wait=True, covered=t < end):
+                told.append(t)
+            t += 5
+        assert told and end <= told[0] < end + 5 and posts == [0], day
+    # it never goes down: told after SLATE, once
+    bell = Bell(str(tmp_path / "s.json"), token="t", api="https://glasovi.example", post=lambda od: {})
+    t0 = at(26, "10:00:00").timestamp()
+    told = [k for k in range(0, 3600, 5) if bell.frame(dt_.fromtimestamp(t0 + k, TZ), wait=True, covered=True)]
+    assert told == [SLATE] and SLATE == 1800
+    # not read: as before, at the third frame
+    bell = Bell(str(tmp_path / "n.json"), token="t", api="https://glasovi.example", post=lambda od: {})
+    assert [bell.frame(at(27, "10:00:00"), wait=True, covered=None) for _ in range(4)] == [False, False, True, False]
+    # out of the hours at its beginning: nothing that run, also once the graphic is down
+    bell = Bell(str(tmp_path / "h.json"), token="t", api="https://glasovi.example", post=lambda od: {})
+    assert not any(bell.frame(at(27, "06:59:00"), wait=True, covered=k < 3) for k in range(8))
+
+
+def test_the_live_record_says_what_it_is_and_where_the_notes_corrected_it():
+    from uzivo import config
+    from uzivo.names import Person
+    t = Tracker(None, "Europe/Belgrade")
+    t.observe(Person("a", "Štimac Aleksandra", "stimac-aleksandra", "Studentska lista"), "Studentska lista", now=1795598171)
+    day = t.day
+    rec = t.record(day)
+    assert rec["zapis"] == "uzivo" and "ispravljeno" not in rec and rec["govori"][0]["ime"] == "Štimac Aleksandra"
+    t.use_waiting({"kviz": [], "cinjenice": [], "dani": [day], "iz_beleski": [day]})
+    rec = t.record(day)
+    assert rec["ispravljeno"] == {"izvor": "beleske", "dan": f"{config.SITE}govornici/{day}"}
+    assert rec["govori"][0]["ime"] == "Štimac Aleksandra"  # nothing taken out: the record as read
+    t.use_waiting({"kviz": [], "cinjenice": [], "dani": [day], "iz_beleski": ["2026-11-24"]})
+    assert "ispravljeno" not in t.record(day)

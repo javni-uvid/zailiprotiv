@@ -102,17 +102,23 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
                 m = _mtime(config.FRAME_PATH)
                 if m > seen:
                     seen, last_new, backoff = m, time.time(), 5.0
-                    if bell:  # a sitting's broadcast has begun: the day's notification (obavesti.py)
-                        bell.frame()
+                    frame = share = None
+                    try:
+                        frame = Image.open(config.FRAME_PATH).convert("RGB")
+                        share = blue(frame)
+                    except Exception:  # a broken frame: the bell counts it as before, nothing else reads it
+                        log.exception("frame not read")
+                    if bell:  # a sitting's broadcast has begun: the day's notification (obavesti.py), once the graphic is down
+                        bell.frame(covered=None if share is None else share >= GRAPHIC)
                         try:
                             bell.heard(tracker)  # … and one when it goes on after a long break
                         except Exception:
                             log.exception("the end of a break not looked for")
+                    if frame is None:
+                        continue
                     at = {"video": VIDEO.get("id", ""), "sq": getattr(proc, "frame_seq", None),
                           "seg": getattr(proc, "seg_dur", None)}
                     try:
-                        frame = Image.open(config.FRAME_PATH).convert("RGB")
-                        share = blue(frame)
                         tracker.screen(share)
                         # nobody's caption is under the graphic, and noise over it was read as an MP's name (24 Nov 2026, 11:10)
                         covered = share >= GRAPHIC

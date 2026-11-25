@@ -300,3 +300,9 @@ records and recordings stays here:
 - **A shared link may now say another speaker** (measured by `deljenje.turn_at` after the fact for the 24th): of the links the
   live page could have given, 113 of 118 on the 24th and 16 of 18 on the 25th lead to the same speaker. Measure it before a
   day is written again, not after.
+- **The live record says what it is** (25 Nov 2026, the maintainer: "može"; 25 Nov's record has a speech of 10:16 the notes gave
+  to another speaker). `/dan/<day>.json` carries `"zapis": "uzivo"`: the record as read, never mended by hand, no name taken out;
+  and, once the site's day is made from the notes, `"ispravljeno": {"izvor": "beleske", "dan": "<the site's govornici/<day>>"}`,
+  by the days the site lists so (`iz_beleski` in `mikrofon-cekanje.json`). Fields for a machine; no sentence of it is shown
+  to readers. Who reads the file: `uzivo.pull` (into `data/<N>/uzivo/`, so the copy there gains the fields with the next pull
+  of a recent day), `tacnost` and `arhiva` (they read `govori`), and anyone outside.

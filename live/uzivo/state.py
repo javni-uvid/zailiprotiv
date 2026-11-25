@@ -585,8 +585,14 @@ class Tracker(Said, Chronicle, View):
                     return None
                 kept = json.loads(f.read_text(encoding="utf-8"))
                 turns, cover = kept.get("turns", []), kept.get("cover", [])
+        notes = self.waiting.get("iz_beleski") if isinstance(self.waiting, dict) else None
+        fixed = isinstance(notes, list) and day in notes
         return {
             "dan": day,
+            # what this file is (25 Nov 2026, the maintainer): the live record as it was read, never mended by hand; and,
+            # once the site's day is made from the Assembly's notes, that those corrected it, and where that day is
+            "zapis": "uzivo",
+            **({"ispravljeno": {"izvor": "beleske", "dan": f"{config.SITE}govornici/{day}"}} if fixed else {}),
             "napomena": "Pročitano automatski iz potpisa u prenosu Skupštine; može da sadrži greške. Van 'pokriveno' "
                         "servis prenos nije video.",
             "pokriveno": [{"od": int(a), "do": int(b)} for a, b in cover],

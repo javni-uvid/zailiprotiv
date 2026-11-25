@@ -178,3 +178,9 @@ def test_a_second_sitting_convened_goes_by_itself_from_the_listing_to_the_live_p
         assert [x["stanje"] for x in (snap["dnevni_red"] or {"tacke": []})["tacke"]] == ["na_redu", ""][:len(items)], name
         assert [x["tekst"] for x in (snap["dnevni_red"] or {"tacke": []})["tacke"]] == items, name
 
+
+def test_the_waiting_file_lists_the_days_made_from_the_notes():
+    from zailiprotiv import pages_mikrofon
+    w = pages_mikrofon.waiting([], [], days_=["2026-11-25", "2026-11-24"], notes_=["2026-11-25"])
+    assert w["dani"] == ["2026-11-24", "2026-11-25"] and w["iz_beleski"] == ["2026-11-25"]
+    assert "iz_beleski" not in pages_mikrofon.waiting([], [], days_=["2026-11-25"])
