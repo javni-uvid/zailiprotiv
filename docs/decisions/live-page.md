@@ -245,7 +245,9 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   one line and ×. On a wide screen the small picture stays. YouTube's own controls stay as they are (no overlay of
   ours over its player).
 - **A step's time leads to its moment** (24 Nov 2026, the maintainer, for the reprimands; the same for every step heard): the
-  broadcast on now, or the archive's recording of the day (`page._moment`); plain text when neither holds it.
+  broadcast on now, or the archive's recording of the day (`page._moment`); plain text when neither holds it. The
+  decisions of the day's summary too, to the minute they carry (25 Nov 2026, the maintainer: "na vremenskoj oznaci stavi
+  link da prebaci na taj deo videa"; of the first eight steps three had led there), in the text's own colour.
   Its line under the pinned picture does not name the speaker while the player shows a moment over two minutes back
   (`past` in live.js): the name would be another's than the picture's.
 - **What happened, in a break** (24 Nov 2026, the maintainer: "bilo bi dobro na pauzama da objavimo", then "pusti okvir

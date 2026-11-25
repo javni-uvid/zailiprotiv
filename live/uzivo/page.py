@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from html import escape
 from pathlib import Path
 from urllib.parse import quote
@@ -349,6 +349,16 @@ def _minute(hhmm: str) -> int:
     return (h + 24 if h < 6 else h) * 60 + m
 
 
+def _at_clock(day: str, hhmm: str, tz: ZoneInfo) -> float:
+    """The moment of a clock's "HH:MM" on a sitting day (before 6 is the night after, as in _minute); 0 when it has none."""
+    m = _minute(hhmm)
+    try:
+        start = datetime.strptime(str(day)[:10], "%Y-%m-%d")
+    except ValueError:
+        return 0
+    return (start + timedelta(minutes=m)).replace(tzinfo=tz).timestamp() if m >= 0 else 0
+
+
 def _step_mark(e: dict) -> tuple[str, str]:
     """The mark of a step on the line of time, by its kind (22 Nov 2026, the maintainer: a symbol for each kind of
     thing, a warning a red square): the class and what stands inside the mark."""
@@ -433,7 +443,8 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     for o in decisions:
         votes = f'<p class="st-v">{_votes(o["glasovi"], o.get("glasanje"), cyr)}</p>' if o.get("glasovi") else ""
         rows.append((_minute(o.get("vreme", "")), li(str(o.get("vreme", "")), ("mk-odluka", ""),
-                     f'<p class="st-title">{t("dl_decision")}</p><p class="st-what st-said">{s(o["sta"])}</p>{votes}')))
+                     f'<p class="st-title">{t("dl_decision")}</p><p class="st-what st-said">{s(o["sta"])}</p>{votes}',
+                     at=_at_clock(snap.get("dan") or "", o.get("vreme", ""), tz))))
     for e in heard:
         if decisions and e.get("naslov") in ("Izbor", "Rezultat glasanja"):
             continue  # the day's summary has told them, checked (sudija.settle_votes)
