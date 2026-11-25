@@ -172,3 +172,10 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
 - **The page after the confirming click says "posle svakog dana sednice"** (25 Nov 2026, the maintainer: "Dobro implementiraj
   tako"): "posle sledećeg dana" was wrong for who signs up while a sitting is on, as the list is read when the mail goes to
   all, so that day's mail reaches them too.
+- **The privacy page says what Cloudflare keeps of a mail it carries** (25 Nov 2026, the maintainer, of the finding that its
+  documentation states more than the page did: "Nemoj uraditi 1 i 2, ali možeš dopuniti politiku privatnosti": nobody writes
+  to Cloudflare and "Email preview" is left as it is). By its documentation and no more: the recipient and the subject 31
+  days, the whole mail about seven days where "Email preview" is on, an address that does not exist or complained with no end.
+  The account was not looked at, so the page claims neither that the preview is on nor that it is off. What we keep is as it
+  was; three sentences spoke of the database as of everything and now say the database. "Email preview" is in `<code>`, which
+  the Cyrillic page leaves in Latin. The counter's own "Tvoja adresa je obrisana" (`worker/mejl.js`) is not changed.
