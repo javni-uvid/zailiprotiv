@@ -1,0 +1,127 @@
+{
+ "napomena": "Merač vremena govornika u potpisu prenosa (gore desno) i ime u potpisu, pročitani okom sa okvira snimka u arhivi, za govore čije prve reči automatski zapis nije čuo. Početak govora je trenutak okvira manje vreme na meraču; govor.timer_starts ga primenjuje samo kad se ime slaže sa beleškama i bar dva okvira daju isti početak, i nikad pre poslednje reči čujene pre rupe. Okvir bez potpisa ne pomera ništa.",
+ "citanja": [
+  {
+   "dan": "2026-11-18",
+   "beleske": "54098/00109",
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810a.mp4",
+   "ime": "Шаип Камбери",
+   "okviri": [
+    {
+     "sek": 6785,
+     "merac": "0:33"
+    },
+    {
+     "sek": 6791,
+     "merac": "0:39"
+    }
+   ],
+   "procitao": "radnik (Claude Opus 5.5), okom, na dva okvira iz arhive, 26. 11. 2026."
+  },
+  {
+   "dan": "2026-11-18",
+   "beleske": "54098/00130",
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810b.mp4",
+   "ime": "Александар Вучић",
+   "okviri": [
+    {
+     "sek": 2804,
+     "merac": "0:43"
+    },
+    {
+     "sek": 2810,
+     "merac": "0:49"
+    }
+   ],
+   "procitao": "radnik (Claude Opus 5.5), okom, na dva okvira iz arhive, 26. 11. 2026."
+  },
+  {
+   "dan": "2026-11-18",
+   "beleske": "54098/00066",
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111810.mp4",
+   "ime": "Сања Фриц",
+   "okviri": [
+    {
+     "sek": 4101,
+     "merac": "0:08"
+    },
+    {
+     "sek": 4107,
+     "merac": "0:14"
+    }
+   ],
+   "procitao": "radnik (Claude Opus 5.5), okom, na dva okvira iz arhive, 26. 11. 2026."
+  },
+  {
+   "dan": "2026-11-19",
+   "beleske": "54098/00372",
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "ime": "Александар Вучић",
+   "okviri": [
+    {
+     "sek": 1858,
+     "merac": "0:27"
+    },
+    {
+     "sek": 1864,
+     "merac": "0:33"
+    }
+   ],
+   "procitao": "radnik (Claude Opus 5.5), okom, na dva okvira iz arhive, 26. 11. 2026."
+  },
+  {
+   "dan": "2026-11-24",
+   "beleske": "54098/00899",
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410d.mp4",
+   "ime": "Александар Вучић",
+   "okviri": [
+    {
+     "sek": 1209,
+     "merac": "0:24"
+    },
+    {
+     "sek": 1215,
+     "merac": "0:30"
+    },
+    {
+     "sek": 1223,
+     "merac": "0:38"
+    }
+   ],
+   "procitao": "radnik (Claude Opus 5.5), okom, na dva okvira iz arhive, 26. 11. 2026."
+  },
+  {
+   "dan": "2026-11-24",
+   "beleske": "54098/00604",
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4",
+   "ime": null,
+   "okviri": [
+    {
+     "sek": 4206,
+     "merac": null
+    },
+    {
+     "sek": 4212,
+     "merac": null
+    },
+    {
+     "sek": 4220,
+     "merac": null
+    },
+    {
+     "sek": 4226,
+     "merac": null
+    },
+    {
+     "sek": 4246,
+     "merac": null
+    },
+    {
+     "sek": 4252,
+     "merac": null
+    }
+   ],
+   "procitao": "radnik (Claude Opus 5.5), okom, na dva okvira iz arhive, 26. 11. 2026."
+  }
+ ]
+}

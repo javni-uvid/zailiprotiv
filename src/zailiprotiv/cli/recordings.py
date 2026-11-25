@@ -109,7 +109,11 @@ def govor_cmd(args) -> int:
     for s in speeches:
         if not s.get("chair") and govor.roll_call(s["text"]):
             s["chair"] = True  # a vote read out by name is no speech
-    placed = govor.place(speeches, govor.heard(Path(args.heard), day_files))
+    words = govor.heard(Path(args.heard), day_files)
+    placed = govor.place(speeches, words)
+    # Beginnings Whisper missed, from the speaker's timer in the caption, read by hand (data/<N>/merac.json, 26 Nov 2026)
+    readings = [r for r in jsonfile.load(conv_dir / "merac.json", {}).get("citanja", []) if r.get("dan") == args.day]
+    placed = govor.timer_starts(placed, words, readings)
     # Each speaker as the site names them: the newest convocation's list of MPs, else the name as the notes give it.
     members = {mps.key(m["name"]): m for m in json.loads((conv_dir / "members.json").read_text(encoding="utf-8"))["members"]}
     known = {}

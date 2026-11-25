@@ -129,6 +129,43 @@ def place(speeches: list[dict], got: list[tuple[str, str, float]]) -> list[dict]
     return between(out)
 
 
+AGREE_TIMER = 1  # seconds: the frames of one reading must give the same start within this
+
+
+def timer_starts(speeches: list[dict], got: list[tuple[str, str, float]], readings: list[dict]) -> list[dict]:
+    """A speech's beginning from the speaker's own timer in the broadcast's caption, where Whisper missed its first
+    words (26 Nov 2026; data/<N>/merac.json, read by hand for now). Each reading: the notes' key ("beleske"), the
+    archive's file, the caption's name as read ("ime") and frames ({"sek": second in the file, "merac": "m:ss" as read,
+    or null where the frame shows none}). A speech's start = a frame's second less its timer, taken only when:
+    the name is the notes' speaker; two frames or more read a timer and give the same start within AGREE_TIMER; the
+    reading's file is the speech's. The start only moves earlier, and never before the last word heard before it in
+    that file (the end of the speech before, or the hole's beginning): a timer may start before the hole, when the
+    floor is given while the chair still speaks, or run on from the same speaker's speech just before (19 and 24 Nov)."""
+    by_key = {r["beleske"]: r for r in readings}
+    times: dict[str, list[float]] = {}
+    for _, url, t in got:
+        times.setdefault(url, []).append(t)
+    for s in speeches:
+        r = by_key.get(s.get("key"))
+        if not r or "datoteka" not in s or r.get("datoteka") != s["datoteka"] or s.get("chair"):
+            continue
+        if sorted(fold(r.get("ime") or "")) != sorted(fold(s["speaker"])):
+            continue
+        starts = []
+        for f in r.get("okviri") or []:
+            m = re.fullmatch(r"(\d{1,2}):(\d{2})", f.get("merac") or "")
+            if m:
+                starts.append(f["sek"] - (int(m.group(1)) * 60 + int(m.group(2))))
+        if len(starts) < 2 or max(starts) - min(starts) > AGREE_TIMER:
+            continue
+        before = [t for t in times.get(s["datoteka"], []) if t < s["od"]]
+        start = max(min(starts), before[-1] if before else 0.0)
+        if start < s["od"]:
+            s["od"] = start
+            s["po_meracu"] = True
+    return speeches
+
+
 def between(speeches: list[dict]) -> list[dict]:
     """A speech too short to hold two runs (fewer than SHORT words: an answer, a "Hvala"), with no place, gets one
     where the notes put it: just after the speech before it, which must be placed, in the same file as the one after
