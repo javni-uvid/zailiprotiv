@@ -221,7 +221,8 @@ records and recordings stays here:
   (or 95.2% and 396 s, if a wrong second weighs 1 to 3 right ones) on 18, 91.1% and 51 s on 19. Of
   all 108 (likeness 0.75-0.85, lead 0.05-0.15, unlike 0.5-0.7, cut 0.5-0.7) 19 Nov had 85.0 to 91.7% right, half of them
   under 89.8%, and 32 to 734 s wrong, half of them under 51 s.
-  Tried and not kept: score normalisation against the other MPs (s-norm, as-norm, centring; a bar that lets none of 204
+  Tried and not kept: the chair's own voice as a known voice (18 Nov: extra 529 to 519 s, 50 right seconds lost; 17 and 19 Nov no
+  second changed); the face confirming a voice of 0.60 to 0.80 of a piece nothing named (18 Nov nothing, 19 Nov 74 s right for 7 wrong and 78 extra); score normalisation against the other MPs (s-norm, as-norm, centring; a bar that lets none of 204
   false matches through keeps 78, 75 and 94% of the true seconds, the plain likeness 95%); joining a day's later pieces
   to voices learnt that day (18 Nov: 401 s wrong); trimming a piece's ends to its own voice (18 Nov 0.9 points less right);
   a bar of 0.75 (18 Nov: 1017 s wrong). Not measured: a day whose captions stand for ten seconds (24 Nov: no notes yet),
