@@ -266,3 +266,5 @@ records and recordings stays here:
   the day had). 103 turns of 43 speakers for 95 of 41; 364 minutes for 357; 18 short speeches (147 words) have no place. A
   speaker whose first turn anywhere gives no list (a day before the groups were formed) has the one the list of MPs gives
   now: Vjerica Radeta's would have left her list's sum. 25 Nov waits: its recording is not written down.
+- **17 and 19 Nov written again for one speaker's list** (25 Nov 2026, the conductor): only Vjerica Radeta's list changes
+  (none before, the list of MPs' now), and the lists' sums with it; every turn, name and time is the same.
