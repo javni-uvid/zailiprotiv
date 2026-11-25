@@ -69,6 +69,17 @@ as the change. The principles and the rules of work are in AGENTS.md.
   page shown at mikrofon while the service is down links it, and the live page has a box of its own.
 - **The groups' time for debate** (22 Nov 2026): term `vreme-rasprave` (97, 99, 158), the rule behind the live
   page's estimate of each group's time left (`live-day.md`).
+- **When a sitting already begun goes on** (25 Nov 2026, the maintainer: "Zašto automatski ne pripremamo stranicu prema
+  skupštinskom kalendaru?"; that morning the live page said only "Ne zaseda"). Two reasons it was missed: the notice of a day was sought only in
+  the preamble and only as "за среду, 25. …" (what convenes a sitting), while a continuation is the last sentence of
+  the sitting's page ("Народна скупштина наставља рад у среду, 25. новембра 2026. године, са почетком у 10.00
+  часова"); and a sitting with a roll call was taken as over, which the first sitting had since 19 Nov. Now
+  `skupstina.continues` reads that sentence into the sitting's `continues`: the Assembly's own words only (the two forms
+  it has used so far and their slips of "са почетком", "се", "наставиће"), with a date and a year, the named day of the
+  week being the date's; the latest when there are several; a sentence worded otherwise is not guessed at and the notice by
+  hand (`data/obavestenja.json`) still stands for it. `next_start` takes it beside a sitting convened, the nearest still to
+  come first. **Not from the Assembly's calendar**: its page gives the entries of one chosen day only (today's), the
+  rest by a script, and the calendar in the margin of every page the same; the sitting's page is read every hour anyway.
 
 ## Laws
 
@@ -198,6 +209,15 @@ as the change. The principles and the rules of work are in AGENTS.md.
   waited behind it. Now `transcripts.tool` runs the workflow's `NOTES_TOOLS_INSTALL` the first time a program is
   asked for and missing; where the variable isn't set (a developer's computer) nothing is installed and a missing
   program fails as before.
+- **When the Assembly sits next is read first, and a run begins from the branch as it is** (25 Nov 2026). On the evening
+  of a sitting a **votes** run takes 80 to 95 minutes (`arhiva`, the day's recordings) and all it read was committed at its end, so
+  the sitting's page saying when the Assembly goes on would have waited for that. Now the newest convocation's `index`
+  is the run's first reading, and when anything in it is new it is committed and **pages** started at once; the same
+  requests to the Assembly as before, in another order. And a run that waited behind another checked out the state of when it was
+  asked for: on 24 Nov the one of 20:47 UTC met the conflict in `index.json` and seven files more, the rebase stopped
+  half way, `git status -sb` had no "ahead" to show, and the run was green with its hour's reading lost. It checks out
+  `github.ref` now, takes an unfinished rebase back before it tries again, and is red when the push did not go. The
+  other data workflows share the loop without the check and are as they were.
 
 ## Changing convocation
 

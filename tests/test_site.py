@@ -597,6 +597,18 @@ def test_the_next_sitting_from_the_assemblys_listing_or_a_notice(tmp_path):
         "b": {"title": "Ranija", "agenda": ["x"], "starts": "2026-11-23T09:00", "votes": [["x", "y"]]}}}))
     assert next_start(tmp_path, "15", now)["pocinje"] == "2026-11-23T11:30"
     assert next_start(tmp_path, "15", now)["sat"] == "11.30 h"
+    # a sitting with roll calls that goes on another day, as its page says (25 Nov 2026): the nearest still to come,
+    # and today's with its hour past only while no other is known
+    (tmp_path / "obavestenja.json").unlink()
+    going = {"title": "Prva sednica", "agenda": ["x"], "starts": "", "votes": [["x", "y"]], "continues": "2026-11-25T10:00"}
+    (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {"a": going}}))
+    assert next_start(tmp_path, "15", datetime(2026, 11, 24, 23, 0, tzinfo=TZ))["pocinje"] == "2026-11-25T10:00"
+    evening = datetime(2026, 11, 25, 18, 0, tzinfo=TZ)
+    assert next_start(tmp_path, "15", evening)["pocinje"] == "2026-11-25T10:00"
+    (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {"a": going, "b": {**going, "continues": "2026-11-26T10:00"}}}))
+    assert next_start(tmp_path, "15", evening)["pocinje"] == "2026-11-26T10:00"
+    (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {"a": {**going, "continues": "2026-11-24T10:00"}}}))
+    assert next_start(tmp_path, "15", evening) is None
 
 
 def test_the_live_page_on_every_page_before_a_sitting(tmp_path):

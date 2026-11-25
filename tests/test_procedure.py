@@ -36,6 +36,23 @@ def test_a_sittings_agenda_and_the_day_it_was_convened_for():
     assert skupstina.agenda(other) == [] and skupstina.convened(other) == "2026-07-27T10:00"
 
 
+def test_when_a_sitting_goes_on_as_its_page_says():
+    """25 Nov 2026: the first sitting's page as the Assembly had it that morning, and the words of 20 November."""
+    page = (PAGES / "sednica.54098.43.html").read_text(encoding="utf-8")
+    assert skupstina.continues(page) == "2026-11-25T10:00" and skupstina.convened(page) == ""
+    said = skupstina.continues
+    assert said("<div>Народна скупштина наставља са радом у уторак, 24.&nbsp;новембра 2026. године, у 10.00 часова.</div>") == "2026-11-24T10:00"
+    assert said("наставља рад у суботу, 5. децембра 2026. године.") == "2026-12-05"  # a day with no hour
+    assert said("наставља рад у уторак, 24. новембра 2026. године, у 10 часова. … наставља рад у среду, 25. новембра "
+                "2026. године, у 9.30 часова.") == "2026-11-25T09:30"  # the latest
+    # what has been, a day of the week that is not the date's, a comment of the page's: nothing
+    assert said("Другог дана рада, 18. новембра 2026. године, Народна скупштина наставила је претрес.") == ""
+    assert said("наставља рад у четвртак, 25. новембра 2026. године, у 10.00 часова") == ""
+    assert said("<!-- наставља рад у среду, 25. новембра 2026. године -->") == ""
+    for older in ("sednica.53893.43.html", "sednica.53810.43.html"):
+        assert said((PAGES / older).read_text(encoding="utf-8")) == ""
+
+
 def test_a_reading_with_far_fewer_entries_does_not_replace_the_file(tmp_path, capsys):
     import json
 

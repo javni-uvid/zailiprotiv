@@ -40,10 +40,37 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
+      # The branch as it is when the run begins, not when it was asked for: a run that waited behind another read the
+      # state before that one's commit and lost its own to the conflict (24 Nov 2026, 20:47 UTC: an hour's reading).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          ref: ${{ github.ref }}
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.12"
+      # When the Assembly sits next is what the live page tells its readers, so the newest convocation's sittings are
+      # read first and published at once when anything in them is new (25 Nov 2026): the rest of a run on a sitting's
+      # evening takes over an hour (the recordings), and its commit comes at the end.
+      - name: The newest convocation's sittings first
+        env:
+          IN_CONVOCATION: ${{ inputs.convocation }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pip install uv==0.13.9 && uv sync --frozen
+          current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
+          newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
+          conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
+          [ "$conv" = "$current" ] && [ "$newest" != "$conv" ] || exit 0  # the newest is read below, or not asked for
+          uv run zailiprotiv --convocation "$newest" index || exit 0
+          git diff -I'"fetched": "[^"]*"' -- "data/$newest/index.json" | grep -q '^@@' || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "data/$newest/index.json"
+          git commit -q -m "The sittings as the Assembly lists them (convocation $newest)"
+          for i in 1 2 3; do
+            git pull --rebase -q && git push -q && { gh workflow run pages.yml --ref main || true; exit 0; }
+            git rebase --abort 2>/dev/null || true; sleep 5
+          done  # not pushed: the next run finds it new again
       - name: Index the sittings and read the roll calls
         env:
           IN_CONVOCATION: ${{ inputs.convocation }}
@@ -51,7 +78,6 @@ jobs:
           IN_REREAD: ${{ inputs.reread }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null  # tesseract: scanned bills
-          pip install uv==0.13.9 && uv sync --frozen
           current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
           conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
           echo "CONV=$conv" >> "$GITHUB_ENV"
@@ -79,7 +105,8 @@ jobs:
           # for that the newer convocation's MPs, their occupations and its recordings went unread for a day).
           if [ "$conv" = "$current" ] && [ "$newest" != "$conv" ]; then
             n="--convocation $newest"
-            uv run zailiprotiv $n index && uv run zailiprotiv $n laws && uv run zailiprotiv $n votes && uv run zailiprotiv $n link || true
+            # its sittings were read above
+            uv run zailiprotiv $n laws && uv run zailiprotiv $n votes && uv run zailiprotiv $n link || true
             uv run zailiprotiv $n videos || true
             uv run zailiprotiv members || true  # its MPs before its first roll call (members.py)
             uv run --with numpy --with pytesseract zailiprotiv $n arhiva || true
@@ -115,8 +142,12 @@ jobs:
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
           fi
           git commit -m "Roll calls read from the Assembly's site (convocation $CONV)"
-          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-          if git status -sb | grep -q ahead; then exit 1; fi
+          sent=
+          for i in 1 2 3; do
+            git pull --rebase -q && git push -q && { sent=1; break; }
+            git rebase --abort 2>/dev/null || true; sleep 5
+          done
+          [ -n "$sent" ] || exit 1  # a conflict left the run green and its data behind (24 Nov 2026)
           gh workflow run pages.yml --ref main
           gh workflow run transcripts.yml --ref main -f convocation=$c
       # The Assembly lists a later convocation's sitting among the current one's: time to switch (docs/decisions/data.md,

@@ -27,7 +27,7 @@ def index(args) -> int:
         "fetched": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "sittings": {
             s.url: {"listed": i, "title": s.title, "votes": [[v.item, v.pdf] for v in s.votes],
-                    "agenda": s.agenda, "starts": s.starts}
+                    "agenda": s.agenda, "starts": s.starts, **({"continues": s.continues} if s.continues else {})}
             for i, s in enumerate(found)
         },
     }
