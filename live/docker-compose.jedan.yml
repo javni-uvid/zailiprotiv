@@ -1,0 +1,48 @@
+# The live service as ONE container, the form before the two (docker-compose.yml): what `mikrofon.ps1 nazad -Jedan` and
+# `uzivo -Jedan` run, kept until the maintainer agrees it may go (docs/decisions/live-service.md, 25 Nov 2026).
+# It runs the image the test passed (mikrofon:uzivo) and never builds.
+name: mikrofon
+services:
+  uzivo:
+    image: mikrofon:uzivo
+    pull_policy: never
+    environment:
+      # Whisper on the graphics card (live/whisper-gpu.ps1); while it does not answer the CPU writes. A WHISPER_URL in
+      # .env, empty too, wins.
+      WHISPER_URL: "${WHISPER_URL-http://host.docker.internal:8178}"
+      SOUND_PATH: /data/zvuk    # the sound not written down yet, on the volume: a restart loses none of it
+    env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # the computer itself, where Whisper's server on the graphics card runs
+    volumes:
+      - podaci:/data              # today's turns and the last list of MPs, kept across restarts
+      - whisper:/data/hf          # Whisper's model, shared with the test
+    security_opt:
+      - no-new-privileges:true    # nothing in it can become root again
+    cap_drop: [ALL]
+    # What the entry needs to hand /data over and become the user (ulaz.sh); DAC_OVERRIDE so that an image from
+    # before 20 Nov 2026, which runs as root, can still write there when `nazad` puts it back. The service's own
+    # process has none of them: it isn't root, and can't become it.
+    cap_add: [CHOWN, SETUID, SETGID, DAC_OVERRIDE]
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    cpu_shares: 4096              # ahead of anything else on the computer (a recording read with Whisper) when both want it
+
+  tunel:                          # Cloudflare's named tunnel: mikrofon.zailiprotiv.rs → http://uzivo:8000
+    image: cloudflare/cloudflared:2026.11.1@sha256:e613aadbc2d9511785d2e67a86b0c8ac18dd63a3f9af0d06faf04cbfdcb35f2d
+    command: tunnel --no-autoupdate run
+    env_file: .tunnel.env         # TUNNEL_TOKEN=… (from Cloudflare; never committed)
+    depends_on:
+      - uzivo
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    restart: unless-stopped
+
+volumes:
+  podaci:
+    name: mikrofon-podaci
+  whisper:
+    name: mikrofon-whisper
+    external: true                # made once by mikrofon.ps1, shared with the tests

@@ -109,21 +109,34 @@ of a clean `origin/main` goes live, and every image says which commit it is.
 cd live
 cp .env.example .env
 Set-Content -Encoding ascii .tunnel.env "TUNNEL_TOKEN=<token from Cloudflare>"   # never committed
-.\mikrofon.ps1 test      # this tree's test (-Novo: the newest yt-dlp); waits until it answers, says where
-.\mikrofon.ps1 uzivo     # mikrofon:test goes live, if built from a clean origin/main (-Ipak: anyway)
-.\mikrofon.ps1 nazad     # the image that was live before, live again
-.\mikrofon.ps1 stanje    # each image's commit and branch, the containers and their health, what runs live
-.\mikrofon.ps1 logovi    # the live service's log (-Test: this tree's test)
+.\mikrofon.ps1 test      # this tree's test, as two containers (-Jedan: as one; -Novo: the newest yt-dlp); says where it is
+.\mikrofon.ps1 uzivo     # mikrofon:test goes live as the page, if built from a clean origin/main (-Ipak: anyway); -Deo
+                         # merenje or oba: the measuring, or both; -Jedan: while live is one container
+.\mikrofon.ps1 nazad -Deo strana   # (merenje, oba) the part's image that was live before, live again; -Jedan: below
+.\mikrofon.ps1 stanje    # each image's commit, the containers and their health, and the commits of each part not live
+.\mikrofon.ps1 logovi    # the live service's log (-Deo strana or merenje; -Test: this tree's test)
 .\mikrofon.ps1 ocisti    # remove untagged images and the tests of worktrees that are gone
 ```
 
-- **Live** (`docker-compose.yml`, project `mikrofon`): `mikrofon:uzivo` on port 8000 and the tunnel; it never
-  builds. Its data are in the volume `mikrofon-podaci`. `uzivo` runs only from the main clone on `main`, and only
-  an image whose labels say it was built from `origin/main` as it is now, with nothing uncommitted; it waits until
-  the new one answers with that commit, and if it doesn't within 90 s, puts the one before back.
+- **Live** (`docker-compose.yml`, project `mikrofon`): two containers and the tunnel, none of which builds. `merenje`
+  (`mikrofon:uzivo`, before it `mikrofon:prethodni`) reads the broadcast and writes all that is kept, in the volume
+  `mikrofon-podaci`; `uzivo` (`mikrofon:strana`, `mikrofon:strana-prethodni`) is the page on port 8000 and the mail. `uzivo`
+  runs only from the main clone on `main`, and only an image whose labels say it was built from `origin/main` as it is
+  now, with nothing uncommitted; it waits until the new one answers with that commit, and if it doesn't within 90 s, puts
+  the one before back. Not by `docker compose up` by hand, which replaces both.
+- **Which part to release:** `stanje` says which commits wait for which (one in a module both load stands under both, and
+  the page alone may have it at once). The page is replaced in a second or two and the measuring goes on; the measuring is back in some
+  seven seconds, in which the page goes on with what it had, so it waits for the turn to end; when both, the measuring goes first.
+  Parts of two formats (`state_base.FORMAT`, the image's label) go live only together; the script asks.
+- **What each container has of `.env`** (it is one file; what one must not have is emptied by name in `docker-compose.yml`):
+  the page `MEJL_KLJUC` and `MEJL_UREDNIK` (the readers' addresses and the maintainer's own), the measuring `ANTHROPIC_API_KEY`
+  and `ZVUK_R2_*`, both `PUSH_TOKEN` and `PREPIS_KLJUC`. The page reads `/data` and writes only `/data/mejl`.
+- **From one container to two:** `uzivo -Deo oba`, once, on a day without a sitting (nothing answers for some nine seconds, the
+  edge gives the last answers); it undoes itself if it fails. **Back:** `nazad -Jedan` (`docker-compose.jedan.yml`: one container of the
+  measuring's image, with the whole `.env`), then, if the image is at fault, `nazad`. The kept files are the same either way.
 - **Tests** (`docker-compose.test.yml`): from the main clone on `main`, `mikrofon:test` at port 8001 (project
   `mikrofon-test`, volume `mikrofon-test-podaci`); from a worktree, `mikrofon:test-<branch>` on a port of its own
-  (8002-8091, from the branch's name) with its own project and volume, so that agents' tests never replace each
+  (8002-8091, from the branch's name) with its own project and volume, as two containers like the live service, so that agents' tests never replace each
   other's or the one `uzivo` takes. A worktree's test takes `.env` from the main clone. No tunnel, no visits counted,
   no notifications sent, four Whisper threads. They read the same broadcast as the live service.
 - Every image carries its commit, branch and whether the tree was clean (labels `zailiprotiv.*`); `/stanje.json`
@@ -154,13 +167,14 @@ site). Nothing changes in the tunnel or the DNS.
 frame is under 90 s old (`RESUME_SECONDS`).
 
 When YouTube asks to sign in, put a `cookies.txt` in the volume and set `YTDLP_COOKIES=/data/cookies.txt`; when
-yt-dlp stops working, `.\mikrofon.ps1 test -Novo` takes the newest, then `.\mikrofon.ps1 uzivo`.
+yt-dlp stops working, `.\mikrofon.ps1 test -Novo` takes the newest, then `.\mikrofon.ps1 uzivo -Deo merenje`
+(yt-dlp runs in the measuring).
 
 The service holds a lock on `/data` (`/data/.pisac`) from its start to its end: a second one on the same volume waits,
-and says so in its log every half a minute. `docker exec` commands (`uzivo.popuna` and the like) do not take it.
+and says so in its log every half a minute. `docker exec` commands (`uzivo.popuna` and the like) do not take it, and go
+to `mikrofon-merenje-1`: the page's container, `mikrofon-uzivo-1`, cannot write there.
 
-The service can run as two processes (`ULOGA=merenje` and `ULOGA=strana` on one `/data`); live it still
-runs as one, with `ULOGA` empty. `.\mikrofon.ps1 test -Dva` runs the test as two; plain `test` is the form that goes live.
+One image is both parts, told apart by `ULOGA` (`merenje`, `strana`; empty: one process that is both, `docker-compose.jedan.yml`).
 
 Settings are in `uzivo/config.py`, each overridable from `.env`.
 

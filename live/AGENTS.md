@@ -33,8 +33,8 @@ that file in the same commit, and here only when a line below no longer holds.
   stronger model's (`DAY_MODEL`), from the whole transcript, after the sitting; what its lines rest on goes to the
   maintainer only.
 - **A name in the mail or the measures is the list's, never guessed.**
-- **The readers' addresses** are opened only here, only to send, and never written down: what went is kept by the
-  counter's row id. To all only on the maintainer's click, until noon the next day.
+- **The readers' addresses** are opened only here, in the page's container alone (it alone has the key; 25 Nov 2026), only
+  to send, and never written down: what went is kept by the counter's row id. To all only on the maintainer's click, until noon the next day.
 
 ## How to work here
 
@@ -44,10 +44,14 @@ that file in the same commit, and here only when a line below no longer holds.
   width, both scripts); after the merge build the test from the main clone on a clean `origin/main`, check that
   nothing else lies between the live image's commit and `main` (`mikrofon.ps1 stanje`, `git log <commit>..origin/main
   -- live/`), then `mikrofon.ps1 uzivo`, and check the public page.
+- **Two containers** (25 Nov 2026): `uzivo` puts the page live alone, `-Deo merenje` the measuring, `-Deo oba` both (README.md).
+  The measuring alone writes `/data` (the page only `mejl`), so `docker exec` that writes goes to `mikrofon-merenje-1`. What the
+  page needs of the measuring is in a kept file: a field that changes its meaning raises `state_base.FORMAT` and the
+  Dockerfile's label. A module only one of the two loads is named in `mikrofon.ps1`.
 - **Without a sitting:** a container by hand on a round-the-clock broadcast (`SOURCE_PAGE=`, `CHANNEL_LIVE=`,
   `YOUTUBE_URL=<its address>`, port 8095), never with `--env-file`.
 - **Secrets** are in `live/.env` only; a test has none but the page's key, and a new one is emptied in
-  `docker-compose.test.yml` (a test asks for it).
+  `docker-compose.test.yml`, and in `docker-compose.yml` for the container that does not use it (a test asks for both).
 - **The sound never holds up the frames**, and neither does anything else: what is slow has a thread of its own.
 - **A file the service keeps is written whole** (`state_base._write`).
 - **The voices' rule is in one place,** `uzivo/komadi.py` (25 Nov 2026): the live service and the recordings read

@@ -50,9 +50,11 @@ def start(t: Tracker, stop: threading.Event, bell) -> None:
 
 
 def healthy() -> bool:
-    """Whether the measuring beside this process is there and its loop turns (citac.Reader.alive, the page's own rule)."""
+    """Whether the measuring beside this process is there and its loop turns (citac.Reader.alive, the page's own rule); of
+    this commit: what the run before left is fresh for half a minute more, and would pass for a new one that fails."""
     from .citac import alive
-    return alive(sada.read(config.STATE_PATH))
+    m = sada.read(config.STATE_PATH)
+    return m.get("verzija") == config.VERSION and alive(m)
 
 
 def main() -> int:

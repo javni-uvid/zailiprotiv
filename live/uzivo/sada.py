@@ -16,7 +16,7 @@ import time
 from pathlib import Path
 
 from . import config, slusaj
-from .state_base import _write
+from .state_base import FORMAT, _write
 from .stream import VIDEO
 
 try:
@@ -25,7 +25,6 @@ except ImportError:  # Windows: the tests, and a trial by hand; nothing to guard
     fcntl = None
 
 log = logging.getLogger("sada")
-FORMAT = 1  # what the page must be able to read; raised when a field it needs changes its meaning
 BEAT = 5.0  # seconds: written this often though nothing changed
 LOOK = 1.0  # seconds between looks for a change
 
