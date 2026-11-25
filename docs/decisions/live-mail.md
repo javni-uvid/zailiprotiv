@@ -169,3 +169,6 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   when the sender's own address is refused, then for everybody: so a refusal counts only while more have the day's mail
   than are refused it. **The row is not deleted**: the next day's mail tries it once, as anybody's. Whether a row refused
   for long is to be deleted is the maintainer's to decide.
+- **The page after the confirming click says "posle svakog dana sednice"** (25 Nov 2026, the maintainer: "Dobro implementiraj
+  tako"): "posle sledećeg dana" was wrong for who signs up while a sitting is on, as the list is read when the mail goes to
+  all, so that day's mail reaches them too.
