@@ -22,6 +22,12 @@ from .stream import VIDEO, NotLive, resolve_input, start_ffmpeg
 log = logging.getLogger("worker")
 
 
+# Seconds for a step of the net, and for reading a file whole, when the site is asked (RosterKeeper): with the net gone each of
+# the site's four addresses is tried, so a file that does not come holds the loop some 80 s at the most, and the next one
+# begins with the loop's clock set (cuvar.STANDS is 180).
+ASK, READ = 10, 20
+
+
 class RosterKeeper:
     """The site's list of MPs: fetched at start and every few hours, with the last good copy kept on disk. With it,
     the last sitting day read from the recording and "Dok čekate", handed to the tracker."""
@@ -38,17 +44,18 @@ class RosterKeeper:
         if time.time() - self.fetched > config.ROSTER_HOURS * 3600:
             self.fetched = time.time()
             try:
-                text = mreza.site(config.ROSTER_URL)
+                text = mreza.site(config.ROSTER_URL, timeout=ASK, whole=READ)
                 self.roster = Roster.from_json(text)
                 write_text(self.cache, text)
                 log.info("roster: %d MPs", len(self.roster.people))
             except Exception as exc:  # the last good list stays
                 log.warning("roster not fetched (%s); keeping %d MPs", exc, len(self.roster.people))
             if self.tracker:
+                self.tracker.looped = time.time()
                 for url, use in ((config.DAY_URL, self.tracker.use_recording), (config.WAIT_URL, self.tracker.use_waiting),
                                  (config.FACTS_URL, self.tracker.use_facts)):
                     try:
-                        use(json.loads(mreza.site(url)))
+                        use(json.loads(mreza.site(url, timeout=ASK, whole=READ)))
                     except Exception as exc:  # the last good copy stays
                         log.warning("%s not fetched (%s)", url, exc)
                     self.tracker.looped = time.time()  # slow, when the site is, but not standing (cuvar.py)
@@ -151,6 +158,12 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
             if proc and proc.poll() is None:
                 proc.kill()
         tracker.looped = time.time()
+        if waiting:  # no broadcast: the site is asked all the same, once an hour (25 Nov 2026), and it never ends the loop
+            try:
+                roster.get()
+            except Exception:
+                log.exception("the site not asked")
+            tracker.looped = time.time()
         tracker.tick()
         stop.wait(backoff)
         if not waiting:
