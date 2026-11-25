@@ -208,3 +208,9 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
     next sitting begins.
   - **Not in this step:** the notes' later names, votes, laws, groups, a correction's line of its own (a false name is mended in the next day's
     mail to all, by the maintainer), an MP's leaving.
+- **"Sednica je počela" once the broadcast's graphic is down** (25 Nov 2026, the maintainer: "može"). It went at the third frame of
+  a broadcast, and the graphic (blue oval, the building) stood 5 minutes before the sitting of 24 Nov and 12 before 25 Nov's:
+  so it told of a sitting that had not begun. Now three frames and the first without the graphic (`grafika.blue` under
+  `state_base.GRAPHIC`). A graphic standing 30 minutes (`obavesti.SLATE`) is told anyway, rather than never: two and a half
+  times the longest seen, and a sitting called for an hour rarely begins half an hour late; a frame whose share cannot be read
+  counts as before. Once a day, in the same hours.

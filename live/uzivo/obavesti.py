@@ -19,6 +19,9 @@ from .state_base import _write, counted
 
 log = logging.getLogger("obavesti")
 FRAMES = 3  # frames of a live broadcast in a row (about 15 s) before it counts as begun
+# and the first of them without the broadcast's graphic (25 Nov 2026, the maintainer: it stood 5 and 12 minutes before the
+# sittings of 24 and 25 Nov); one standing longer than this is told anyway, rather than never
+SLATE = 30 * 60
 HOURS = (7, 22)  # local hours in which a beginning is told; a broadcast outside them wakes nobody
 BATCHES = 200  # at most this many batches (of 30) in one day's sending
 PAUSE = 1200  # seconds nobody is heard: a long break; the five or ten minutes' breaks wake nobody
@@ -70,20 +73,26 @@ class Bell:
         self.api = (config.VOTES_API if api is None else api).rstrip("/")
         self.post = post or self._post
         self.frames = 0
+        self.first = 0.0  # when this run's first frame came
+        self.decided = False  # whether this run's beginning was looked at (told, or out of the hours, or told before)
         self.looked = 0.0
 
     def restart(self) -> None:
         """A new run of frames (the broadcast found again): count from nought."""
-        self.frames = 0
+        self.frames, self.decided = 0, False
 
-    def frame(self, now: datetime | None = None, *, wait: bool = False) -> bool:
-        """One more frame of a live broadcast. True when this one makes the day's notification go out."""
+    def frame(self, now: datetime | None = None, *, wait: bool = False, covered: bool | None = None) -> bool:
+        """One more frame of a live broadcast. True when this one makes the day's notification go out. `covered`: the
+        broadcast's graphic is on it (grafika.blue), None when that could not be read: then as before it."""
         if not (self.token and self.api.startswith("https://")):
             return False
-        self.frames += 1
-        if self.frames != FRAMES:
-            return False
         now = now or datetime.now(ZoneInfo(config.TZ))
+        self.frames += 1
+        if self.frames == 1:
+            self.first = now.timestamp()
+        if self.decided or self.frames < FRAMES or (covered and now.timestamp() - self.first < SLATE):
+            return False
+        self.decided = True
         if not HOURS[0] <= now.hour < HOURS[1]:
             return False
         day = now.date().isoformat()
