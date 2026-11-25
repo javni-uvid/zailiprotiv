@@ -155,3 +155,14 @@ def test_a_heading_inside_a_line_and_a_roll_call_glued_on_are_split_off_with_eve
     # a list in a speech with no roll call read before it that day stays the speaker's
     alone = {k: v for k, v in sp.items() if k != "00001"}
     assert transcripts.mended(alone)["00002"] == sp["00002"]
+
+
+def test_a_speech_with_no_speaker_breaks_nothing_that_reads_names():
+    """26 Nov 2026: the pages' build stopped at debates.whole_names on the part of 19 Nov's roll call the notes give no
+    heading (speaker "")."""
+    from zailiprotiv import debates, measures
+    sp = [{"speaker": "АНА БРНАБИЋ", "chair": False, "day": 1, "text": "Хвала."},
+          {"speaker": "", "chair": False, "day": 1, "no_heading": "roll call", "text": "Бубњевић Слободан – одсутан;"},
+          {"speaker": "ПРЕДСЕДНИК", "chair": True, "day": 1, "text": "Изричем опомену."}]
+    assert debates.whole_names(sp) == {}
+    measures.measures(sp)
