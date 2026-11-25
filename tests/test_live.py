@@ -3560,6 +3560,10 @@ def test_the_sittings_notification_waits_for_the_graphic_to_go_down(tmp_path):
     # out of the hours at its beginning: nothing that run, also once the graphic is down
     bell = Bell(str(tmp_path / "h.json"), token="t", api="https://glasovi.example", post=lambda od: {})
     assert not any(bell.frame(at(27, "06:59:00"), wait=True, covered=k < 3) for k in range(8))
+    # a run begun out of them tells nothing when the hours come, as before (once looked at, a run is done)
+    bell = Bell(str(tmp_path / "r.json"), token="t", api="https://glasovi.example", post=lambda od: {})
+    t0 = at(28, "06:59:30").timestamp()
+    assert not any(bell.frame(dt_.fromtimestamp(t0 + 5 * k, TZ), wait=True, covered=False) for k in range(40))
 
 
 def test_the_live_record_says_what_it_is_and_where_the_notes_corrected_it():
