@@ -1,0 +1,137 @@
+{
+ "dan": "2026-11-25",
+ "napomena": "Pročitano automatski iz potpisa u prenosu Skupštine; može da sadrži greške. Van 'pokriveno' servis prenos nije video.",
+ "pokriveno": [
+  {
+   "od": 1795596707,
+   "do": 1795600166
+  }
+ ],
+ "govori": [
+  {
+   "ime": "Bakić Jovo",
+   "adresa": "bakic-jovo",
+   "grupa": "Studentska lista",
+   "uloga": "",
+   "od": 1795597607,
+   "do": 1795597622,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "potpis"
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795597878,
+   "do": 1795598010,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "potpis"
+  },
+  {
+   "ime": "Štimac Aleksandra",
+   "adresa": "stimac-aleksandra",
+   "grupa": "Studentska lista",
+   "uloga": "",
+   "od": 1795598171,
+   "do": 1795598193,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "prepis"
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795598197,
+   "do": 1795598227,
+   "okvira": 5,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795598197,
+   "do": 1795598322,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "glas"
+  },
+  {
+   "ime": "Radeta Vjerica",
+   "adresa": "radeta-vjerica",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795598401,
+   "do": 1795598532,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "potpis"
+  },
+  {
+   "ime": "Đukanović Vladimir",
+   "adresa": "djukanovic-vladimir",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795598635,
+   "do": 1795598664,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "potpis"
+  },
+  {
+   "ime": "Brnabić Ana",
+   "adresa": "brnabic-ana",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795598761,
+   "do": 1795598848,
+   "okvira": 4,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "potpis"
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "Aleksandar Vučić - Srbija pobeđuje",
+   "uloga": "",
+   "od": 1795599865,
+   "do": 1795600066,
+   "okvira": 8,
+   "video": "",
+   "sq_od": null,
+   "sq_do": null,
+   "segment": null,
+   "izvor": "potpis"
+  }
+ ]
+}

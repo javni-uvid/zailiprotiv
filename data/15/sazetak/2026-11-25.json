@@ -1,0 +1,76 @@
+{
+ "dan": null,
+ "delovi": [
+  {
+   "od": "10:02",
+   "do": "10:30",
+   "ukratko": "Skupština je otvorila prvu konstitutivnu sednicu u 15. sazivu, utvrdila da postoje uslovi za rad i prešla na raspravu o tački dnevnog reda: izbor članova stalnih parlamentarnih delegacija u međunarodnim institucijama. Pretres je prekidan povredama poslovnika u vezi sa prisustvom gostiju na galeriji, minutom ćutanja i zabranom snimanja u salama. Predsedavajući je izrekao opomene i upozorenja, a zatim proglasio pauzu od pet minuta.",
+   "tok": [
+    {
+     "vreme": "10:03",
+     "sta": "Predsedavajući je otvorio sednicu, konstatovao prisustvo poslanika i pozvao poslanike da ubace identifikacione kartice u sistem za glasanje radi utvrđivanja kvoruma.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:04",
+     "sta": "Predsedavajući je saopštio rezultat elektronskog utvrđivanja prisutnih i konstatovao da postoje uslovi za rad Narodne skupštine.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:05",
+     "sta": "Predsedavajući je pozdravio goste iz delegacije Studentskog pokreta na galeriji i upozorio na zabranu snimanja i fotografisanja u salama, važi za goste i za poslanike.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:06",
+     "sta": "Predsedavajući je najavio nastavak rada i prelazak na pretres o tački dnevnog reda: izbor članova stalnih parlamentarnih delegacija u međunarodnim institucijama.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:07",
+     "sta": "Predsedavajući je pozvao poslanike da odaju počast minutom ćutanja.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:08",
+     "sta": "Predsedavajući je zamolio medije da napuste sednicu.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:11",
+     "sta": "Poslanici su se javljali za povrede poslovnika u vezi sa odavanjem počasti, prisustvom gostiju na galeriji i njihovim ponašanjem u sali; predsedavajući je u toku rasprave više puta pozivao na red.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:19",
+     "sta": "Predsedavajući je upozorio poslanike da govore bez date reči i izjavio da ne vrši bezbednosne provere gostiju, već se oslanja na bezbednosne službe.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:24",
+     "sta": "Predsedavajući je uputio upozorenje poslaniku zbog govora bez date reči i upozorio poslanike da ne vređaju goste.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:25",
+     "sta": "Predsedavajući je najavio direktno izricanje opomena zbog istovremenog govora poslanika bez date reči.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:28",
+     "sta": "Predsedavajući je izrekao opomenu poslaniku koji je govorio bez date reči i zatražio da ustane.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:30",
+     "sta": "Predsedavajući je proglasio pauzu od pet minuta.",
+     "glasanje": null
+    }
+   ],
+   "t_od": 1795597370,
+   "t_do": 1795599056
+  }
+ ],
+ "greske": 0,
+ "model": "claude-haiku-5-5"
+}
