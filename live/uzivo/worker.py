@@ -74,6 +74,7 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
     waiting = False  # said once in the log, not on every look
     while not stop.is_set():
         proc = None
+        tracker.looped = time.time()
         try:
             source, headers = resolve_input()
             proc = start_ffmpeg(source, headers)
@@ -85,6 +86,7 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
             last_new = time.time()
             while not stop.is_set():
                 stop.wait(1.0)
+                tracker.looped = time.time()
                 tracker.tick()
                 m = _mtime(config.FRAME_PATH)
                 if m > seen:
@@ -140,6 +142,7 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
         finally:
             if proc and proc.poll() is None:
                 proc.kill()
+        tracker.looped = time.time()
         tracker.tick()
         stop.wait(backoff)
         if not waiting:

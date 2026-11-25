@@ -144,6 +144,9 @@ frame is under 90 s old (`RESUME_SECONDS`).
 When YouTube asks to sign in, put a `cookies.txt` in the volume and set `YTDLP_COOKIES=/data/cookies.txt`; when
 yt-dlp stops working, `.\mikrofon.ps1 test -Novo` takes the newest, then `.\mikrofon.ps1 uzivo`.
 
+The service holds a lock on `/data` (`/data/.pisac`) from its start to its end: a second one on the same volume waits,
+and says so in its log every half a minute. `docker exec` commands (`uzivo.popuna` and the like) do not take it.
+
 Settings are in `uzivo/config.py`, each overridable from `.env`.
 
 ## Code
@@ -155,6 +158,8 @@ uzivo/
   caption.py    the two lines; who the name line names (no OCR: tested)
   names.py      both scripts; the site's list of MPs and matching to it (tested)
   state.py      the current speaker and today's turns (tested)
+  sada.py       the moment and two clocks in /data/sada.json, for the page's own process; one writer of /data (tested)
+  citac.py      the same state read from the kept files, for the page's own process; nothing uses it yet (tested)
   page.py       the page in both scripts (tested)
   worker.py, main.py, config.py
 ```

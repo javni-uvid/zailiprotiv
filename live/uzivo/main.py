@@ -16,13 +16,14 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, hronika, picture, pretplata, prepis, slusaj, sudija, worker
+from . import config, hronika, picture, pretplata, prepis, sada, slusaj, sudija, worker
 from .stream import VIDEO
 from .obavesti import Bell
 from .page import admin_page, fragment, listen_html, manifest, page, service_worker, transcript_page
 from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
+sada.prepare(config.STATE_PATH)  # the only writer, before anything is read: the run before may still be writing
 tracker = Tracker(config.STATE_PATH)
 if config.KEEP_INPUTS and Path(config.STATE_PATH).parent.is_dir():  # what it is told, kept to go through a day again
     from . import dnevnik
@@ -39,6 +40,8 @@ NO_STORE = {"Cache-Control": "no-store"}
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     threading.Thread(target=worker.run, args=(tracker, _stop, bell), daemon=True).start()
+    if Path(config.STATE_PATH).parent.is_dir():  # the moment, for the page's own process (citac.py); nothing reads it yet
+        sada.Pulse(tracker, _stop).start()
     if prepis.on():
         prepis.Writer(tracker, _stop).start()
         if config.WHISPER_URL and config.SHOW_CAPTIONS:  # the line under the picture, on the graphics card only

@@ -82,6 +82,7 @@ class Tracker(Said, Chronicle, View):
         self._frames = 0  # frames read so far: a snapshot begun before the latest is not kept
         self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
         self.place: dict = {}  # the newest frame's place in the broadcast: {"t", "video", "sq", "seg"}
+        self.looped = time.time()  # when the loop that reads the frames last turned (worker.run; sada.py)
         self._resumed = 0.0  # when this run took up the last one's open turn (a restart; RESUME_SECONDS)
         self._migrate()
         self._load()
@@ -116,6 +117,9 @@ class Tracker(Said, Chronicle, View):
         with self._lock:
             self.lines = (day, kept)
             self._snap = None
+
+    def lines_of(self, day: str) -> list:
+        return self.lines[1] if self.lines[0] == day else []
 
     def summary_of(self, day: str) -> dict:
         """The model's summaries of a day: today's as the model keeps them, an earlier day's from its file."""

@@ -146,3 +146,28 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   on the page; a rule is told a kept day again and scored before it goes live.** Seen the same day in the frames:
   the broadcast shows a speaker's caption only now and then (some 15 s, minutes apart; none in two stretches of four
   minutes watched), so a turn cannot end where the caption does.
+- **The measuring and the page are to be two containers** (25 Nov 2026, the maintainer: "2 da", asked whether to split
+  them so that a release of the page does not interrupt the measuring; the day before, restarts had held the day's mail
+  back 50 minutes). Of 119 commits since 20 Nov touching the service's code, Dockerfile or requirements, 57 touch only what the page
+  will run. The plan, accepted by the conductor, in steps that each leave the service working: (1) what this entry says;
+  (2) roles in the code; (3) the test as two; (4) live as two; (5) the one-process form goes.
+  - **The cut:** the measuring keeps the frames, the sound, the voices, Whisper, the steps, the model, the bell and every write
+    to `/data` but `/data/mejl`; the page has what readers are served, the snapshot's drawing (`state_view` and its helpers,
+    which the measuring imports too, each its own version) and the mail. One image, told apart by its role. Not cut
+    further: the measuring's parts share one Tracker in memory and write the steps together.
+  - **The page reads the kept files**, each written whole, and one new one, `/data/sada.json` (`sada.py`): what was in memory
+    only, and two clocks. No HTTP between the two. `citac.Reader` is a Tracker that is told nothing and writes nothing; its
+    snapshot equals the tracker's, compared step by step in `tests/test_dva.py`. Who speaks and whether the turn is open
+    come from the same file (`dani/<day>.json`), so nobody is shown for another's turn; `sada.json`, up to a second
+    behind, may only say that there is no broadcast.
+  - **Two clocks, for two faults.** No heartbeat (`t`, every 5 s) for 30 s: the measuring is not there, and the page answers as
+    when the service is down. A heartbeat but a loop of frames that stands (yt-dlp hung): the heartbeat has a thread of its
+    own and goes on, and the tracker's own `tick`, which ends a turn after 60 s with no frame, is in the loop that stands;
+    so the Reader applies that rule itself, from the last frame's time: after 60 s nobody is shown as speaking. With the
+    loop's clock (`petlja`) 300 s old the page is not served at all (between sittings one look for a broadcast may ask yt-dlp four times).
+  - **One writer, by a lock** (`sada.only_writer`, flock on `/data/.pisac`, taken before anything is read): a second
+    measuring on the same volume waits. Tried between two containers on one volume, and with the first killed; on
+    Windows (the tests) there is none.
+  - **Nothing reads `sada.json` yet:** step 1 changes nothing of what is served. Tried for the later steps: a page with `/data`
+    read-only and only the volume's `mejl` subpath writable, and the page's modules, which took 63 MB with both pages and two
+    pictures of an empty day drawn and load no model, stream reader or OCR.
