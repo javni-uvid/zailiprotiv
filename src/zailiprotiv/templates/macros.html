@@ -171,6 +171,8 @@
 {# "Ukratko": the MP in a few numbers, always first on the page (19 Nov 2026, the maintainer's decision): a tile a
    number, a few words under it, the whole sentences folded below. The same tiles for every MP, by rules (mp_card.py);
    a new MP's are what is known: time on the floor, year, occupation, place. #}
+{% macro fact_tile(x) %}{% if x.words %}<li class="t-words"><div><span>{{ x.short }}</span><p>{% for w in x.words %}<i>{{ w }}</i>{% endfor %}</p></div></li>
+    {% elif x.short %}<li>{% if x.href %}<a href="{{ x.href }}">{% else %}<div>{% endif %}<b>{{ x.n }}</b><span>{{ x.short }}</span>{% if x.sub %}<small>{{ x.sub }}</small>{% endif %}{% if x.href %}</a>{% else %}</div>{% endif %}</li>{% endif %}{% endmacro %}
 {% macro brief(slug, facts, extra=[]) %}{% set f = floor_now.get(slug) %}
 {% if f or facts or extra %}
 <section class="mp-brief" id="ukratko">
@@ -178,11 +180,13 @@
   <ul class="tiles">
     {% if f %}<li class="t-now"><a href="#govornica"><b>{{ f.time }}</b><span>za govornicom u {{ floor_now_conv }}. sazivu</span><small>{{ f.n }} {{ "govor" if f.n == 1 else "govora" }}, sa snimka</small></a></li>{% endif %}
     {% set nn = floor_notes_now.get(slug) if (floor_notes_now and not facts) else none %}{% if nn and nn.speeches %}<li>{% if nn.page %}<a href="{{ root }}{{ nn.page }}">{% else %}<div>{% endif %}<b>{{ nn.speeches }}</b><span>{{ "govor" if nn.speeches == 1 else "govora" }} u stenogramima</span><small>{{ nn.words }} reči, {{ floor_now_conv }}. saziv</small>{% if nn.page %}</a>{% else %}</div>{% endif %}</li>{% endif %}
-    {% for x in facts %}{% if x.words %}<li class="t-words"><div><span>{{ x.short }}</span><p>{% for w in x.words %}<i>{{ w }}</i>{% endfor %}</p></div></li>
-    {% elif x.short %}<li>{% if x.href %}<a href="{{ x.href }}">{% else %}<div>{% endif %}<b>{{ x.n }}</b><span>{{ x.short }}</span>{% if x.sub %}<small>{{ x.sub }}</small>{% endif %}{% if x.href %}</a>{% else %}</div>{% endif %}</li>{% endif %}{% endfor %}
-    {% for n, label in extra %}{% if n %}<li><div><b class="t-text">{{ n }}</b><span>{{ label }}</span></div></li>{% endif %}{% endfor %}
+    {% for x in facts %}{{ fact_tile(x) }}{% endfor %}
+    {% for n, label in extra %}{% if n %}<li class="t-own"><div><b class="t-text">{{ n }}</b><span>{{ label }}</span></div></li>{% endif %}{% endfor %}
   </ul>
   {% if facts %}<details class="brief-more"><summary>Cele rečenice i kako je izračunato</summary>
+  {# On a phone the first four tiles stand above, the same four for every MP; the others are here. #}
+  {% set tiled = facts|selectattr("short")|list %}{% set past = tiled[(3 if f else 4):] %}
+  {% if past %}<ul class="tiles phone-list" data-pagefind-ignore>{% for x in past %}{{ fact_tile(x) }}{% endfor %}</ul>{% endif %}
   <ul class="mp-facts">{% for x in facts %}<li>{% if x.n %}<b>{{ x.n }}</b> {% endif %}{{ x.text }}</li>{% endfor %}</ul>
   <p class="label">Izračunato iz poimeničnih glasanja i stenograma, istim pravilom za svakog poslanika; ovo nije ocena rada poslanika. {{ how("ukratko") }}</p>
   </details>{% else %}<p class="label">Isti podaci za svakog poslanika; glasanja i govori iz stenograma dolaze čim ih Skupština objavi.</p>{% endif %}
@@ -197,21 +201,25 @@
 <section class="mp-floor-now" id="govornica">
 <header><h2>Za govornicom u {{ floor_now_conv }}. sazivu</h2><p class="fn-sum"><b>{{ f.time }}</b><span>{{ f.n }} {{ "govor" if f.n == 1 else "govora" }}</span></p></header>
 {% for d in f.days %}
-<div class="fn-day">
-<h3><a href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a><span>{{ d.time }}</span></h3>
+<details class="fn-day" data-wide{% if loop.first %} open{% endif %}>
+<summary><h3><a class="wide-only" href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a><b class="phone-only">{{ d.when }}</b><span>{{ d.time }}</span></h3></summary>
 <ul class="fn-turns">{% for t in d.turns %}<li><a href="{{ root }}govornici/{{ d.day }}.html#{{ t.id }}" title="Snimak i automatski prepis"><b>{{ t.at }}</b> {{ t.dur }}</a></li>{% endfor %}</ul>
-</div>
+</details>
 {% endfor %}
 <p class="label">Mereno sa snimka prenosa: govor je vreme dok je ime u potpisu, isto za svakog. Klik na govor otvara snimak i automatski prepis. <a href="{{ root }}govornici.html">Ko koliko govori u sazivu</a></p>
 </section>
 {% endif %}{% endmacro %}
 {# The MP's offices in the Assembly (offices.py): [(convocation, offices)], newest first, each linked to the page of
    the Assembly it is read from; the same list for every MP. #}
-{% macro office_card(c) %}<li><span class="off-k">{{ c.label }}</span><a href="{{ c.source }}">{{ c.text }}</a><span class="off-m">{{ c.when }}</span></li>{% endmacro %}
-{% macro offices_part(rows) %}{% set cards = rows|office_cards %}{% if cards %}{% set rest = cards[office_cards_shown:] %}
+{% macro office_card(c, cls="") %}<li{% if cls %} class="{{ cls }}"{% endif %}><span class="off-k">{{ c.label }}</span><a href="{{ c.source }}">{{ c.text }}</a><span class="off-m">{{ c.when }}</span></li>{% endmacro %}
+{% macro offices_part(rows, groups="") %}{% set cards = rows|office_cards %}{% if cards %}{% set rest = cards[office_cards_shown:] %}
 <div class="off" id="funkcije">
-<ul>{% for c in cards[:office_cards_shown] %}{{ office_card(c) }}{% endfor %}</ul>
-<details class="off-more"><summary>{% if rest %}još {{ rest|length }} {{ plural(rest|length, "funkcija", "funkcije", "funkcija") }}, i odakle je{% else %}odakle je{% endif %}</summary>
+{% set more = cards[2:] %}{# on a phone two are shown, of every MP's #}
+{% macro how_many(n) %}{% if n %}još {{ n }} {{ plural(n, "funkcija", "funkcije", "funkcija") }}, i odakle je{% else %}odakle je{% endif %}{% endmacro %}
+<ul>{% for c in cards[:office_cards_shown] %}{{ office_card(c, "wide-li" if loop.index > 2 else "") }}{% endfor %}</ul>
+<details class="off-more"><summary><span class="wide-only">{{ how_many(rest|length) }}</span><span class="phone-only">{{ how_many(more|length) }}</span></summary>
+{% if groups %}<p class="label phone-list" data-pagefind-ignore>{{ groups }}</p>{% endif %}
+{% if cards[2:office_cards_shown] %}<ul class="phone-list" data-pagefind-ignore>{% for c in cards[2:office_cards_shown] %}{{ office_card(c) }}{% endfor %}</ul>{% endif %}
 {% if rest %}<ul>{% for c in rest %}{{ office_card(c) }}{% endfor %}</ul>{% endif %}
 <p class="label">Funkcije u Skupštini su sa stranica sastava i iz arhive Narodne skupštine, od 9. saziva (2012); dane izbora Skupština navodi samo za predsednika i potpredsednike. Članstvo u Vladi je iz odluka Skupštine o izboru Vlade i ministara, sa godinom izbora; kraj piše samo kad ga navodi odluka o razrešenju. Isto pravilo i isti redosled za svakog poslanika; funkcija u Vladi stoji samo kad je potvrđeno da je ista osoba (mandat poslanika je prestao kad je izabran u Vladu, ili je isto godište).</p></details>
 </div>

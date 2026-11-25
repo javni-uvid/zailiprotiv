@@ -17,11 +17,12 @@
 <div class="mp-head">
 <h1>{{ mp.name }}</h1>
 {% if member_now %}<p class="mp-now">Poslanik i u <a href="../{{ member_page }}">{{ member_conv|locative }} sazivu</a>{% if member_now.group %}, poslanička grupa {{ member_now.group|latin }}{% elif member_now.group is defined %}, van poslaničkih grupa{% endif %}{% if member_now.party not in ["-", "–", ""] %} (na predlog: {{ member_now.party|latin }}){% endif %}</p>{% endif %}
-<p class="mp-groups">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g|grp }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+{% set their_groups %}{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g|grp }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}{% endset %}
+<p class="mp-groups{% if member_now and offices %} past{% endif %}">{{ their_groups }}</p>
 {% if profile %}{% set ns = namespace(q=none) %}{% for t in profile.points %}{% if t.citat and t.citat.tekst.split()|length <= 45 and (ns.q is none or t.citat.tekst|length < ns.q.tekst|length) %}{% set ns.q = t.citat %}{% endif %}{% endfor %}
 {% if ns.q %}<blockquote class="mp-line"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.ours or ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
 </div>
-{{ offices_part(offices) }}
+{{ offices_part(offices, their_groups if member_now else "") }}
 </div>
 
 {{ brief(mp.slug, facts) }}

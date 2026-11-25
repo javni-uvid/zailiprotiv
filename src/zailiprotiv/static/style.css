@@ -1375,3 +1375,43 @@ main section > ol.rules-cited { max-width: 52rem; }
   .subtabs.three-up a { display: flex; flex-direction: column; justify-content: center; padding: .5rem .3rem; font-size: var(--t-2); }
 }
 @media (max-width: 350px) { .lead-nums.trends { grid-template-columns: minmax(0, 1fr); } }
+
+/* Lighter on a phone, the second round (25 Nov 2026): the pages visits begin on. What is shown twice in a page, once for
+   each width, is marked .phone-list / .wide-li; a wide screen stays as it was. */
+.phone-list { display: none; }
+.one > summary { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 2.75rem; font-weight: 600; border-bottom: 1px solid var(--line); cursor: pointer; list-style: none; text-decoration: none; }
+.one > summary::-webkit-details-marker { display: none; }
+.one > summary::after { content: "+"; color: var(--muted); font-size: var(--t-5); } .one[open] > summary::after { content: "–"; }
+details.fn-day { margin: 0; } .fn-day > summary { list-style: none; cursor: pointer; color: inherit; font: inherit; margin: 0; padding: 0; text-decoration: none; } .gv-v i { font-style: normal; } .fn-day > summary::-webkit-details-marker { display: none; }
+@media (max-width: 640px) {
+  .phone-list { display: block; } ul.phone-list.tiles { display: grid; } .wide-li { display: none; }
+  main:has(> .mp-hero) > .crumbs, .rules > .crumbs, .rules > .page-menu { display: none; }
+  main > .mp-hero { margin-top: 1rem; }
+  .mp-hero, .mp-hero:has(.off) { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0 1rem; align-items: start; }
+  .mp-hero .mp-photo, .mp-hero:has(.off) .mp-photo { grid-row: 1 / span 4; margin: 0; }
+  .mp-head { display: contents; }
+  .mp-head > * { grid-column: 2; } .mp-head h1 { margin-top: 0; }
+  .mp-head .mp-line { grid-column: 1 / -1; order: 6; margin: .7rem 0 0; }
+  .mp-groups { margin-bottom: .4rem; } .mp-groups.past { display: none; } .mp-own { margin: 0 0 .4rem; color: var(--muted); font-size: var(--t-2); } .mp-now { margin-bottom: .6rem; }
+  .off { grid-column: 1 / -1; order: 5; margin-top: .5rem; }
+  .off ul { display: block; } .off-more ul { margin: 0; }
+  .off li:not(.wide-li) { display: block; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; padding: .5rem 0; min-height: 1.75rem; }
+  .off li.wide-li, .off li .off-k { display: none; } .off li .off-m { margin-left: .4rem; }
+  .off-more > summary, .brief-more > summary { display: flex; align-items: center; min-height: 2.75rem; text-decoration: none; } .off-more > summary::before, .brief-more > summary::before { content: "+"; margin-right: .5rem; }
+  .off-more[open] > summary::before, .brief-more[open] > summary::before { content: "–"; } .off-more > summary, .brief-more > summary { list-style: none; } .off-more > summary::-webkit-details-marker, .brief-more > summary::-webkit-details-marker { display: none; }
+  .mp-brief { margin-top: .6rem; } .mp-brief > h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .mp-brief > .tiles > li:nth-child(n+5), .mp-brief > .tiles > .t-own { display: none; }
+  .mp-brief .tiles b { font-size: var(--t-6); } .mp-brief .tiles li > * { padding: .6rem .7rem; }
+  .fn-day { padding: 0; } .fn-day > summary { display: flex; align-items: center; min-height: 2.75rem; } .fn-day > summary h3 { flex: 1; margin: 0; align-items: center; } .fn-day > summary h3 > span { display: flex; gap: .7rem; } .fn-day > summary h3 > span::after { content: "+"; color: var(--muted); width: .8rem; text-align: center; } .fn-day[open] > summary h3 > span::after { content: "–"; }
+  .fn-day .fn-turns { padding-bottom: .7rem; }
+  .gv { gap: 0; } .gv-r { grid-template-columns: minmax(0, 1fr) auto; gap: .2rem .8rem; padding: .5rem 0; min-height: 2.75rem; align-items: baseline; box-sizing: border-box; } .gv-b { height: .3rem; } .gv-n a { display: inline-flex; align-items: center; min-height: 1.75rem; }
+  .gv-v { display: flex; gap: .5rem; align-items: baseline; } .gv-v span { font-size: var(--t-2); min-width: 3.4rem; text-align: right; }
+  .row-link { margin: 0 0 .4rem; } .row-link a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .kicker.wide-only + h1 { margin-top: 1rem; }
+  .day-rows { list-style: none; padding: 0; } .day-rows li { display: flex; flex-wrap: wrap; align-items: center; gap: 0 .4rem; margin: 0; border-bottom: 1px solid var(--line); } .day-rows a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .parts-row { position: sticky; top: 0; z-index: 20; background: var(--bg); margin: 0 -16px .6rem; padding: 0 16px; } .parts-list a { display: flex; align-items: center; min-height: 2.75rem; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
+  .rules > h1 { margin-top: 1rem; } #pojmovi > h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } #pojmovi { border-top: 0; margin-top: 0; padding-top: 0; }
+  main:has(> .home-hero) .home-hero .standfirst, main:has(> .home-hero) > .mic .mic-s, main:has(> .home-hero) > .mic .mic-go { display: none; }
+  main:has(> .home-hero) > .mic { padding: .7rem .9rem; margin-top: 1rem; } main:has(> .home-hero) > .mic .mic-m { font-size: var(--t-4); } main:has(> .home-hero) > .mic .mic-ic { width: 2.3rem; height: 2.3rem; }
+  main:has(> .home-hero) > .mic.to-rules { margin-top: 0; } .to-rules .mic-ic { grid-row: 1; }
+}
