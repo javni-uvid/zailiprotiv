@@ -339,3 +339,10 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   service's own: the visits' script and the uses (`live.js`, `mikrofon.js`) ask for the project's hosts first, as on
   the site (`site.md`, the end of "The site"). The bell and the mail's form still send when pressed; the counter
   refuses them from anywhere but `mikrofon.zailiprotiv.rs`.
+- **A shared speech goes through the edge** (25 Nov 2026, the conductor's task; found looking for what a link in a mail would
+  need). The edge worker and its test had `/govor/<second>` since the links were made, but the routes in
+  `live/edge/wrangler.toml` did not, so it never saw one: while the computer was off a shared speech gave Cloudflare's 530.
+  The routes `/govor/*` and `/cir/govor/*` bring it there: the answer is kept three seconds as `/` is, the last one shows
+  during a restart, and with the service off the site's page comes, whose script finds the speech. The wildcard takes
+  whatever is under `/govor/`; what is not ten digits the worker passes on and does not keep, and only when the service is
+  off leads to the site. `/govor.png` is not under it. A request with a query goes through the worker too, unlike on `/`.

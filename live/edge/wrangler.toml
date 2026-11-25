@@ -16,5 +16,9 @@ routes = [
   { pattern = "mikrofon.zailiprotiv.rs/stanje.json", zone_name = "zailiprotiv.rs" },
   { pattern = "mikrofon.zailiprotiv.rs/dani.json", zone_name = "zailiprotiv.rs" },
   { pattern = "mikrofon.zailiprotiv.rs/dan/*", zone_name = "zailiprotiv.rs" },
+  # A shared speech (25 Nov 2026). A pattern has no digits and takes "*" at its end only, so the worker checks the ten
+  # digits (SHARED); anything else under it goes to the service as it is. With "*", an address with a query matches too.
+  { pattern = "mikrofon.zailiprotiv.rs/govor/*", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/cir/govor/*", zone_name = "zailiprotiv.rs" },
 ]
 # Not /stanje.js either: other pages read it every few seconds, from Cloudflare's cache (live/uzivo/main.py).
