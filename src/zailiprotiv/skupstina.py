@@ -222,7 +222,7 @@ _AGENDA = re.compile(r"\bдневни ред\b[^:]{0,200}:\s*(.*)$", re.I)
 
 def _told(html: str) -> list[str]:
     """The agenda told in the page's lines, not in a list (agenda); empty when it is not."""
-    text = re.sub(r"<!--.*?-->|<script\b.*?</script>", " ", html, flags=re.S | re.I)
+    text = re.sub(r"<!--.*?-->|<script\b.*?</script\b[^>]*>", " ", html, flags=re.S | re.I)
     text = re.sub(r"<br\b[^>]*>|</(?:div|p|li|ol|h\d)>", "\n", re.sub(r"\s+", " ", text), flags=re.I)
     lines = [" ".join(unescape(re.sub(r"<[^>]+>", " ", x)).split()) for x in text.split("\n")]
     lines = [x for x in lines if x]

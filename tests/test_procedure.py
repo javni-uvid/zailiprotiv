@@ -57,6 +57,11 @@ def test_every_form_in_which_a_sitting_was_convened():
     assert said("сазвао је седницу за среду, 1. децембар, са почетком у 10.00 часова.") == ""  # the day is not that date's
 
 
+def test_a_script_on_the_page_is_no_agenda():
+    page = '<p class="preamble">x</p><script>var a = "дневни ред: ништа";</script ><div>Дневни ред: Избор Владе.</div>'
+    assert skupstina.agenda(page) == ["Избор Владе"]
+
+
 def test_a_sitting_is_told_from_news_of_one():
     for t in ("Прва седница Народне скупштине Републике Србије у Петнаестом сазиву", "Друга посебна седница Народне скупштине",
               "Прва седница Другог редовног заседања Народне скупштине Републике Србије у 2026. години",
