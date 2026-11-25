@@ -8,6 +8,7 @@ rules:
       - notes.yml
       - osnova.yml
       - sample.yml
+      - snimci.yml
       - summaries.yml
       - transcripts.yml
       - votes.yml

@@ -212,6 +212,25 @@ NOTE = ("Iz zapisa stranice „Ko sada govori“ (potpis u prenosu, kadar na oko
         "može da pogreši.")
 
 
+def _turns(record: dict) -> list[dict]:
+    return [t for t in record.get("govori", []) if t.get("okvira", 0) >= 2]
+
+
+def _parts(days: dict, kept: dict, day: str) -> list[str]:
+    """A day's files still to be placed: not placed yet, and tried fewer than TRIES times."""
+    return [p["url"] for p in days.get(day, []) if "od" not in kept.get(p["url"], {})
+            and kept.get(p["url"], {}).get("pokusaja", 0) < TRIES]
+
+
+def waiting(root: Path, conv: str) -> list[str]:
+    """The files `run` would read frames of: nothing is asked of anyone (the votes workflow starts snimci for them)."""
+    load = lambda p, empty: json.loads(p.read_text(encoding="utf-8")) if p.exists() else empty
+    days = load(root / conv / "videos.json", {}).get("days", {})
+    kept = load(root / conv / "arhiva.json", {})
+    return [url for day in sorted(days) if _turns(load(root / conv / "uzivo" / f"{day}.json", {}))
+            for url in _parts(days, kept, day)]
+
+
 def run(root: Path, conv: str, *, now: str | None = None, read_frames=None, probe=duration) -> list[str]:
     """Line up the archive's files with the live page's records, for every day that has both, and write each day's
     file. read_frames(url, names, dur) → samples, and probe(url) → seconds, are for the tests. Returns what changed."""
@@ -228,15 +247,12 @@ def run(root: Path, conv: str, *, now: str | None = None, read_frames=None, prob
         if not rec_path.exists():
             continue
         record = json.loads(rec_path.read_text(encoding="utf-8"))
-        rec_turns = [(_key(t["ime"]), t["od"], t["do"]) for t in record.get("govori", []) if t.get("okvira", 0) >= 2]
-        names = sorted({(t["ime"], t.get("adresa", ""), t.get("grupa", "")) for t in record.get("govori", []) if t.get("okvira", 0) >= 2})
+        rec_turns = [(_key(t["ime"]), t["od"], t["do"]) for t in _turns(record)]
+        names = sorted({(t["ime"], t.get("adresa", ""), t.get("grupa", "")) for t in _turns(record)})
         if not rec_turns:
             continue
-        for p in parts:
-            url = p["url"]
+        for url in _parts(days, kept, day):
             k = kept.get(url, {})
-            if "od" in k or k.get("pokusaja", 0) >= TRIES:
-                continue
             began = time.monotonic()
             try:
                 dur = probe(url)

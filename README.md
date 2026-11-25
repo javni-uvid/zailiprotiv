@@ -114,7 +114,8 @@ What a workflow read or wrote is committed with `tools/predaj.sh`, which ends re
 
 | Workflow | When | What |
 |---|---|---|
-| votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links, committed first (an issue when a roll call listed is not read); then the archive's new recordings placed and each day's speeches linked into them; commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |
+| votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links, committed first (an issue when a roll call listed is not read); commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |
+| snimci | after votes when there is something to do, and by hand | the archive's new recordings placed on the clock and each day's speeches linked into them (`arhiva.json`, `snimak/`); asks the broadcaster's archive only |
 | transcripts | after votes, and by hand | the stenographic notes; the raw notes go to the bucket |
 | summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API; the cheapest model first, a stronger one only by hand |
 | pages | on push, and after each data run | build the site and its search index, send downloads to the bucket, publish, purge the cache, tell search engines what changed (about seven minutes); a push that changes only `static/` puts it into the site published last instead (`static-patch`, about two) |

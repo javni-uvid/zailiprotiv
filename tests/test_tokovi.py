@@ -13,9 +13,18 @@ FLOWS = Path(__file__).parents[1] / ".github" / "workflows"
 def test_the_roll_calls_are_read_and_sent_before_the_recordings():
     text = (FLOWS / "votes.yml").read_text(encoding="utf-8")
     at = [text.index(x) for x in ("for what in laws votes link", "zailiprotiv $c votes ", "zailiprotiv $c bills",
-                                  "name: Commit the roll calls", "zailiprotiv $c videos", "zailiprotiv $c arhiva",
-                                  "name: Commit the rest")]
+                                  "name: Commit the roll calls", "zailiprotiv $c videos", "name: Commit the rest",
+                                  "gh workflow run snimci.yml")]
     assert at == sorted(at)
+
+
+def test_the_recordings_have_one_writer_and_never_two_at_once():
+    for f in sorted(FLOWS.glob("*.yml")):
+        runs = [x for x in f.read_text(encoding="utf-8").splitlines() if re.search(r"zailiprotiv .*\barhiva\b", x)]
+        assert bool([x for x in runs if "--waiting" not in x]) == (f.name == "snimci.yml"), f.name
+    text = (FLOWS / "snimci.yml").read_text(encoding="utf-8")
+    assert "  group: snimci\n  cancel-in-progress: false\n" in text
+    assert "git add -- 'data/*/arhiva.json' 'data/*/snimak/**'\n" in text
 
 
 def test_no_command_is_skipped_in_silence_behind_another():

@@ -169,6 +169,7 @@ def main(argv: list[str] | None = None) -> int:
     p = commands.add_parser("uzivo-pull", help="the live page's records of who spoke when → data/<N>/uzivo/")
     p.set_defaults(run=uzivo_pull)
     p = commands.add_parser("arhiva", help="the archive's recordings lined up with the live records → data/<N>/snimak/")
+    p.add_argument("--waiting", action="store_true", help="only say which files wait to be placed; nothing is asked")
     p.set_defaults(run=arhiva_cmd)
     p = commands.add_parser("govor", help="who spoke when, from the notes lined up with the recording's words → data/<N>/snimak/")
     p.add_argument("day", help="the sitting day, YYYY-MM-DD")

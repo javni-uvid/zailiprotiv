@@ -26,7 +26,7 @@ def _bash():
 BASH = _bash()
 pytestmark = pytest.mark.skipif(not BASH, reason="bash and git are needed")
 FILES = ["data/14/index.json", "data/14/votes/1.json", "data/15/transcripts/1.json", "data/15/uzivo/d.json",
-         "data/15/prepis/d/1.json", "data/notes_manifest.json", "data/mp_years.json", "data/batches.json",
+         "data/15/prepis/d/1.json", "data/15/arhiva.json", "data/15/snimak/d.json", "data/notes_manifest.json", "data/mp_years.json", "data/batches.json",
          "tests/fixtures/a.txt"]
 
 

@@ -251,7 +251,7 @@ as the change. The principles and the rules of work are in AGENTS.md.
   links, the bills; a commit and **pages**; then the recordings, offices, portraits, the Rules and the live records, with
   a commit of their own. The chain (notes, the model's writing) is started once, at the end, as before. A roll call listed
   when a run begins is committed about two minutes later (an estimate), not 61 to 97 as it was; one listed just after a run read the page waits for
-  the next run, which queues behind the recordings: that wait stays.
+  the next run, which queued behind the recordings (mended below).
 - **The Fifteenth's roll calls were not read from 17 to 25 Nov 2026**, five of them. The line was `laws && votes && link ||
   true`, and `laws` ends with 1 while the page of passed laws is empty. Nobody saw it: the run was green, and a
   convocation newer than the current one is read and not shown (`site.convocations`). Now `laws` takes an empty page as
@@ -266,6 +266,19 @@ as the change. The principles and the rules of work are in AGENTS.md.
   workflow's own commit steps and runs them against a server where another has changed the same files: the run must end red and
   start nothing; and no workflow may push any other way (but **osnova**, one push that fails aloud). The checkout is of
   `github.ref` in all of them. Written with nothing of this project in it, to go to `javni-uvid/osnova`'s tools.
+- **The recordings are placed by a workflow of their own, snimci** (25 Nov 2026, the maintainer, to the conductor's
+  recommendation with its cost: "Možemo sa tvojom preporukom"). While `arhiva` ran inside **votes**, the next hour's run waited for
+  it, so a roll call listed just after a run had read the page waited 59 to 97 minutes more; with a new run every hour, of the
+  thirteen asked for on the evening of 24 Nov (12:47 to 00:44 UTC) nine ran. **What it costs:** all thirteen would run now,
+  about 22 requests to the Assembly each (counted from the code: the listings and sittings, the laws, the bills, the
+  portraits, the offices, the members), so some 290 in the evening where there were some 200, a second apart as before and no
+  more than the clock says. **The broadcaster's archive** is asked no more than it was: the same files, each tried at most
+  three times, at most 120 frames a file; that evening 18 readings of five files, as the stale checkouts (mended that
+  day) lost the count of tries, and it would have been 11 at most. **One writer a file:** snimci writes `arhiva.json` and
+  `snimak/`, votes the rest (`videos.json`, `uzivo/`, which snimci reads); a day read by hand comes by a pull request. One snimci
+  at a time; of those that wait the newest stays, the one that runs is never stopped. votes starts it after its commit,
+  when a file waits to be placed (`arhiva --waiting`, nothing asked of anyone) or a day's record grew in that run. It starts
+  **pages** only when a day's file changed.
 
 ## Changing convocation
 

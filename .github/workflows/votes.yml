@@ -1,7 +1,8 @@
 # Every hour of the working day for the current convocation, or by hand for another: index a convocation's sittings
 # (with the agenda of those convened) and laws, the bills in procedure, read every roll call and bill not read yet,
 # link laws to their votes, and commit data/<convocation>/ when it changed. A scheduled run that finds nothing new
-# stops there; one that does continues the chain (transcripts, the model's writing, the site).
+# stops there; one that does continues the chain (transcripts, the model's writing, the site). The recordings are
+# placed by snimci, which this starts.
 name: votes
 
 on:
@@ -77,8 +78,8 @@ jobs:
           git add "data/$newest/index.json"
           # Not sent: the last step tries once more, and is red if it can't.
           if sh tools/predaj.sh "The sittings as the Assembly lists them (convocation $newest)"; then gh workflow run pages.yml --ref main || true; fi
-      # The roll calls before all else, with their own commit: the recordings of a sitting's day, read after it, take
-      # over an hour on its evening (25 Nov 2026, measured: 59 to 97 minutes).
+      # The roll calls before all else, with their own commit. The recordings of a sitting's day, which take over an hour
+      # on its evening (25 Nov 2026, measured: 59 to 97 minutes), are placed by **snimci**, started at the end.
       - name: The roll calls, the laws and the bills
         env:
           IN_CONVOCATION: ${{ inputs.convocation }}
@@ -94,7 +95,7 @@ jobs:
           # clock's runs name it by number (19 Nov 2026: for that the newer convocation's MPs, their occupations and its
           # recordings went unread for a day).
           beside=; [ "$conv" = "$current" ] && [ "$newest" != "$conv" ] && beside=$newest
-          { echo "CONV=$conv"; echo "CURRENT=$current"; echo "BESIDE=$beside"; } >> "$GITHUB_ENV"
+          { echo "CONV=$conv"; echo "CURRENT=$current"; echo "BESIDE=$beside"; echo "START=$(git rev-parse HEAD)"; } >> "$GITHUB_ENV"
           # A newer convocation with no law yet is read beside the current one; with its first law it becomes the
           # current one (config.CURRENT). Its sittings were read above. Each command by itself: the page of laws is empty
           # until the first one, `laws` says so with a 1, and for that its roll calls went unread from 17 to 25 Nov 2026.
@@ -138,7 +139,7 @@ jobs:
           title="Glasanja sa spiska Skupštine koja nisu pročitana"
           n=$(gh issue list --state open --limit 200 --json number,title | TITLE="$title" python3 -c 'import json,os,sys; print(next((r["number"] for r in json.load(sys.stdin) if r["title"] == os.environ["TITLE"]), ""))')
           [ -n "$n" ] || gh issue create --title "$title" --body-file "$RUNNER_TEMP/nije.md"
-      - name: The recordings, the offices and the rest
+      - name: The recordings' list, the offices and the rest
         if: ${{ !cancelled() && env.CONV != '' }}  # also when the roll calls failed
         run: |
           c="--convocation $CONV"
@@ -156,11 +157,6 @@ jobs:
             uv run zailiprotiv members || true  # its MPs before its first roll call (members.py)
           fi
           uv run zailiprotiv uzivo-pull  # who spoke when, from the live page (live/); its computer may be off
-          # Each new recording in the archive placed on the clock by its captions, and the day's turns linked into it
-          # (arhiva.py); ffmpeg reads only a few frames of each file over the network.
-          command -v ffmpeg >/dev/null || sudo apt-get install -y -qq ffmpeg >/dev/null
-          uv run --with numpy --with pytesseract zailiprotiv $c arhiva || true
-          if [ -n "$BESIDE" ]; then uv run --with numpy --with pytesseract zailiprotiv --convocation "$BESIDE" arhiva || true; fi
       - name: Commit the rest, and the chain
         if: always()  # keep what was read even when a later step failed
         env:
@@ -190,9 +186,20 @@ jobs:
             [ -z "$ROLLS" ] && { [ "${CTX_EVENT_NAME}" = "schedule" ] || [ "${IN_SCHEDULED}" = "true" ]; } && exit 0
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
           fi
-          sh tools/predaj.sh "Recordings, offices and the rest, beside the roll calls (convocation $CONV)"
+          sh tools/predaj.sh "The recordings' list, offices and the rest, beside the roll calls (convocation $CONV)"
           gh workflow run pages.yml --ref main
           gh workflow run transcripts.yml --ref main -f convocation=$c
+      # A recording not placed yet, or a day's record that has grown since this run began: **snimci** does the rest. After the
+      # commit, so that it finds both on main. (A run that waits for another to end takes both too.)
+      - name: The recordings, by a workflow of their own
+        if: ${{ !cancelled() && env.CURRENT != '' && env.CONV == env.CURRENT }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          waiting=$(for n in $CONV $BESIDE; do uv run zailiprotiv --convocation "$n" arhiva --waiting; done)
+          [ -z "$waiting" ] && git diff --quiet "$START" HEAD -- 'data/*/uzivo/**' && exit 0
+          echo "to be placed: ${waiting:-none; the record has grown}"
+          gh workflow run snimci.yml --ref main
       # The Assembly lists a later convocation's sitting among the current one's: time to switch (docs/decisions/data.md,
       # "Changing convocation"). Said once, in an issue; the current convocation's data stay as they were.
       - name: Tell the maintainer a new convocation has begun
