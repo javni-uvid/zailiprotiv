@@ -22,8 +22,12 @@
 </blockquote>
 {%- endmacro %}
 
+{# The convocations: tabs on a wide screen, one row that opens on a phone (25 Nov 2026), the same links in both. #}
+{% macro conv_row(links, name, years, id="") -%}
+{% if id %}<div id="{{ id }}">{% endif %}<nav class="tabs" aria-label="Saziv">{{ links }}</nav><details class="one conv-row phone-list" data-pagefind-ignore><summary><span>{{ name }} <small>{{ years }}</small></span></summary><nav class="parts-list" aria-label="Saziv">{{ links }}</nav></details>{% if id %}</div>{% endif %}
+{%- endmacro %}
 {% macro tabs(convs, conv, key) -%}
-{% if convs|length > 1 or (newer15 and newer15[key]) %}<nav class="tabs" aria-label="Saziv">{% if newer15 and newer15[key] %}<a href="{{ newer15[key] }}"{% if conv == newer15.conv %} aria-current="page"{% endif %}>{{ newer15.years }}<span>{{ newer15.name }} saziv</span></a>{% endif %}{% for c in convs %}<a href="{{ c[key] }}"{% if c.n == conv %} aria-current="page"{% endif %}>{{ c.years }}<span>{{ c.name }} saziv</span></a>{% endfor %}</nav>{% endif %}
+{% if convs|length > 1 or (newer15 and newer15[key]) %}{% set links %}{% if newer15 and newer15[key] %}<a href="{{ newer15[key] }}"{% if conv == newer15.conv %} aria-current="page"{% endif %}>{{ newer15.years }}<span>{{ newer15.name }} saziv</span></a>{% endif %}{% for c in convs %}<a href="{{ c[key] }}"{% if c.n == conv %} aria-current="page"{% endif %}>{{ c.years }}<span>{{ c.name }} saziv</span></a>{% endfor %}{% endset %}{% set at = (convs|selectattr("n", "equalto", conv)|list or [newer15 if newer15 and conv == newer15.conv else convs[0]])[0] %}{{ conv_row(links, at.name ~ " saziv", at.years) }}{% endif %}
 {%- endmacro %}
 
 {# A term of the Rules (data/poslovnik/pojmovi.json) leads to what the Rules say of it, where the page has it. #}

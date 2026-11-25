@@ -1151,3 +1151,17 @@ def test_a_phone_shows_the_same_first_tiles_and_offices_of_every_mp():
     for f in ("govornici_dan.html", "govornici.html"):
         t = (here / "templates" / f).read_text(encoding="utf-8")
         assert "{{ r.share }} %<i" in t and "Automatsko čitanje može da pogreši" in t and "kako-racunamo" in t + macros
+
+
+def test_the_convocations_row_on_a_phone_has_the_tabs_own_links():
+    """25 Nov 2026: one row that opens in place of tabs that scrolled sideways; the same links in both, no script needed."""
+    from pathlib import Path
+    here = Path(site.__file__).parent / "templates"
+    macros = (here / "macros.html").read_text(encoding="utf-8")
+    row = macros[macros.index("{% macro conv_row("):macros.index("{%- endmacro %}", macros.index("{% macro conv_row("))]
+    assert row.count("{{ links }}") == 2 and '<nav class="tabs"' in row and '<details class="one conv-row phone-list"' in row
+    for f in here.glob("*.html"):  # no page makes tabs of its own past it
+        if f.name != "macros.html":
+            assert '<nav class="tabs"' not in f.read_text(encoding="utf-8"), f.name
+    js = (here.parent / "static/site.js").read_text(encoding="utf-8")
+    assert 't.querySelector("details:not(.conv-row)")' in js  # arriving at it does not open it

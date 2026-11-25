@@ -8,12 +8,12 @@
 {% macro counted(p, key) %}{% if not p.slug %}{{ p.name }}{% elif key == "harsh" %}<a href="{{ c.page_who }}#reci-{{ p.slug }}">{{ p.name }}</a>{% else %}<a href="poslanik/{{ p.slug }}.html#{{ {"exchanges": "replike", "measures": "mere"}.get(key, "aktivnost") }}">{{ p.name }}</a>{% endif %}{% endmacro %}
 {% macro where(e) %}{{ e.date|day }} · {{ e.sitting }}{% if e.on and e.on.text %}<br><span class="floor-on">Na dnevnom redu: {% if e.on.law %}<a href="zakon/{{ e.on.law.slug }}.html">{{ e.on.law.law.short }}</a>{% else %}{{ e.on.text|truncate(140, killwords=False, end=" …") }}{% endif %}{% if e.on.more %} i još {{ e.on.more }}{% endif %}</span>{% elif e.joint %}<br><span class="floor-on">Zajednički pretres o {{ e.joint }} tačaka dnevnog reda</span>{% endif %}{% endmacro %}
 <h1>Varnice u sali</h1>
-<p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene {{ term("replika", "replika") }} između dvoje govornika i {{ term("mere", "mere koje izriče predsedavajući") }}. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
+<p class="standfirst wide-li">Šta se u sali dešava mimo dnevnog reda: razmene {{ term("replika", "replika") }} između dvoje govornika i {{ term("mere", "mere koje izriče predsedavajući") }}. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 {# The newest convocation is one of the tabs once its notes are read; until then its panel stands here. #}
 {% from "macros.html" import newer_panel, newer_tiles, quick_fold with context %}
 {% set own15 = newer15 and newer15.conv in by_conv|map(attribute="n")|list %}
 {% if not own15 %}{{ newer_panel("varnice") }}{% endif %}
-<nav class="tabs" aria-label="Saziv"{% if own15 %} id="saziv-{{ newer15.conv }}"{% endif %}>{% if newer15 and not own15 %}<a href="#saziv-{{ newer15.conv }}">{{ newer15.years }}<span>{{ newer15.name }} saziv</span></a>{% endif %}{% if all_page %}<a href="{{ all_page }}"{% if part == "svi" %} aria-current="page"{% endif %}>Svi sazivi<span>{{ by_conv[-1].years.split("–")[0] }}–{{ by_conv[0].years.split("–")[-1] }}</span></a>{% endif %}{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}</nav>
+{% set links %}{% if newer15 and not own15 %}<a href="#saziv-{{ newer15.conv }}">{{ newer15.years }}<span>{{ newer15.name }} saziv</span></a>{% endif %}{% if all_page %}<a href="{{ all_page }}"{% if part == "svi" %} aria-current="page"{% endif %}>Svi sazivi<span>{{ by_conv[-1].years.split("–")[0] }}–{{ by_conv[0].years.split("–")[-1] }}</span></a>{% endif %}{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}{% endset %}{% from "macros.html" import conv_row with context %}{% if part == "svi" %}{{ conv_row(links, "Svi sazivi", by_conv[-1].years.split("–")[0] ~ "–" ~ by_conv[0].years.split("–")[-1], "saziv-" ~ newer15.conv if own15 else "") }}{% else %}{{ conv_row(links, c.name ~ " saziv", c.years, "saziv-" ~ newer15.conv if own15 else "") }}{% endif %}
 <div class="finder js-only floor-finder" hidden data-filter="floor-rows" data-quiet{% if part != "svi" %} data-none="Niko pod tim imenom među govornicima ovog saziva."{% endif %}>
   <label class="sr" for="f-q">Nađi govornika</label>
   <input id="f-q" type="search" placeholder="Nađi poslanika: govori, replike, mere i teške reči, npr. Jovanov" autocomplete="off">
@@ -176,6 +176,7 @@
 {% endif %}
 {% if own15 and c.n == newer15.conv %}{{ quick_fold() }}{% endif %}
 <p class="meta">{{ c.people|length }} govornika u pročitanim beleškama {{ "svih saziva" if part == "svi" else "ovog saziva" }}. Za reči i rečenice: <a href="pretraga.html">pretraga celog teksta</a>.</p>
+<p class="label phone-list" data-pagefind-ignore>Šta se u sali dešava mimo dnevnog reda: razmene {{ term("replika", "replika") }} između dvoje govornika i {{ term("mere", "mere koje izriče predsedavajući") }}. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 <details class="method"><summary>Kako je ovo nastalo</summary>
 <p>Pronalazi ih pravilo, ne urednik i ne AI model, u beleškama sednica koje smo pročitali. Ne navodimo ko je bio u pravu ni o čemu se „zapravo“ radilo: tu su samo reči govornika. {{ how("replike") }}</p>
 </details>

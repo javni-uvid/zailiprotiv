@@ -1415,3 +1415,33 @@ details.fn-day { margin: 0; } .fn-day > summary { list-style: none; cursor: poin
   main:has(> .home-hero) > .mic { padding: .7rem .9rem; margin-top: 1rem; } main:has(> .home-hero) > .mic .mic-m { font-size: var(--t-4); } main:has(> .home-hero) > .mic .mic-ic { width: 2.3rem; height: 2.3rem; }
   main:has(> .home-hero) > .mic.to-rules { margin-top: 0; } .to-rules .mic-ic { grid-row: 1; }
 }
+
+/* Lighter on a phone, the second round: the pages of the menu. */
+.chips-row > summary { display: none; } details.chips-row { margin: 0; }
+details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer; text-decoration: none; font-weight: inherit; } .year > summary::-webkit-details-marker { display: none; }
+@media (max-width: 640px) {
+  .tabs, .page-menu:has(+ .parts-row) { display: none; }
+  details.conv-row { margin: .4rem 0 1rem; } .conv-row > summary { font-size: var(--t-4); } .conv-row small { color: var(--muted); font-size: var(--t-2); font-weight: 400; margin-left: .5rem; }
+  .conv-row .parts-list a { justify-content: space-between; } .conv-row .parts-list a[aria-current] { font-weight: 700; }
+  .conv-row .parts-list a span { color: var(--muted); font-size: var(--t-2); }
+  .subtabs.law-kinds a, .subtabs.law-kinds.three a, .subtabs.law-kinds.four a { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; box-sizing: border-box; }
+  .subtabs.law-kinds { margin-bottom: .6rem; }
+  .np-tiles { gap: .5rem 1rem; } .np-tiles li > div { border: 0; padding: 0; flex-direction: row; align-items: baseline; gap: .5rem; } .np-tiles span { margin: 0; }
+  .np-tiles.np-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  main:has(> .lead-laws), main:has(> .members-h) { display: flex; flex-direction: column; } main:has(> .lead-laws) > *, main:has(> .members-h) > * { order: 3; }
+  main:has(> .lead-laws) > h1, main:has(> .lead-laws) > .subtabs, main:has(> .lead-laws) > .conv-row, main:has(> .lead-laws) > .finder { order: 1; }
+  main:has(> .lead-laws) > .lead-laws { order: 2; } main:has(> .finder.on) > .lead-laws { display: none; }
+  .lead-laws li:nth-child(n+2) { display: none; }
+  .chips-row > summary { display: flex; } .chips-row .chips { flex-wrap: wrap; overflow: visible; margin-right: 0; padding: 0 0 .4rem; } .chips-row .chip { min-height: 2.75rem; } .chips-row .chips select { flex: 1 1 100%; min-height: 2.75rem; }
+  .finder .chips select { min-height: 2.75rem; }
+  main:has(> .members-h) > .scroll:has(.members-groups) { order: 4; } main:has(> .members-h) > .scroll ~ .foot-note { order: 5; }
+  .members-h { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .subtabs.law-kinds.four { display: grid; grid-template-columns: auto auto auto auto; gap: .3rem; } .subtabs.law-kinds.four a { padding: .3rem .25rem; font-size: var(--t-2); }
+  .week-lead .week-span { font-size: var(--t-6); } .week-lead .lead-nums { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; padding: .7rem 0; } .week-lead .lead-nums b { font-size: var(--t-6); } .week-lead .lead-nums span > span { font-size: var(--t-1); overflow-wrap: anywhere; } .week-lead .lead-nums > :last-child:nth-child(odd) { grid-column: auto; }
+  .year > summary { display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; border-bottom: 1px solid var(--line); } .year > summary::after { content: "+"; color: var(--muted); font-size: var(--t-5); } .year[open] > summary::after { content: "–"; } .year > summary h2 { margin: 0; font-size: var(--t-5); }
+  main > section:has(> .year) { margin: 0; }
+  .newer-panel:has(.np-days) { border: 0; padding: 0; margin-top: .6rem; }
+  .np-days, .sittings-list { list-style: none; padding: 0; } .np-days li, .sittings-list li { margin: 0; padding: .55rem 0; border-bottom: 1px solid var(--line); } .sittings-list li:has(.meta:first-child) { padding: .3rem 0; }
+  .faces .face-who:not(:has(.row-meta)) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+}
+@media (max-width: 345px) { .subtabs.law-kinds.four { grid-template-columns: 1fr 1fr; } .week-lead .lead-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
