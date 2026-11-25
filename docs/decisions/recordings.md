@@ -306,3 +306,16 @@ records and recordings stays here:
   by the days the site lists so (`iz_beleski` in `mikrofon-cekanje.json`). Fields for a machine; no sentence of it is shown
   to readers. Who reads the file: `uzivo.pull` (into `data/<N>/uzivo/`, so the copy there gains the fields with the next pull
   of a recent day), `tacnost` and `arhiva` (they read `govori`), and anyone outside.
+- **A speech's beginning is not counted back over a hole in the recording's words** (25 Nov 2026, the conductor, from the
+  maintainer's reading of the doubtful cases: 18 Nov's Kamberi, Fric and Vučić at 15:45:48 began over the words of the
+  speaker before). `govor.place` steps from a speech's first run back to its first word, and from its last run on to its
+  last, a word heard for a word of the notes. Where Whisper missed a speech's first words (silence in its words of 28 to 42
+  s in all three), that count ran over the chair's words into the speech before. Now it never steps over a hole of more
+  than `GAP` (10 s) with no word heard, nor into another speech's runs, and what the recording did not hear is not guessed:
+  the speech begins at the first word heard after the hole. The end the same way: it stops at the speaker's last word
+  heard, not over applause into the chair's words (18 Nov, Vučić's end at 13:31:52 for 13:32:40). A last run that reaches
+  into the next speech's words no longer moves the end on. Measured on 17-25 Nov, old code giving every day byte for byte
+  as kept: 26 turns move by over 10 s (starts only later, ends only earlier), 31 by less; 18 Nov 448 s less in all, 24 Nov
+  196 s. The live record scored against the days (`tacnost`): 18 Nov 89.0 to 90.3% right and 283 to 190 s under a wrong
+  name (the 97 s the doubtful cases blamed on our placing); 24 Nov 92.3 to 92.8%. 5 and 20 s were tried: 5 moves a few
+  more ends, 20 misses holes of 10 to 20 s, the five cases the same in all three.

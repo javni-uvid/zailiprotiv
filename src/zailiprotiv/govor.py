@@ -23,6 +23,7 @@ ANCHOR = 4       # words in a run
 MIN_ANCHORS = 2  # runs a speech needs to be placed
 SHORT = 2 * ANCHOR  # a speech with fewer words than this cannot hold two runs ("Ne želim.", "Hvala."): see between()
 RATE = 2.5       # words a second, to give such a speech its length
+GAP = 10         # seconds with no word heard: a speech's beginning or end is not counted over it (see place())
 _WORD = re.compile(r"[a-z0-9]+")
 
 
@@ -91,20 +92,31 @@ def place(speeches: list[dict], got: list[tuple[str, str, float]]) -> list[dict]
     for i, p in anchors(said, [w for w, _, _ in got]):
         by.setdefault(owner[i], []).append((i, p))
     out = []
-    for s in speeches:
-        runs = by.get(s["key"], [])
+    all_runs = [by.get(s["key"], []) for s in speeches]
+    ends = [r[-1][1] + ANCHOR - 1 if r else -1 for r in all_runs]   # the last heard word of each speech's runs
+    for k, s in enumerate(speeches):
+        runs = all_runs[k]
         s = dict(s, sidra=len(runs))
         if len(runs) >= MIN_ANCHORS:
             (i0, p0), (i1, p1) = runs[0], runs[-1]
             n = len(fold(s["text"]))
-            # from the first run back to the speech's first word, and from the last run on to its last word, as many
-            # words of the recording as of the notes (Whisper leaves words out and adds some, about as many)
-            a = max(0, p0 - (i0 - first[s["key"]]))
-            b = min(len(got) - 1, p1 + ANCHOR - 1 + (first[s["key"]] + n - 1 - (i1 + ANCHOR - 1)))
-            while a < p0 and got[a][1] != got[p0][1]:
-                a += 1
+            # From the first run back to the speech's first word, and from the last run on to its last word, as many
+            # words of the recording as of the notes (Whisper leaves words out and adds some, about as many), but
+            # never over a hole of more than GAP seconds in the recording's words, nor into another speech's runs:
+            # where Whisper missed a speech's first words, counting them back had taken the chair's words and the
+            # speaker's before (25 Nov 2026: 18 Nov's Kamberi began 78 s early, over Vučić's end). What the recording
+            # did not hear is not guessed: the speech begins at the first word heard after the hole.
+            lo = max(ends[:k], default=-1) + 1
+            hi = min((r[0][1] for r in all_runs[k + 1:] if r), default=len(got)) - 1
+            need, a = i0 - first[s["key"]], p0
+            while need > 0 and a > lo and got[a - 1][1] == got[a][1] and got[a][2] - got[a - 1][2] <= GAP:
+                a, need = a - 1, need - 1
+            need = first[s["key"]] + n - 1 - (i1 + ANCHOR - 1)  # under 0: the last run reaches into the next speech
+            b, need = min(len(got) - 1, p1 + ANCHOR - 1 + min(need, 0)), max(need, 0)
             while b > p1 and got[b][1] != got[p1][1]:
                 b -= 1
+            while need > 0 and b < hi and got[b + 1][1] == got[b][1] and got[b + 1][2] - got[b][2] <= GAP:
+                b, need = b + 1, need - 1
             if got[a][1] == got[b][1]:
                 s.update(datoteka=got[a][1], od=got[a][2], do=got[b][2])
             else:  # from one file into the next (24 Nov 2026: an hour's speech of 19 Nov had no place, its last words

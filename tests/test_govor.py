@@ -42,6 +42,27 @@ def test_place_and_day():
     assert t["okvira"] >= govor.MIN_ANCHORS and t["beleske"] == ["2"]
 
 
+def test_a_speechs_beginning_the_recording_missed_is_not_counted_back_into_the_speech_before():
+    """25 Nov 2026: Whisper missed the first words of 18 Nov's Kamberi; counting them back from his first run took the
+    chair's words and Vučić's end, 78 s early. The beginning is not counted over a hole of GAP seconds in the words
+    heard, nor into another speech's runs; and the end the same way, not over applause into the chair's words."""
+    before = "i zato vas pozivam da glasate za ovaj zakon koji je dobar za sve građane naše zemlje hvala vam"
+    chair = "zahvaljujem reč ima narodni poslanik šaip kamberi izvolite"
+    missed = "zahvaljujem gospodine predsedavajući dame i gospodo počinjem od toga šta piše u članu prvom"
+    mp = "početak novog saziva uvek predstavlja priliku da se preispitaju odnosi i otvore nova pitanja za sve nas"
+    after = "a to bi bilo sve što imam da kažem danas"
+    speeches = [{"key": "1", "chair": False, "speaker": "A", "text": before},
+                {"key": "2", "chair": True, "speaker": "ПРЕДСЕДАВАЈУЋИ", "text": chair},
+                {"key": "3", "chair": False, "speaker": "Б", "text": missed + " " + mp + " " + after},
+                {"key": "4", "chair": True, "speaker": "ПРЕДСЕДАВАЈУЋИ", "text": "hvala vam idemo dalje sa listom govornika"}]
+    # Whisper heard nothing of "missed" (30 s of words lost) nor of "after" (applause, then the chair)
+    words = (heard(before, 100) + heard(chair, 115) + heard(mp, 150) + heard("hvala vam idemo dalje sa listom govornika",
+                                                                            185))
+    placed = govor.place(speeches, words)
+    assert placed[2]["od"] == 150 and placed[2]["do"] == 150 + (len(govor.fold(mp)) - 1) * 0.5
+    assert placed[0]["do"] == 100 + (len(govor.fold(before)) - 1) * 0.5  # the speech before keeps its end
+
+
 def test_a_very_short_speech_between_two_placed_ones_gets_a_place():
     """21 Nov 2026: "Ne želim." (two words) answering the chair has no run of four, and so no place by runs; it stands
     just after the speech before it. A longer speech with no runs, or a short one at the edge, still has none."""
