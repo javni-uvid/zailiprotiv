@@ -204,22 +204,32 @@ as the change. The principles and the rules of work are in AGENTS.md.
   the vote by name, after a page's mark, was glued onto Ana Brnabić's answer when her name was called ("Нећу да
   учествујем у овој фарси."), so the list counted as her words and `govor.roll_call` dropped her answer with it. Now a
   heading of two words or more, or the chair's role, after a sentence's end, begins that speech; and a list glued onto a
-  member's speech, on a day a roll call was read before it, goes to whoever read that one. Every word is kept in order;
+  member's speech, on a day a roll call was read before it, is split off and given **no speaker**: the notes give it no
+  heading, and the site states only what the source states (the conductor, 26 Nov 2026, rather than the reader of the
+  roll call around it by inference). It carries `"no_heading": "roll call"`, counts for nobody's words or speeches (the
+  tally, the notes' count of speeches, the measures' neighbours and the exchanges skip a speech with no speaker), and
+  the notes' page heads it "Bez imena govornika u beleškama (deo prozivke)". Every word is kept in order;
   only a boundary or an attribution moves (principle 6). A speech split off keeps the key of the one it was in with a
   letter after it ("54098/00647a"), so no key that a page, a link or a model's text names moves; it takes the day, part
   and items of that one (the chair's words split off an MP's speech so do not move the debate's parts on, as a fresh
   reading would; none such in the Fifteenth). Run again, it changes nothing.
-  - **Counted in every convocation's notes before the mend** (speeches split off, words that change speaker): 9th 96
-    and 44,580; 10th 160 and 61,544; 11th 2 and 391; 12th 1 and 8; 13th 14 and 1,592; 14th 13 and 2,620; 15th 2 and 293.
+  - **Counted in every convocation's notes before the mend**, for the maintainer to decide on rewriting the earlier ones:
+
+    | Convocation | 9th | 10th | 11th | 12th | 13th | 14th | 15th |
+    |---|---|---|---|---|---|---|---|
+    | speeches split off | 96 | 160 | 2 | 1 | 14 | 13 | 2 |
+    | words that change speaker | 44,580 | 61,544 | 391 | 8 | 1,592 | 2,620 | 293 |
+
     All are headings inside a line but one: the roll call glued onto an answer occurs once in all the notes (19 Nov).
     The names of those not heading any speech of their sitting (21) were all looked at: real headings, some misspelt by
     the notes. Only the Fifteenth's stored notes are mended; the earlier ones wait for a decision of their own.
-  - **The Fifteenth:** Ana Brnabić 20 to 21 speeches, 6,930 to 6,691 words (the roll call's 266 leave her, her own 27
-    come in); Srđan Smiljanić, who read the roll call, 3 to 4 speeches; the chair 29 words less; the chair's measures
-    the same. The days from the recording: 19 Nov a turn of hers at 22:33:20 (19 s), 24 Nov her turn of 12:52:11 to
+  - **The Fifteenth:** Ana Brnabić 20 to 21 speeches, 6,930 to 6,691 words (the roll call's 266 leave her for nobody,
+    her own 27 come in from the chair's); Srđan Smiljanić, who read the roll call, 3 speeches and 3,380 words as before;
+    the chair 29 words less; the chair's 12 measures the same. The days from the recording: 19 Nov a turn of hers at 22:33:20 (19 s), 24 Nov her turn of 12:52:11 to
     12:53:03 for 12:52:45.
-  - **Not mended, found on the way:** 8 headings at a line's beginning the parser did not take (a space before the colon,
-    "ЛАВ – ГРИГОРИЈЕ ПАЈКИЋ:", the chair's role twice); one in the Fifteenth, the chair's own (54098/00492). The 25 words
+  - **Known, not mended:** 8 headings at a line's beginning the parser did not take (a space before the colon,
+    "ЛАВ – ГРИГОРИЈЕ ПАЈКИЋ:", the chair's role twice); one in the Fifteenth, the chair's own (54098/00492). A parser
+    mend for a later pull request, by the same proof: every word kept, counts before and after per convocation. The 25 words
     after the roll call of 19 Nov 23:50 ("Молим вас да сачекате резултате … Десет минута пауза.") stand under the reader
     with no heading of their own: the chair's, by their sense, but the notes do not say so.
   - `govor.roll_call` counts semicolons and dashes, so a long chair's speech of the Thirteenth with an agenda and vote

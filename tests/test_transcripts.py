@@ -131,7 +131,7 @@ def test_a_sitting_read_before_is_read_again_when_a_day_is_added(tmp_path, monke
 
 def test_a_heading_inside_a_line_and_a_roll_call_glued_on_are_split_off_with_every_word_kept():
     """25 Nov 2026: the notes of 24 Nov hold "…повреда Пословника.АНА БРНАБИЋ: …" in the chair's speech, and those of
-    19 Nov the rest of a roll call glued onto Ana Brnabić's answer. A heading of one word that is no role, or one after
+    19 Nov the rest of a roll call glued onto Ana Brnabić's answer, which the notes give no heading: nobody's. A heading of one word that is no role, or one after
     no sentence's end, splits nothing; no other key moves; run again, nothing changes."""
     from zailiprotiv import transcripts
     roll = "\n".join(f"Презиме{c} Име – Марија Бјелобрк, Сара Валентик;" for c in "абвгдђежзијклљмнњопрс")
@@ -146,7 +146,8 @@ def test_a_heading_inside_a_line_and_a_roll_call_glued_on_are_split_off_with_eve
     got = transcripts.mended(sp)
     assert list(got) == ["00001", "00002", "00002a", "00003", "00003a"]
     assert got["00002"]["text"] == "Нећу да учествујем у овој фарси. Хвала вам.\n63/1МВ/МЈ22.35 – 22.45"
-    assert got["00002a"]["speaker"] == "СРЂАН СМИЉАНИЋ" and got["00002a"]["text"] == roll
+    assert got["00002a"]["speaker"] == "" and got["00002a"]["no_heading"] == transcripts.NO_HEADING  # nobody's
+    assert got["00002a"]["text"] == roll and transcripts.tally(list(got.values()))[""] == 0
     assert got["00003"]["text"] == "Молим вас, само објасните која је повреда Пословника."
     assert got["00003a"]["speaker"] == "АНА БРНАБИЋ" and not got["00003a"]["chair"]
     assert got["00003a"]["text"].startswith("Члан 107") and got["00003a"]["text"].endswith("СКУПШТИНЕ: ништа")

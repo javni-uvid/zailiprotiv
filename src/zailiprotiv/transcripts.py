@@ -383,7 +383,7 @@ def tally(speeches_: list[dict]) -> Counter:
     """Words spoken by each speaker, the chair left out."""
     out: Counter = Counter()
     for s in speeches_:
-        if not s["chair"]:
+        if not s["chair"] and s["speaker"]:  # a part with no heading is nobody's
             out[s["speaker"]] += words(s["text"])
     return out
 
@@ -393,6 +393,7 @@ def tally(speeches_: list[dict]) -> Counter:
 HEADING_IN_LINE = re.compile(rf"(?<=[.?!…»\")])[ \t]*(?=(?:(?:[Дд]р|[Пп]роф|[Мм]р)\.?\s+)*[{CAPS}][{CAPS}\-]+"
                              rf"(?:\s+[{CAPS}][{CAPS}\-.]*){{0,5}}:\s)")
 # A line of a vote by name: "Бубњевић Слободан – Марија Бјелобрк, …;", "Џајић Сања – Није ту."
+NO_HEADING = "roll call"  # a part the notes give no heading, inside a roll call: nobody's speech
 LIST_LINE = re.compile(r"^[^\W\d]+(?:\s+[^\W\d.]+\.?){1,5}\s*[–-].*[;.]\s*$")
 
 
@@ -412,7 +413,9 @@ def mended(speeches_: dict[str, dict]) -> dict[str, dict]:
     speech; and a vote by name the notes glue onto a member's answer (19 Nov 2026: "Нећу да учествујем у овој фарси."
     and the rest of the roll call after it, all under Ana Brnabić) is split from it, the list going to whoever read
     the roll call before it that day. A speech split off keeps the key of the one it was in with a letter after it
-    ("00647a"), so no other key moves; it is given the day, part and items of that one. Run again, it changes nothing."""
+    ("00647a"), so no other key moves; it is given the day, part and items of that one. Run again, it changes nothing.
+    The notes give such a list no heading, so it is given no speaker ("speaker" empty, `NO_HEADING` saying why; the
+    conductor, 26 Nov 2026: the site states only what the source states) and counts for nobody's words or speeches."""
     from zailiprotiv.govor import roll_call
     out: list[tuple[str, dict]] = []
     for key, s in sorted(speeches_.items()):
@@ -430,18 +433,18 @@ def mended(speeches_: dict[str, dict]) -> dict[str, dict]:
             out.append((f"{key}{chr(ord('a') + n)}", {**s, "speaker": name, "chair": is_chair(name),
                                                       "text": (h.group(2) + "\n" + rest).strip()}))
     done: list[tuple[str, dict]] = []
-    reader: dict[int, str] = {}  # the day's last reader of a roll call
+    read: set = set()  # the days a roll call was read on, so far
     for key, s in out:
         lines = (s.get("text") or "").split("\n")
         at = next((i for i, line in enumerate(lines) if LIST_LINE.match(line.strip())), None)  # the first line of a list
-        if (at and not s["chair"] and s.get("day") in reader and roll_call("\n".join(lines[at:]))
+        if (at and not s["chair"] and s.get("speaker") and s.get("day") in read and roll_call("\n".join(lines[at:]))
                 and words(" ".join(lines[:at]))):
             done.append((key, {**s, "text": "\n".join(lines[:at]).strip()}))
-            name = reader[s["day"]]
             free = next(c for c in "abcdefghijklmnopqrstuvwxyz" if not any(k == key[:5] + c for k, _ in out + done))
-            done.append((key[:5] + free, {**s, "speaker": name, "chair": is_chair(name), "text": "\n".join(lines[at:]).strip()}))
+            done.append((key[:5] + free, {**s, "speaker": "", "chair": False, "no_heading": NO_HEADING,
+                                          "text": "\n".join(lines[at:]).strip()}))
             continue
         if roll_call(s.get("text") or ""):
-            reader[s.get("day")] = s["speaker"]
+            read.add(s.get("day"))
         done.append((key, s))
     return dict(sorted(done))

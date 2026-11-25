@@ -292,7 +292,7 @@ def mend(stores: dict, votes: dict) -> dict[str, str]:
     for v in votes.values():
         for row in v["rows"]:
             roster.setdefault(loose(mps.key(row[1])), row[1])
-    heard = Counter(sp["speaker"] for notes in stores.values() for sp in (notes.get("speeches") or {}).values() if not sp.get("chair"))
+    heard = Counter(sp["speaker"] for notes in stores.values() for sp in (notes.get("speeches") or {}).values() if not sp.get("chair") and sp["speaker"])
     by_key, spelled = Counter(), {}
     for name, n in heard.most_common():
         k = loose(mps.key(name))
