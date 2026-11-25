@@ -9,6 +9,7 @@ when its loop of frames last turned (`petlja`). `citac.Reader` reads it.
 And the lock that keeps the writing to one: two measurings on the same volume would write over each other's files."""
 from __future__ import annotations
 
+import json
 import logging
 import threading
 import time
@@ -31,6 +32,14 @@ LOOK = 1.0  # seconds between looks for a change
 
 def file(state_path: str | Path) -> Path:
     return Path(state_path).with_name("sada.json")
+
+
+def read(state_path: str | Path) -> dict:
+    try:
+        m = json.loads(file(state_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return m if isinstance(m, dict) else {}
 
 
 def moment(tracker, now: float) -> dict:

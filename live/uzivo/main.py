@@ -16,18 +16,19 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, hronika, picture, pretplata, prepis, sada, slusaj, sudija, worker
-from .stream import VIDEO
+from . import config, picture, pretplata, slusaj
 from .obavesti import Bell
 from .page import admin_page, fragment, listen_html, manifest, page, service_worker, transcript_page
-from .state import Tracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
-sada.prepare(config.STATE_PATH)  # the only writer, before anything is read: the run before may still be writing
-tracker = Tracker(config.STATE_PATH)
-if config.KEEP_INPUTS and Path(config.STATE_PATH).parent.is_dir():  # what it is told, kept to go through a day again
-    from . import dnevnik
-    dnevnik.attach(tracker, Path(config.STATE_PATH).parent / "ulazi")
+APART = config.ROLE == "strana"  # the measuring is another process: its files are read, nothing of it is loaded here
+if APART:
+    from .citac import Reader
+    tracker = Reader(config.STATE_PATH)
+    slusaj.told = lambda: tracker.sada.get("zvuk") or {}
+else:
+    from . import merenje
+    tracker = merenje.tracker()
 _stop = threading.Event()
 bell = Bell()
 mailer = pretplata.Mailer(Path(config.STATE_PATH).parent / "mejl", pretplata.day_mail(tracker))
@@ -39,32 +40,52 @@ NO_STORE = {"Cache-Control": "no-store"}
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    threading.Thread(target=worker.run, args=(tracker, _stop, bell), daemon=True).start()
-    if Path(config.STATE_PATH).parent.is_dir():  # the moment, for the page's own process (citac.py); nothing reads it yet
-        sada.Pulse(tracker, _stop).start()
-    if prepis.on():
-        prepis.Writer(tracker, _stop).start()
-        if config.WHISPER_URL and config.SHOW_CAPTIONS:  # the line under the picture, on the graphics card only
-            prepis.Captions(tracker, _stop).start()
-        if config.VOICES:  # who speaks by the voice, while no caption names anyone (glas.py)
-            from . import glas
-            glas.Listener(tracker, _stop).start()
-    hronika.Watcher(tracker, _stop).start()
-    if sudija.on():  # the model tells the day's steps and sums the day up (sudija.py); no key, no calls
-        sudija.Judge(tracker, _stop, bell=bell, mailer=mailer).start()
-        if config.SPEECH_LINES:  # a line on each speech when it ends (rezimei.py)
-            from . import rezimei
-            rezimei.Writer(tracker, _stop).start()
+    if not APART:
+        merenje.start(tracker, _stop, bell)
+    pretplata.Watch(tracker, mailer, _stop).start()
     yield
     _stop.set()
 
 
 app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+# What says who speaks now. Without the measuring (no heartbeat, or its loop standing: citac.Reader.alive) none of it is
+# served, as when the service is down: the edge then gives its last answer or the site's page, the counter's watch
+# tells the maintainer, and an open page keeps what it shows. The days kept, the mail and the rest go on.
+MOMENT = {"/", "/cir", "/cir/", "/deo", "/cir/deo", "/stanje.json", "/stanje.js", "/slika.png", "/cir/slika.png", "/prica.png",
+          "/cir/prica.png"}
+
+
+@app.middleware("http")
+async def only_while_measured(request: Request, call_next):
+    if APART and request.url.path in MOMENT and not await asyncio.to_thread(tracker.alive):
+        return Response("Servis trenutno ne radi.", status_code=503, media_type="text/plain; charset=utf-8",
+                        headers={**NO_STORE, "Retry-After": "30"})
+    return await call_next(request)
+
+
+@app.get("/zdravlje")
+def health() -> JSONResponse:
+    """That this process answers (Docker's check of the page's container): the measuring has a check of its own."""
+    return JSONResponse({"ok": True}, headers=NO_STORE)
+
+
+def _video() -> str:
+    """The YouTube id of the broadcast being read."""
+    if APART:
+        return str(tracker.sada.get("video") or "")
+    from .stream import VIDEO
+    return VIDEO.get("id", "")
+
+
+def _versions() -> dict:
+    """The commit of the page, and of the measuring (another one when they were put live apart)."""
+    return {"verzija": config.VERSION, "merenje": str(tracker.sada.get("verzija") or "") if APART else config.VERSION}
 
 
 def _page(cyr: bool) -> HTMLResponse:
-    return HTMLResponse(page(tracker.snapshot(), cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
-                             live=VIDEO.get("id", ""), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
+    snap = tracker.snapshot()  # first: the rest is read with it
+    return HTMLResponse(page(snap, cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
+                             live=_video(), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
                              push_key=config.PUSH_KEY, version=config.VERSION, sample=bool(_sample_day())),
                         headers=NO_STORE)
 
@@ -215,7 +236,7 @@ def cyrillic_transcript(k: str = "") -> HTMLResponse:
 
 @app.get("/stanje.json")
 def state() -> JSONResponse:
-    return JSONResponse({**tracker.snapshot(), "verzija": config.VERSION}, headers=NO_STORE)
+    return JSONResponse({**tracker.snapshot(), **_versions()}, headers=NO_STORE)
 
 
 @app.get("/stanje.js")
@@ -315,7 +336,7 @@ def listen_page(k: str) -> Response:
 def listen_playlist(k: str) -> Response:
     if not config.admin_open(k):
         raise HTTPException(404)
-    text = slusaj.PLAYLIST.text()
+    text = slusaj.playlist()
     if not text:
         raise HTTPException(404)
     return Response(text, media_type="application/vnd.apple.mpegurl", headers={"Cache-Control": "no-store"})
@@ -337,7 +358,7 @@ def listen_public(name: str) -> Response:
     if not config.LISTEN_PUBLIC:
         raise HTTPException(404)
     if name == "z.m3u8":
-        text = slusaj.PLAYLIST.text()
+        text = slusaj.playlist()
         if not text:
             raise HTTPException(404)
         return Response(text, media_type="application/vnd.apple.mpegurl", headers={"Cache-Control": "no-cache, max-age=2"})

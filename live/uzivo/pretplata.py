@@ -16,6 +16,7 @@ import logging
 import re
 import socket
 import threading
+import time
 import urllib.error
 from datetime import date, datetime, timedelta
 from html import escape
@@ -23,6 +24,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import config, mejl, mere, mreza
+from .obavesti import to_tell
 from .state_base import _write
 
 log = logging.getLogger("uzivo.pretplata")
@@ -233,6 +235,35 @@ class Mailer:
         if broken or failed:
             return "deo", len(done)
         return ("nesigurno" if unsure else "ok"), len(done)
+
+
+MAIL_EVERY = 300  # seconds between tries of the day's mail to the maintainer
+
+
+class Watch(threading.Thread):
+    """The day's mail to the maintainer, with the link that sends it to all, once the day's summary is kept: asked again
+    every few minutes, so that one that did not go is tried again (Mailer.ready knows what went). By the kept files
+    alone (25 Nov 2026; until then in the model's loop): whoever serves the page sends the mail, and a restart of the
+    measuring does not hold it back."""
+
+    def __init__(self, tracker, mailer: Mailer, stop: threading.Event) -> None:
+        super().__init__(daemon=True)
+        self.tracker, self.mailer, self.halt = tracker, mailer, stop
+
+    def step(self, now: float | None = None) -> bool:
+        now = time.time() if now is None else now
+        day = str(self.tracker.snapshot(now=now).get("dan") or "")
+        if not day or not to_tell(self.tracker.summary_of(day).get("dan"), now, TZ):
+            return False
+        return self.mailer.ready(date.fromisoformat(day))
+
+    def run(self) -> None:
+        while not self.halt.is_set():
+            try:
+                self.step()
+            except Exception:
+                log.exception("the day's mail not tried")
+            self.halt.wait(MAIL_EVERY)
 
 
 WEAK = "<p><b>Pažnja:</b> sažetak je napisao slabiji model iz sažetaka delova. Proveri rečenice po govorniku.</p>"

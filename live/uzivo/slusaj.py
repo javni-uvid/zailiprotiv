@@ -12,6 +12,7 @@ import logging
 import math
 import subprocess
 import threading
+import time
 from pathlib import Path
 
 from . import config, r2
@@ -29,15 +30,33 @@ def on() -> bool:
 REMOTE = "uzivo/"  # the folder in the bucket (r2.py): the playlist, and each broadcast's segments under its video's id
 
 
+told = None  # in the page's own process: gives what the measuring said of the live sound ({"t", "url"}; sada.py)
+
+
 def address() -> str:
     """Where listeners get the playlist: the bucket's public address when it is set (22 Nov 2026: Cloudflare's terms
     want audio served from its storage), else this service's own /slusaj/z.m3u8."""
+    if told:
+        return str(told().get("url") or "/slusaj/z.m3u8")
     return r2.PUBLIC + REMOTE + "z.m3u8" if r2.on() else "/slusaj/z.m3u8"
 
 
 def fresh(now: float) -> bool:
     """Whether the playlist has a segment from the last minute: the button is offered only then."""
+    if told:
+        return now - float(told().get("t") or 0) < 60
     return bool(PLAYLIST.items) and now - PLAYLIST.seen < 60
+
+
+def playlist() -> str:
+    """The playlist as served: this process's own, or in the page's process the file the measuring keeps of it (in a
+    folder both have: LISTEN_PATH), while it is fresh."""
+    if not told:
+        return PLAYLIST.text()
+    try:
+        return (PLAYLIST.folder / "z.m3u8").read_text(encoding="utf-8") if fresh(time.time()) else ""
+    except OSError:
+        return ""
 
 
 class Playlist:

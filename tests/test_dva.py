@@ -1,5 +1,6 @@
 """The measuring and the page as two: the moment's file and the lock (sada.py), the page's reader (citac.py)."""
 import json
+import re
 import select
 import subprocess
 import sys
@@ -195,3 +196,69 @@ def test_the_reader_loads_no_model_stream_or_ocr():
             "if m in sys.modules])")
     out = subprocess.run([sys.executable, "-c", code, str(LIVE)], capture_output=True, text=True)
     assert out.stdout.strip() == "[]", out.stdout + out.stderr
+
+
+def test_the_mail_to_the_maintainer_goes_by_the_kept_summary(two, monkeypatch):
+    """25 Nov 2026: until then asked from the model's loop, which a restart of the measuring begins anew."""
+    import datetime as dt
+    from uzivo import pretplata
+    t, pulse, reader, base = two
+    t.observe(t.roster.people[0], "PG A", now=NOW)
+    pulse.step(NOW)
+    asked = []
+
+    class Mailer:
+        def ready(self, day):
+            asked.append(day)
+            return True
+    w = pretplata.Watch(reader, Mailer(), threading.Event())
+    at = dt.datetime(2026, 11, 24, 20, 0, tzinfo=pretplata.TZ).timestamp()
+    monkeypatch.setattr(config, "SHOW_SUMMARY", True)
+    assert not w.step(at) and not asked  # no summary yet
+    kept = {"delovi": [], "dan": {"ukratko": "Govorili su.", "t": at - 60}}
+    _write(base / "sazetak" / "2026-11-24.json", kept)
+    assert w.step(at) and asked == [dt.date(2026, 11, 24)]
+    assert not w.step(at + 3.5 * 3600)        # 23:30: nobody is woken
+    assert not w.step(at + 13 * 3600)         # 9:00 the next day: half a day old
+    monkeypatch.setattr(config, "SHOW_SUMMARY", False)
+    assert not w.step(at) and len(asked) == 1
+
+
+def test_the_page_knows_of_the_live_sound_by_what_the_measuring_said(tmp_path, monkeypatch):
+    from uzivo import slusaj
+    said = {"t": 1000.0, "url": "https://zvuk.zailiprotiv.rs/uzivo/z.m3u8"}
+    monkeypatch.setattr(slusaj, "told", lambda: said)
+    assert slusaj.fresh(1059) and not slusaj.fresh(1061) and slusaj.address() == said["url"]
+    monkeypatch.setattr(slusaj, "PLAYLIST", slusaj.Playlist(tmp_path))
+    (tmp_path / "z.m3u8").write_text("#EXTM3U\n", encoding="utf-8")
+    monkeypatch.setattr(slusaj.time, "time", lambda: 1010.0)
+    assert slusaj.playlist() == "#EXTM3U\n"
+    monkeypatch.setattr(slusaj.time, "time", lambda: 2000.0)
+    assert slusaj.playlist() == ""            # of a broadcast that is over
+
+
+def test_the_measuring_s_check_goes_by_the_page_s_own_rule(two, monkeypatch):
+    from uzivo import merenje
+    t, pulse, _, _b = two
+    assert not merenje.healthy()
+    t.looped = NOW
+    pulse.step(NOW)
+    monkeypatch.setattr(citac.time, "time", lambda: NOW + 10)
+    assert merenje.healthy()
+    monkeypatch.setattr(citac.time, "time", lambda: NOW + citac.BEAT_OLD + 1)
+    assert not merenje.healthy()
+
+
+def test_the_page_s_modules_load_no_model_stream_or_ocr():
+    """The models must not be loaded twice: what main.py imports for the page alone (picture, which needs Pillow, is the
+    only other)."""
+    code = ("import sys; sys.path.insert(0, sys.argv[1])\nfrom uzivo import citac, config, obavesti, page, pretplata, slusaj\n"
+            "print([m for m in ('numpy','yt_dlp','faster_whisper','ctranslate2','sherpa_onnx','anthropic','pytesseract','uzivo.worker',"
+            "'uzivo.merenje') if m in sys.modules])")
+    out = subprocess.run([sys.executable, "-c", code, str(LIVE)], capture_output=True, text=True)
+    assert out.stdout.strip() == "[]", out.stdout + out.stderr
+    code = (LIVE / "uzivo" / "main.py").read_text(encoding="utf-8")
+    apart = code[:code.index("else:\n    from . import merenje")]
+    imported = set(re.findall(r"\w+", " ".join(re.findall(r"^ *(?:from|import) (.+)$", apart, re.M))))
+    assert {"pretplata", "Reader"} <= imported
+    assert not imported & {"worker", "prepis", "glas", "sudija", "hronika", "ocr", "numpy", "stream", "sada"}

@@ -55,6 +55,14 @@ def resumed(said: dict[str, str], turns: list[dict], events: list[dict], now: fl
     return int(gap[0])
 
 
+def to_tell(whole, now: float, tz) -> bool:
+    """Whether a day's summary (`whole`, as kept) is to be told of now, by a notification and by the mail to the
+    maintainer: it is on the page, in the hours that may wake someone (a day ended at midnight is told in the
+    morning), and not news no more (half a day old)."""
+    return bool(config.SHOW_SUMMARY and isinstance(whole, dict) and whole.get("ukratko")
+                and HOURS[0] <= datetime.fromtimestamp(now, tz).hour < HOURS[1] and now - whole.get("t", now) <= 12 * 3600)
+
+
 class Bell:
     def __init__(self, path: str | None = None, *, token: str | None = None, api: str | None = None, post=None):
         self.path = Path(path or config.PUSH_PATH)

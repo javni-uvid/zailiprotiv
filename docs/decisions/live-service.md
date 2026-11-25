@@ -171,3 +171,15 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   - **Nothing reads `sada.json` yet:** step 1 changes nothing of what is served. Tried for the later steps: a page with `/data`
     read-only and only the volume's `mejl` subpath writable, and the page's modules, which took 63 MB with both pages and two
     pictures of an empty day drawn and load no model, stream reader or OCR.
+- **Two roles in the code** (25 Nov 2026, step 2 of the same plan; live it is still one process). `ULOGA` empty: the page and
+  the measuring in one process, as before. `merenje`: `python -m uzivo.merenje`, every thread of the measuring and no web
+  server; its check is `python -m uzivo.merenje zdravo`. `strana`: `main.py` with `citac.Reader`, which loads nothing of the measuring.
+  - **The page by itself answers 503** on what says who speaks now (the home in both scripts, `/deo`, `/stanje.json`, `/stanje.js`,
+    the pictures) while the measuring is not there (`citac.alive`); the days, the summaries and the mail go on. The edge
+    and the counter's watch take that as a service that is down, with no change to either; an answer kept by the edge may so stand
+    150 s at worst (30 and the edge's 120), where it is 120 in one process. `/zdravlje` says only that the page answers.
+  - **The maintainer's mail is asked for by `pretplata.Watch`**, from the kept summary, in whichever process serves the page; until
+    now from the model's loop. `obavesti.to_tell` is the one rule of when a summary is told of, the bell's and the mail's.
+  - `/stanje.json` has `merenje`, the measuring's commit, beside `verzija`. The live sound's freshness and address come from
+    `sada.json`; without the bucket the page serves the playlist from `LISTEN_PATH`, a folder both must then have.
+  - Measured: the page 97 MB after 150 pages and pictures of a made-up day of 230 turns and 2,500 pieces (the budget was 150).
