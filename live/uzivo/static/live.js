@@ -350,6 +350,8 @@
     } catch (err) {}
   }
   use("otvori");
+  // a speech opened from a mail to who follows an MP: one sum, and the mark is taken off the address
+  if (location.hash === "#iz-mejla") { use("iz-mejla"); history.replaceState(null, "", location.pathname + location.search); }
   var seen = 0, marks = [[60, "1min"], [300, "5min"], [900, "15min"], [1800, "30min"]];
   var clock = setInterval(function () {
     if (document.hidden) return;

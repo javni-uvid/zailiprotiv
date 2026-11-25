@@ -20,5 +20,8 @@ routes = [
   # digits (SHARED); anything else under it goes to the service as it is. With "*", an address with a query matches too.
   { pattern = "mikrofon.zailiprotiv.rs/govor/*", zone_name = "zailiprotiv.rs" },
   { pattern = "mikrofon.zailiprotiv.rs/cir/govor/*", zone_name = "zailiprotiv.rs" },
+  # The same speech from a mail (25 Nov 2026): while the service is off the worker itself leads on to it.
+  { pattern = "mikrofon.zailiprotiv.rs/iz-mejla/*", zone_name = "zailiprotiv.rs" },
+  { pattern = "mikrofon.zailiprotiv.rs/cir/iz-mejla/*", zone_name = "zailiprotiv.rs" },
 ]
 # Not /stanje.js either: other pages read it every few seconds, from Cloudflare's cache (live/uzivo/main.py).

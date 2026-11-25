@@ -69,6 +69,8 @@ async function fallback(url) {
     return new Response(JSON.stringify({ radi: false }), {
       status: 503, headers: { ...busy, "content-type": "application/json; charset=utf-8" } });
   }
+  const mail = /^\/(cir\/)?iz-mejla\/(govor\/\d{10})$/.exec(url.pathname);  // a speech's link in a mail: the speech's own
+  if (mail) return Response.redirect(`${url.origin}/${mail[1] || ""}${mail[2]}#iz-mejla`, 302);
   if (PART.test(url.pathname)) return new Response("", { status: 503, headers: busy });
   // a shared speech (/govor/<second>) too: the site's page lists the last day, and its script finds the speech there
   const page = /^\/(govor\/\d{10})?$/.test(url.pathname) ? "mikrofon"

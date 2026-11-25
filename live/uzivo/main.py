@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, deljenje, picture, pretplata, slusaj
+from . import config, deljenje, picture, prati, pretplata, slusaj
 from .obavesti import Bell
 from .page import admin_page, fragment, listen_html, manifest, page, service_worker, transcript_page
 
@@ -32,6 +32,7 @@ else:
 _stop = threading.Event()
 bell = Bell()
 mailer = pretplata.Mailer(Path(config.STATE_PATH).parent / "mejl", pretplata.day_mail(tracker))
+following = prati.Following(tracker, mailer, _stop)
 _tz = ZoneInfo(config.TZ)
 FONTS = Path(__file__).parent / "static" / "fonts"
 URL = os.environ.get("PUBLIC_URL", "").strip()  # the page's own address, for canonical links
@@ -43,6 +44,7 @@ async def lifespan(_: FastAPI):
     if not APART:
         merenje.start(tracker, _stop, bell)
     pretplata.Watch(tracker, mailer, _stop).start()
+    following.start()
     yield
     _stop.set()
 
@@ -187,6 +189,9 @@ def _speech(cyr: bool, sek: str) -> Response:
         to = deljenje.elsewhere(at, tracker.waiting, cyr=cyr, tz=_tz)
         if to:
             return RedirectResponse(to, status_code=302, headers=NO_STORE)
+        slug = deljenje.kept(tracker.record, at, _tz)
+        if slug:
+            return RedirectResponse(f'{config.SITE}{"cir/" if cyr else ""}poslanik/{slug}', status_code=302, headers=NO_STORE)
     return RedirectResponse("/cir/" if cyr else "/", status_code=302, headers=NO_STORE)
 
 
@@ -198,6 +203,38 @@ def latin_speech(sek: str) -> Response:
 @app.get("/cir/govor/{sek}")
 def cyrillic_speech(sek: str) -> Response:
     return _speech(True, sek)
+
+
+@app.get("/iz-mejla/govor/{sek}")
+def latin_from_mail(sek: str) -> Response:
+    """A speech opened from a mail to who follows an MP: the same address for every reader. The page's script counts one
+    sum of them a day ("mikrofon.iz-mejla"), not whose speech and not who; a mail scanner runs no script."""
+    return RedirectResponse(f"/govor/{sek}#iz-mejla" if deljenje.moment(sek) else "/", status_code=302, headers=NO_STORE)
+
+
+@app.get("/cir/iz-mejla/govor/{sek}")
+def cyrillic_from_mail(sek: str) -> Response:
+    return RedirectResponse(f"/cir/govor/{sek}#iz-mejla" if deljenje.moment(sek) else "/cir/", status_code=302, headers=NO_STORE)
+
+
+@app.get("/mejl/prati")
+def follow_ask(dan: str = "", k: str = "") -> HTMLResponse:
+    """The maintainer's link in the morning's mail: a page with one button, as for the day's mail."""
+    return HTMLResponse(prati.page_ask(dan, k), headers={"Cache-Control": "no-store", "Referrer-Policy": "no-referrer",
+                                                         "X-Robots-Tag": "noindex, nofollow"})
+
+
+@app.post("/mejl/prati")
+async def follow_send(request: Request) -> HTMLResponse:
+    """The button: the mail to who follows an MP that spoke, that morning only (prati.Following.to_all)."""
+    from urllib.parse import parse_qs
+    form = parse_qs((await request.body()).decode("utf-8", "replace")[:500])
+    dan, k = (form.get("dan") or [""])[0], (form.get("k") or [""])[0]
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", dan):
+        return HTMLResponse(prati.page_done("kod", 0), status_code=400)
+    from datetime import date
+    what, n = await asyncio.to_thread(following.to_all, date.fromisoformat(dan), k)
+    return HTMLResponse(prati.page_done(what, n), headers={"Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow"})
 
 
 @app.get("/deo")

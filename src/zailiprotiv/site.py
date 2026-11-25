@@ -338,11 +338,11 @@ ORDINAL_NAME = {"8": "Osmi", "9": "Deveti", "10": "Deseti", "11": "Jedanaesti", 
 
 # The files copied as they are from static/ to the site's root (glasaj.js comes with the quiz's pages). PNGs: Google
 # Search doesn't take an SVG favicon.
-STATIC_FILES = ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "listic.js",
+STATIC_FILES = ("style.css", "site.js", "favicon.svg", "pretraga.js", "bez-slike.svg", "glas.js", "prati.js", "listic.js",
                 "favicon-96.png", "apple-touch-icon.png", "logo.png",
                 "caslav-srce.webp",  # the cat in a heart beside "Podrži" in the head of every page, as on the live page
                 "marko.jpg", "caslav.jpg")  # the two on the page "Podrži" (23 Nov 2026, the maintainer's)
-VERSIONED = ("style.css", "site.js", "pretraga.js", "glas.js", "listic.js", "glasaj.js")
+VERSIONED = ("style.css", "site.js", "pretraga.js", "glas.js", "prati.js", "listic.js", "glasaj.js")
 
 
 def asset_version() -> str:
@@ -1185,6 +1185,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     (out / pages_mikrofon.SPEAKERS_FILE).write_text(json.dumps(pages_mikrofon.speakers(
         member_rows, live_facts, conv=members_conv or "", spoken_=pages_mikrofon.spoken(days_read), plain=_plain,
         latin=latin, day=env.filters["day"]), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+    from zailiprotiv.cyrillic import cyr
+    (out / pages_mikrofon.FOLLOW_FILE).write_text(json.dumps(pages_mikrofon.followable(
+        member_rows, latin=latin, given_first=given_first, cyr=cyr), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     items = items_by_conv[active]
     votes = loaded[active][1]

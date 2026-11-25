@@ -62,6 +62,7 @@ _ATTR = re.compile(r'\b(alt|title|placeholder|aria-label)="([^"]*)"')
 _LINK = re.compile(r'\b(href|src)="([^"#?:][^":]*?)([#?][^"]*)?"')
 _PAGE = (".html", "/")
 _CIR_HREF = re.compile(r'\bdata-cir-href="([^"]*)"')
+_CIR_VALUE = re.compile(r'value="[^"]*" data-cir-value="([^"]*)"')  # what a form sends from this edition, with no script
 _CIR_CONTENT = re.compile(r'content="[^"]*" data-cir-content="([^"]*)"')  # a share picture of its own for this edition
 _SAID = re.compile(r'<meta (?:name="description"|property="og:(?:title|description|site_name)") content="([^"]*)"')
 
@@ -89,6 +90,8 @@ def page(html: str, rel: str) -> str:
                 skip = tag
             elif tag == "svg" and 'class="ips-qr"' in part:  # a payment code (pages_support): a drawing, never words
                 skip = tag
+            if tag == "input" and "data-cir-value=" in part:
+                part = _CIR_VALUE.sub(r'value="\1"', part)
             if tag == "meta" and "data-cir-content=" in part:
                 part = _CIR_CONTENT.sub(r'content="\1"', part)
             if tag == "meta" and _SAID.match(part):

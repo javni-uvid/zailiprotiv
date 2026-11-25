@@ -71,7 +71,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 
 | Address | What | From |
 |---|---|---|
-| zailiprotiv.rs | the site's pages and search | GitHub Pages, behind Cloudflare |
+| zailiprotiv.rs | the site's pages and search; a sitting MP's page offers a mail when the MP speaks in the hall | GitHub Pages, behind Cloudflare |
 | beleske.zailiprotiv.rs | the notes' pages and their search index; the notes as read (`sirovo/`) | R2 bucket `zailiprotiv-beleske` |
 | podaci.zailiprotiv.rs | every law's CSV, JSON and picture, MPs' pictures, `podaci/` | R2 bucket `zailiprotiv-podaci` |
 | glasovi.zailiprotiv.rs | the visitors' votes counter, and the project's clock | Cloudflare Worker with D1 (`worker/`) |

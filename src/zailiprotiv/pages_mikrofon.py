@@ -195,7 +195,19 @@ def quiz(*, numbers: list[dict], totals: dict, active: str, items: list[dict] | 
 
 
 SPEAKERS_FILE = "mikrofon-poslanici.json"
+FOLLOW_FILE = "prati-poslanici.json"  # the sitting MPs, for the counter: who can be followed by mail (worker/prati.js)
 QUOTE_AT_MOST = 240  # characters: a quote is shown whole or not at all (principle 6), and the box is small
+
+
+def followable(rows: list[dict], *, latin, given_first, cyr) -> dict[str, list[str]]:
+    """Who can be followed by mail, by address: the name as people say it, in both scripts. Every sitting MP, and only
+    they (`rows` as in `speakers`)."""
+    out = {}
+    for r in rows:
+        name = given_first(re.sub(r"\s*\(\d{4}\)$", "", latin(r.get("name") or "")).strip())
+        if name:
+            out[r["slug"]] = [name, cyr(name)]
+    return out
 
 
 def span(convs: list[str]) -> str:

@@ -17,18 +17,18 @@
 // Unconfirmed sign-ups are deleted after 48 hours (cleanup, from the scheduled run).
 
 const LIVE = "https://mikrofon.zailiprotiv.rs";
-const SELF = "https://glasovi.zailiprotiv.rs";
-const FROM = { email: "sazetak@mikrofon.zailiprotiv.rs", name: "Za ili Protiv" };
-const REPLY = "kontakt@zailiprotiv.rs";
-const PRIVACY = "https://zailiprotiv.rs/privatnost";
+export const SELF = "https://glasovi.zailiprotiv.rs";
+export const FROM = { email: "sazetak@mikrofon.zailiprotiv.rs", name: "Za ili Protiv" };
+export const REPLY = "kontakt@zailiprotiv.rs";
+export const PRIVACY = "https://zailiprotiv.rs/privatnost";
 export const ADDRESS = /^[^\s@<>()",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
-const KEEP_UNCONFIRMED = 48 * 3600e3;
+export const KEEP_UNCONFIRMED = 48 * 3600e3;
 
 const enc = new TextEncoder();
 const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const hex = (buf) => [...new Uint8Array(buf)].map((x) => x.toString(16).padStart(2, "0")).join("");
-async function sha(text) { return hex(await crypto.subtle.digest("SHA-256", enc.encode(text))); }
-const random = (n) => hex(crypto.getRandomValues(new Uint8Array(n)));
+export async function sha(text) { return hex(await crypto.subtle.digest("SHA-256", enc.encode(text))); }
+export const random = (n) => hex(crypto.getRandomValues(new Uint8Array(n)));
 
 // The address, sealed for the maintainer's key: base64url of the worker's one-time public key (65 bytes), the
 // nonce (12) and the AES-GCM ciphertext. `live/uzivo/pretplata.py` opens it.
@@ -47,7 +47,7 @@ export async function seal(jwk, text) {
   return b64u(out);
 }
 
-const WORDS = {
+export const WORDS = {
   lat: { subject: "Potvrdi prijavu: klikni na dugme u ovom mejlu", brand: "Za ili Protiv",
          head: "Potvrdi prijavu", lead: "Klikni na dugme, pa još jednom na stranici koja se otvori. Bez toga ti sažetak dana ne stiže.",
          reply: "Ne odgovaraj na ovaj mejl: odgovor ne potvrđuje prijavu. Ako dugme ne radi, otvori ovaj link:",
@@ -77,10 +77,10 @@ const WORDS = {
          check: "Провери сандуче", checkText: "Послали смо ти мејл. Отвори га и кликни на дугме „Да, пријави ме“: без тога пријава не важи. Одговор на мејл је не потврђује.",
          bad: "Адреса није исправна", back: "Назад на микрофон" },
 };
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // A page of the worker's own (a confirmation, an unsubscription): the site's look, nothing loaded from anywhere.
-function page(w, title, text, form) {
+export function page(w, title, text, form, back) {
   const live = w === WORDS.cir ? LIVE + "/cir/" : LIVE + "/";
   return new Response(`<!doctype html><html lang="${w === WORDS.cir ? "sr-Cyrl" : "sr-Latn"}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(title)} · ${esc(w.brand)}</title>
@@ -92,7 +92,7 @@ button,.a{display:inline-block;font:inherit;font-weight:700;background:#111;colo
 a{color:#111}@media (prefers-color-scheme:dark){body{background:#0c0e12;color:#f1f1ee}main{background:#181b21;border-color:#f1f1ee}p{color:#c9ccd3}
 button,.a{background:#f1f1ee;color:#111}a{color:#f1f1ee}.b i{color:#7cc0f5}.b em{color:#ff9a52}}</style></head><body><main>
 <div class="b"><i>${w === WORDS.cir ? "За" : "Za"}</i> ${w === WORDS.cir ? "или" : "ili"} <em>${w === WORDS.cir ? "Против" : "Protiv"}</em></div>
-<h1>${esc(title)}</h1><p>${esc(text)}</p>${form || `<a class="a" href="${live}">${esc(w.back)}</a>`}
+<h1>${esc(title)}</h1><p>${esc(text)}</p>${form || `<a class="a" href="${back ? back.href : live}">${esc(back ? back.text : w.back)}</a>`}
 <p style="font-size:.85rem;margin-top:1.4rem"><a href="${PRIVACY}">${esc(w.privacy)}</a></p></main></body></html>`,
     { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "referrer-policy": "no-referrer",
                               "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'" } });
@@ -115,7 +115,7 @@ function confirmMail(w, link) {
   return { html, text };
 }
 
-async function form(request) {
+export async function form(request) {
   const type = request.headers.get("content-type") || "";
   const body = (await request.text()).slice(0, 2000);
   if (type.includes("application/json")) { try { return { json: true, ...(JSON.parse(body) || {}) }; } catch (e) { return { json: true }; } }

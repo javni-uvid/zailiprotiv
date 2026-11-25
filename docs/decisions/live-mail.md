@@ -183,3 +183,28 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   account; nobody else looked). The page says only that: what Cloudflare keeps besides stands as its documentation has it.
   The sentence is true only while the switch stays off, and a new sending domain turns it on by itself: look at it with any
   change of the domain, and mend the sentence the day it is turned on.
+- **Following a sitting MP by mail, step 1: "govori u sali"** (25 Nov 2026, the maintainer, of the proposal's decisions 3-11 and three designs each:
+  "Po preporuci za sad"; "za sad": it may change once seen). A mail the morning after a day on which an MP the reader follows
+  spoke in the hall; every sitting MP by one rule. The counter's side is in `worker/README.md`, the sender is `prati.py`.
+  - **Only the caption.** A speech is told when its name was read from the broadcast's caption (no "izvor", or "potpis", in two frames or more).
+    Measured against the notes on 18, 24 and 25 Nov (an MP in a day): the caption's 61, the right person in 60 (a former MP once, since
+    mended by rule); 14 by the voice or the chair's words alone, 13 right, not told, as a guess is not a fact; 9 in the notes that the record
+    lacked. On 19 Nov, when the captions stopped, the mail would have missed most. The mail says whence the name is, and that the notes hold.
+  - **What is kept.** On the counter the address and what is followed, each sealed and padded to one length; no hash, column or count per MP.
+    Here `/data/mejl/prati/stanje.json` (the page writes only `/data/mejl`): per row id, up to which day a reader was told and when a mail last
+    went; a reader who ended everything is dropped from it. Never an address or a name, in a file or a log: exceptions are logged by type.
+  - **One mail a day.** From nine, to one o'clock, marked before the call that sends: nobody is told twice; what surely did not go is undone
+    (the counter not reached) or waits for tomorrow (a message refused). A day is told for three days at most. Who has the summary too finds
+    it there, as a card after the day (`mejl.build(following=...)`), and waits for it until noon; then a mail of its own goes. A reader who
+    follows nobody gets the summary byte for byte as it was (a test; and compared with `main`'s on 19, 24 and 25 Nov, both scripts).
+    The counter not answering with the followers never holds up the summary.
+  - **On the maintainer's click** for the first two sitting weeks (its own link and code, good that morning); his mail has how many in all, who
+    spoke by the caption, and a sample of the first of them by the alphabet, never who follows whom. `PRATI_SAMO=1` in `live/.env` ends it.
+  - **The look** is variant B, a plain list; no portrait (a request for one portrait would say whom a reader follows), no initials either in the
+    drawing chosen, no support card, nothing loaded, no name in a subject (Cloudflare keeps subjects), nothing a model wrote.
+  - **The links** are the same for every reader: `/iz-mejla/govor/<second>` leads to the speech, and the page's script counts one sum a day
+    (`mikrofon.iz-mejla`), not whose speech. While the service is off the edge leads on to the speech itself. A speech of a day no longer on
+    the page and not listed by the site yet leads to the MP's page, not home (`deljenje.kept`): the morning the mail is read is the one the
+    next sitting begins.
+  - **Not in this step:** the notes' later names, votes, laws, groups, a correction's line of its own (a false name is mended in the next day's
+    mail to all, by the maintainer), an MP's leaving.
