@@ -61,7 +61,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Javni uvid** on every page: the family's bar at the top (its page and its other sites) and its block in the
   footer, in the family's look (`osnova/design/`, `family.py`).
 - **The live page on every page**: "Uživo" in the menu (red while a sitting is on), a strip on the home page with
-  who speaks now, the next sitting's day and hour or the last day with its recording, and an announcement on the
+  who speaks now, the next sitting's day and hour (one convened, or one begun going on, as the Assembly's page of it says) or the last day with its recording, and an announcement on the
   other pages from the day before a sitting until it starts.
 - **Search** over the site and every speech; **feeds** (new laws, bills, per area, per MP, weeks); **downloads**
   (CSV, JSON) under CC BY 4.0; **method** ("Kako računamo"): how every figure is made.

@@ -316,8 +316,9 @@ WEEKDAYS = ("ponedeljak", "utorak", "sreda", "četvrtak", "petak", "subota", "ne
 def next_start(root, conv: str, now: datetime | None = None) -> dict | None:
     """When the Assembly sits next, for the site's way to the live page (22 Nov 2026): the first sitting of the
     convocation convened for today or later, as the Assembly lists it (data/<N>/index.json "starts"), or the next day
-    of a sitting going on, as a notice gives it ("pocinje" beside the notice's sentence in data/obavestenja.json,
-    written by hand from the Assembly's site). Times are Belgrade's; the page's script shows the announcement from
+    of a sitting going on, as its page at the Assembly says ("continues", skupstina.continues) or a notice gives it
+    ("pocinje" beside the notice's sentence in data/obavestenja.json, written by hand from the Assembly's site). The
+    nearest still to come; today's, its hour past, only when no other is known. Times are Belgrade's; the page's script shows the announcement from
     the day before ("od") until the start ("u"), "sutra" until the day itself begins ("dan"). None when none is known."""
     now = now or datetime.now(TZ)
     today = now.date().isoformat()
@@ -330,6 +331,8 @@ def next_start(root, conv: str, now: datetime | None = None) -> dict | None:
         at = str(s.get("starts") or "")
         if s.get("agenda") and not s.get("votes") and len(at) >= 16:
             found.append(at[:16])
+        if len(str(s.get("continues") or "")) >= 16:
+            found.append(s["continues"][:16])
     try:
         rows = json.loads((Path(root) / NOTICES_FILE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -344,7 +347,8 @@ def next_start(root, conv: str, now: datetime | None = None) -> dict | None:
             starts.append(datetime.fromisoformat(at).replace(tzinfo=TZ))
         except ValueError:
             pass
-    start = min((s for s in starts if s.date().isoformat() >= today), default=None)
+    start = min((s for s in starts if s > now), default=None) or max(
+        (s for s in starts if s.date().isoformat() == today), default=None)
     if start is None:
         return None
     day0 = start.replace(hour=0, minute=0)

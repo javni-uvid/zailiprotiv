@@ -189,7 +189,7 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   sitting until it starts, the live bar with its dot grey: "Sutra (Danas) u 10 h: sednica Skupštine". The next
   sitting's start is the Assembly's listing of a sitting convened, or, for the next day of one going on, the
   notice's `pocinje` in `data/obavestenja.json`, written by hand from the Assembly's site
-  (`pages_mikrofon.next_start`); the pages carry the hours and the script shows each part only in them
+  (`pages_mikrofon.next_start`; since 25 Nov 2026 the sitting's own page says it, `continues`, `data.md`); the pages carry the hours and the script shows each part only in them
   (`data-show`). Each way counted by where it was taken (`sajt.mikrofon-meni`, `-pocetna`, `-najava`, `-traka`,
   `-poslanik`), to see after the 24 Nov sitting what brings people.
 - **The phone's menu is a bar at the bottom, and "Uživo" is its middle** (23 Nov 2026, the maintainer's choice of three:

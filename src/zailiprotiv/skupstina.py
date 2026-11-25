@@ -8,6 +8,7 @@ one for extraordinary sittings."""
 
 from __future__ import annotations
 
+import datetime as dt
 import http.client
 import re
 import time
@@ -144,6 +145,7 @@ class Sitting:
     votes: list[Vote] = field(default_factory=list)
     agenda: list[str] = field(default_factory=list)  # the items it was convened for, as its page lists them
     starts: str = ""  # "2026-08-24T10:00", from the notice that convened it
+    continues: str = ""  # "2026-11-25T10:00", when its page says the Assembly goes on with it
 
 
 _MONTHS = months.CYR
@@ -160,6 +162,32 @@ def convened(html: str) -> str:
     day = f"{d.group(3)}-{_MONTHS.index(d.group(2).lower()) + 1:02d}-{int(d.group(1)):02d}"
     h = re.search(r"почетком у (\d{1,2})[.:,](\d{2})", text[d.end():])
     return f"{day}T{int(h.group(1)):02d}:{h.group(2)}" if h else day
+
+
+_DAYS_IN = ("понедељак", "уторак", "среду", "четвртак", "петак", "суботу", "недељу")
+_GOES_ON = re.compile(r"\b(?:наставља|наставиће)(?:\s+се)?(?:\s+(?:са\s+)?рад(?:ом)?)?,?\s+у\s+(\w+),?\s+"
+                      r"(\d{1,2})\.\s*(\w+)\s+(\d{4})\.(?:\s*године)?,?"
+                      r"(?:\s+са\s+почетком)?(?:\s+у\s+(\d{1,2})(?:[.:,](\d{2}))?\s*(?:час|сат))?", re.I)
+
+
+def continues(html: str) -> str:
+    """When the Assembly goes on with a sitting already begun, as the sitting's page says at the end of a day: "Народна
+    скупштина наставља рад у среду, 25. новембра 2026. године, са почетком у 10.00 часова" (25 Nov 2026), "наставља са
+    радом у уторак, 24. новембра 2026. године, у 10.00 часова" (20 Nov). The latest such day with its hour, the day
+    alone when no hour is given, empty when none is said. A sentence whose day of the week is not its date's is not
+    read: which of the two is meant is not for us to say."""
+    text = re.sub(r"<[^>]+>", " ", re.sub(r"<!--.*?-->", " ", html, flags=re.S))
+    text = re.sub(r"\s+", " ", unescape(text))
+    found = []
+    for weekday, d, word, y, h, minute in _GOES_ON.findall(text):
+        month = next((i for i, m in enumerate(zip(months.NAMES, months.OF), 1) if latin(word).lower() in m), 0)
+        try:
+            at = dt.datetime(int(y), month, int(d), int(h or 0), int(minute or 0))
+        except ValueError:
+            continue
+        if weekday.lower() == _DAYS_IN[at.weekday()]:
+            found.append(at.strftime("%Y-%m-%dT%H:%M" if h else "%Y-%m-%d"))
+    return max(found, default="")
 
 
 def agenda(html: str) -> list[str]:
@@ -236,6 +264,7 @@ def index(get: Callable[[str], bytes] = fetch, convocation: str = "14") -> tuple
     for sitting in found:
         page = get(sitting.url).decode("utf-8", "replace")
         sitting.votes, sitting.agenda, sitting.starts = votes(page, sitting.url), agenda(page), convened(page)
+        sitting.continues = continues(page)
     later += [s.title for s in found if s.starts and s.starts[:10] >= conf.get("to", "9999")]
     return [s for s in found if within(s.starts, conf)], later
 
