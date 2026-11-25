@@ -3,6 +3,8 @@
 {% from "rules_icons.html" import icon %}
 {% block title %}Poslovnik Narodne skupštine: pojmovi i članovi na koje se poslanici pozivaju — Za ili Protiv{% endblock %}
 {% block description %}Šta po Poslovniku Narodne skupštine znače replika, opomena, oduzimanje reči, hitni postupak i drugi pojmovi sa sajta, i članovi Poslovnika koje poslanici navode u govorima, svi sazivi od 2012.{% endblock %}
+{% block share %}{% if site_url and rules_picture %}<meta property="og:image" content="{{ site_url }}{{ rules_picture.lat }}" data-cir-content="{{ site_url }}{{ rules_picture.cir }}">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">{% else %}{{ super() }}{% endif %}{% endblock %}
 {# An article's own words, as the Assembly publishes them: in the serif, behind a line, never mistaken for ours. #}
 {% macro law(paragraphs) %}<div class="law-text">{% for x in paragraphs %}<p>{{ x }}</p>{% endfor %}</div>{% endmacro %}
 {% block main %}

@@ -49,7 +49,7 @@ name. Every page is also in Cyrillic, under `cir/`.
   articles invoked in the debates, the terms the site explains and the order of a sitting's steps.
   The page `poslovnik-clanovi` explains the site's terms from it (`data/poslovnik/pojmovi.json`: replika, the chair's
   measures, hitni postupak, načelni pretres, amandman, Dan za glasanje…, each with the articles' text; an index
-  of them, a search over terms and articles), and the
+  of them, a search over terms and articles; its link shows the Rules as an open book, `rules_card.py`), and the
   pages where a term appears link there.
 - **Ko koliko govori:** per sitting day read from the recording (`govornici/<date>`), each speaker's time and the
   time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a

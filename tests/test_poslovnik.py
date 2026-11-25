@@ -145,3 +145,27 @@ def test_the_sites_terms_rest_on_articles_the_rules_have():
     assert len(ids) == len(set(ids))
     terms = poslovnik.terms(folder)
     assert all(len(t["articles"]) == len(t["clanovi"]) for t in terms)
+
+
+def test_the_rules_share_picture_is_drawn_from_the_rules_in_both_scripts(tmp_path):
+    """25 Nov 2026: an open book at the article on the reply, in each script; the general picture when the retelling no
+    longer stands on the article as it reads."""
+    from pathlib import Path
+
+    from PIL import Image
+
+    from zailiprotiv import cyrillic, poslovnik, rules_card
+    root = Path(__file__).parents[1]
+    terms, rules = poslovnik.terms(root / "data/poslovnik"), poslovnik.load(root / "data/poslovnik")
+    shown = rules_card.parts(terms, rules)
+    assert [a for a, _ in shown[1]] == ["Član 103", "Član 104"] and shown[0] == next(t for t in terms if t["id"] == "replika")["objasnjenje"]
+    lat, cir = tmp_path / "a.png", tmp_path / "b.png"
+    rules_card.both(shown, lat, cir)
+    for f in (lat, cir):
+        assert Image.open(f).size == (1200, 630) and f.stat().st_size < 300_000
+    assert lat.read_bytes() != cir.read_bytes()
+    changed = [{**t, "changed": True} if t["id"] == rules_card.TERM else t for t in terms]
+    assert rules_card.parts(changed, rules) is None and rules_card.parts([], rules) is None and rules_card.parts(terms, None) is None
+    assert rules_card.parts(terms, {"clanovi": [a for a in rules["clanovi"] if a["n"] != 103]}) is None
+    page = '<meta property="og:image" content="https://x.rs/poslovnik.png" data-cir-content="https://x.rs/poslovnik-cir.png"><p>a</p>'
+    assert 'content="https://x.rs/poslovnik-cir.png"><' in cyrillic.page(page, "a.html") and "data-cir" not in cyrillic.page(page, "a.html")

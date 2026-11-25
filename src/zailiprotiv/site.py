@@ -547,6 +547,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
               # "Podrži" (pages_support), linked from the footer and the home page when settings has it (22 Nov 2026)
               "support": bool((settings.get("support") or {}).get("account")),
               "support_amounts": [str(a) for a in (settings.get("support") or {}).get("amounts") or [500]]}
+    # The Rules' own share picture (rules_card.py), drawn below when there is what to draw.
+    from zailiprotiv import rules_card
+    rules_shown = rules_card.parts(src.rule_terms, src.rules)
+    common["rules_picture"] = {"lat": rules_card.LAT, "cir": rules_card.CIR} if rules_shown else None
     # A plenary sitting in progress, as the Assembly lists it now (the newest convocation's listing is the one read
     # each hour): the pages that list sittings point to the Assembly's live broadcast while it lasts.
     common["live"], common["live_url"] = [], LIVE
@@ -958,6 +962,12 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             card.draw(kept, *args_)
         shutil.copy(kept, path)
     picture(out / "za-ili-protiv.png", "Kako glasaju poslanici Narodne skupštine Srbije", "Zakoni, glasanja, rasprave", None, "")
+    if rules_shown:
+        kept = [cache / f"{hashlib.sha256(repr((rules_card.VERSION, n, rules_shown)).encode()).hexdigest()[:24]}.png" for n in (rules_card.LAT, rules_card.CIR)]
+        if not all(k.exists() for k in kept):
+            rules_card.both(rules_shown, *kept)
+        for k, n in zip(kept, (rules_card.LAT, rules_card.CIR)):
+            shutil.copy(k, out / n)
     for args in law_pages:
         it = args["it"]
         if it["final"]:  # the picture shown when the page is shared

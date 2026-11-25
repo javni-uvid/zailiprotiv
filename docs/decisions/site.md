@@ -11,7 +11,7 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   none is left). **The Cyrillic edition** (13 Nov 2026; `cyrillic.py`) writes every page again under `cir/`, letter by
   letter back from Latin except what is Latin by nature (`KEEP`) and words where nj, lj, dž are two sounds
   (`_APART`: add to it when one is found); scripts' output is converted by `site.js`; share pictures and feeds stay
-  Latin.
+  Latin (the Rules' picture has a Cyrillic twin since 25 Nov 2026, below).
 - **Design** (12 Nov 2026, chosen from three mock-ups): newspaper look, white page, Literata headlines (served from
   the site), colour only for "za" (blue) and "protiv" (orange), never for a group. The mark is the chamber as one arc.
   Neutral order everywhere: groups by seats then alphabet; names in Serbian order (`collate`). MPs are written
@@ -245,6 +245,16 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   counter already refused what came from other origins; now it is not asked either. `publish.check` lets the visits'
   script through in that one form only (`publish.ANALYTICS`). A translating proxy's copy (`*.translate.goog`) isn't
   counted either.
+- **The Rules' page has a share picture of its own, in each script** (25 Nov 2026, the maintainer: "Treba mi mnogo lepša
+  slika kada podelim link poslovnika - koja je vezana za poslovnik"; of three he chose the book: "B / Može ćirilična
+  slika / Ne smeta što je presečen samo ulepšaj i unapredi da bude vidljivije da je knjiga/poslovnik"). Until then a
+  link showed the site's general picture, Latin on both editions. `rules_card.py` draws the Rules as an open book at the
+  article on the reply (the term's first article and the one before it, word for word, going out of sight at the
+  page's foot), with a question and our retelling beside the book, so that the two voices stay apart. It is drawn at
+  build time from `data/poslovnik/`; its only numbers are the articles'. When an article the retelling rests on
+  changes, the page has the site's own picture until it is written again. The mark's two colours are lightened for the
+  dark ground; blue and orange are nowhere else. The Cyrillic page takes its own by `data-cir-content`
+  (`cyrillic.py`): the first share picture in Cyrillic, the others stay Latin.
 
 ## Design rules
 
