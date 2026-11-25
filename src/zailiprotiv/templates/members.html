@@ -9,7 +9,7 @@
 {{ tabs(convs, conv, "mps_page") }}
 <h2 class="members-h">{{ conv_name }} saziv, od {{ since|day_of }}</h2>
 {% if grouped %}
-<div class="scroll"><table class="groups members-groups">
+<div class="scroll wide-li"><table class="groups members-groups">
   <thead><tr><th>Poslanička grupa</th><th class="num">Poslanika</th><th class="num">Prvi put</th></tr></thead>
   <tbody>{% for g in sections %}<tr><td><a href="#g{{ loop.index }}">{{ g.name }}</a></td><td class="num">{{ g.rows|length }}</td><td class="num">{{ g.rows|selectattr("new")|list|length }}</td></tr>{% endfor %}</tbody>
 </table></div>
@@ -37,6 +37,12 @@
 {% endfor %}
 {% endfor %}
 </ol>
+{% if grouped %}
+<div class="scroll phone-list" data-pagefind-ignore><table class="groups members-groups">
+  <thead><tr><th>Poslanička grupa</th><th class="num">Poslanika</th><th class="num">Prvi put</th></tr></thead>
+  <tbody>{% for g in sections %}<tr><td><a href="#g{{ loop.index }}">{{ g.name }}</a></td><td class="num">{{ g.rows|length }}</td><td class="num">{{ g.rows|selectattr("new")|list|length }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
 <p class="label">{{ conv_name }} saziv Narodne skupštine konstituisan je {{ since|day_of }}. Ovde je svih {{ rows|length }} poslanika sa spiska Skupštine; {{ new }} {{ "je" if new % 10 == 1 and new % 100 != 11 else "su" }} prvi put u Skupštini od 2012. godine, a ostali vode na svoje stranice sa glasanjima i govorima iz ranijih saziva.</p>
 <p class="label">Glasanja i govori ovog saziva biće na stranicama poslanika od prve sednice na kojoj se glasa.</p>
 <p class="meta foot-note">Izvor: <a href="{{ source }}">spisak poslanika na sajtu Narodne skupštine</a>{% if listed_on %}, preuzet {{ listed_on[:10]|day }}{% endif %}. Stranka je ona na čiji je predlog poslanik izabran, kako je Skupština navodi („bez stranke“: navedena nije nijedna). „Prvi put“: nije na poimeničnim glasanjima od 2012, pa je moguće da je poslanik bio ranije. Ko je već bio poslanik prepoznato je po imenu i godištu iz arhive Skupštine.</p>

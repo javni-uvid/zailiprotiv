@@ -1391,9 +1391,9 @@ details.fn-day { margin: 0; } .fn-day > summary { list-style: none; cursor: poin
   .mp-hero .mp-photo, .mp-hero:has(.off) .mp-photo { grid-row: 1 / span 4; margin: 0; }
   .mp-head { display: contents; }
   .mp-head > * { grid-column: 2; } .mp-head h1 { margin-top: 0; }
-  .mp-head .mp-line { grid-column: 1 / -1; order: 6; margin: .7rem 0 0; }
+  .mp-hero > .mp-line { grid-column: 1 / -1; margin: .7rem 0 0; }
   .mp-groups { margin-bottom: .4rem; } .mp-groups.past { display: none; } .mp-own { margin: 0 0 .4rem; color: var(--muted); font-size: var(--t-2); } .mp-now { margin-bottom: .6rem; }
-  .off { grid-column: 1 / -1; order: 5; margin-top: .5rem; }
+  .off { grid-column: 1 / -1; margin-top: .5rem; }
   .off ul { display: block; } .off-more ul { margin: 0; }
   .off li:not(.wide-li) { display: block; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; padding: .5rem 0; min-height: 1.75rem; }
   .off li.wide-li, .off li .off-k { display: none; } .off li .off-m { margin-left: .4rem; }
@@ -1428,13 +1428,9 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
   .subtabs.law-kinds { margin-bottom: .6rem; }
   .np-tiles { gap: .5rem 1rem; } .np-tiles li > div { border: 0; padding: 0; flex-direction: row; align-items: baseline; gap: .5rem; } .np-tiles span { margin: 0; }
   .np-tiles.np-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  main:has(> .lead-laws), main:has(> .members-h) { display: flex; flex-direction: column; } main:has(> .lead-laws) > *, main:has(> .members-h) > * { order: 3; }
-  main:has(> .lead-laws) > h1, main:has(> .lead-laws) > .subtabs, main:has(> .lead-laws) > .conv-row, main:has(> .lead-laws) > .finder { order: 1; }
-  main:has(> .lead-laws) > .lead-laws { order: 2; } main:has(> .finder.on) > .lead-laws { display: none; }
-  .lead-laws li:nth-child(n+2) { display: none; }
+  .finder.on ~ .lead-laws { display: none; }
   .chips-row > summary { display: flex; } .chips-row .chips { flex-wrap: wrap; overflow: visible; margin-right: 0; padding: 0 0 .4rem; } .chips-row .chip { min-height: 2.75rem; } .chips-row .chips select { flex: 1 1 100%; min-height: 2.75rem; }
   .finder .chips select { min-height: 2.75rem; }
-  main:has(> .members-h) > .scroll:has(.members-groups) { order: 4; } main:has(> .members-h) > .scroll ~ .foot-note { order: 5; }
   .members-h { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .subtabs.law-kinds.four { display: grid; grid-template-columns: auto auto auto auto; gap: .3rem; } .subtabs.law-kinds.four a { padding: .3rem .25rem; font-size: var(--t-2); }
   .week-lead .week-span { font-size: var(--t-6); } .week-lead .lead-nums { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; padding: .7rem 0; } .week-lead .lead-nums b { font-size: var(--t-6); } .week-lead .lead-nums span > span { font-size: var(--t-1); overflow-wrap: anywhere; } .week-lead .lead-nums > :last-child:nth-child(odd) { grid-column: auto; }
