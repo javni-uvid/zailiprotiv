@@ -152,7 +152,8 @@ src/zailiprotiv/
   family.py                   Javni uvid's look and links from osnova/design/: the stylesheet served, the bar, the footer block
   digest.py, feeds.py, downloads.py, card.py, photos.py, publish.py
   cli/                        commands, by what they work on: assembly, recordings, writing, buckets, build
-tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates)
+tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates);
+                              pretplate: subscribers counted by sitting day, run by hand
 worker/                       the visitors' votes counter (Cloudflare Worker, D1)
 live/                         "Ko sada govori": the live broadcast's caption read, a page of its own (Docker; README there)
 data/<N>/                     one folder per convocation (9 to 15)
