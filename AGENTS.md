@@ -16,6 +16,15 @@ it. Dates are the maintainer's decisions unless said otherwise.
   `osnova/security.md` holds the guards and `osnova/principles.md` the promises every project makes. The folder is
   a copy the **osnova** workflow brings from `javni-uvid/osnova`: a rule that should hold for every project is
   changed there, never in `osnova/` here. What follows is only this project's.
+- **One conductor, and workers under it** (25 Nov 2026, the maintainer, after a sitting day on which three sessions
+  changed the live service at once: 67 pull requests, restarts that held the day's mail back 50 minutes). One session
+  is the conductor ("dirigent"), on Claude Fable 5.2; the agents it starts are Claude Opus 5.5 (the Agent tool's
+  `model: "opus"`, or `orca worktree create --agent claude --model claude-opus-5-5`). **Only the conductor puts
+  anything live** (`mikrofon.ps1 uzivo`, `nazad`) **and changes what the service keeps** (`/data`); a worker works in
+  its own worktree up to a merged pull request and tells the conductor. Workers go by part (who speaks; the mail and
+  the day's summary; the live page and the site), one at a part. During a sitting a release goes in a break, once a
+  break, but for mending a false statement about a person. The maintainer's word holds in the session it was said
+  in: that session passes it on with his words quoted, and a worker's or another session's word is never his.
 - **A worktree** is under `~/orca/workspaces/zailiprotiv/`; Orca runs `uv sync` in a new one itself (`orca.yaml`);
   `tzdata`, which Windows lacks, is a dependency there. The workflows that commit data straight to `main` are
   votes, transcripts, notes, summaries and the like.
