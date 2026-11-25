@@ -7,7 +7,8 @@ Read from the Assembly's own pages of its composition ("Састав"), not from
 - the deputy Speakers: their page, a block per person (name in `<h2>`, group in `<h3>`);
 - the chairs of the parliamentary groups: their page, the same blocks;
 - the committees: the list of committees links a page per committee, a table of rows "NAME (члан | председник |
-  заменик председника), group, DEPUTY (заменик члана), group";
+  заменик председника), group, DEPUTY (заменик члана), group", a name bare in the archive and a link to the MP's page
+  since the Fifteenth (read by the cell's lines of text, so either way);
 - the standing delegations: the list links a page per delegation, rows "NAME, шеф Делегације | члан Делегације …".
 The newest convocation's are the pages under "Састав"; an earlier one's committees and delegations are on its archive
 pages (ARCHIVE), read once. Kept in data/<N>/offices.json; each office says the page it is from and the day it was
@@ -55,7 +56,8 @@ ARCHIVE = {
            "delegations": S + "/делегације/сазив-од-6-фебруара-2024-године.5180.html"},
 }
 
-WEEK = 7 * 24 * 3600  # the committees' and delegations' pages are read again at least this often
+DAY = 24 * 3600  # a body's page that gave nobody is asked for again this often, not every hour
+WEEK = 7 * DAY  # the committees' and delegations' pages are read again at least this often
 
 
 def _text(s: str) -> str:
@@ -103,30 +105,74 @@ def parts(page: str, listing: str) -> list[tuple[str, str]]:
     return out
 
 
-_COMMITTEE_ROW = re.compile(
-    r"<strong>(?P<name>[^<]+)</strong>\s*\(\s*(?:<strong>)?(?P<role>[^<)]+?)(?:</strong>)?\s*\)\s*<br\s*/?>"
-    r"(?P<group>[^<]*)<br\s*/?>(?P<deputy>[^<(]*)\(заменик члана\)\s*<br\s*/?>(?P<dgroup>[^<]*)", re.S)
-_DELEGATION_ROW = re.compile(r"<td[^>]*>\s*<strong>(?P<name>[^<]+)</strong>\s*<br\s*/?>(?P<role>[^<]+)</td>", re.S)
+def numbers(page: str, listing: str) -> dict[str, int]:
+    """How many members the list says each body has, by its address ("Број чланова": a column of the committees' list,
+    a line under a delegation's name). A body with no number beside it isn't named."""
+    number = re.search(r"\.(\d+)\.html$", listing).group(1)
+    out: dict[str, int] = {}
+    url = ""
+    for m in re.finditer(r'<a[^>]+?href="(?P<href>[^"]+\.\d+\.' + number + r'\.html)"|'
+                         r'class="members_number">\s*<b>\s*(?P<a>\d+)|Број чланова:\s*(?P<b>\d+)', _content(page)):
+        if m["href"]:
+            url = urllib.parse.urljoin(BASE, htmllib.unescape(m["href"]))
+        elif url:
+            out.setdefault(url, int(m["a"] or m["b"]))
+    return out
 
 
 def _group(s: str) -> str:
     return re.sub(r"^Посланичка група\s*", "", _text(s)).strip()
 
 
+def _cells(page: str) -> list[list[str]]:
+    """The people's cells of a body's table, each as its lines of text. What stands around a name (a link to the MP's
+    page since the Fifteenth, nothing in the archive) does not matter to it."""
+    return [[_text(x) for x in re.split(r"<br\s*/?>", cell)]
+            for cell in re.findall(r"<td[^>]*>\s*(<strong>.*?)</td>", _content(page), re.S)]
+
+
+_ROLE_OF = re.compile(r"(?P<name>.*\S)\s*\(\s*(?P<role>[^()]+?)\s*\)")
+
+
 def committee(page: str) -> list[dict]:
     """A committee's page → [{"name", "role", "group"}]: each member with their role (председник, заменик
-    председника, члан) and each member's deputy (заменик члана)."""
+    председника, члан) and each member's deputy (заменик члана). A cell's lines: NAME (role), group, DEPUTY (заменик
+    члана), group."""
     out = []
-    for m in _COMMITTEE_ROW.finditer(_content(page)):
-        out.append({"name": _text(m["name"]), "role": _text(m["role"]), "group": _group(m["group"])})
-        if _text(m["deputy"]):
-            out.append({"name": _text(m["deputy"]), "role": "заменик члана", "group": _group(m["dgroup"])})
+    for lines in _cells(page):
+        for who, group in zip(lines[::2], lines[1::2]):
+            m = _ROLE_OF.fullmatch(who)
+            if m:
+                out.append({"name": m["name"], "role": m["role"], "group": _group(group)})
     return out
 
 
 def delegation(page: str) -> list[dict]:
     """A delegation's page → [{"name", "role"}] (шеф Делегације, заменик шефа Делегације, члан Делегације …)."""
-    return [{"name": _text(m["name"]), "role": _text(m["role"])} for m in _DELEGATION_ROW.finditer(_content(page))]
+    return [{"name": lines[0], "role": lines[1]} for lines in _cells(page)
+            if len(lines) > 1 and lines[0] and lines[1] and not _ROLE_OF.fullmatch(lines[0])]
+
+
+def members(page: str) -> list[dict]:
+    return committee(page) or delegation(page)
+
+
+def keep_unread(old: list[dict], listed: dict[str, int], rows: list[tuple[str, str, list[dict]]], kind: str) -> list:
+    """A body whose page gave nobody though the list says it has members keeps those read before (`unread` says it)."""
+    return [(t, url, got or [{k: o[k] for k in ("name", "role", "group") if k in o} for o in old
+                             if o["kind"] == kind and o["source"] == url and listed.get(url)]) for t, url, got in rows]
+
+
+def unread(kept: dict, now) -> list[str]:
+    """What data/<N>/offices.json shows was not read, a line each: the bodies the Assembly lists with members whose
+    pages gave none, and a reading long overdue. Empty when all is well. (25 Nov 2026: names had become links, no
+    committee of the Fifteenth was read for a week, and every run was green.)"""
+    from datetime import datetime
+    out = [f"- {url} (na spisku {n})" for url, n in kept.get("unread", {}).items()]
+    read = kept.get("parts_read")
+    if read and (now - datetime.fromisoformat(read)).total_seconds() > WEEK + DAY:
+        out.append(f"- odbori i delegacije nisu čitani od {read[:10]}")
+    return out
 
 
 # The rule for a relevant news item, on its title: who was elected, appointed, dismissed or resigned, a mandate, a
@@ -207,11 +253,21 @@ def keep_since(old: list[dict], found: list[dict], today: str) -> list[dict]:
     return [{**o, "since": had.get(k(o), today)} for o in found]
 
 
-def dumps(fetched: str, offices: list[dict], read_parts: str) -> str:
-    """data/<N>/offices.json: one office to a line, so a change shows as a small diff."""
+def dumps(fetched: str, offices: list[dict], read_parts: str, listed: dict[str, int] | None = None,
+          unread: dict[str, int] | None = None) -> str:
+    """data/<N>/offices.json: one office to a line, so a change shows as a small diff. `listed`: the bodies as listed
+    when their pages were last read, with the numbers of members (None: an archive's, read once); `unread`: those of
+    them whose page gave nobody. They stand on lines of their own: the workflow's commit passes over a change of
+    "fetched" alone, and a reading that is not kept would be made again every hour."""
     rows = ",\n".join(json.dumps(o, ensure_ascii=False, sort_keys=True) for o in offices)
-    return (f'{{"fetched": {json.dumps(fetched)}, "parts_read": {json.dumps(read_parts)}, '
-            f'"offices": [\n{rows}\n]}}\n')
+    if listed is None:
+        return (f'{{"fetched": {json.dumps(fetched)}, "parts_read": {json.dumps(read_parts)}, '
+                f'"offices": [\n{rows}\n]}}\n')
+
+    def one(d):
+        return json.dumps(d, ensure_ascii=False, sort_keys=True)
+    return (f'{{"fetched": {json.dumps(fetched)},\n"parts_read": {json.dumps(read_parts)},\n"listed": {one(listed)},\n'
+            f'"unread": {one(unread or {})},\n"offices": [\n{rows}\n]}}\n')
 
 
 def dumps_news(fetched: str, items: list[dict]) -> str:
@@ -336,5 +392,5 @@ def load(root) -> dict[str, list[dict]]:
 
 
 __all__ = ["SPEAKER", "VICE", "GROUP_CHAIRS", "COMMITTEES", "DELEGATIONS", "NEWS", "ARCHIVE", "person", "blocks",
-           "parts", "committee", "delegation", "news", "merge_news", "offices_of", "keep_since", "say",
+           "parts", "numbers", "members", "committee", "delegation", "unread", "news", "merge_news", "offices_of", "keep_since", "say",
            "order", "load"]

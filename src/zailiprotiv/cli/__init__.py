@@ -203,6 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(run=members_cmd)
     p = commands.add_parser("offices", help="offices in the Assembly (Speaker, deputies, committees, delegations) "
                                             "→ data/<N>/offices.json, and its news → data/vesti.json")
+    p.add_argument("--unread", action="store_true", help="only say which bodies' members were not read; nothing is asked")
     p.set_defaults(run=offices_cmd)
     p = commands.add_parser("mp-years", help="MPs' years of birth from the Assembly's archive, and names that are two people")
     p.set_defaults(run=mp_years_cmd)
