@@ -46,7 +46,7 @@
       <p class="label">Vreme dok je ime u potpisu prenosa, {{ newer.days }} {{ plural(newer.days, "dan", "dana", "dana") }} sednice, isto pravilo za svakog. <a href="govornici.html">Svi govornici i vreme po grupama</a></p>
     </div>{% endif %}
     <div>
-      {% if newer.sitting %}<h3><a href="{{ newer.sitting.url }}">Prva sednica: šta se odlučuje</a></h3>
+      {% if newer.sitting %}<h3><a href="{{ newer.sitting.url }}">{{ newer.sitting.label }}: šta se odlučuje</a></h3>
       <ol class="hc-agenda">{% for a in newer.sitting.agenda %}<li>{{ a }}</li>{% endfor %}</ol>{% endif %}
       <ul class="plain hc-links">
         <li><a href="{{ newer.page }}">Svih {{ newer.n }} poslanika, po grupama</a></li>

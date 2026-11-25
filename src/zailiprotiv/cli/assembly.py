@@ -34,10 +34,16 @@ def index(args) -> int:
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     total = sum(len(s.votes) for s in found)
+    known = jsonfile.load(out, {}).get("sittings") or {}
     if _shrunk(out, "sittings", sum(1 for s in found if s.votes), lambda v: bool(v.get("votes"))):
         return 0
     jsonfile.save(out, store, "sittings")
     print(f"sittings: {len(found)}, roll calls: {total}")
+    if getattr(args, "tell", ""):  # the votes workflow opens an issue of each file
+        for i, (head, body) in enumerate(skupstina.news_of(known, store["sittings"])):
+            Path(args.tell).mkdir(parents=True, exist_ok=True)
+            (Path(args.tell) / f"{i}.txt").write_text(head + "\n" + body, encoding="utf-8", newline="\n")
+            print(f"convened, new or changed: {head}")
     for title in later:  # the votes workflow opens an issue on this line
         print(f"::notice::A later convocation's sitting is listed: {title}")
     for s in found:

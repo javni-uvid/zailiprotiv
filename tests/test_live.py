@@ -2976,6 +2976,38 @@ def test_the_assemblys_listing_announces_a_sitting_by_one_rule_begun_or_convened
     assert page.announcement({**snap, "sazvano": {**snap["sazvano"], "pocinje": "2026-11-26"}})[2] is None
 
 
+def test_each_sitting_has_its_own_agenda_and_the_item_heard_at_it(tmp_path):
+    """25 Nov 2026: the last item heard is kept across days, so the Second sitting's first items would have stood as done
+    by the chair's word, and the First's last day would have had the Second's items in its steps."""
+    from datetime import datetime
+    at = lambda d, h, m=0: datetime(2026, 11 if d > 20 else 12, d, h, m, tzinfo=TZ).timestamp()
+    t = Tracker(str(tmp_path / "state.json"), "Europe/Belgrade")
+    row = lambda name, day, n: {"naslov": name, "url": f"https://x/{name}", "pocinje": day,
+                                "tacke": [{"n": i, "tekst": f"{name} {i}", "gotova": False} for i in range(1, n + 1)]}
+    t.use_waiting({"kviz": [], "cinjenice": [], "dnevni_red": [row("Druga", "2026-12-01T10:00", 8), row("Prva", "", 6)],
+                   "sazvano": {"naslov": "Druga", "url": "https://x/Druga", "pocinje": "2026-12-01T10:00", "tacke": []}})
+    t._load("2026-11-25")
+    t.item = {"n": 6, "t": int(at(25, 11))}
+    states = lambda a: [x["stanje"] for x in a["tacke"]]
+    snap = t.snapshot(now=at(25, 13))  # closed at noon, the Second convened
+    assert snap["dnevni_red"]["naslov"] == "Druga" and states(snap["dnevni_red"]) == ["na_redu"] + [""] * 7
+    assert snap["dnevni_red_dana"]["naslov"] == "Prva" and states(snap["dnevni_red_dana"])[-1] == "u_toku"
+    from uzivo.steps import model_steps
+    snap = {**snap, "hronika": [{"t": int(at(25, 11)), "vrsta": "Tačka dnevnog reda", "izvor": "model", "url": "",
+                                 "tekst": "Prelazimo na šestu tačku dnevnog reda.", "vise": {"tacka": 6}}]}
+    assert "Prva 6" in str(model_steps(snap)) and "Druga 6" not in str(model_steps(snap))
+    t._load("2026-12-01")
+    t.observe(None, now=at(1, 10, 1))
+    snap = t.snapshot(now=at(1, 10, 2))
+    assert states(snap["dnevni_red"]) == ["na_redu"] + [""] * 7 and "dnevni_red_dana" not in snap
+    t.note(at(1, 10, 30), "Tačka dnevnog reda", "Prelazimo na drugu tačku dnevnog reda.", "prepis")
+    assert t.item["n"] == 2  # lower than the First's sixth: another sitting's count
+    t._snap = None
+    assert states(t.snapshot(now=at(1, 10, 31))["dnevni_red"])[:3] == ["gotova", "u_toku", ""]
+    t.note(at(1, 11), "Tačka dnevnog reda", "Prelazimo na prvu tačku dnevnog reda.", "prepis")
+    assert t.item["n"] == 2  # within a sitting it only goes on
+
+
 def test_a_sitting_that_has_begun_is_no_longer_the_next_one():
     """25 Nov 2026: in its break and on its evening the page would have said that it begins soon."""
     from datetime import datetime

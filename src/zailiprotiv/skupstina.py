@@ -151,17 +151,45 @@ class Sitting:
 _MONTHS = months.CYR
 
 
+def _month(word: str) -> int:
+    """1-12 from a month's name, as it is ("новембар") or in a sentence ("новембра"); 0 when it is none."""
+    return next((i for i, m in enumerate(zip(months.NAMES, months.OF), 1) if latin(word).lower() in m), 0)
+
+
+# A sitting's title as the Assembly lists it: "Друга седница …", "Прва посебна седница …", "Десето ванредно заседање …",
+# never a piece of news about one ("Одржане консултације уочи конститутивне седнице …").
+_SITTING = re.compile(r"^(?:prv|drug|treć|četvrt|pet|šest|sedm|osm|devet|deset|\w+naest|\w+deset)\w*(?:\s\w+){0,2}\s"
+                      r"(?:sednica|zasedanje)\b.*\bNarodne skupštine", re.I)
+
+
+def sitting_title(title: str) -> bool:
+    return bool(_SITTING.match(" ".join(latin(title).split())))
+
+
 def convened(html: str) -> str:
     """When a sitting was convened for, from its page's notice: "… за понедељак, 24. август 2026. године, са почетком
-    у 10.00 часова". The day alone when no hour is given; empty when the notice has no day."""
+    у 10.00 часова". The day alone when no hour is given; empty when the notice has no day. A notice with no year ("за
+    среду, 17. јун, са почетком", June 2026) has the year of the page's own date, when the named day of the week is then
+    that date's."""
     m = re.search(r'class="preamble"[^>]*>(.*?)</p>', html, flags=re.S)
-    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1) if m else ""))
-    d = re.search(r"за\s+(?:\w+,\s*)?(\d{1,2})\.\s*(\w+)\s+(\d{4})\.", text)
-    if not d or d.group(2).lower() not in _MONTHS:
+    text = re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", " ", m.group(1) if m else "")))
+    d = re.search(r"за\s+(?:(\w+),\s*)?(\d{1,2})\.\s*([^\W\d]+)(?:\s+(\d{4})\b|(?=,))", text)
+    month = _month(d.group(3)) if d else 0
+    if not month:
         return ""
-    day = f"{d.group(3)}-{_MONTHS.index(d.group(2).lower()) + 1:02d}-{int(d.group(1)):02d}"
-    h = re.search(r"почетком у (\d{1,2})[.:,](\d{2})", text[d.end():])
-    return f"{day}T{int(h.group(1)):02d}:{h.group(2)}" if h else day
+    year = d.group(4)
+    if not year:
+        posted = re.search(r'class="posted"[^>]*>[^<]*?(\d{4})\.', html[:m.start()][-3000:])
+        try:
+            at = dt.date(int(posted.group(1)), month, int(d.group(2))) if posted else None
+        except ValueError:
+            at = None
+        if not at or (d.group(1) or "").lower() != _DAYS_IN[at.weekday()]:
+            return ""
+        year = posted.group(1)
+    day = f"{year}-{month:02d}-{int(d.group(2)):02d}"
+    h = re.search(r"почетком у (\d{1,2})(?:[.:,](\d{2})|(?=\s*(?:час|сат)))", text[d.end():])
+    return f"{day}T{int(h.group(1)):02d}:{h.group(2) or '00'}" if h else day
 
 
 _DAYS_IN = ("понедељак", "уторак", "среду", "четвртак", "петак", "суботу", "недељу")
@@ -180,9 +208,8 @@ def continues(html: str) -> str:
     text = re.sub(r"\s+", " ", unescape(text))
     found = []
     for weekday, d, word, y, h, minute in _GOES_ON.findall(text):
-        month = next((i for i, m in enumerate(zip(months.NAMES, months.OF), 1) if latin(word).lower() in m), 0)
         try:
-            at = dt.datetime(int(y), month, int(d), int(h or 0), int(minute or 0))
+            at = dt.datetime(int(y), _month(word), int(d), int(h or 0), int(minute or 0))
         except ValueError:
             continue
         if weekday.lower() == _DAYS_IN[at.weekday()]:
@@ -190,10 +217,41 @@ def continues(html: str) -> str:
     return max(found, default="")
 
 
+_AGENDA = re.compile(r"\bдневни ред\b[^:]{0,200}:\s*(.*)$", re.I)
+
+
+def _told(html: str) -> list[str]:
+    """The agenda told in the page's lines, not in a list (agenda); empty when it is not."""
+    text = re.sub(r"<!--.*?-->|<script\b.*?</script>", " ", html, flags=re.S | re.I)
+    text = re.sub(r"<br\b[^>]*>|</(?:div|p|li|ol|h\d)>", "\n", re.sub(r"\s+", " ", text), flags=re.I)
+    lines = [" ".join(unescape(re.sub(r"<[^>]+>", " ", x)).split()) for x in text.split("\n")]
+    lines = [x for x in lines if x]
+    at = next(((i, m) for i, x in enumerate(lines) if (m := _AGENDA.search(x))), None)
+    if not at:
+        return []
+    i, m = at
+    if m.group(1):  # one item, in the same line: to the sentence's end (not an abbreviation's: "Њ. Е. Сакр Гобаша")
+        if re.match(r"1\s*[.)]", m.group(1)):
+            return []  # several in one line: not read
+        return [re.split(r"(?<=\w{4})\.\s+(?=[А-ЯЂЈЉЊЋЏ])", m.group(1))[0].strip(" ;.")]
+    out = []
+    for line in lines[i + 1:]:
+        n = re.match(rf"{len(out) + 1}(?!\d)\s*[.)]?\s*(?=[^\W\d])(.+)$", line)
+        if not n:
+            break
+        out.append(n.group(1).strip(" ;."))
+    return out
+
+
 def agenda(html: str) -> list[str]:
-    """The items a sitting was convened for: the first numbered list of its page that links no roll calls (the list
-    of results, further down, links one per item)."""
+    """The items a sitting was convened for. After the words "дневни ред … :" of its page: the item said in that line
+    ("дневни ред са једном тачком и то: …", "следећи дневни ред: Полагање заклетве …"), or the lines numbered from 1
+    ("1.Предлог закона …", July 2026). Otherwise the first numbered list that links no roll calls (the list of results,
+    further down, links one per item)."""
     start = html.find('class="preamble"')
+    told = _told(html[max(start, 0):])
+    if told:
+        return told
     for block in re.findall(r"<ol\b.*?</ol>", html[max(start, 0):], flags=re.S | re.I):
         if any(p.lower() in urllib.parse.unquote(block).lower() for p in VOTES_PATHS):
             continue
@@ -267,6 +325,26 @@ def index(get: Callable[[str], bytes] = fetch, convocation: str = "14") -> tuple
         sitting.continues = continues(page)
     later += [s.title for s in found if s.starts and s.starts[:10] >= conf.get("to", "9999")]
     return [s for s in found if within(s.starts, conf)], later
+
+
+def news_of(known: dict, now: dict) -> list[tuple[str, str]]:
+    """What the maintainer is told of when the listing is read (25 Nov 2026): a sitting newly listed, or one not voted at
+    yet whose day or agenda has come or changed: [(a line to head it, the words below)], in Latin, with the Assembly's
+    page. Nothing on the first reading, when every sitting would be new."""
+    out = []
+    for url, s in now.items() if known else ():
+        if not sitting_title(s["title"]) or s["votes"]:
+            continue
+        before = known.get(url)
+        if before and (before.get("starts"), before.get("agenda")) == (s["starts"], s["agenda"]):
+            continue
+        items = [f"{i}. {x}" for i, x in enumerate(s["agenda"], 1)] or ["Dnevni red nije pročitan sa strane."]
+        head = f"Sednica na sajtu Skupštine: {s['title'].split(' Народне скупштине')[0]}"
+        body = "\n".join(["Nova na spisku." if not before else "Promenjen dan ili dnevni red.",
+                          f"Počinje: {s['starts'] or 'dan nije pročitan sa strane'}", url, "", *items, ""])
+        # an "@" in the Assembly's words must call nobody on GitHub
+        out.append((latin(head).replace("@", ""), "\n".join(x if x.startswith("http") else latin(x) for x in body.split("\n")).replace("@", "")))
+    return out
 
 
 def later_convocation(title: str, ordinal: str) -> bool:

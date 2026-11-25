@@ -25,6 +25,7 @@ from zoneinfo import ZoneInfo
 
 from zailiprotiv import jsonfile, months
 from zailiprotiv.config import LIVE
+from zailiprotiv.skupstina import sitting_title
 from zailiprotiv.translit import latin
 
 PAGE = "mikrofon.html"
@@ -313,6 +314,45 @@ def notices(root) -> list[dict]:
 WEEKDAYS = ("ponedeljak", "utorak", "sreda", "četvrtak", "petak", "subota", "nedelja")
 
 
+def _called(s: dict) -> bool:
+    """A sitting convened and not voted at yet: with its agenda, or by its title when its page's agenda is not read
+    (25 Nov 2026: one told in a sentence made the Ninth extraordinary session no sitting)."""
+    return not s.get("votes") and bool(s.get("agenda") or (s.get("starts") and sitting_title(s.get("title", ""))))
+
+
+def sittings(root, conv: str) -> list[dict]:
+    """The convocation's sittings as the Assembly lists them, the latest begun or convened first (one whose page gives no
+    day last): [{"title", "url", "starts", "agenda"}], in Latin. Also one whose agenda is not read, so that an earlier
+    sitting's is not taken for its own."""
+    try:
+        listed = jsonfile.load(Path(root) / str(conv) / "index.json", {}).get("sittings", {})
+    except (ValueError, AttributeError):
+        listed = {}
+    rows = [{"title": latin(s.get("title", "")), "url": u, "starts": s.get("starts", ""),
+             "agenda": [latin(x).removesuffix(" i") for x in s.get("agenda") or []]}
+            for u, s in listed.items() if s.get("agenda") or sitting_title(s.get("title", ""))]
+    return sorted(rows, key=lambda r: r["starts"], reverse=True)
+
+
+def current_sitting(rows: list[dict], now: datetime | None = None) -> dict | None:
+    """Of `sittings`, the one to speak of: the nearest of today or to come, else the latest begun."""
+    today = (now or datetime.now(TZ)).astimezone(TZ).date().isoformat()
+    return min((r for r in rows if r["starts"][:10] >= today), key=lambda r: r["starts"], default=None) or next(iter(rows), None)
+
+
+def read_live(rows: list[dict], now: datetime | None = None) -> list[str]:
+    """The pages the live service reads during a broadcast (hronika.Watcher): the latest sitting begun and those to come,
+    not the closed ones, whose later sentences are no news of the day."""
+    today = (now or datetime.now(TZ)).astimezone(TZ).date().isoformat()
+    begun = [r["url"] for r in rows if r["starts"][:10] <= today]
+    return [r["url"] for r in rows if r["starts"][:10] > today] + begun[:1]
+
+
+def label(title: str) -> str:
+    """A sitting's short name, from its title: "Prva sednica", "Druga sednica Drugog redovnog zasedanja"."""
+    return title.split(" Narodne skupštine")[0].strip()
+
+
 def next_start(root, conv: str, now: datetime | None = None) -> dict | None:
     """When the Assembly sits next, for the site's way to the live page (22 Nov 2026): the first sitting of the
     convocation convened for today or later, as the Assembly lists it (data/<N>/index.json "starts"), or the next day
@@ -329,7 +369,7 @@ def next_start(root, conv: str, now: datetime | None = None) -> dict | None:
         listed = {}
     for s in listed.values():
         at = str(s.get("starts") or "")
-        if s.get("agenda") and not s.get("votes") and len(at) >= 16:
+        if _called(s) and len(at) >= 16:
             found.append(at[:16])
         if len(str(s.get("continues") or "")) >= 16:
             found.append(s["continues"][:16])
@@ -372,7 +412,7 @@ def fixes(root) -> dict:
 
 def agenda(root, conv: str, sittings: list[dict]) -> list[dict]:
     """The agenda of each sitting of the convocation as the Assembly lists it, with the items the Assembly's page of
-    the sitting says are done: [{"naslov", "url", "tacke": [{"n", "tekst", "gotova", "kada", "sta"}]}]. What is done
+    the sitting says are done: [{"naslov", "url", "pocinje", "tacke": [{"n", "tekst", "gotova", "kada", "sta"}]}]. What is done
     is written by hand into data/<N>/tacke.json from that page ({sitting's address: {item's number: {"kada", "sta"}}}),
     a sentence of fact each; the live service adds what the chair says aloud (hronika.py)."""
     path = Path(root) / str(conv) / "tacke.json"
@@ -383,7 +423,7 @@ def agenda(root, conv: str, sittings: list[dict]) -> list[dict]:
     out = []
     for s in sittings:
         mine = done.get(s["url"]) or {}
-        out.append({"naslov": s["title"], "url": s["url"], "tacke": [
+        out.append({"naslov": s["title"], "url": s["url"], "pocinje": s.get("starts", ""), "tacke": [
             {"n": i, "tekst": a, "gotova": str(i) in mine, "kada": (mine.get(str(i)) or {}).get("kada", ""),
              "sta": (mine.get(str(i)) or {}).get("sta", "")} for i, a in enumerate(s["agenda"], 1)]})
     return out
@@ -403,8 +443,8 @@ def upcoming(root: Path, coming: list[dict], conv: str) -> list[dict]:
     for url, s in listed.items():
         if s.get("continues"):
             out.append({"title": s.get("title", ""), "url": url, "starts": s["continues"], "agenda": [], "goes_on": True})
-        if s.get("agenda") and not s.get("votes") and url not in seen:
-            out.append({"title": s.get("title", ""), "url": url, "starts": s.get("starts", ""), "agenda": s["agenda"]})
+        if _called(s) and url not in seen:
+            out.append({"title": s.get("title", ""), "url": url, "starts": s.get("starts", ""), "agenda": s.get("agenda") or []})
     return [*coming, *out]
 
 

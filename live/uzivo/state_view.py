@@ -233,13 +233,22 @@ class View:
                 coming = None  # nor once it has begun: in its break, and on its evening, it is not the next one
             news = [n for n in (self.waiting.get("obavestenja") or []) if isinstance(n, dict) and n.get("tekst")
                     and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
+            # the agenda that stands on the page, and the shown day's own where that is another sitting's (for its steps)
+            agenda, own = self._agenda(self._shown_sitting(coming, day)), self._agenda(self._sitting(day))
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,
-                    "obavestenja": news[:3], "dnevni_red": self._agenda(), "bez_potpisa": unsigned, "hronika": [e if e.get("izvor") == "sajt" else {**e, "tekst": self.shown(e.get("tekst", ""))}
+                    "obavestenja": news[:3], "dnevni_red": agenda, **({"dnevni_red_dana": own} if own and own != agenda else {}), "bez_potpisa": unsigned, "hronika": [e if e.get("izvor") == "sajt" else {**e, "tekst": self.shown(e.get("tekst", ""))}
                                 for e in (self.events if day == self.day else self._events_load(day))[-150:][::-1]],
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
                     "vreme_grupa": groups, "predsedava": self._presiding_shown(),
                     "razmene": exchanges, "prenos": self._broadcast() if self.status != NO_STREAM else None}
+
+    def _shown_sitting(self, coming: dict | None, day: str) -> dict | None:
+        """The sitting whose agenda stands on the page: between sittings the one convened next, else the shown day's."""
+        if self.status == NO_STREAM and coming:
+            own = next((r for r in self._sittings() if r.get("url") == coming.get("url")), None)
+            return own or {"tacke": []}  # its agenda not known: another sitting's is not its own
+        return self._sitting(day)
 
     def _presiding_shown(self) -> dict | None:
         """Who presides, by the voice, while a broadcast is on and the chair was heard in the last quarter of an hour."""

@@ -89,6 +89,18 @@ as the change. The principles and the rules of work are in AGENTS.md.
   that tail is off 20 Nov's, and its fingerprint is counted again. No retelling had been hidden: no term rests on 298.
   But article 298 is among those invoked, so from 20 to 25 Nov `poslovnik-clanovi#clan-298` showed the margin as the
   Rules' text. A term resting on it would have lost its retelling at the first news item.
+- **A sitting convened is read in every form the Assembly has used, and told of at once** (25 Nov 2026, the maintainer: "čim
+  se objavi", before the Second sitting; tried on the Fourteenth's sittings whose agenda or day was not read, kept as
+  fixtures). Read besides the list: lines numbered from 1 (the Eighth extraordinary session), the one item said in the line
+  of "дневни ред … :" (the Ninth, the Third and Fourth special sittings), a notice with no year (the Fourth special one: the
+  page's own date gives it, when the weekday fits), an hour with no minutes, a month in either case. A sitting is known by
+  its title (`sitting_title`), so one whose agenda is not read is still announced (`pages_mikrofon._called`), with no items
+  rather than another's. The agenda given to the live page is of the newest convocation whatever the current one is
+  (it would have gone with the Fifteenth's first law), each sitting with the day it was convened for; the home page
+  names the sitting by its title, not "Prva sednica". Bills in procedure are tied to the newest convocation's agenda too.
+  **The alert:** a sitting newly listed, or a day or agenda that came or changed before a vote at it, opens an issue in the
+  repository (`news_of`, `index --tell`, the first step of **votes**), which GitHub mails the maintainer; it says also when
+  the day or the agenda could not be read. No secret and nothing on the site.
 
 ## Laws
 

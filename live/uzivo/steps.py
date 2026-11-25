@@ -67,7 +67,7 @@ def steps_shown(snap: dict) -> list[dict]:
     if any(e.get("izvor") == "model" for e in snap.get("hronika") or []):
         return model_steps(snap)
     from .hronika import find, item_no
-    agenda = (snap.get("dnevni_red") or {}).get("tacke") or []
+    agenda = (snap.get("dnevni_red_dana") or snap.get("dnevni_red") or {}).get("tacke") or []  # of the day shown
     items = {int(x["n"]): x["tekst"] for x in agenda}
     now = snap.get("provereno") or 0
     turns = [(d["od"], d["do"]) for d in snap.get("danas") or []]
@@ -172,7 +172,7 @@ def model_steps(snap: dict) -> list[dict]:
     names a sitting MP by the list. A break or the day's end shows once nobody is at the rostrum for STEP_QUIET after
     it; a move to an agenda item only to an item the agenda has, after the last one; the order of the work as for the
     rules (`_in_order`); the same line within a quarter of an hour once."""
-    agenda = (snap.get("dnevni_red") or {}).get("tacke") or []
+    agenda = (snap.get("dnevni_red_dana") or snap.get("dnevni_red") or {}).get("tacke") or []  # of the day shown
     items = {int(x["n"]): x["tekst"] for x in agenda}
     now = snap.get("provereno") or 0
     turns = [(d["od"], d["do"]) for d in snap.get("danas") or []]
