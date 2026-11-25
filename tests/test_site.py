@@ -218,6 +218,21 @@ def test_visitors_votes_are_sent_only_when_an_address_is_set(tmp_path):
     assert "ulaze u zbir" in page and 'data-api="https://glasovi.example/"' in page and "nije istraživanje" in page
 
 
+def test_the_home_page_leads_to_the_rules_before_the_convocations(tmp_path):
+    """25 Nov 2026: a strip of its own after the live page's, on the home page only, once, in no convocation's box."""
+    from pathlib import Path
+    here = Path(site.__file__).parent / "templates"
+    home = (here / "index.html").read_text(encoding="utf-8")
+    at = home.index('class="mic to-rules"')
+    assert home.index("mic_strip()") < at < home.index('class="home-hero"') < home.index('class="home-conv"')
+    assert home.count("poslovnik-clanovi.html#pojmovi") == 1 and "hc-rules" not in home
+    strip = home[at:home.index("</section>", at)]
+    heading = re.search(r"<h1>(.*?)</h1>", (here / "rules_cited.html").read_text(encoding="utf-8")).group(1)
+    assert f'<a href="poslovnik-clanovi.html">{heading}</a>' in strip  # the page's own name
+    terms = {t["id"] for t in json.loads((here.parents[2] / "data/poslovnik/pojmovi.json").read_text(encoding="utf-8"))}
+    assert set(re.findall(r"#pojam-([a-z-]+)", strip)) <= terms
+
+
 def test_links_without_html_when_published(tmp_path):
     out = tmp_path / "_site"
     site.build(data(tmp_path), out, "zailiprotiv.rs", clean=True)
