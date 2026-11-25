@@ -236,6 +236,7 @@ class Mailer:
 
 
 WEAK = "<p><b>Pažnja:</b> sažetak je napisao slabiji model iz sažetaka delova. Proveri rečenice po govorniku.</p>"
+UNREAD = "<p><b>Pažnja:</b> fajl sa ispravkama ranijeg mejla ne može ceo da se pročita. Mejl ide bez onoga što se ne čita.</p>"
 HINT_AFTER = 300  # seconds after a measure with no name in which the chair's words may say whose it was
 
 
@@ -274,6 +275,28 @@ def roll_of(facts: dict) -> mere.Roll:
                       if isinstance(f, dict) and f.get("ime")])
 
 
+def corrections(f: Path) -> tuple[list[tuple[date, str]], bool]:
+    """The corrections a day's mail carries, put by hand in `/data/mejl/ispravke-<day>.json`: a list of {"dan": the day
+    whose mail was wrong, "tekst": the words}, shown as written. And whether all of the file was read: an entry that
+    cannot be is left out, and the maintainer's mail says so (`day_mail`)."""
+    if not f.exists():
+        return [], True
+    try:
+        kept = json.loads(f.read_text(encoding="utf-8-sig"))  # a file written on Windows may begin with a mark
+    except (OSError, ValueError):
+        kept = None
+    if not isinstance(kept, list):
+        return [], False
+    out = []
+    for x in kept:
+        try:
+            if x["tekst"].strip():
+                out.append((date.fromisoformat(x["dan"]), x["tekst"].strip()))
+        except (AttributeError, KeyError, TypeError, ValueError):
+            continue
+    return out, len(out) == len(kept)
+
+
 def day_mail(tracker):
     """The day's mail from what this service keeps: the day's summary and its stretches (/data/sazetak), the day's
     lines (/data/hronika), the MPs (the site's facts) and, for today, each MP's time at the rostrum."""
@@ -300,10 +323,14 @@ def day_mail(tracker):
         except ValueError:
             log.warning("mejl %s: recenice se ne citaju, mejl ide bez njih", day)
             quotes = []
+        fixes, whole = corrections(base / "mejl" / f"ispravke-{day.isoformat()}.json")
+        if not whole:
+            log.warning("mejl %s: ispravke se ne citaju cele", day)
         other = f"{(config.PUBLIC_URL or 'https://mikrofon.zailiprotiv.rs').rstrip('/')}/{'' if cyr else 'cir/'}"
         return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other,
-                          quotes=quotes if isinstance(quotes, list) else [])
-    def hint(day: date) -> str:
+                          quotes=quotes if isinstance(quotes, list) else [], corrections=fixes)
+
+    def whom(day: date) -> str:
         kept = tracker.summary_of(day.isoformat()) or {}
         f, p = base / "hronika" / f"{day.isoformat()}.json", base / "prepis" / f"{day.isoformat()}.json"
         try:
@@ -313,6 +340,10 @@ def day_mail(tracker):
             return ""
         roll = roll_of(getattr(tracker, "facts", {}))
         return hints(mere.measures(lines, kept.get("delovi") or [], roll, TZ), said, roll, day)
+
+    def hint(day: date) -> str:
+        whole = corrections(base / "mejl" / f"ispravke-{day.isoformat()}.json")[1]
+        return ("" if whole else UNREAD) + whom(day)
     build.hints = hint
     return build
 
