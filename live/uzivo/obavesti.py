@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import config, mreza
+from . import config, cuvar, mreza
 from .state_base import _write, counted
 
 log = logging.getLogger("obavesti")
@@ -133,6 +133,10 @@ class Bell:
         return True
 
     def send(self, what: str = "sednica", nth: int = 0) -> None:
+        with cuvar.making("a notification"):
+            self._send(what, nth)
+
+    def _send(self, what: str, nth: int) -> None:
         sent = gone = 0
         od = 0
         try:

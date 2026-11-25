@@ -174,6 +174,15 @@ The service holds a lock on `/data` (`/data/.pisac`) from its start to its end: 
 and says so in its log every half a minute. `docker exec` commands (`uzivo.popuna` and the like) do not take it, and go
 to `mikrofon-merenje-1`: the page's container, `mikrofon-uzivo-1`, cannot write there.
 
+**When the loop of frames stands** 180 s (`docker ps` calls the measuring unhealthy only after 300), the measuring ends
+itself and Docker starts it again (`uzivo/cuvar.py`), at most three times in an hour, and never while the day's summary,
+a mail or a notification is being made. `docker logs mikrofon-merenje-1` then has a line of `cuvar`: "the loop has stood
+180 s; this process ends, 1. of at most 3 in 60 minutes, …; it is at: …" (the place in the code where it stood), or "not
+ended" and why, when it did not. The times it did are in `/data/cuvar.json`; while that file cannot be read or written
+it ends nothing, and deleting it lets it end again. After three the page stays at 503 until somebody looks; a test
+container is not started again (`docker start`). A process put back by Docker has its restart counted: `docker inspect -f
+"{{.RestartCount}}" mikrofon-merenje-1`.
+
 One image is both parts, told apart by `ULOGA` (`merenje`, `strana`; empty: one process that is both, `docker-compose.jedan.yml`).
 
 Settings are in `uzivo/config.py`, each overridable from `.env`.
@@ -191,6 +200,7 @@ uzivo/
   sada.py       the moment and two clocks in /data/sada.json, for the page's own process; one writer of /data (tested)
   citac.py      the same state read from the kept files, for the page's own process (ULOGA=strana; tested)
   merenje.py    the measuring's threads, in the page's process or in its own (ULOGA=merenje); its health check
+  cuvar.py      ends the measuring when its loop stands, for Docker to start it again (tested)
   page.py       the page in both scripts (tested)
   worker.py, main.py, config.py
 ```

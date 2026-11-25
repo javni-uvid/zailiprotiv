@@ -23,7 +23,7 @@ from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import config, mejl, mere, mreza
+from . import config, cuvar, mejl, mere, mreza
 from .obavesti import to_tell
 from .state_base import _write
 
@@ -171,7 +171,8 @@ class Mailer:
         if not self._lock.acquire(blocking=False):
             return "u_toku", 0
         try:
-            return self._to_all(day)
+            with cuvar.making("the day's mail to all"):
+                return self._to_all(day)
         finally:
             self._lock.release()
 
@@ -255,7 +256,8 @@ class Watch(threading.Thread):
         day = str(self.tracker.snapshot(now=now).get("dan") or "")
         if not day or not to_tell(self.tracker.summary_of(day).get("dan"), now, TZ):
             return False
-        return self.mailer.ready(date.fromisoformat(day))
+        with cuvar.making("the mail to the maintainer"):
+            return self.mailer.ready(date.fromisoformat(day))
 
     def run(self) -> None:
         while not self.halt.is_set():

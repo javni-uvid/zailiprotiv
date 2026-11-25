@@ -11,6 +11,12 @@ from . import config
 from .caption import Caption, Word, read
 
 
+# Seconds for one reading by tesseract, which has no limit of its own (a frame with all its readings takes about one; the longest
+# turn of the loop on 24 and 25 Nov 2026 was 11 s). Past it tesseract is killed and RuntimeError raised: the frame is not
+# read (worker.run), and with none read for STALE_SECONDS nobody is shown as speaking.
+LIMIT = 10
+
+
 def crop(frame: Image.Image) -> Image.Image:
     w, h = frame.size
     return frame.crop((
@@ -35,7 +41,8 @@ def letters(part: Image.Image, scale: int = 0) -> Image.Image:
 
 def lines(img: Image.Image) -> list[list[Word]]:
     """Tesseract's words grouped into lines, top to bottom."""
-    d = pytesseract.image_to_data(img, lang=config.OCR_LANG, config="--psm 6", output_type=pytesseract.Output.DICT)
+    d = pytesseract.image_to_data(img, lang=config.OCR_LANG, config="--psm 6", output_type=pytesseract.Output.DICT,
+                                  timeout=LIMIT)
     rows: dict[tuple, list[tuple[str, float, int]]] = {}
     for i, w in enumerate(d["text"]):
         w = w.strip()
@@ -75,7 +82,8 @@ def clock(frame: Image.Image) -> int | None:
     for low in (215, 235):
         mask = Image.fromarray(np.where(arr >= low, 0, 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.MinFilter(5))
         for img in (mask, mask.resize((mask.width // 2, mask.height // 2), Image.LANCZOS)):
-            text = pytesseract.image_to_string(img, lang="eng", config="--psm 7 -c tessedit_char_whitelist=0123456789:").strip()
+            text = pytesseract.image_to_string(img, lang="eng", config="--psm 7 -c tessedit_char_whitelist=0123456789:",
+                                               timeout=LIMIT).strip()
             m = re.fullmatch(r"(\d{1,2}):([0-5]\d)", text)
             if m:
                 sec = int(m.group(1)) * 60 + int(m.group(2))

@@ -73,6 +73,10 @@ def _youtube_url_from_page(page_url: str) -> str:
     return _last_youtube_url
 
 
+NET = 10  # seconds for one answer of YouTube's to yt-dlp (its own 20): an ask takes a second or two, and with the net gone
+# eight of these, so that a loop that is slow is not taken for one that stands (cuvar.py: 180 s)
+
+
 def _resolve_youtube(url: str) -> str:
     from yt_dlp import YoutubeDL
 
@@ -81,6 +85,7 @@ def _resolve_youtube(url: str) -> str:
         "quiet": True,
         "no_warnings": True,
         "logger": _Quiet(),
+        "socket_timeout": NET,
         # The picture is what is needed; a format with sound first, for the automatic transcript (prepis.py), one
         # without will do. HLS (m3u8) first: it is read below.
         "format": (
@@ -138,8 +143,9 @@ def sound_format(formats: list[dict]) -> str:
     return min(only, key=lambda f: (f.get("abr") or f.get("tbr") or 0, str(f.get("format_id"))))["url"] if only else ""
 
 
-def resolve_input() -> tuple[str, dict]:
-    """An address (or a path) to read frames from, and the HTTP headers for it."""
+def resolve_input(turned=lambda: None) -> tuple[str, dict]:
+    """An address (or a path) to read frames from, and the HTTP headers for it. `turned` is called before each ask of
+    YouTube: with the net down each may take a minute, which is slow, not standing (cuvar.py)."""
     if config.STREAM_URL:
         VIDEO.clear()
         SOUND.clear()
@@ -157,6 +163,7 @@ def resolve_input() -> tuple[str, dict]:
         if not yt or yt in tried:
             continue
         tried.append(yt)
+        turned()
         try:
             got = _resolve_youtube(yt)
         except NotLive as exc:

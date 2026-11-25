@@ -222,3 +222,35 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   - **Not tried:** the mail really sent from the page's container (a test has no keys); the bucket's live sound with two (the
     page takes its address from `sada.json`); a name read from a caption on a live broadcast (the rebroadcast's
     captions were covered), which `tests/test_dva.py` compares step by step instead; a whole sitting.
+- **The measuring ends itself when its loop stands** (25 Nov 2026; the maintainer, of the conductor's list: "Može 1 2 i 5").
+  - **Before:** Docker starts again a container whose process has ended (`restart: unless-stopped`, on both), not one whose check
+    calls it unhealthy, so a loop that hung stood until somebody looked. As two, the page names nobody 60 s after the last frame and
+    answers 503 from 300 s; in one process nothing ended the turn, as `tick` is in the loop that stands, and the page went on
+    naming the last speaker. In both, the measuring's own state stays "speaking", so the day does not end for the
+    model: no summary, no mail. Two calls in the loop had no time limit: tesseract's, and yt-dlp's of Deno.
+  - **The rule** (`cuvar.py`): a thread of its own ends the process (`os._exit`, as the thread that stands would hold an orderly
+    exit) when the loop's clock (`looped`) has not moved for 180 s, at any hour. Not by frames: none come in a break. Measured over
+    the kept days: with a broadcast the loop never stood over 11 s, without one 70 s (24 and 25 Nov). Time is counted by looks, so
+    a computer that slept does not count. A loop that keeps failing is not one that stands: it waits 60 s at most.
+  - **What it does not cut:** the day's summary, the maintainer's mail, the mail to all, a notification. None is made on the
+    loop's thread; each says it is being made (`cuvar.making`), for an hour at most. As two, the mail is made in the page's process,
+    which this never ends.
+  - **Three times in an hour at most,** counted in `/data/cuvar.json` and written before the end: what cannot be counted is not ended.
+    Then the loop stands as before the rule, and the page answers 503.
+  - **What a restart loses:** the day's voices learnt in memory, up to 5 minutes of mean voices, the caption line; a turn on ends
+    at its last frame, as that is over the 90 s of `RESUME_SECONDS`. Kept: every file, and the sound not yet written down. A loop that
+    stands reads no frame in any case. In one process the page goes down with it.
+  - **Time limits:** tesseract 10 s a reading (then the frame is not read, and with none read for 60 s nobody is named);
+    Deno 30 s (`deno.sh`; yt-dlp goes on without what it would have worked out); one answer of YouTube's 10 s (yt-dlp's own 20).
+    With the net gone an ask of YouTube took 160 s, now 80, and the clock is stamped before each, and after each of the site's files.
+  - A test container has no restart policy and stays ended.
+  - **Tried** (renamed copy, a round-the-clock broadcast): a loop that hung at every turn, with 20 s for the 180: ended at 25, 50 and
+    78 s, each time started by Docker and healthy 4 to 7 s later, then not ended again; the page answered 200 throughout.
+    Hung once while somebody was shown as speaking, as two with the real 180 s: the name off the page at 60 s, ended at 182 s, a new
+    frame on the page at 185 s (no moment without an answer). In one process, with 20 s: 1 s without an answer, a new frame
+    4 s after the end; until it ended the page named the last speaker. Tesseract hung for 80 s: a frame given up every
+    11 s, the name off at 60 s, the process not ended (the loop turns), the name back 11 s after tesseract was; nothing is
+    left running of a reading given up. Deno hung: one ask of YouTube answered in 31.6 s, with an address.
+  - **Not tried:** the 503 after the third end (it comes at 300 s of standing); a hang with a summary or a mail being made (tests
+    only); a hang in the one-process form with 180 s; a real broadcast of the Assembly's. A release puts it live with
+    `uzivo -Deo merenje`, not during a sitting; the way back is `nazad -Deo merenje`.

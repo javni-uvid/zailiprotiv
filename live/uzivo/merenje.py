@@ -29,9 +29,12 @@ def tracker() -> Tracker:
 def start(t: Tracker, stop: threading.Event, bell) -> None:
     """Every thread of the measuring."""
     from . import hronika, prepis, sudija, worker
-    threading.Thread(target=worker.run, args=(t, stop, bell), daemon=True).start()
+    loop = threading.Thread(target=worker.run, args=(t, stop, bell), daemon=True, name="frames")
+    loop.start()
     if Path(config.STATE_PATH).parent.is_dir():  # the moment, for the page's own process (citac.py)
         sada.Pulse(t, stop).start()
+        from . import cuvar
+        cuvar.Guard(t, stop, loop).start()  # ends the process when the loop stands
         from . import prenosi
         prenosi.Keeper(t, stop).start()  # where the day is on YouTube, for when the broadcast is over
     if prepis.on():

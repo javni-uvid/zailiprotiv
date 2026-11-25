@@ -5,8 +5,9 @@ FROM denoland/deno:bin-2.9.8@sha256:b507583d3c68ba69f3ed2ce5969ae5b8b70f43421c78
 FROM python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg tesseract-ocr tesseract-ocr-srp fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
-# yt-dlp needs a JavaScript runtime for YouTube; Deno is the one it uses without settings.
-COPY --from=deno /deno /usr/local/bin/deno
+# yt-dlp needs a JavaScript runtime for YouTube; Deno is the one it uses without settings. Under a time limit (deno.sh).
+COPY --from=deno /deno /usr/local/lib/deno/deno
+COPY --chmod=755 live/deno.sh /usr/local/bin/deno
 WORKDIR /srv
 COPY live/requirements.txt live/constraints.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
