@@ -134,3 +134,35 @@ def test_a_vote_read_out_is_no_speech_and_a_misspelt_name_is_the_one_near():
     assert govor.nearest("бакић јова", keys) == "бакић јово" and govor.nearest("митев петар", keys) == "митов петар"
     assert govor.nearest("смиљанић срђан", keys) is None  # nobody near
     assert govor.nearest("бакић јова", {"бакић јово": 1, "бакић јоца": 1}) is None  # two as near
+
+
+def test_a_speaker_seen_first_on_a_day_without_groups_has_the_lists_group(tmp_path, monkeypatch):
+    """24 Nov 2026: Vjerica Radeta, whose turn of the 17th names no list, would have stood under none."""
+    import json
+    from types import SimpleNamespace
+    from zailiprotiv.cli import common, recordings
+    c = tmp_path / "15"
+    for d in ("snimak", "uzivo", "transcripts", "reci"):
+        (c / d).mkdir(parents=True)
+
+    def write(path, data):
+        path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    url = "https://x/a.mp4"
+    text = "један два три четири пет шест седам осам девет десет"
+    write(c / "videos.json", {"days": {"2026-11-24": [{"part": 1, "url": url}]}})
+    write(c / "arhiva.json", {url: {"od": 1000, "trajanje": 100}})
+    write(c / "members.json", {"members": [{"name": "РАДЕТА ВЈЕРИЦА", "group": "Листа А"}, {"name": "БАКИЋ ЈОВО", "group": "Листа Б"}]})
+    write(c / "snimak" / "2026-11-17.json", {"govori": [
+        {"ime": "Radeta Vjerica", "adresa": "radeta-vjerica", "grupa": "", "uloga": "", "od": 1, "do": 2},
+        {"ime": "Bakić Jovo", "adresa": "bakic-jovo", "grupa": "", "uloga": "Lista s potpisa", "od": 3, "do": 4}]})
+    write(c / "transcripts" / "1.json", {"days": [{"day": 4, "listed_date": "2026-11-24"}], "speeches": {
+        "1": {"day": 4, "speaker": "ВЈЕРИЦА РАДЕТА", "chair": False, "text": text},
+        "2": {"day": 4, "speaker": "ЈОВО БАКИЋ", "chair": False, "text": "а" + text.replace(" ", " а")}}})
+    words = text.split() + ("а" + text.replace(" ", " а")).split()
+    (c / "reci" / "a.jsonl").write_text(json.dumps({"reci": [[i, i + 1, w] for i, w in enumerate(words)]}), encoding="utf-8")
+    monkeypatch.setattr(common, "ROOT", tmp_path)
+    monkeypatch.setattr(common, "CONVOCATION", "15")
+    recordings.govor_cmd(SimpleNamespace(day="2026-11-24", heard=str(c / "reci"), note="", dry_run=False))
+    turns = json.loads((c / "snimak" / "2026-11-24.json").read_text(encoding="utf-8"))["govori"]
+    assert [(t["ime"], t["grupa"], t["uloga"]) for t in turns] == [("Radeta Vjerica", "Lista A", ""),
+                                                                  ("Bakić Jovo", "", "Lista s potpisa")]
