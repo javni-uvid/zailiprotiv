@@ -28,7 +28,6 @@
   </div>
 {% endfor %}
 </section>
-<p class="label">Prvih pet po svakom broju u ovom sazivu, isto pravilo za svakoga; samo konačna glasanja o zakonima. Izostanak: nije prisutan ili nije glasao.</p>
 {% endif %}
 <p id="f-n" class="row-meta" aria-live="polite"></p>
 <ol class="rows compact" id="f-rows" data-more="40">
@@ -44,5 +43,6 @@
   </li>
 {% endfor %}
 </ol>
+{% if boards %}<p class="label"><span class="wide-only">Prvih pet</span><span class="phone-only">Prva tri</span> po svakom broju u ovom sazivu, isto pravilo za svakoga; samo konačna glasanja o zakonima. Izostanak: nije prisutan ili nije glasao.</p>{% endif %}
 <p class="meta foot-note">Svako ko je bar jednom na spisku konačnog glasanja o zakonu u ovom sazivu. Traka: za, protiv, uzdržan, nije glasao, nije prisutan. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala odsutne.</p>
 {% endblock %}

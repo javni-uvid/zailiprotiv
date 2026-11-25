@@ -289,7 +289,7 @@ issue #7 once the Fifteenth is current.
   the sitting one. `macros.newer_panel(part)`: on "Grupe" the groups' table and seats bar, on "Sednice" the agenda
   and the days, on "Varnice" the quick exchanges by the order of turns (the notes' replies, measures and harsh words
   come when the notes are counted for it: `pages_floor` still counts only convocations with laws), elsewhere in the
-  Assembly's pages and on "Prisustvo" a line and the links. It rides in `assembly_tabs`, so every page of that
+  Assembly's pages and on "Prisustvo" a line (with links until 25 Nov 2026, when its form was made lighter: `site.md`). It rides in `assembly_tabs`, so every page of that
   section has it. Gone when the convocation becomes the current one.
 - **The new convocation's notes are counted before it has a law** (19 Nov 2026). `site.build` gives `pages_floor`
   the newest convocation's notes (brought from the bucket at build) ahead of the others', so "Varnice" opens on it

@@ -21,7 +21,6 @@
       <input id="q" type="search" placeholder="Zakon ili poslanik, npr. budžet ili Jovanov" autocomplete="off">
       <ul id="hits" class="hits" hidden></ul>
     </div>
-    <p class="masthead">{{ stats.all_laws }} {{ plural(stats.all_laws, "zakon", "zakona", "zakona") }} od {{ convs[-1].years[:4] }}. godine · {{ stats.all_mps }} poslanika · <a href="pretraga.html">pretraga celog teksta</a> · <a href="zakoni.html">svi zakoni</a> · <a href="poslanici.html">svi poslanici</a></p>
   </div>
   {% if divisive %}
   {% set c = divisive.final.counts %}
@@ -54,10 +53,6 @@
     <div>
       {% if newer.sitting %}<h3><a href="{{ newer.sitting.url }}">{{ newer.sitting.label }}: šta se odlučuje</a></h3>
       <ol class="hc-agenda">{% for a in newer.sitting.agenda %}<li>{{ a }}</li>{% endfor %}</ol>{% endif %}
-      <ul class="plain hc-links">
-        <li><a href="{{ newer.page }}">Svih {{ newer.n }} poslanika, po grupama</a></li>
-        {% if live_page %}<li><a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">Ko sada govori, uživo sa prepisom</a></li>{% endif %}
-      </ul>
     </div>
   </div>
   <p class="label">Novi saziv još nije usvojio nijedan zakon; glasanja će biti ovde od prve sednice na kojoj se glasa. Sve označeno sa „prethodni saziv“ je iz prethodnog, četrnaestog saziva.</p>

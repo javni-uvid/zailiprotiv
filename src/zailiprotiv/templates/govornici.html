@@ -6,7 +6,7 @@
 {% block main %}
 <p class="kicker">Skupština</p>
 <h1>Ko koliko govori u {{ conv }}. sazivu</h1>
-<p class="lead">Svi dani sednica pročitani sa snimka prenosa, sabrani: ukupno {{ whole }} govora s imenom govornika u potpisu, {{ days|length }} {{ "dan" if days|length == 1 else "dana" }}. Isto pravilo za svakog govornika; predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši.</p>
+<p class="lead">Svi dani sednica pročitani sa snimka prenosa, sabrani: ukupno {{ whole }} govora s imenom govornika u potpisu, {{ days|length }} {{ "dan" if days|length == 1 else "dana" }}.</p>
 <h2>Dani</h2>
 <ul class="plain">{% for d in days %}<li><a href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a> <span class="label">· {{ d.whole }} · {{ d.people }} govornika</span></li>{% endfor %}</ul>
 <h2>Po govorniku</h2>
@@ -24,4 +24,5 @@
 {% endfor %}</tbody></table></div>
 {% endfor %}
 {% endif %}
+<p class="label">Isto pravilo za svakog govornika; predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši. {% from "macros.html" import how with context %}{{ how("govornici") }}</p>
 {% endblock %}
