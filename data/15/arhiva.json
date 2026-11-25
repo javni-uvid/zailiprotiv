@@ -67,32 +67,34 @@
   "rucno": true
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410.mp4": {
-  "pokusaja": 3,
-  "kadrova": 3,
-  "provereno": "2026-11-24T16:57:24+00:00"
+  "od": 1795515059,
+  "trajanje": 7666,
+  "rucno": true,
+  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 32 govora, 13 govornika; potpis i sat govora u slici potvrđeni za Vujadinovića (4408. s) i Vučića (7534. s)."
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410a.mp4": {
-  "od": 1795522712,
+  "od": 1795522726,
   "trajanje": 3149,
-  "kadrova": 10,
-  "slaze_se": 10
+  "rucno": true,
+  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 16 govora, 9 govornika; potpis i sat govora u slici potvrđeni za Lesjak (1123. s)."
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410b.mp4": {
-  "od": 1795529474,
+  "od": 1795529492,
   "trajanje": 7243,
-  "kadrova": 7,
-  "slaze_se": 7
+  "rucno": true,
+  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 20 govora, 13 govornika; potpis i sat govora u slici potvrđeni za Ilić (1660. s)."
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410c.mp4": {
-  "pokusaja": 3,
-  "kadrova": 4,
-  "provereno": "2026-11-25T00:46:55+00:00"
+  "od": 1795536738,
+  "trajanje": 3386,
+  "rucno": true,
+  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 14 govora, 9 govornika; potpis i sat govora u slici potvrđeni za Vučića (22. i 1595. s), Tandira (1737. s), Radetu (918. s) i Đukanovića (3222. s)."
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410d.mp4": {
-  "od": 1795541114,
+  "od": 1795541050,
   "trajanje": 3912,
-  "kadrova": 6,
-  "slaze_se": 6
+  "rucno": true,
+  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 9 govora, 8 govornika; potpis i sat govora u slici potvrđeni za Vučevića (252. s)."
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112510.mp4": {
   "od": 1795597394,
