@@ -35,7 +35,9 @@ RULES: list[tuple[str, re.Pattern]] = [(label, re.compile(rx)) for label, rx in 
     ("Tačka dnevnog reda", r"prelaz\w* na \w*\s*\w*\s*tačk|prelaz\w* na dnevn\w* red|tačk\w* dnevnog reda"),
     ("Pretres zaključen", r"zaključuj\w* \w*\s*\w*\s*(pretres|rasprav)"),
     ("Pretres otvoren", r"otvaram\w* \w*\s*\w*\s*(pretres|rasprav)"),  # the chair's own verb, not "do otvaranja pretresa"
-    ("Pauza", r"određuj\w* pauz|pravimo pauz|pauz\w* u trajanju|nastavljamo u \d|nastavljamo sutra|nastavak sednice"),
+    # "Nastavak sednice sutra u 10" ends the day and is no break (24 Nov 2026, 19:29); "nastavak sednice u 15" is one
+    ("Kraj rada", r"(nastavlja\w*( (sa )?(rad\w*|sednic\w*))?|nastavak (sednice|rada))( je)?( zakazan\w*)?( za)? sutra"),
+    ("Pauza", r"određuj\w* pauz|pravimo pauz|pauz\w* u trajanju|nastavljamo u \d|nastavak sednice"),
     ("Nastavak rada", r"nastavlja\w* (sa )?rad|nastavljamo sednic"),
     ("Mera predsedavajućeg", r"izrič\w* \w*\s*(opomen|mer)|oduzima\w* \w*\s*reč|udaljenj\w* sa sednic"),
     ("Sednica otvorena", r"otvaram\w* \w*\s*\w*\s*sednic"),

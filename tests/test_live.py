@@ -3509,3 +3509,26 @@ def test_whether_the_days_mail_went_to_all_is_only_read(tmp_path):
     assert m.went(day) is True
     (tmp_path / "2026-11-24.json").write_text("{", encoding="utf-8")
     assert m.went(day) is False
+
+
+def test_the_sitting_goes_on_tomorrow_is_the_days_end_and_a_break_stays_a_break():
+    """24 Nov 2026, 19:29: "Nastavak sednice sutra u 10." was taken for a break."""
+    from uzivo import hronika, state_base, steps
+    kind = lambda text: [k for k, _ in hronika.find(text)]
+    for end in ("Nastavak sednice sutra u 10.", "Nastavljamo sutra u 10 sati.", "Nastavljamo sa radom sutra.", "Nastavak sednice je zakazan za sutra."):
+        assert kind(end) == ["Kraj rada"], end
+    for other in ("Nastavak sednice u 15 časova.", "Nastavljamo u 16 sati.", "Određujem pauzu."):
+        assert kind(other) == ["Pauza"], other
+    assert kind("Nastavljamo sa radom.") == ["Nastavak rada"]
+    # the four breaks of 24 and 25 Nov: the model's steps, shown as breaks; the chair's words end a turn by state_base.BREAK
+    now = 1795500000
+    for said in ("proglašam pauzu od jednog sata", "Proglašavam pauzu do 15 sati i 10 minuta.",
+                 "Ja ću sada da pozovem pauzu. Pauza deset minuta.", "Proglašavam pauzu od pet minuta."):
+        assert state_base.BREAK.search(said) and "Kraj rada" not in kind(said)
+        snap = {"provereno": now + 900, "sada": None, "dnevni_red": None, "danas": [], "hronika": [
+            {"t": now, "vrsta": "Pauza", "tekst": said, "izvor": "model", "url": "", "vise": {}}]}
+        assert [e["naslov"] for e in steps.steps_shown(snap)] == ["Pauza"]
+    # a day kept before the mend: read again by today's rules, the page's own words for the day's end
+    old = {"provereno": now + 900, "sada": None, "dnevni_red": None, "danas": [], "hronika": [
+        {"t": now, "vrsta": "Pauza", "tekst": "Nastavak sednice sutra u 10.", "izvor": "prepis", "url": ""}]}
+    assert [e["naslov"] for e in steps.steps_shown(old)] == ["Kraj rada za danas"]

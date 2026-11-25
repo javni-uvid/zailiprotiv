@@ -241,3 +241,9 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   the agenda of the one convened next, and the steps of the day shown keep that day's (`dnevni_red_dana`). Two sittings
   begun on one day are not told apart. The Assembly's page is read during a broadcast only of the sitting last begun
   and those to come (`read_live`).
+- **"Nastavak sednice sutra" is the day's end, not a break** (25 Nov 2026, the conductor; found on 24 Nov 19:29). The rule on
+  the chair's words took any "nastavak sednice" and "nastavljamo sutra" for "Pauza"; with "sutra" it is "Kraj rada" now, with
+  the page's own words for it ("Kraj rada za danas"), shown as before only when nobody is at the rostrum for four minutes
+  after. A day of steps with no model step, kept before, is read again by it. The rule is loaded by both containers: what
+  it notes while a sitting is on changes with the measuring's release. The model called the same sentence "Nastavak rada":
+  its own text, left. A break said with an hour or a length stays one.
