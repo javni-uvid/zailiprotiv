@@ -317,5 +317,9 @@ records and recordings stays here:
   into the next speech's words no longer moves the end on. Measured on 17-25 Nov, old code giving every day byte for byte
   as kept: 26 turns move by over 10 s (starts only later, ends only earlier), 31 by less; 18 Nov 448 s less in all, 24 Nov
   196 s. The live record scored against the days (`tacnost`): 18 Nov 89.0 to 90.3% right and 283 to 190 s under a wrong
-  name (the 97 s the doubtful cases blamed on our placing); 24 Nov 92.3 to 92.8%. 5 and 20 s were tried: 5 moves a few
-  more ends, 20 misses holes of 10 to 20 s, the five cases the same in all three.
+  name (the 97 s the doubtful cases blamed on our placing); 24 Nov 92.3 to 92.8%. A `GAP` of 5 and of 20 s was tried
+  too: the five cases come out the same in all three (5 moves a few more ends, 20 misses holes of 10 to 20 s).
+  **What it costs:** where Whisper missed a speech's first or last words, those seconds are now counted for nobody (they
+  are no longer under another speaker's name), so such a speech's time is a little short. The days' totals: 17 Nov 11 s
+  less, 18 Nov 448 s, 19 Nov 171 s, 24 Nov 196 s, 25 Nov 2 s. Less is said, nothing false, the same for everyone (the
+  conductor, approving it).
