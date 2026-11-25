@@ -16,6 +16,18 @@ def test_a_file_is_placed_where_the_names_read_in_it_fit_the_turns():
     assert abs(arhiva.refine(found[0], seen, turns, who) - start) <= 2
 
 
+def test_a_file_tried_in_vain_waits_three_times_and_no_more(tmp_path):
+    (tmp_path / "15" / "uzivo").mkdir(parents=True)
+    (tmp_path / "15" / "videos.json").write_text(json.dumps({"days": {"2026-11-19": [{"part": 1, "title": "", "url": "u"}]}}))
+    assert arhiva.waiting(tmp_path, "15") == []  # no record of the day yet
+    turn = {"ime": "Petrović Petar", "od": 1000, "do": 1400, "okvira": 60}
+    (tmp_path / "15" / "uzivo" / "2026-11-19.json").write_text(json.dumps({"govori": [turn]}))
+    for _ in range(arhiva.TRIES):
+        assert arhiva.waiting(tmp_path, "15") == ["u"]
+        arhiva.run(tmp_path, "15", read_frames=lambda u, names, dur: [], probe=lambda u: 2000.0)
+    assert arhiva.waiting(tmp_path, "15") == []
+
+
 def test_frames_that_dont_agree_place_nothing():
     assert arhiva.offset([(t, "a") for t in range(20, 600, 30)], [("a", 1000, 9000)]) is None  # all in one long speech
     turns = [("a", 1000, 1100), ("b", 5000, 5100)]
@@ -37,7 +49,9 @@ def test_a_day_is_written_from_the_record_with_its_places_in_the_archive(tmp_pat
     def frames(u, names, dur):
         return [(t, arhiva._key("Petrović Petar") if 100 <= t <= 600 else arhiva._key("Nikolić Nina"))
                 for t in range(110, 1500, 30) if not 600 < t < 700]
+    assert arhiva.waiting(root, "15") == [url] and arhiva.waiting(root, "14") == []
     changed = arhiva.run(root, "15", read_frames=frames, probe=lambda u: 2000.0)
+    assert arhiva.waiting(root, "15") == []
     day = json.loads((root / "15" / "snimak" / "2026-11-19.json").read_text())
     assert "15/snimak/2026-11-19.json" in changed and day["izvor"] == "uzivo"
     assert [t["ime"] for t in day["govori"]] == ["Petrović Petar", "Nikolić Nina"]  # a one-frame reading left out

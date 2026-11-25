@@ -1,0 +1,67 @@
+# The sittings' recordings in the archive, placed on the clock by the captions in their frames, and each day's speeches
+# linked into them (arhiva.py): data/<N>/arhiva.json and data/<N>/snimak/, which nothing else writes by itself. Asks the
+# broadcaster's archive only, never the Assembly's site. Started by **votes** when a recording is to be placed or a
+# day's record has grown, and by hand. It takes over an hour on a sitting's evening; until 25 Nov 2026 it was a part of
+# votes, whose next run waited for it.
+name: snimci
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+# One at a time; of those that wait only the newest stays (GitHub's own rule), and the one that runs is never stopped.
+concurrency:
+  group: snimci
+  cancel-in-progress: false
+
+jobs:
+  snimci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: write  # commits what was placed
+      actions: write  # starts pages
+      issues: write  # tells the maintainer when it fails
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          ref: ${{ github.ref }}  # as it is when the run begins, not when it was asked for
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Place the recordings
+        run: |
+          pip install uv==0.13.9 && uv sync --frozen
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null
+          # The current convocation's, and the newest's while it is another.
+          failed=
+          for c in $(uv run python -c 'from zailiprotiv.config import CURRENT, NEWEST; print(*sorted({CURRENT, NEWEST}, key=int, reverse=True))'); do
+            uv run --with numpy --with pytesseract zailiprotiv --convocation "$c" arhiva || failed=1
+          done
+          [ -z "$failed" ]
+      - name: Commit
+        if: always()  # keep what was placed even when the other convocation's failed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -- 'data/*/arhiva.json' 'data/*/snimak/**'
+          git diff --cached --quiet && exit 0
+          git diff --cached --quiet -- 'data/*/snimak/**' || pages=1  # a try that placed nothing changes no page
+          sh tools/predaj.sh "The archive's recordings placed, the day's speeches linked into them"
+          [ -z "$pages" ] || gh workflow run pages.yml --ref main
+      - name: Tell the maintainer when this failed
+        if: failure()
+        env:
+          CTX_WORKFLOW: ${{ github.workflow }}
+          CTX_SERVER_URL: ${{ github.server_url }}
+          CTX_REPOSITORY: ${{ github.repository }}
+          CTX_RUN_ID: ${{ github.run_id }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # One open issue per workflow, not one per failed run.
+          title="Workflow ${CTX_WORKFLOW} ne prolazi"
+          url="${CTX_SERVER_URL}/${CTX_REPOSITORY}/actions/runs/${CTX_RUN_ID}"
+          n=$(gh issue list -R "${CTX_REPOSITORY}" --state open --search "in:title \"$title\"" --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" -R "${CTX_REPOSITORY}" --body "Ponovo: $url"
+          else gh issue create -R "${CTX_REPOSITORY}" --title "$title" --body "Pokretanje nije prošlo: $url"; fi

@@ -77,6 +77,10 @@ def arhiva_cmd(args) -> int:
     by the captions read in a few of its frames, and each sitting day's file in data/<N>/snimak/ written or given the
     places it lacked. Needs ffmpeg, Tesseract's Serbian, numpy and pytesseract; a day without them changes nothing."""
     from zailiprotiv import arhiva
+    if args.waiting:
+        for url in arhiva.waiting(common.ROOT, common.CONVOCATION):
+            print(url)
+        return 0
     changed = arhiva.run(common.ROOT, common.CONVOCATION)
     print(f"archive: {', '.join(changed) or 'nothing new'}")
     return 0
