@@ -74,14 +74,9 @@ jobs:
             else gh issue create --title "$title" --body-file "$RUNNER_TEMP/telo.md" || true; fi
           done
           git diff -I'"fetched": "[^"]*"' -- "data/$newest/index.json" | grep -q '^@@' || exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "data/$newest/index.json"
-          git commit -q -m "The sittings as the Assembly lists them (convocation $newest)"
-          for i in 1 2 3; do
-            git pull --rebase -q && git push -q && { gh workflow run pages.yml --ref main || true; exit 0; }
-            git rebase --abort 2>/dev/null || true; sleep 5
-          done  # not pushed: the next run finds it new again
+          # Not sent: the last step tries once more, and is red if it can't.
+          if sh tools/predaj.sh "The sittings as the Assembly lists them (convocation $newest)"; then gh workflow run pages.yml --ref main || true; fi
       # The roll calls before all else, with their own commit: the recordings of a sitting's day, read after it, take
       # over an hour on its evening (25 Nov 2026, measured: 59 to 97 minutes).
       - name: The roll calls, the laws and the bills
@@ -123,18 +118,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           # Nothing new but the time of reading: left for the run's last commit.
           if ! git diff --cached -I'"fetched": "[^"]*"' -- data | grep -q '^@@'; then git reset -q -- data; exit 0; fi
           echo "ROLLS=1" >> "$GITHUB_ENV"  # the chain at the end starts for these too
-          git commit -m "Roll calls read from the Assembly's site (convocation $CONV)"
-          for i in 1 2 3; do
-            git pull --rebase -q && git push -q && { gh workflow run pages.yml --ref main || true; exit 0; }
-            git rebase --abort 2>/dev/null || true; sleep 5
-          done
-          exit 1  # red; the last commit tries once more
+          sh tools/predaj.sh "Roll calls read from the Assembly's site (convocation $CONV)"  # red if not sent; the last step tries once more
+          gh workflow run pages.yml --ref main || true
       # A roll call the Assembly lists and no file here has is said aloud, whatever kept it from being read: an issue,
       # one while it is open (25 Nov 2026: five of the Fifteenth's unread for a week, every run green).
       - name: Every roll call listed is read
@@ -179,15 +168,6 @@ jobs:
           IN_SCHEDULED: ${{ inputs.scheduled }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          send() {
-            for i in 1 2 3; do
-              git pull --rebase -q && git push -q && return 0
-              git rebase --abort 2>/dev/null || true; sleep 5
-            done
-            return 1  # a conflict left the run green and its data behind (24 Nov 2026)
-          }
           git add data
           c="$CONV"
           # The newest convocation, where the site is still on the one before it: its sittings' notes come after some
@@ -202,17 +182,15 @@ jobs:
           if ! git diff --cached -I'"fetched": "[^"]*"' -- data ':(exclude)data/*/uzivo/**' | grep -q '^@@'; then
             if ! git diff --cached --quiet -- 'data/*/uzivo/**'; then
               git reset -q -- data && git add -- 'data/*/uzivo/**'  # the records only, not the times of reading
-              git commit -q -m "Who spoke when, from the live page's records"
-              git checkout -q -- data  # those times: git pull --rebase refuses beside them
-              send
+              sh tools/predaj.sh "Who spoke when, from the live page's records"
             fi
+            sh tools/predaj.sh  # an earlier step's commit that was not sent
             # Nothing new but the time of reading: no commit. An hourly run stops here, unless it brought roll calls;
             # one by hand goes on.
             [ -z "$ROLLS" ] && { [ "${CTX_EVENT_NAME}" = "schedule" ] || [ "${IN_SCHEDULED}" = "true" ]; } && exit 0
             gh workflow run transcripts.yml --ref main -f convocation=$c; exit 0
           fi
-          git commit -m "Recordings, offices and the rest, beside the roll calls (convocation $CONV)"
-          send
+          sh tools/predaj.sh "Recordings, offices and the rest, beside the roll calls (convocation $CONV)"
           gh workflow run pages.yml --ref main
           gh workflow run transcripts.yml --ref main -f convocation=$c
       # The Assembly lists a later convocation's sitting among the current one's: time to switch (docs/decisions/data.md,

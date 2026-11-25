@@ -33,6 +33,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          ref: ${{ github.ref }}  # as it is when the run begins, not when it was asked for
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.12"
@@ -64,9 +66,6 @@ jobs:
         env:
           IN_MODEL: ${{ inputs.model }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/batches.json  # what is still running, for the next run
           git diff --cached --quiet && exit 0
-          git commit -m "A sample written by ${IN_MODEL}"
-          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          sh tools/predaj.sh "A sample written by ${IN_MODEL}"
