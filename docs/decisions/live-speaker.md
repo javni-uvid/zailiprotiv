@@ -175,3 +175,33 @@ presided (not done).
   minutes stood as nobody's and were entered by hand) and "sledeći govornik, odnosno govornica je profesor doktor Marija
   Lesjak". On the day's transcript the words find these two floors more (74 for 72), both right, and lose none.
   Petar Mitov's floor of 12:07 was not in the live transcript at all, so no words could find it.
+- **A name the voice is against is taken back, a turn ends where the voice changes, and a voice is learnt from the chair's
+  words** (25 Nov 2026, the maintainer: "izaberi najtačniji metod, da li još nekako možemo poboljšati?"; `glas.Listener`,
+  `komadi`, `Tracker.taken_back`). The recordings' rule (recordings.md, the same day) brought to the live service, where it
+  applies to a turn found by the chair's words or a caption of seconds, until its speaker's voice is recognised in it; a
+  caption that stays rules as before, and nothing is named from a face.
+  **(1)** From 30 s on, the voice of the turn's first minute is compared: surely another's known voice, or under 0.60 alike
+  the named MP's own, and the turn is no turn (gone from the day; the name stood for half a minute or so on the page).
+  **(2)** The turn ends where its sound is cut as the recordings' is (`pieces`, two pieces under 0.5 alike, from 15 s on).
+  It replaces "its first 12 s against a later 15 s under 0.45" of 22-23 Nov, which on 17 Nov ended a speech of 97 minutes at
+  its 20th second, and nothing took it up again. Cost: a change is seen some 35 s late, not 15 (the turn is cut back to it),
+  and not in a turn's first 20 s.
+  **(3)** A turn the chair's words gave, a minute on and of one voice, is that MP's voice until the day ends, in memory only
+  (not in `glasovi.npz`), never of an MP known already or of a presiding officer, and never used to judge the turn it
+  came from: the floor is then known again after a pause or an interruption.
+  Scored on 17-19 Nov by running the service's own `Tracker` and `Listener` over the kept windows, words and captions at their own
+  seconds (voices of earlier days only; the replay of the rules until now gives 18 Nov 88.9% and 308 s wrong, the live
+  record of that day 89.0% and 293 s): % right, seconds under a wrong name, extra.
+
+  | | 17 Nov | 18 Nov | 19 Nov |
+  |---|---|---|---|
+  | until now, captions as they were | 26.0%, 87, 151 | 88.9%, 308, 230 | 88.1%, 370, 371 |
+  | **now** | **84.1%, 0, 36** | **88.9%, 307, 261** | **90.1%, 120, 331** |
+  | until now, every caption for ten seconds only (as on 24 Nov) | 27.4%, 89, 150 | 86.4%, 114, 236 | 81.6%, 813, 371 |
+  | **now** | **84.1%, 0, 36** | **87.2%, 119, 178** | **83.6%, 43, 294** |
+
+  Of 18 Nov's 307 s wrong 211 are names spelt otherwise in the record or the notes. One number rose: 119 for 114 s wrong, 18
+  Nov with captions of ten seconds. The bars are the recordings' and were seen on these days; 0.5 in (2) is
+  the one chosen on this replay (0.4 to 0.6 and no bar: the same to a point of a percent). Not scored: 24 and 25 Nov (no notes
+  yet), and Whisper's words are those written afterwards from the recording, some better than the live ones. Tried
+  without (3): 17 Nov 35.3%; with a voice judging its own turn: 19 Nov 88.0%.

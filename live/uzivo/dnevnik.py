@@ -28,7 +28,7 @@ from . import config
 from .names import Person
 
 log = logging.getLogger("dnevnik")
-METHODS = ("observe", "heard", "clocked", "say", "note", "caption", "presides", "unheard", "voice_gone", "tick")
+METHODS = ("observe", "heard", "clocked", "say", "note", "caption", "presides", "unheard", "voice_gone", "taken_back", "tick")
 KEEP = 30  # days of lines kept
 
 

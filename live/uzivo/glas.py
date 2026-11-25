@@ -18,17 +18,23 @@ from pathlib import Path
 import numpy as np
 
 from . import config, prepis
-from .komadi import GAP, MARGIN, MIN_RUN, STRETCH_MIN, VOICE_MIN, stretches  # noqa: F401 (the one rule, the recordings' too)
+from .komadi import (GAP, LEARN, MARGIN, MIN_RUN, STRETCH_MIN, SURE, VOICE_MIN, against, alike, pieces,  # noqa: F401
+                     stretches, unit, voice)  # the one rule, the recordings' too
 
 log = logging.getLogger("glas")
 RATE = 16000
 WIN, HOP = 3.0, 1.5  # seconds of sound in a window, and between windows (lice_glas)
 KEEP = 600  # seconds of windows kept in memory
-# A turn found by the chair's words, of someone whose voice is not known: its first seconds (3-15 s) are its voice, and
-# a later 15 s on average less alike than CHANGE is someone else's. Set on 18 Nov 2026 against the notes: a speech's
-# own later 15 s fall below 0.45 in 10% of cases (an interruption: the turn ends early, nobody is named), the next
-# speaker's stay above in 4% (the turn goes on wrongly).
-CHANGE, OWN_FROM, OWN_TO, CHANGE_SPAN = 0.45, 3.0, 15.0, 15.0
+# A turn found by the chair's words or a caption of seconds (25 Nov 2026, scored on 17-19 Nov against the notes through
+# the service's own code): its own voice from OWN_FROM on.
+OWN_FROM = 3.0
+# It ends where its sound is cut (komadi.pieces) into two pieces less alike than APART, from OWN_TO on. Until 25 Nov its
+# first 12 s against a later 15 s (0.45) told: on 17 Nov that ended a speech of 97 minutes at its 20th second.
+OWN_TO, APART = 15.0, 0.5
+# It is taken back when the voice of its first FIRST seconds is against it (komadi.against): a name misheard or a caption misread.
+FIRST = 60.0
+# A turn the chair's words gave, LEARN seconds on and its halves this alike, is that MP's voice for the rest of the day.
+HALVES = 0.65
 # Another's voice heard in a turn whose own voice is not known: taken only when it is liker that voice than the turn's
 # sound before it was, by this much; a speaker merely alike another is as alike all along. On 17-19 Nov 2026: no change
 # of 83 refused, the one false change (0.04) refused.
@@ -87,6 +93,8 @@ class Listener(threading.Thread):
         self.f: list[np.ndarray] = []
         self.loud: list[float] = []
         self.learned: dict[str, float] = {}  # a caption turn's start → up to when its windows were learned
+        self.today: dict[str, dict[float, np.ndarray]] = {}  # an MP's voice of the day, from turns the chair's words gave
+        self.today_of = ""  # the day they are of
         self.saved = time.time()
 
     def _model(self):
@@ -159,11 +167,22 @@ class Listener(threading.Thread):
                 self.voices.add(d["slug"], np.stack([self.f[i] for i in np.flatnonzero(m)]))
             self.learned[key] = b
 
+    def refs(self) -> dict[str, np.ndarray]:
+        """The voices known: those kept, and the day's own, from the turns the chair's words gave. Not the day's own of
+        whoever has the floor by such a turn: a turn is not judged by the voice it was itself learnt from."""
+        out = self.voices.refs()
+        cur = self.tracker.open_turn()
+        own = cur["slug"] if cur and cur.get("izvor") in ("prepis", "potpis") and not cur.get("po_glasu") else None
+        for slug, turns in self.today.items():
+            if slug not in out and slug != own and sum(len(w) for w in turns.values()) >= LEAST:
+                out[slug] = unit(np.concatenate(list(turns.values())).mean(0)).astype(np.float32)
+        return out
+
     def judge(self) -> None:
         """Who the newest stretch of voice is, told to the tracker."""
         if not self.t:
             return
-        refs = self.voices.refs()
+        refs = self.refs()
         runs = stretches(np.array(self.t), np.stack(self.f), refs)
         newest = self.t[-1] + WIN
         if not runs or newest - runs[-1][2] > GAP:  # nobody's voice goes on: one found by voice has stopped
@@ -216,23 +235,57 @@ class Listener(threading.Thread):
         return (person, self.t[-AGAIN]) if person and self.t[-AGAIN] > cur["seen"] else None
 
     def changed(self) -> None:
-        """A turn found by the chair's words, of someone whose voice is not known: ended when its voice changes."""
+        """A turn found by the chair's words or a caption of seconds, whose speaker's voice has not been recognised: taken
+        back when the voice says it is not theirs, ended where the voice changes, and its voice learnt for the day."""
         cur = self.tracker.open_turn()
         if not cur or cur.get("izvor") not in ("prepis", "potpis") or cur.get("po_glasu") or not self.t:
             return
-        t = np.array(self.t)
-        own = (t >= cur["start"] + OWN_FROM) & (t + WIN <= cur["start"] + OWN_TO)
-        newest = t[-1]
-        late = (t > newest - CHANGE_SPAN) & (t >= cur["start"] + OWN_TO)
-        if own.sum() < 5 or late.sum() < 6:
+        t, f = np.array(self.t), np.stack(self.f)
+        a = cur["start"] + OWN_FROM
+        heard = t[-1] + WIN - a
+        first = (t >= a) & (t + WIN <= a + FIRST)
+        if SURE <= heard <= FIRST + 30 and first.sum() >= 8 and cur.get("slug"):
+            v = unit(f[first].mean(0))
+            if against(cur["slug"], alike(v, self.refs()), min(heard, FIRST)):
+                log.info("turn of %s taken back: its voice is against it", cur["slug"])
+                self.tracker.taken_back(cur["start"])
+                return
+        self._teach(cur, t, f)
+        mine = t >= a
+        if mine.sum() < 20:
             return
-        f = np.stack(self.f)
-        ref = f[own].mean(0)
-        ref /= np.linalg.norm(ref) + 1e-9
-        if float((f[late] @ ref).mean()) < CHANGE:
-            # it ends after the last window still alike its first seconds, before the 15 s that were not
-            after = np.flatnonzero((t >= cur["start"] + OWN_TO) & (t < t[late][0]) & (f @ ref >= CHANGE))
-            self.tracker.unheard(float(t[after[-1]] + HOP) if len(after) else cur["start"] + OWN_TO)
+        t, f = t[mine], f[mine]
+        cuts = pieces(t, f)
+        for before, after in zip(cuts, cuts[1:]):
+            if after[0] - cur["start"] < OWN_TO:
+                continue
+            one, two = voice(t, f, *before), voice(t, f, after[0], min(after[1], after[0] + 40))
+            if one is not None and two is not None and float(one @ two) < APART:
+                self.tracker.unheard(float(before[1]))
+                return
+
+    def _teach(self, cur: dict, t: np.ndarray, f: np.ndarray) -> None:
+        """The voice of a turn the chair's words gave, for the rest of the day (kept only in memory), of an MP not known by
+        voice and never of a presiding officer: up to its first cut, LEARN seconds on, one voice, and not surely another's."""
+        slug, day = cur.get("slug"), self.tracker.day
+        if day != self.today_of:
+            self.today, self.today_of = {}, day
+        known = self.voices.refs()
+        if cur.get("izvor") != "prepis" or not slug or slug in known or slug in config.VOICE_SKIP:
+            return
+        a = cur["start"] + OWN_FROM
+        mine = (t >= a) & (t + WIN <= cur["seen"] - LEARN_EDGE)
+        if t[-1] - a < LEARN or mine.sum() < LEAST:
+            return
+        t, f = t[mine], f[mine]
+        first = pieces(t, f)[0]
+        w = f[(t >= first[0]) & (t < first[1])]
+        if len(w) < LEAST or float(unit(w[:len(w) // 2].mean(0)) @ unit(w[len(w) // 2:].mean(0))) < HALVES:
+            return
+        others = {k: v for k, v in self.refs().items() if k != slug}
+        if against(slug, alike(unit(w.mean(0)), others), LEARN):
+            return
+        self.today.setdefault(slug, {})[cur["start"]] = w
 
     def step(self) -> None:
         self.take()

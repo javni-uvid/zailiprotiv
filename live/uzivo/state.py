@@ -498,6 +498,19 @@ class Tracker(Said, Chronicle, View):
                 self.status = UNKNOWN
                 self._snap = None
 
+    def taken_back(self, start: float) -> None:
+        """The turn open since `start`, found by the chair's words or a caption of seconds, was not its speaker's: the
+        voice said so. It is no turn, its seconds are nobody's (25 Nov 2026: Balać's speech under Vučić's name, a caption
+        misread; Drašković's under Bakić's, a name misheard)."""
+        with self._lock:
+            cur = self.turns[-1] if self.turns else None
+            if self.open and cur and cur["start"] == start and cur.get("izvor") in ("prepis", "potpis"):
+                self.turns.pop()
+                self.open = False
+                self.status = UNKNOWN
+                self._snap = None
+                self._save()
+
     def voice_gone(self, last: float, newest: float, tracked: set) -> None:
         """No voice heard for GAP: a turn whose speaker's voice was recognised in it ends with the last voice heard.
         Not one whose voice is only on the list: a voice not recognised does not say that nobody speaks (24 Nov 2026,
