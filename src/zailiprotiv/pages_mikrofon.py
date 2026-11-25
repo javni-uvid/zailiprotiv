@@ -393,13 +393,16 @@ def upcoming(root: Path, coming: list[dict], conv: str) -> list[dict]:
     """The sittings convened that the live page may count down to: the current convocation's (`coming`, from the
     bills in procedure) and the newest convocation's from its index (`conv`; before its first law the current one
     is the earlier convocation, whose listing the Assembly no longer shows): a sitting with an agenda and no roll
-    calls yet, once each."""
+    calls yet, once each; and one already begun, at the day its page says the Assembly goes on with it ("continues",
+    25 Nov 2026), with no agenda of its own: the live page has it as the agenda of the sitting under way."""
     out, seen = [], {c.get("url") for c in coming}
     try:
         listed = json.loads((Path(root) / str(conv) / "index.json").read_text(encoding="utf-8"))["sittings"]
     except (OSError, ValueError, KeyError):
         listed = {}
     for url, s in listed.items():
+        if s.get("continues"):
+            out.append({"title": s.get("title", ""), "url": url, "starts": s["continues"], "agenda": [], "goes_on": True})
         if s.get("agenda") and not s.get("votes") and url not in seen:
             out.append({"title": s.get("title", ""), "url": url, "starts": s.get("starts", ""), "agenda": s["agenda"]})
     return [*coming, *out]
@@ -409,18 +412,23 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
             notices_: list[dict] | None = None, sittings_: list[str] | None = None,
             agenda_: list[dict] | None = None, fixes_: dict | None = None, now: datetime | None = None) -> dict:
     """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own); and the
-    next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts, its agenda)."""
+    next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts, its agenda; "nastavak"
+    for one already begun that goes on then)."""
     plain = lambda h: h if h.startswith("http") else h.removesuffix(".html")
     out = {"kviz": [{**q, "href": plain(q["href"])} for q in quiz_],
            "cinjenice": [{**f, "href": plain(f["href"])} for f in besides(facts_, quiz_)]}
     # The next sitting: the first convened for today or later (one convened earlier and not yet voted on is not
-    # "next"), with its agenda, for the live page's countdown (20 Nov 2026).
-    today = (now or datetime.now(TZ)).date().isoformat()
-    c = next((c for c in sorted(coming or [], key=lambda c: c.get("starts") or "")
-              if (c.get("starts") or "")[:10] >= today), None)
+    # "next"), with its agenda, for the live page's countdown (20 Nov 2026); one whose hour has come today only when
+    # no other is known (the live page takes it off once it has begun).
+    at = (now or datetime.now(TZ)).astimezone(TZ).strftime("%Y-%m-%dT%H:%M")
+    when = lambda c: c.get("starts") or ""
+    rows = sorted((c for c in coming or [] if when(c)[:10] >= at[:10]), key=when)
+    c = next((c for c in rows if when(c) > at or len(when(c)) == 10), rows[-1] if rows else None)
     if c:
         out["sazvano"] = {"naslov": latin(c.get("title", "")), "url": c.get("url", ""), "pocinje": c.get("starts", ""),
                           "tacke": [latin(a) for a in c.get("agenda") or []]}
+        if c.get("goes_on"):
+            out["sazvano"]["nastavak"] = True
     if notices_:
         out["obavestenja"] = notices_
     if agenda_:
