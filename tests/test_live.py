@@ -1023,8 +1023,9 @@ def test_the_agenda_under_the_broadcast_says_which_items_are_done_and_by_whose_w
     assert states() == [("gotova", "sajt"), ("na_redu", ""), ("", ""), ("", "")]
     t.note(time.time(), "Tačka dnevnog reda", "Prelazimo na treću tačku dnevnog reda.", "prepis")
     assert states() == [("gotova", "sajt"), ("gotova", "prepis"), ("u_toku", "prepis"), ("", "")]
-    html = fragment(t.snapshot(), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert 'class="agenda"' in html and "2 od 4 tačaka gotovo" in html and "u toku: 3. Izbor potpredsednika" in html
+    html = fragment({**t.snapshot(), "stanje": "nepoznato"}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'class="agenda"' in html and "2 od 4 tačaka gotovo" in html and "Izbor potpredsednika" in html
+    assert '<span class="st-h">u toku:</span> 3. Izbor potpredsednika' in html and "u toku · po rečima" in html
     assert "Mandati su potvrđeni." in html and "po rečima predsedavajućeg" in html  # heard: said so; the Assembly's: the default
     assert "Tačka je gotova kad to napiše Skupština" in html  # by whose word, in the label under the list
 
@@ -1826,6 +1827,7 @@ def test_the_first_line_says_what_is_now_and_the_agenda_stands_open():
     off = page_({**snap, "stanje": "nema_prenosa", "datoteke": [{"url": "https://x/1.mp4", "od": 1795089600, "trajanje": 60},
                                                                  {"url": "https://x/2.mp4", "od": 1795093200, "trajanje": 60}]},
                 cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "у току" not in off  # 25 Nov 2026: under "Ne zaseda" nothing is said to be under way, nor in the agenda
     assert '<span class="pill off">Не заседа</span>' in off and "Скупштина сада не заседа" not in off
     assert '<details class="parts-more"><summary>Делови дана (2)</summary>' in off
 

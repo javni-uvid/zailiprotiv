@@ -234,9 +234,10 @@ def _status(snap: dict, *, cyr: bool) -> str:
     the Assembly sits ("Uživo", while the broadcast is on) or not, and the agenda's item under way or next."""
     t = lambda k: escape(_t(k, cyr))
     items = (snap.get("dnevni_red") or {}).get("tacke") or []
-    on = (next((x for x in items if x.get("stanje") == "u_toku"), None)
+    off = snap["stanje"] == "nema_prenosa"  # nothing is under way then, whatever was heard last (25 Nov 2026)
+    on = (next((x for x in items if x.get("stanje") == "u_toku" and not off), None)
           or next((x for x in items if x.get("stanje") == "na_redu"), None))
-    if snap["stanje"] == "nema_prenosa":
+    if off:
         pill = f'<span class="pill off">{t("status_off")}</span>'
     else:
         pill = f'<span class="pill"><i aria-hidden="true"></i>{t("status_live")}</span>'
@@ -282,6 +283,8 @@ def _agenda(snap: dict, *, cyr: bool) -> str:
     head = f'<b>{t("ag")}</b> <span>{escape(_fill(_t("ag_done", cyr), done, len(items)))}</span>'  # what is on: the line on top
     rows = []
     for x in items:
+        if x["stanje"] == "u_toku" and snap["stanje"] == "nema_prenosa":  # not under way while the Assembly is not sitting
+            x = {**x, "stanje": ""}
         mark = {"gotova": "✓", "u_toku": "●", "na_redu": "→"}.get(x["stanje"], "")
         state = ""
         if x["stanje"] == "gotova":  # the ✓ says done; the label under the list says by whose word (22 Nov 2026: shorter)

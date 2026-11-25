@@ -346,3 +346,7 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   during a restart, and with the service off the site's page comes, whose script finds the speech. The wildcard takes
   whatever is under `/govor/`; what is not ten digits the worker passes on and does not keep, and only when the service is
   off leads to the site. `/govor.png` is not under it. A request with a query goes through the worker too, unlike on `/`.
+- **Nothing is "u toku" while the Assembly is not sitting** (25 Nov 2026, seen that evening: "u toku: 6. Izbor članova …" under
+  "Ne zaseda", as the chair ended the sitting in words the agenda does not read). With no broadcast the line on top drops
+  the item last heard as under way, and the agenda shows it without a mark or a state; no new word, and no guess that it is
+  done. An item "na redu" stands as before, and on the air nothing changes.
