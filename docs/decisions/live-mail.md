@@ -138,3 +138,15 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   of a warning, word for word, for the maintainer only. No rule names anybody by it: tried on 24 Nov it shows
   Kuburović at 13:27, rightly, and Vučić at 12:15, wrongly (the chair only gave him the floor), so a rule would
   have named a wrong MP. A name the maintainer confirms is put in the day's line by hand (`vise.kome`).
+- **A correction of an earlier mail stands in the next one** (25 Nov 2026, the maintainer, asked whether that evening's mail
+  should carry a line of correction after 24 Nov's said something false about an MP to all readers: "1 da"; until then the
+  page was mended and the readers told nothing). When a mail that was sent said something false about a person, the next
+  mail says so. The conductor puts it by hand in `/data/mejl/ispravke-<day>.json`, `<day>` being the day of the mail that
+  carries it, beside `recenice-<day>.json` and read like it, each time a mail is made: a list of `{"dan": "<the day whose
+  mail was wrong, YYYY-MM-DD>", "tekst": "..."}`, the same for anybody. The words are the maintainer's, shown as written
+  (never a model's; only escaped, and in Cyrillic letters for who reads Cyrillic). A plain white card "Ispravka" with the
+  day it is of, above the day's dark card, and "ISPRAVKA" first in the plain text; in the maintainer's copy, the mail to
+  all and the sample. With no file or an empty list the mail is byte for byte what it was. What cannot be read of the
+  file is left out and the maintainer's copy says so on top (`pretplata.UNREAD`): a correction that silently does not go
+  would be taken for sent. A file put after the maintainer's copy went is in the mail to all and not in that copy, so it
+  is put before.

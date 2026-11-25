@@ -122,11 +122,12 @@ def by_lists(people: list, roll: Roll, label=lambda x: x[0]) -> list[tuple[str, 
 
 def build(day: date, summary: dict, measures: list[Measure] | None = None, roll: Roll | None = None,
           spoke: dict[str, int] | None = None, cyr: bool = False, unsubscribe: str = "", other_script: str = "",
-          quotes: list[dict] | None = None) -> Mail:
+          quotes: list[dict] | None = None, corrections: list[tuple[date, str]] | None = None) -> Mail:
     """`summary` is the day's "dan"; `measures` from `mere.measures`; `roll` the convocation's MPs, whose names,
     lists and portraits are shown instead of the model's; `spoke` the seconds each MP (by the list's name) was heard;
     `unsubscribe` the subscriber's own address to leave by; `other_script` the page to receive the other script from;
-    `quotes` the sentences the maintainer chose and checked by hand ({"vreme", "ime", "o_cemu", "tekst", "snimak"})."""
+    `quotes` the sentences the maintainer chose and checked by hand ({"vreme", "ime", "o_cemu", "tekst", "snimak"});
+    `corrections` of earlier mails, on top: the day whose mail was wrong, and the words written by hand, as they are."""
     t = cyrillic if cyr else (lambda s: s)
     e = lambda s: html.escape(t(s))  # noqa: E731
     measures, spoke = measures or [], spoke or {}
@@ -171,8 +172,12 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     def measure_words(m: Measure) -> tuple[str, str]:
         return (m.mera[:1].upper() + m.mera[1:], ", ".join(given_first(p.name) for p in m.kome))
 
+    def corrected(d: date) -> str:
+        return f"Sažetak od {d.day}. {MONTHS_OF[d.month - 1]} {d.year}."
+
     # The plain text, in the same order as the HTML.
     lines = [t(f"ZA ILI PROTIV · Skupština, {weekday} {day.day}. {MONTHS_OF[day.month - 1]} {day.year}."), "",
+             *[x for d, words in corrections or [] for x in (t("ISPRAVKA"), t(f"  {corrected(d)}"), t(f"  {words}"), "")],
              *([t(title), ""] if title else []), t(brief), ""]
     if events:
         lines.append(t("DAN PO SATU"))
@@ -284,6 +289,14 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
            f'<div style="{font}font-size:12px;font-weight:bold;letter-spacing:1.5px;color:{PALE}">{e("DAN U SKUPŠTINI, PO SATU")}</div>'
            f'{headline}{table(line) if line else ""}</td></tr>')
 
+    # A correction of an earlier mail stands before the day itself, as a plain card: seen, not shouted (25 Nov 2026).
+    fixes = "".join('<tr><td style="padding:0 0 14px">' + table(
+        f'<tr><td bgcolor="{PAPER}" style="background:{PAPER};border-radius:14px;padding:18px 20px">'
+        f'<div style="font-family:{SERIF};font-size:21px;line-height:1.2;font-weight:bold;color:{INK}">{e("Ispravka")}</div>'
+        f'<div style="{font}font-size:14px;line-height:1.5;color:{MUTED};padding:3px 0 8px">{e(corrected(d))}</div>'
+        f'<div style="{font}font-size:16px;line-height:1.5;color:{INK}">{e(words)}</div></td></tr>') + "</td></tr>"
+        for d, words in corrections or [])
+
     parts = []
     if said:  # the maintainer's own choice, checked by hand; never the service's
         parts.append(heading("Rečeno u sali", QUOTES_NOTE))
@@ -351,7 +364,7 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
         foot.append(f'<a href="{html.escape(other_script)}" style="color:{MUTED}">{"Latinica" if cyr else "Ћирилица"}</a>')
     brand = (f'<span style="color:{ZA}">{e("Za")}</span><span style="color:{INK}"> {e("ili")} </span><span style="color:{PROTIV}">{e("Protiv")}</span>')
     portraits = e("Portreti: Narodna skupština, učitavaju se sa zailiprotiv.rs.") + "<br>" if "<img" in "".join(parts) else ""
-    inside = top + "".join(parts)
+    inside = fixes + top + "".join(parts)
     read = max(1, round(len(re.sub(r"<[^>]+>", " ", inside).split()) / 200))
     body = f"""<!doctype html>
 <html lang="{'sr-Cyrl' if cyr else 'sr-Latn'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

@@ -197,3 +197,54 @@ def test_the_maintainer_is_shown_whom_the_chair_named_after_a_measure_with_no_na
     assert got.count("<li>") == 1 and "13:24 opomena, bez imena" in got and "u 13:27 pominje Brnabić Ana" in got and "ništa nije upisano" in got
     assert pretplata.hints(ms[1:], said, ROLL, date(2026, 11, 19)) == ""
 
+
+def test_a_correction_of_an_earlier_mail_stands_on_top_and_changes_nothing_else():
+    plain = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL)
+    assert mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, corrections=[]) == plain and "spravka" not in plain.html
+    words = "U mejlu je pisalo da je <odbor> odlučio & glasao. Nije."
+    fix = [(date(2026, 11, 18), words), (date(2026, 11, 17), "Drugo.")]
+    m = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, corrections=fix)
+    assert m.subject == plain.subject
+    block = f"ISPRAVKA\n  Sažetak od 18. novembra 2026.\n  {words}\n\nISPRAVKA\n  Sažetak od 17. novembra 2026.\n  Drugo.\n\n"
+    assert block in m.text and m.text.replace(block, "") == plain.text  # the words as they are, nothing else touched
+    assert "U mejlu je pisalo da je &lt;odbor&gt; odlučio &amp; glasao. Nije." in m.html and "<odbor>" not in m.html
+    assert m.html.count(">Ispravka</div>") == 2
+    assert m.html.index("Sažetak od 18.") < m.html.index("Sažetak od 17.") < m.html.index("DAN U SKUPŠTINI, PO SATU")
+    i, j = m.html.index('<tr><td style="padding:0 0 14px">'), m.html.index(f'<tr><td bgcolor="{mejl.DARK}"')
+    assert m.html[:i] + m.html[j:] == plain.html
+    cyr = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, cyr=True, corrections=[(date(2026, 11, 18), "Odbor nije glasao.")])
+    assert "Исправка</div>" in cyr.html and "Сажетак од 18. новембра 2026." in cyr.html and "Одбор није гласао." in cyr.text
+
+
+def test_the_corrections_file_is_read_into_the_mail_and_one_that_cannot_be_is_said_to_the_maintainer(tmp_path, monkeypatch):
+    import json
+
+    from uzivo import pretplata
+    monkeypatch.setattr(pretplata.config, "STATE_PATH", str(tmp_path / "stanje.json"))
+
+    class Service:
+        facts = {}
+
+        def summary_of(self, day):
+            return {"dan": SUMMARY}
+
+        def snapshot(self):
+            return {}
+
+    build, day = pretplata.day_mail(Service()), date(2026, 11, 19)
+    plain = build(day, False, "https://x.test/o")
+    (tmp_path / "mejl").mkdir()
+    f = tmp_path / "mejl" / "ispravke-2026-11-19.json"
+    f.write_text("[]", encoding="utf-8")
+    assert build(day, False, "https://x.test/o") == plain and build.hints(day) == ""  # an empty list: byte for byte the same
+    one = {"dan": "2026-11-18", "tekst": "Odbor nije glasao."}
+    f.write_text(json.dumps([one]), encoding="utf-8-sig")
+    m = build(day, False, "https://x.test/o")
+    assert "Odbor nije glasao." in m.html and "Odbor nije glasao." in m.text and build.hints(day) == ""
+    assert "Одбор није гласао." in build(day, True, "").html and "Odbor nije glasao." in pretplata.sample(build, day, False)
+    assert "Ispravka" not in build(date(2026, 11, 20), False, "https://x.test/o").html  # only the day it is put for
+    for broken in ("{", json.dumps(one), json.dumps([{"dan": "18. 11.", "tekst": "x"}, "x", {"dan": "2026-11-18", "tekst": " "}])):
+        f.write_text(broken, encoding="utf-8")
+        assert build(day, False, "https://x.test/o") == plain and "ispravkama" in build.hints(day)
+    f.write_text(json.dumps([one, {"dan": "2026-11-18"}]), encoding="utf-8")
+    assert "Odbor nije glasao." in build(day, False, "").text and "ispravkama" in build.hints(day)
