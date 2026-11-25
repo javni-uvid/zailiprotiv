@@ -96,6 +96,10 @@ The project's promises to its readers. Never change them without the maintainer.
      (videonet.co.rs, a plain `<video>`), from where a turn's "▶ snimak" says. Until the click the page shows our own
      button and loads nothing from either; the page and "O projektu" say so. The links work without the script;
      the script plays only archive files and YouTube ids it recognises;
+   - **a link to a speech starts by itself** (25 Nov 2026, the maintainer: "Prenos kreće sam"): opening a link to a
+     finished speech that a reader chose to open (`/govor/<second>`, `#govor-<second>`) loads that player and starts
+     it at the speech, only where the browser lets a page sound without a press; elsewhere its button waits for one
+     and nothing is loaded. Every other player still only on a click;
    - **notifications from `mikrofon.zailiprotiv.rs`, only to who asks** (20 Nov 2026): one when a sitting's
      broadcast begins, once a day; one each time it goes on after a break of over 20 minutes (24 Nov
      2026, no limit); one when the day's summary is out; carried by the browser's own push service (Google, Apple, Mozilla).
