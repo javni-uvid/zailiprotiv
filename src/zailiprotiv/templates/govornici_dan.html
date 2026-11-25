@@ -4,15 +4,16 @@
 {% block description %}Vreme govora svakog govornika u Narodnoj skupštini {{ when }}: ukupno {{ whole }}, {{ people|length }} govornika, po listama, i svaki govor sa snimkom.{% endblock %}
 {% block share %}{% if site_url %}<meta property="og:image" content="{{ site_url }}govornici/{{ day }}.png">
 <meta name="twitter:card" content="summary_large_image">{% endif %}{% endblock %}
-{% macro bars(rows, link) %}<div class="gv">{% for r in rows %}<div class="gv-r"><div class="gv-n">{% if link and r.slug %}<a href="{{ root }}poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a>{% elif link %}{{ r.name|given_first }}{% else %}{{ r.name }}{% endif %}</div><div class="gv-b"><i style="width:{{ r.width }}%"></i></div><div class="gv-v"><b>{{ r.time }}</b><span>{{ r.share }} % · {{ r.n }} {{ "govor" if r.n == 1 else "govora" }}{% if r.people %} · {{ r.people }} {{ "govornik" if r.people == 1 else "govornika" }}{% endif %}</span></div></div>{% endfor %}</div>{% endmacro %}
+{% macro bars(rows, link) %}<div class="gv" data-more="10">{% for r in rows %}<div class="gv-r"><div class="gv-n">{% if link and r.slug %}<a href="{{ root }}poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a>{% elif link %}{{ r.name|given_first }}{% else %}{{ r.name }}{% endif %}</div><div class="gv-b"><i style="width:{{ r.width }}%"></i></div><div class="gv-v"><b>{{ r.time }}</b><span>{{ r.share }} %<i class="wide-only"> · {{ r.n }} {{ "govor" if r.n == 1 else "govora" }}{% if r.people %} · {{ r.people }} {{ "govornik" if r.people == 1 else "govornika" }}{% endif %}</i></span></div></div>{% endfor %}</div>{% endmacro %}
 {% block main %}
-<p class="kicker"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
+<p class="kicker wide-only"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
 <h1>Ko je koliko govorio u Skupštini, {{ when }}</h1>
-<p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika. Isto pravilo za svakog: govor traje od prvog do poslednjeg kadra s imenom u potpisu. Predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši.</p>
+<p class="row-link phone-list"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
+<p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika.</p>
 {% if summary %}<section class="day-summary" id="sazetak">
 <h2>Sažetak dana</h2>
 {% if summary.odluke %}<ul class="plain">{% for o in summary.odluke %}<li><span class="label">{{ o.vreme }}</span> {{ o.sta }}{% if o.glasovi %}<br><span class="label">{{ o.glasovi }}</span>{% endif %}</li>{% endfor %}</ul>{% endif %}
-<p>{{ summary.ukratko }}</p>
+<details class="one"><summary>Sažetak dana</summary><p>{{ summary.ukratko }}</p></details>
 {% if summary.govornici %}<details><summary class="label">O čemu je ko govorio ({{ summary.govornici|length }})</summary><ul class="plain">{% for g in summary.govornici %}<li><b>{{ g.ime|given_first }}</b>{% if g.lista %} <span class="label">{{ g.lista }}</span>{% endif %}: {{ g.o_cemu }}</li>{% endfor %}</ul></details>{% endif %}
 <p class="label">Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
 </section>{% endif %}
@@ -38,6 +39,7 @@
     <details class="prepis"><summary class="label">Automatski prepis</summary><p>{{ t.said|latin }}</p><p class="label">Zapisao AI model za prepoznavanje govora (Whisper{% if model %}, {{ model }}{% endif %}) sa snimka; može da sadrži greške i nije citat. Zvaničan tekst je stenogram Skupštine, koji ovde zamenjuje prepis kad bude objavljen.</p></details>{% endif %}</li>
   {% endfor %}
 </ol>
+<p class="label">Isto pravilo za svakog: govor traje od prvog do poslednjeg kadra s imenom u potpisu. Predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši.</p>
 <p class="label">Izvor: {% if source == "uzivo" %}zapis stranice „Ko sada govori“, poravnat sa snimkom u arhivi{% elif source == "govor" %}stenografske beleške, poravnate sa zvukom snimka u arhivi{% elif source == "glas" %}potpis u prenosu, a gde ga nije bilo, reč predsedavajućeg kad daje reč i glas govornika (do objave stenografskih beleški; deo bez jasnog znaka nije imenovan){% else %}ceo snimak prenosa, pročitan posle sednice{% endif %}. <a href="{{ root }}kako-racunamo.html#govornici">Kako merimo</a></p>
 <style>
 {% include "mikrofon.css" %}

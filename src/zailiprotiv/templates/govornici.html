@@ -2,13 +2,13 @@
 {# The convocation's time on the floor: every day read from the recording summed (pages_govornici.py). #}
 {% block title %}Ko koliko govori u Skupštini — {{ conv }}. saziv — Za ili Protiv{% endblock %}
 {% block description %}Vreme govora svakog govornika u Narodnoj skupštini u {{ conv }}. sazivu, po listama i po danima sednica: ukupno {{ whole }}, merenje sa snimka prenosa.{% endblock %}
-{% macro bars(rows, link) %}<div class="gv">{% for r in rows %}<div class="gv-r"><div class="gv-n">{% if link and r.slug %}<a href="{{ root }}poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a>{% elif link %}{{ r.name|given_first }}{% else %}{{ r.name }}{% endif %}</div><div class="gv-b"><i style="width:{{ r.width }}%"></i></div><div class="gv-v"><b>{{ r.time }}</b><span>{{ r.share }} % · {{ r.n }} {{ "govor" if r.n == 1 else "govora" }}{% if r.people %} · {{ r.people }} {{ "govornik" if r.people == 1 else "govornika" }}{% endif %}</span></div></div>{% endfor %}</div>{% endmacro %}
+{% macro bars(rows, link) %}<div class="gv" data-more="10">{% for r in rows %}<div class="gv-r"><div class="gv-n">{% if link and r.slug %}<a href="{{ root }}poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a>{% elif link %}{{ r.name|given_first }}{% else %}{{ r.name }}{% endif %}</div><div class="gv-b"><i style="width:{{ r.width }}%"></i></div><div class="gv-v"><b>{{ r.time }}</b><span>{{ r.share }} %<i class="wide-only"> · {{ r.n }} {{ "govor" if r.n == 1 else "govora" }}{% if r.people %} · {{ r.people }} {{ "govornik" if r.people == 1 else "govornika" }}{% endif %}</i></span></div></div>{% endfor %}</div>{% endmacro %}
 {% block main %}
-<p class="kicker">Skupština</p>
+<p class="kicker wide-only">Skupština</p>
 <h1>Ko koliko govori u {{ conv }}. sazivu</h1>
 <p class="lead">Svi dani sednica pročitani sa snimka prenosa, sabrani: ukupno {{ whole }} govora s imenom govornika u potpisu, {{ days|length }} {{ "dan" if days|length == 1 else "dana" }}.</p>
 <h2>Dani</h2>
-<ul class="plain">{% for d in days %}<li><a href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a> <span class="label">· {{ d.whole }} · {{ d.people }} govornika</span></li>{% endfor %}</ul>
+<ul class="plain day-rows">{% for d in days %}<li><a href="{{ root }}govornici/{{ d.day }}.html">{{ d.when }}</a> <span class="label">· {{ d.whole }} · {{ d.people }} govornika</span></li>{% endfor %}</ul>
 <h2>Po govorniku</h2>
 {{ bars(people, true) }}
 <h2>Po listi</h2>

@@ -1132,3 +1132,22 @@ def test_the_support_pages_uses_are_known_to_the_counter_and_say_nothing_of_who(
         assert all(f'data-don="{w}"' in html for w in where)
     mail = (root / "live/uzivo/mejl.py").read_text(encoding="utf-8")
     assert 'SUPPORT = "podrzi"' in mail  # the same address for every reader: the privacy page says no link is tracked
+
+
+def test_a_phone_shows_the_same_first_tiles_and_offices_of_every_mp():
+    """25 Nov 2026 (principle 1): on a phone four tiles and two offices, by one rule for all, the rest in what opens;
+    nothing that opens needs the script."""
+    from pathlib import Path
+    here = Path(site.__file__).parent
+    macros = (here / "templates/macros.html").read_text(encoding="utf-8")
+    css = (here / "static/style.css").read_text(encoding="utf-8")
+    assert ".mp-brief > .tiles > li:nth-child(n+5)" in css and "facts|selectattr(\"short\")|list" in macros
+    assert '"wide-li" if loop.index > 2 else ""' in macros and "cards[2:office_cards_shown]" in macros
+    assert '<details class="fn-day" data-wide{% if loop.first %} open{% endif %}>' in macros
+    day = (here / "templates/govornici_dan.html").read_text(encoding="utf-8")
+    folded = day.index('<details class="one"><summary>Sažetak dana</summary>')
+    note = day.index("Napisao AI model ({{ summary.model")
+    assert day.index("summary.odluke") < folded < day.index("</details>", folded) < note  # decisions and the model's note in sight
+    for f in ("govornici_dan.html", "govornici.html"):
+        t = (here / "templates" / f).read_text(encoding="utf-8")
+        assert "{{ r.share }} %<i" in t and "Automatsko čitanje može da pogreši" in t and "kako-racunamo" in t + macros

@@ -115,6 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Phones. All of this only marks things; what it means is in the stylesheet's rules for narrow screens, so a wide
   // screen shows the page as it was.
   var phone = window.matchMedia && window.matchMedia("(max-width: 640px)");
+  // A row of the page's parts closes once one is chosen.
+  document.querySelectorAll(".parts-row").forEach(function (d) { d.addEventListener("click", function (e) { if (e.target.closest("a")) d.open = false; }); });
+  // What opens by rows on a phone stands open on a wide screen (data-wide).
+  if (!(phone && phone.matches)) document.querySelectorAll("details[data-wide]").forEach(function (d) { d.open = true; });
   // A long list shows its first rows and a button for more (data-more="30" on the list). Searching, sorting or a
   // link to a row further down shows all of it.
   document.querySelectorAll("[data-more]").forEach(function (list) {

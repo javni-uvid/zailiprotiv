@@ -270,6 +270,22 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   From the home page went the line under the field and two links of the new convocation's box, which repeated the menu.
   Where the content begins at 375 px: Varnice 3,012 -> 845, an earlier convocation's 2,739 -> 421, Zakoni's field 1,309 ->
   717, Nedelje 616 -> 337.
+- **Lighter on a phone, the second round: the pages visits begin on** (25 Nov 2026, the maintainer: "mislim da jos dosta
+  poraditi na lakoci dizajna i smanjiti visual overload sa tekstom i dugmadima itd", "treba vise se posvetiti
+  optimizacijama za telefon"; of the proposal's five questions: "1 moze po predlogu / 2 moze / 3 sklopljen / 4 dobro / 5
+  moze"). Fourteen days of visits: 82% on phones, a fifth or more in an app's own browser, so each page was measured at
+  360 by 600 px in Cyrillic, and the pages where visits begin came first. An MP's page: no crumbs on a phone, the offices
+  as rows (two, the rest and the earlier convocations' groups under "odakle je"), the quote whole and full width, the
+  first four tiles and the rest under "Cele rečenice i kako je izračunato"; the same four and the same two for every MP,
+  in the order they had (principle 1); a new MP's year, occupation and place are a line under the name. Its speeches: the
+  last day open, an earlier day a row that opens. A day: the first sentence, the rule and "Automatsko čitanje može da
+  pogreši" at the foot; the day's decisions stay, the summary's text is folded (the maintainer's choice, on a wide
+  screen too) and the note that a model wrote it stays in sight under it. Speakers: a row each, time and share (a number
+  never alone), ten and a button. The Rules: the row of parts that scrolled sideways is one row that opens and stays on
+  top (the only way back on a page of 27 screens; the conductor, within "4 dobro"). Home: the live page's and the Rules'
+  strips without their lines. What opens is a <details>: it works without the script. A wide screen is as it was but for
+  the day's page; what is on a page twice, once for each width, is `.phone-list` / `.wide-li`, and `data-wide` folds
+  stand open there (`site.js`).
 
 ## Design rules
 
