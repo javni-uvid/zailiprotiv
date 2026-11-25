@@ -192,6 +192,18 @@ console.log(JSON.stringify(out));
     assert out["other"] == "302 https://zailiprotiv.rs/"
 
 
+def test_a_shared_speech_reaches_the_edge_and_nothing_else_under_its_name_does():
+    import tomllib
+    routes = tomllib.loads((ROOT / "live" / "edge" / "wrangler.toml").read_text(encoding="utf-8"))["routes"]
+    patterns = [r["pattern"].removeprefix("mikrofon.zailiprotiv.rs") for r in routes]
+    hit = lambda path: any(path.startswith(p[:-1]) if p.endswith("*") else path == p for p in patterns)  # noqa: E731
+    assert all("*" not in p[:-1] for p in patterns)  # Cloudflare takes "*" at a pattern's end only
+    for path in ("/govor/1795520640", "/cir/govor/1795520640", "/govor/1795520640?fbclid=1", "/", "/cir/", "/stanje.json"):
+        assert hit(path), path
+    for path in ("/govor.png", "/cir/govor.png", "/govor", "/deo", "/cir/deo", "/stanje.js", "/govornici", "/mejl/posalji"):
+        assert not hit(path), path
+
+
 def test_the_service_answers_a_speechs_address(monkeypatch):
     pytest.importorskip("fastapi")
     from fastapi.testclient import TestClient
