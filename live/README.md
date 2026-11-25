@@ -116,7 +116,7 @@ Set-Content -Encoding ascii .tunnel.env "TUNNEL_TOKEN=<token from Cloudflare>"  
 .\mikrofon.ps1 stanje    # each image's commit, the containers and their health, and the commits of each part not live
 .\mikrofon.ps1 logovi    # the live service's log (-Deo strana or merenje; -Test: this tree's test)
 .\mikrofon.ps1 ocisti    # remove untagged images and the tests of worktrees that are gone
-uv run python ..	ools\pretplate.py   # subscribers to the mail and notifications, by sitting day: numbers only, nothing written
+uv run python ../tools/pretplate.py   # subscribers to the mail and notifications, by sitting day: numbers only, nothing written
 ```
 
 - **Live** (`docker-compose.yml`, project `mikrofon`): two containers and the tunnel, none of which builds. `merenje`
