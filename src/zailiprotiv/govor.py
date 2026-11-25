@@ -167,12 +167,31 @@ NOTE = ("Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa z
         "pet sekundi pre prve reči. ")
 
 
+def start_at(f: dict, second: float) -> int | None:
+    """The clock time (unix) a file's second 0 would have for what it shows at `second`: its start, or, for a file the
+    archive cut inside ("delovi": [{"sek", "od"}], the second each stretch begins at and that stretch's start), the
+    stretch's own (24 Nov 2026: a break of 70 minutes is cut out of one file)."""
+    own = [d for d in f.get("delovi") or [] if d["sek"] <= second]
+    return own[-1]["od"] if own else f.get("od")
+
+
+def stretches(f: dict, length: int) -> list[dict]:
+    """A file as the day's file lists it, a stretch each: {"url", "od", "trajanje"}, where a moment's place in the file
+    is the moment less "od". A later stretch's "od" is therefore before its first picture, by "preskoceno" seconds."""
+    parts = f.get("delovi") or []
+    if not parts:
+        return [{"url": f["url"], "od": f["od"], "trajanje": length}]
+    ends = [d["sek"] for d in parts[1:]] + [length]
+    return [{"url": f["url"], "od": d["od"], "trajanje": end, **({"preskoceno": d["sek"]} if d["sek"] else {})}
+            for d, end in zip(parts, ends)]
+
+
 def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
     """The day's turns as data/<N>/snimak/ holds them, from placed speeches (place()) in the notes' order. files:
     [{"url", "od"}], each file's start on the clock (unix), or None where it is not known; who(speaker in the notes)
     → {"ime", "adresa", "grupa", "uloga"}. The chair is left out; a speaker's speeches with only the chair between
     them, within MERGE seconds, are one turn."""
-    start = {f["url"]: f.get("od") for f in files}
+    by_url = {f["url"]: f for f in files}
     out: list[dict] = []
     last_speaker = None
     for s in speeches:
@@ -182,22 +201,24 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
             last_speaker = None
             continue
         for part in [s] + ([s["dalje"]] if s.get("dalje") else []):
-            base = start.get(part["datoteka"])
+            f = by_url.get(part["datoteka"], {})
+            base, end = start_at(f, part["od"]), start_at(f, part["do"])
             t = {**who(s["speaker"]), "od": int(base + part["od"]) if base is not None else None,
-                 "do": int(base + part["do"]) if base is not None else None, "okvira": s["sidra"], "video": "",
+                 "do": int(end + part["do"]) if base is not None else None, "okvira": s["sidra"], "video": "",
                  "snimak": int(max(0, part["od"] - LEAD)), "datoteka": part["datoteka"], "beleske": [s["key"]],
-                 "_od": part["od"], "_do": part["do"]}
+                 "_od": part["od"], "_do": part["do"], "_s": base, "_e": end}
             prev = out[-1] if out else None
-            if (prev and last_speaker == s["speaker"] and prev["datoteka"] == t["datoteka"]
+            if (prev and last_speaker == s["speaker"] and prev["datoteka"] == t["datoteka"] and prev["_e"] == t["_s"]
                     and t["_od"] - prev["_do"] <= MERGE):
-                prev["do"], prev["_do"] = t["do"], t["_do"]
+                prev["do"], prev["_do"], prev["_e"] = t["do"], t["_do"], t["_e"]
                 prev["okvira"] += t["okvira"]
                 prev["beleske"] += t["beleske"]
             else:
                 out.append(t)
             last_speaker = s["speaker"]
     for t in out:
-        t.pop("_od"), t.pop("_do")
+        for k in ("_od", "_do", "_s", "_e"):
+            t.pop(k)
     return out
 
 

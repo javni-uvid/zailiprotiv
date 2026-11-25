@@ -70,7 +70,17 @@
   "od": 1795515059,
   "trajanje": 7666,
   "rucno": true,
-  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 32 govora, 13 govornika; potpis i sat govora u slici potvrđeni za Vujadinovića (4408. s) i Vučića (7534. s)."
+  "kako": "Beleške dana nađene u rečima snimka (govor.place), početak svakog govora prema govoru istog govornika u zapisu: 32 govora, 13 govornika; potpis i sat govora u slici potvrđeni za Vujadinovića (4408. s) i Vučića (7534. s); prvih 736 s je početak sednice od 10:00:39, pre pauze koja je isečena (rez na 735,25-736,0 s, sa slike): nizovi reči snimka u zapisu zvuka servisa, 189 od 196 za prvi deo, 2146 od 2148 za drugi (od 779. s do 2400. s), kod drugog isti sat kao po govorima.",
+  "delovi": [
+   {
+    "sek": 0,
+    "od": 1795510839
+   },
+   {
+    "sek": 736,
+    "od": 1795515059
+   }
+  ]
  },
  "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410a.mp4": {
   "od": 1795522726,

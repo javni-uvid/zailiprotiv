@@ -46,7 +46,7 @@ def last_day(root: Path) -> dict | None:
 def parts(day: dict) -> list[dict]:
     """The day's recording in the broadcaster's archive, file by file, each with the hours it covers."""
     clock = lambda ts: datetime.fromtimestamp(ts, TZ).strftime("%H:%M")
-    return [{"url": p["url"], "from": clock(p["od"]), "to": clock(p["od"] + p["trajanje"])}
+    return [{"url": p["url"], "from": clock(p["od"] + p.get("preskoceno", 0)), "to": clock(p["od"] + p["trajanje"])}
             for p in day.get("datoteke") or [] if p.get("url") and p.get("od") and p.get("trajanje")]
 
 

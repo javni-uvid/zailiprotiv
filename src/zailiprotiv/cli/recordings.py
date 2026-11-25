@@ -141,7 +141,7 @@ def govor_cmd(args) -> int:
     files = []
     for url in day_files:
         if "od" in kept.get(url, {}):
-            files.append({"url": url, "od": kept[url]["od"], "kako": "arhiva.json"})
+            files.append({"url": url, "od": kept[url]["od"], "kako": "arhiva.json", "delovi": kept[url].get("delovi")})
             continue
         # Every start the file could have by a speech placed in it and a turn of the same speaker in the live record;
         # the file's start is where most of them agree (within 30 s), from two speakers' speeches on.
@@ -162,8 +162,8 @@ def govor_cmd(args) -> int:
     out = {"dan": args.day, "izvor": "govor", "napomena": govor.NOTE + (args.note or ""),
            "pokriveno": [{"od": min(t["od"] for t in turns), "do": max(t["do"] for t in turns)}] if turns else [],
            "govori": turns,
-           "datoteke": [{"url": f["url"], "od": f["od"], "trajanje": int(kept.get(f["url"], {}).get("trajanje") or 0)}
-                        for f in files if f["od"] is not None]}
+           "datoteke": [p for f in files if f["od"] is not None
+                        for p in govor.stretches(f, int(kept.get(f["url"], {}).get("trajanje") or 0))]}
     if args.dry_run:
         return 0
     path = conv_dir / "snimak" / f"{args.day}.json"
