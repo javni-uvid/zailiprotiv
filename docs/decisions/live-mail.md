@@ -179,3 +179,7 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   The account was not looked at, so the page claims neither that the preview is on nor that it is off. What we keep is as it
   was; three sentences spoke of the database as of everything and now say the database. "Email preview" is in `<code>`, which
   the Cyrillic page leaves in Latin. The counter's own "Tvoja adresa je obrisana" (`worker/mejl.js`) is not changed.
+- **"Email preview" is off, and the privacy page says since when** (25 Nov 2026, the maintainer: "Ugasio sam ga", in his own
+  account; nobody else looked). The page says only that: what Cloudflare keeps besides stands as its documentation has it.
+  The sentence is true only while the switch stays off, and a new sending domain turns it on by itself: look at it with any
+  change of the domain, and mend the sentence the day it is turned on.
