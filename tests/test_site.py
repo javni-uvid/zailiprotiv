@@ -1180,3 +1180,8 @@ def test_a_phones_order_is_the_documents():
     assert members.index("scroll wide-li") < members.index('id="f-rows"') < members.index("scroll phone-list")
     mp = (here / "templates/mp.html").read_text(encoding="utf-8")
     assert mp.index("mp-line wide-li") < mp.index("offices_part(offices") < mp.index("mp-line phone-list")
+
+
+def test_years_of_a_convocation_with_no_law_yet():
+    assert site.years_of("14", {"a": {"passed": "2024-05-02"}}) == "2024–2026"
+    assert site.years_of("15", None) == "2026–"  # an MP's overview may be from its notes already

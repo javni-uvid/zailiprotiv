@@ -509,6 +509,18 @@ def read(root: Path) -> Sources:
         rule_terms=poslovnik.terms(root / "poslovnik"))
 
 
+def years_of(conv: str, laws: dict | None) -> str:
+    """A convocation's years, "2022–2024". One with no law yet (None) is not among those the site is built of, though an
+    MP's overview may be from its notes already (25 Nov 2026: no build went through for an hour for that): "2026–"."""
+    conf = CONVOCATIONS.get(conv, {})
+    if laws is None:
+        return f"{conf.get('from', '')[:4]}–"
+    passed = sorted(l.get("passed") or "" for l in laws.values())
+    first = (conf.get("from") or (passed[0] if passed else ""))[:4]
+    last = (conf.get("to") or (passed[-1] if passed else ""))[:4]
+    return f"{first}–{last}" if first and last and first != last else first or last
+
+
 def build(root: Path, out: Path, domain: str | None = None, clean: bool = False, cyrillic: bool = False) -> dict:
     """The site from data/ in three steps: read (read(), each file once), work out what the pages share, then the
     pages. Every global the templates see is set once, before the first page; nothing is put into a page after it
@@ -531,11 +543,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
 
     # 1. What the pages share.
     def years(c: str) -> str:
-        passed = sorted(l.get("passed") or "" for l in loaded[c][0]["laws"].values())
-        conf = CONVOCATIONS.get(c, {})
-        first = (conf.get("from") or (passed[0] if passed else ""))[:4]
-        last = (conf.get("to") or (passed[-1] if passed else ""))[:4]
-        return f"{first}–{last}" if first and last and first != last else first or last
+        return years_of(c, loaded[c][0]["laws"] if c in loaded else None)
 
     conv_list = [{"n": c, "name": ORDINAL_NAME.get(c, c + "."), "page": laws_page(c, current),
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
