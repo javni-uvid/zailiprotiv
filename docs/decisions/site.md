@@ -316,10 +316,11 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   - The bodies' pages are read when the lists change (a body, or a number), when a relevant news item is new, weekly
     otherwise. What was listed and when it was read are on lines of their own in the file: the workflow's commit passes
     over a change of "fetched" alone, and an uncommitted reading was made again every hour.
-  - **Not read again: the archives.** The old reader also passed over a row the archive breaks (a second `<tr>` inside
+  - **The archives are read once more, one a run** (the conductor, the same evening). The old reader also passed over a row the archive breaks (a second `<tr>` inside
     the cell): a committee of the Twelfth listed with 17 members has 14 in our file, one of the Ninth one fewer than its
-    page. The reader takes them now; the files of 9 to 14 are as they were, until it is decided to ask for the archives
-    once more (some 30 pages a convocation).
+    page. The reader takes them now. A file without "listed" is read again (some 30 pages a convocation, a second apart); what
+    was added is in the run's log. Rows are only added: were one to be lost, the file keeps its own, names it under
+    `lost`, the run warns, and no other archive is read until that is looked at.
 
 ## Design rules
 
