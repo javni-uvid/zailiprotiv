@@ -38,6 +38,8 @@ that file in the same commit, and here only when a line below no longer holds.
 
 ## How to work here
 
+- **Only the conductor puts the service live and changes `/data`** (25 Nov 2026; the repository's `AGENTS.md`, "One
+  conductor, and workers under it"); what follows is how it does so.
 - **Test, look, then live, by the agent itself:** `mikrofon.ps1 test` from the worktree, look at the page (a phone's
   width, both scripts); after the merge build the test from the main clone on a clean `origin/main`, check that
   nothing else lies between the live image's commit and `main` (`mikrofon.ps1 stanje`, `git log <commit>..origin/main
