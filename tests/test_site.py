@@ -894,7 +894,9 @@ def test_every_use_a_page_sends_is_one_the_counter_takes():
     sent |= set(re.findall(r'data-e="([^"{]+)"', (root / "src/zailiprotiv/templates/govornici_dan.html").read_text(encoding="utf-8")))
     live = (root / "live/uzivo/static/live.js").read_text(encoding="utf-8")
     sent |= {"mikrofon." + w for w in re.findall(r'use\("([a-z-]+)"\)', live)}
-    assert {"pretraga.polje-ceo", "sajt.snimak", "sajt.mikrofon", "mikrofon.obavesti-odbijeno"} <= sent
+    player = (root / "src/zailiprotiv/templates/mikrofon.js").read_text(encoding="utf-8")
+    sent |= set(re.findall(r'count\("([a-z0-9.-]+)"\)', player))
+    assert {"pretraga.polje-ceo", "sajt.snimak", "mikrofon.slusaj", "sajt.mikrofon", "mikrofon.obavesti-odbijeno"} <= sent
     assert sent <= events, sent - events
 
 

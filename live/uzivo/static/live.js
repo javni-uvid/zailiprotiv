@@ -332,9 +332,9 @@
     if (said) { said.textContent = b.getAttribute("data-done"); said.hidden = false; }
   });
 })();
-// More of the page's uses for the same counter as the broadcast's ▶ (mikrofon.js, "mikrofon.pusti"): a sum per day,
-// nothing with it, each at most once per page opened, so every count is "pages where this happened". Time out of
-// sight is not counted.
+// More of the page's uses for the same counter as the broadcast's ▶ (mikrofon.js, "mikrofon.pusti"): a sum per day
+// (1min and 5min per hour too), nothing with it, each at most once per page opened, so every count is "pages where
+// this happened". Time out of sight is not counted.
 (function () {
   var api = (document.body.getAttribute("data-api") || "").replace(/\/$/, "");
   if (!/^https:\/\//.test(api) || !window.fetch) return;

@@ -5,7 +5,8 @@
   if (!screen) return;
   var ARCHIVE = /^https:\/\/arhiva\.videonet\.co\.rs\//, ID = /^[\w-]{6,20}$/;
   function put(el) { screen.textContent = ""; screen.appendChild(el); }
-  // A press on the broadcast's ▶ told to the site's counter, once per page: a sum per day, nothing with it.
+  // A press on the broadcast's ▶ or on its sound told to the site's counter, once per page: a sum per day and hour,
+  // nothing with it.
   var told = {};
   function count(what) {
     var api = (document.body.getAttribute("data-api") || "").replace(/\/$/, "");

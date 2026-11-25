@@ -39,7 +39,7 @@ voted on is read from the site's `glasanje.json`. The quiz's old sums stay in `v
 for the quiz's picture (`kviz.`) and the ballot's (`listic.`): `otvori` (the ballot's picture opened), `podeli` (the
 share button), `podeljeno` (the share sheet finished), `kopiraj`, `sacuvaj`; and `mikrofon.pusti` (the live
 page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.zailiprotiv.rs`, which may send only
-`mikrofon.` uses); the site's search: `pretraga.trazi` (a search run), `pretraga.prazno` (one that ended with no
+`mikrofon.` uses); `mikrofon.slusaj` ("Slušaj", the live sound only, pressed; 25 Nov 2026); the site's search: `pretraga.trazi` (a search run), `pretraga.prazno` (one that ended with no
 result), `pretraga.klik` (a result opened), and the field on the home page and "Poslanici": `pretraga.polje` (typed in),
 `polje-nema` (no name or title), `polje-izbor` (one taken), `polje-ceo` (the whole text's search taken), never the
 words searched for; `sajt.snimak` (a recording played on a day page), `sajt.mikrofon` (a link to the live page
@@ -51,6 +51,11 @@ shown, pressed, refused at the browser's question, failed). The page "Podrži" (
 `podrzi.kopiraj` (the account's details copied), `podrzi.paypal`. Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.
+
+Four of them are also summed per hour (25 Nov 2026; UTC, the table `events_hours`: the hour, the use, how many, nothing
+else): `mikrofon.pusti`, `mikrofon.slusaj`, `mikrofon.1min`, `mikrofon.5min`. `GET /pregled` gives them under
+`uses_by_hour`, for the same two weeks, without an hour's sum under three (the overview is public, and a sum of one
+can be a person); the **visits** workflow prints them (`tools/uses.py`).
 
 ## Notifications from the live page
 

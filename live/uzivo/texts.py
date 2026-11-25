@@ -237,7 +237,7 @@ TEXT = {
     "archive_note": "Snimak od %1 (Videonet, arhiva Skupštine) učitava se tek na klik.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counted": "Brojač sajta zbraja po danu koliko je puta stranica otvorena, koliko dugo je gledana i šta je "
-                    "na njoj pritisnuto; bez oznake uređaja i bez ičega o tome ko je to bio",
+                    "na njoj pritisnuto (prenos, zvuk i 1 i 5 minuta gledanja i po satu); bez oznake uređaja i bez ičega o tome ko je to bio",
     "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
                  "ste blizu.",
     "question": "Pitanje",
