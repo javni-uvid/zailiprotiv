@@ -105,6 +105,38 @@ def test_a_term_keeps_its_sentence_only_while_its_articles_read_the_same(tmp_pat
     assert poslovnik.terms(tmp_path / "none") == []
 
 
+def test_a_retelling_is_shown_in_the_files_own_words():
+    """The page gives a retelling a paragraph a sentence, its numbers in bold: form only, not a letter changed. Every
+    term belongs to a part of the page, and each part's terms follow one another in the file."""
+    from itertools import groupby
+    from pathlib import Path
+    from zailiprotiv import pages_floor
+    folder = Path(__file__).resolve().parents[1] / "data" / "poslovnik"
+    kept = json.loads((folder / poslovnik.TERMS).read_text(encoding="utf-8"))
+    for t in kept:
+        pieces = pages_floor.retold(t["objasnjenje"])
+        assert " ".join("".join(x for x, _ in s) for s in pieces) == t["objasnjenje"]
+    bold = [x for t in kept for s in pages_floor.retold(t["objasnjenje"]) for x, b in s if b]
+    assert {"84 poslanika", "dva minuta", "10%", "10 do 18 časova", "24 časa"} <= set(bold)
+    assert "109" not in bold  # an article's number is no limit
+    assert [k for k, _ in groupby(t["deo"] for t in kept)] == [id_ for id_, _ in pages_floor.RULE_PARTS]
+    parts = pages_floor.rule_parts([{"id": "a", "part": "tok-sednice"}, {"id": "b", "part": ""}])
+    assert [(p["id"], [t["id"] for t in p["terms"]]) for p in parts] == [("tok-sednice", ["a"]), ("", ["b"])]
+
+
+def test_the_page_of_the_rules_keeps_the_addresses_other_pages_link_to():
+    """The live page, the notes and the site lead to #pojmovi, #pojam-<id>, #clanovi and #clan-<n>; the finder on the
+    page looks through every list of it."""
+    import re
+    from pathlib import Path
+    from zailiprotiv import pages_floor
+    text = (Path(pages_floor.__file__).parent / "templates" / "rules_cited.html").read_text(encoding="utf-8")
+    for id_ in ("pojmovi", "clanovi", "pojam-{{ t.id }}", "clan-{{ a.n }}"):
+        assert text.count(f'id="{id_}"') == 1
+    assert 'id="rc-rows"' in text and re.search(r'data-filter="[^"]*rt-\{\{ loop\.index \}\}[^"]*rc-rows"', text)
+    assert not {id_ for id_, _ in pages_floor.RULE_PARTS} & {"pojmovi", "clanovi", "sadrzaj"}
+
+
 def test_the_sites_terms_rest_on_articles_the_rules_have():
     from pathlib import Path
     folder = Path(__file__).resolve().parents[1] / "data" / "poslovnik"

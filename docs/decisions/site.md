@@ -213,6 +213,20 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   written by `family.py` from `osnova/design/sites.json`; the notes' pages have the bar. On a Cyrillic page the
   links lead to the other sites' Cyrillic editions (`data-cir-href`, as for the live page). The live page
   (`live/`) is not changed here. A new site of the family shows after the next copy of `osnova/` and build.
+- **The page of the Rules in a new form** (25 Nov 2026, the maintainer: "ulepšaj mnogo stranicu za poslovnik i vizuelno i
+  po formi"; some 650 visits in the day of 24 to 25 Nov, mostly from phones, by links from the live page's steps).
+  `poslovnik-clanovi` was one column of 16 grey blocks, 26.6 screens of a phone, with no way to find a term. Now: a
+  field that looks through the terms and the articles (a number finds that article, not its mentions; `site.js`, one
+  finder over several lists, `data-n`); an index of the terms in three parts (`deo` in `pojmovi.json`,
+  `pages_floor.RULE_PARTS`; the file's own order), each with a mark drawn for it (`rules_icons.html`, lines in the
+  text's colour); a retelling as a paragraph a sentence, the first larger, its numbers with a unit in bold, by one
+  rule for every term (`pages_floor.retold`; a test joins the pieces back into the file's words); beside it, under it
+  on a phone, each article as a row of its own that says how it begins and opens to its whole text. **Two voices, told
+  apart by form:** the retelling in the page's letters, the Assembly's text in the serif behind a line, here only.
+  An invoked article's row and the terms that rest on it lead to each other; twelve invoked articles stand first and a
+  button shows the rest (a link to a row shows all, as before). The addresses `#pojmovi`, `#clanovi`, `#pojam-<id>`,
+  `#clan-<n>` are as they were; a link to a part of the page no longer opens its first row. 19 screens of a
+  phone, no new colour, no new size of letters.
 
 ## Design rules
 

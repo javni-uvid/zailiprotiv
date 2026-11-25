@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
       at += step;
       if (at >= items.length) all(); else label();
     });
-    var box = document.querySelector('[data-filter="' + list.id + '"]');
+    var box = document.querySelector('[data-filter~="' + list.id + '"]');
     if (box) { box.addEventListener("input", all); box.addEventListener("change", all); box.addEventListener("click", function (e) { if (e.target.closest(".chip")) all(); }); }
     function target() { var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (t && list.contains(t)) all(); }
     target(); window.addEventListener("hashchange", target);
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (function () {
     var open = function () {
       var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-      var d = t && t.querySelector("details");
+      var d = t && !(t.tagName === "SECTION" && t.closest(".rules")) && t.querySelector("details");  // a part of the Rules is not a row
       if (d) d.open = true;
     };
     open(); window.addEventListener("hashchange", open);
@@ -469,7 +469,9 @@ document.addEventListener("DOMContentLoaded", function () {
   "use strict";
   var box = document.querySelector("[data-filter]");
   if (!box) return;
-  var list = document.getElementById(box.dataset.filter), rows = Array.prototype.slice.call(list.children);
+  // One list, or several named one after the other (the Rules' terms and articles): the same words look through all.
+  var lists = box.dataset.filter.split(" ").map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  var list = lists[0], rows = lists.reduce(function (all, l) { return all.concat(Array.prototype.slice.call(l.children)); }, []);
   var q = document.getElementById("f-q"), sort = document.getElementById("f-sort"), group = document.getElementById("f-g");
   var area = document.getElementById("f-a"), year = document.getElementById("f-y");
   var count = document.getElementById("f-n"), chips = box.querySelectorAll(".chip[data-k]"), kind = "";
@@ -486,7 +488,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var words = norm(q.value.trim()).split(/\s+/).filter(Boolean).map(stem), shown = 0;
     var quiet = box.hasAttribute("data-quiet") && !words.length;  // a list that shows nothing until something is typed
     rows.forEach(function (r) {
-      var ok = words.every(function (w) { return r._t.indexOf(w) >= 0; })
+      var ok = words.every(function (w) {  // a number, where the rows have theirs, is the row's own ("104" is the article, not a mention)
+        return r.dataset.n && /^\d+$/.test(w) ? (" " + r.dataset.n + " ").indexOf(" " + w + " ") >= 0 : r._t.indexOf(w) >= 0; })
         && (!kind || (" " + r.dataset.k + " ").indexOf(" " + kind + " ") >= 0)
         && (!group || !group.value || r.dataset.g === group.value)
         && (!area || !area.value || (" " + (r.dataset.a || "")).indexOf(" " + area.value + " ") >= 0)
@@ -494,7 +497,8 @@ document.addEventListener("DOMContentLoaded", function () {
       r.hidden = !ok || quiet;
       if (ok) shown++;
     });
-    count.textContent = quiet || shown === rows.length ? "" : (shown ? "Prikazano " + shown + " od " + rows.length : "Niko pod tim imenom među govornicima ovog saziva.");
+    box.classList.toggle("on", words.length > 0);
+    count.textContent = quiet || shown === rows.length ? "" : (shown ? "Prikazano " + shown + " od " + rows.length : box.dataset.none || "Niko pod tim imenom među govornicima ovog saziva.");
   }
   function order() {
     var key = sort ? sort.value : "";
