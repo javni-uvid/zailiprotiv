@@ -22,7 +22,7 @@ name. Every page is also in Cyrillic, under `cir/`.
 4. **MPs are public officials:** their names and votes are shown. Nothing about their private lives.
 5. **Nothing from third parties on the pages:** no cookies, fonts or scripts from other servers. The exceptions:
    visits counted by Cloudflare Web Analytics (no cookies, totals only), and visitors' votes sent to the project's
-   own counter.
+   own counter; a copy opened anywhere but on the project's own hosts sends neither.
 6. **What MPs say is not censored and not shaped:** quotes word for word, every name as spoken, and no label or
    verdict of the site's own.
 

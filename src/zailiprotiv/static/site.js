@@ -4,10 +4,12 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
   "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "č", "џ": "dž", "ш": "š" };
 // A use of the quiz or the ballot ("kviz.kraj", "listic.podeljeno", …), told to the counter once per page: it keeps a
 // sum per day and nothing else, not even the device's mark. Plain text, so the browser asks nothing first.
-var zipCounted = {};
+// Only on the project's own hosts (25 Nov 2026), here and in every script that sends: a local build, a test or a copy
+// opened from disk sends nothing, neither this nor a vote nor a visit (base.html).
+var zipOwn = /^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname), zipCounted = {};
 function zipCount(what) {
   var api = document.body && (document.body.dataset.api || "").replace(/\/$/, "");
-  if (!api || zipCounted[what]) return;
+  if (!zipOwn || !api || zipCounted[what]) return;
   zipCounted[what] = 1;
   try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
 }

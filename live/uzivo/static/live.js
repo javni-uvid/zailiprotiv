@@ -335,10 +335,11 @@
 })();
 // More of the page's uses for the same counter as the broadcast's ▶ (mikrofon.js, "mikrofon.pusti"): a sum per day
 // (1min and 5min per hour too), nothing with it, each at most once per page opened, so every count is "pages where
-// this happened". Time out of sight is not counted.
+// this happened". Time out of sight is not counted. Only on the project's own hosts (25 Nov 2026), as in mikrofon.js:
+// a test's page, or the service's own at 127.0.0.1, sends none of it.
 (function () {
   var api = (document.body.getAttribute("data-api") || "").replace(/\/$/, "");
-  if (!/^https:\/\//.test(api) || !window.fetch) return;
+  if (!/^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname) || !/^https:\/\//.test(api) || !window.fetch) return;
   var sent = {};
   function use(what) {
     if (sent[what]) return;

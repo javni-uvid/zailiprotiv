@@ -295,9 +295,63 @@ def test_replies_and_the_chairs_measures_are_found_by_rule():
 
 def test_the_visit_counter_is_the_only_script_from_elsewhere(tmp_path):
     from zailiprotiv import publish
-    (tmp_path / "a.html").write_text(publish.ANALYTICS + " data-cf-beacon='{}'></script>")
+    from pathlib import Path
+    base = (Path(publish.__file__).parent / "templates" / "base.html").read_text(encoding="utf-8")
+    form = publish.ANALYTICS.search(base.replace("{{ analytics }}", "0a1b2c")).group(0)
+    (tmp_path / "a.html").write_text(form)
     (tmp_path / "b.html").write_text('<script src="https://example.com/x.js"></script>')
-    assert [b.split(":")[0] for b in publish.check(tmp_path)] == ["b.html"]
+    # the counter's script with no question of the host, or with another one, is not let through
+    (tmp_path / "c.html").write_text('<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"></script>')
+    (tmp_path / "d.html").write_text(form.replace("(mikrofon", "(.*"))
+    (tmp_path / "e.js").write_text('b.src = "https://static.cloudflareinsights.com/beacon.min.js";')
+    assert [b.split(":")[0] for b in publish.check(tmp_path)] == ["b.html", "c.html", "d.html", "e.js"]
+
+
+def test_a_page_opened_elsewhere_than_on_the_projects_hosts_sends_nothing(tmp_path):
+    """25 Nov 2026: pages built or run locally counted 606 visits in a day at 127.0.0.1. Each script that sends asks the
+    same question of the host first; the site's own are run here on the hosts and off them (mikrofon.js in test_live)."""
+    import shutil
+    import subprocess
+    from pathlib import Path
+    root = Path(__file__).parents[1]
+    own = r"/^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname)"
+    ours = [(f.name, f.read_text(encoding="utf-8")) for d in ("src/zailiprotiv", "live/uzivo") for f in sorted((root / d).rglob("*"))
+            if f.suffix in (".js", ".html", ".py") and "pagefind" not in f.parts]
+    assert {n for n, t in ours if own in t} == {"site.js", "mikrofon.js", "base.html", "live.js", "page.py", "publish.py"}
+    js = dict(x for x in ours if x[0] in ("site.js", "glas.js", "glasaj.js"))
+    assert "window.zipOwn" in js["glas.js"] and "window.zipOwn" in js["glasaj.js"]
+    # every script of a page that asks the counter for anything; a new one asks for the host too
+    assert {n for n, t in ours if not n.endswith(".py") and re.search(r"fetch\(api|sendBeacon", t)} == {
+        "site.js", "glas.js", "glasaj.js", "mikrofon.js", "live.js"}
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("no node")
+    start = js["site.js"].index("var zipOwn")
+    count = js["site.js"][start:js["site.js"].index("\n}\n", start) + 3]
+    glas = js["glas.js"][js["glas.js"].index("  function post("):js["glas.js"].index("  btns.addEventListener")]
+    quiz = js["glasaj.js"][js["glasaj.js"].index("  var apiEl"):]
+    quiz = quiz[:quiz.index("\n") + 1]
+    f = tmp_path / "p.cjs"
+    f.write_text("""
+const sent = [], out = {};
+globalThis.fetch = u => { sent.push(u); return Promise.resolve({ ok: true, json: () => ({}) }); };
+globalThis.document = { body: { dataset: { api: "https://glasovi.example/" } },
+                        getElementById: () => ({ dataset: { api: "https://glasovi.example/" } }) };
+for (const h of ["zailiprotiv.rs", "mikrofon.zailiprotiv.rs", "127.0.0.1", "localhost", "", "zailiprotiv.rs.example", "xzailiprotiv.rs"]) {
+  sent.length = 0;
+  const run = new Function("location", "window", COUNT + "window.zipOwn = zipOwn; zipCount('a.b');"
+    + "(function () { var api = 'https://glasovi.example';" + GLAS + "post('/z', {}).catch(function () {}); })();"
+    + QUIZ + "return api;");
+  out[h] = [sent, run({ hostname: h }, {})];
+  out[h][0] = sent.length;
+}
+console.log(JSON.stringify(out));
+""".replace("COUNT", json.dumps(count)).replace("GLAS", json.dumps(glas)).replace("QUIZ", json.dumps(quiz)), encoding="utf-8")
+    r = subprocess.run([node, str(f)], capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode == 0, r.stderr
+    told = json.loads(r.stdout)
+    assert told.pop("zailiprotiv.rs") == told.pop("mikrofon.zailiprotiv.rs") == [2, "https://glasovi.example/"]
+    assert len(told) == 5 and all(v == [0, ""] for v in told.values())
 
 
 def test_harsh_words_are_counted_in_their_sentence_and_everyday_words_are_not():

@@ -91,6 +91,8 @@
   {{ family_foot("lat", root ~ "index.html")|safe }}
   <p class="foot-fine">Podaci: <a href="https://www.parlament.gov.rs">Narodna skupština Republike Srbije</a>, poimenični rezultati glasanja i predlozi zakona; preuzeto {{ fetched }}. Sajt izgrađen {{ built }}. {% if analytics %}Bez kolačića. Posete se samo broje (Cloudflare Web Analytics: bez kolačića, bez praćenja pojedinaca); osim toga ništa sa drugih servera.{% else %}Bez kolačića, analitike i ičega sa drugih servera.{% endif %}</p>
 </footer>
-{% if analytics %}<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ analytics }}"}'></script>
+{# Only on the project's own hosts (25 Nov 2026): a local build, a test or a copy from disk counts no visits. In this form only (publish.ANALYTICS). #}
+{%- if analytics %}
+<script>if (/^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname)) { let b = document.createElement("script"); b.type = "module"; b.src = "https://static.cloudflareinsights.com/beacon.min.js"; b.setAttribute("data-cf-beacon", '{"token": "{{ analytics }}"}'); document.body.appendChild(b); }</script>
 {% endif %}</body>
 </html>

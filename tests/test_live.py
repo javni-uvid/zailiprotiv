@@ -558,7 +558,7 @@ globalThis.document = { getElementById: i => i === "screen" ? screen : null, cre
   querySelector: s => s === ".listen-live" ? swap : s.includes("facade") ? facade : null, documentElement: { lang: "sr" },
   body: { getAttribute: () => "https://glasovi.example" },
   addEventListener: (k, f) => { if (k === "click" && !press) press = f; } };
-globalThis.location = { origin: "https://mikrofon.zailiprotiv.rs", href: "" };
+globalThis.location = { origin: "https://" + HOST, hostname: HOST, href: "" };
 globalThis.fetch = (u, o) => { sent.push(JSON.parse(o.body).e); return Promise.resolve(); };
 globalThis.setInterval = () => 0;
 const click = b => press({ target: b, preventDefault() {} });
@@ -567,15 +567,17 @@ const out = [];
 for (const b of ORDER) { click(b); out.push([...sent]); }
 console.log(JSON.stringify(out));
 """
-    def ran(order):
+    def ran(order, host="mikrofon.zailiprotiv.rs"):
         f = tmp_path / "p.cjs"
-        f.write_text(harness.replace("SCRIPT", js).replace("ORDER", order), encoding="utf-8")
+        f.write_text(harness.replace("SCRIPT", js).replace("ORDER", order).replace("HOST", json.dumps(host)), encoding="utf-8")
         r = subprocess.run([node, str(f)], capture_output=True, text=True, encoding="utf-8")
         assert r.returncode == 0, r.stderr
         return json.loads(r.stdout)
     both = ["mikrofon.slusaj", "mikrofon.pusti"]
     assert ran("[swap, swap, swap, swap]") == [both[:1], both, both, both]  # sound, picture, sound, picture
     assert ran("[facade, swap, swap]") == [both[1:], both[::-1], both[::-1]]  # the first ▶, the sound, the picture again
+    for host in ("127.0.0.1", "localhost", "", "mikrofon.zailiprotiv.rs.example"):  # a test's page, one from disk, another's
+        assert ran("[facade, swap, swap]", host) == [[], [], []]
 
 
 def test_a_day_in_several_files_plays_from_the_first_with_each_part_listed():
@@ -665,7 +667,9 @@ def test_the_page_is_counted_as_the_site_is():
     from uzivo import config
     snap = {"stanje": NO_STREAM, "provereno": 0, "sada": None, "dan": "2026-11-17", "ranije": False, "danas": []}
     html = page(snap, cyr=False, site="", tz=TZ, analytics="62b7969c87164343897a48605c9267c0")
-    assert 'src="https://static.cloudflareinsights.com/beacon.min.js"' in html and "62b7969c87164343897a48605c9267c0" in html
+    from zailiprotiv import publish
+    assert len(publish.ANALYTICS.findall(html)) == 1 and "62b7969c87164343897a48605c9267c0" in html  # the site's own form
+    assert "cloudflareinsights" not in publish.ANALYTICS.sub("", html)
     assert "posete se samo broje" in html
     plain = page(snap, cyr=False, site="", tz=TZ)
     assert "cloudflareinsights" not in plain and "broje" not in plain
