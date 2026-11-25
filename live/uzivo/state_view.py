@@ -193,10 +193,11 @@ class View:
                 if d.get("adresa") in self.facts and self.facts[d["adresa"]].get("foto"):
                     d["foto"] = self.facts[d["adresa"]]["foto"]
             exchanges = self._exchanges(done) if day == self.day and not recorded and config.SHOW_QUOTES else []
-            if self.lines[0] == day and self.lines[1]:
+            lines = self.lines_of(day)
+            if lines:
                 from .rezimei import shown as line_of
                 for d in done:
-                    line = line_of(self.lines[1], d)
+                    line = line_of(lines, d)
                     if line:
                         d["rezime"] = line
             groups = self._group_time(done + ([current] if current else [])) if day == self.day and not recorded else None
