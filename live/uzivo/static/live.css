@@ -369,8 +369,9 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-x { order: 7; } .ml[open] + .ml
 .q { background: color-mix(in srgb, var(--fg) 4%, transparent); border-radius: 10px; padding: .5rem .7rem; margin: .4rem 0 0; } .q.q-c { background: none; border: 1px solid var(--line); }
 .q .qw { margin: 0; font-size: var(--t-1); display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; } .q .qw span { color: var(--muted); } .q .qp { margin-left: auto; } .q .qt { margin: .15rem 0 0; font-family: var(--serif); line-height: 1.45; }
 .qd { flex: none; width: .65rem; height: .65rem; border-radius: 3px; display: inline-block; } .qd.q-ch { background: var(--muted); border-radius: 50%; } .qd.l1 { background: var(--muted); } .qd.c-av { background: var(--c-av); } .qd.c-sl { background: var(--c-sl); } .qd.c-mn { background: var(--c-mn); }
-/* The Rules, beside a step. */
+/* The Rules, beside a step and at the foot of the card. */
 .rk-l { display: inline-flex; align-items: center; gap: .3rem; font: 600 var(--t-1)/1.2 system-ui, sans-serif; border: 1px solid var(--line); border-radius: 7px; padding: .22rem .5rem; text-decoration: none; vertical-align: middle; } .rk-l svg { width: .95rem; height: .95rem; } .rk-l svg path { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.rk-f { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: .7rem; margin: .9rem 0 0; font-size: var(--t-2); } .rk-f .rk-l { padding: .45rem .7rem; color: inherit; }
 /* The day's turns by the hour, the portrait, the topic, the moment as a button (24 Nov 2026). */
 .turns li.th { display: flex; align-items: center; gap: .6rem; padding: 1rem 0 .2rem; border: 0; font: 700 var(--t-1)/1 system-ui, sans-serif; color: var(--muted); } .turns li.th::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
 .turns li[id] { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0 .75rem; align-items: start; padding: .7rem 0; scroll-margin-top: 45vh; }

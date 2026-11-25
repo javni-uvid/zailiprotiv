@@ -1137,6 +1137,7 @@ def test_the_transcript_is_written_but_not_shown_and_the_steps_are_our_own_lines
     assert "izabrala potpredsednike" not in days and "Zvanično" not in html
     assert days.split('<ol class="steps">')[1].count("<li") == 2
     assert "Zapis sednice na sajtu Skupštine" not in html and "kvorum, replika" not in html  # off, 25 Nov 2026
+    assert '<p class="dl-foot rk-f"><a class="rk-l" href="https://zailiprotiv.rs/poslovnik-clanovi#pojmovi">' in days  # the card stays
     only = fragment({**snap, "hronika": snap["hronika"][:1]}, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
     assert '<p class="st-said">Narodna skupština je izabrala potpredsednike.</p>' in only and "<time" not in only
     assert "Skupština piše posle događaja" in only  # where from: in the label beside the heading
