@@ -157,7 +157,7 @@ jobs:
             uv run zailiprotiv members || true  # its MPs before its first roll call (members.py)
           fi
           uv run zailiprotiv uzivo-pull  # who spoke when, from the live page (live/); its computer may be off
-      # A committee or delegation the Assembly lists with members, whose page gave none (25 Nov 2026: names had become
+      # A committee or delegation whose page gave fewer members than the Assembly lists (25 Nov 2026: names had become
       # links, and nobody of the Fifteenth's committees was read for a week): an issue, one while it is open.
       - name: Every body listed has its members
         if: ${{ !cancelled() && env.CURRENT != '' && env.CONV == env.CURRENT }}
@@ -166,8 +166,8 @@ jobs:
         run: |
           uv run zailiprotiv offices --unread > "$RUNNER_TEMP/tela.md"
           [ -s "$RUNNER_TEMP/tela.md" ] || exit 0
-          while read -r line; do echo "::warning::listed, its members not read: $line"; done < "$RUNNER_TEMP/tela.md"
-          title="Odbori i delegacije sa spiska Skupštine čiji članovi nisu pročitani"
+          while read -r line; do echo "::warning::listed, not all its members read: $line"; done < "$RUNNER_TEMP/tela.md"
+          title="Odbori i delegacije čiji članovi sa spiska Skupštine nisu svi pročitani"
           n=$(gh issue list --state open --limit 200 --json number,title | TITLE="$title" python3 -c 'import json,os,sys; print(next((r["number"] for r in json.load(sys.stdin) if r["title"] == os.environ["TITLE"]), ""))')
           [ -n "$n" ] || gh issue create --title "$title" --body-file "$RUNNER_TEMP/tela.md"
       - name: Commit the rest, and the chain

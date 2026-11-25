@@ -56,7 +56,7 @@ ARCHIVE = {
            "delegations": S + "/делегације/сазив-од-6-фебруара-2024-године.5180.html"},
 }
 
-DAY = 24 * 3600  # a body's page that gave nobody is asked for again this often, not every hour
+DAY = 24 * 3600  # the pages, while one gives fewer members than listed, are asked for again this often, not every hour
 WEEK = 7 * DAY  # the committees' and delegations' pages are read again at least this often
 
 
@@ -126,9 +126,10 @@ def _group(s: str) -> str:
 
 def _cells(page: str) -> list[list[str]]:
     """The people's cells of a body's table, each as its lines of text. What stands around a name (a link to the MP's
-    page since the Fifteenth, nothing in the archive) does not matter to it."""
+    page since the Fifteenth, nothing in the archive) does not matter to it. A member without a deputy has a cell the
+    page never closes: it runs on into the next one's, or to the table's end."""
     return [[_text(x) for x in re.split(r"<br\s*/?>", cell)]
-            for cell in re.findall(r"<td[^>]*>\s*(<strong>.*?)</td>", _content(page), re.S)]
+            for cell in re.findall(r"<td[^>]*>\s*(<strong>.*?)(?:</td>|</table>)", _content(page), re.S)]
 
 
 _ROLE_OF = re.compile(r"(?P<name>.*\S)\s*\(\s*(?P<role>[^()]+?)\s*\)")
@@ -164,11 +165,11 @@ def keep_unread(old: list[dict], listed: dict[str, int], rows: list[tuple[str, s
 
 
 def unread(kept: dict, now) -> list[str]:
-    """What data/<N>/offices.json shows was not read, a line each: the bodies the Assembly lists with members whose
-    pages gave none, and a reading long overdue. Empty when all is well. (25 Nov 2026: names had become links, no
+    """What data/<N>/offices.json shows was not read, a line each: the bodies whose pages gave fewer members than the
+    Assembly lists, and a reading long overdue. Empty when all is well. (25 Nov 2026: names had become links, no
     committee of the Fifteenth was read for a week, and every run was green.)"""
     from datetime import datetime
-    out = [f"- {url} (na spisku {n})" for url, n in kept.get("unread", {}).items()]
+    out = [f"- {url} (na spisku {kept['listed'][url]}, nije pročitano {n})" for url, n in kept.get("unread", {}).items()]
     read = kept.get("parts_read")
     if read and (now - datetime.fromisoformat(read)).total_seconds() > WEEK + DAY:
         out.append(f"- odbori i delegacije nisu čitani od {read[:10]}")
@@ -257,7 +258,7 @@ def dumps(fetched: str, offices: list[dict], read_parts: str, listed: dict[str, 
           unread: dict[str, int] | None = None) -> str:
     """data/<N>/offices.json: one office to a line, so a change shows as a small diff. `listed`: the bodies as listed
     when their pages were last read, with the numbers of members (None: an archive's, read once); `unread`: those of
-    them whose page gave nobody. They stand on lines of their own: the workflow's commit passes over a change of
+    them whose page gave fewer, with how many are missing. They stand on lines of their own: the workflow's commit passes over a change of
     "fetched" alone, and a reading that is not kept would be made again every hour."""
     rows = ",\n".join(json.dumps(o, ensure_ascii=False, sort_keys=True) for o in offices)
     if listed is None:
