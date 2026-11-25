@@ -845,6 +845,12 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     groups_page = (out / "grupe.html").read_text()
     assert 'id="saziv-15"' in groups_page and "Poslaničke grupe u petnaestom sazivu" in groups_page
     assert 'id="saziv-15"' in (out / "sednice.html").read_text()
+    # lighter tops (25 Nov 2026): no row of buttons that repeats the menu; one line where the panel has nothing of its own
+    for n in ("sednice", "nedelje", "brojke", "prisustvo", "grupe", "replike"):
+        f = out / f"{n}.html"
+        if f.exists():
+            assert "np-links" not in f.read_text() and f.read_text().count('id="saziv-15"') <= 1, n
+    assert 'class="np-line" id="saziv-15"' in (out / "nedelje.html").read_text()
     assert any(m["s"] == "pastor-balint" for m in json.loads((out / "podaci.json").read_text())["mps"])
     assert site.check(out) == []
     # A namesake of an earlier MP whose year of birth the archive gives otherwise is another person.

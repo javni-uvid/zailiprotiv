@@ -19,7 +19,6 @@
   </span>
 </a>
 {% endif %}
-<p class="conv-links"><a class="button" href="nedelje.xml">Prati (RSS)</a>{% if newsletter_url %} <a class="button" href="{{ newsletter_url }}" rel="noopener">Primaj e-poštom</a>{% endif %}</p>
 {% for year, group in weeks|groupby("monday.year")|reverse %}
 <section>
   <h2>{{ year }}.</h2>
@@ -28,6 +27,7 @@
   </ul>
 </section>
 {% endfor %}
+<p class="conv-links"><a class="button" href="nedelje.xml">Prati (RSS)</a>{% if newsletter_url %} <a class="button" href="{{ newsletter_url }}" rel="noopener">Primaj e-poštom</a>{% endif %}</p>
 <details class="method"><summary>Kako je ovo nastalo</summary>
 <p>Pregled se pravi sam, bez uredničkog izbora; nedelje bez usvojenih zakona i novih predloga nisu na spisku.{% if newsletter_url %} Bilten šalje spoljni servis; adrese e-pošte ne čuvamo mi.{% endif %}</p>
 </details>

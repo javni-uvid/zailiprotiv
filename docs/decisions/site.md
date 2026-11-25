@@ -255,6 +255,21 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   changes, the page has the site's own picture until it is written again. The mark's two colours are lightened for the
   dark ground; blue and orange are nowhere else. The Cyrillic page takes its own by `data-cir-content`
   (`cyrillic.py`): the first share picture in Cyrillic, the others stay Latin.
+- **Lighter tops of the main pages, the first round** (25 Nov 2026, the maintainer: "Generalno trebamo očistiti dizajn
+  matičnih strana od nepotrebnog cluttera isto kao npr u varnice koje su prepune samo na vrhu dosta zbijenih i nebitnih
+  informacija"; after the proposal with pictures: "1 mozemo za pocetak izgraditi sva ova poboljsanja / 2 ide na dno / 3
+  moze"). "Varnice" had become the new convocation's own page once its notes were read, and still had that convocation's
+  panel on top (2,200 px of a phone) and it twice among the tabs. The panel stands there only until the notes are read;
+  then its four numbers are tiles under the field, its quick exchanges (by the order of turns, with their rule) fold at
+  the foot, and `#saziv-15` is the row of tabs. On the Assembly's other pages and "Prisustvo" the panel is one line that
+  leads to the convocation's MPs (the sentence that it has no law yet is gone); on "Sednice" and "Grupe" it keeps its
+  days and table. Its six buttons repeated the menu and are gone everywhere. Notes, RSS and the quiz's line stand after
+  the lists; the caveat on absences stays whole above its list; "Ko koliko govori" says at the foot, with its rule and a
+  link to the method, that the automatic reading may err (the maintainer's choice). On a phone: numbers two to a row, a
+  face beside its name, a law's chamber beside its name, three faces to a list where five were ("Prva tri" in the rule).
+  From the home page went the line under the field and two links of the new convocation's box, which repeated the menu.
+  Where the content begins at 375 px: Varnice 3,012 -> 845, an earlier convocation's 2,739 -> 421, Zakoni's field 1,309 ->
+  717, Nedelje 616 -> 337.
 
 ## Design rules
 
