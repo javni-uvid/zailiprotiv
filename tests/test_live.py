@@ -3454,3 +3454,58 @@ def test_a_days_summary_already_in_the_file_is_not_written_again(tmp_path, monke
     j.step(now=base + 300 + sudija.END_QUIET + 5)
     assert j.kept["dan"]["kratko"] == "Rukom." and sudija.DAY not in asked and sudija.SUMMARY not in asked
     assert json.loads(f.read_text(encoding="utf-8"))["dan"]["kratko"] == "Rukom."
+
+
+def test_the_mails_row_says_what_comes_next_and_stands_higher_at_three_moments(monkeypatch):
+    """25 Nov 2026, the maintainer's words: in a break, when the day is over, at a shared speech; nothing promised that
+    is not sure (the mail goes on his click, and who signs up after it went does not get that day)."""
+    from datetime import datetime
+    from uzivo import page as page_
+    at = lambda h, m: int(datetime(2026, 11, 24, h, m, tzinfo=TZ).timestamp())
+    clock = lambda h, m: monkeypatch.setattr(page_, "_now", lambda: datetime(2026, 11, 24, h, m, tzinfo=TZ))
+    clock(14, 20)
+    b = at(14, 10)
+    brk = {"t": b, "vrsta": "Pauza", "tekst": "Proglašavam pauzu do 15 sati i 10 minuta.", "izvor": "model", "url": "", "vise": {}}
+    turn = {"ime": "Petrović Petar", "od": at(14, 0), "do": at(14, 8), "sekundi": 480, "grupa": "", "adresa": "", "uloga": "", "lista": "", "video": ""}
+    snap = {"stanje": "nepoznato", "provereno": b + 900, "sada": None, "sazvano": None, "bez_potpisa": None, "ranije": False,
+            "dan": "2026-11-24", "danas": [turn], "dnevni_red": None, "sazetak": None, "hronika": [brk]}
+    tag = lambda s, **kw: page_.fragment(s, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, **kw).split(">", 1)[0]
+    on = tag(snap)
+    assert 'data-ml="danas"' in on and 'data-gore="pauza"' in on and 'data-nastavak="1"' in on
+    clock(14, 50)  # exactly twenty minutes left: the bell promises nothing
+    assert "data-nastavak" not in tag(snap) and 'data-gore="pauza"' in tag(snap)
+    clock(14, 20)
+    assert "data-nastavak" not in tag({**snap, "hronika": [{**brk, "tekst": "Određujem pauzu od jednog sata."}]})  # no hour named
+    later = {**turn, "od": b + 600, "do": b + 700}
+    for s in ({**snap, "stanje": "govori", "sada": {**turn, "od": b + 600, "do": b + 700}}, {**snap, "danas": [later, turn]},
+              {**snap, "hronika": []}, {**snap, "provereno": b + 60}):  # speaking; spoke since; no break; not yet known as one
+        assert "data-gore" not in tag(s) and 'data-ml="svake"' in tag(s) and 'data-ml-govor="danas"' in tag(s)
+    off = {**snap, "stanje": "nema_prenosa"}
+    assert 'data-ml="gotov"' in tag(off) and 'data-gore="kraj"' in tag(off) and "data-nastavak" not in tag(off)
+    assert 'data-ml="sledeci"' in tag(off, sent=True) and 'data-ml="sledeci"' in tag(snap, sent=True)
+    old = tag({**off, "ranije": True})
+    assert 'data-ml="svake"' in old and 'data-ml-govor="sledeci"' in old and "data-gore" not in old
+    kw = dict(site="https://zailiprotiv.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs", push_key="K")
+    seen = lambda html: re.findall(r'data-k="(\w+)">([^<]+)<', html)  # the one not hidden, without the script
+    assert seen(page_.page(snap, cyr=False, **kw)) == [("danas", "stiže kad se današnja sednica završi")]
+    assert seen(page_.page(off, cyr=True, **kw)) == [("gotov", "данашњи стиже кад буде готов")]
+    assert seen(page_.page(off, cyr=False, sent=True, **kw)) == [("sledeci", "stiže posle sledećeg dana sednice")]
+    assert seen(page_.page({**off, "ranije": True}, cyr=True, **kw)) == [("svake", "после сваке седнице")]
+    assert seen(page_.page({**off, "ranije": True}, cyr=True, speech=turn["od"], **kw)) == [("sledeci", "стиже после следећег дана седнице")]
+    cyr = page_.page(snap, cyr=True, **kw)
+    assert 'data-nastavak="Јави кад се настави">Обавести ме<' in cyr
+    assert '<p class="in-app meta" hidden>Да ти јавимо кад се настави, отвори страну у прегледачу (мени ⋯).</p>' in cyr
+    assert "večeras" not in page_.page(snap, cyr=False, **kw)
+
+
+def test_whether_the_days_mail_went_to_all_is_only_read(tmp_path):
+    from datetime import date
+    from uzivo import pretplata
+    m, day = pretplata.Mailer(tmp_path, lambda *a: None), date(2026, 11, 24)
+    assert m.went(day) is False and list(tmp_path.iterdir()) == []
+    (tmp_path / "2026-11-24.json").write_text('{"uredniku": "x"}', encoding="utf-8")
+    assert m.went(day) is False
+    (tmp_path / "2026-11-24.json").write_text('{"uredniku": "x", "svima": "y"}', encoding="utf-8")
+    assert m.went(day) is True
+    (tmp_path / "2026-11-24.json").write_text("{", encoding="utf-8")
+    assert m.went(day) is False

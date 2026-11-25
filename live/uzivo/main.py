@@ -88,8 +88,27 @@ def _page(cyr: bool, speech: int | None = None) -> HTMLResponse:
     snap = tracker.snapshot()  # first: the rest is read with it
     return HTMLResponse(page(snap, cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
                              live=_video(), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
-                             push_key=config.PUSH_KEY, version=config.VERSION, sample=bool(_sample_day()), speech=speech),
+                             push_key=config.PUSH_KEY, version=config.VERSION, sample=bool(_sample_day()), speech=speech, sent=_sent(snap)),
                         headers=NO_STORE)
+
+
+_went: tuple[float, str, bool] = (0.0, "", False)  # when looked at, the day, whether its mail went to all
+
+
+def _sent(snap: dict) -> bool:
+    """Whether the mail of the day on the page went to all, looked up at most every ten seconds: the row of the mail
+    then promises the next day's (page.mail_line)."""
+    global _went
+    at, day, went = _went
+    if day != str(snap.get("dan") or "") or time.time() - at > 10:
+        from datetime import date
+        day = str(snap.get("dan") or "")
+        try:
+            went = mailer.went(date.fromisoformat(day))
+        except ValueError:
+            went = False
+        _went = (time.time(), day, went)
+    return went
 
 
 def _sample_day():
@@ -124,7 +143,7 @@ def cyrillic_mail_sample() -> Response:
     return _sample(True)
 
 
-_parts: dict[bool, tuple[dict, str, str]] = {}  # per script: the snapshot, the part drawn from it, its mark
+_parts: dict[bool, tuple[dict, str, str, bool]] = {}  # per script: the snapshot, the part, its mark, the mail sent
 
 
 def _part(cyr: bool, request: Request) -> Response:
@@ -132,12 +151,13 @@ def _part(cyr: bool, request: Request) -> Response:
     (ETag) so that a page holding the same part gets a 304 and nothing else (20 Nov 2026)."""
     snap = tracker.snapshot()
     kept = _parts.get(cyr)
-    if kept and kept[0] is snap:
+    sent = _sent(snap)
+    if kept and kept[0] is snap and kept[3] == sent:
         html, tag = kept[1], kept[2]
     else:
-        html = fragment(snap, cyr=cyr, site=config.SITE, tz=_tz)
+        html = fragment(snap, cyr=cyr, site=config.SITE, tz=_tz, sent=sent)
         tag = '"' + hashlib.blake2s(html.encode(), digest_size=8).hexdigest() + '"'
-        _parts[cyr] = (snap, html, tag)
+        _parts[cyr] = (snap, html, tag, sent)
     headers = {"Cache-Control": "no-cache", "ETag": tag}
     asked = [t.strip().removeprefix("W/") for t in request.headers.get("if-none-match", "").split(",")]
     if tag in asked:  # Cloudflare passes the mark on, made weak ("W/") when it compresses the answer

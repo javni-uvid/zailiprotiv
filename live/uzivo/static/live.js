@@ -390,14 +390,19 @@
     box.hidden = ![].some.call(box.querySelectorAll(".nt, .add, .nt-done, .nt-blocked, .nt-err, .add-ios"), function (c) { return !c.hidden; });
   }
   var home = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
+  // An app's own browser (Instagram, Facebook, X, Reddit …) puts nothing on the home screen and tells of nothing: known by
+  // what it says of itself. A page opened from an iPhone's home screen looks like one and is none.
+  var ua = navigator.userAgent, inApp = !home && (/; wv\)|FBAN|FBAV|FB_IAB|Instagram|Twitter|Reddit|LinkedInApp|Snapchat|TikTok|musical_ly|Viber/.test(ua) ||
+    (/iPhone|iPad|iPod/.test(ua) && !/Safari\//.test(ua)));
+  document.documentElement.toggleAttribute("data-in-app", inApp);
   if (home) use("ekran");
   else {
     var ask = null;
-    window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); ask = e; show("add", true); });
+    window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); ask = e; show("add", !inApp); });
     window.addEventListener("appinstalled", function () { show("add", false); use("dodato"); });
     // an iPhone makes no offer: the same button, and a press says where Safari keeps it (22 Nov 2026: no text under)
     var ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    if (ios) show("add", true);
+    if (ios) show("add", !inApp);
     part("add-go").addEventListener("click", function () {
       if (!ask) { if (ios) { show("add-ios", part("add-ios").hidden); use("dodaj"); } return; }
       use("dodaj"); ask.prompt();
@@ -469,4 +474,33 @@
   x.addEventListener("click", function () { keep(true); show(true); });
   back.querySelector("button").addEventListener("click", function () { keep(false); show(false); box.open = true; box.scrollIntoView({ block: "center" }); });
   document.addEventListener("mejl-prijavljen", function () { keep(true); });
+  // In a break, when the day is over, and once a shared speech has been started, the row stands under the player; its
+  // second line says what comes next (25 Nov 2026). The same row moved, with its form and its cross: nothing covers
+  // anything. Not while its form is open or the keyboard is in it; put away by the reader, it stays away.
+  var pills = document.querySelector(".pills"), home = document.createComment(""), played = false;
+  box.parentNode.insertBefore(home, box);
+  function place() {
+    var deo = document.getElementById("deo");
+    if (!deo || !pills) return;
+    // the bell in a break says it tells when the sitting goes on, where it will (to a screen reader too)
+    var go = deo.hasAttribute("data-nastavak"), bell = document.querySelector(".nt-on"), word = bell && bell.querySelector("[data-nastavak]");
+    if (word) {
+      if (!word.hasAttribute("data-inace")) { word.setAttribute("data-inace", word.textContent); word.setAttribute("data-ime", bell.getAttribute("aria-label")); }
+      word.textContent = word.getAttribute(go ? "data-nastavak" : "data-inace");
+      bell.setAttribute("aria-label", word.getAttribute(go ? "data-nastavak" : "data-ime"));
+    }
+    var told = document.querySelector(".in-app");
+    if (told) told.hidden = !(go && document.documentElement.hasAttribute("data-in-app"));
+    if (box.open || box.contains(document.activeElement) || x === document.activeElement) return;
+    var speech = /^\/(cir\/)?govor\/\d{10}$/.test(location.pathname), line = deo.getAttribute(speech ? "data-ml-govor" : "data-ml");
+    [].forEach.call(box.querySelectorAll("[data-k]"), function (s) { s.hidden = s.getAttribute("data-k") !== line; });
+    var up = !box.hidden && (deo.hasAttribute("data-gore") || played), to = up ? pills : home;
+    if (document.documentElement.hasAttribute("data-ml-gore") === up) return;
+    to.parentNode.insertBefore(box, to); to.parentNode.insertBefore(x, to);
+    document.documentElement.toggleAttribute("data-ml-gore", up);
+  }
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".play.govor")) { played = true; place(); } }, true);
+  document.addEventListener("deo", place);
+  box.addEventListener("toggle", place);
+  place();
 })();

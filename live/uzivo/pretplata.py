@@ -117,6 +117,13 @@ class Mailer:
         f = self.folder / f"{day.isoformat()}.json"
         return json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
 
+    def went(self, day: date) -> bool:
+        """Whether the day's mail has begun to go to all: who signs up now is not sure to get it. Read only."""
+        try:
+            return bool(self._state(day).get("svima"))
+        except (OSError, ValueError):
+            return False
+
     def _basis(self, day: date) -> str:
         """For the maintainer's mail only (24 Nov 2026): what each speaker's line rests on in the transcript, word for
         word, the lines that rest on none first; or that the stronger model did not write the day (sudija._whole)."""

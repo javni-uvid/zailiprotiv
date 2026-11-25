@@ -350,3 +350,22 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   "Ne zaseda", as the chair ended the sitting in words the agenda does not read). With no broadcast the line on top drops
   the item last heard as under way, and the agenda shows it without a mark or a state; no new word, and no guess that it is
   done. An item "na redu" stands as before, and on the air nothing changes.
+- **The mail's row, at the moment it is worth something** (25 Nov 2026, the maintainer, of the proposal with pictures: "Dobro
+  implementiraj tako"; on a phone of 360 x 600 the row stood under the first screen in a broadcast and in a break, and with
+  its upper part alone in it after a day). No new card: the same row, with its form and its cross, stands under the player in a
+  break, when the day is over (until midnight) and once a shared speech has been started; for everybody alike, also who opens
+  the page then. During a broadcast the first screen is as it was. The script moves it in the document too, so the
+  keyboard goes as the eye; not while the form is open; put away, it stays away (`mejl-sklonjen`, on the device). Without
+  the script it stands where it did and the form works.
+  - **The second line says what comes next, never more than is sure** (`page.mail_line`): "stiže kad se današnja sednica
+    završi" in a break and at a speech's link during a broadcast; "današnji stiže kad bude gotov" when the day is over; "stiže
+    posle sledećeg dana sednice" once that day's mail began to go to all (`Mailer.went`), and at a speech's link of an
+    earlier day; "posle svake sednice" otherwise. Never "večeras": the mail goes on the maintainer's click, until noon.
+  - **A break** is one shown among the steps, with nobody heard since (`page._paused`), so it comes four minutes in. The bell
+    stands first there and says "Javi kad se nastavi" only while the hour the chair named is over 20 minutes away (a
+    shorter break is told to nobody); else "Obavesti me".
+  - **In an app's own browser** (by what it says of itself; not a page opened from an iPhone's home screen) "Dodaj kao
+    aplikaciju" is not offered, as it can do nothing there; in such a break one line says to open the page in the browser.
+    While a broadcast is on the app's pill gives its place to the row where the bell can be offered; an iPhone's Safari
+    keeps it, as there it is the only way to the notifications.
+  - Nothing new is kept or counted. Sign-ups per 1,000 pages opened before: 7.3 and 5.3 (24 and 25 Nov; `tools/pretplate.py`).

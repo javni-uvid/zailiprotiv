@@ -15,7 +15,7 @@ from . import config
 from .deljenje import turn_at
 from .names import cyrillic, given_first
 from .prenosi import place
-from .steps import steps_shown
+from .steps import STEP_TITLES, steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
 
 
@@ -137,7 +137,7 @@ def _moment(snap: dict, at: float, text: str, cyr: bool) -> str:
 TURNS_SHOWN = 8  # of a day's turns, the latest this many are listed open; the earlier ones are folded under them
 
 
-def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
+def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = False) -> str:
     """The part of the page that changes: who speaks now, and today's turns."""
     t = lambda k: escape(_t(k, cyr))
     if not config.SHOW_TRANSCRIPT:  # the transcript is written down but not shown (config.SHOW_TRANSCRIPT)
@@ -150,7 +150,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     lc = ""
     if snap["stanje"] == "govori" and cur:
         lc = f' class="lc-{_shades((snap.get("danas") or []) + [cur]).get(cur.get("lista") or "", "lx")}"'
-    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}">', _status(snap, cyr=cyr)]
+    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}"{_mail_attrs(snap, sent, tz)}>', _status(snap, cyr=cyr)]
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
     for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:
@@ -938,6 +938,57 @@ def _break(snap: dict, *, cyr: bool, tz: ZoneInfo) -> str:
             f'{when}<p class="br-text">{n(s["ukratko"])}</p>{f"<ul>{rows}</ul>" if rows else ""}</section>')
 
 
+def _paused(snap: dict) -> int:
+    """When the break on now was said, or 0: a break shown among the day's steps while a broadcast is on and nobody is
+    at the rostrum, and since then nobody spoke and no step was heard."""
+    if snap.get("stanje") in ("govori", "nema_prenosa") or snap.get("ranije") or snap.get("sada"):
+        return 0
+    steps = [e for e in steps_shown(snap) if e.get("izvor") != "sajt"]
+    b = max((e["t"] for e in steps if e.get("naslov") == STEP_TITLES["Pauza"]), default=0)
+    if not b or any(d["do"] > b + 30 for d in snap.get("danas") or []) or any(e["t"] > b + 60 for e in steps):
+        return 0
+    return b
+
+
+def mail_line(snap: dict, sent: bool, *, speech: bool = False) -> str:
+    """Which words stand under "Sažetak dana na mejl" (25 Nov 2026, the maintainer's): what comes next to who signs up
+    now, so never more than is sure. `sent`: the day's mail went to all, so who signs up now does not get that day."""
+    today = not snap.get("ranije")
+    off = snap.get("stanje") == "nema_prenosa"
+    if sent or (speech and not today):
+        return "sledeci"
+    if today and off and snap.get("danas"):
+        return "gotov"
+    if today and not off and (speech or _paused(snap)):
+        return "danas"
+    return "svake"
+
+
+NOTIFY_FROM = 20 * 60  # a break shorter than this is told to nobody (obavesti.PAUSE)
+
+
+def _mail_attrs(snap: dict, sent: bool, tz: ZoneInfo) -> str:
+    """What the page's script needs for the row of the mail, as attributes of the part: its words, its words on a
+    speech's own link, whether the row stands under the player for everybody (a break, the day over), and whether the
+    bell may say that the sitting's going on will be told of: the chair named the hour, and it is over 20 minutes away."""
+    b = _paused(snap)
+    up = "pauza" if b else ""
+    if snap.get("stanje") == "nema_prenosa" and not snap.get("ranije") and snap.get("danas"):
+        up = "kraj"
+    out = f' data-ml="{mail_line(snap, sent)}" data-ml-govor="{mail_line(snap, sent, speech=True)}"'
+    if up:
+        out += f' data-gore="{up}"'
+    if b:
+        said = next((e for e in snap.get("hronika") or [] if e.get("vrsta") == "Pauza" and abs(e["t"] - b) <= 2), {})
+        hour = _resumes_at(said.get("tekst", ""), b, tz)
+        if hour:
+            h, m = hour.split(":")
+            end = datetime.fromtimestamp(b, tz).replace(hour=int(h), minute=int(m), second=0, microsecond=0)
+            if (end - _now()).total_seconds() > NOTIFY_FROM:
+                out += ' data-nastavak="1"'
+    return out
+
+
 def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     """While nobody is on during a sitting's break: the next sitting convened, if any. The box of the day's sentence,
     its three with the most time and the pictures to share stood here until 22 Nov 2026 (the maintainer: "sklonio bi
@@ -1426,7 +1477,7 @@ def _site_name(url: str) -> str:
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
          live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "",
-         sample: bool = False, speech: int | None = None) -> str:
+         sample: bool = False, speech: int | None = None, sent: bool = False) -> str:
     """`speech`: the second a shared speech began, when its link was opened (deljenje.py): the same page, with that
     link's preview, and the script's button for it."""
     t = lambda k: escape(_t(k, cyr))
@@ -1443,7 +1494,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
         alt, title = '<meta name="robots" content="noindex">', escape(speech_title(snap, speech, cyr=cyr, tz=tz))
     brand = _brand(cyr)
     sup = [escape(w) for w in _t("support_cta", cyr).split(" ", 1)]  # "Podrži", and " sajt" where there is room
-    day = fragment(snap, cyr=cyr, site=site, tz=tz)
+    day = fragment(snap, cyr=cyr, site=site, tz=tz, sent=sent)
     # "Obavesti me kad sednica počne": under the speaker's box while a broadcast is on; between sittings above the
     # day, which had put it half a phone's screens down, under the last day's summary (20 Nov 2026: one device asked)
     # each with a tile of its own, the app's as it will stand on the home screen, and what it gives under its name
@@ -1453,12 +1504,12 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     listen = (f'<button type="button" class="pill-b listen-live" data-uzivo="{escape(slusaj.address())}">🎧 <span>{t("listen_pill")}<small>{t("listen_locked")}</small></span></button>'
               if live and snap["stanje"] != "nema_prenosa" and config.LISTEN_PUBLIC and slusaj.fresh(time.time()) else "")
     pills = f"""<section class="pills">{listen}<div class="add-home" hidden{f' data-key="{escape(push_key)}"' if push_key and api.startswith("https://") else ""}>
-<div class="ah-row"><button type="button" class="pill-b nt nt-on" hidden aria-label="{t("nt_on")}">{BELL}<span>{t("nt_pill")}</span></button><button type="button" class="pill-b add add-go" hidden><span class="pill-m">{ARC}</span><span>{t("app_pill")}</span></button></div>
+<div class="ah-row"><button type="button" class="pill-b nt nt-on" hidden aria-label="{t("nt_on")}">{BELL}<span data-nastavak="{t("nt_resume")}">{t("nt_pill")}</span></button><button type="button" class="pill-b add add-go" hidden><span class="pill-m">{ARC}</span><span>{t("app_pill")}</span></button></div>
 <p class="nt-done" hidden><button type="button" class="nt-off">{t("nt_off")}</button></p>
 <p class="nt-blocked meta" hidden>{t("nt_blocked")}</p>
 <p class="nt-err meta" hidden>{t("nt_err")}</p>
 <p class="add-ios meta" hidden>{SHARE} {t("add_ios")}</p>
-</div></section>
+</div><p class="in-app meta" hidden>{t("in_app")}</p></section>
 """
     add = ""
     # "Sažetak dana na mejl" (23 Nov 2026, the maintainer's decision): the address goes to the counter, sealed there for
@@ -1467,7 +1518,10 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
         # `#mejl` is its address on the page, for a link that leads straight to it; its three lines stand with the
         # mail's own marks (23 Nov 2026, the maintainer: a card that stands out)
         see = f' <a class="ml-see" href="{base}mejl/primer">{t("ml_sample")} →</a>' if sample else ""
-        add += f"""<details class="ml" id="mejl"><summary><span class="ml-n"><b>{t("ml_kicker")}</b><span class="meta">{t("ml_slim")}</span></span><span class="ml-p">{t("ml_button")}</span></summary>
+        now_ = mail_line(snap, sent, speech=bool(speech))  # the script shows another as the day goes on
+        lines = "".join(f'<span class="meta" data-k="{k}"{"" if k == now_ else " hidden"}>{t(w)}</span>' for k, w in
+                        (("svake", "ml_slim"), ("danas", "ml_today"), ("gotov", "ml_soon"), ("sledeci", "ml_next")))
+        add += f"""<details class="ml" id="mejl"><summary><span class="ml-n"><b>{t("ml_kicker")}</b>{lines}</span><span class="ml-p">{t("ml_button")}</span></summary>
 <form class="ml-box" method="post" action="{escape(api)}/m">
 <h2>{t("ml_title")}</h2>
 <ul class="ml-list"><li>{t("ml_1")}</li><li>{t("ml_2")}</li><li>{t("ml_3")}</li></ul>
