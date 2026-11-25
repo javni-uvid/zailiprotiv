@@ -490,3 +490,8 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   pays for, with a figure only where it is known (Cloudflare's 5 $ a month). The photos are cut so that no screen's
   text shows (another person's name was on one) and saved anew, without their metadata (place, phone). Every mail of
   the day's summary ends with one line asking for support; nothing is locked behind it (the maintainer's decision).
+- **"Prati mejlom" under a sitting MP's name** (25 Nov 2026, the maintainer, variant B of three; the decisions are in `live-mail.md`, "Following a
+  sitting MP by mail"). A quiet row that opens in place: a `<details>` with a form to the counter, so it works without the script; the script
+  (`prati.js`) only keeps the reader on the page. On a phone the box takes the page's width from under the portrait by a margin, as a `<details>`
+  can't leave its column. It is no `section` with a heading, which a phone would fold. The hidden field says the script of the edition
+  (`data-cir-value`, `cyrillic.page`). `prati-poslanici.json` names the sitting MPs for the counter, which takes nobody else.

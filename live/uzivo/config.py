@@ -202,5 +202,7 @@ PUSH_PATH = os.environ.get("PUSH_PATH", "/data/obavesti.json")
 # day's mail goes first with the link that sends it to all. Both in live/.env only; without them nothing is sent.
 MAIL_KEY = os.environ.get("MEJL_KLJUC", "").strip()
 MAIL_EDITOR = os.environ.get("MEJL_UREDNIK", "").strip()
+# Following an MP by mail (prati.py, 25 Nov 2026): "1", it goes by itself at nine; until then on the maintainer's click.
+FOLLOW_ALONE = os.environ.get("PRATI_SAMO", "").strip() == "1"
 PUBLIC_URL = os.environ.get("PUBLIC_URL", "").strip()
 

@@ -112,6 +112,7 @@ class Mailer:
         self.build = build          # day, cyr, unsubscribe link → mejl.Mail of that day, or None
         self._lock = threading.Lock()  # one sending at a time: the button pressed twice is one sending
         self.hints = getattr(build, "hints", None)  # day → what the chair said after a measure with no name
+        self.following = None  # prati.Following: what a reader who follows an MP too is told in the day's mail
 
     def _state(self, day: date) -> dict:
         f = self.folder / f"{day.isoformat()}.json"
@@ -220,6 +221,7 @@ class Mailer:
             if p["id"] not in settled:
                 waiting.append((p, to))
         state.setdefault("svima", datetime.now(TZ).isoformat())
+        follow = self.following.blocks(day) if self.following and waiting else {}
         earlier = [g for g in state.get("greske") or [] if g.get("id") in refused]
         failed: list[dict] = []
         broken = False
@@ -228,21 +230,29 @@ class Mailer:
             ids = [p["id"] for p, _ in batch]
             messages = []
             for p, to in batch:
-                m = self.build(day, bool(p.get("cir")), p["odjava"]) or first
+                cyr = bool(p.get("cir"))
+                card = (self.following.card(follow[p["id"]], cyr),) if p["id"] in follow else ()
+                m = self.build(day, cyr, p["odjava"], *card) or first
                 messages.append({"to": to, "subject": m.subject, "html": m.html, "text": m.text, "odjava": p["odjava"]})
             state.update(poslati=done, nesigurni=unsure + ids)
             self._keep(day, state)  # before the call: whatever happens to it, these are not sent a second time
+            told = {x: follow[x] for x in ids if x in follow}
+            before = self.following.begin(list(told.values())) if told else {}
             try:
                 _, wrong = send(messages)
             except Exception as exc:
                 broken = True
                 if not _not_sent(exc):
                     unsure += ids
+                elif told:
+                    self.following.undo(before, list(before))
                 log.warning("mejl %s: prekid (%s)", day, exc)
                 break
             bad = {w.get("i") for w in wrong}
             failed += [{"id": ids[w["i"]], "code": str(w.get("code", ""))} for w in wrong if w.get("i") in range(len(ids))]
             done += [x for j, x in enumerate(ids) if j not in bad]
+            if told:
+                self.following.undo(before, [told[x][0].id for j, x in enumerate(ids) if j in bad and x in told])
         # The same code is Cloudflare's answer when it is the sender's own address that is refused, and then it is
         # everybody's: a refusal is the reader's only while more have the day's mail than are refused it.
         now = [f["id"] for f in failed if f["code"] in REFUSED]
@@ -356,7 +366,7 @@ def day_mail(tracker):
     lines (/data/hronika), the MPs (the site's facts) and, for today, each MP's time at the rostrum."""
     base = Path(config.STATE_PATH).parent
 
-    def build(day: date, cyr: bool, out: str):
+    def build(day: date, cyr: bool, out: str, following: tuple[str, list[str]] | None = None):
         kept = tracker.summary_of(day.isoformat()) or {}
         if not isinstance(kept.get("dan"), dict):
             return None
@@ -382,7 +392,7 @@ def day_mail(tracker):
             log.warning("mejl %s: ispravke se ne citaju cele", day)
         other = f"{(config.PUBLIC_URL or 'https://mikrofon.zailiprotiv.rs').rstrip('/')}/{'' if cyr else 'cir/'}"
         return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other,
-                          quotes=quotes if isinstance(quotes, list) else [], corrections=fixes)
+                          quotes=quotes if isinstance(quotes, list) else [], corrections=fixes, following=following)
 
     def whom(day: date) -> str:
         kept = tracker.summary_of(day.isoformat()) or {}

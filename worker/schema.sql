@@ -27,3 +27,13 @@ CREATE TRIGGER IF NOT EXISTS ballots_out AFTER DELETE ON ballots BEGIN UPDATE ta
 CREATE TABLE IF NOT EXISTS mejl (id TEXT PRIMARY KEY, kljuc TEXT NOT NULL UNIQUE, adresa TEXT NOT NULL, cir INTEGER NOT NULL,
   prijava TEXT NOT NULL, potvrda TEXT, kod TEXT, poslato TEXT);
 CREATE INDEX IF NOT EXISTS mejl_kod ON mejl (kod);
+-- Following a sitting MP by mail (25 Nov 2026; worker/prati.js). A reader: the address sealed for the maintainer's key, a
+-- hash of it with SALT, the script, the day of the first confirmation, the last day asked and how many times then. What is
+-- followed: sealed too, with the day asked (its hour while unconfirmed) and confirmed, the hash of the confirmation's code.
+-- Nothing from which an MP can be told or counted. And how many confirming mails went a day, from all.
+CREATE TABLE IF NOT EXISTS pratioci (id TEXT PRIMARY KEY, kljuc TEXT NOT NULL UNIQUE, adresa TEXT NOT NULL, cir INTEGER NOT NULL,
+  potvrda TEXT, dan TEXT NOT NULL, n INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS prati (id TEXT PRIMARY KEY, citalac TEXT NOT NULL, sta TEXT NOT NULL, prijava TEXT NOT NULL, potvrda TEXT, kod TEXT);
+CREATE INDEX IF NOT EXISTS prati_kod ON prati (kod);
+CREATE INDEX IF NOT EXISTS prati_citalac ON prati (citalac);
+CREATE TABLE IF NOT EXISTS prati_dani (dan TEXT PRIMARY KEY, n INTEGER NOT NULL);

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import bar, plural, how, brief, floor_now_part, offices_part, next_steps with context %}
+{% from "macros.html" import bar, plural, how, brief, floor_now_part, offices_part, next_steps, follow_part with context %}
 {% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}, poslanik: kako glasa — Za ili Protiv{% endblock %}
 {# The MP's own counts first (a search result shows the first 160 characters), the same sentence for every MP. #}{% block description %}{{ mp.name|given_first }}, poslanik{% if record %}: od {{ record|length }} {{ plural(record|length, "konačnog glasanja", "konačna glasanja", "konačnih glasanja") }} o zakonima {{ tally.za or 0 }} za, {{ tally.protiv or 0 }} protiv{% for k, label in [("uzdrzan", "uzdržan"), ("nije_prisutan", "nije prisutan"), ("nije_glasao", "nije glasao")] if tally[k] %}, {{ tally[k] }} {{ label }}{% endfor %}{% set t_s = floor|sum(attribute="speeches") %}{% if t_s %}; {{ t_s }} {{ plural(t_s, "govor", "govora", "govora") }} u sali{% endif %}{% if by_conv and by_conv[0].groups %}. {{ by_conv[0].groups[0]|grp }}, {{ by_conv[0].name|lower }} saziv{% endif %}.{% else %} {{ mp.name }} u Narodnoj skupštini.{% endif %}{% endblock %}
@@ -19,6 +19,7 @@
 {% if member_now %}<p class="mp-now">Poslanik i u <a href="../{{ member_page }}">{{ member_conv|locative }} sazivu</a>{% if member_now.group %}, poslanička grupa {{ member_now.group|latin }}{% elif member_now.group is defined %}, van poslaničkih grupa{% endif %}{% if member_now.party not in ["-", "–", ""] %} (na predlog: {{ member_now.party|latin }}){% endif %}</p>{% endif %}
 {% set their_groups %}{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g|grp }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}{% endset %}
 <p class="mp-groups{% if member_now and offices %} past{% endif %}">{{ their_groups }}</p>
+{% if member_now %}{{ follow_part(mp.slug) }}{% endif %}
 {% if profile %}{% set ns = namespace(q=none) %}{% for t in profile.points %}{% if t.citat and t.citat.tekst.split()|length <= 45 and (ns.q is none or t.citat.tekst|length < ns.q.tekst|length) %}{% set ns.q = t.citat %}{% endif %}{% endfor %}
 {% if ns.q %}<blockquote class="mp-line wide-li"><p>„{{ ns.q.tekst|latin }}“</p><footer>U raspravi u Skupštini{% if ns.q.url %} · <a href="{{ ns.q.ours or ns.q.url }}">stenogram{% if ns.q.date %}, {{ ns.q.date|day }}{% endif %}</a>{% endif %}</footer></blockquote>{% endif %}{% endif %}
 </div>

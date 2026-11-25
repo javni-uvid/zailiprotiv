@@ -122,12 +122,14 @@ def by_lists(people: list, roll: Roll, label=lambda x: x[0]) -> list[tuple[str, 
 
 def build(day: date, summary: dict, measures: list[Measure] | None = None, roll: Roll | None = None,
           spoke: dict[str, int] | None = None, cyr: bool = False, unsubscribe: str = "", other_script: str = "",
-          quotes: list[dict] | None = None, corrections: list[tuple[date, str]] | None = None) -> Mail:
+          quotes: list[dict] | None = None, corrections: list[tuple[date, str]] | None = None,
+          following: tuple[str, list[str]] | None = None) -> Mail:
     """`summary` is the day's "dan"; `measures` from `mere.measures`; `roll` the convocation's MPs, whose names,
     lists and portraits are shown instead of the model's; `spoke` the seconds each MP (by the list's name) was heard;
     `unsubscribe` the subscriber's own address to leave by; `other_script` the page to receive the other script from;
     `quotes` the sentences the maintainer chose and checked by hand ({"vreme", "ime", "o_cemu", "tekst", "snimak"});
-    `corrections` of earlier mails, on top: the day whose mail was wrong, and the words written by hand, as they are."""
+    `corrections` of earlier mails, on top: the day whose mail was wrong, and the words written by hand, as they are;
+    `following` what the reader follows, made by `prati.block` (None: the mail is what it is for everybody)."""
     t = cyrillic if cyr else (lambda s: s)
     e = lambda s: html.escape(t(s))  # noqa: E731
     measures, spoke = measures or [], spoke or {}
@@ -190,6 +192,8 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
             else:
                 lines.append(t(f"  {when_}  {x['sta']}"))
         lines.append("")
+    if following:
+        lines += following[1]
     if said:
         lines += [t("REČENO U SALI"), t(f"  {QUOTES_NOTE}")]
         for mp, q in said:
@@ -364,7 +368,7 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
         foot.append(f'<a href="{html.escape(other_script)}" style="color:{MUTED}">{"Latinica" if cyr else "Ћирилица"}</a>')
     brand = (f'<span style="color:{ZA}">{e("Za")}</span><span style="color:{INK}"> {e("ili")} </span><span style="color:{PROTIV}">{e("Protiv")}</span>')
     portraits = e("Portreti: Narodna skupština, učitavaju se sa zailiprotiv.rs.") + "<br>" if "<img" in "".join(parts) else ""
-    inside = fixes + top + "".join(parts)
+    inside = fixes + top + (following[0] if following else "") + "".join(parts)
     read = max(1, round(len(re.sub(r"<[^>]+>", " ", inside).split()) / 200))
     body = f"""<!doctype html>
 <html lang="{'sr-Cyrl' if cyr else 'sr-Latn'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from . import config
@@ -30,6 +30,19 @@ def turn_at(turns: list[dict], at: int) -> dict | None:
     if near:
         return min(near, key=lambda d: (abs(int(d["od"]) - at), d["od"]))
     return next((d for d in sorted(turns, key=lambda d: d["od"]) if d["od"] <= at <= d["do"]), None)
+
+
+def kept(record_of, at: int, tz: ZoneInfo) -> str:
+    """The address on the site of the MP whose speech a link means, by this service's own record of that day (a sitting
+    past midnight is the day before's); "" when there is none. For a link to a day no longer on the page that the site
+    does not list yet: the morning a mail is read is the morning the next sitting begins (25 Nov 2026)."""
+    day = datetime.fromtimestamp(at, tz).date()
+    for d in (day, day - timedelta(days=1)):
+        turn = turn_at([t for t in (record_of(d.isoformat()) or {}).get("govori") or [] if t.get("okvira", 0) >= 2], at)
+        if turn:
+            slug = str(turn.get("adresa") or "")
+            return slug if re.fullmatch(r"[a-z0-9-]{1,80}", slug) else ""
+    return ""
 
 
 def elsewhere(at: int, waiting: dict | None, *, cyr: bool, tz: ZoneInfo) -> str:

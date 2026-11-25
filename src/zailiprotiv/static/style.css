@@ -1441,3 +1441,19 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
   .faces .face-who:not(:has(.row-meta)) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
 }
 @media (max-width: 345px) { .subtabs.law-kinds.four { grid-template-columns: 1fr 1fr; } .week-lead .lead-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Following an MP by mail (25 Nov 2026, variant B): a quiet row under the name, opening in place. On a phone the box
+   takes the page's width, from under the portrait. */
+.prati { margin: .1rem 0 1rem; }
+.prati > summary { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: 0 .95rem; border: 1px solid #9a9a9a; border-radius: 999px; font-size: var(--t-2); font-weight: 600; cursor: pointer; list-style: none; text-decoration: none; }
+.prati > summary::-webkit-details-marker { display: none; }
+.prati[open] > summary { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.prati-box { margin: .8rem 0 0; padding: .8rem .9rem .9rem; border-radius: 10px; background: var(--card); max-width: 34rem; }
+.prati-box p { margin: 0; font-size: var(--t-2); color: var(--muted); }
+.prati-row { display: flex; margin: .5rem 0 .6rem; }
+.prati-box [hidden] { display: none; }
+.prati-row input[type=email] { flex: 1 1 auto; min-width: 0; height: 48px; border: 2px solid var(--fg); border-radius: 0; padding: 0 .65rem; font: inherit; background: var(--bg); color: var(--fg); }
+.prati-row button { flex: none; height: 48px; padding: 0 1.1rem; border: 2px solid var(--fg); border-radius: 0; background: var(--fg); color: var(--bg); font: 700 var(--t-3) system-ui, sans-serif; cursor: pointer; }
+.prati-box .prati-done, .prati-box .prati-err { margin: .5rem 0 .6rem; color: var(--fg); font-size: var(--t-3); }
+.prati-fine a { color: inherit; }
+@media (max-width: 600px) { .prati { margin-bottom: .6rem; } .prati-box { width: calc(100% + 6.5rem); margin-left: -6.5rem; } }
