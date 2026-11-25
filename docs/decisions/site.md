@@ -298,6 +298,24 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   agree, rule 9). "Zakoni", the fifteenth's MPs and an MP's quote had been moved by the stylesheet's `order`, so the keyboard
   went another way than the eye; each now stands twice in the page, once for each width (`.wide-li`, `.phone-list`), in its
   place. The home page's parts are still put in order by the stylesheet on a phone, as since 13 Nov.
+- **The Fifteenth's committees and delegations are read, and a body nobody was read of is said** (25 Nov 2026; the
+  maintainer asked "Da li povlačiš nove informacije o tome ko će biti član kog odbora i delegacija itd", and the answer
+  was no). The names on the bodies' pages are links to the MPs' pages since the Fifteenth; the reader wanted a bare name,
+  kept nobody, and asked for every page again each hour. `offices.py` reads a cell by its lines of text now, whatever
+  stands around a name. The name stays what an office is matched by: the link's number of the MP's page would need a
+  list of numbers we do not keep, and no two of the Fifteenth's 250 share a name (two that do get no office, as before).
+  - **The list's "Број чланова" is the check.** A body listed with members whose page gives none is kept under `unread`
+    in `data/<N>/offices.json`, keeps the members read before, is asked for again once a day, and **votes** opens an issue
+    (one while it is open, as for an unread roll call; not a red step, which would hide the run's other faults under an
+    hourly comment). A number that differs from what was read is in the run's log. Nothing read of the bodies for eight
+    days is said too.
+  - The bodies' pages are read when the lists change (a body, or a number), when a relevant news item is new, weekly
+    otherwise. What was listed and when it was read are on lines of their own in the file: the workflow's commit passes
+    over a change of "fetched" alone, and an uncommitted reading was made again every hour.
+  - **Not read again: the archives.** The old reader also passed over a row the archive breaks (a second `<tr>` inside
+    the cell): a committee of the Twelfth listed with 17 members has 14 in our file, one of the Ninth one fewer than its
+    page. The reader takes them now; the files of 9 to 14 are as they were, until it is decided to ask for the archives
+    once more (some 30 pages a convocation).
 
 ## Design rules
 

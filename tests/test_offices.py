@@ -1,5 +1,16 @@
+import datetime as dt
+import json
+from pathlib import Path
+from types import SimpleNamespace
+
 from zailiprotiv import offices
+from zailiprotiv.cli import assembly, common
 from zailiprotiv.translit import latin
+
+# The Assembly's pages of 25 Nov 2026, their own part as the server gives it (peek).
+PAGES = Path(__file__).parent / "fixtures" / "pages"
+COMMITTEES15, COMMITTEE15, DELEGATIONS15, DELEGATION15 = ((PAGES / n).read_text(encoding="utf-8") for n in (
+    "odbori.13.html", "odbor-spoljni.176.13.html", "delegacije.14.html", "delegacija-savet-evrope.83.14.html"))
 
 WRAP = "<div>menu <a href='/x.5.43.html'>Прва седница Народне скупштине</a></div><!-- OCP content start -->{}<!-- OCP content end -->"
 
@@ -148,3 +159,95 @@ def test_an_earlier_convocations_offices_get_its_speaker_and_deputies():
 
 def test_the_archives_cover_every_convocation_before_the_newest():
     assert sorted(offices.ARCHIVE, key=int) == ["9", "10", "11", "12", "13", "14"]
+
+
+def test_names_that_are_links_to_the_mps_pages():
+    rows = offices.committee(COMMITTEE15)
+    assert len(rows) == 20 and [r["role"] for r in rows] == ["члан", "заменик члана"] * 10
+    assert rows[0] == {"name": "ЗУКОРЛИЋ УСАМЕ", "role": "члан",
+                       "group": "Народни посланици који нису чланови посланичких група"}
+    assert rows[1] == {"name": "ФРИЦ САЊА", "role": "заменик члана", "group": "„Студентска листа“"}
+    rows = offices.delegation(DELEGATION15)
+    assert len(rows) == 14 and rows[0] == {"name": "ВУЈИЧИЋ ЈОВАН", "role": "шеф Делегације"}
+    assert rows[2] == {"name": "ВУЧИЋЕВИЋ ВУКАШИН", "role": "заменик члана Делегације"}
+    assert offices.committee(DELEGATION15) == [] and offices.members(DELEGATION15) == rows
+
+
+def test_the_numbers_the_lists_give():
+    for page, listing, many in ((COMMITTEES15, offices.COMMITTEES, 20), (DELEGATIONS15, offices.DELEGATIONS, 12)):
+        assert list(offices.numbers(page, listing)) == [u for _, u in offices.parts(page, listing)]
+        assert len(offices.numbers(page, listing)) == many
+    n = {u.rsplit("/", 1)[1]: k for u, k in (offices.numbers(COMMITTEES15, offices.COMMITTEES)
+                                             | offices.numbers(DELEGATIONS15, offices.DELEGATIONS)).items()}
+    assert n["одбори.176.13.html"] == 10 and n["делегације.83.14.html"] == 14
+
+
+def test_a_row_the_archive_breaks_is_read():
+    """A second <tr> inside a cell (the archive, 25 Nov 2026): of a committee the list gives 17 members, 14 were read."""
+    page = WRAP.format("""<tr><td align="left"> <strong> ЛАКИЋ  САЊА </strong> (члан)<br />Посланичка група А<br />
+<tr> <td align="left"> ВАСИЉЕВИЋ  БРАТИМИР (заменик члана) <br/> Посланичка група А </td> </tr>""")
+    assert [(r["name"], r["role"], r["group"]) for r in offices.committee(page)] == [
+        ("ЛАКИЋ САЊА", "члан", "А"), ("ВАСИЉЕВИЋ БРАТИМИР", "заменик члана", "А")]
+
+
+def test_bodies_are_not_asked_for_every_hour_and_those_unread_are_said(tmp_path, monkeypatch, capsys):
+    from zailiprotiv.config import NEWEST
+    kept = tmp_path / NEWEST / "offices.json"
+    kept.parent.mkdir()
+    asked, shape = [], {"committee": COMMITTEE15}
+    clock = {"now": dt.datetime(2026, 11, 25, 20, 0, tzinfo=dt.timezone.utc)}
+
+    class Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return clock["now"]
+
+    def fetch(url):
+        asked.append(url)
+        page = {offices.COMMITTEES: COMMITTEES15, offices.DELEGATIONS: DELEGATIONS15, offices.VICE: VICE,
+                offices.SPEAKER: SPEAKER}.get(url, "")
+        if not page and url.endswith(".13.html"):
+            page = shape["committee"]
+        if not page and url.endswith(".14.html"):
+            page = DELEGATION15
+        return page.encode("utf-8")
+
+    def run(hours=0):
+        asked.clear()
+        clock["now"] += dt.timedelta(hours=hours)
+        assert assembly.offices_cmd(SimpleNamespace(unread=False)) == 0
+        return sum(u.endswith((".13.html", ".14.html")) for u in asked) - 2  # but for the two lists
+
+    def said():
+        capsys.readouterr()
+        assert assembly.offices_cmd(SimpleNamespace(unread=True)) == 0
+        return capsys.readouterr().out.splitlines()
+
+    monkeypatch.setattr(common, "ROOT", tmp_path)
+    monkeypatch.setattr(assembly.skupstina, "fetch", fetch)
+    monkeypatch.setattr(assembly, "_government", lambda get: None)
+    monkeypatch.setattr(assembly.dt, "datetime", Clock)
+    assert run() == 32 and said() == [] and run(1) == 0 and run(24) == 0
+    before = [o for o in json.loads(kept.read_text(encoding="utf-8"))["offices"] if o["kind"] == "committee"]
+    assert len(before) == 400
+
+    # the shape changes: the pages give nobody; those read before stay, it is said, and asked for again once a day
+    shape["committee"] = WRAP.format("<table><tr><td><p>ФРИЦ САЊА, члан</p></td></tr></table>")
+    assert run(7 * 24) == 32 and run(1) == 0 and run(22) == 0
+    lines = said()
+    assert len(lines) == 20 and lines[0].startswith("- https://www.parlament.gov.rs/") and "(na spisku " in lines[0]
+    after = json.loads(kept.read_text(encoding="utf-8"))
+    assert [o for o in after["offices"] if o["kind"] == "committee"] == before
+    assert run(2) == 32
+
+    shape["committee"] = COMMITTEE15
+    assert run(25) == 32 and said() == [] and run(1) == 0
+    clock["now"] += dt.timedelta(days=9)  # never read again: each reading failed
+    assert len(said()) == 1 and "nisu čitani" in said()[0]
+
+
+def test_what_was_listed_stands_on_lines_of_its_own():
+    """The workflow's commit passes over a change of "fetched" alone; a reading of the bodies must be kept."""
+    text = offices.dumps("f", [{"name": "А"}], "r", {"u": 10}, {"u": 10})
+    assert json.loads(text) == {"fetched": "f", "parts_read": "r", "listed": {"u": 10}, "unread": {"u": 10}, "offices": [{"name": "А"}]}
+    assert [line for line in text.splitlines() if "fetched" in line] == ['{"fetched": "f",']

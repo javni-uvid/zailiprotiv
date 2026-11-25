@@ -91,6 +91,7 @@ uv run zailiprotiv laws                # the laws it passed → laws.json
 uv run zailiprotiv procedure           # bills in procedure now → procedure.json
 uv run zailiprotiv votes               # every roll call not read yet → votes/ (needs pdftotext)
 uv run zailiprotiv unread              # the roll calls listed and not read, if any
+uv run zailiprotiv offices --unread    # the committees and delegations whose members were not read, if any
 uv run zailiprotiv bills               # each bill's memorandum → bills/ (scans by OCR: tesseract, srp)
 uv run zailiprotiv link                # each law's kind, area, roll calls and final vote
 uv run zailiprotiv transcripts         # the stenographic notes → transcripts/

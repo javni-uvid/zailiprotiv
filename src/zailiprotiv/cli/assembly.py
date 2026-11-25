@@ -417,11 +417,16 @@ def _government(get) -> None:
 def offices_cmd(args) -> int:
     """Who holds which office in the newest convocation (the Speaker, the deputy Speakers, the groups' chairs, the
     committees, the delegations) → data/<N>/offices.json, and the Assembly's news → data/vesti.json (offices.py). The
-    committees' and delegations' own pages are read when their lists changed, when a relevant news item is new, or
-    once a week; an earlier convocation's (offices.ARCHIVE) once."""
+    committees' and delegations' own pages are read when their lists changed (a body, or its number of members), when
+    a relevant news item is new, or once a week (once a day while a body's page gives nobody); an earlier
+    convocation's (offices.ARCHIVE) once. With --unread, only what the kept file shows was not read: nothing is asked."""
     from zailiprotiv import offices
     from zailiprotiv.config import NEWEST
     now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
+    if args.unread:
+        for line in offices.unread(jsonfile.load(common.ROOT / NEWEST / "offices.json", {}), now):
+            print(line)
+        return 0
     today = now.date().isoformat()
 
     def get(url):
@@ -441,19 +446,16 @@ def offices_cmd(args) -> int:
             f.write("### Nove vesti Skupštine o izboru i funkcijama\n\n"
                     + "".join(f"- [{x['title']}]({x['url']})\n" for x in fresh) + "\n")
 
-    def read_parts(listing):
-        out = []
-        for t, url in offices.parts(get(listing), listing):
-            page = get(url)
-            out.append((t, url, offices.committee(page) or offices.delegation(page)))  # named as the list names it
-        return out
+    def read_parts(bodies):
+        return [(t, url, offices.members(get(url))) for t, url in bodies]  # named as the list names it
 
     for conv, pages in offices.ARCHIVE.items():  # an earlier convocation's: its archive doesn't change
         path = common.ROOT / conv / "offices.json"
         if path.exists() or not path.parent.exists():  # a convocation the site doesn't cover isn't asked for
             continue
-        found = offices.offices_of(speaker=None, vice=[], chairs=[], committees=read_parts(pages["committees"]),
-                                   delegations=read_parts(pages["delegations"]), sources={})
+        bodies = {k: offices.parts(get(u), u) for k, u in pages.items()}
+        found = offices.offices_of(speaker=None, vice=[], chairs=[], committees=read_parts(bodies["committees"]),
+                                   delegations=read_parts(bodies["delegations"]), sources={})
         if found:
             path.write_text(offices.dumps(now.isoformat(), [{**o, "since": ""} for o in found], now.isoformat()),
                             encoding="utf-8")
@@ -475,17 +477,28 @@ def offices_cmd(args) -> int:
     sources = {"speaker": offices.SPEAKER, "vice": offices.VICE, "group": offices.GROUP_CHAIRS}
     speaker = offices.person(get(offices.SPEAKER))
     vice, chairs = offices.blocks(get(offices.VICE)), offices.blocks(get(offices.GROUP_CHAIRS))
-    listed = {k: offices.parts(get(u), u) for k, u in (("committee", offices.COMMITTEES),
-                                                        ("delegation", offices.DELEGATIONS))}
-    had = {k: sorted({o["source"] for o in old["offices"] if o["kind"] == k}) for k in listed}
+    lists = {k: (u, get(u)) for k, u in (("committee", offices.COMMITTEES), ("delegation", offices.DELEGATIONS))}
+    bodies = {k: offices.parts(page, u) for k, (u, page) in lists.items()}
+    said = {}  # every body listed, with the number of members the list gives (0: none given)
+    for k, (u, page) in lists.items():
+        many = offices.numbers(page, u)
+        said.update({url: many.get(url, 0) for _, url in bodies[k]})
     last = dt.datetime.fromisoformat(old["parts_read"]) if old.get("parts_read") else None
-    again = (fresh or last is None or (now - last).total_seconds() > offices.WEEK
-             or any(sorted(u for _, u in listed[k]) != had[k] for k in listed))
+    missed = old.get("unread", {})
+    again = (fresh or last is None or said != old.get("listed")
+             or (now - last).total_seconds() > (offices.DAY if missed else offices.WEEK))
     if again:
-        parts = {k: read_parts(u) for k, u in (("committee", offices.COMMITTEES), ("delegation", offices.DELEGATIONS))}
+        parts = {k: read_parts(bodies[k]) for k in bodies}
+        missed = {url: said[url] for k in parts for _, url, got in parts[k] if said[url] and not got}
+        for k in parts:
+            for t, url, got in parts[k]:
+                n = sum(m["role"] != "заменик члана" for m in got)  # the committees' lists count no deputies
+                if n != said[url]:
+                    print(f"  {t}: {n} read, {said[url]} listed ({url})")
+        parts = {k: offices.keep_unread(old["offices"], said, parts[k], k) for k in parts}
         read_at = now.isoformat()
     else:  # the committees and delegations as last read
-        parts = {k: [] for k in listed}
+        parts = {k: [] for k in bodies}
         for o in old["offices"]:
             if o["kind"] in parts:
                 body = next((p for p in parts[o["kind"]] if p[1] == o["source"]), None)
@@ -503,7 +516,7 @@ def offices_cmd(args) -> int:
         return 1
     found = offices.with_history(offices.keep_since(old["offices"], found, today), past, conv)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(offices.dumps(now.isoformat(), found, read_at), encoding="utf-8")
+    path.write_text(offices.dumps(now.isoformat(), found, read_at, said, missed), encoding="utf-8")
     by = {}
     for o in found:
         by[o["kind"]] = by.get(o["kind"], 0) + 1
