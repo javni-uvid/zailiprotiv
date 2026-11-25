@@ -286,6 +286,14 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   strips without their lines. What opens is a <details>: it works without the script. A wide screen is as it was but for
   the day's page; what is on a page twice, once for each width, is `.phone-list` / `.wide-li`, and `data-wide` folds
   stand open there (`site.js`).
+- **Lighter on a phone, the second round: the menu's pages** (25 Nov 2026, the same answers; "4 dobro" for the convocations).
+  On a phone the convocations are one row that opens, the convocation shown in it (`macros.conv_row`, the same links as the
+  tabs, which a wide screen keeps), in place of a row of 700 to 1,350 px that scrolled without a sign; `#saziv-15` is the
+  block of both. "Zakoni": the field before the laws, its chips and choices under "Prikaži", one chamber (the other two
+  are in the list). The fifteenth's MPs: the table of groups after the list, "prvi put" not at each of 193 names.
+  "Varnice": the lead at the foot, its four numbers without boxes. "Nedelje": four numbers in a row, the newest year
+  open. "Sednice": the new convocation's days without a box. Buttons of 44 px. A wide screen is as it was (pixel by
+  pixel); what opens is a <details> and works without the script.
 
 ## Design rules
 

@@ -32,7 +32,7 @@
       <a class="row-title" href="poslanik/{{ r.slug }}.html">{{ r.name }}</a>
       <p class="row-meta">{% if grouped %}{{ g.name }} · {% endif %}{{ (r.party_ or "bez stranke")|latin }} · {{ r.place|latin }} · {{ r.year }}.</p>
     </div>
-    <p class="row-meta members-when">{% if r.before %}poslanik i u {% for c in r.before %}{{ c }}.{% if not loop.last %}, {% endif %}{% endfor %} sazivu{% else %}prvi put{% endif %}</p>
+    <p class="row-meta members-when{% if not r.before %} wide-li{% endif %}">{% if r.before %}poslanik i u {% for c in r.before %}{{ c }}.{% if not loop.last %}, {% endif %}{% endfor %} sazivu{% else %}prvi put{% endif %}</p>
   </li>
 {% endfor %}
 {% endfor %}

@@ -18,6 +18,7 @@
 <div class="finder js-only" hidden data-filter="f-rows" data-none="Nema zakona za ovaj izbor.">
   <label class="sr" for="f-q">Pretraži zakone</label>
   <input id="f-q" type="search" placeholder="Pretraži {{ total }} {{ plural(total, "zakon", "zakona", "zakona") }} ovog saziva" autocomplete="off">
+  <details class="one chips-row" data-wide><summary>Prikaži</summary>
   <div class="chips" role="group" aria-label="Prikaži">
     <button type="button" class="chip on" data-k="">Svi</button>
     {% if urgent %}<button type="button" class="chip" data-k="u">Hitan postupak <span>{{ urgent }}</span></button>{% endif %}
@@ -29,6 +30,7 @@
     <label class="sr" for="f-sort">Redosled</label>
     <select id="f-sort"><option value="d">Najnoviji prvo</option><option value="sh">Najviše glasova protiv</option></select>
   </div>
+  </details>
 </div>
 <p id="f-n" class="row-meta" aria-live="polite"></p>
 <ol class="rows" id="f-rows" data-more="30">

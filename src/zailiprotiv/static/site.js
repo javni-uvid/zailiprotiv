@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (function () {
     var open = function () {
       var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-      var d = t && !(t.tagName === "SECTION" && t.closest(".rules")) && t.querySelector("details");  // a part of the Rules is not a row
+      var d = t && !(t.tagName === "SECTION" && t.closest(".rules")) && t.querySelector("details:not(.conv-row)");  // a part of the Rules is not a row, nor are the convocations
       if (d) d.open = true;
     };
     open(); window.addEventListener("hashchange", open);

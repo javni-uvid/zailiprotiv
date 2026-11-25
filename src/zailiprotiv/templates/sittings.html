@@ -8,6 +8,7 @@
 {% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("sednice") }}
 <p><a href="govornici.html">Ko koliko govori u sali</a>: vreme govora svakog govornika, po danima sednica, merenje sa snimka prenosa.</p>
 <nav class="page-menu" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav>
+<details class="one parts-row phone-list" data-pagefind-ignore><summary>Saziv</summary><nav class="parts-list" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav></details>
 {% for cv, ss in by_conv if ss %}
 <section id="saziv-{{ cv.n }}">
   <h2><a href="{{ cv.saziv_page }}">{{ cv.name }} saziv</a> <span class="count">{{ cv.years }} · {{ ss|length }} {{ "sednica" if ss|length % 10 == 1 and ss|length % 100 != 11 else ("sednice" if ss|length % 10 in [2, 3, 4] and ss|length % 100 not in [12, 13, 14] else "sednica") }}</span></h2>
