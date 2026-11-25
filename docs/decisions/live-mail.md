@@ -150,3 +150,11 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   file is left out and the maintainer's copy says so on top (`pretplata.UNREAD`): a correction that silently does not go
   would be taken for sent. A file put after the maintainer's copy went is in the mail to all and not in that copy, so it
   is put before.
+- **How many asked to be called back is counted, never who** (25 Nov 2026, the maintainer's yes to counting subscribers by
+  sitting day; a site without cookies cannot see who came back, only who asked to be told). `tools/pretplate.py`, run by the
+  conductor, only reads: the counter's public overview, and the ids of `/data/mejl/<day>.json` inside the page's container,
+  which gives numbers alone (no id comes out, no sealed address is asked for, no key read). New and gone are from one mail
+  to the next. The first reading: 119 confirmed of 145 sign-ups sent from the page (82%, roughly: the same address sent
+  twice counts twice), nobody gone between the mails of 24 and 25 Nov, 33 devices with notifications; 7.3 sign-ups per
+  1,000 pages opened on 24 Nov, 5.3 on the 25th. Not kept, so not counted: the day of a leaving, and the sign-ups never
+  confirmed (deleted after 48 hours). Nothing new is kept for it.
