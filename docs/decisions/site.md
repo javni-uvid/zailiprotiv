@@ -287,6 +287,17 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   stood right under the result and asked the visitor to read first what was below it. It now follows "Šta zakon
   menja" and the voices from the debate. The result still stands above it: the page is the record of the vote
   first, and the visitors' sum is no poll, as the box says.
+- **Listening counted, and four uses by the hour** (25 Nov 2026, the maintainer: "3 dobro", to the offer "the counter: add
+  `mikrofon.slusaj` and hourly sums for `pusti`/`1min`/`5min`"). The live page sent `mikrofon.slusaj` from the button's
+  first day (#120), but the counter's list had no such name and refused it (400, silent for the reader), so the sound
+  of 24 Nov, its first open day, was not counted; a test now checks the names in `mikrofon.js` too. It is counted as
+  `mikrofon.pusti` is, once per page opened. It and `pusti`, `1min`, `5min` are also summed per hour (UTC; the table
+  `events_hours`: hour, use, how many, nothing of a reader), to be read beside `tools/watching.py`. **visits** prints
+  them (`tools/uses.py`, from `/pregled`, `uses_by_hour`, two weeks); an hour's sum under three is left out by the
+  counter itself, as both the overview and the run's log are public. The method page says it all (the maintainer, the
+  same day, on the words: "Ništa ne stavljaj na dno stranice. Sve neka ide na metod pa linkuj na jednom mestu"): the
+  live page's footer keeps its words, of which "Brojač sajta" is the one link to it; the privacy page no longer says
+  "only per day" and points there.
 
 ## Search engines
 

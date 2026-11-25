@@ -306,6 +306,65 @@ def test_each_break_gone_on_is_pushed_once_by_the_workers_own_code():
     assert again["already"] and refused == 403
 
 
+USES = """
+import worker from %s;
+const done = [], said = [];
+const st = (sql, a = []) => ({ sql, a, bind: (...b) => st(sql, b), first: async () => ({ n: 0 }),
+  all: async () => ({ results: [] }), run: async () => ({ meta: { changes: 0 } }) });
+const DB = { prepare: (sql) => st(sql), batch: async (all) => { done.push(...all.map((x) => [x.sql, x.a])); return all.map((x) =>
+  ({ results: x.sql.includes("events_hours") ? [{ hour: "2026-11-24T10", what: "mikrofon.slusaj", n: 7 }] : [{ n: 0 }] })); } };
+const ask = (e, origin) => worker.fetch(new Request("https://glasovi.zailiprotiv.rs/e", { method: "POST",
+  headers: { origin }, body: JSON.stringify({ e }) }), { DB }, { waitUntil() {} });
+const live = "https://mikrofon.zailiprotiv.rs";
+for (const e of ["mikrofon.slusaj", "mikrofon.slusaj", "mikrofon.pusti", "mikrofon.1min", "mikrofon.5min", "mikrofon.15min", "mikrofon.nema"])
+  said.push((await ask(e, live)).status);
+said.push((await ask("mikrofon.slusaj", "https://drugi.rs")).status);
+const added = done.splice(0);
+const seen = await (await worker.fetch(new Request("https://glasovi.zailiprotiv.rs/pregled"), { DB }, { waitUntil() {} })).json();
+console.log(JSON.stringify({ said, added, read: done.filter((x) => x[0].includes("events_hours")), seen }));
+"""
+
+
+@pytest.mark.skipif(not shutil.which("node"), reason="needs Node, as the worker's code is JavaScript")
+def test_listening_is_counted_and_four_uses_by_the_hour_with_nothing_of_the_reader():
+    """25 Nov 2026: the worker's own statements run on its own schema; an hour's sum under three is not given out."""
+    import sqlite3
+    ran = subprocess.run(["node", "--input-type=module", "-e", USES % json.dumps((ROOT / "worker" / "worker.js").as_uri())],
+                         capture_output=True, text=True, encoding="utf-8")
+    assert ran.returncode == 0, ran.stderr
+    out = json.loads(ran.stdout)
+    assert out["said"] == [204] * 6 + [400, 403]
+    db = sqlite3.connect(":memory:")
+    db.executescript((ROOT / "worker" / "schema.sql").read_text(encoding="utf-8"))
+    for sql, values in out["added"]:
+        db.execute(sql, values)
+    by_day = dict(db.execute("SELECT what, SUM(n) FROM events GROUP BY what"))
+    by_hour = dict(db.execute("SELECT what, SUM(n) FROM events_hours GROUP BY what"))
+    assert by_day == {"mikrofon.slusaj": 2, "mikrofon.pusti": 1, "mikrofon.1min": 1, "mikrofon.5min": 1, "mikrofon.15min": 1}
+    assert by_hour == {k: n for k, n in by_day.items() if k != "mikrofon.15min"}
+    columns = [c[1] for c in db.execute("PRAGMA table_info(events_hours)")]
+    assert columns == ["hour", "what", "n"]
+    (sql, (since, least)), = out["read"]
+    assert db.execute(sql, (since, least)).fetchall() == []  # two is under three
+    db.execute(*out["added"][1])
+    assert [r[1:] for r in db.execute(sql, (since, least))] == [("mikrofon.slusaj", 3)]
+    assert out["seen"]["uses_by_hour"] == {"2026-11-24T10": {"mikrofon.slusaj": 7}}
+
+
+def test_the_hours_are_printed_for_the_visits_workflow():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("uses", ROOT / "tools" / "uses.py")
+    uses = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(uses)
+    lines = uses.table({"2026-11-24T10": {"mikrofon.slusaj": 7, "mikrofon.1min": 340}, "2026-11-24T09": {"mikrofon.pusti": 12},
+                        "2026-11-23T09": {"mikrofon.pusti": 5}}, "2026-11-24T00")
+    assert [x.split() for x in lines] == [["11-24", "09:00", "12", "-", "-", "-"], ["11-24", "10:00", "-", "7", "340", "-"]]
+    worker = (ROOT / "worker" / "worker.js").read_text(encoding="utf-8")
+    hourly = worker[worker.index("const HOURLY"):].split(";")[0]
+    assert all(f'"mikrofon.{u}"' in hourly for u in uses.USES)
+    assert hourly.count('"mikrofon.') == len(uses.USES)
+
+
 def test_the_live_page_offers_the_mail_and_the_form_works_without_the_script():
     from zoneinfo import ZoneInfo
 

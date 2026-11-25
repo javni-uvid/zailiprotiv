@@ -52,6 +52,11 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           HOURS: ${{ inputs.hours }}
         run: python3 tools/watching.py "$HOURS"
+      - name: What was started on the live page, by hour (our counter's sums)
+        if: ${{ !cancelled() }}
+        env:
+          HOURS: ${{ inputs.hours }}
+        run: python3 tools/uses.py "$HOURS"
       - name: What Google Search showed
         if: ${{ !cancelled() && inputs.search }}
         env:

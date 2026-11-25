@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS votes (law TEXT NOT NULL, vote TEXT NOT NULL, n INTEG
 CREATE TABLE IF NOT EXISTS ballots (item TEXT NOT NULL, device TEXT NOT NULL, vote TEXT NOT NULL, day TEXT NOT NULL, net TEXT NOT NULL, PRIMARY KEY (item, device));
 CREATE INDEX IF NOT EXISTS ballots_day ON ballots (day, item, net);
 CREATE TABLE IF NOT EXISTS events (day TEXT NOT NULL, what TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (day, what));
+-- A few of the uses summed per hour too (25 Nov 2026; "2026-11-25T09", UTC): the hour, the use, how many. Nothing else.
+CREATE TABLE IF NOT EXISTS events_hours (hour TEXT NOT NULL, what TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (hour, what));
 CREATE TABLE IF NOT EXISTS marks (item TEXT NOT NULL, quote TEXT NOT NULL, device TEXT NOT NULL, day TEXT NOT NULL, PRIMARY KEY (item, quote, device));
 -- The sums of `ballots` per law and vote, kept by the triggers below, so that the totals read a few rows per law
 -- and not every ballot (the free D1 reads 5 million rows a day; the full count reached 98% of that on 18 Nov 2026).

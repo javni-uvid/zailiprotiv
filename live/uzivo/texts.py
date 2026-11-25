@@ -236,7 +236,8 @@ TEXT = {
     "mini_x": "Vrati snimak na njegovo mesto",
     "archive_note": "Snimak od %1 (Videonet, arhiva Skupštine) učitava se tek na klik.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
-    "uses_counted": "Brojač sajta zbraja po danu koliko je puta stranica otvorena, koliko dugo je gledana i šta je "
+    "uses_counter": "Brojač sajta",  # in the footer a link to what is counted (the method page)
+    "uses_counted": "zbraja po danu koliko je puta stranica otvorena, koliko dugo je gledana i šta je "
                     "na njoj pritisnuto; bez oznake uređaja i bez ičega o tome ko je to bio",
     "quiz_lead": "Kviz o Skupštini: {n} pitanja iz brojki i beleški sajta Za ili Protiv. Pogodite, pa vidite koliko "
                  "ste blizu.",

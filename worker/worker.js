@@ -13,7 +13,7 @@
 //   POST /c           ← {"d": "<device>", "item": "<law>", "q": "<quote>", "on": true | false}   mark a quote
 //   POST /e           ← {"e": "kviz.kraj" | "listic.podeljeno" | …}               one use of the quiz or the ballot, counted
 //   GET  /pregled     → what today's votes look like, law by law, for the watch against inflated counts, and the
-//                       uses of the last two weeks by day
+//                       uses of the last two weeks by day (four of them by hour too)
 //   POST /p           ← {"endpoint": "<push address>", "cir": bool}   from the live page: notify this device when a
 //                                                                     sitting's broadcast begins
 //   POST /p/odjava    ← {"endpoint": "<push address>"}                no more notifications for it
@@ -89,6 +89,8 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   "listic.otvori", "listic.podeli", "listic.podeljeno", "listic.kopiraj", "listic.sacuvaj",
   // the live page (mikrofon.zailiprotiv.rs): its ▶ on the broadcast pressed
   "mikrofon.pusti",
+  // "Slušaj", the live sound only, pressed (the page sends it since 22 Nov 2026, taken here since 25 Nov)
+  "mikrofon.slusaj",
   // and, each at most once per page opened: the page opened; in view after 1, 5, 15, 30 minutes (time out of sight
   // not counted); a recording of the archive played; the agenda, the speaker's lines, a share of the moment or of
   // the day, the day in cards opened; a way to the site taken
@@ -120,12 +122,19 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   "podrzi.klik-meni", "podrzi.klik-podnozje", "podrzi.klik-pocetna", "podrzi.otvori", "podrzi.od-mikrofona",
   "podrzi.kod", "podrzi.slika", "podrzi.kopiraj", "podrzi.paypal"]);
 
+// Of these, summed per hour too (UTC, as the day is): the broadcast and the sound started, and the page in view after
+// 1 and 5 minutes (25 Nov 2026, the maintainer's decision). A sum and nothing with it, as the day's. An hour's sum
+// under LEAST is not given out: the overview is public, and a sum of one can be a person.
+const HOURLY = new Set(["mikrofon.pusti", "mikrofon.slusaj", "mikrofon.1min", "mikrofon.5min"]);
+const LEAST = 3;
+
 const DEVICE = /^[A-Za-z0-9_-]{16,64}$/;
 async function hash(text) {
   const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 const today = () => new Date().toISOString().slice(0, 10);
+const thisHour = () => new Date().toISOString().slice(0, 13);  // "2026-11-25T09"
 // The network a request came from, coarsely (an IPv4 /24, an IPv6 /64), hashed with the secret and the day: the
 // same network gives the same mark within a day and another one the next.
 async function network(request, env, day) {
@@ -150,18 +159,22 @@ async function one(env, item) {
 // many devices sent many votes today. Numbers only.
 async function overview(env) {
   const day = today();
-  const [items, nets, busy, used] = await env.DB.batch([
+  const since = new Date(Date.now() - 13 * 864e5).toISOString().slice(0, 10);
+  const [items, nets, busy, used, hourly] = await env.DB.batch([
     env.DB.prepare("SELECT item, COUNT(*) AS total, SUM(day = ?1) AS today FROM ballots GROUP BY item HAVING today > 0").bind(day),
     env.DB.prepare("SELECT item, net, COUNT(*) AS n FROM ballots WHERE day = ?1 GROUP BY item, net").bind(day),
     env.DB.prepare("SELECT COUNT(*) AS n FROM (SELECT device FROM ballots WHERE day = ?1 GROUP BY device HAVING COUNT(*) > 60)").bind(day),
-    env.DB.prepare("SELECT day, what, n FROM events WHERE day >= ?1 ORDER BY day DESC, what").bind(new Date(Date.now() - 13 * 864e5).toISOString().slice(0, 10))]);
+    env.DB.prepare("SELECT day, what, n FROM events WHERE day >= ?1 ORDER BY day DESC, what").bind(since),
+    env.DB.prepare("SELECT hour, what, n FROM events_hours WHERE hour >= ?1 AND n >= ?2 ORDER BY hour DESC, what").bind(since, LEAST)]);
   const top = {};
   for (const r of nets.results) top[r.item] = Math.max(top[r.item] || 0, r.n);
   const uses = {};
   for (const r of used.results) (uses[r.day] = uses[r.day] || {})[r.what] = r.n;
+  const hours = {};
+  for (const r of hourly.results) (hours[r.hour] = hours[r.hour] || {})[r.what] = r.n;
   const push = await env.DB.batch([env.DB.prepare("SELECT COUNT(*) AS n FROM push"),
     env.DB.prepare("SELECT day, sent, gone FROM push_days ORDER BY day DESC LIMIT 14")]);
-  return { day, devices_with_many_votes: busy.results[0].n, uses,
+  return { day, devices_with_many_votes: busy.results[0].n, uses, uses_by_hour: hours,
            push: { devices: push[0].results[0].n, sent: push[1].results }, mejl: await mejl.count(env),
            laws: items.results.map((r) => ({ item: r.item, total: r.total, today: r.today, busiest_network: top[r.item] || 0 }))
              .sort((a, b) => b.today - a.today).slice(0, 200) };
@@ -450,8 +463,11 @@ export default {
     body = body || {};
     if (path === "/e") {
       if (!EVENTS.has(body.e) || (uses && !body.e.startsWith("mikrofon."))) return reply({ error: "event" }, 400, origin);
-      await env.DB.prepare("INSERT INTO events (day, what, n) VALUES (?, ?, 1) ON CONFLICT (day, what) DO UPDATE SET n = n + 1")
-        .bind(today(), body.e).run();
+      const sums = [env.DB.prepare("INSERT INTO events (day, what, n) VALUES (?, ?, 1) ON CONFLICT (day, what) DO UPDATE SET n = n + 1")
+        .bind(today(), body.e)];
+      if (HOURLY.has(body.e)) sums.push(env.DB.prepare("INSERT INTO events_hours (hour, what, n) VALUES (?, ?, 1) ON CONFLICT (hour, what) DO UPDATE SET n = n + 1")
+        .bind(thisHour(), body.e));
+      await env.DB.batch(sums);
       return reply({}, 204, origin);
     }
     const known = await allowed(), day = today();
