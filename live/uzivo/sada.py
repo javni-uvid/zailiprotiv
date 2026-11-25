@@ -46,7 +46,8 @@ def moment(tracker, now: float) -> dict:
     """The moment as the page needs it, beside the day's files."""
     with tracker._lock:
         out = {"dan": tracker.day, "stanje": tracker.status, "okvir": tracker.last_frame, "nastavljeno": tracker._resumed,
-               "titl": list(tracker.captions), "mesto": dict(tracker.place), "predsedava": dict(tracker.presiding)}
+               "titl": list(tracker.captions), "mesto": dict(tracker.place), "predsedava": dict(tracker.presiding),
+               "prenosi": tracker.broadcasts}
     return {"format": FORMAT, "verzija": config.VERSION, "t": now, "petlja": tracker.looped, **out,
             "video": VIDEO.get("id", ""),
             "zvuk": {"t": slusaj.PLAYLIST.seen if slusaj.PLAYLIST.items else 0, "url": slusaj.address()}}

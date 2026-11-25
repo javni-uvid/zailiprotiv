@@ -32,6 +32,8 @@ def start(t: Tracker, stop: threading.Event, bell) -> None:
     threading.Thread(target=worker.run, args=(t, stop, bell), daemon=True).start()
     if Path(config.STATE_PATH).parent.is_dir():  # the moment, for the page's own process (citac.py)
         sada.Pulse(t, stop).start()
+        from . import prenosi
+        prenosi.Keeper(t, stop).start()  # where the day is on YouTube, for when the broadcast is over
     if prepis.on():
         prepis.Writer(t, stop).start()
         if config.WHISPER_URL and config.SHOW_CAPTIONS:  # the line under the picture, on the graphics card only

@@ -110,6 +110,7 @@ class Reader(Tracker):
                 self.roster.current = frozenset(self.facts)
         self.captions = m.get("titl") or []
         self.place, self.presiding = m.get("mesto") or {}, m.get("predsedava") or {}
+        self.broadcasts = m.get("prenosi") if isinstance(m.get("prenosi"), dict) else {}
         self._resumed = float(m.get("nastavljeno") or 0)
         self.last_frame = float(m.get("okvir") or 0)
         # The turns and whether one is open come from the same file, so a speaker is never shown for another's turn;

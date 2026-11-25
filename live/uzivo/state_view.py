@@ -8,7 +8,7 @@ import json
 import time
 from datetime import datetime
 
-from . import config
+from . import config, prenosi
 from .names import Person
 from .state_base import NO_STREAM, SAID_TAIL, counted
 
@@ -191,8 +191,11 @@ class View:
                 # the record stands (an earlier copy did not take its place), with the archive's files the site knows:
                 # each turn begun inside one gets its place in it (24 Nov 2026: the links to the recordings had gone)
                 parts, done = _filed(rec, done)
-            if self.status == NO_STREAM:  # no broadcast: a link into its YouTube video would lead to a private video
-                done = [{**d, "snimak": None} if not d.get("datoteka") else d for d in done]
+            still = []
+            if self.status == NO_STREAM:  # no broadcast: a link into its YouTube video only while that is known to be public
+                if not parts and not any(d.get("datoteka") for d in done):
+                    still = prenosi.shown(self.broadcasts, day, time.time() if now is None else now)
+                done = [d if d.get("datoteka") else {**d, "snimak": None, **(prenosi.place(still, d["od"]) or {})} for d in done]
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
             self._lists(done, current, recorded)
@@ -241,7 +244,8 @@ class View:
                     "dan": day, "ranije": day != today, "snimak": recorded, "datoteke": parts,
                     "danas": done[::-1], "sazetak": self._summary_shown(day), "titl": self._captions_shown(),
                     "vreme_grupa": groups, "predsedava": self._presiding_shown(),
-                    "razmene": exchanges, "prenos": self._broadcast() if self.status != NO_STREAM else None}
+                    "razmene": exchanges, "prenos": self._broadcast() if self.status != NO_STREAM else None,
+                    "otvoreno": still}
 
     def _shown_sitting(self, coming: dict | None, day: str) -> dict | None:
         """The sitting whose agenda stands on the page: between sittings the one convened next, else the shown day's."""

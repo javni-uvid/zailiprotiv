@@ -82,6 +82,7 @@ class Tracker(Said, Chronicle, View):
         self._frames = 0  # frames read so far: a snapshot begun before the latest is not kept
         self._memo: dict = {}  # names and lines already matched to the list, by the list they were matched to
         self.place: dict = {}  # the newest frame's place in the broadcast: {"t", "video", "sq", "seg"}
+        self.broadcasts: dict = {}  # the shown day's broadcasts whose video is public, when none is on (prenosi.py)
         self.looped = time.time()  # when the loop that reads the frames last turned (worker.run; sada.py)
         self._resumed = 0.0  # when this run took up the last one's open turn (a restart; RESUME_SECONDS)
         self._migrate()
