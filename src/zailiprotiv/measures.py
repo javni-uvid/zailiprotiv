@@ -189,10 +189,11 @@ def measures(speeches: list[dict]) -> list[dict]:
             if again and _same(text, again, f):
                 continue
             kept.append(f)
-        before = next((p for p in reversed(speeches[max(0, i - 6):i]) if not p.get("chair")), None)
+        before = next((p for p in reversed(speeches[max(0, i - 6):i]) if not p.get("chair") and p["speaker"]), None)
         if before and re.search(r"имам опомену", before["text"][-160:], re.I):
             kept = [f for f in kept if not re.match(r"(?:имате|добијате)", text[f[2]:f[2] + 10], re.I)]
-        after = speeches[i + 1] if i + 1 < len(speeches) and not speeches[i + 1].get("chair") else None
+        after = (speeches[i + 1] if i + 1 < len(speeches) and not speeches[i + 1].get("chair") and speeches[i + 1]["speaker"]
+                 else None)
         if i and kept and out and out[-1]["chair"] is speeches[i - 1] and _told_again(out[-1], text, kept[0]):
             out.pop()  # the notes cut one address in two at a heckle, and the measure is told again with the name
         for j, (k, label, a, b) in enumerate(kept):

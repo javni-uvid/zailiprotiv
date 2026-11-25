@@ -72,7 +72,7 @@ def around(measure: dict, to: str | None) -> dict:
 
 def exchanges(speeches: list[dict]) -> list[list[dict]]:
     """Runs of speeches in which two speakers take turns, with the chair's words between them."""
-    idx = [i for i, s in enumerate(speeches) if not s.get("chair")]
+    idx = [i for i, s in enumerate(speeches) if not s.get("chair") and s["speaker"]]
     out, i = [], 0
     while i < len(idx) - TURNS + 1:
         a, b = speeches[idx[i]]["speaker"], speeches[idx[i + 1]]["speaker"]

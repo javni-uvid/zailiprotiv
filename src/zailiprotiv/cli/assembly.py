@@ -336,7 +336,7 @@ def notes_of_debate(args) -> int:
             continue
         record = {"sitting": url, "days": meta, "agenda": {str(k): v for k, v in found["agenda"].items()},
                   "amendments": found["amendments"],
-                  "speeches": {f"{i:05d}": s for i, s in enumerate(found["speeches"])}}
+                  "speeches": transcripts.mended({f"{i:05d}": s for i, s in enumerate(found["speeches"])})}
         jsonfile.save(path, record, "speeches")
         read += 1
         print(f"{path}: {len(meta)} days, {len(found['speeches'])} speeches, {len(found['amendments'])} amendments", flush=True)

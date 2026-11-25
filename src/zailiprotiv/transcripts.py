@@ -383,6 +383,68 @@ def tally(speeches_: list[dict]) -> Counter:
     """Words spoken by each speaker, the chair left out."""
     out: Counter = Counter()
     for s in speeches_:
-        if not s["chair"]:
+        if not s["chair"] and s["speaker"]:  # a part with no heading is nobody's
             out[s["speaker"]] += words(s["text"])
     return out
+
+
+# A speaker's heading inside a line, after a sentence's end: the notes run two speeches together
+# ("… која је повреда Пословника.АНА БРНАБИЋ: … и онда ћете успети…", 24 Nov 2026).
+HEADING_IN_LINE = re.compile(rf"(?<=[.?!…»\")])[ \t]*(?=(?:(?:[Дд]р|[Пп]роф|[Мм]р)\.?\s+)*[{CAPS}][{CAPS}\-]+"
+                             rf"(?:\s+[{CAPS}][{CAPS}\-.]*){{0,5}}:\s)")
+# A line of a vote by name: "Бубњевић Слободан – Марија Бјелобрк, …;", "Џајић Сања – Није ту."
+NO_HEADING = "roll call"  # a part the notes give no heading, inside a roll call: nobody's speech
+LIST_LINE = re.compile(r"^[^\W\d]+(?:\s+[^\W\d.]+\.?){1,5}\s*[–-].*[;.]\s*$")
+
+
+def _heading_at(text: str) -> list[int]:
+    """Where a speech of another heading begins inside the text: a name of two words or more, or the chair's role."""
+    out = []
+    for m in HEADING_IN_LINE.finditer(text):
+        h = SPEAKER.match(text[m.end():].split("\n", 1)[0])
+        if h and (len(h.group(1).split()) >= 2 or is_chair(h.group(1).strip())):
+            out.append(m.start())
+    return out
+
+
+def mended(speeches_: dict[str, dict]) -> dict[str, dict]:
+    """A sitting's speeches by key, with two faults of the notes undone (25 Nov 2026), each by moving a boundary
+    and never a word (principle 6). A speaker's heading inside a line, after a sentence's end, begins that speaker's
+    speech; and a vote by name the notes glue onto a member's answer (19 Nov 2026: "Нећу да учествујем у овој фарси."
+    and the rest of the roll call after it, all under Ana Brnabić) is split from it, the list going to whoever read
+    the roll call before it that day. A speech split off keeps the key of the one it was in with a letter after it
+    ("00647a"), so no other key moves; it is given the day, part and items of that one. Run again, it changes nothing.
+    The notes give such a list no heading, so it is given no speaker ("speaker" empty, `NO_HEADING` saying why; the
+    conductor, 26 Nov 2026: the site states only what the source states) and counts for nobody's words or speeches."""
+    from zailiprotiv.govor import roll_call
+    out: list[tuple[str, dict]] = []
+    for key, s in sorted(speeches_.items()):
+        text = s.get("text") or ""
+        cuts = _heading_at(text)
+        if not cuts:
+            out.append((key, s))
+            continue
+        pieces = [text[a:b] for a, b in zip([0] + cuts, cuts + [len(text)])]
+        out.append((key, {**s, "text": pieces[0].strip()}))
+        for n, piece in enumerate(pieces[1:]):
+            first, _, rest = piece.strip().partition("\n")
+            h = SPEAKER.match(first)
+            name = h.group(1).strip()
+            out.append((f"{key}{chr(ord('a') + n)}", {**s, "speaker": name, "chair": is_chair(name),
+                                                      "text": (h.group(2) + "\n" + rest).strip()}))
+    done: list[tuple[str, dict]] = []
+    read: set = set()  # the days a roll call was read on, so far
+    for key, s in out:
+        lines = (s.get("text") or "").split("\n")
+        at = next((i for i, line in enumerate(lines) if LIST_LINE.match(line.strip())), None)  # the first line of a list
+        if (at and not s["chair"] and s.get("speaker") and s.get("day") in read and roll_call("\n".join(lines[at:]))
+                and words(" ".join(lines[:at]))):
+            done.append((key, {**s, "text": "\n".join(lines[:at]).strip()}))
+            free = next(c for c in "abcdefghijklmnopqrstuvwxyz" if not any(k == key[:5] + c for k, _ in out + done))
+            done.append((key[:5] + free, {**s, "speaker": "", "chair": False, "no_heading": NO_HEADING,
+                                          "text": "\n".join(lines[at:]).strip()}))
+            continue
+        if roll_call(s.get("text") or ""):
+            read.add(s.get("day"))
+        done.append((key, s))
+    return dict(sorted(done))

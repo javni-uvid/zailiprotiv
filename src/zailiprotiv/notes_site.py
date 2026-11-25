@@ -171,7 +171,8 @@ WORDS = {
             "prov": "privremene beleške", "prev": "Prethodni deo", "next": "Sledeći deo", "conv": "saziv",
             "clip": "snimak",
             "clip_how": "Mesto u snimku prenosa Skupštine, nađeno automatski po redosledu govornika iz potpisa u "
-                        "prenosu; može da promaši."},
+                        "prenosu; može da promaši.",
+            "no_heading": "Bez imena govornika u beleškama (deo prozivke)"},
     "cir": {"lang": "sr-Cyrl", "notes": "Стенографске белешке", "other": "Latinica", "other_lang": "sr-Latn",
             "chair": "Председавајући", "source": "Изворни фајл Скупштине за овај дан", "day": "дан", "part": "део",
             "foot": "Стенографске белешке Народне скупштине Републике Србије, од речи до речи, како их Скупштина "
@@ -181,7 +182,8 @@ WORDS = {
             "prov": "привремене белешке", "prev": "Претходни део", "next": "Следећи део", "conv": "сазив",
             "clip": "снимак",
             "clip_how": "Место у снимку преноса Скупштине, нађено аутоматски по редоследу говорника из потписа у "
-                        "преносу; може да промаши."},
+                        "преносу; може да промаши.",
+            "no_heading": "Без имена говорника у белешкама (део прозивке)"},
 }
 
 
@@ -199,6 +201,8 @@ def _clip(at: dict | None, w: dict) -> str:
 def _speech(k: str, s: dict, who: dict | None, w: dict, script: str, at: dict | None = None) -> str:
     show = (lambda t: latin(t)) if script == "lat" else (lambda t: t)
     name = show(s["speaker"]).title() if not s.get("chair") else show(s["speaker"]).capitalize()
+    if not s["speaker"]:  # a part the notes give no heading (transcripts.mended): nobody's, and said so
+        name = w["no_heading"]
     if who and who.get("slug"):
         name = f'<a href="{MAIN}poslanik/{who["slug"]}">{html.escape(who["name"] if script == "lat" else name)}</a>'
     else:
