@@ -25,6 +25,23 @@ def test_articles_chapters_and_their_pages():
     assert a[168]["stavovi"] == ["Први став у реду.", "Други став."]  # one <p> of lines broken by <br/>
 
 
+def test_the_last_article_ends_with_its_chapter():
+    """25 Nov 2026: the end of the Assembly's page as it was that day. The margin's calendar and news and the foot of the
+    page stood as paragraphs of article 298, and two "versions" were kept in which nothing else had changed."""
+    from pathlib import Path
+    end = (Path(__file__).parent / "fixtures" / "pages" / "poslovnik-kraj.1422.html").read_text(encoding="utf-8")
+    assert "Цео календар догађаја" in end and "Прикажи мобилну верзију" in end  # the page does go on after the Rules
+    d = poslovnik.parse(end)
+    assert [a["n"] for a in d["clanovi"]] == [295, 296, 297, 298]
+    last = d["clanovi"][-1]["stavovi"]
+    assert len(last) == 1 and last[0].startswith("Овај пословник ступа на снагу") and last[0].endswith("у новом сазиву.")
+    # whatever the margin says, in whatever words, the text and its fingerprint are the same
+    other = end.replace("наставак Прве седнице", "нешто друго").replace("Уторак, 24. новембар 2026.", "Петак, 4. децембар 2026.")
+    assert other != end and poslovnik.fingerprint(poslovnik.parse(other)) == poslovnik.fingerprint(d)
+    kept = poslovnik.load(Path(__file__).resolve().parents[1] / "data" / "poslovnik", "2026-11-20")
+    assert kept["clanovi"][-1]["stavovi"] == last and kept["otisak"] == poslovnik.fingerprint(kept)
+
+
 def test_a_version_is_kept_only_when_the_text_changes(tmp_path):
     d = poslovnik.parse(PAGE)
     assert poslovnik.store(tmp_path, d, "2026-11-20") == "2026-11-20.json"
