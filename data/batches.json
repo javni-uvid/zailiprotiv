@@ -248,10 +248,10 @@
   "profiles": {
    "claude-haiku-5-5": {
     "cache_read": 239994,
-    "cache_written": 9648,
-    "input": 5575101,
-    "output": 1023057,
-    "replies": 207
+    "cache_written": 10854,
+    "input": 5588282,
+    "output": 1030556,
+    "replies": 208
    },
    "claude-sonnet-5-5": {
     "cache_read": 173664,

@@ -1,0 +1,46 @@
+{
+ "mp": "милан радин",
+ "model": "claude-haiku-5-5",
+ "read": 10,
+ "speeches": 12,
+ "sittings": 6,
+ "points": [
+  {
+   "tekst": "Zamera opoziciji što su njeni predlozi za zakon o jedinstvenom biračkom spisku išli samo u pravcu opstrukcije.",
+   "govora": 2,
+   "sazivi": [
+    "14"
+   ],
+   "citat": {
+    "tekst": "Ви сте ишли само у правцу апсолутне опструкције са небитним детаљима. Нисте ишли у оно што је срж проблема.",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Zamera predstavnicima ranijih vlasti zbog politike prema Kosovu i Metohiji i navodi da je Kosovo i Metohija deo Srbije.",
+   "govora": 2,
+   "sazivi": [
+    "13"
+   ],
+   "citat": {
+    "tekst": "Ја вас молим, поготово молим представнике странака за време чије власти је део Србије прогласио независност, уз туђу подршку, коју су тада сакрили, немојте то радити",
+    "date": "2022-10-21",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Prva sednica Drugog redovnog zasedanja NSR, 21.10.2022. godine, treci dan rada.docx"
+   }
+  },
+  {
+   "tekst": "Navodi da opozicija ruši demokratske institucije i da je odgovorna za nasilje, uz primere paljenja Narodne skupštine i pitanja o pребијању жена.",
+   "govora": 3,
+   "sazivi": [
+    "14",
+    "15"
+   ],
+   "citat": {
+    "tekst": "Ви сте ти који рушите демократију у Србији, ви сте ти који руше институције демократске у Србији, са оваквим предлозима који опструишу чак и оно што није имало никакав проблем",
+    "date": "2025-11-06",
+    "url": "https://www.parlament.gov.rs/upload/archive/files/cir/doc/stenografske_beleske/Druga sednica Drugog redovnog zasedanja NSRS, odrzana 6. novembra 2025. godine, treci dan rada.docx"
+   }
+  }
+ ]
+}
