@@ -24,8 +24,10 @@ Several agents work at once, so nothing is committed straight to `main`.
 - **A pull request that needs the maintainer says so and is left for them to merge:** a principle, something
   seen from outside (a domain, DNS, a service's settings, email), money.
 - **A merged task's worktree is removed.** `tools/pocisti.sh`, run by `posalji.sh` after its merge, removes every
-  worktree with no changes whose pull request was merged on exactly its commit over ten minutes ago; an agent's
-  own goes in the next agent's run. By hand: `sh tools/pocisti.sh` (`--proba` only lists). Never by
+  worktree with no changes whose pull request was merged on exactly its commit over ten minutes ago, unless an
+  agent is in it: one open in an Orca terminal there keeps it, also idle, until it is closed or has been done and
+  silent for a day; an agent does nothing for this. An agent in no Orca terminal of the worktree it works in, or a
+  folder to be kept longer: `git worktree lock --reason <why> <path>`, and `git worktree unlock` after. By hand: `sh tools/pocisti.sh` (`--proba` only lists, with what stays and why). Never by
   `git worktree remove`: Orca keeps the folder open, git forgets the worktree and the folder stays behind.
   What a project keeps outside git for a worktree (a test's containers and images, a cache) goes at the same
   time: the project removes it in `tools/pocisti-projekat.sh`, which `pocisti.sh` runs last when it is there.
