@@ -10,7 +10,7 @@ const PART = /^\/(cir\/)?deo$/;  // what an open page asks for every few seconds
 // What every open page asks for every few seconds, the same for everyone: kept here three seconds per Cloudflare
 // location, so the computer answers each about once in three seconds there, however many ask (18 Nov 2026: some
 // 4,500 visits an hour, each page asking every five seconds, and other sites reading the state, left it unanswering).
-const SHARED = /^\/((cir\/)?(deo)?|stanje\.json)$/;
+const SHARED = /^\/((cir\/)?(deo|govor\/\d{10})?|stanje\.json)$/;
 const KEEP = 3;
 // The same answers kept longer, apart, for when the service doesn't answer (20 Nov 2026): a new image put live
 // restarts it for a few seconds, and in that time an open page goes on showing the last answer (its "checked N s
@@ -70,7 +70,9 @@ async function fallback(url) {
       status: 503, headers: { ...busy, "content-type": "application/json; charset=utf-8" } });
   }
   if (PART.test(url.pathname)) return new Response("", { status: 503, headers: busy });
-  const page = url.pathname === "/" ? "mikrofon" : /^\/cir\/?$/.test(url.pathname) ? "cir/mikrofon" : null;
+  // a shared speech (/govor/<second>) too: the site's page lists the last day, and its script finds the speech there
+  const page = /^\/(govor\/\d{10})?$/.test(url.pathname) ? "mikrofon"
+    : /^\/cir(\/(govor\/\d{10})?)?$/.test(url.pathname) ? "cir/mikrofon" : null;
   if (!page) return Response.redirect(SITE + "/", 302);  // nothing else is here while the service is off
   const shown = await fetch(`${SITE}/${page}`, { cf: { cacheTtl: 300 } });
   if (!shown.ok) return new Response("Ko sada govori trenutno ne radi.", { status: 503, headers: busy });

@@ -308,3 +308,28 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   under the agenda.
   **The Rules' mark at the foot of the steps is back, without the words** (the same day, the maintainer: "Želim da poslovnik ostane u
   sta se desilo danas kao kartica ta trenutno gde ljudi mogu kliknuti"; #245 had taken it off with them).
+- **A finished speech has a link of its own** (25 Nov 2026, the maintainer: "Dodatno trebamo dodati opciju da neko može da podeli
+  govor koji je prošao - link bi vodio na našu stranu, upalio prenos na taj trenutak koji je podeljen"). "podeli" stands beside
+  every finished speech, for everyone alike; the link is `/govor/<the second it began>` (`deljenje.py`), with no name and no place
+  in a recording in it, as both change: what it means is looked up when it is opened, the speech that begins nearest within 45 s,
+  else the one that holds that second. Measured by the links of the service's records in the days as the site has them: 24 Nov
+  114 of 114 the same speaker (that day is made of that record), 18 Nov 52 of 58 (three of the other six are the same person, the name mended), 19 Nov 11 of 12
+  (1 to 3 of 12 within 0 to 30 s). Not a hash: a hash never reaches the server, so every speech would show the home's card,
+  and Facebook and Reddit would take them all for one link. Each day's speeches are opened here while the day is the page's; then
+  the site's own page of that day, `govornici/<day>#govor-<second>`, which has the archive's file of each turn and needs no service
+  (only of a day the site lists, `dani` in `mikrofon-cekanje.json`); else the page as it is. One script for both (`mikrofon.js`):
+  the player's place has the speech's own button, and the row is marked. While the service is off the edge shows the
+  site's page, where the same script finds the last day's speech.
+  - **It starts by itself** (the maintainer's answer the same day: "Prenos kreće sam"), an exception to principle 5's "only on a
+    click", for a link to a speech a reader chose to open; every other player waits for its click. The script first asks the
+    browser whether a page may sound without a press (20 ms of silence, in the page itself): where it says no (an iPhone,
+    mostly; Chrome for a site not used before; the apps' own browsers) the large button stays and nothing of YouTube's or the
+    archive's is loaded. The page, the day's page on the site, "O projektu" and the method page say so. `START` in `mikrofon.js`.
+  - **The name is in the card** (the maintainer: "Hajdemo sa imenom u kartici"): "Ana Anić, govor u Skupštini, 24. novembra
+    u 12:44", as the record has the name when the card is drawn; nothing of the topic or the transcript; the still picture
+    (`/govor.png`), before a sitting too. A service may keep a card with a name mended since: he chose it knowing.
+    `DELI_IME=0` takes the name off. Not indexed (`noindex`).
+  - **Not counted** (the maintainer), neither the press nor what starts by itself; Cloudflare's own count has the addresses.
+  - **A speech with no place in a recording** says so ("Mesto ovog govora na snimku još nije poznato."): between the broadcast's
+    end and the archive's file, and where the file is there and not placed by the captions (24 Nov: 48 of 95 have a place). To do: placing
+    such files by another sign.

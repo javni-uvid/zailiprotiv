@@ -21,6 +21,10 @@ li.now-playing { outline: 2px solid currentColor; outline-offset: 3px; border-ra
 .fx-live { display: inline-flex; align-items: center; gap: .4rem; font-size: var(--t-1); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; } .fx-live i { width: .6rem; height: .6rem; border-radius: 50%; background: #dc2626; }
 .fx-pill { display: inline-flex; align-items: center; gap: .6rem; padding: 1rem 2.2rem; border-radius: 999px; background: #fff; color: #111; font-size: var(--t-6); font-weight: 800; line-height: 1.1; box-shadow: 0 0 0 6px rgba(255,255,255,.16); } .play.facade:hover .fx-pill, .play.facade:focus-visible .fx-pill { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(255,255,255,.22); }
 @media (max-width: 420px) { .fx-pill { padding: .85rem 1.7rem; font-size: var(--t-5); } .play.facade { gap: .8rem; } }
+/* a shared speech in the player's place: whose it is and when, one press (25 Nov 2026) */
+.fx-ko { font-family: var(--serif); font-size: var(--t-6); line-height: 1.15; } .fx-kad { font-size: var(--t-3); color: #c9ccd3; }
+.govor-no { margin: .6rem 0; font-weight: 600; } .govor-live { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 600; }
+li.govor-on { background: color-mix(in srgb, var(--fg) 7%, transparent); box-shadow: -.5rem 0 0 color-mix(in srgb, var(--fg) 7%, transparent), .5rem 0 0 color-mix(in srgb, var(--fg) 7%, transparent); }
 .parts { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .2rem; padding: 0; list-style: none; }
 .part { font: inherit; font-size: var(--t-2); font-variant-numeric: tabular-nums; padding: .3rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
 .part.on { border-color: currentColor; font-weight: 700; }

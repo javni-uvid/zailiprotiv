@@ -243,15 +243,103 @@
   show(0);
 })();
 
-// "podeli" beside a turn (govornici/<date>): the page's address at that turn, by the share sheet or copied.
+// A finished speech by its own link (25 Nov 2026, the maintainer; live/uzivo/deljenje.py): "podeli" beside a turn hands on
+// the address of the second it began (/govor/<second> on the live page, #govor-<second> on the site's page of the day),
+// by the share sheet or copied; opened, that address puts one button for that speech in the player's place. The place in
+// the recording is the row's own, never the address's: of the address only a number is taken.
+// On arrival the speech starts by itself (the maintainer, 25 Nov 2026: the one exception to "only on a click", for who
+// opened a link to a speech), where the browser lets a page sound without a press; elsewhere the button waits for one,
+// and until then nothing of YouTube's or the archive's is loaded.
 (function () {
   "use strict";
+  var words = document.getElementById("deljen");
+  if (!words) return;
+  var START = true;  // false: only on a press
+  var SILENCE = "data:audio/wav;base64,UklGRsQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YaAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";  // 20 ms of nothing, to ask the browser whether it lets a page sound
+  var NEAR = 45;  // seconds, as deljenje.NEAR
+  function w(k) { var el = words.querySelector('[data-w="' + k + '"]'); return el ? el.textContent.trim() : ""; }
+  function clock(sec) { return new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Belgrade" }).format(new Date(sec * 1000)); }
+  function who(li) { var k = li.querySelector(".ko"); return k ? k.textContent.trim() : ""; }
+  function when(li) { return w("d") + " " + clock(+li.getAttribute("data-od")); }
+  // The turn a second means: the one beginning nearest within NEAR, else the one that holds it (then from that second on).
+  function turnAt(sec) {
+    var near = null, holds = null;
+    [].forEach.call(document.querySelectorAll("li[data-od][data-do]"), function (li) {
+      var od = +li.getAttribute("data-od"), d = Math.abs(od - sec);
+      if (d <= NEAR && (!near || d < near.d || (d === near.d && od < near.od))) near = { li: li, od: od, d: d, into: 0 };
+      if (od <= sec && sec <= +li.getAttribute("data-do") && (!holds || od < holds.od)) holds = { li: li, od: od, into: sec - od };
+    });
+    return near || holds;
+  }
+  function asked() {
+    var m = /^\/(?:cir\/)?govor\/(\d{10})$/.exec(location.pathname || "") || /^#govor-(\d{10})$/.exec(location.hash || "");
+    var old = m ? null : /^#g(\d{10})$/.exec(location.hash || "");  // a turn's own place in the page: only when it is gone
+    return m ? +m[1] : old && !document.getElementById("g" + old[1]) ? +old[1] : 0;
+  }
+  function el(tag, cls, text) { var x = document.createElement(tag); x.className = cls; x.textContent = text || ""; return x; }
+  // Starts the button's speech, if the browser says yes; not in a tab nobody looks at, and not over a press made meanwhile.
+  function start(b) {
+    if (document.hidden) {
+      document.addEventListener("visibilitychange", function () { start(b); }, { once: true });
+      return;
+    }
+    var a = new Audio(SILENCE), p = a.play();
+    if (p && p.then) p.then(function () { a.pause(); if (document.contains(b)) b.click(); }, function () {});
+  }
+  var last = null, gone = null;  // the second last put on the page; the note that there is no recording yet
+  function show() {
+    var sec = asked(), x = sec ? turnAt(sec) : null;
+    [].forEach.call(document.querySelectorAll("li.govor-on"), function (li) { if (!x || li !== x.li) li.classList.remove("govor-on"); });
+    if (!x) return;
+    x.li.classList.add("govor-on");
+    var first = last !== sec, screen = document.getElementById("screen"), fold = x.li.closest("details");
+    last = sec;
+    if (first && fold) fold.open = true;
+    var place = x.li.querySelector("[data-file][data-t], [data-yt][data-t]");
+    if (!place || !screen) {
+      if (!gone) { gone = el("p", "govor-no"); words.parentNode.insertBefore(gone, words); }
+      var told = who(x.li) + ", " + when(x.li) + ". " + w("n");
+      if (gone.textContent !== told) gone.textContent = told;  // as text, never as markup
+      if (first && location.hash) gone.scrollIntoView({ block: "center" });
+      return;
+    }
+    if (gone) { gone.remove(); gone = null; }
+    var made = screen.querySelector(".play.govor");
+    if (!made && !first && screen.querySelector("iframe, video, audio")) return;  // it plays: nothing is taken from under it
+    var key = place.getAttribute("data-file") ? "data-file" : "data-yt", t = String((+place.getAttribute("data-t") || 0) + x.into);
+    if (made && made.getAttribute("data-t") === t && made.getAttribute(key) === place.getAttribute(key)) return;
+    var live = screen.querySelector(".play.facade[data-yt]:not(.govor)");  // the broadcast's own button gives way: a link leads back
+    var b = el("button", "play facade govor"), box = el("span", "fx"), name = who(x.li), at = when(x.li);
+    b.type = "button";
+    b.setAttribute(key, place.getAttribute(key));
+    b.setAttribute("data-t", t);
+    b.setAttribute("aria-label", w("p") + ": " + name + ", " + at);
+    box.appendChild(el("b", "fx-ko", name));
+    box.appendChild(el("span", "fx-kad", at));
+    b.appendChild(box);
+    b.appendChild(el("span", "fx-pill", "▶ " + w("p")));
+    screen.textContent = "";
+    screen.appendChild(b);
+    var back = words.querySelector('a[data-w="l"]');
+    if (live && back) { back.hidden = false; back.className = "govor-live"; words.parentNode.insertBefore(back, words); }
+    if (first && location.hash) screen.scrollIntoView({ block: "center" });
+    if (first && START) start(b);
+  }
   document.addEventListener("click", function (e) {
-    var b = e.target.closest ? e.target.closest(".share-turn") : null;
-    if (!b) return;
-    var url = location.href.split("#")[0] + b.getAttribute("data-share"), text = b.getAttribute("data-text") || "";
+    var b = e.target.closest ? e.target.closest(".share-turn") : null, li = b && b.closest("li");
+    if (!li) return;
+    var url = new URL(b.getAttribute("data-share") || "", location.href).href;
+    var text = who(li) + ", " + when(li) + ", " + w("s"), label = b.querySelector("span") || b, done = w("c");
     if (navigator.share) { navigator.share({ text: text, url: url }).catch(function () {}); return; }
-    var done = document.querySelector(".share-done");
-    if (navigator.clipboard) navigator.clipboard.writeText(text + " " + url).then(function () { if (done) done.hidden = false; });
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(text + " " + url).then(function () {
+      var was = label.textContent;
+      if (was === done) return;
+      label.textContent = done;
+      setTimeout(function () { label.textContent = was; }, 3000);
+    }).catch(function () {});
   });
+  document.addEventListener("deo", show);  // the live page's part was replaced (live.js)
+  window.addEventListener("hashchange", show);
+  show();
 })();

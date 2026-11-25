@@ -127,6 +127,9 @@ SHOW_SUMMARY = os.environ.get("SAZETAK_PRIKAZ", "0").strip() == "1"
 # The words of the chair's measures and of the exchanges in "Šta se desilo" (24 Nov 2026). Off the same day, by the
 # maintainer: the transcript's sentences were too often wrong; "1" puts them back.
 SHOW_QUOTES = os.environ.get("RECI_PRIKAZ", "0").strip() == "1"
+# The speaker's name in what a pasted link to a speech shows (deljenje.py; 25 Nov 2026, the maintainer's choice, knowing
+# that a card a service keeps may keep a name mended later); "0": only that it is a speech, and when.
+SHARE_NAME = os.environ.get("DELI_IME", "1").strip() == "1"
 # The groups' time left in the debate (vreme.py), on the page; "0" takes it off, counted all the same.
 SHOW_GROUP_TIME = os.environ.get("VREME_GRUPA_PRIKAZ", "1").strip() == "1"
 WHISPER_THREADS = _i("WHISPER_THREADS", 4)

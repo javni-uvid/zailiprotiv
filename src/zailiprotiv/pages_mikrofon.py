@@ -60,7 +60,7 @@ def turns(day: dict) -> list[dict]:
             continue
         sec = t["do"] - t["od"]
         rec = t.get("snimak")
-        out.append({"from": datetime.fromtimestamp(t["od"], TZ).strftime("%H:%M"),
+        out.append({"od": t["od"], "do": t["do"], "from": datetime.fromtimestamp(t["od"], TZ).strftime("%H:%M"),
                     "to": datetime.fromtimestamp(t["do"], TZ).strftime("%H:%M"),
                     "name": " ".join(t["ime"].split(" ", 1)[::-1]), "slug": t["adresa"], "side": t["uloga"] or t["grupa"],
                     "minutes": max(1, round(sec / 60)),
@@ -450,7 +450,8 @@ def upcoming(root: Path, coming: list[dict], conv: str) -> list[dict]:
 
 def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = None,
             notices_: list[dict] | None = None, sittings_: list[str] | None = None,
-            agenda_: list[dict] | None = None, fixes_: dict | None = None, now: datetime | None = None) -> dict:
+            agenda_: list[dict] | None = None, fixes_: dict | None = None, now: datetime | None = None,
+            days_: list[str] | None = None) -> dict:
     """"Dok čekate" for the live service: links as addresses under the site (no ".html", as the site's own); and the
     next sitting convened, as the Assembly lists it ("sazvano": title, address, when it starts, its agenda; "nastavak"
     for one already begun that goes on then)."""
@@ -475,6 +476,8 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
         out["dnevni_red"] = agenda_
     if fixes_:  # corrections to the automatic transcript (live/uzivo/ispravke.py)
         out["ispravke"] = fixes_
+    if days_:  # the days the site has a page of (govornici/<day>), where a shared speech of an earlier day leads
+        out["dani"] = sorted(days_)
     if sittings_:  # the pages of the sittings going on, which the service reads for what the Assembly adds (hronika.py)
         out["sednice"] = sittings_
     return out
@@ -483,7 +486,7 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
 def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None,
            quiz_: list[dict] | None = None, notices_: list[dict] | None = None,
            sittings_: list[str] | None = None, agenda_: list[dict] | None = None, fixes_: dict | None = None,
-           next_: list[dict] | None = None) -> None:
+           next_: list[dict] | None = None, days_: list[str] | None = None) -> None:
     """mikrofon.html: an ordinary page of the site (its links relative), which the edge worker (live/edge) shows at
     mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap. With the
     last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
@@ -491,6 +494,6 @@ def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], da
         **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
         day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
         encoding="utf-8")
-    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming if next_ is None else next_, notices_, sittings_, agenda_, fixes_), ensure_ascii=False), encoding="utf-8")
+    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming if next_ is None else next_, notices_, sittings_, agenda_, fixes_, days_=days_), ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")

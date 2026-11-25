@@ -163,6 +163,7 @@
           keep = [sel, [].indexOf.call(deo.querySelectorAll(sel), f)];
         }
         deo.outerHTML = html;
+        document.dispatchEvent(new Event("deo"));  // a shared speech's row is marked again (mikrofon.js)
         var now = folds(true);
         Object.keys(now).forEach(function (k) { if (k in was) now[k].open = was[k]; });
         if (keep) { var again = document.querySelectorAll("#deo " + keep[0])[keep[1]]; if (again) again.focus({ preventScroll: true }); }
