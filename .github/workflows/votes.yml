@@ -54,14 +54,16 @@ jobs:
       - name: The newest convocation's sittings first
         env:
           IN_CONVOCATION: ${{ inputs.convocation }}
+          IN_SCHEDULED: ${{ inputs.scheduled }}
           GH_TOKEN: ${{ github.token }}
         run: |
           pip install uv==0.13.9 && uv sync --frozen
           current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
           newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
-          conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
-          [ "$conv" = "$current" ] && [ "$newest" != "$conv" ] || exit 0  # the newest is read below, or not asked for
-          uv run zailiprotiv --convocation "$newest" index --tell "$RUNNER_TEMP/sednice" || exit 0
+          conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ] || [ "$IN_SCHEDULED" = "true" ]; } && conv=$current
+          [ "$conv" = "$current" ] || exit 0  # an earlier one asked for by hand
+          uv run zailiprotiv --convocation "$newest" index --tell "$RUNNER_TEMP/sednice" > "$RUNNER_TEMP/index.log" || { cat "$RUNNER_TEMP/index.log"; rm "$RUNNER_TEMP/index.log"; exit 0; }
+          cat "$RUNNER_TEMP/index.log"
           # A sitting newly listed, or its day or agenda: the maintainer is told at once, one issue a sitting
           # (25 Nov 2026, "čim se objavi"); it stops nothing.
           for f in "$RUNNER_TEMP"/sednice/*.txt; do
@@ -83,15 +85,19 @@ jobs:
       - name: Index the sittings and read the roll calls
         env:
           IN_CONVOCATION: ${{ inputs.convocation }}
+          IN_SCHEDULED: ${{ inputs.scheduled }}
           IN_AGAIN_FLAG: ${{ inputs.again && '--again' || '' }}
           IN_REREAD: ${{ inputs.reread }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-srp tesseract-ocr-srp-latn >/dev/null  # tesseract: scanned bills
           current=$(uv run python -c 'from zailiprotiv.config import CURRENT; print(CURRENT)')
-          conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
+          conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ] || [ "$IN_SCHEDULED" = "true" ]; } && conv=$current
           echo "CONV=$conv" >> "$GITHUB_ENV"
           c="--convocation $conv"
-          uv run zailiprotiv $c index | tee index.log
+          newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
+          # The newest, once it is the current one, was read in the step above: not asked for twice.
+          if [ "$newest" = "$conv" ] && [ -f "$RUNNER_TEMP/index.log" ]; then cp "$RUNNER_TEMP/index.log" index.log
+          else uv run zailiprotiv $c index | tee index.log; fi
           uv run zailiprotiv $c laws
           uv run zailiprotiv $c videos || true  # the sittings' recordings (videos.py); a broadcaster's hiccup stops nothing; before the roll calls, which may fail
           # The bills in procedure are the current convocation's only.
@@ -109,7 +115,6 @@ jobs:
           uv run zailiprotiv $c bills
           # A newer convocation with no law yet is read beside the current one; with its first law it becomes the
           # current one (config.CURRENT).
-          newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
           # Whenever the current one is read, however it was named: the clock's runs name it by number (19 Nov 2026:
           # for that the newer convocation's MPs, their occupations and its recordings went unread for a day).
           if [ "$conv" = "$current" ] && [ "$newest" != "$conv" ]; then

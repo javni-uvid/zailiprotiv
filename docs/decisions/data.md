@@ -301,3 +301,8 @@ issue #7 once the Fifteenth is current.
   read. **votes** now starts **transcripts** for `config.NEWEST` too, over every sitting with `--more`: the page is asked,
   and the notes read again only when it links a day the record lacks. No model's writing follows (a run over every
   sitting starts none).
+- **The clock's runs read the current convocation, whatever number the clock names** (25 Nov 2026, found before the Second
+  sitting). The counter's worker starts **votes** with convocation "14": with the Fifteenth's first law `config.CURRENT` is 15,
+  and such a run would have read the Fourteenth alone, every hour, with nobody told. `scheduled` now means the current
+  one; a run by hand is for the convocation it names. The first step (the sittings, the alert, the early commit) goes on when
+  the newest is the current one, and its listing is not asked for twice.
