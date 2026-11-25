@@ -113,6 +113,13 @@ The project's promises to its readers. Never change them without the maintainer.
      one thing a mail loads is the MPs' portraits from the site itself, at the same address for every reader (25 Nov
      2026);
      the maintainer, Marko Pomorišac, is the controller, as "Politika o privatnosti" (`privatnost`) says;
+   - **following a sitting MP by mail, only to who asks** (25 Nov 2026, the maintainer, of the proposal's decisions 3–11: "Po preporuci
+     za sad"; of the built step: "moze"): the morning after a day on which the MP spoke in the hall, by the broadcast's caption only,
+     at most one mail a day, from the same address and through the same service as the day's summary; explicit consent by a click in
+     a mail that names the MP, for each one; the address and whom it follows kept sealed for the maintainer's key, padded to one
+     length, with no hash or count per MP, until the reader ends it (one press in every mail); no name in a subject, no picture; the
+     links to speeches are the same for every reader and counted as one sum a day. What Cloudflare keeps of a mail it carries is on
+     `privatnost`;
    - things of others' making **served from the project itself**: the search (Pagefind), MPs' portraits from the
      Assembly (`photos.py`, `data/photos/`), and the project's own subdomains for the notes' pages and the downloads.
 6. **What MPs say is not censored and not shaped** (13 Nov 2026). Quotes are word for word, checked against the
