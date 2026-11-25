@@ -133,6 +133,9 @@ def test_a_vote_read_out_is_no_speech_and_a_misspelt_name_is_the_one_near():
     keys = {"бакић јово": 1, "митов петар": 1, "јовановић петар": 1, "вучић александар": 1}
     assert govor.nearest("бакић јова", keys) == "бакић јово" and govor.nearest("митев петар", keys) == "митов петар"
     assert govor.nearest("смиљанић срђан", keys) is None  # nobody near
+    anas = {"ана брнабић": 1, "ана белоица": 1, "вујичић јован": 1}
+    assert govor.nearest("ана брбанић", anas) == "ана брнабић"  # two letters exchanged (25 Nov 2026)
+    assert govor.nearest("ана бранчић", anas) is None  # more than two letters out of place
     assert govor.nearest("бакић јова", {"бакић јово": 1, "бакић јоца": 1}) is None  # two as near
 
 
