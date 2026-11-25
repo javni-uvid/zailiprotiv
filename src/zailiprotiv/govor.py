@@ -216,7 +216,11 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
         if s.get("chair"):
             continue
         if "datoteka" not in s:
-            last_speaker = None
+            # A piece of the same speaker with no place (too short for two runs) does not end the turn: with only the
+            # chair's words around it, the speaker who goes on after it never lost the floor (26 Nov 2026, the
+            # maintainer: "svo vreme treba biti kartica za tandira"). Another speaker's piece does.
+            if s["speaker"] != last_speaker:
+                last_speaker = None
             continue
         for part in [s] + ([s["dalje"]] if s.get("dalje") else []):
             f = by_url.get(part["datoteka"], {})
