@@ -182,39 +182,59 @@ def tacnost_cmd(args) -> int:
 
 
 def glas_dan_cmd(args) -> int:
-    """A sitting day with no notes yet, from captions and voices (govor.voice_day; 20 Nov 2026): the live record's
-    turns the caption gave, and where there were none, the stretches ko.py named by voice (args.stretches, written
-    in the analysis image: {"files": [{"url", "trajanje"}], "stretches": {url: [[address, from, to, likeness]]},
-    "known": {url: start}}). Each file's clock from `known` or from captions read in passing (govor.clock); a file
-    with neither is reported and its stretches left out. Writes data/<N>/snimak/<day>.json unless the day has been
-    read from its notes."""
-    from zailiprotiv import govor, translit
+    """A sitting day with no notes yet, read from its recording (ko.named, 25 Nov 2026): each piece of its sound named by
+    the captions the live service read, the chair's words giving the floor, or a known voice. args.folder holds the
+    day's numbers and words (lice_glas.py, zvuk_dana.py); the voices are those of the turns of other days kept in
+    args.uzorci. Each file's clock from arhiva.json or from captions read in passing (govor.clock); a file with neither
+    is reported and left out. Writes data/<N>/snimak/<day>.json unless the day has been read from its notes;
+    args.zapis writes the record there instead (to be scored: `zailiprotiv tacnost <day> --zapis`)."""
+    from zailiprotiv import govor, ko, translit
+    from uzivo import config as live_config, hronika  # ko.py puts live/ on the path
+    from uzivo.names import Person, person_key
+    from zailiprotiv.site import slug as site_slug
     conv_dir = common.ROOT / common.CONVOCATION
     path = conv_dir / "snimak" / f"{args.day}.json"
-    if path.exists() and json.loads(path.read_text(encoding="utf-8")).get("izvor") == "govor":
+    if not args.zapis and path.exists() and json.loads(path.read_text(encoding="utf-8")).get("izvor") == "govor":
         print(f"glas-dan {args.day}: read from the notes already; the notes win")
         return 0
-    data = json.loads(Path(args.stretches).read_text(encoding="utf-8"))
-    record = json.loads((conv_dir / "uzivo" / f"{args.day}.json").read_text(encoding="utf-8"))
-    rec = record.get("govori", [])
-    files = data["files"]
-    starts = govor.clock(files, data["stretches"], rec, data.get("known", {}))
+    folder, kept = Path(args.folder), jsonfile.load(conv_dir / "arhiva.json", {})
+    rec = json.loads((conv_dir / "uzivo" / f"{args.day}.json").read_text(encoding="utf-8")).get("govori", [])
+    urls = [p["url"] for p in sorted(json.loads((conv_dir / "videos.json").read_text(encoding="utf-8"))["days"]
+                                     .get(args.day, []), key=lambda p: p["part"])]
+    sound = {u: got for u in urls if (got := ko.load(folder, u, "glas")) is not None}
+    if not sound:
+        print(f"glas-dan {args.day}: no voices in {folder}")
+        return 1
+
+    # The voices known from other days: their turns that have a place in a file whose numbers are kept. Not those of a
+    # day known from the live record or from this reading: some of its names are voices', which would teach themselves.
+    other_days = [json.loads(d.read_text(encoding="utf-8")) for d in sorted((conv_dir / "snimak").glob("*.json"))
+                  if d.stem != args.day and (not args.pre or d.stem < args.day)]
+    spans = [s for d in other_days if d.get("izvor") not in ("uzivo", "glas") for s in ko.known_spans(d)]
+    where = {url: next((Path(u) for u in args.uzorci if ko.load(Path(u), url, "glas") is not None), folder)
+             for url in {s[1] for s in spans}}
+    refs = ko.voices(spans, where.get)
+
+    files = [{"url": u, "trajanje": kept.get(u, {}).get("trajanje") or float(got[0][-1]) + ko.WIN} for u, got in sound.items()]
+    starts = govor.clock(files, {u: ko.stretches(*got, refs) for u, got in sound.items()}, rec,
+                         {u: kept[u]["od"] for u in sound if "od" in kept.get(u, {})})
     for f in files:
         print(f"  {f['url'].rsplit('/', 1)[1]}: {starts.get(f['url'], ('?', 'not placed'))}")
-    named = {}
+    files = [f for f in files if f["url"] in starts]
+
+    named, people = {}, []
     for p in list((conv_dir / "snimak").glob("*.json")) + list((conv_dir / "uzivo").glob("*.json")):
         if p == path:  # not the file this writes: a name it got wrong would come back
             continue
         for t in json.loads(p.read_text(encoding="utf-8")).get("govori", []):
             if t.get("adresa"):
                 named.setdefault(t["adresa"], {k: t.get(k, "") for k in ("ime", "adresa", "grupa", "uloga")})
-
-    from zailiprotiv.site import slug as site_slug
     for m in json.loads((conv_dir / "members.json").read_text(encoding="utf-8"))["members"]:
         # "Surname Given", as the site lists names, without the degree the list puts in some ("ДРЕЦУН мр МИЛОВАН")
         name = " ".join(w for w in translit.latin(m["name"]).split() if w.lower().rstrip(".") not in {"mr", "dr", "prof"}).title()
         group = translit.latin(m.get("group") or "")
         s = site_slug(name, 60)
+        people.append(Person(person_key(name), name, s, group))
         named.setdefault(s, {"ime": name, "adresa": s, "grupa": group, "uloga": group})
         if not named[s].get("uloga"):  # a caption read with no list line: the list the Assembly gives
             named[s] = {**named[s], "grupa": named[s].get("grupa") or group, "uloga": group}
@@ -222,36 +242,46 @@ def glas_dan_cmd(args) -> int:
     def who(address: str) -> dict:
         return named.get(address) or {"ime": address, "adresa": address, "grupa": "", "uloga": ""}
 
-    # The captions' turns, by the live page's rule (okvira 2 or more: counted); then the voices where no caption was.
-    caps = [{**t, "po": "potpis"} for t in rec if t.get("okvira", 0) >= 2]
-    all_voiced = govor.voice_day(files, data["stretches"], starts, who)
-    # A caption read with no list line under it, where the voice is surely someone else's, is a misreading (19 Nov
-    # 2026, 20:58: "Vučić" in four frames while Petrašinović spoke): the voice stands.
-    caps = [c for c in caps if c.get("uloga") or not any(
-        v["adresa"] != c.get("adresa") and v["od"] <= c["od"] and c["do"] <= v["do"] for v in all_voiced)]
-    for c in caps:  # a caption read with no list line: the list the Assembly gives
-        if not c.get("uloga") and c.get("adresa") in named:
-            c["uloga"] = named[c["adresa"]].get("uloga", "")
-    voiced = [t for t in all_voiced
-              if not any(c["od"] - 30 <= t["od"] <= c["do"] + 30 or t["od"] <= c["od"] <= t["do"] for c in caps)]
-    for c in caps:  # the captions' turns get their place in the archive's files too
-        for f in files:
-            if f["url"] in starts and starts[f["url"]][0] <= c["od"] < starts[f["url"]][0] + f["trajanje"]:
-                c.update(datoteka=f["url"], snimak=int(max(0, c["od"] - starts[f["url"]][0] - govor.LEAD)), video="")
-    turns = sorted(caps + voiced, key=lambda t: t["od"])
-    how = "; ".join(f"{f['url'].rsplit('/', 1)[1]}: {starts[f['url']][1]}" for f in files if f["url"] in starts)
+    words = {f["url"]: [w for line in _lines(folder / (f["url"].rsplit("/", 1)[1].removesuffix(".mp4") + ".jsonl"))
+                        for w in line.get("reci") or []] for f in files}
+
+    def floor(url: str, a: float, b: float) -> str:
+        hit = hronika.floor(" ".join(w for s, _, w in words[url] if a <= s < b), people, now_only=True)
+        return hit[-1].slug if hit else ""
+
+    # The captions' turns, by the live page's rule (okvira 2 or more: counted); of a caption that stands for seconds
+    # only its first seconds are a caption seen. What the live service found by voice or the chair's words is no caption.
+    caps = [t for t in rec if t.get("okvira", 0) >= 2 and t.get("adresa") and t.get("izvor") in (None, "potpis")]
+    seen = [(t["adresa"], t["od"], min(t["do"], t["od"] + CAPTION_STANDS) if t.get("izvor") else t["do"]) for t in caps]
+    got = ko.named([{"url": f["url"], "od": starts[f["url"]][0], "t": sound[f["url"]][0], "f": sound[f["url"]][1]} for f in files],
+                   refs, seen, floor, live_config.VOICE_SKIP)
+    by_file: dict[str, list] = {}
+    for r in got:
+        by_file.setdefault(r["datoteka"], []).append((r["adresa"], r["od"], r["do"], r["po"]))
+    turns = govor.voice_day(files, by_file, starts, who)
+    read = [(starts[f["url"]][0], starts[f["url"]][0] + f["trajanje"]) for f in files]
+    turns += [{**{k: t.get(k, "") for k in ("ime", "adresa", "grupa", "uloga", "od", "do", "okvira")}, "video": "", "po": "potpis"}
+              for t in caps if not any(a <= t["od"] < b for a, b in read)]  # a caption in a part whose sound was not read
+    turns.sort(key=lambda t: t["od"])
+    how = "; ".join(f"{f['url'].rsplit('/', 1)[1]}: {starts[f['url']][1]}" for f in files)
     out = {"dan": args.day, "izvor": "glas", "napomena": govor.VOICE_NOTE + f"Sat delova snimka: {how}.",
-           "pokriveno": [{"od": int(starts[f["url"]][0]), "do": int(starts[f["url"]][0] + f["trajanje"])}
-                         for f in files if f["url"] in starts],
-           "govori": turns,
-           "datoteke": [{"url": f["url"], "od": int(starts[f["url"]][0]), "trajanje": int(f["trajanje"])}
-                        for f in files if f["url"] in starts]}
-    print(f"glas-dan {args.day}: {len(caps)} turns by caption, {len(voiced)} by voice, "
-          f"{sum(t['do'] - t['od'] for t in voiced) // 60} min by voice")
+           "pokriveno": [{"od": int(a), "do": int(b)} for a, b in read], "govori": turns,
+           "datoteke": [{"url": f["url"], "od": int(starts[f["url"]][0]), "trajanje": int(f["trajanje"])} for f in files]}
+    print(f"glas-dan {args.day}: {len(refs)} voices known, {len(turns)} turns; minutes named by "
+          + ", ".join(f"{k} {sum(r['do'] - r['od'] for r in got if r['po'] == k) / 60:.0f}" for k in ("potpis", "prepis", "glas")))
+    target = Path(args.zapis) if args.zapis else path
     if not args.dry_run:
-        path.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-        print(f"wrote {path.as_posix()}")
+        target.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(f"wrote {target.as_posix()}")
     return 0
+
+
+CAPTION_STANDS = 40  # seconds: a caption that comes up at a turn's start only (24 Nov 2026) is of these (glas.LEARN_ON)
+
+
+def _lines(f: Path) -> list[dict]:
+    """The lines of a recording written down (zvuk_dana.py); none when it has not been."""
+    return [json.loads(x) for x in f.read_text(encoding="utf-8").splitlines() if x.strip()] if f.exists() else []
 
 
 def prepis_cmd(args) -> int:

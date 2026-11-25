@@ -201,12 +201,13 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
     return out
 
 
-VOICE_NOTE = ("Ko je kad govorio: dok je prenos prikazivao potpis, iz potpisa (zapis stranice „Ko sada govori“); posle "
-              "toga, dok Skupština ne objavi stenografske beleške ovog dana, po glasu: svaki deo zvuka snimka u arhivi "
-              "upoređen je sa glasom govornika iz govora čije je ime poznato iz potpisa ovog saziva, isto pravilo za "
-              "svakoga, a ime stoji samo kad je glas dovoljno sličan (provereno na 18. novembru: svaki tako imenovan "
-              "deo bio je tačan). Govornik bez uzorka glasa ostaje neimenovan, pa vreme dana nije potpuno. Kad beleške "
-              "budu objavljene, dan se piše ponovo iz njih. Predsedavajući nije u spisku. 'datoteka' je snimak u "
+VOICE_NOTE = ("Ko je kad govorio, dok Skupština ne objavi stenografske beleške ovog dana: zvuk snimka u arhivi podeljen je "
+              "na delove gde se glas menja, a deo dobija ime po potpisu u prenosu (zapis stranice „Ko sada govori“), gde ga "
+              "nije bilo po rečima predsedavajućeg kad daje reč (automatski zapis zvuka), a gde nema ni njih po glasu, "
+              "upoređenom sa glasom govornika iz govora čije je ime poznato; ime iz potpisa ili iz reči ne stoji gde glas "
+              "kaže drugačije. Isto pravilo za svakoga; deo bez jasnog znaka ostaje neimenovan, pa vreme dana nije potpuno, "
+              "a automatsko čitanje može da pogreši. Kad beleške budu objavljene, dan se piše ponovo iz njih. "
+              "Predsedavajući nije u spisku. 'datoteka' je snimak u "
               "arhivi videonet.co.rs, 'snimak' mesto u njemu u sekundama, pet sekundi pre početka. ")
 AGREE = 60  # seconds: a file placed by one caption read in passing, when the file before or after agrees this closely
 
@@ -265,18 +266,18 @@ def clock(files: list[dict], stretches: dict, record: list[dict], known: dict) -
 
 
 def voice_day(files: list[dict], stretches: dict, starts: dict, who) -> list[dict]:
-    """The turns a day's voices give: stretches ([(address, from, to, likeness)], seconds in the file) of files with a
-    start, one speaker's stretches within MERGE seconds joined. who(address) → {"ime", "adresa", "grupa", "uloga"}."""
+    """The turns a day's pieces give: stretches ([(address, from, to, what named it)], seconds in the file) of files with a
+    start, one speaker's within MERGE seconds, nobody else's between, joined. who(address) → {"ime", "adresa", "grupa", "uloga"}."""
     out: list[dict] = []
     for f in files:
         if f["url"] not in starts:
             continue
         base = starts[f["url"]][0]
-        for w, a, b, s in stretches.get(f["url"], []):
+        for w, a, b, how in stretches.get(f["url"], []):
             prev = out[-1] if out else None
             if prev and prev["adresa"] == w and prev["datoteka"] == f["url"] and base + a - prev["do"] <= MERGE:
                 prev["do"] = int(base + b)
                 continue
             out.append({**who(w), "od": int(base + a), "do": int(base + b), "okvira": 2, "video": "",
-                        "snimak": int(max(0, a - LEAD)), "datoteka": f["url"], "po": "glas"})
+                        "snimak": int(max(0, a - LEAD)), "datoteka": f["url"], "po": how})
     return out

@@ -2621,12 +2621,10 @@ def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch)
     assert "petrovic-petar" in L.voices.sums
     # the presiding officers are never named by voice
     assert {"cupic-aleksandar", "radenovic-stojan", "macura-nada"} <= config.VOICE_SKIP  # by address, as the voices are kept
-    # the stretch rule is the site's
-    import importlib.util, pathlib
-    spec = importlib.util.spec_from_file_location("ko", pathlib.Path(__file__).parents[1] / "src/zailiprotiv/ko.py")
-    ko = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(ko)
-    assert (glas.VOICE_MIN, glas.MARGIN, glas.STRETCH_MIN, glas.MIN_RUN, glas.GAP) == (ko.VOICE_MIN, ko.MARGIN, ko.STRETCH_MIN, ko.MIN_RUN, ko.GAP)
+    # the voices' rule is in one place, the site's recordings and the live service alike
+    from zailiprotiv import ko
+    from uzivo import komadi
+    assert glas.stretches is komadi.stretches and ko.stretches is komadi.stretches and glas.WIN == komadi.WIN == ko.WIN
 
 
 def test_listening_live_a_playlist_of_the_broadcasts_own_sound(tmp_path, monkeypatch):

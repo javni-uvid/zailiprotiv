@@ -50,8 +50,10 @@ that file in the same commit, and here only when a line below no longer holds.
   `docker-compose.test.yml` (a test asks for it).
 - **The sound never holds up the frames**, and neither does anything else: what is slow has a thread of its own.
 - **A file the service keeps is written whole** (`state_base._write`).
-- **The voices' rule and the recordings' are the same** (`glas.stretches`, the site's `ko.stretches`): change both. The
-  name of a worktree's test is computed in `mikrofon.ps1` and `tools/pocisti-projekat.sh`: change both.
+- **The voices' rule is in one place,** `uzivo/komadi.py` (25 Nov 2026): the live service and the recordings read
+  afterwards (the site's `ko.py`) take it from there, so a change changes both and is scored (`zailiprotiv glas-dan
+  --zapis`, `tacnost --zapis`). `pieces` and what names them are only the recordings' so far; the live service names by
+  `stretches`. The name of a worktree's test is computed in `mikrofon.ps1` and `tools/pocisti-projekat.sh`: change both.
 - **What the page says about principle 5** (what loads, what is kept, what is counted) is on the page or the method
   page: a change there changes the words too, in both scripts.
 - The tests are `tests/test_live.py`, `test_pretplata.py` and `test_mejl.py`; OCR and the stream are tried against a
