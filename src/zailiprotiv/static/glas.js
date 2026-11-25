@@ -57,6 +57,7 @@
     }
   }
   function post(path, body) {
+    if (!window.zipOwn) return Promise.reject(new Error("host"));  // site.js: only on the project's own hosts
     return fetch(api + path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
   }
@@ -93,7 +94,7 @@
     box.querySelector(".yv-nz").textContent = box.querySelector(".yv-np").textContent = "…"; box.querySelector(".yv-nu").textContent = "";
     bar(box.querySelector(".yv-bar-b"), 0, 0, 0);
     show(null);
-    if (mine) fetch(api + "/z/" + encodeURIComponent(item)).then(function (r) { return r.ok ? r.json() : null; }).then(function (t) { if (t && asked === item) show(t); }).catch(function () {});
+    if (mine && window.zipOwn) fetch(api + "/z/" + encodeURIComponent(item)).then(function (r) { return r.ok ? r.json() : null; }).then(function (t) { if (t && asked === item) show(t); }).catch(function () {});
   }
   open();
   // "Glasaj i ti" puts another bill into the same box (listic.js): the box then starts again with that one.

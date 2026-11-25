@@ -235,6 +235,16 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   finder of 13 Nov: it stays there (a convocation's "Varnice"; not "svi sazivi"), the laws say "Nema zakona za ovaj
   izbor." (as the home page's list of laws does), and a list with no sentence of its own (`data-none`) says the count, "Prikazano
   0 od 252".
+- **A page opened anywhere but on the project's own hosts sends nothing** (25 Nov 2026, the maintainer: "Daj to
+  lokalno"). In some seven hours Cloudflare counted 606 views at 127.0.0.1, agents' looks at built pages, more than
+  zailiprotiv.rs itself had (512). The visits' script, the uses, the votes and the live page's sums ask
+  `location.hostname` first, for `zailiprotiv.rs` and `mikrofon.zailiprotiv.rs` (the only hosts that answer with these
+  pages: `www` and GitHub's address redirect). In the page and not in the build: a build that leaves them out has to
+  be told which one is published, the published form is opened locally too (a comparison, the artifact), a saved copy
+  would still send, and a local page would lack what they draw (the vote's box, the sentences on counting). The
+  counter already refused what came from other origins; now it is not asked either. `publish.check` lets the visits'
+  script through in that one form only (`publish.ANALYTICS`). A translating proxy's copy (`*.translate.goog`) isn't
+  counted either.
 
 ## Design rules
 

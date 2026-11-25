@@ -202,7 +202,13 @@ def clean_urls(out: Path) -> None:
 # for a phone. The largest page now is under 0.6 MB.
 PAGE_LIMIT = 1_000_000
 # The one script from another server the pages may load: the visit counter (AGENTS.md, principle 5, second exception).
-ANALYTICS = '<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"'
+# Loaded in one form only, which asks for the project's own hosts first (base.html, the live page's _beacon; 25 Nov
+# 2026: pages built locally had counted 606 views in a day at 127.0.0.1).
+ANALYTICS = re.compile(re.escape(
+    r'<script>if (/^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname)) { let b = document.createElement("script"); b.type = "module"; '
+    'b.src = "https://static.cloudflareinsights.com/beacon.min.js"; '
+    'b.setAttribute("data-cf-beacon", \'{"token": "TOKEN"}\'); document.body.appendChild(b); }</script>'
+).replace("TOKEN", "[0-9A-Za-z]+"))
 EXTERNAL = re.compile(r"<(?:script|iframe|img|source|video|audio|embed|object)\b[^>]*\bsrc=[\"'](?:https?:)?//"
                       r"|<link\b[^>]*\bhref=[\"'](?:https?:)?//[^\"']*[\"'][^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)"
                       r"|<link\b[^>]*\brel=[\"'](?:stylesheet|preload|icon|modulepreload)[\"'][^>]*\bhref=[\"'](?:https?:)?//"
@@ -215,7 +221,8 @@ def _check_file(job: tuple[str, str]) -> list[str]:
     text = f.read_text(encoding="utf-8")
     if f.suffix == ".html" and len(text.encode()) > PAGE_LIMIT:
         bad.append(f"{name}: {len(text.encode()) / 1e6:.1f} MB")
-    m = EXTERNAL.search(text.replace(ANALYTICS, ""))
+    text = ANALYTICS.sub("", text)
+    m = EXTERNAL.search(text) or re.search(r"\bstatic\.cloudflareinsights\.com\S*", text)
     if m:
         bad.append(f"{name}: spoljni resurs: {m.group(0)[:80]}")
     return bad

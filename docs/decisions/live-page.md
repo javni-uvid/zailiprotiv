@@ -333,3 +333,7 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   - **A speech with no place in a recording** says so ("Mesto ovog govora na snimku još nije poznato."): between the broadcast's
     end and the archive's file, and where the file is there and not placed by the captions (24 Nov: 48 of 95 have a place). To do: placing
     such files by another sign.
+- **Opened at 127.0.0.1 the page counts nothing** (25 Nov 2026, the maintainer: "Daj to lokalno"), a test's or the live
+  service's own: the visits' script and the uses (`live.js`, `mikrofon.js`) ask for the project's hosts first, as on
+  the site (`site.md`, the end of "The site"). The bell and the mail's form still send when pressed; the counter
+  refuses them from anywhere but `mikrofon.zailiprotiv.rs`.

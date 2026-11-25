@@ -357,7 +357,7 @@
   });
 
   // Visitors' votes: shown under a law once the visitor has answered it; sent only when the visitor asks.
-  var apiEl = document.getElementById("q-api"), api = apiEl ? apiEl.dataset.api : "";
+  var apiEl = document.getElementById("q-api"), api = apiEl && window.zipOwn ? apiEl.dataset.api : "";  // zipOwn: site.js
   var crowd = null, SENT = KEY + ":poslato";
   var sentLaws = {};
   try { sentLaws = JSON.parse(localStorage.getItem(SENT) || "{}"); } catch (e) {}

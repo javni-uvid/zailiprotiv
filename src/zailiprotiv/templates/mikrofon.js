@@ -6,11 +6,11 @@
   var ARCHIVE = /^https:\/\/arhiva\.videonet\.co\.rs\//, ID = /^[\w-]{6,20}$/;
   function put(el) { screen.textContent = ""; screen.appendChild(el); }
   // A press on the broadcast's ▶ or on its sound told to the site's counter, once per page: a sum per day and hour,
-  // nothing with it.
-  var told = {};
+  // nothing with it. Only on the project's own hosts (25 Nov 2026), as in site.js.
+  var told = {}, own = /^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname);
   function count(what) {
     var api = (document.body.getAttribute("data-api") || "").replace(/\/$/, "");
-    if (!what || !/^https:\/\//.test(api) || told[what]) return;
+    if (!own || !what || !/^https:\/\//.test(api) || told[what]) return;
     told[what] = 1;
     try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
   }

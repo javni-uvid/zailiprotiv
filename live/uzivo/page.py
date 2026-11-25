@@ -1282,11 +1282,13 @@ def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo, speech: int | None = N
 
 
 def _beacon(token: str) -> str:
-    """Cloudflare Web Analytics, as on the site (base.html): the page counted, no cookies, nobody followed."""
+    """Cloudflare Web Analytics, as on the site (base.html, the same form): the page counted, no cookies, nobody
+    followed; only on the project's own hosts, so a page opened at 127.0.0.1, a test's or the service's own, is not."""
     if not token or not token.isalnum():
         return ""
-    return ('<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" '
-            f'data-cf-beacon=\'{{"token": "{token}"}}\'></script>')
+    return (r'<script>if (/^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname)) { let b = document.createElement("script"); b.type = "module"; '
+            'b.src = "https://static.cloudflareinsights.com/beacon.min.js"; '
+            f'b.setAttribute("data-cf-beacon", \'{{"token": "{token}"}}\'); document.body.appendChild(b); }}</script>')
 
 
 def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None, speech: int | None = None) -> str:
