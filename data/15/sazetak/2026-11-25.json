@@ -1,5 +1,402 @@
 {
- "dan": null,
+ "dan": {
+  "naslov": "Skupština je izabrala stalne parlamentarne delegacije",
+  "kratko": "Skupština je usvojila odluke o sastavu stalnih delegacija u međunarodnim parlamentarnim institucijama, delegacije u odboru za stabilizaciju i pridruživanje i delegacije u forumu Srbije i Republike Srpske. Odlučila je i o povredama Poslovnika i zaključila prvu sednicu.",
+  "ukratko": "Nastavljena je prva konstitutivna sednica 15. saziva, a predsedavajući je pozdravio delegaciju studentskog pokreta na galeriji. Aleksandar Vučić i drugi poslanici njegove liste protestovali su zbog prisustva gostiju, a Vučić je govorio o hapšenju vlasnika televizije Informer i o bacanju bombe na jednu kuću. Predsedavajući je rekao da je odobrio spisak gostiju i da i druge grupe mogu dostaviti spisak. Posle pauze poslanici liste Srbija pobeđuje napustili su salu, a Vučić je ostao i govorio o delegacijama. Zatim su govorili poslanici Studentske liste. Skupština je usvojila tri odluke o delegacijama i odlučila o ukazanim povredama Poslovnika. Na kraju je predsedavajući zaključio prvu sednicu.",
+  "odluke": [
+   {
+    "vreme": "10:31",
+    "sta": "Predsedavajući je izrekao opomenu poslaniku Mirkoviću.",
+    "glasanje": null
+   },
+   {
+    "vreme": "10:43",
+    "sta": "Predsedavajući je povukao opomenu izrečenu Milimiru Vujadinoviću i izvinio se, jer je to bila njegova greška.",
+    "glasanje": null
+   },
+   {
+    "vreme": "10:28",
+    "sta": "Predsedavajući je izrekao opomenu poslaniku ili poslanici zbog govora bez date reči.",
+    "glasanje": null
+   },
+   {
+    "vreme": "11:43",
+    "sta": "Usvojena je odluka o sastavu stalnih delegacija Narodne skupštine u međunarodnim parlamentarnim institucijama.",
+    "glasanje": {
+     "za": 136,
+     "protiv": 0,
+     "uzdrzano": 0,
+     "nije_glasalo": 2,
+     "prisutno": 138
+    },
+    "glasovi": "za 136, protiv 0, uzdržano 0, nije glasalo 2, prisutno 138"
+   },
+   {
+    "vreme": "11:44",
+    "sta": "Usvojena je odluka o sastavu delegacije u parlamentarnom odboru za stabilizaciju i pridruživanje.",
+    "glasanje": {
+     "za": 136,
+     "protiv": 0,
+     "uzdrzano": 0,
+     "nije_glasalo": 2,
+     "prisutno": 138
+    },
+    "glasovi": "za 136, protiv 0, uzdržano 0, nije glasalo 2, prisutno 138"
+   },
+   {
+    "vreme": "11:45",
+    "sta": "Usvojena je odluka o sastavu delegacije u parlamentarnom forumu Republike Srbije i Republike Srpske.",
+    "glasanje": {
+     "za": 132,
+     "protiv": 0,
+     "uzdrzano": 1,
+     "nije_glasalo": 5,
+     "prisutno": 138
+    },
+    "glasovi": "za 132, protiv 0, uzdržano 1, nije glasalo 5, prisutno 138"
+   },
+   {
+    "vreme": "11:46",
+    "sta": "Skupština je odlučila da je povređen Poslovnik, kako je ukazao Petar Mitov.",
+    "glasanje": {
+     "za": 107,
+     "protiv": 3,
+     "uzdrzano": 17,
+     "nije_glasalo": 11,
+     "prisutno": 138
+    },
+    "glasovi": "za 107, protiv 3, uzdržano 17, nije glasalo 11, prisutno 138"
+   },
+   {
+    "vreme": "11:47",
+    "sta": "Skupština je odlučila da je povređen Poslovnik, kako je ukazao Ilija Srdanović.",
+    "glasanje": {
+     "za": 114,
+     "protiv": 2,
+     "uzdrzano": 9,
+     "nije_glasalo": 13,
+     "prisutno": 138
+    },
+    "glasovi": "za 114, protiv 2, uzdržano 9, nije glasalo 13, prisutno 138"
+   },
+   {
+    "vreme": "11:48",
+    "sta": "Skupština je odlučila da su povređeni članovi Poslovnika, kako je ukazao Petar Mitov.",
+    "glasanje": {
+     "za": 110,
+     "protiv": 4,
+     "uzdrzano": 9,
+     "nije_glasalo": 15,
+     "prisutno": 138
+    },
+    "glasovi": "za 110, protiv 4, uzdržano 9, nije glasalo 15, prisutno 138"
+   },
+   {
+    "vreme": "11:48",
+    "sta": "Skupština je odlučila da je povređen Poslovnik, po još jednom ukazivanju Petra Mitova.",
+    "glasanje": {
+     "za": 109,
+     "protiv": 3,
+     "uzdrzano": 15,
+     "nije_glasalo": 11,
+     "prisutno": 138
+    },
+    "glasovi": "za 109, protiv 3, uzdržano 15, nije glasalo 11, prisutno 138"
+   },
+   {
+    "vreme": "11:49",
+    "sta": "Skupština je odlučila da je povređen Poslovnik, po još jednom ukazivanju Petra Mitova.",
+    "glasanje": {
+     "za": 105,
+     "protiv": 2,
+     "uzdrzano": 11,
+     "nije_glasalo": 20,
+     "prisutno": 138
+    },
+    "glasovi": "za 105, protiv 2, uzdržano 11, nije glasalo 20, prisutno 138"
+   },
+   {
+    "vreme": "11:50",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, kako je ukazao Feđa Dimović.",
+    "glasanje": {
+     "za": 12,
+     "protiv": 94,
+     "uzdrzano": 17,
+     "nije_glasalo": 16,
+     "prisutno": 138
+    },
+    "glasovi": "za 12, protiv 94, uzdržano 17, nije glasalo 16, prisutno 138"
+   },
+   {
+    "vreme": "11:50",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, po ukazivanju Petra Mitova.",
+    "glasanje": {
+     "za": 8,
+     "protiv": 85
+    },
+    "glasovi": "za 8, protiv 85"
+   },
+   {
+    "vreme": "11:51",
+    "sta": "Skupština je odlučila da nisu povređeni članovi Poslovnika, kako je ukazao Milenko Jovanov.",
+    "glasanje": {
+     "za": 0,
+     "protiv": 125,
+     "uzdrzano": 6,
+     "nije_glasalo": 7,
+     "prisutno": 138
+    },
+    "glasovi": "za 0, protiv 125, uzdržano 6, nije glasalo 7, prisutno 138"
+   },
+   {
+    "vreme": "11:51",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, kako je ukazala Ana Brnabić.",
+    "glasanje": {
+     "za": 1,
+     "protiv": 130,
+     "uzdrzano": 0,
+     "nije_glasalo": 7,
+     "prisutno": 138
+    },
+    "glasovi": "za 1, protiv 130, uzdržano 0, nije glasalo 7, prisutno 138"
+   },
+   {
+    "vreme": "11:52",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, kako je ukazala Vjerica Radeta.",
+    "glasanje": {
+     "za": 1,
+     "protiv": 129,
+     "uzdrzano": 0,
+     "nije_glasalo": 8,
+     "prisutno": 138
+    },
+    "glasovi": "za 1, protiv 129, uzdržano 0, nije glasalo 8, prisutno 138"
+   },
+   {
+    "vreme": "11:52",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, kako je ukazao Vladimir Đukanović.",
+    "glasanje": {
+     "za": 0,
+     "protiv": 129,
+     "uzdrzano": 1,
+     "nije_glasalo": 7,
+     "prisutno": 137
+    },
+    "glasovi": "za 0, protiv 129, uzdržano 1, nije glasalo 7, prisutno 137"
+   },
+   {
+    "vreme": "11:53",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, po ukazivanju Petra Mitova.",
+    "glasanje": {
+     "za": 6,
+     "protiv": 90,
+     "uzdrzano": 31,
+     "nije_glasalo": 10,
+     "prisutno": 137
+    },
+    "glasovi": "za 6, protiv 90, uzdržano 31, nije glasalo 10, prisutno 137"
+   },
+   {
+    "vreme": "11:54",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, po još jednom ukazivanju Ane Brnabić.",
+    "glasanje": {
+     "za": 0,
+     "protiv": 128,
+     "uzdrzano": 2,
+     "nije_glasalo": 7,
+     "prisutno": 137
+    },
+    "glasovi": "za 0, protiv 128, uzdržano 2, nije glasalo 7, prisutno 137"
+   },
+   {
+    "vreme": "11:54",
+    "sta": "Skupština je odlučila da nisu povređeni članovi Poslovnika, po još jednom ukazivanju Vladimira Đukanovića.",
+    "glasanje": {
+     "za": 2,
+     "protiv": 120,
+     "uzdrzano": 2,
+     "nije_glasalo": 13,
+     "prisutno": 137
+    },
+    "glasovi": "za 2, protiv 120, uzdržano 2, nije glasalo 13, prisutno 137"
+   },
+   {
+    "vreme": "11:55",
+    "sta": "Skupština je odlučila da nisu povređeni članovi Poslovnika, po još jednom ukazivanju Milenka Jovanova.",
+    "glasanje": {
+     "za": 1,
+     "protiv": 128,
+     "uzdrzano": 1,
+     "nije_glasalo": 7,
+     "prisutno": 137
+    },
+    "glasovi": "za 1, protiv 128, uzdržano 1, nije glasalo 7, prisutno 137"
+   },
+   {
+    "vreme": "11:56",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, po još jednom ukazivanju Vjerice Radete.",
+    "glasanje": {
+     "za": 0,
+     "protiv": 122,
+     "uzdrzano": 4,
+     "nije_glasalo": 11,
+     "prisutno": 137
+    },
+    "glasovi": "za 0, protiv 122, uzdržano 4, nije glasalo 11, prisutno 137"
+   },
+   {
+    "vreme": "11:56",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, kako je ukazao Vladan Mančić.",
+    "glasanje": {
+     "za": 36,
+     "protiv": 38,
+     "uzdrzano": 44,
+     "nije_glasalo": 19,
+     "prisutno": 137
+    },
+    "glasovi": "za 36, protiv 38, uzdržano 44, nije glasalo 19, prisutno 137"
+   },
+   {
+    "vreme": "11:57",
+    "sta": "Skupština je odlučila da nije povređen Poslovnik, po još jednom ukazivanju Vladimira Đukanovića.",
+    "glasanje": {
+     "za": 0,
+     "protiv": 130,
+     "uzdrzano": 1,
+     "nije_glasalo": 6
+    },
+    "glasovi": "za 0, protiv 130, uzdržano 1, nije glasalo 6"
+   },
+   {
+    "vreme": "11:58",
+    "sta": "Skupština je odlučila o povredi Poslovnika na koju je ukazao Dejan Šoškić; predsedavajući je prvo rekao da nisu povređeni, pa se ispravio da jesu.",
+    "glasanje": {
+     "za": 123,
+     "protiv": 1,
+     "uzdrzano": 5,
+     "nije_glasalo": 8,
+     "prisutno": 137
+    },
+    "glasovi": "za 123, protiv 1, uzdržano 5, nije glasalo 8, prisutno 137"
+   },
+   {
+    "vreme": "11:58",
+    "sta": "Predsedavajući je zaključio prvu sednicu Narodne skupštine u 15. sazivu.",
+    "glasanje": null
+   }
+  ],
+  "tok": [
+   {
+    "vreme": "10:03",
+    "sta": "Nastavljena je prva konstitutivna sednica, a predsedavajući je konstatovao da u sali ima 133 poslanika."
+   },
+   {
+    "vreme": "10:04",
+    "sta": "Predsedavajući je pozdravio delegaciju studentskog pokreta na galeriji i upozorio da je snimanje u sali zabranjeno."
+   },
+   {
+    "vreme": "10:07",
+    "sta": "Na poziv Jova Bakića odat je minut ćutanja."
+   },
+   {
+    "vreme": "10:11",
+    "sta": "Aleksandar Vučić je ukazao na povredu Poslovnika, protestovao zbog gostiju na galeriji i rekao da je uhapšen vlasnik televizije Informer."
+   },
+   {
+    "vreme": "10:15",
+    "sta": "Predsedavajući je rekao da je odobrio spisak gostiju i da će gost koji krši pravila biti udaljen."
+   },
+   {
+    "vreme": "10:19",
+    "sta": "Vjerica Radeta je rekla da su poslanici većine aplaudirali hapšenju posle minuta ćutanja."
+   },
+   {
+    "vreme": "10:23",
+    "sta": "Vladimir Đukanović je tražio da se gosti udalje, a predsedavajući je rekao da on nije pozvao goste, već je odobrio posetu."
+   },
+   {
+    "vreme": "10:26",
+    "sta": "Ana Brnabić je navela objave jednog gosta na društvenim mrežama i tražila da bude udaljen."
+   },
+   {
+    "vreme": "10:27",
+    "sta": "Predsedavajući je rekao da neće nikoga izbacivati i da to procenjuju službe bezbednosti."
+   },
+   {
+    "vreme": "10:30",
+    "sta": "Predsedavajući je proglasio pauzu od pet minuta."
+   },
+   {
+    "vreme": "10:44",
+    "sta": "Posle pauze Vučić je ponovo govorio o gostu na galeriji i o hapšenju."
+   },
+   {
+    "vreme": "10:47",
+    "sta": "Predsedavajući je rekao da i druge poslaničke grupe mogu dostaviti spisak gostiju."
+   },
+   {
+    "vreme": "10:49",
+    "sta": "Vera Radović je tražila da predsedavajući zaštiti goste."
+   },
+   {
+    "vreme": "10:53",
+    "sta": "Otvoren je jedinstveni pretres o tri predloga odluka o delegacijama."
+   },
+   {
+    "vreme": "10:54",
+    "sta": "Vučić je govorio kao predsednik poslaničke grupe, a zatim je napustio salu."
+   },
+   {
+    "vreme": "11:14",
+    "sta": "Predsedavajući je odgovorio o postavljenju generalnog sekretara i pozvao građane da se uzdrže od svakog nasilja."
+   },
+   {
+    "vreme": "11:16",
+    "sta": "U pretresu su govorili Slobodan Vukosavić, Zoran Stevanović, Slobodan Bubnjević i Slavica Filipović, a Miroslav Andrić je odustao od reči."
+   },
+   {
+    "vreme": "11:43",
+    "sta": "Skupština je usvojila tri odluke o delegacijama."
+   },
+   {
+    "vreme": "11:45",
+    "sta": "Skupština je odlučivala o ukazanim povredama Poslovnika."
+   },
+   {
+    "vreme": "11:58",
+    "sta": "Predsedavajući je zaključio prvu sednicu."
+   }
+  ],
+  "govornici": [
+   {
+    "ime": "Vučić Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Protestovao je zbog gostiju na galeriji, koje je nazvao navijačkom grupom i batinašem. Govorio je o hapšenju vlasnika Informera i bacanju bombe i rekao da njegova grupa prihvata učešće u delegacijama zbog Srbije."
+   },
+   {
+    "ime": "Radeta Vjerica",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Rekla je da su poslanici većine posle minuta ćutanja aplaudirali hapšenju urednika Informera i da gosti na galeriji nemaju pravo da aplaudiraju."
+   },
+   {
+    "ime": "Vukosavić Slobodan",
+    "lista": "Studentska lista",
+    "o_cemu": "Pozvao je na podršku delegacijama i rekao da su potrebne za saradnju sa drugim parlamentima u borbi protiv mafije. Rekao je i da optuživanje za krivična dela nije posao Skupštine."
+   },
+   {
+    "ime": "Stevanović Zoran",
+    "lista": "Studentska lista",
+    "o_cemu": "Podržao je predloge delegacija i pozdravio to što će i druga poslanička grupa imati članove u njima. Govorio je o postavljanju nekompetentnih ljudi u diplomatiju prethodnih godina."
+   },
+   {
+    "ime": "Bubnjević Slobodan",
+    "lista": "Studentska lista",
+    "o_cemu": "Izvinio se gostima zbog uvreda koje su čuli. Rekao je da će delegati predstavljati promenu od 25. oktobra i da će glasati za predloge."
+   }
+  ],
+  "t": 1795604684,
+  "model": "claude-opus-5-5"
+ },
  "delovi": [
   {
    "od": "10:02",
@@ -69,8 +466,325 @@
    ],
    "t_od": 1795597370,
    "t_do": 1795599056
+  },
+  {
+   "od": "10:31",
+   "do": "12:00",
+   "ukratko": "Skupština je prešla na odlučivanje o tri predloga odluka o sastavu stalnih parlamentarnih delegacija i sva tri su usvojena. Zatim je glasala o više ukazanih povreda poslovnika; neke su utvrđene kao povređene, a većina nije. Prva konstitutivna sednica 15. saziva zaključena je u 11:58, a o narednoj sednici poslanici će biti obavešteni.",
+   "tok": [
+    {
+     "vreme": "10:31",
+     "sta": "Predsedavajući je izrekao opomenu gospodinu Mirkoviću zbog snimanja u sali i upozorio ga da ne sme da prilazi.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:40",
+     "sta": "Pauza je istekla i predsedavajući je pozvao poslanike da se vrate na svoja mesta.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:43",
+     "sta": "Predsedavajući je povukao opomenu koju je ranije izrekao narodnom poslaniku Milimiru Vujadinoviću, uz izvinjenje.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:44",
+     "sta": "Poslanici su se javljali za povrede poslovnika u vezi s prisustvom gostiju na galeriji; predsedavajući je davao reč.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:53",
+     "sta": "Prešlo se na tačku šest dnevnog reda: izbor članova stalnih parlamentarnih delegacija u međunarodnim institucijama; predsedavajući je saopštio da su primljeni predlozi tri odluke.",
+     "glasanje": null
+    },
+    {
+     "vreme": "10:54",
+     "sta": "Predsedavajući je otvorio jedinstveni pretres o predlozima odluka: o sastavu delegacije u Parlamentarnom odboru za stabilizaciju i pridruživanje, o sastavu delegacije u parlamentarnom forumu Republike Srbije i Republike Srpske i o sastavu stalnih delegacija u međunarodnim parlamentarnim institucijama.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:16",
+     "sta": "Predsedavajući je najavio prelazak na glavni pretres.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:42",
+     "sta": "Pošto je jedinstveni pretres završen, Skupština je prešla na odlučivanje; predsedavajući je podsetio da se izborne nadležnosti vrše većinom glasova svih narodnih poslanika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:43",
+     "sta": "Skupština je glasala o predlogu odluke o sastavu stalnih delegacija Narodne skupštine u međunarodnim parlamentarnim institucijama u celini. Predlog je usvojen.",
+     "glasanje": {
+      "za": 136,
+      "protiv": 0,
+      "uzdrzano": 0,
+      "nije_glasalo": 2,
+      "prisutno": 138
+     },
+     "glasovi": "za 136, protiv 0, uzdržano 0, nije glasalo 2, prisutno 138"
+    },
+    {
+     "vreme": "11:44",
+     "sta": "Skupština je glasala o predlogu odluke o sastavu delegacije u Parlamentarnom odboru za stabilizaciju i pridruživanje. Predlog je usvojen.",
+     "glasanje": {
+      "za": 136,
+      "protiv": 0,
+      "uzdrzano": 0,
+      "nije_glasalo": 2,
+      "prisutno": 138
+     },
+     "glasovi": "za 136, protiv 0, uzdržano 0, nije glasalo 2, prisutno 138"
+    },
+    {
+     "vreme": "11:45",
+     "sta": "Skupština je glasala o predlogu odluke o sastavu delegacije u parlamentarnom forumu Republike Srbije i Republike Srpske. Predlog je usvojen.",
+     "glasanje": {
+      "za": 132,
+      "protiv": 0,
+      "uzdrzano": 1,
+      "nije_glasalo": 5,
+      "prisutno": 138
+     },
+     "glasovi": "za 132, protiv 0, uzdržano 1, nije glasalo 5, prisutno 138"
+    },
+    {
+     "vreme": "11:45",
+     "sta": "Skupština je prešla na odlučivanje o povredama poslovnika na koje su ukazali narodni poslanici, prema članu 103 stav 6 Poslovnika.",
+     "glasanje": null
+    },
+    {
+     "vreme": "11:46",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Petra Mitova na povredu člana 109 Poslovnika. Utvrđeno je da je član povređen.",
+     "glasanje": {
+      "za": 107,
+      "protiv": 3,
+      "uzdrzano": 17,
+      "nije_glasalo": 11,
+      "prisutno": 138
+     },
+     "glasovi": "za 107, protiv 3, uzdržano 17, nije glasalo 11, prisutno 138"
+    },
+    {
+     "vreme": "11:47",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Ilije Srdanovića na povredu člana 107 stav 1 Poslovnika. Utvrđeno je da je član povređen.",
+     "glasanje": {
+      "za": 114,
+      "protiv": 2,
+      "uzdrzano": 9,
+      "nije_glasalo": 13,
+      "prisutno": 138
+     },
+     "glasovi": "za 114, protiv 2, uzdržano 9, nije glasalo 13, prisutno 138"
+    },
+    {
+     "vreme": "11:48",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Petra Mitova na povrede navedenih članova Poslovnika. Utvrđeno je da su članovi povređeni.",
+     "glasanje": {
+      "za": 110,
+      "protiv": 4,
+      "uzdrzano": 9,
+      "nije_glasalo": 15,
+      "prisutno": 138
+     },
+     "glasovi": "za 110, protiv 4, uzdržano 9, nije glasalo 15, prisutno 138"
+    },
+    {
+     "vreme": "11:48",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Petra Mitova na povredu člana 103 Poslovnika. Utvrđeno je da je član povređen.",
+     "glasanje": {
+      "za": 109,
+      "protiv": 3,
+      "uzdrzano": 15,
+      "nije_glasalo": 11,
+      "prisutno": 138
+     },
+     "glasovi": "za 109, protiv 3, uzdržano 15, nije glasalo 11, prisutno 138"
+    },
+    {
+     "vreme": "11:49",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Petra Mitova na povredu člana 100 Poslovnika. Utvrđeno je da je član povređen."
+    },
+    {
+     "vreme": "11:50",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Feđe Dimovića na povredu člana 117 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 12,
+      "protiv": 94,
+      "uzdrzano": 17,
+      "nije_glasalo": 16,
+      "prisutno": 138
+     },
+     "glasovi": "za 12, protiv 94, uzdržano 17, nije glasalo 16, prisutno 138"
+    },
+    {
+     "vreme": "11:50",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Petra Mitova na povredu člana 15 stav 2 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 8,
+      "protiv": 85
+     },
+     "glasovi": "za 8, protiv 85"
+    },
+    {
+     "vreme": "11:51",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Milenka Jovanova na povrede članova 108 i 109 Poslovnika. Utvrđeno je da članovi nisu povređeni.",
+     "glasanje": {
+      "za": 0,
+      "protiv": 125,
+      "uzdrzano": 6,
+      "nije_glasalo": 7,
+      "prisutno": 138
+     },
+     "glasovi": "za 0, protiv 125, uzdržano 6, nije glasalo 7, prisutno 138"
+    },
+    {
+     "vreme": "11:51",
+     "sta": "Skupština je odlučila o ukazivanju poslanice Ane Brnabić na povredu člana 107 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 1,
+      "protiv": 130,
+      "uzdrzano": 0,
+      "nije_glasalo": 7,
+      "prisutno": 138
+     },
+     "glasovi": "za 1, protiv 130, uzdržano 0, nije glasalo 7, prisutno 138"
+    },
+    {
+     "vreme": "11:52",
+     "sta": "Skupština je odlučila o ukazivanju poslanice Vjerice Radete na povredu člana 101 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 1,
+      "protiv": 129,
+      "uzdrzano": 0,
+      "nije_glasalo": 8,
+      "prisutno": 138
+     },
+     "glasovi": "za 1, protiv 129, uzdržano 0, nije glasalo 8, prisutno 138"
+    },
+    {
+     "vreme": "11:52",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Vladimira Đukanovića na povredu člana 27 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 0,
+      "protiv": 129,
+      "uzdrzano": 1,
+      "nije_glasalo": 7,
+      "prisutno": 137
+     },
+     "glasovi": "za 0, protiv 129, uzdržano 1, nije glasalo 7, prisutno 137"
+    },
+    {
+     "vreme": "11:53",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Petra Mitova na povredu člana 103 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 6,
+      "protiv": 90,
+      "uzdrzano": 31,
+      "nije_glasalo": 10,
+      "prisutno": 137
+     },
+     "glasovi": "za 6, protiv 90, uzdržano 31, nije glasalo 10, prisutno 137"
+    },
+    {
+     "vreme": "11:54",
+     "sta": "Skupština je odlučila o ukazivanju poslanice Ane Brnabić na povredu člana 108 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 0,
+      "protiv": 128,
+      "uzdrzano": 2,
+      "nije_glasalo": 7,
+      "prisutno": 137
+     },
+     "glasovi": "za 0, protiv 128, uzdržano 2, nije glasalo 7, prisutno 137"
+    },
+    {
+     "vreme": "11:54",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Vladimira Đukanovića na povrede članova 27 i 107 Poslovnika. Utvrđeno je da članovi nisu povređeni.",
+     "glasanje": {
+      "za": 2,
+      "protiv": 120,
+      "uzdrzano": 2,
+      "nije_glasalo": 13,
+      "prisutno": 137
+     },
+     "glasovi": "za 2, protiv 120, uzdržano 2, nije glasalo 13, prisutno 137"
+    },
+    {
+     "vreme": "11:55",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Milenka Jovanova na povrede članova 27, 107 i 108 Poslovnika. Utvrđeno je da članovi nisu povređeni.",
+     "glasanje": {
+      "za": 1,
+      "protiv": 128,
+      "uzdrzano": 1,
+      "nije_glasalo": 7,
+      "prisutno": 137
+     },
+     "glasovi": "za 1, protiv 128, uzdržano 1, nije glasalo 7, prisutno 137"
+    },
+    {
+     "vreme": "11:56",
+     "sta": "Skupština je odlučila o ukazivanju poslanice Vjerice Radete na povredu člana 27 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 0,
+      "protiv": 122,
+      "uzdrzano": 4,
+      "nije_glasalo": 11,
+      "prisutno": 137
+     },
+     "glasovi": "za 0, protiv 122, uzdržano 4, nije glasalo 11, prisutno 137"
+    },
+    {
+     "vreme": "11:56",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Vladana Mančića na povredu člana 107 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 36,
+      "protiv": 38,
+      "uzdrzano": 44,
+      "nije_glasalo": 19,
+      "prisutno": 137
+     },
+     "glasovi": "za 36, protiv 38, uzdržano 44, nije glasalo 19, prisutno 137"
+    },
+    {
+     "vreme": "11:57",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Vladimira Đukanovića na povredu člana 108 Poslovnika. Utvrđeno je da član nije povređen.",
+     "glasanje": {
+      "za": 0,
+      "protiv": 130,
+      "uzdrzano": 1,
+      "nije_glasalo": 6
+     },
+     "glasovi": "za 0, protiv 130, uzdržano 1, nije glasalo 6"
+    },
+    {
+     "vreme": "11:58",
+     "sta": "Skupština je odlučila o ukazivanju poslanika Dejana Šoškića na povrede članova 106 i 107 Poslovnika. Utvrđeno je da članovi nisu povređeni.",
+     "glasanje": {
+      "za": 123,
+      "protiv": 1,
+      "uzdrzano": 5,
+      "nije_glasalo": 8,
+      "prisutno": 137
+     },
+     "glasovi": "za 123, protiv 1, uzdržano 5, nije glasalo 8, prisutno 137"
+    },
+    {
+     "vreme": "11:58",
+     "sta": "Pošto je Skupština obavila razmatranje i odlučivanje o svim tačkama dnevnog reda ove sednice, predsedavajući je zaključio prvu sednicu Narodne skupštine Republike Srbije u 15. sazivu.",
+     "glasanje": null
+    },
+    {
+     "vreme": "12:00",
+     "sta": "Predsedavajući je saopštio da će o narednoj sednici Narodne skupštine poslanici biti blagovremeno obavešteni.",
+     "glasanje": null
+    }
+   ],
+   "t_od": 1795599056,
+   "t_do": 1795604432
   }
  ],
  "greske": 0,
- "model": "claude-haiku-5-5"
+ "model": "claude-opus-5-5",
+ "javljeno": 1795604684
 }
