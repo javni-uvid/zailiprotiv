@@ -9,7 +9,7 @@
 <div class="rules">
 <p class="crumbs"><a href="varnice-svi.html">Varnice u sali</a></p>
 <h1>Poslovnik Narodne skupštine</h1>
-{% if terms %}<p class="lead">Šta reči koje sajt koristi znače po Poslovniku: naše kratko prepričavanje člana, a ispod njega tekst člana iz današnjeg prečišćenog teksta sa sajta Skupštine.</p>{% endif %}
+{% if terms %}<p class="lead">Šta reči koje sajt koristi znače po Poslovniku: naše kratko prepričavanje člana, a uz njega tekst člana iz današnjeg prečišćenog teksta sa sajta Skupštine.</p>{% endif %}
 {% if terms and invoked %}<nav class="page-menu" aria-label="Na ovoj strani"><a href="#pojmovi">Pojmovi</a>{% for g in parts if g.name %}<a href="#{{ g.id }}">{{ g.name }}</a>{% endfor %}<a href="#clanovi">Članovi na koje se poslanici pozivaju</a></nav>{% endif %}
 {% if terms %}
 <section id="pojmovi">

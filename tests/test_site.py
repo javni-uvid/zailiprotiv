@@ -881,6 +881,23 @@ def test_letter_sizes_are_the_scale():
     assert not re.search(r"font:\s*\d+\s+[\d.]+rem", css)
 
 
+def test_a_finders_list_hides_its_rows_and_has_no_other_lists_sentence():
+    """25 Nov 2026: "Prisustvo" on a phone showed every row of a search, and each list with nothing found spoke of the
+    speakers of a convocation. A row left out is hidden in every list; the script has no sentence of one list."""
+    from pathlib import Path
+    here = Path(site.__file__).parent
+    css, js = ((here / "static" / n).read_text(encoding="utf-8") for n in ("style.css", "site.js"))
+    rule = re.search(r"([^\n}]*)\{ display: none !important; \}", css[css.index(".rows > [hidden]"):])
+    assert all(x in rule.group(1) for x in (".rows > [hidden]", ".rt-list > [hidden]", ".rules-cited > [hidden]"))
+    assert "govornicima ovog saziva" not in js and "box.dataset.none" in js
+    said = {p.name: p.read_text(encoding="utf-8") for p in (here / "templates").glob("*.html")}
+    finders = {n for n, t in said.items() if "data-filter=" in t}
+    assert {n for n in finders if "data-none=" in said[n]} == {"laws.html", "floor.html", "rules_cited.html"}
+    for n in finders:  # a list the rule reaches
+        for id_ in re.findall(r'data-filter="([\w-]+)"', said[n]):
+            assert re.search(rf'class="rows[^"]*" id="{id_}"', said[n]), n
+
+
 def test_the_search_page_counts_its_use_and_never_its_words():
     """20 Nov 2026, before a search by meaning is decided: a search run, one with no result, a result opened, each a
     name the counter knows; what is sent is one of those names, never the field's words."""

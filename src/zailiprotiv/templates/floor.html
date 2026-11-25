@@ -11,7 +11,7 @@
 <p class="standfirst">Šta se u sali dešava mimo dnevnog reda: razmene {{ term("replika", "replika") }} između dvoje govornika i {{ term("mere", "mere koje izriče predsedavajući") }}. Sve od reči do reči, iz stenografskih beleški Skupštine.</p>
 {% from "macros.html" import newer_panel with context %}{{ newer_panel("varnice") }}
 <nav class="tabs" aria-label="Saziv">{% if newer15 %}<a href="#saziv-{{ newer15.conv }}">{{ newer15.years }}<span>{{ newer15.name }} saziv</span></a>{% endif %}{% if all_page %}<a href="{{ all_page }}"{% if part == "svi" %} aria-current="page"{% endif %}>Svi sazivi<span>{{ by_conv[-1].years.split("–")[0] }}–{{ by_conv[0].years.split("–")[-1] }}</span></a>{% endif %}{% for x in by_conv %}<a href="{{ x.page if part == "mere" else (x.page_who if part == "ko" else x.page_exchanges) }}"{% if x.n == c.n %} aria-current="page"{% endif %}>{{ x.years }}<span>{{ x.name }} saziv</span></a>{% endfor %}</nav>
-<div class="finder js-only floor-finder" hidden data-filter="floor-rows" data-quiet>
+<div class="finder js-only floor-finder" hidden data-filter="floor-rows" data-quiet{% if part != "svi" %} data-none="Niko pod tim imenom među govornicima ovog saziva."{% endif %}>
   <label class="sr" for="f-q">Nađi govornika</label>
   <input id="f-q" type="search" placeholder="Nađi poslanika: govori, replike, mere i teške reči, npr. Jovanov" autocomplete="off">
   <p id="f-n" class="row-meta" aria-live="polite"></p>

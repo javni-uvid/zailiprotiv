@@ -226,7 +226,15 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   An invoked article's row and the terms that rest on it lead to each other; twelve invoked articles stand first and a
   button shows the rest (a link to a row shows all, as before). The addresses `#pojmovi`, `#clanovi`, `#pojam-<id>`,
   `#clan-<n>` are as they were; a link to a part of the page no longer opens its first row. 19 screens of a
-  phone, no new colour, no new size of letters.
+  phone, no new colour, no new size of letters. The first sentence says the article's text is "uz njega", not "ispod
+  njega" (the maintainer left it to the conductor, the same day), as on a wide screen it is beside.
+- **A finder's list hides what it leaves out, and says only what is true of it** (25 Nov 2026, the maintainer: "Daj ih",
+  of two faults seen while the page of the Rules was made). On a phone "Prisustvo" laid its rows out by a rule
+  stronger than `hidden`, so a search counted four and showed all 252: one rule now hides them in every such list.
+  With nothing found every list said "Niko pod tim imenom među govornicima ovog saziva.", the sentence of the one
+  finder of 13 Nov: it stays there (a convocation's "Varnice"; not "svi sazivi"), the laws say "Nema zakona za ovaj
+  izbor." (as the home page's list of laws does), and a list with no sentence of its own (`data-none`) says the count, "Prikazano
+  0 od 252".
 
 ## Design rules
 
