@@ -288,3 +288,15 @@ records and recordings stays here:
     transcript and one record's end; its silences over a minute are one, the anthem and the ceremony in every frame; a cut
     inside speech is not ruled out by anything but the notes, whose speeches are all there in order.
   - Placing by the median alone hides such a part: look at each speech that does not agree.
+- **25 Nov is written from the notes, its file placed as the 24th's** (25 Nov 2026, by the rule of 20 Nov; the maintainer had
+  the recording written down the same evening). The file begins at 10:03:06, 8 s before where four frames had put it (12
+  of 25 speeches agree, 9 speakers; caption and running clock seen in five speeches; in Stevanović's the clock starts 17 s
+  after his first words; by the service's transcript 10:03:05, one offset all along, the break in the file). 22 turns of 14 speakers for 14 of 11; the live record had 83.5% of the time under the right name,
+  22 s of Vučić's under Aleksandra Štimac's.
+- **Two letters exchanged are one slip** (the same day): the notes write АНА БРБАНИЋ once (54098/00948), and `govor.nearest` let
+  it by, 0.71 alike in a word of seven letters: a speaker who is nobody, under no list. Exchanged letters count as 0.9 now, for
+  every name. Days 17 to 24 come out the same. That it is Ana Brnabić the picture says: the speaker captioned so at 1388 s
+  of the file stands at the same microphone, in one shot, through that speech.
+- **A shared link may now say another speaker** (measured by `deljenje.turn_at` after the fact for the 24th): of the links the
+  live page could have given, 113 of 118 on the 24th and 16 of 18 on the 25th lead to the same speaker. Measure it before a
+  day is written again, not after.

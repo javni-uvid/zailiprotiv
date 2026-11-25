@@ -141,14 +141,20 @@ def roll_call(text: str) -> bool:
 
 def nearest(name: str, keys: dict) -> str | None:
     """The key of the one listed name the notes' misspelt name is near ("Јова Бакић", "Петар Митев"): as many words, each
-    at least 0.75 alike, clearly nearer than any other; None when no listed name is, or two are."""
+    at least 0.75 alike, clearly nearer than any other; None when no listed name is, or two are. Two letters exchanged
+    ("Брбанић") are one slip, whatever their share of a short word (25 Nov 2026)."""
     from difflib import SequenceMatcher
+
+    def alike(a: str, b: str) -> float:
+        off = [i for i in range(len(a)) if a[i] != b[i]] if len(a) == len(b) else []
+        swapped = len(off) == 2 and a[off[0]] == b[off[1]] and a[off[1]] == b[off[0]]
+        return max(SequenceMatcher(None, a, b).ratio(), 0.9 if swapped else 0)
     mine = sorted(name.lower().split())
     scored = []
     for k in keys:
         theirs = sorted(k.lower().split())
         if len(theirs) == len(mine):
-            scored.append((min(SequenceMatcher(None, a, b).ratio() for a, b in zip(mine, theirs)), k))
+            scored.append((min(alike(a, b) for a, b in zip(mine, theirs)), k))
     scored.sort(reverse=True)
     if scored and scored[0][0] >= 0.75 and (len(scored) == 1 or scored[0][0] - scored[1][0] >= 0.05):
         return scored[0][1]
