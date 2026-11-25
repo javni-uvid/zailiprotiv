@@ -97,7 +97,7 @@ def test_files_placed_on_the_clock_by_captions_read_in_passing():
 
 def test_voice_day_joins_and_places():
     f = "u/b.mp4"
-    st = {f: [("x", 100.0, 200.0, 0.8), ("x", 250.0, 300.0, 0.8), ("y", 400.0, 500.0, 0.7)]}
+    st = {f: [("x", 100.0, 200.0, "glas"), ("x", 250.0, 300.0, "glas"), ("y", 400.0, 500.0, "glas")]}
     turns = govor.voice_day([{"url": f, "trajanje": 1000}], st, {f: (1000.0, "")},
                             lambda w: {"ime": w, "adresa": w, "grupa": "", "uloga": ""})
     assert [(t["adresa"], t["od"], t["do"], t["snimak"], t["po"]) for t in turns] == [

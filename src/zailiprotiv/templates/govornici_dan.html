@@ -38,7 +38,7 @@
   {% endfor %}
 </ol>
 <p class="label share-done" hidden>Link je kopiran.</p>
-<p class="label">Izvor: {% if source == "uzivo" %}zapis stranice „Ko sada govori“, poravnat sa snimkom u arhivi{% elif source == "govor" %}stenografske beleške, poravnate sa zvukom snimka u arhivi{% elif source == "glas" %}potpis u prenosu, a gde ga nije bilo, glas govornika (do objave stenografskih beleški; govornik bez uzorka glasa nije imenovan){% else %}ceo snimak prenosa, pročitan posle sednice{% endif %}. <a href="{{ root }}kako-racunamo.html#govornici">Kako merimo</a></p>
+<p class="label">Izvor: {% if source == "uzivo" %}zapis stranice „Ko sada govori“, poravnat sa snimkom u arhivi{% elif source == "govor" %}stenografske beleške, poravnate sa zvukom snimka u arhivi{% elif source == "glas" %}potpis u prenosu, a gde ga nije bilo, reč predsedavajućeg kad daje reč i glas govornika (do objave stenografskih beleški; deo bez jasnog znaka nije imenovan){% else %}ceo snimak prenosa, pročitan posle sednice{% endif %}. <a href="{{ root }}kako-racunamo.html#govornici">Kako merimo</a></p>
 <style>
 {% include "mikrofon.css" %}
 </style>

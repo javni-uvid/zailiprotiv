@@ -1,34 +1,31 @@
-"""Who is at the rostrum by face and voice, where the broadcast shows no caption (20 Nov 2026, the maintainer's
-decision: the recordings are public, MPs are public officials, and faces and voices may be used to tell who speaks).
+"""Who is at the rostrum when, read from a day's recording while the day has no notes yet (20 Nov 2026, the maintainer's
+decision: the recordings are public, MPs are public officials, and voices may be used to tell who speaks).
 
 Only the fallback: a day whose notes are published is read from the notes (govor.py), which replace this.
 
-The numbers come from live/uzivo/lice_glas.py (a face's 128, a voice window's 512, each with its second in a file of
-the archive). What they are matched to, for every speaker by the same rule:
-- **voices** of the speakers whose turns are known (read from the caption on any day of the convocation, or placed
-  by the notes): the mean of their windows inside those turns;
-- **faces**: the MPs' portraits from the Assembly (data/photos/), and the faces seen during each known turn.
-A stretch of sound gets a speaker when its windows' nearest voice is that speaker's, clearly nearer than the next
-(MARGIN), over at least MIN_RUN seconds; a face seen then that is nearest another speaker's takes the place from
-it, so a stretch where face and voice disagree gets nobody. Nobody is named from a guess below these bars.
+The numbers come from live/uzivo/lice_glas.py (a voice window's 512, with its second in a file of the archive), the
+words from live/uzivo/zvuk_dana.py. The sound is cut where the voice changes and each piece named by the best sign of
+it (live/uzivo/komadi.py, the rule and its bars): the caption the live service read then; the chair giving the floor by
+name just before it; a voice known from the turns of other days (placed by the notes or the caption), or from a piece of
+this day a caption or the chair's words named. A caption or a name heard is not taken where the voice says otherwise,
+and a piece no sign is clear of is nobody's. Nobody is named from a face: until 25 Nov 2026 a face seen mostly another's
+dropped a voice's stretch (check_faces), and on 19 Nov that was 1184 right seconds of 1242.
 """
 from __future__ import annotations
 
-import json
+import sys
 from pathlib import Path
 
 import numpy as np
 
-VOICE_MIN = 0.55   # cosine: a voice window this alike its speaker's mean at the least
-MARGIN = 0.05      # and this far ahead of the next speaker's
-FACE_MIN = 0.42    # SFace's cosine for "the same person"
-MIN_RUN = 20.0     # seconds: a shorter stretch is a replica's start or noise, not a turn
-# A stretch is named only when its windows are on average this alike its speaker's voice. Checked on 18 Nov 2026,
-# each file left out of the samples in turn and compared with the captions: from 0.68 every stretch named was the
-# speaker (11,313 s, 88 % of the time of speakers with a sample); at 0.65, 99 %; at 0.60, 93 %. A speaker with no
-# sample is nearest someone else at 0.58-0.65 on 19 Nov, so below the bar.
-STRETCH_MIN = 0.68
-GAP = 8.0          # seconds of no window or another speaker's that do not end a stretch
+LIVE = Path(__file__).resolve().parents[2] / "live"  # the rule is the live service's own, as arhiva.py's reading is
+if str(LIVE) not in sys.path:
+    sys.path.insert(0, str(LIVE))
+from uzivo.komadi import LEARN, SHORT, WIN, against, alike, pieces, stretches, unit, voice, whose  # noqa: E402, F401
+
+BEFORE, AFTER = 45.0, 12.0  # seconds before a piece's start and after it, in which the chair's words give it its speaker
+SEEN = 4.0  # seconds of a caption inside a piece, at the least, for it to be a sign
+SHIFTS, SHIFT_TURNS, SHIFT_GAIN = range(-60, 61, 2), 5, 0.01  # see `clock_shift`
 
 
 def load(folder: Path, url: str, kind: str):
@@ -36,7 +33,7 @@ def load(folder: Path, url: str, kind: str):
     if not path.exists():
         return None
     d = np.load(path)
-    return d["t"], d["feat"]
+    return d["t"].astype(np.float64), d["feat"]  # kept as float32, which an epoch added to makes 128 s coarse
 
 
 def known_spans(day: dict) -> list[tuple[str, str, float, float]]:
@@ -61,92 +58,60 @@ def voices(spans, folder_of) -> dict[str, np.ndarray]:
         m = (t >= a + 5) & (t + 3 <= b - 5)
         if m.any():
             acc.setdefault(who, []).append(f[m])
-    out = {}
-    for who, parts in acc.items():
-        v = np.concatenate(parts).mean(0)
-        out[who] = v / (np.linalg.norm(v) + 1e-9)
-    return out
+    return {who: unit(np.concatenate(parts).mean(0)) for who, parts in acc.items()}
 
 
-def faces(spans, folder_of, portraits: dict[str, np.ndarray]) -> dict[str, list[np.ndarray]]:
-    """Each speaker's faces: the portrait, and the largest face of each frame inside a known turn when most such
-    faces of the turn are alike (the camera on the speaker), their mean."""
-    out = {k: [v] for k, v in portraits.items()}
-    for who, url, a, b in spans:
-        got = load(folder_of(url), url, "lica")
-        if got is None:
-            continue
-        d = np.load(folder_of(url) / (url.rsplit("/", 1)[1].removesuffix(".mp4") + ".lica.npz"))
-        t, box, f = d["t"], d["box"], d["feat"]
-        m = (t >= a) & (t <= b)
-        if m.sum() < 3:
-            continue
-        idx = np.where(m)[0]
-        biggest = {}
-        for i in idx:
-            if t[i] not in biggest or box[i][2] * box[i][3] > box[biggest[t[i]]][2] * box[biggest[t[i]]][3]:
-                biggest[t[i]] = i
-        fs = f[list(biggest.values())]
-        centre = fs.mean(0)
-        centre /= np.linalg.norm(centre) + 1e-9
-        alike = fs @ centre > FACE_MIN
-        if alike.mean() >= 0.6:
-            v = fs[alike].mean(0)
-            out.setdefault(who, []).append(v / (np.linalg.norm(v) + 1e-9))
-    return out
+def clock_shift(captions, files) -> int:
+    """How many seconds the captions' clock is off the files' (a file placed by hand, 19 Nov 2026: 36 s): the shift at
+    which each caption's turn is most one voice. 0 unless SHIFT_TURNS turns of 20 s say so, by SHIFT_GAIN."""
+    long = [(a, b) for _, a, b in captions if b - a >= 20]
+    if len(long) < SHIFT_TURNS:
+        return 0
+    got = {}
+    for s in SHIFTS:
+        whole, n = 0.0, 0
+        for a, b in long:
+            for x in files:
+                t = x["t"] + x["od"]
+                m = (t >= a + s) & (t + WIN <= b + s)
+                if m.sum() >= 3:
+                    whole, n = whole + float(np.linalg.norm(x["f"][m].sum(0))), n + int(m.sum())
+        got[s] = whole / max(n, 1)
+    best = max(got, key=lambda s: (got[s], -abs(s)))
+    return best if got[best] - got[0] >= SHIFT_GAIN else 0
 
 
-def stretches(t: np.ndarray, f: np.ndarray, refs: dict[str, np.ndarray]) -> list[tuple[str, float, float, float]]:
-    """(speaker, from, to, mean likeness) of a file's sound: windows given to their nearest voice when clearly
-    nearest, joined while the same speaker goes on (GAP), kept from MIN_RUN seconds."""
-    if not refs or not len(t):
-        return []
-    names = list(refs)
-    sims = f @ np.stack([refs[n] for n in names]).T
-    order = np.argsort(-sims, axis=1)
-    out, cur = [], None
-    for i in range(len(t)):
-        best, second = order[i, 0], order[i, 1] if len(names) > 1 else None
-        s = sims[i, best]
-        ok = s >= VOICE_MIN and (second is None or s - sims[i, second] >= MARGIN)
-        who = names[best] if ok else None
-        if cur and who == cur[0] and t[i] - cur[2] <= GAP:
-            cur[2], cur[3] = t[i] + 3, cur[3] + [s]
-        elif cur and who is None and t[i] - cur[2] <= GAP:
-            continue
-        else:
-            if cur:
-                out.append(cur)
-            cur = [who, t[i], t[i] + 3, [s]] if who else None
-    if cur:
-        out.append(cur)
-    return [(w, a, b, float(np.mean(s))) for w, a, b, s in out if b - a >= MIN_RUN and np.mean(s) >= STRETCH_MIN]
-
-
-def check_faces(runs, lica, face_refs: dict[str, list[np.ndarray]]):
-    """Each stretch with "lice": the speaker most faces in it are nearest to (above FACE_MIN), or None; a stretch
-    whose faces are mostly another's is dropped."""
-    if lica is None:
-        return [(w, a, b, s, None) for w, a, b, s in runs]
-    t, f = lica
-    stacked = [(n, v) for n in face_refs for v in face_refs[n]]
-    if not stacked:
-        return [(w, a, b, s, None) for w, a, b, s in runs]
-    M = np.stack([v for _, v in stacked])
-    out = []
-    for w, a, b, s in runs:
-        m = (t >= a) & (t <= b)
-        if not m.any():
-            out.append((w, a, b, s, None))
-            continue
-        sims = f[m] @ M.T
-        top = sims.argmax(1)
-        votes: dict[str, int] = {}
-        for i, j in enumerate(top):
-            if sims[i, j] >= FACE_MIN:
-                votes[stacked[j][0]] = votes.get(stacked[j][0], 0) + 1
-        face = max(votes, key=votes.get) if votes else None
-        if face and face != w and votes[face] > 2 * votes.get(w, 0):
-            continue  # the picture shows someone else most of the time: nobody, rather than a guess
-        out.append((w, a, b, s, face))
+def named(files: list[dict], refs: dict, captions, floor, skip=frozenset()) -> list[dict]:
+    """A day's pieces with a speaker, in order: {"adresa", "datoteka", "od", "do" (seconds in the file), "po" (what named
+    it: "potpis", "prepis", "glas")}. files: [{"url", "od" (its start on the clock), "t", "f" (the voice's windows)}];
+    captions: [(address, from, to)] on the clock; floor(url, from, to) → the address the chair's words there give the
+    floor to, or ""; skip: never named by voice (the presiding officers)."""
+    shift, learned, out = clock_shift(captions, files), {}, []
+    for x in files:
+        t, f = x["t"], x["f"]
+        for a, b in pieces(t, f):
+            v = voice(t, f, a, b)
+            if b - a < SHORT or v is None:
+                continue
+            known = {k: unit(np.mean(learned.get(k, []) + ([refs[k]] if k in refs else []), axis=0)) for k in {*refs, *learned}}
+            sims = alike(v, known)
+            seen: dict[str, float] = {}
+            for who, c, d in captions:
+                both = min(d + shift - x["od"], b) - max(c + shift - x["od"], a)
+                if both >= 0:
+                    seen[who] = seen.get(who, 0) + both
+            who, how = next((k for k in sorted(seen, key=lambda k: -seen[k])
+                             if seen[k] >= SEEN and not against(k, sims, b - a)), ""), "potpis"
+            if not who:
+                who, how = floor(x["url"], a - BEFORE, a + AFTER), "prepis"
+                if who and against(who, sims, b - a):
+                    who = ""
+            if who and b - a >= LEARN:
+                learned.setdefault(who, []).append(v)
+            if not who:
+                who, how = whose(sims), "glas"
+                if who in skip:
+                    who = ""
+            if who:
+                out.append({"adresa": who, "datoteka": x["url"], "od": a, "do": b, "po": how})
     return out

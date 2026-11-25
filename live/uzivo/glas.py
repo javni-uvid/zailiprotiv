@@ -18,13 +18,11 @@ from pathlib import Path
 import numpy as np
 
 from . import config, prepis
+from .komadi import GAP, MARGIN, MIN_RUN, STRETCH_MIN, VOICE_MIN, stretches  # noqa: F401 (the one rule, the recordings' too)
 
 log = logging.getLogger("glas")
 RATE = 16000
 WIN, HOP = 3.0, 1.5  # seconds of sound in a window, and between windows (lice_glas)
-# The rule of the recordings read afterwards (the site's ko.py, checked on 18 Nov 2026: from 0.68 every stretch named
-# was the speaker): keep them the same.
-VOICE_MIN, MARGIN, STRETCH_MIN, MIN_RUN, GAP = 0.55, 0.05, 0.68, 20.0, 8.0
 KEEP = 600  # seconds of windows kept in memory
 # A turn found by the chair's words, of someone whose voice is not known: its first seconds (3-15 s) are its voice, and
 # a later 15 s on average less alike than CHANGE is someone else's. Set on 18 Nov 2026 against the notes: a speech's
@@ -39,32 +37,6 @@ AGAIN = 4  # windows (some 8 s) in a row that tell the speaker of a held turn go
 LEARN_ON = 40.0  # seconds after a caption that stands for seconds whose sound is taken as its speaker's voice
 LEAST = 20  # windows a voice is known from before it names anyone or ends a turn: a few are only those seconds' own sound
 LEARN_EDGE = 5.0  # seconds at a turn's start and end not taken as its voice (the chair may still be speaking)
-
-
-def stretches(t: np.ndarray, f: np.ndarray, refs: dict[str, np.ndarray]) -> list[tuple[str, float, float, float]]:
-    """(speaker, from, to, mean likeness): windows given to their nearest voice when clearly nearest, joined while the
-    same speaker goes on (GAP), kept from MIN_RUN seconds at STRETCH_MIN. The site's ko.stretches, the same rule."""
-    if not refs or not len(t):
-        return []
-    names = list(refs)
-    sims = f @ np.stack([refs[n] for n in names]).T
-    order = np.argsort(-sims, axis=1)
-    out, cur = [], None
-    for i in range(len(t)):
-        best, second = order[i, 0], order[i, 1] if len(names) > 1 else None
-        s = sims[i, best]
-        who = names[best] if s >= VOICE_MIN and (second is None or s - sims[i, second] >= MARGIN) else None
-        if cur and who == cur[0] and t[i] - cur[2] <= GAP:
-            cur[2], cur[3] = t[i] + WIN, cur[3] + [s]
-        elif cur and who is None and t[i] - cur[2] <= GAP:
-            continue
-        else:
-            if cur:
-                out.append(cur)
-            cur = [who, t[i], t[i] + WIN, [s]] if who else None
-    if cur:
-        out.append(cur)
-    return [(w, a, b, float(np.mean(s))) for w, a, b, s in out if b - a >= MIN_RUN and np.mean(s) >= STRETCH_MIN]
 
 
 class Voices:

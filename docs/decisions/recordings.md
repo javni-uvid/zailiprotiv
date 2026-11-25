@@ -186,5 +186,45 @@ records and recordings stays here:
   captions stopped that afternoon; 73 s under a wrong name). A day has no truth until its notes are out and
   `govor` has run: 24 Nov is to be read then. Known limits: a short speech the notes' words could not place counts
   as "extra"; a name the record spells as another MP's is counted wrong, which it is.
+- **A day cut where the voice changes, each piece named by its best sign** (25 Nov 2026, the maintainer: "izaberi
+  najtačniji metod, da li još nekako možemo poboljšati?"; `live/uzivo/komadi.py`, `ko.named`, the command `glas-dan
+  <day> <folder> --uzorci …`). It changes "Faces and voices, only where there are no notes" above: windows alike a voice
+  for 20 s no longer make a turn; the sound is cut where the 20 s before and after a place are under 0.65 alike (the least
+  alike near), and where no voice is heard for 30 s, and a piece is one speaker's whole: by the caption the live service
+  read in it, else the chair's floor-giving in the 45 s before and 12 s after its start (`hronika.floor` on the
+  recording's words), else a known voice (0.80 alike, 0.10 ahead of the next). **A caption or a name heard is not taken
+  where the voice says otherwise:** the piece is surely another's known voice, or, from 30 s, under 0.60 alike the named
+  MP's. A piece of 60 s named by a caption or the chair is that MP's sample from then on. The captions' clock is set
+  beside the files' by the sound itself (`clock_shift`). The presiding officers are not named by voice.
+  **The face is out:** `check_faces` (a face seen mostly another's dropped a stretch) is gone, on 19 Nov it dropped 1242 s
+  of which 1184 were right; a face confirming a doubtful voice is not used either. Samples are taken only of days known by
+  the notes or by hand, not from a day whose names are voices'.
+  Measured (`tacnost`; seconds right / under a wrong name / missing / extra; voices of earlier days only, so 17 Nov has
+  none; the variants measured on 25 Nov first use every other day's voices for 17 and 18 Nov):
+
+  | | 17 Nov | 18 Nov | 19 Nov |
+  |---|---|---|---|
+  | the live record as made then | 78.9% of 22 min | 89.0%, wrong 293 | 29.9%, wrong 73 |
+  | voice alone (`ko.py` until now) | 81.5%, wrong 121 | 65.1%, wrong 177 | 46.7%, wrong 334 |
+  | captions, then voice | 81.5%, wrong 121 | 87.7%, wrong 388 | 67.4%, wrong 387 |
+  | captions, voice, chair's words (I) | 89.9%, wrong 121 | 89.8%, wrong 411 | 77.5%, wrong 616 |
+  | the same, chair's words first (K) | 90.2%, wrong 81 | 89.8%, wrong 416 | 77.6%, wrong 612 |
+  | b3's: cut, best sign, 0.62 | 85.0%, wrong 0 | 95.3%, wrong 441 | 90.9%, wrong 1812 |
+  | **this rule** | **85.2%, 0/1906/65** | **94.9%, 269/847/528** | **91.4%, 34/2390/794** |
+  | this rule, voices of all other days | 99.6%, 2/49/140 | 95.8%, 182/743/1172 | the same |
+
+  Of 18 Nov's 269 s under a wrong name 166 are spellings (112 s Šoškić/Stošić in the old record, 54 s of "Mitev", as the
+  notes misspell Petar Mitov). b3's design put 557 s of Balać's under Vučić (a misread caption), 477 s of Stojković's and
+  366 s of Tandir's under Bakić (a sample spoilt by a misheard name): the voice's check stops all three.
+  **How far it is fitted:** the bars are on the plateau of what 17-19 Nov showed, so they were seen on the days they are
+  scored on. Choosing them on two days and scoring the third (108 settings): 99.6% and 2 s wrong on 17, 96.1% and 182 s
+  (or 95.2% and 396 s, if a wrong second weighs 1 to 3 right ones) on 18, 91.1% and 51 s on 19. Of
+  all 108 (likeness 0.75-0.85, lead 0.05-0.15, unlike 0.5-0.7, cut 0.5-0.7) 19 Nov had 85.0 to 91.7% right, half of them
+  under 89.8%, and 32 to 734 s wrong, half of them under 51 s.
+  Tried and not kept: score normalisation against the other MPs (s-norm, as-norm, centring; a bar that lets none of 204
+  false matches through keeps 78, 75 and 94% of the true seconds, the plain likeness 95%); joining a day's later pieces
+  to voices learnt that day (18 Nov: 401 s wrong); trimming a piece's ends to its own voice (18 Nov 0.9 points less right);
+  a bar of 0.75 (18 Nov: 1017 s wrong). Not measured: a day whose captions stand for ten seconds (24 Nov: no notes yet),
+  and Whisper was told the names of 17-18 Nov's speakers when those recordings were written down.
 - **A day's recording as sound only** (22 Nov 2026): the day pages (`govornici/<date>`) have "Slušaj samo zvuk" and
   the lock screen's player with who speaks, as the live page (`live-sound.md`).
