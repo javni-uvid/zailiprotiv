@@ -62,6 +62,7 @@ _ATTR = re.compile(r'\b(alt|title|placeholder|aria-label)="([^"]*)"')
 _LINK = re.compile(r'\b(href|src)="([^"#?:][^":]*?)([#?][^"]*)?"')
 _PAGE = (".html", "/")
 _CIR_HREF = re.compile(r'\bdata-cir-href="([^"]*)"')
+_CIR_CONTENT = re.compile(r'content="[^"]*" data-cir-content="([^"]*)"')  # a share picture of its own for this edition
 _SAID = re.compile(r'<meta (?:name="description"|property="og:(?:title|description|site_name)") content="([^"]*)"')
 
 
@@ -88,6 +89,8 @@ def page(html: str, rel: str) -> str:
                 skip = tag
             elif tag == "svg" and 'class="ips-qr"' in part:  # a payment code (pages_support): a drawing, never words
                 skip = tag
+            if tag == "meta" and "data-cir-content=" in part:
+                part = _CIR_CONTENT.sub(r'content="\1"', part)
             if tag == "meta" and _SAID.match(part):
                 part = part.replace(_SAID.match(part).group(1), cyr(_SAID.match(part).group(1)))
             elif tag == "html":
