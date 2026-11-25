@@ -20,7 +20,7 @@ that file in the same commit, and here only when a line below no longer holds.
 ## What must not change without the maintainer
 
 - **Every speaker by one rule** (principle 1): nobody followed, singled out or ranked by preference.
-- **Nothing from elsewhere on the page** but what principle 5 names: the counter of visits, the player only on a click,
+- **Nothing from elsewhere on the page** but what principle 5 names: the counter of visits, the player only on a click (and by itself for a link to a speech, 25 Nov 2026),
   notifications and the mail only to who asks.
 - **The automatic transcript is never a quote** and is off the page, but for the line under the picture, which says
   it may err. A correction mends spellings only. No step shows the transcript's wording (the sentences of a measure and
