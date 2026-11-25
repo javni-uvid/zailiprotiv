@@ -328,9 +328,9 @@ def whole_names(speeches) -> dict[str, str]:
     full: dict[str, set] = {}
     alone = set()
     for s in speeches:
-        if s.get("chair"):
-            continue
         words = s["speaker"].split()
+        if s.get("chair") or not words:  # a part the notes give no heading (transcripts.mended) names nobody
+            continue
         if len(words) == 1:
             alone.add(s["speaker"])
         else:
