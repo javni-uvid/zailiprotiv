@@ -268,3 +268,9 @@ records and recordings stays here:
   now: Vjerica Radeta's would have left her list's sum. 25 Nov waits: its recording is not written down.
 - **17 and 19 Nov written again for one speaker's list** (25 Nov 2026, the conductor): only Vjerica Radeta's list changes
   (none before, the list of MPs' now), and the lists' sums with it; every turn, name and time is the same.
+- **18 Nov written again: "Петар Митев" is Petar Mitov** (25 Nov 2026, the conductor). The notes write it so once
+  (54098/00138), Митов everywhere else; the list of MPs has only Mitov; the broadcast's caption inside that turn (16:30:20)
+  is his. No entry by hand: `govor.nearest`, the rule for every name the notes misspell (the one listed name near it,
+  clearly nearer than any other; its test has this very name), gives the turn to him; that one turn changes. Not put into
+  `data/mp_aliases.json`: the notes' page in Latin would then write "Petar Mitov" over the speech, and the notes stay as
+  the Assembly wrote them. Until then the notes' own count of speeches (`debates.resolve`) gives that one speech to nobody.
