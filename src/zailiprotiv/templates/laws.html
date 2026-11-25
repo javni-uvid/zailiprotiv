@@ -7,7 +7,7 @@
 <nav class="subtabs law-kinds three" aria-label="Usvojeni, u proceduri ili po oblastima"><a href="zakoni.html" aria-current="page">Usvojeni</a><a href="u-proceduri.html">U proceduri</a><a href="oblasti.html">Oblasti</a></nav>
 {{ tabs(convs, conv, "page") }}
 {% if lead %}
-<section class="lead-laws" aria-label="Najviše podeljeni u ovom sazivu">
+<section class="lead-laws wide-li" aria-label="Najviše podeljeni u ovom sazivu">
   <h2>Zakoni koji su najviše podelili ovaj saziv</h2>
   <ol>
   {% for it in lead %}<li><a href="zakon/{{ it.slug }}.html">{{ chamber(it.final.counts) }}<span class="lead-law">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</span></a><span class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}</span></li>
@@ -32,6 +32,16 @@
   </div>
   </details>
 </div>
+{# On a phone the field comes first: the same law on top, after it in the document too, so that the keyboard goes as the eye. #}
+{% if lead %}
+<section class="lead-laws phone-list" data-pagefind-ignore aria-label="Najviše podeljeni u ovom sazivu">
+  <h2>Zakoni koji su najviše podelili ovaj saziv</h2>
+  <ol>
+  {% for it in lead[:1] %}<li><a href="zakon/{{ it.slug }}.html">{{ chamber(it.final.counts) }}<span class="lead-law">{% if it.aka %}{{ it.aka[0][:1]|upper }}{{ it.aka[0][1:] }}{% else %}{{ it.law.short }}{% endif %}</span></a><span class="row-meta">{{ it.law.passed|day }}{% if it.urgent %} · hitan postupak{% endif %}</span></li>
+  {% endfor %}
+  </ol>
+</section>
+{% endif %}
 <p id="f-n" class="row-meta" aria-live="polite"></p>
 <ol class="rows" id="f-rows" data-more="30">
 {% for it in items %}

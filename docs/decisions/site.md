@@ -294,6 +294,10 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   "Varnice": the lead at the foot, its four numbers without boxes. "Nedelje": four numbers in a row, the newest year
   open. "Sednice": the new convocation's days without a box. Buttons of 44 px. A wide screen is as it was (pixel by
   pixel); what opens is a <details> and works without the script.
+- **What the second round moved on a phone stands so in the document** (25 Nov 2026, the conductor: sight and order must
+  agree, rule 9). "Zakoni", the fifteenth's MPs and an MP's quote had been moved by the stylesheet's `order`, so the keyboard
+  went another way than the eye; each now stands twice in the page, once for each width (`.wide-li`, `.phone-list`), in its
+  place. The home page's parts are still put in order by the stylesheet on a phone, as since 13 Nov.
 
 ## Design rules
 

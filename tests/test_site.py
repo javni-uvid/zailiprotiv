@@ -1165,3 +1165,18 @@ def test_the_convocations_row_on_a_phone_has_the_tabs_own_links():
             assert '<nav class="tabs"' not in f.read_text(encoding="utf-8"), f.name
     js = (here.parent / "static/site.js").read_text(encoding="utf-8")
     assert 't.querySelector("details:not(.conv-row)")' in js  # arriving at it does not open it
+
+
+def test_a_phones_order_is_the_documents():
+    """25 Nov 2026 (rule 9): the second round's pages move nothing by the stylesheet's `order` that the keyboard reaches."""
+    from pathlib import Path
+    here = Path(site.__file__).parent
+    css = (here / "static/style.css").read_text(encoding="utf-8")
+    second = css[css.index("/* Lighter on a phone, the second round (25 Nov 2026)"):]
+    assert not re.search(r"[^-\w]order: ?-?\d", second)
+    laws = (here / "templates/laws.html").read_text(encoding="utf-8")
+    assert laws.index("lead-laws wide-li") < laws.index('data-filter="f-rows"') < laws.index("lead-laws phone-list") < laws.index('id="f-n"')
+    members = (here / "templates/members.html").read_text(encoding="utf-8")
+    assert members.index("scroll wide-li") < members.index('id="f-rows"') < members.index("scroll phone-list")
+    mp = (here / "templates/mp.html").read_text(encoding="utf-8")
+    assert mp.index("mp-line wide-li") < mp.index("offices_part(offices") < mp.index("mp-line phone-list")
