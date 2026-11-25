@@ -2676,6 +2676,79 @@ def test_the_speaker_by_the_chairs_words_and_by_the_voice(tmp_path, monkeypatch)
     assert glas.stretches is komadi.stretches and ko.stretches is komadi.stretches and glas.WIN == komadi.WIN == ko.WIN
 
 
+def _words_turn(tmp_path, monkeypatch, slug="petrovic-petar", windows=50, first=None, samples=(), n=50):
+    """A turn the chair's words gave `slug`, `windows` windows on (first: one voice for all of them), with samples known."""
+    import threading as th
+    np = pytest.importorskip("numpy")
+    from uzivo import config, glas
+    monkeypatch.setattr(config, "SOUND_PATH", str(tmp_path))
+    now = 1795100000.0
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    t.observe(None, now=now)
+    person = next(p for p in ROSTER.people if p.slug == slug)
+    t.heard(person, "prepis", now, now)
+    for i in range(0, 200, 5):
+        t.observe(None, now=now + i)
+    path = tmp_path / "g.npz"
+    path.unlink(missing_ok=True)
+    if samples:
+        np.savez_compressed(path, slugs=np.array([s for s, _ in samples]), vecs=np.stack([v for _, v in samples]),
+                            counts=np.array([n] * len(samples)))
+    L = glas.Listener(t, th.Event(), embed=lambda x: first, path=path)
+    L.t = [now + 1.5 * i for i in range(windows)]
+    L.f = [first] * windows
+    return t, L, now
+
+
+def test_a_name_the_voice_is_against_is_taken_back(tmp_path, monkeypatch):
+    """25 Nov 2026: Balać's speech stood under Vučić's name, Drašković's under Bakić's (17-19 Nov): the voice of the turn's
+    first minute is surely another's, or unlike the named MP's known one, and the turn is no turn."""
+    np = pytest.importorskip("numpy")
+    a, b = np.eye(512, dtype=np.float32)[:2]
+    c = ((a + b) / np.linalg.norm(a + b)).astype(np.float32)
+    for said, known in ((b, [("petrovic-petar", a)]), (b, [("markovic-marko", b)])):  # unlike his; surely another's
+        t, L, now = _words_turn(tmp_path, monkeypatch, first=said, samples=known)
+        L.changed()
+        assert t.turns == [] and not t.open and t.status == "nepoznato"
+    for said, known in ((a, [("petrovic-petar", a)]), (c, [("petrovic-petar", a)]), (b, [])):  # his; alike enough (0.71); not known
+        t, L, now = _words_turn(tmp_path, monkeypatch, first=said, samples=known)
+        L.changed()
+        assert t.open and len(t.turns) == 1
+    t, L, now = _words_turn(tmp_path, monkeypatch, first=b, samples=[("petrovic-petar", a)], windows=15)  # 22 s: too soon to say
+    L.changed()
+    assert t.open
+    # a caption that stays is not judged by the voice
+    t, L, now = _words_turn(tmp_path, monkeypatch, first=b, samples=[("petrovic-petar", a)])
+    t.turns[-1].pop("izvor")
+    L.changed()
+    assert t.open and len(t.turns) == 1
+
+
+def test_the_days_own_voice_is_learnt_from_the_chairs_words(tmp_path, monkeypatch):
+    """25 Nov 2026, 17 Nov's speeches: an MP the chair named and who spoke a minute is known by voice for the rest of the
+    day, but the turn it was learnt from is not judged by it."""
+    np = pytest.importorskip("numpy")
+    a, b = np.eye(512, dtype=np.float32)[:2]
+    t, L, now = _words_turn(tmp_path, monkeypatch, first=a, samples=[("markovic-marko", b)], windows=70)
+    L.changed()
+    assert set(L.today) == {"petrovic-petar"}
+    assert set(L.refs()) == {"markovic-marko"}  # not of the turn that is on
+    t.unheard(now + 120)
+    assert set(L.refs()) == {"markovic-marko", "petrovic-petar"} and float(L.refs()["petrovic-petar"] @ a) > 0.99
+    assert "petrovic-petar" not in L.voices.sums  # only for the day, in memory
+    t.day = "2026-11-26"
+    t2, L2, now = _words_turn(tmp_path, monkeypatch, first=a, samples=[("petrovic-petar", a)], windows=70)
+    L2.changed()
+    assert L2.today == {}  # known already
+    # and never of a presiding officer
+    from uzivo import config
+    t3, L3, now = _words_turn(tmp_path, monkeypatch, first=a, windows=70)
+    monkeypatch.setattr(config, "VOICE_SKIP", {"petrovic-petar"})
+    L3.changed()
+    assert L3.today == {}
+
+
 def test_listening_live_a_playlist_of_the_broadcasts_own_sound(tmp_path, monkeypatch):
     """22 Nov 2026, the maintainer's trial: each fetched segment's sound into a live HLS playlist of our own, copied
     as it is with its timestamps, the last WINDOW kept, a gap marked; a player reads it as one stream."""
@@ -2757,11 +2830,11 @@ def test_the_floor_given_now_and_the_chair_by_voice(tmp_path, monkeypatch):
     a, b = np.zeros(512, np.float32), np.zeros(512, np.float32)
     a[0], b[1] = 1, 1
     L = glas.Listener(t, th.Event(), embed=lambda x: a, path=tmp_path / "none.npz")
-    L.t = [now + 1 + 1.5 * i for i in range(30)]  # 45 s: his voice (a) for 22 s, then another (b)
-    L.f = [a if i < 15 else b for i in range(30)]
+    L.t = [now + 1 + 1.5 * i for i in range(50)]  # 75 s: his voice (a) for 30 s, then another (b): both sides of a cut need 20 s
+    L.f = [a if i < 20 else b for i in range(50)]
     L.changed()
-    snap = t.snapshot(now + 47)
-    assert snap["stanje"] != "govori" and t.turns_now()[-1]["seen"] <= now + 1 + 1.5 * 16
+    snap = t.snapshot(now + 77)
+    assert snap["stanje"] != "govori" and t.turns_now()[-1]["seen"] <= now + 1 + 1.5 * 22
     # the chair's voice: a presiding officer's, said on top
     monkeypatch.setattr(config, "VOICE_SKIP", {"markovic-marko"})
     np.savez_compressed(tmp_path / "v.npz", slugs=np.array(["markovic-marko"]), vecs=np.stack([b]), counts=np.array([30]))
