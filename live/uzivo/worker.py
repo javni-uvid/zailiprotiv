@@ -50,6 +50,7 @@ class RosterKeeper:
                         use(json.loads(mreza.site(url)))
                     except Exception as exc:  # the last good copy stays
                         log.warning("%s not fetched (%s)", url, exc)
+                    self.tracker.looped = time.time()  # slow, when the site is, but not standing (cuvar.py)
             if self.tracker:
                 self.tracker.roster = self.roster
         if self.tracker and self.tracker.facts:  # the sitting convocation's MPs first, when a caption is matched
@@ -76,7 +77,9 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
         proc = None
         tracker.looped = time.time()
         try:
-            source, headers = resolve_input()
+            def turned() -> None:
+                tracker.looped = time.time()
+            source, headers = resolve_input(turned)
             proc = start_ffmpeg(source, headers)
             log.info("frames started: %s", VIDEO.get("id", "") or source[:60])
             if bell:

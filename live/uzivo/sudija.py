@@ -31,7 +31,7 @@ import unicodedata
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import config
+from . import config, cuvar
 from .state_base import SAID_LEAD, _write, speakers_own
 
 log = logging.getLogger("uzivo.sudija")
@@ -454,7 +454,8 @@ class Judge(threading.Thread):
         if fresh and (now - self.last_call >= EVERY or not live):
             self._events(fresh, rows, turns)
             self.last_call = now
-        self._summaries(snap, rows, turns, now, live)
+        with cuvar.making("the day's summary"):
+            self._summaries(snap, rows, turns, now, live)
         self._tell(now)
 
     def _tell(self, now: float) -> None:

@@ -3,6 +3,7 @@
 !live/requirements.txt
 !live/constraints.txt
 !live/ulaz.sh
+!live/deno.sh
 !live/uzivo
 !src/zailiprotiv/static/fonts
 !src/zailiprotiv/og

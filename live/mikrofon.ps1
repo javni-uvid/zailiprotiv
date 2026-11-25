@@ -94,7 +94,7 @@ $Parts = @{
 $OnlyPage = @("deljenje", "main", "mejl", "mere", "page", "picture", "pretplata", "steps", "texts")
 $OnlyMeasuring = @("dnevnik", "glas", "komadi", "merenje", "ocr", "sada", "worker")
 $PageFiles = @("live/uzivo/static", "src/zailiprotiv/static/fonts", "src/zailiprotiv/og", "src/zailiprotiv/templates/mikrofon.js", "src/zailiprotiv/templates/mikrofon.css")
-$ImageFiles = @("live/uzivo", "live/Dockerfile", "live/requirements.txt", "live/constraints.txt", "live/ulaz.sh", "live/docker-compose.yml", "src/zailiprotiv/cyrillic.py", "data/settings.json")
+$ImageFiles = @("live/uzivo", "live/Dockerfile", "live/requirements.txt", "live/constraints.txt", "live/ulaz.sh", "live/deno.sh", "live/docker-compose.yml", "src/zailiprotiv/cyrillic.py", "data/settings.json")
 
 # Whether the live service is two containers: the measuring has one of its own, running or not.
 function Test-Two {
