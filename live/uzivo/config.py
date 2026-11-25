@@ -139,6 +139,12 @@ LISTEN_PATH = os.environ.get("LISTEN_PATH", "/tmp/uzivo/slusaj")  # the live sou
 # the key. Off until the maintainer opens it (22 Nov 2026: a trial behind the key first).
 LISTEN_PUBLIC = os.environ.get("SLUSAJ_JAVNO", "0").strip() == "1"
 
+# Which half of the service this process is (25 Nov 2026): "merenje" reads the broadcast and writes what is kept
+# (uzivo/merenje.py, no web server), "strana" serves the page from what is kept (main.py with citac.Reader) and sends the
+# mail; empty: both in one, as before.
+ROLE = os.environ.get("ULOGA", "").strip()
+if ROLE not in ("", "merenje", "strana"):
+    raise SystemExit(f"ULOGA={ROLE!r}: merenje, strana or empty")
 TZ = os.environ.get("TZ_NAME", "Europe/Belgrade")
 VERSION = os.environ.get("VERZIJA", "").strip()  # the commit the image was built from (mikrofon.ps1; Dockerfile)
 FRAME_PATH = os.environ.get("FRAME_PATH", "/tmp/uzivo/frame.jpg")

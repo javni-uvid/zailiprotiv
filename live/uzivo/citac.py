@@ -24,6 +24,15 @@ BEAT_OLD = 30.0  # seconds with no heartbeat (one comes every 5): the measuring 
 LOOP_OLD = 300.0  # seconds its loop may stand: between sittings a look for a broadcast asks yt-dlp up to four times
 
 
+def alive(m: dict, now: float | None = None) -> bool:
+    """Whether the measuring that wrote the moment `m` is there and looking."""
+    now = time.time() if now is None else now
+    try:
+        return now - float(m["t"]) <= BEAT_OLD and now - float(m["petlja"]) <= LOOP_OLD
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
 class Files:
     """JSON files read again only when they have changed."""
 
@@ -73,13 +82,8 @@ class Reader(Tracker):
 
     def alive(self, now: float | None = None) -> bool:
         """Whether the measuring is there and looking: what the page says of this moment may be believed."""
-        now = time.time() if now is None else now
         with self._lock:
-            m = self.files.get(self.base / "sada.json", {})[0]
-        try:
-            return now - float(m["t"]) <= BEAT_OLD and now - float(m["petlja"]) <= LOOP_OLD
-        except (KeyError, TypeError, ValueError):
-            return False
+            return alive(self.files.get(self.base / "sada.json", {})[0], now)
 
     def refresh(self, now: float | None = None) -> None:
         """The files that have changed, taken up."""
