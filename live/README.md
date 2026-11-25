@@ -48,6 +48,11 @@ the browser lets a page sound without a press, else on its button; the link's ca
 (`DELI_IME=0`: no name) and `/govor.png`. A speech of an earlier day leads to the site's page of that day, if the site
 lists it (`dani` in `mikrofon-cekanje.json`), and anything else to the page. The edge keeps `/govor/…` three seconds, as `/`.
 
+**After the broadcast** (25 Nov 2026; `prenosi.py`), until the archive has a file of the day, its speeches' and steps' times
+play the broadcast's own YouTube video, for as long as that is public: asked of YouTube's oEmbed at most once in ten minutes, and no
+link on any answer but yes. `/data/prenosi/<day>.json` keeps the video, when its first second was (`pocetak`) and what was read of
+it (`od`, `do`), all as seconds of the clock.
+
 **Between sittings** the service looks for a broadcast once a minute, quietly (one line in the log, not one per
 look; yt-dlp's own "not live" errors are kept out of it), and starts reading within a minute of the next sitting
 going live. Each sitting day is a new YouTube video, so the broadcaster's page is read afresh every time; `YOUTUBE_URL`
@@ -168,6 +173,7 @@ uzivo/
   caption.py    the two lines; who the name line names (no OCR: tested)
   names.py      both scripts; the site's list of MPs and matching to it (tested)
   state.py      the current speaker and today's turns (tested)
+  prenosi.py    the day on YouTube after its broadcast, while the video is public (/data/prenosi/)
   sada.py       the moment and two clocks in /data/sada.json, for the page's own process; one writer of /data (tested)
   citac.py      the same state read from the kept files, for the page's own process (ULOGA=strana; tested)
   merenje.py    the measuring's threads, in the page's process or in its own (ULOGA=merenje); its health check

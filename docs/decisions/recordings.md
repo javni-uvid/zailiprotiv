@@ -57,6 +57,7 @@ records and recordings stays here:
   begins in the day was found by lining up a caption's first frame in the file and in the video. The live record's
   links (`video`, YouTube) will go private the same way: moving them to the archive's files is to do, and
   `recording_links` stays off until then.
+  (Changed 25 Nov 2026 for the time until the archive's file: see the end of this file.)
 - **The archive's files placed by their captions** (18 Nov 2026, the maintainer's request; `arhiva.py`, run by
   **votes** each hour): for every new file in `videos.json` of a day with a live record, ffmpeg reads a frame every
   30 s (over the network, only those bytes), the live page's own OCR reads the caption, and the start that puts the
@@ -235,3 +236,15 @@ records and recordings stays here:
   Petar Mitov: `govor` run again on 18 Nov would place him, not done here). Of all other days' voices: 182 to 157 s.
 - **A day's recording as sound only** (22 Nov 2026): the day pages (`govornici/<date>`) have "Slušaj samo zvuk" and
   the lock screen's player with who speaks, as the live page (`live-sound.md`).
+- **The last day's broadcast can be played until the archive's file, while its video is public** (25 Nov 2026, the maintainer, when the
+  times had lost their links with the broadcast's end: "Trebamo ostaviti i opciju da klikom na vreme sam odeš na tu poziciju"; on
+  the proposal: "Može"). It changes the rule of 18 Nov ("The live broadcast's YouTube video goes private") and of 24 Nov in
+  `live-page.md` ("Gone with the broadcast"): measured on 25 Nov, that day's video and 24 Nov's were public, 18 and 19 Nov's
+  were not (403, 404), so the rule had dropped links that would have worked for a day. `live/uzivo/prenosi.py`, a thread of
+  the measuring: keeps per day the video, when its first second was and from when to when it was read
+  (`/data/prenosi/<day>.json`, written whole; a clock that moved by over 20 s is a new row, so a moment is never counted
+  across a stop), and, only with no broadcast on and no file of the archive for the day shown, asks YouTube's oEmbed whether the video
+  is public: one question in ten minutes at most, kept over a restart. Anything but a clear yes drops the links until the next yes; an answer
+  nobody renews is dropped too. With one file of the archive for the day, the archive's places alone, as before. The page's process
+  has it from `sada.json` (`citac`). The turns' times, the steps' times, the player's button and a link to a speech take the
+  same place; nothing loads before a press but for a link to a speech. A wrong or missing file leaves the page with no links.

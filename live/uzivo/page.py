@@ -14,6 +14,7 @@ from zoneinfo import ZoneInfo
 from . import config
 from .deljenje import turn_at
 from .names import cyrillic, given_first
+from .prenosi import place
 from .steps import steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
 
@@ -121,10 +122,15 @@ def _moment(snap: dict, at: float, text: str, cyr: bool) -> str:
         href, data = f'https://www.youtube.com/watch?v={on["video"]}&t={sec}s', f'data-yt="{escape(on["video"])}"'
     else:
         part = next((p for p in snap.get("datoteke") or [] if p["od"] <= at < p["od"] + p["trajanje"]), None)
-        if not part:
+        still = None if part else place(snap.get("otvoreno") or [], at)  # the broadcast over, its video still public
+        if still:
+            sec = still["snimak"]
+            href, data = f'https://www.youtube.com/watch?v={still["video"]}&t={sec}s', f'data-yt="{escape(still["video"])}"'
+        elif not part:
             return f'<span class="time">{escape(text)}</span>'
-        sec = int(at - part["od"])
-        href, data = f'{part["url"]}#t={sec}', f'data-file="{escape(part["url"])}"'
+        else:
+            sec = int(at - part["od"])
+            href, data = f'{part["url"]}#t={sec}', f'data-file="{escape(part["url"])}"'
     return f'<a class="time" href="{escape(href)}" {data} data-t="{sec}" title="{escape(_t("recording_title", cyr))}">{escape(text)}</a>'
 
 
@@ -1310,6 +1316,14 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None,
         onair = ""
         parts = snap.get("datoteke") or []
         first = next((d for d in reversed(snap["danas"]) if d.get("datoteka") and d.get("snimak") is not None), None)
+        still = next((d for d in reversed(snap["danas"]) if d.get("video") and d.get("snimak") is not None), None)
+        if not parts and not first and still and snap.get("otvoreno"):
+            # the broadcast is over and the archive has no file yet: its video, from the day's first turn (25 Nov 2026)
+            button = (f'<button type="button" class="play" data-yt="{escape(still["video"])}" data-t="{int(still["snimak"])}">'
+                      f'▶ {t("play_day")}</button>')
+            note = "" if speech else t("yt_note")
+            return (f'<section class="player">{_stage(button, onair, cyr)}'
+                    + (f'<p class="meta" data-nosnippet>{note}</p>' if note else "") + "</section>")
         if not parts and not first:
             return ""
         url, at = (parts[0]["url"], 0) if parts else (first["datoteka"], int(first["snimak"]))
