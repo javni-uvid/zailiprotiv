@@ -341,3 +341,24 @@ records and recordings stays here:
   24 Nov Vučić +90, Radeta +9, Kokanović +5; 25 Nov Vučić +11, Radeta +10, Đukanović -2 by rounding). Every old link to a
   joined turn's later part now opens the same speaker, from the turn's beginning. The 120 s limit itself is still
   arbitrary.
+- **A beginning Whisper missed, from the speaker's timer in the caption: hand readings for now** (26 Nov 2026, the conductor;
+  `govor.timer_starts`, `data/15/merac.json`). Where the recording's words have a hole at a speech's beginning, the speech
+  begins at the first word heard after it (above), so the seconds Whisper missed counted for nobody. The broadcast's caption
+  carries the speaker's own running timer (top right): a frame's second less the timer is the speech's beginning, from the
+  source. Of the 7 speeches of 17-25 Nov whose start follows a real hole, it was read for 4 (the 24 Nov 12:21 speech has no
+  caption in six frames, and two holes of 2 words were left), **by eye, by a worker, on two frames or more from the
+  archive** (ranged reads, no whole file), as the files placed by hand are (`"rucno"`). The readings: Kamberi 0:33 at 6785
+  and 0:39 at 6791 (began 6752; our start 6777), Vučić 18 Nov 0:43 and 0:49 (2761; 2796), Vučić 19 Nov 0:27 and 0:33
+  (1831; 1869), Vučić 24 Nov 18:44 0:24, 0:30 and 0:38 (1185; 1233). **Fric's, a control with no hole, matched our first
+  word to the second** (0:08 at 4101, 0:14 at 4107: 4093). A start is taken only when the caption's name is the notes'
+  speaker and two frames or more agree within a second; it only moves earlier, and **never before the last word heard
+  before it**: a timer may start before the hole, as the floor is given while the chair still speaks (19 Nov: 9 s of the
+  chair's would have gone to Vučić) or run on from the same speaker's speech just before (24 Nov: 20 s of his reply). So
+  19 Nov's start is the hole's beginning (1840), and 24 Nov's changes nothing on the page, being inside his turn. The pages:
+  Kamberi −24 s, Vučić −35 s (18 Nov) and −29 s (19 Nov) at their beginnings, 88 s returned (89 less a second of rounding);
+  nothing else moves, and the old links open the same speakers.
+  - **Next, on the runner** (not started): for each such hole, the step that places the archive's files (`arhiva.py`, which
+    has ffmpeg and Tesseract there) reads two frames a few seconds after the first word heard, the caption's name by the
+    live page's OCR and the timer by a digits-only read, and writes them into `merac.json` (`"procitao": "OCR"`); `govor`
+    applies them by the same safeguards, and a reading by hand is kept over one by OCR.
+

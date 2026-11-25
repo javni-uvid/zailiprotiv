@@ -106,6 +106,29 @@ def test_a_piece_of_the_same_speaker_with_no_place_does_not_end_the_turn():
     assert len(govor.day([a, c, other, dict(c, key="4"), b], [{"url": F, "od": 0}], who)) == 2
 
 
+def test_a_beginning_from_the_speakers_timer_with_its_safeguards():
+    """26 Nov 2026: Whisper missed Kamberi's first words (heard nothing from 6749 to 6777); his caption's timer read
+    0:33 at 6785 and 0:39 at 6791, so he began at 6752. A name that is another's, frames that disagree, a single frame,
+    a frame with nothing, or a timer from before the hole move nothing past the last word heard before it."""
+    got = [("hvala", F, 6740.0), ("izvolite", F, 6749.0), ("i", F, 6777.0), ("ambicijom", F, 6778.0)]
+    def speech():
+        return [{"key": "k", "speaker": "ШАИП КАМБЕРИ", "datoteka": F, "od": 6777.0, "do": 7000.0, "sidra": 9}]
+    def read(**kw):
+        return [{"beleske": "k", "datoteka": F, "ime": "Шаип Камбери",
+                 "okviri": [{"sek": 6785, "merac": "0:33"}, {"sek": 6791, "merac": "0:39"}], **kw}]
+    assert govor.timer_starts(speech(), got, read())[0]["od"] == 6752
+    assert govor.timer_starts(speech(), got, read(ime="Александар Вучић"))[0]["od"] == 6777  # another's name
+    two = [{"sek": 6785, "merac": "0:33"}, {"sek": 6791, "merac": "0:29"}]
+    assert govor.timer_starts(speech(), got, read(okviri=two))[0]["od"] == 6777  # the frames disagree
+    one = [{"sek": 6785, "merac": "0:33"}, {"sek": 6791, "merac": None}]
+    assert govor.timer_starts(speech(), got, read(okviri=one))[0]["od"] == 6777  # one frame read, one with nothing
+    early = [{"sek": 6785, "merac": "0:53"}, {"sek": 6791, "merac": "0:59"}]  # 6732: before the hole
+    assert govor.timer_starts(speech(), got, read(okviri=early))[0]["od"] == 6749  # clamped to the last word heard
+    late = [{"sek": 6785, "merac": "0:03"}, {"sek": 6791, "merac": "0:09"}]
+    assert govor.timer_starts(speech(), got, read(okviri=late))[0]["od"] == 6777  # only ever earlier
+    assert govor.timer_starts(speech(), got, read(datoteka="u/other.mp4"))[0]["od"] == 6777  # another file
+
+
 def test_a_days_part_the_archive_holds_before_its_page_lists_it():
     from zailiprotiv import videos
     base = "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910"
