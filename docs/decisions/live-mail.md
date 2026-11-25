@@ -158,3 +158,14 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   twice counts twice), nobody gone between the mails of 24 and 25 Nov, 33 devices with notifications; 7.3 sign-ups per
   1,000 pages opened on 24 Nov, 5.3 on the 25th. Not kept, so not counted: the day of a leaving, and the sign-ups never
   confirmed (deleted after 48 hours). Nothing new is kept for it.
+- **An address Cloudflare refuses does not keep the day from its end** (25 Nov 2026, the conductor's task; found reading the
+  code: one such address, and every click said "Nije završeno" and tried it again). A row refused with
+  `E_RECIPIENT_SUPPRESSED` (Cloudflare's list: a bounce, a complaint, an entry by hand) is put in the day's `odbijeni`, by
+  the counter's row id, and is not tried again that day; it stays in `greske` too, and the click says some were refused.
+  Their documentation marks no code as lasting, and the answer gives neither the reason nor the end (a full mailbox 24
+  hours, other bounces 7 days, no such mailbox or a complaint for good). That code alone speaks of the address, so it
+  alone counts. The rest are tried again, `E_DELIVERY_FAILED` (a rejection or a failure on the way, not told apart) and
+  `E_RECIPIENT_NOT_ALLOWED`, `E_RECIPIENT_PLAN_RESTRICTED` (our account's settings) among them. The same code also comes
+  when the sender's own address is refused, then for everybody: so a refusal counts only while more have the day's mail
+  than are refused it. **The row is not deleted**: the next day's mail tries it once, as anybody's. Whether a row refused
+  for long is to be deleted is the maintainer's to decide.

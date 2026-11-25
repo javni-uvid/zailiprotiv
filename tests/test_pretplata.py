@@ -91,7 +91,7 @@ def outbox(tmp_path, monkeypatch):
 
     class Box:
         got: list = []
-        fail = None  # how the next calls fail: called with the batch's number and messages
+        fail = None  # how the next calls fail: called with the batch's number; the places that fail, or {place: code}
         calls = 0
         mailer = pretplata.Mailer(tmp_path, FakeMail())
 
@@ -106,7 +106,8 @@ def outbox(tmp_path, monkeypatch):
         box.calls += 1
         wrong = (box.fail(box.calls) if box.fail else None) or []
         box.got += [m["to"] for i, m in enumerate(body["poruke"]) if i not in wrong]
-        return {"poslato": len(body["poruke"]) - len(wrong), "greske": [{"i": i, "code": "X"} for i in wrong]}
+        codes = wrong if isinstance(wrong, dict) else dict.fromkeys(wrong, "X")
+        return {"poslato": len(body["poruke"]) - len(wrong), "greske": [{"i": i, "code": c} for i, c in codes.items()]}
 
     monkeypatch.setattr(pretplata, "_call", call)
     return box
@@ -151,6 +152,50 @@ def test_a_batch_the_counter_refused_and_a_message_that_failed_are_sent_on_the_n
     assert sorted(outbox.got) == sorted(f"c{i}@primer.rs" for i in range(50))
     kept = (outbox.mailer.folder / f"{DAY}.json").read_text(encoding="utf-8")
     assert "@" not in kept  # readers are kept by the counter's row, never by address
+
+
+def kept_of(outbox) -> dict:
+    return json.loads((outbox.mailer.folder / f"{DAY}.json").read_text(encoding="utf-8"))
+
+
+def test_all_sent_ends_the_day_with_nobody_refused(outbox):
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("ok", 50)
+    kept = kept_of(outbox)
+    assert kept["zavrseno"] and kept["odbijeni"] == [] and kept["greske"] == []
+
+
+def test_an_address_cloudflare_refuses_does_not_keep_the_day_from_its_end(outbox):
+    outbox.fail = lambda n: {3: "E_RECIPIENT_SUPPRESSED"} if n == 1 else None
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("odbijeni", 49)
+    kept = kept_of(outbox)
+    assert kept["zavrseno"] and len(kept["odbijeni"]) == 1 and len(kept["poslati"]) == 49
+    assert [g["id"] for g in kept["greske"]] == kept["odbijeni"] and "@" not in json.dumps(kept)
+    calls = outbox.calls
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("vec", 49) and outbox.calls == calls
+    assert "odbija" in pretplata.page_done("odbijeni", 49) and "Nije završeno" not in pretplata.page_done("odbijeni", 49)
+
+
+@pytest.mark.parametrize("code", ["E_DELIVERY_FAILED", "E_RATE_LIMIT_EXCEEDED", "E_DAILY_LIMIT_EXCEEDED",
+                                  "E_INTERNAL_SERVER_ERROR", "E_RECIPIENT_NOT_ALLOWED", "X"])
+def test_an_error_that_may_pass_is_tried_again_and_a_refused_address_beside_it_is_not(outbox, code):
+    outbox.fail = lambda n: {3: "E_RECIPIENT_SUPPRESSED", 5: code} if n == 1 else None
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("deo", 48)
+    first = kept_of(outbox)
+    assert "zavrseno" not in first and len(first["odbijeni"]) == 1
+    outbox.fail = None
+    outbox.mailer = pretplata.Mailer(outbox.mailer.folder, FakeMail())  # a restart in between changes nothing
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("odbijeni", 49)
+    last = kept_of(outbox)
+    assert last["zavrseno"] and last["odbijeni"] == first["odbijeni"] and len(outbox.got) == len(set(outbox.got)) == 49
+    assert [g["id"] for g in last["greske"]] == last["odbijeni"]  # the refused stay listed over a later click
+
+
+def test_everybody_refused_is_the_senders_fault_and_the_day_is_not_ended(outbox):
+    outbox.fail = lambda n: dict.fromkeys(range(20 if n < 3 else 10), "E_RECIPIENT_SUPPRESSED")
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("deo", 0)
+    assert "zavrseno" not in kept_of(outbox) and kept_of(outbox)["odbijeni"] == []
+    outbox.fail = None
+    assert outbox.mailer.to_all(DAY, pretplata.link_key(DAY)) == ("ok", 50)
 
 
 def test_the_maintainers_mail_that_did_not_go_is_tried_again(outbox):

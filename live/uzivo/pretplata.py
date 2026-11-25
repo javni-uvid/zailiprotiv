@@ -30,6 +30,10 @@ from .state_base import _write
 log = logging.getLogger("uzivo.pretplata")
 COUNTER = "https://glasovi.zailiprotiv.rs"
 BATCH = 20
+# What Cloudflare answers for an address it will not send to: a bounce, a complaint or an entry by hand put it on the
+# list of those it refuses (Email Service, "Suppressions"). Only this code is about the reader's address: the others
+# are the account's, the sender's, a quota's or the message's, or may pass (E_DELIVERY_FAILED), and are tried again.
+REFUSED = {"E_RECIPIENT_SUPPRESSED"}
 TZ = ZoneInfo(config.TZ)
 _N = 0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551  # the order of P-256
 
@@ -100,7 +104,8 @@ class Mailer:
     What went is kept per reader (the counter's row id, never the address), written before and after every batch, so
     that a break in the middle loses nobody and nobody gets the day twice: a batch is "nesigurni" while its call is
     out, then each of its readers is sent or failed. The next click goes on with those not yet sent; the uncertain
-    (at most one batch) are never sent again (23 Nov 2026)."""
+    (at most one batch) are never sent again (23 Nov 2026). Nor, that day, are those Cloudflare refuses ("odbijeni", by
+    the row id): they do not keep the day from its end (25 Nov 2026)."""
 
     def __init__(self, folder: Path, build):
         self.folder = Path(folder)  # /data/mejl: what went, by day
@@ -194,8 +199,10 @@ class Mailer:
             log.warning("mejl %s: spisak nije stigao (%s)", day, exc)
             return "brojac", len(done)
         unsure = list(state.get("nesigurni") or [])
+        refused = list(state.get("odbijeni") or [])
+        settled = {*done, *unsure, *refused}
         waiting, seen = [], set()
-        for p in sorted(people, key=lambda p: p["id"] not in done and p["id"] not in unsure):  # those who have it first
+        for p in sorted(people, key=lambda p: p["id"] not in settled):  # those settled first
             try:
                 to = unseal(config.MAIL_KEY, p["adresa"])
             except Exception:  # noqa: BLE001 — sealed for another key: never sent, never shown
@@ -203,9 +210,10 @@ class Mailer:
             if to.lower() in seen:
                 continue
             seen.add(to.lower())
-            if p["id"] not in done and p["id"] not in unsure:
+            if p["id"] not in settled:
                 waiting.append((p, to))
         state.setdefault("svima", datetime.now(TZ).isoformat())
+        earlier = [g for g in state.get("greske") or [] if g.get("id") in refused]
         failed: list[dict] = []
         broken = False
         for i in range(0, len(waiting), BATCH):
@@ -228,14 +236,20 @@ class Mailer:
             bad = {w.get("i") for w in wrong}
             failed += [{"id": ids[w["i"]], "code": str(w.get("code", ""))} for w in wrong if w.get("i") in range(len(ids))]
             done += [x for j, x in enumerate(ids) if j not in bad]
-        state.update(poslati=done, nesigurni=unsure, greske=failed)
-        if not broken and not failed:
+        # The same code is Cloudflare's answer when it is the sender's own address that is refused, and then it is
+        # everybody's: a refusal is the reader's only while more have the day's mail than are refused it.
+        now = [f["id"] for f in failed if f["code"] in REFUSED]
+        if len(done) > len(refused) + len(now):
+            refused += now
+        passing = [f for f in failed if f["id"] not in refused]
+        state.update(poslati=done, nesigurni=unsure, odbijeni=refused, greske=earlier + failed)
+        if not broken and not passing:
             state["zavrseno"] = datetime.now(TZ).isoformat()
         self._keep(day, state)
-        log.info("mejl %s: svima %d, nije proslo %d, nesigurno %d", day, len(done), len(failed), len(unsure))
-        if broken or failed:
+        log.info("mejl %s: svima %d, nije proslo %d, odbijeno %d, nesigurno %d", day, len(done), len(passing), len(refused), len(unsure))
+        if broken or passing:
             return "deo", len(done)
-        return ("nesigurno" if unsure else "ok"), len(done)
+        return ("nesigurno" if unsure else "odbijeni" if refused else "ok"), len(done)
 
 
 MAIL_EVERY = 300  # seconds between tries of the day's mail to the maintainer
@@ -421,6 +435,8 @@ def page_done(what: str, n: int) -> str:
             "deo": f"Poslato do sada: {n}. Nije završeno: otvori link iz mejla i klikni ponovo, nastavlja gde je stalo.",
             "nesigurno": f"Poslato: {n}. Za deo čitalaca veza je pukla usred slanja, pa se ne zna da li im je stiglo; "
                          "njima se ne šalje drugi put.",
+            "odbijeni": f"Poslato: {n}. Ima adresa koje Cloudflare odbija (koliko, piše u dnevniku servisa); za ovaj dan im se "
+                        "ne pokušava ponovo.",
             "u_toku": "Slanje je već u toku.", "brojac": "Brojač ne odgovara, ništa nije poslato: probaj ponovo za koji minut.",
             "prazno": "Sažetak tog dana još ne postoji.",
             "kasno": "Prošlo je podne: taj dan se više ne šalje.", "dvopis": "Sažetak ima reč u dva pisma: ne šalje se.",
