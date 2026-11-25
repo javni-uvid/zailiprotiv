@@ -213,3 +213,6 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   with their sentences), so that evening's summary and mail were Haiku's from the stretches, with the wrong line the change was
   made for. Now 100,000 and "medium": tried by hand on that day, 152,000 tokens in and 20,000 out a call, two calls (a number not
   in the transcript the first time), 5.5 minutes. A measure's name only when the chair said it in giving it.
+- **The groups' time is said to be a rough estimate** (25 Nov 2026, the maintainer, asked whether to show it only once the
+  chair's own figure confirms it: "ne, samo izrazi da je gruba procena"). On 24 Nov our count stood 20 minutes off the
+  chair's 23:21. The label is "gruba procena", and "Kako ovo radi" says it may be off by some twenty minutes.
