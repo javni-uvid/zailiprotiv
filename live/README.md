@@ -147,8 +147,8 @@ yt-dlp stops working, `.\mikrofon.ps1 test -Novo` takes the newest, then `.\mikr
 The service holds a lock on `/data` (`/data/.pisac`) from its start to its end: a second one on the same volume waits,
 and says so in its log every half a minute. `docker exec` commands (`uzivo.popuna` and the like) do not take it.
 
-The service can run as two processes (`ULOGA=merenje` and `ULOGA=strana` on one `/data`); the compose files still run it
-as one, with `ULOGA` empty.
+The service can run as two processes (`ULOGA=merenje` and `ULOGA=strana` on one `/data`); live it still
+runs as one, with `ULOGA` empty. `.\mikrofon.ps1 test -Dva` runs the test as two; plain `test` is the form that goes live.
 
 Settings are in `uzivo/config.py`, each overridable from `.env`.
 

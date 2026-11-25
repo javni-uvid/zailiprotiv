@@ -1,0 +1,46 @@
+# Beside docker-compose.test.yml (mikrofon.ps1 test -Dva): the same test as two containers, the measuring and the page
+# (docs/decisions/live-service.md, 25 Nov 2026), on one volume. `uzivo` is the page: it keeps the name and the port.
+services:
+  merenje:
+    extends:
+      file: docker-compose.test.yml
+      service: uzivo              # its secrets emptied, its Whisper, its limits
+    build: !reset null            # the page's service builds the one image of both
+    pull_policy: never
+    command: ["python", "-m", "uzivo.merenje"]
+    ports: !reset []              # no web server in it
+    environment:
+      ULOGA: merenje
+      LISTEN_PATH: /data/slusaj   # where the page finds the live sound (the test has no bucket)
+    healthcheck:
+      test: ["CMD", "python", "-m", "uzivo.merenje", "zdravo"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+  uzivo:
+    depends_on:
+      merenje:
+        condition: service_healthy  # it makes the folder the page writes, on a volume that is new
+    environment:
+      ULOGA: strana
+      LISTEN_PATH: /data/slusaj
+    volumes: !override
+      - type: volume
+        source: podaci
+        target: /data
+        read_only: true           # the page reads what the measuring keeps …
+      - type: volume
+        source: podaci
+        target: /data/mejl        # … and writes only what went by mail
+        volume:
+          subpath: mejl
+    mem_limit: 300m               # measured: 97 MB on a long day (25 Nov 2026)
+    stop_grace_period: 120s       # a mail being sent ends first
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/zdravlje', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
