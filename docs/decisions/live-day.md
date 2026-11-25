@@ -233,3 +233,11 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   words of that morning, put the card on top too. How fast: **votes** reads the page hourly (6:47 to 22:47), a build takes 8
   minutes or twice that behind another, the service takes the file every ten: between 20 and 90 minutes; on a
   sitting's evening a run waits for the one before it to end, so up to some two and a half hours.
+- **Each sitting has its own agenda, and its own item heard** (25 Nov 2026, found before the Second sitting). The page took the
+  first agenda in the site's list for everything, and `tacka.json` (the last item heard) only goes up and is kept across days:
+  with the Second sitting listed, its items 1 to 5 would have stood as done by the chair's word before it began, and the First's
+  last day would have named its steps by the Second's items. Now the sitting of a day is the latest convened for it or before
+  (`Tracker._sitting`, `pocinje` from the site); an item heard counts only at the sitting it was heard at; the page shows, between sittings,
+  the agenda of the one convened next, and the steps of the day shown keep that day's (`dnevni_red_dana`). Two sittings
+  begun on one day are not told apart. The Assembly's page is read during a broadcast only of the sitting last begun
+  and those to come (`read_live`).

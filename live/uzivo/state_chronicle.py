@@ -47,7 +47,8 @@ class Chronicle:
                         n = int((more or {}).get("tacka") or 0)
                     except (TypeError, ValueError):
                         n = 0
-                if n > self.item.get("n", 0):
+                # an item heard at an earlier sitting says nothing of this one's (25 Nov 2026, before the Second sitting)
+                if n > (self.item.get("n", 0) if self._item_of(self._sitting(self.day)) else 0):
                     self.item = {"n": n, "t": int(ts)}
                     f2 = self.days.parent / "tacka.json" if self.days else None
                     try:
@@ -65,15 +66,33 @@ class Chronicle:
                     pass
             return True
 
-    def _agenda(self) -> dict | None:
+    def _sittings(self) -> list[dict]:
+        rows = self.waiting.get("dnevni_red") if isinstance(self.waiting, dict) else None
+        return [r for r in rows if isinstance(r, dict)] if isinstance(rows, list) else []
+
+    def _sitting(self, day: str) -> dict | None:
+        """The sitting of a day: the latest convened for it or before ("pocinje", from the site; a sitting whose page
+        gives no day is the earliest). 25 Nov 2026: until then the first listed was taken, so a sitting newly convened
+        would have lent its items to the last day's steps, and the chair's last item of the one before to its own."""
+        rows = self._sittings()
+        begun = [r for r in rows if str(r.get("pocinje") or "")[:10] <= day]
+        return max(begun, key=lambda r: str(r.get("pocinje") or ""), default=None)
+
+    def _item_of(self, sitting: dict | None) -> bool:
+        """Whether the item the chair last moved to, as kept, was heard at this sitting."""
+        if not self.item.get("n") or not sitting:
+            return False
+        at = self._sitting(self._day(float(self.item.get("t") or 0)))
+        return bool(at) and at.get("url") == sitting.get("url")
+
+    def _agenda(self, sitting: dict | None = None) -> dict | None:
         """The sitting's agenda from the site (as the Assembly lists it), each item with where it stands: done by the
         Assembly's page ("sajt"), done or under way by what the chair said aloud ("prepis": moving to item N says
         the ones before it are over), or the next in turn."""
-        rows = self.waiting.get("dnevni_red") if isinstance(self.waiting, dict) else None
-        if not rows or not isinstance(rows, list) or not rows[0].get("tacke"):
+        s = sitting or self._sitting(self.day)
+        if not s or not s.get("tacke"):
             return None
-        s = rows[0]
-        heard = int(self.item.get("n", 0) or 0)
+        heard = int(self.item.get("n", 0) or 0) if self._item_of(s) else 0
         if heard > len(s["tacke"]):
             heard = 0  # a number the agenda does not have: misheard
         out = []

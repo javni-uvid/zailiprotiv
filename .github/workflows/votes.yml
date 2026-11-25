@@ -61,7 +61,16 @@ jobs:
           newest=$(uv run python -c 'from zailiprotiv.config import NEWEST; print(NEWEST)')
           conv="${IN_CONVOCATION}"; { [ -z "$conv" ] || [ "$conv" = "tekući" ]; } && conv=$current
           [ "$conv" = "$current" ] && [ "$newest" != "$conv" ] || exit 0  # the newest is read below, or not asked for
-          uv run zailiprotiv --convocation "$newest" index || exit 0
+          uv run zailiprotiv --convocation "$newest" index --tell "$RUNNER_TEMP/sednice" || exit 0
+          # A sitting newly listed, or its day or agenda: the maintainer is told at once, one issue a sitting
+          # (25 Nov 2026, "čim se objavi"); it stops nothing.
+          for f in "$RUNNER_TEMP"/sednice/*.txt; do
+            [ -f "$f" ] || continue
+            title=$(head -n 1 "$f"); tail -n +2 "$f" > "$RUNNER_TEMP/telo.md"
+            n=$(gh issue list --state all --limit 200 --json number,title | TITLE="$title" python3 -c 'import json,os,sys; print(next((r["number"] for r in json.load(sys.stdin) if r["title"] == os.environ["TITLE"]), ""))') || n=
+            if [ -n "$n" ]; then gh issue comment "$n" --body-file "$RUNNER_TEMP/telo.md" || true
+            else gh issue create --title "$title" --body-file "$RUNNER_TEMP/telo.md" || true; fi
+          done
           git diff -I'"fetched": "[^"]*"' -- "data/$newest/index.json" | grep -q '^@@' || exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

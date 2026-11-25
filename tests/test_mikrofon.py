@@ -1,5 +1,7 @@
 """The page shown at mikrofon.zailiprotiv.rs while "Ko sada govori" is down (pages_mikrofon, live/edge)."""
 import json
+import urllib.parse
+from pathlib import Path
 
 from zailiprotiv import pages_mikrofon
 
@@ -126,3 +128,53 @@ def test_a_sitting_begun_is_announced_when_its_page_says_it_goes_on(tmp_path):
     put(**{"https://a/druga": {"title": "Друга седница", "starts": "2026-11-26T10:00", "agenda": ["Буџет"], "votes": []}})
     assert at(2026, 11, 25, 9) == first and at(2026, 11, 25, 12)["naslov"] == "Druga sednica"  # the nearest to come
     assert "nastavak" not in at(2026, 11, 25, 12)
+
+
+def test_a_second_sitting_convened_goes_by_itself_from_the_listing_to_the_live_page(tmp_path, monkeypatch):
+    """25 Nov 2026, a trial: a listing and a page made up in the shape of the Assembly's, read as votes reads them, made
+    the live service's file as the build makes it, and shown as the service shows it."""
+    import sys
+    from datetime import datetime as dt_
+    from zailiprotiv import skupstina
+    from zailiprotiv.config import BASE, CONVOCATIONS
+    sys.path.insert(0, str(Path(__file__).parent.parent / "live"))
+    from uzivo import page
+    from uzivo.state import Tracker
+    first_url, second_url = f"{BASE}/Прва_седница.54098.43.html", f"{BASE}/Друга_седница.54120.43.html"
+    old = (Path(__file__).parent / "fixtures" / "pages" / "sednica.54098.43.html").read_text(encoding="utf-8")
+    new = ('<p class="posted">Среда, 25. новембар 2026.</p><h2>Друга седница</h2><p class="preamble">Председник Народне скупштине '
+           'Републике Србије Александар Чупић сазвао је Другу седницу Народне скупштине Републике Србије у Петнаестом сазиву, за '
+           'уторак, 1. децембар 2026. године, са почетком у 10.00 часова.</p>')
+    forms = {"списак": "<div>За ову седницу утврђен је следећи дневни ред:</div><ol><li>Предлог закона о буџету;</li><li>Избор судија.</li></ol>",
+             "редови": "<div>За ову седницу утврђен је следећи дневни ред:</div><div>1.Предлог закона о буџету;</div><div>2. Избор судија.</div>",
+             "реченица": "<div>Дневни ред са једном тачком и то: Избор Владе.</div>", "без реда": ""}
+    monkeypatch.setattr(page, "_now", lambda: dt_(2026, 11, 30, 20, 0, tzinfo=pages_mikrofon.TZ))
+    (tmp_path / "15").mkdir()
+    for name, body in forms.items():
+        links_ = f'<a href="{second_url}">Друга седница Народне скупштине Републике Србије у Петнаестом сазиву</a>' \
+                 f'<a href="{first_url}">Прва седница Народне скупштине Републике Србије у Петнаестом сазиву</a>'
+        site_ = {**{u: "" for u in CONVOCATIONS["15"]["listings"]}, CONVOCATIONS["15"]["listings"][0]: links_,
+                 first_url: old, second_url: new + body}
+        found, _ = skupstina.index(lambda u: site_[urllib.parse.unquote(u)].encode(), "15")
+        (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {s.url: {
+            "title": s.title, "votes": [[v.item, v.pdf] for v in s.votes], "agenda": s.agenda, "starts": s.starts,
+            **({"continues": s.continues} if s.continues else {})} for s in found}}), encoding="utf-8")
+        built = dt_(2026, 11, 25, 13, 0, tzinfo=pages_mikrofon.TZ)
+        rows = pages_mikrofon.sittings(tmp_path, "15")
+        w = pages_mikrofon.waiting([], [], pages_mikrofon.upcoming(tmp_path, [], "15"), None, pages_mikrofon.read_live(rows, built),
+                                   pages_mikrofon.agenda(tmp_path, "15", rows), now=built)
+        items = {"списак": ["Predlog zakona o budžetu", "Izbor sudija"], "реченица": ["Izbor Vlade"], "без реда": []}.get(
+            name, ["Predlog zakona o budžetu", "Izbor sudija"])
+        assert urllib.parse.unquote(w["sazvano"]["url"]) == second_url and w["sazvano"]["pocinje"] == "2026-12-01T10:00", name
+        assert w["sazvano"]["tacke"] == items and "nastavak" not in w["sazvano"], name
+        assert pages_mikrofon.next_start(tmp_path, "15", built)["pocinje"] == "2026-12-01T10:00"
+        assert pages_mikrofon.label(pages_mikrofon.current_sitting(rows, built)["title"]) == "Druga sednica"
+        t = Tracker(None, "Europe/Belgrade")
+        t.use_waiting(json.loads(json.dumps(w)))
+        t.item = {"n": 6, "t": int(dt_(2026, 11, 25, 11, 30, tzinfo=pages_mikrofon.TZ).timestamp())}  # the First's last item
+        snap = t.snapshot(now=dt_(2026, 11, 30, 20, 0, tzinfo=pages_mikrofon.TZ).timestamp())
+        html = page.fragment(snap, cyr=False, site="", tz=pages_mikrofon.TZ)
+        assert "Sednica sutra u 10" in html and "nastavlja" not in html, name
+        assert [x["stanje"] for x in (snap["dnevni_red"] or {"tacke": []})["tacke"]] == ["na_redu", ""][:len(items)], name
+        assert [x["tekst"] for x in (snap["dnevni_red"] or {"tacke": []})["tacke"]] == items, name
+

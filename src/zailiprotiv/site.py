@@ -836,8 +836,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         _whole = sum(g["sec"] for g in _groups) or 1
         for g in _groups:
             g["share"] = round(100 * g["sec"] / _whole)
-        _sit = [{"title": latin(v["title"]), "url": u, "agenda": [latin(x).removesuffix(" i") for x in v["agenda"]]}
-                for u, v in src.newest_sittings.items() if v.get("agenda")]
+        _sit = [s for s in pages_mikrofon.sittings(root, members_conv) if s["agenda"]]  # the latest first
         _daysv = [{"day": d["dan"], "when": _gv.day_name(d["dan"]), "time": _gv.dur(sum(max(0, t["do"] - t["od"]) for t in d["govori"])),
                    "people": len({t["ime"] for t in d["govori"]}),
                    "exchanges": [{"a": x["a"], "b": x["b"], "n": x["n"], "id": f"g{x['od']}"} for x in _gv.exchanges(d["govori"])]}
@@ -1186,7 +1185,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     last_sitting.sort(key=lambda it: -(it["final"]["counts"]["protiv"] or 0))
     # The newest convocation on the home page while it has passed no law yet (19 Nov 2026, the maintainer's request):
     # its seats by group, how many MPs have no vote in any convocation the site has, who has spoken the most by the
-    # recordings, and its first sitting's agenda as the Assembly lists it. All by rule, nothing chosen by hand.
+    # recordings, and the agenda of its sitting (the nearest to come, or the last) as the Assembly lists it. All by rule, nothing chosen by hand.
     newer = None
     if members_conv and member_rows and members_conv != active:
         secs = pages_members.by_group(member_rows)
@@ -1194,8 +1193,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                   "cls": GROUP_COLOURS.get(x["name"], "g-mn" if x.get("none") else "")} for x in secs if x["rows"]]
         by_slug = {r["slug"]: r for r in member_rows}
         top = sorted(((sl, x) for sl, x in floor_now.items() if sl in by_slug), key=lambda kv: (-kv[1]["sec"], kv[0]))[:5]
-        sitting = next(({"title": latin(v["title"]), "url": u, "agenda": [latin(a).rstrip(" i") for a in v["agenda"]]}
-                        for u, v in src.newest_sittings.items() if v.get("agenda")), None)
+        sitting = pages_mikrofon.current_sitting([s for s in pages_mikrofon.sittings(root, members_conv) if s["agenda"]])
+        sitting = sitting and {**sitting, "label": pages_mikrofon.label(sitting["title"])}
         newer = {"conv": members_conv, "name": ORDINAL_NAME.get(members_conv, members_conv),
                  "since": pages_members.since(members_conv), "page": pages_members.PAGE.format(conv=members_conv),
                  "n": len(member_rows), "new": sum(1 for r in member_rows if r["new"]), "seats": seats,
@@ -1234,10 +1233,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),
                           next_=pages_mikrofon.upcoming(root, coming, NEWEST_),
                           notices_=pages_mikrofon.notices(root),
-                          sittings_=[x["url"] for x in (newer15 or {}).get("sittings", [])],
+                          sittings_=pages_mikrofon.read_live(pages_mikrofon.sittings(root, NEWEST_)),
                           fixes_=pages_mikrofon.fixes(root),
-                          agenda_=pages_mikrofon.agenda(root, (newer15 or {}).get("conv", ""),
-                                                        (newer15 or {}).get("sittings", [])),
+                          agenda_=pages_mikrofon.agenda(root, NEWEST_, pages_mikrofon.sittings(root, NEWEST_)),
                           quiz_=pages_mikrofon.quiz(numbers=numbers, totals=floor_totals, active=active, items=items),
                           facts_=pages_mikrofon.facts(
         stats=stats, numbers=numbers, items=items, most_against=most_against, active=active, totals=floor_totals))

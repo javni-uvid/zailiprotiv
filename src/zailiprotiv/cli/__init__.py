@@ -42,6 +42,7 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     p = commands.add_parser("index", help="list the current convocation's sittings and their roll-call PDFs")
     p.add_argument("--out", default=str(common.DATA / "index.json"))
+    p.add_argument("--tell", default="", help="a folder for what is new among the sittings, a file each (votes.yml)")
     p.set_defaults(run=index)
     p = commands.add_parser("laws", help="the laws the current convocation passed → data/laws.json")
     p.add_argument("--out", default=str(common.DATA / "laws.json"))

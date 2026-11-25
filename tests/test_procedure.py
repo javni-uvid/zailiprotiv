@@ -31,9 +31,56 @@ def test_a_sittings_agenda_and_the_day_it_was_convened_for():
     agenda = skupstina.agenda(page)
     assert skupstina.convened(page) == "2026-08-24T10:00" and len(agenda) == 59
     assert agenda[1].startswith("Предлог закона о ублажавању последица енергетске кризе") and agenda[1].endswith("поднела Влада")
-    # An agenda given in a sentence, not a list: none read, the day still is.
+    # An agenda given in a sentence, not a list.
     other = (PAGES / "sednica.53810.43.html").read_text(encoding="utf-8")
-    assert skupstina.agenda(other) == [] and skupstina.convened(other) == "2026-07-27T10:00"
+    assert skupstina.convened(other) == "2026-07-27T10:00"
+    assert skupstina.agenda(other) == ["Предлог за гласање о неповерењу Влади, који су поднела 62 народна посланика у "
+                                       "Народној скупштини Републике Србије"]
+
+
+def test_every_form_in_which_a_sitting_was_convened():
+    """25 Nov 2026: the Fourteenth's sittings whose agenda or day was not read, as their pages are."""
+    read = lambda n: (PAGES / f"sednica.{n}.43.html").read_text(encoding="utf-8")
+    numbered = skupstina.agenda(read("53692"))  # lines "1.Предлог …", one of them "8Предлог …", no list
+    assert skupstina.convened(read("53692")) == "2026-07-06T10:00" and len(numbered) >= 11
+    assert numbered[7].startswith("Предлог закона о изменама и допунама Закона о финансирању политичких активности")
+    assert all(x[0].isalpha() for x in numbered)
+    assert skupstina.agenda(read("53418")) == ["Обраћање Народној скупштини Њ. Е. Сакр Гобаша, председника Федералног "
+                                               "Националног савета Уједињених Арапских Емирата"]
+    assert skupstina.convened(read("53518")) == "2026-06-17T10:00"  # "за среду, 17. јун", the year the page's own
+    assert skupstina.agenda(read("53518")) == ["Полагање заклетве председника Врховног суда"]
+    assert skupstina.agenda(read("50913")) == ["Избор Владе и полагање заклетве председника и чланова Владе"]
+    page = lambda words, posted="Среда, 25. новембар 2026.": f'<p class="posted">{posted}</p><p class="preamble">{words}</p>'
+    said = lambda *a: skupstina.convened(page(*a))
+    assert said("сазвао је Другу седницу за уторак, 1. децембар 2026. године, са почетком у 10 часова.") == "2026-12-01T10:00"
+    assert said("сазвао је Другу седницу за уторак, 1. децембра 2026. године, са почетком у 10.30 часова.") == "2026-12-01T10:30"
+    assert said("сазвао је седницу за среду, 1. децембар, са почетком у 10.00 часова.") == ""  # the day is not that date's
+
+
+def test_a_sitting_is_told_from_news_of_one():
+    for t in ("Прва седница Народне скупштине Републике Србије у Петнаестом сазиву", "Друга посебна седница Народне скупштине",
+              "Прва седница Другог редовног заседања Народне скупштине Републике Србије у 2026. години",
+              "Десето ванредно заседање Народне скупштине Републике Србије у Четрнаестом сазиву",
+              "Шесто ванредно заседање Народне скупштине Републике Србије у Чeтрнаестом сазиву"):  # a Latin "e"
+        assert skupstina.sitting_title(t), t
+    for t in ("Одржане консултације уочи конститутивне седнице Народне скупштине", "Одржана седница Одбора за правосуђе",
+              "Чланови српске делегације учествовали на заседању Поткомитета Парламентарне скупштине Савета Европе"):
+        assert not skupstina.sitting_title(t), t
+
+
+def test_the_maintainer_is_told_of_a_sitting_newly_listed():
+    first = {"title": "Прва седница Народне скупштине", "starts": "", "agenda": ["Избор"], "votes": [["x", "y"]]}
+    second = {"title": "Друга седница Народне скупштине Републике Србије у Петнаестом сазиву", "starts": "2026-12-01T10:00",
+              "agenda": ["Предлог закона @buduci"], "votes": []}
+    news = {"title": "Одржане консултације уочи седнице Народне скупштине", "starts": "", "agenda": [], "votes": []}
+    told = skupstina.news_of({"a": first}, {"a": first, "https://b/б": second, "c": news})
+    assert len(told) == 1 and told[0][0] == "Sednica na sajtu Skupštine: Druga sednica"
+    assert "Počinje: 2026-12-01T10:00" in told[0][1] and "1. Predlog zakona buduci" in told[0][1] and "https://b/б" in told[0][1]
+    assert skupstina.news_of({"b": second}, {"b": second}) == [] and skupstina.news_of({}, {"b": second}) == []
+    later = {**second, "agenda": ["Предлог закона", "Избор"]}
+    assert "Promenjen dan ili dnevni red." in skupstina.news_of({"b": second}, {"b": later})[0][1]
+    bare = skupstina.news_of({"a": first}, {"b": {**second, "starts": "", "agenda": []}})[0][1]
+    assert "dan nije pročitan" in bare and "Dnevni red nije pročitan" in bare  # what our reading missed is said too
 
 
 def test_when_a_sitting_goes_on_as_its_page_says():
