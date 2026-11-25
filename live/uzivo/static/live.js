@@ -464,7 +464,7 @@
   function keep(on) { try { if (on) localStorage.setItem("mejl-sklonjen", "1"); else localStorage.removeItem("mejl-sklonjen"); } catch (e) {} }
   function show(away) { box.hidden = away; x.hidden = away; back.hidden = !away; document.documentElement.toggleAttribute("data-ml-off", away); }
   show(read() && location.hash !== "#mejl");
-  x.addEventListener("click", function () { keep(true); show(true); if (window.mikrofonUse) window.mikrofonUse("mejl-skloni"); });
+  x.addEventListener("click", function () { keep(true); show(true); });
   back.querySelector("button").addEventListener("click", function () { keep(false); show(false); box.open = true; box.scrollIntoView({ block: "center" }); });
   document.addEventListener("mejl-prijavljen", function () { keep(true); });
 })();

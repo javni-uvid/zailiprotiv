@@ -298,6 +298,14 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   same day, on the words: "Ništa ne stavljaj na dno stranice. Sve neka ide na metod pa linkuj na jednom mestu"): the
   live page's footer keeps its words, of which "Brojač sajta" is the one link to it; the privacy page no longer says
   "only per day" and points there.
+- **The broadcast started after the sound is counted; the mail's card put away is not sent** (25 Nov 2026, the two things
+  seen with the listening and left then; the maintainer: "Sve promene baš koje čekaju za posle"). After "Slušaj" the button
+  "▶ Gledaj prenos" carried no name of a use, so a reader who went from the sound to the picture was not in `pusti`:
+  it now counts as the first ▶ does, once per page opened whichever of the two was pressed, so `pusti` may rise
+  with the release and is not to be read as more viewers. `live.js` sent `mikrofon.mejl-skloni`, which the counter never took: the cross on
+  the mail's card is "kept in this browser only" (`live-page.md`, 24 Nov) and the code beside it says nothing is sent, so the sending
+  is gone rather than the name added. Nothing asks for that sum. The words on the method page hold as they are.
+  The test of the names sent missed it because it read `use("…")` only: it reads `mikrofonUse("…")` too.
 
 ## Search engines
 
