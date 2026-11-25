@@ -2454,6 +2454,9 @@ def test_the_groups_time_left_stands_small_under_the_speaker(monkeypatch):
     assert html.index('class="sp"') < html.index('class="gt-sec"') < html.index('class="said-sec"')
     assert "PG A</span><b>1 h 50 min</b>" in html and "procena" in html and "potrošeno" not in html
     assert "gt-sec" not in draw(vreme_grupa={**g, "zakljucen": True})  # the debate closed: no time left to tell
+    assert "gt-said" not in html  # no figure of the chair's: nothing under the bar
+    told = {**g, "grupe": [{**g["grupe"][0], "receno": {"t": __import__("datetime").datetime(2026, 11, 24, 18, 43, 40, tzinfo=TZ).timestamp(), "sek": 1401, "nase": 180}}]}
+    assert '<small class="gt-said">predsedavajući u 18:43: još 23 min 21 s</small>' in draw(vreme_grupa=told)
     how = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ).split('<details class="how">', 1)[1]
     assert "član 97" in how and "poslovnik-clanovi#pojam-vreme-rasprave" in how
     monkeypatch.setattr(config, "SHOW_GROUP_TIME", False)

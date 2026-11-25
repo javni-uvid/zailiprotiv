@@ -309,6 +309,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .gt li { display: grid; grid-template-columns: 1fr auto; gap: .1rem .8rem; align-items: baseline; font-size: var(--t-2); line-height: 1.35; }
 .gt li b { font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .gt-bar { grid-column: 1 / -1; height: .3rem; border-radius: 2px; background: color-mix(in srgb, var(--fg) 8%, transparent); overflow: hidden; } .gt-bar i { display: block; height: 100%; }
+.gt-said { grid-column: 1 / -1; font-size: var(--t-1); color: var(--muted); }
 /* "Sažetak dana na mejl" (23 Nov 2026): a dark card in either theme, with colours of its own, as the one thing on the
    page that asks something of the reader; the list's marks are the mail's (a decision, a warning, a speaker) */
 .ml-box { --ml-bg: #111318; --ml-fg: #ffffff; --ml-soft: #c9ccd3; --ml-line: #3a3f4a; --ml-go: #7cc0f5; --ml-dot: #ff9a52; --ml-stop: #f87171;

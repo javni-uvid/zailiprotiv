@@ -182,7 +182,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
         out.append('<ol class="cc-src" hidden>' + "".join(
             f'<li data-od="{c["od"]}"{f' data-pt="{c["pt"]}"' if c.get("pt") else ""}>{escape(_name(c["tekst"], cyr))}</li>'
             for c in snap["titl"]) + "</ol>")
-    out.append("</section>" + (_group_time(snap, cyr=cyr) if config.SHOW_GROUP_TIME else ""))
+    out.append("</section>" + (_group_time(snap, cyr=cyr, tz=tz) if config.SHOW_GROUP_TIME else ""))
     out.append(f'<section class="said-sec">{said}</section>{_steps(snap, cyr=cyr, tz=tz, site=site)}<section class="day">')
     if snap.get("ranije") and snap["danas"]:
         when = _date(snap["dan"])
@@ -542,7 +542,14 @@ def next_item(snap: dict) -> dict | None:
     return next((x for x in ((snap.get("dnevni_red") or {}).get("tacke") or []) if x.get("stanje") == "na_redu"), None)
 
 
-def _group_time(snap: dict, *, cyr: bool) -> str:
+def _left(sec: int, cyr: bool) -> str:
+    """Minutes and seconds as the chair says them ("23 min 21 s")."""
+    m, s = divmod(max(0, sec), 60)
+    minute, second = ("мин", "с") if cyr else ("min", "s")
+    return f"{m} {minute}" + (f" {s} {second}" if s else "")
+
+
+def _group_time(snap: dict, *, cyr: bool, tz: ZoneInfo | None = None) -> str:
     """The groups' time left in the debate of the item under way (vreme.py), an estimate: a line and a thin bar a group
     (24 Nov 2026, the maintainer: smaller, under the speaker, no other words; how it is counted is under "Kako ovo
     radi"). None once the chair has closed the debate."""
@@ -555,8 +562,11 @@ def _group_time(snap: dict, *, cyr: bool) -> str:
         left = r["ima"] - r["potroseno"]
         share = max(0.0, min(100.0, 100 * left / r["ima"])) if r["ima"] else 0.0
         rest = _dur(left, cyr) if left >= 60 else f'{t("gt_over")} {_dur(-left, cyr)}' if left <= -60 else t("gt_none")
+        said = r.get("receno") or {}  # the Assembly's own figure, when the chair said one: when, and how much
+        told = (f'<small class="gt-said">{escape(_fill(_t("gt_said", cyr), _clock(int(said["t"]), tz), _left(int(said["sek"]), cyr)))}</small>'
+                if tz and said.get("t") and said.get("sek") is not None else "")
         rows.append(f'<li><span>{escape(_name(r["lista"], cyr))}</span><b>{rest}</b>'
-                    f'<div class="gt-bar"><i class="{LIST_COLOURS.get(r["lista"], "l1")}" style="width:{share:.1f}%"></i></div></li>')
+                    f'<div class="gt-bar"><i class="{LIST_COLOURS.get(r["lista"], "l1")}" style="width:{share:.1f}%"></i></div>{told}</li>')
     return (f'<section class="gt-sec"><h2>{t("gt_head")} <span>{t("gt_estimate")}</span></h2>'
             f'<ul class="gt">{"".join(rows)}</ul></section>')
 

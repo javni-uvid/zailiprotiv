@@ -216,3 +216,6 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
 - **The groups' time is said to be a rough estimate** (25 Nov 2026, the maintainer, asked whether to show it only once the
   chair's own figure confirms it: "ne, samo izrazi da je gruba procena"). On 24 Nov our count stood 20 minutes off the
   chair's 23:21. The label is "gruba procena", and "Kako ovo radi" says it may be off by some twenty minutes.
+- **The chair's own figure stands under a group's time** (25 Nov 2026, the maintainer: "može"): "predsedavajući u 18:43:
+  još 23 min 21 s" under the bar of the group it was said for (`receno`), so the reader sees what the estimate goes
+  on from and when that was. "Kako ovo radi" says so.
