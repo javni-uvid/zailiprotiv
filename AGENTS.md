@@ -92,7 +92,9 @@ The project's promises to its readers. Never change them without the maintainer.
    - **visitors' votes** sent to the project's own counter (`worker/`; 13 Nov 2026) when `votes_api` is set; what is
      kept is on the method page (see "Visitors' votes" below);
    - **a player on `mikrofon.zailiprotiv.rs`, only on a click** (18 Nov 2026): while the broadcast is on, the YouTube
-     video of it (`youtube-nocookie.com`); between sittings, the last day's recording from the broadcaster's archive
+     video of it (`youtube-nocookie.com`); after it, the same video for the last day while it is public and the archive
+     has no file of that day yet (25 Nov 2026, the maintainer: "Može"; until then the links went with the broadcast);
+     between sittings, the last day's recording from the broadcaster's archive
      (videonet.co.rs, a plain `<video>`), from where a turn's "▶ snimak" says. Until the click the page shows our own
      button and loads nothing from either; the page and "O projektu" say so. The links work without the script;
      the script plays only archive files and YouTube ids it recognises;
