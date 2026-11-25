@@ -90,6 +90,7 @@ uv run zailiprotiv index               # the convocation's sittings and their ro
 uv run zailiprotiv laws                # the laws it passed → laws.json
 uv run zailiprotiv procedure           # bills in procedure now → procedure.json
 uv run zailiprotiv votes               # every roll call not read yet → votes/ (needs pdftotext)
+uv run zailiprotiv unread              # the roll calls listed and not read, if any
 uv run zailiprotiv bills               # each bill's memorandum → bills/ (scans by OCR: tesseract, srp)
 uv run zailiprotiv link                # each law's kind, area, roll calls and final vote
 uv run zailiprotiv transcripts         # the stenographic notes → transcripts/
@@ -111,7 +112,7 @@ Assembly's site runs through the workflows.
 
 | Workflow | When | What |
 |---|---|---|
-| votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links; the archive's new recordings placed and each day's speeches linked into them; commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |
+| votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links, committed first (an issue when a roll call listed is not read); then the archive's new recordings placed and each day's speeches linked into them; commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |
 | transcripts | after votes, and by hand | the stenographic notes; the raw notes go to the bucket |
 | summaries | after transcripts, every six hours, and by hand | the model's writing through the Batch API; the cheapest model first, a stronger one only by hand |
 | pages | on push, and after each data run | build the site and its search index, send downloads to the bucket, publish, purge the cache, tell search engines what changed (about seven minutes); a push that changes only `static/` puts it into the site published last instead (`static-patch`, about two) |
