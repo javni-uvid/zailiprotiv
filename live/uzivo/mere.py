@@ -68,6 +68,7 @@ class MP:
     slug: str = ""
     group: str = ""    # the parliamentary group, Latin; "" when in none
     party: str = ""    # who proposed the MP, Latin; "-" or "" when nobody
+    photo: str = ""    # the portrait's file on the site ("1435.jpg"), "" when none
 
     @property
     def label(self) -> str:

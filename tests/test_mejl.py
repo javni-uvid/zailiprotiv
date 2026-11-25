@@ -13,7 +13,7 @@ ROLL = mere.Roll([
     mere.MP("Brnabić Ana", group="Aleksandar Vučić - Srbija pobeđuje"),
     mere.MP("Jovanov Milenko", group="Aleksandar Vučić - Srbija pobeđuje"),
     mere.MP("Jovanović Nataša", group="Aleksandar Vučić - Srbija pobeđuje"),
-    mere.MP("Bakić Jovo", group="Studentska lista"),
+    mere.MP("Bakić Jovo", group="Studentska lista", photo="1601.jpg"),
     mere.MP("Tandir Samir", group="Aleksandar Vučić - Srbija pobeđuje"),
     mere.MP("Stojković Miloš", group="Aleksandar Vučić - Srbija pobeđuje"),
     mere.MP("Stojković Ana", group="Studentska lista"),
@@ -97,11 +97,22 @@ def test_the_mail_says_who_and_which_list_from_the_list_and_nothing_of_a_model()
     assert m.subject == "Skupština, četvrtak 19. novembar: šta je odlučeno i ko je dobio opomenu"
     assert "bez liste" not in m.html and "SVM-VMSZ" in m.html and "Balint Pastor" in m.html
     assert "AI model" not in m.html and "Kako nastaje ovaj sažetak" in m.html and "kako-racunamo#sazetak-dana" in m.html
-    assert "Ana Brnabić" in m.html and "Anji" not in m.html and "opomena" in m.html and "najduže" in m.html
+    assert "Opomena: Ana Brnabić, Milenko Jovanov" in m.html and "Anji" not in m.html and "opomena u 22:00" in m.html
     assert "https://x.test/o?k=1" in m.html and "https://x.test/o?k=1" in m.text
-    assert not any(tag in m.html for tag in ("<img", "<script", "<link", "url("))  # nothing loaded, nothing tracked
     cyr = mejl.build(date(2026, 11, 19), SUMMARY, measures, ROLL, cyr=True)
     assert cyr.subject.startswith("Скупштина, четвртак") and "/cir/govornici/2026-11-19" in cyr.html
+
+
+def test_nothing_is_loaded_but_the_portraits_from_the_site_the_same_for_every_reader():
+    import re
+    a = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, unsubscribe="https://x.test/o?k=1")
+    b = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, unsubscribe="https://x.test/o?k=2")
+    assert not any(tag in a.html for tag in ("<script", "<link", "url(", "<iframe", "@import", "@font-face"))
+    assert re.findall(r'<img src="([^"]+)"', a.html) == ["https://zailiprotiv.rs/foto/1601.jpg"]  # only who has a portrait
+    assert re.findall(r"<img[^>]+>", a.html) == re.findall(r"<img[^>]+>", b.html)  # nothing of the reader in it
+    assert "Portreti: Narodna skupština" in a.html and ">BP</div>" in a.html  # no portrait: the initials
+    odd = mere.Roll([mere.MP("Bakić Jovo", group="Studentska lista", photo='x" onerror="y')])
+    assert "<img" not in mejl.build(date(2026, 11, 19), SUMMARY, [], odd).html  # a file's name only
 
 
 def test_a_word_in_two_scripts_is_caught():
@@ -115,44 +126,49 @@ def test_every_mail_asks_for_support_in_its_middle_and_locks_nothing():
     for a in amounts:  # each leads to its code on the site's page
         assert f'href="https://zailiprotiv.rs/podrzi#din-{a}"' in m.html
     assert m.html.count("Časlav") == 1 and "ili koliko želiš" in m.html
-    for said in (m.html.split("</title>")[1], m.text):  # after the decisions, before what was said
-        assert said.upper().index("ODLUKE") < said.index("Časlav") < said.upper().index("KO JE ŠTA REKAO")
+    for said, day_, who in ((m.html.split("</title>")[1], "PO SATU", "Govorili su"), (m.text, "DAN PO SATU", "GOVORILI SU")):
+        assert said.index(day_) < said.index("Časlav") < said.index(who)  # after the day, before who spoke
     cyr = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, cyr=True)
     assert "https://zailiprotiv.rs/cir/podrzi#din-" in cyr.html and "Часлава" in cyr.html
-    bare = mejl.build(date(2026, 11, 19), {**SUMMARY, "odluke": []}, [], ROLL)  # nothing decided: after what was said
-    assert bare.html.index("Ko je šta rekao") < bare.html.index("Časlav") and bare.text.count("Časlav") == 1
+    bare = mejl.build(date(2026, 11, 19), {"kratko": "Sednica nije održana."}, [], ROLL)  # a day with nothing in it
+    assert bare.html.count("Časlav") == 1 and "Govorili su" not in bare.html and "Sednica nije održana." in bare.html
 
 
-def test_the_day_in_figures_is_counted_only_from_a_whole_transcript():
-    from uzivo import brojevi
-    day, flow = date(2026, 11, 19), [{"vreme": "10:04"}, {"vreme": "23:57"}]
-    t0 = int(at("10:05"))
-    said = {("p" if i % 2 else "") + str(t0 + i * 60): "Hvala, po Poslovniku. Izvinite, molim vas." for i in range(120)}
-    t1 = int(at("14:04"))  # after a break of two hours, called at 12:04
-    said |= {str(t1 + i * 60): "Poslovnik ove reči." for i in range(593)}
-    pause = [{"t": at("12:04"), "vrsta": "Pauza"}]
-    n = brojevi.count(day, flow, said, pause, TZ)
-    assert n["traje"] == 833 and n["pauza"] == 120 and n["pauza_od"] == "12:04"
-    assert n["poslovnik"] == 120 + 593 and n["hvala"] == n["izvinite"] == n["molim"] == 120
-    assert "reci" not in brojevi.count(day, flow, said, [], TZ)  # a silence nobody called: the transcript was off
-    assert "reci" not in brojevi.count(day, flow, {k: v for k, v in said.items() if int(k.lstrip("p")) >= t1}, pause, TZ)  # begun late
-    assert brojevi.count(day, [{"vreme": "18:00"}, {"vreme": "01:30"}], {}, [], TZ)["traje"] == 450  # past midnight
-    n |= {"reci": 69132, "strana": 230}
-    got = brojevi.tiles(n, day, "17:03")
-    assert got[0] == ("13 h 53 min", "od prve do poslednje reči, kao 9 fudbalskih utakmica")
-    assert got[1] == ("69.000", "reči izgovoreno, kao knjiga od 230 strana") and len(got) == 4
-    seen = {x for d in range(1, 8) for x in brojevi.tiles(n, date(2026, 12, d), "17:03")[2:]}
-    assert len(seen) == 6 and ("6 h 59 min", "do prve opomene, u 17:03") in seen  # others by the date
-    assert brojevi.tiles({}, day) == [] and brojevi.tiles({"traje": 100, "od": 600}, day) == []  # one figure is no strip
-
-
-def test_the_top_says_the_day_in_one_line_and_not_how_many_decisions():
-    with_title = {**SUMMARY, "naslov": "Čupić izabran za predsednika Skupštine."}
-    m = mejl.build(date(2026, 11, 19), with_title, [], ROLL, numbers={"traje": 833, "od": 604, "reci": 69132, "strana": 230})
+def test_the_day_by_the_clock_has_the_steps_the_measures_and_the_decisions_once():
+    day = {**SUMMARY, "naslov": "Čupić izabran za predsednika Skupštine.",
+           "tok": [{"vreme": "10:04", "sta": "Otvoren je nastavak sednice."}, {"vreme": "13:27", "sta": "Izabran je predsednik."},
+                   {"vreme": "17:03", "sta": "Izrečena opomena poslaniku."}, {"vreme": "00:40", "sta": "Kraj."}]}
+    measures = mere.measures(LINES, STRETCHES, ROLL, TZ)
+    m = mejl.build(date(2026, 11, 19), day, measures, ROLL)
     assert "Čupić izabran za predsednika Skupštine<" in m.html and m.html.count("Skupština je izabrala predsednika.") == 1  # the preview
-    assert "Dan u brojevima" in m.html and "69.000" in m.html and "DAN U BROJEVIMA" in m.text and "govornika</div>" not in m.html
-    assert ">140 za</b>" in m.html and ">0 protiv</b>" in m.html  # the vote as a bar and its figures
+    assert "Izabran je predsednik" not in m.html and "Izrečena opomena poslaniku" not in m.html  # said by the decision and the measure
+    order = [m.html.index(x) for x in ("Otvoren je nastavak sednice", "Aleksandar Čupić izabran za predsednika", "Opomena: Samir Tandir", ">Kraj<")]
+    assert order == sorted(order)  # by the clock, past midnight too
+    assert ">140</span> za<" in m.html and ">0</span></td>" in m.html and "Dan u brojevima" not in m.html  # the vote in figures and a bar
+    assert "Oduzimanje reči: Feđa Dimović" in m.html and "oduzimanje reči u 19:32" not in m.html  # Dimović did not speak in this summary
     plain = mejl.build(date(2026, 11, 19), {**SUMMARY, "naslov": "x" * 200}, [], ROLL)  # no title: the sentence, as before
-    assert plain.html.count("Skupština je izabrala predsednika.") == 2 and "Dan u brojevima" not in plain.html
-    cyr = mejl.build(date(2026, 11, 19), with_title, [], ROLL, numbers={"traje": 833, "od": 604, "reci": 69132, "strana": 230}, cyr=True)
-    assert "Дан у бројевима" in cyr.html and not mejl.mixed_words(cyr.text) and "140 за" in cyr.html
+    assert plain.html.count("Skupština je izabrala predsednika.") == 2
+    cyr = mejl.build(date(2026, 11, 19), day, measures, ROLL, cyr=True)
+    assert "ДАН У СКУПШТИНИ, ПО САТУ" in cyr.html and not mejl.mixed_words(cyr.text) and ">140</span> за<" in cyr.html
+
+
+def test_who_spoke_is_by_lists_by_their_seats_and_the_longest_first():
+    day = {**SUMMARY, "govornici": SUMMARY["govornici"] + [{"ime": "Brnabić Ana", "o_cemu": "Govorila je o odborima."},
+                                                          {"ime": "Stojković Ana", "o_cemu": "Govorila je o školama."}]}
+    m = mejl.build(date(2026, 11, 19), day, [], ROLL, {"Bakić Jovo": 60, "Stojković Ana": 600})
+    part = m.html[m.html.index("Govorili su"):]
+    order = [part.index(x) for x in ("Aleksandar Vučić - Srbija pobeđuje", "Ana Brnabić", "Studentska lista", "Ana Stojković", "Jovo Bakić",
+                                     "Van poslaničkih grupa", "Balint Pastor")]
+    assert order == sorted(order)  # six seats in the list, then four, then nobody's group; within a list by the time
+    assert "4 poslanika, po listama" in part and "Studentska lista</span>" not in part and ">SVM-VMSZ</span>" in part
+
+
+def test_the_maintainers_sentences_are_shown_only_when_added():
+    quotes = [{"vreme": "12:38", "ime": "Jovo Bakić", "o_cemu": "o medijima", "tekst": "Mediji su <slobodni>.",
+               "snimak": "https://arhiva.videonet.co.rs/x.mp4#t=5"},
+              {"vreme": "12:40", "ime": "Pastor Balint", "o_cemu": "o manjinama", "tekst": "Manjine.", "snimak": "javascript:1"}]
+    assert "Rečeno u sali" not in mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL).html
+    m = mejl.build(date(2026, 11, 19), SUMMARY, [], ROLL, quotes=quotes)
+    assert "Rečeno u sali" in m.html and "izabrao i proverio urednik" in m.html and "REČENO U SALI" in m.text
+    assert "Mediji su &lt;slobodni&gt;." in m.html and 'href="https://arhiva.videonet.co.rs/x.mp4#t=5"' in m.html and "Pusti od 12:38" in m.html
+    assert "javascript" not in m.html and "„Manjine.“" in m.text  # a link only to a recording's address

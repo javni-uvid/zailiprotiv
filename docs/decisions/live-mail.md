@@ -6,6 +6,7 @@ in short, is there. **Keep it current:** a decision is added at the end of this 
 changes an earlier one says so. Dates are the maintainer's decisions unless said otherwise.
 
 **Changed since written:** The mail's link works until noon ("Who gets the day's mail" first said 8).
+The mail's look and what it loads are as the last entry says (25 Nov 2026): "no picture" and "Dan u brojevima" no longer hold.
 
 - **A notification when a sitting begins** (20 Nov 2026, the maintainer's choice: only the broadcast's beginning,
   the addresses kept by the counter). "Obavesti me kad sednica počne" under the speaker's box asks the browser,
@@ -104,3 +105,26 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   were not confirmed): the subject and the first line say to press the button, and once more on the page it opens, the button is as wide as the mail ("Da, prijavi
   me"), the mail says an answer does not confirm, and the link stands under it for a reader whose button does not work;
   the page it leads to says "Poslednji korak", as it has a button of its own (scanners open links).
+- **The mail is the day by the clock, then who spoke by lists, with portraits** (25 Nov 2026, the maintainer, over drafts of
+  24 Nov's mail in which he chose among four tops: "napravi da se mail uvek pravi na ovaj način s ovim dizajnom"). After
+  a look at what such mails do well (one thing on top, cards and white space, a single column of 600 px, 16 px text,
+  buttons a thumb can press, the reading time). A masthead with the date and the minutes of reading; a dark card with
+  the day's title and **the day by the clock**: the summary's steps ("tok"), the chair's measures (`mere`, amber, the
+  list's names as before, "ime nije izgovoreno" otherwise) and the decisions (white and bold; a vote in large figures
+  and a bar), in one line by time, a day past midnight in order. A step that tells of a measure, or stands at a
+  decision's minute, is left out: the code's words say it. The call for support follows, then **"Govorili su"**: a
+  band per parliamentary group, the groups by their seats in the list and then the alphabet, MPs of no group last
+  with the party that proposed them; within a band the longest first; a mark beside who got a measure and when.
+  "Odluke", "Opomene i mere" and "Ko je šta rekao" as parts of their own, "najduže" and the bar of time are gone, and
+  so is "Dan u brojevima" (`brojevi.py` removed: the maintainer wanted what does not matter out).
+  **Portraits change principle 5's exception**: the mail loads the MPs' portraits from `zailiprotiv.rs/foto/`, the
+  same address for every reader and nothing of the reader in it, so nobody can tell who opened a mail; the site's
+  host sees the request as on any visit. The maintainer chose this over circles with initials (which stay for an MP
+  with no portrait); the privacy page said "u mejlu nema slika" and now says what is loaded and why it tells nothing.
+  A portrait is cut round from its top by the mail reader; where that is not done (Outlook) it is a small upright
+  picture. **Sentences are the maintainer's, never the service's**: "Rečeno u sali" stands only when
+  `/data/mejl/recenice-<day>.json` is there (a list of `{"vreme", "ime", "o_cemu", "tekst", "snimak"}`), put by hand
+  before the click that sends to all, each sentence chosen and checked against the recording by a person, with a link
+  to its place in the archive; the mail says so. The rule that the automatic transcript is never a quote stands: the
+  service shows none by itself. A file that cannot be read sends the mail without them. With 39 speakers the HTML is
+  58 KB (70 KB with seven sentences), under the 102 KB at which Gmail cuts a mail.

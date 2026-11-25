@@ -2,10 +2,11 @@
 
 Made from the day's summary as `sudija` keeps it (`/data/sazetak/<day>.json`, its "dan"), the chair's measures among
 the day's lines (`/data/hronika/<day>.json`) and the speakers' time measured from the broadcast. Short pieces, no
-paragraph: the decisions, the warnings and to whom, and what each speaker spoke about, on a line of time with the
-live page's marks. The subject, the counts and the votes' figures are the code's words, never the model's; how the
-summary is made is on the method page, linked at the foot. The HTML is for mail readers: tables and inline styles,
-no picture, no font, nothing loaded from anywhere, no tracking of any kind.
+paragraph: the day by the clock on a dark card (the summary's steps, the chair's measures and to whom, the decisions
+with their votes), then who spoke, by lists, with what each spoke about. The subject, the counts, the votes' figures
+and the measures are the code's words, never the model's; how the summary is made is on the method page, linked at
+the foot. The HTML is for mail readers: tables and inline styles, no font, no script, no tracking of any kind; the one
+thing loaded is the MPs' portraits from the site, at the same address for every reader (25 Nov 2026).
 """
 from __future__ import annotations
 
@@ -15,7 +16,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
-from . import brojevi, config
+from . import config
 from .mere import MP, Measure, Roll
 from .names import cyrillic, given_first
 
@@ -38,10 +39,14 @@ MONTHS_OF = ["januara", "februara", "marta", "aprila", "maja", "juna", "jula", "
 # A list's colour, as on the live page (page.LIST_COLOURS): the two big lists their own, every other list teal.
 LISTS = {"Aleksandar Vučić - Srbija pobeđuje": "#3730a3", "Studentska lista": "#e11d48"}
 OTHER_LIST = "#0f9d8a"
+OUTSIDE = "#4b5563"  # the band of MPs in no group
 INK, MUTED, LINE, SOFT, ZA, PROTIV, STOP, PAPER, BACK = ("#111111", "#5b616b", "#e3e5e8", "#f6f7f9", "#1f5fa8",
                                                         "#c2410c", "#dc2626", "#ffffff", "#eef0f3")
 # The dark top's and the support card's own, as the live page's card that offers the mail; "za" legible on it.
 DARK, WARM, PALE, ZA_DARK = "#111318", "#ff9a52", "#c9ced6", "#7cc0f5"
+AMBER, DIM = "#f5c26b", "#8d939c"  # on the dark card: a measure's mark, the hour of a plain step
+# Above the sentences the maintainer adds by hand (25 Nov 2026): whose choice they are and from where.
+QUOTES_NOTE = "Rečenice je iz snimka izabrao i proverio urednik. Stenografske beleške još nisu objavljene."
 TITLE_MAX = 100  # a day's title longer than this is no title (the model is asked for 60)
 SERIF = "Georgia, 'Times New Roman', serif"
 SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
@@ -70,12 +75,41 @@ def _minutes(seconds: int) -> str:
     return f"{m // 60} h" + (f" {m % 60} min" if m % 60 else "")
 
 
+def _clock(hhmm: str) -> int:
+    h, _, m = str(hhmm).partition(":")
+    return int(h) * 60 + int(m) if h.isdigit() and m.isdigit() else -1
+
+
+def _votes(text_: str) -> dict[str, int]:
+    """A vote's figures as the code wrote them ("za 136, protiv 0, ..., prisutno 234")."""
+    return {k: int(x) for k, x in re.findall(r"(za|protiv|uzdržano|nevažeći|nije glasalo|glasalo|prisutno) (\d+)", text_ or "")}
+
+
+def by_lists(people: list, roll: Roll, label=lambda x: x[0]) -> list[tuple[str, str, list]]:
+    """People in bands, one per parliamentary group and one for everybody outside the groups: (the band's name, its
+    colour, its people in the order given). The groups by their seats in the list, most first, then by the alphabet;
+    outside the groups last. The same rule for every list (principle 1)."""
+    seats: dict[str, int] = {}
+    for mp in roll.mps:
+        if mp.group:
+            seats[mp.group] = seats.get(mp.group, 0) + 1
+    bands: dict[str, list] = {}
+    for x in people:
+        bands.setdefault(label(x).group, []).append(x)
+    order = sorted((g for g in bands if g), key=lambda g: (-seats.get(g, 0), g))
+    out = [(g, LISTS.get(g, OTHER_LIST), bands[g]) for g in order]
+    if bands.get(""):
+        out.append(("Van poslaničkih grupa", OUTSIDE, bands[""]))
+    return out
+
+
 def build(day: date, summary: dict, measures: list[Measure] | None = None, roll: Roll | None = None,
           spoke: dict[str, int] | None = None, cyr: bool = False, unsubscribe: str = "", other_script: str = "",
-          numbers: dict | None = None) -> Mail:
-    """`summary` is the day's "dan"; `measures` from `mere.measures`; `roll` the convocation's MPs, whose names and
-    lists are shown instead of the model's; `spoke` the seconds each MP (by the list's name) was heard;
-    `unsubscribe` the subscriber's own address to leave by; `other_script` the page to receive the other script from; `numbers` the day's figures (`brojevi`)."""
+          quotes: list[dict] | None = None) -> Mail:
+    """`summary` is the day's "dan"; `measures` from `mere.measures`; `roll` the convocation's MPs, whose names,
+    lists and portraits are shown instead of the model's; `spoke` the seconds each MP (by the list's name) was heard;
+    `unsubscribe` the subscriber's own address to leave by; `other_script` the page to receive the other script from;
+    `quotes` the sentences the maintainer chose and checked by hand ({"vreme", "ime", "o_cemu", "tekst", "snimak"})."""
     t = cyrillic if cyr else (lambda s: s)
     e = lambda s: html.escape(t(s))  # noqa: E731
     measures, spoke = measures or [], spoke or {}
@@ -94,43 +128,63 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     support = f"{SITE}{prefix}{SUPPORT}"
     roll = roll or Roll([])
 
-    def who(s: dict) -> MP:
+    def who(name: str, lista: str = "") -> MP:
         """The speaker as the list writes the name, with the list's own group; the model's name and list only when
         the list has nobody of that name."""
-        return roll.one(s.get("ime", "")) or MP(s.get("ime", ""), group=s.get("lista", ""))
-    people = [(who(s), s.get("o_cemu", "")) for s in speakers]
-    warned = {mp.name for m in measures for mp in m.kome}
-    longest = sorted((spoke.get(mp.name, 0) for mp, _ in people), reverse=True)
-    top = longest[0] if longest else 0
-    hours = f"{flow[0]['vreme']}–{flow[-1]['vreme']}" if len(flow) > 1 and flow[0].get("vreme") else ""
-    tiles = brojevi.tiles(numbers or {}, day, warning)
+        return roll.one(name) or MP(name, group=lista)
+    people = [(who(s.get("ime", ""), s.get("lista", "")), s.get("o_cemu", "")) for s in speakers]
+    people.sort(key=lambda x: -spoke.get(x[0].name, 0))  # the longest first; the day's order among the rest
+    given = {}  # an MP's first measure of the day, for the mark beside the name
+    for m in measures:
+        for mp in m.kome:
+            given.setdefault(mp.name, m)
+    said = [(who(str(q.get("ime", ""))), q) for q in quotes or [] if q.get("tekst") and q.get("ime")]
+
+    # The day by the clock: the summary's steps, the chair's measures (the code's, with the list's names) and the
+    # decisions. A step that tells of a measure, or stands at a decision's minute, would say it twice.
+    decided = {d.get("vreme", "") for d in decisions}
+    events = [(d.get("vreme", ""), 0, "odluka", d) for d in decisions]
+    events += [(m.vreme, 1, "mera", m) for m in measures]
+    events += [(f.get("vreme", ""), 2, "", f) for f in flow
+               if f.get("sta") and f.get("vreme", "") not in decided and not re.search(r"opomen|oduz\w+ reč", f["sta"], re.I)]
+    clocks = [_clock(x[0]) for x in events if _clock(x[0]) >= 0]
+    start = next((_clock(f.get("vreme", "")) for f in flow if _clock(f.get("vreme", "")) >= 0), min(clocks, default=0))  # the summary's first step
+    events.sort(key=lambda x: ((_clock(x[0]) - start) % 1440, x[1]))  # a day that ends after midnight stays in order
+
+    def measure_words(m: Measure) -> tuple[str, str]:
+        return (m.mera[:1].upper() + m.mera[1:], ", ".join(given_first(p.name) for p in m.kome))
 
     # The plain text, in the same order as the HTML.
     lines = [t(f"ZA ILI PROTIV · Skupština, {weekday} {day.day}. {MONTHS_OF[day.month - 1]} {day.year}."), "",
              *([t(title), ""] if title else []), t(brief), ""]
-    if decisions:
-        lines += [t("ODLUKE")] + [t(f"  {d.get('vreme', '')}  {d.get('sta', '')}") + (f"\n         {t(d['glasovi'])}" if d.get("glasovi") else "")
-                                 for d in decisions] + [""]
-    if tiles:
-        lines += [t("DAN U BROJEVIMA")] + [t(f"  {a} {b}") for a, b in tiles] + [""]
-    if measures:
-        lines += [t("OPOMENE I MERE")] + [t(f"  {m.vreme}  {m.mera[:1].upper() + m.mera[1:]}: "
-                                           + (", ".join(given_first(p.name) for p in m.kome) or "ime nije izgovoreno"))
-                                         for m in measures]
+    if events:
+        lines.append(t("DAN PO SATU"))
+        for when_, _, kind, x in events:
+            if kind == "odluka":
+                lines.append(t(f"  {when_}  ODLUKA: {x.get('sta', '')}") + (f"\n         {t(x['glasovi'])}" if x.get("glasovi") else ""))
+            elif kind == "mera":
+                what, to = measure_words(x)
+                lines.append(t(f"  {when_}  {what}: {to or 'ime nije izgovoreno'}"))
+            else:
+                lines.append(t(f"  {when_}  {x['sta']}"))
         lines.append("")
-    ask = [t("PODRŽI ZA ILI PROTIV"), t(f"  {SUPPORT_TITLE}"), t(f"  {SUPPORT_LINE}"), "  " + support, ""]
-    if decisions or measures:  # in the middle of the mail, before what was said
-        lines += ask
-    if speakers:
-        lines.append(t("KO JE ŠTA REKAO"))
-        for mp, said in people:
-            m = _minutes(spoke.get(mp.name, 0))
-            lines.append(t(f"  {given_first(mp.name)} ({mp.label}){', ' + m if m else ''}"))
-            if said:
-                lines.append(t(f"    {said}"))
+    if said:
+        lines += [t("REČENO U SALI"), t(f"  {QUOTES_NOTE}")]
+        for mp, q in said:
+            lines += [t(f"  {given_first(mp.name)} ({mp.label}), {q.get('vreme', '')}: „{q['tekst']}“")]
         lines.append("")
-    if not (decisions or measures):
-        lines += ask
+    lines += [t("PODRŽI ZA ILI PROTIV"), t(f"  {SUPPORT_TITLE}"), t(f"  {SUPPORT_LINE}"), "  " + support, ""]
+    if people:
+        lines.append(t("GOVORILI SU"))
+        for band, _, rows in by_lists(people, roll):
+            lines.append(t(f"  {band}"))
+            for mp, about in rows:
+                m = _minutes(spoke.get(mp.name, 0))
+                mark = f", {given[mp.name].mera} u {given[mp.name].vreme}" if mp.name in given else ""
+                lines.append(t(f"    {given_first(mp.name)}{'' if mp.group else ' (' + mp.label + ')'}{', ' + m if m else ''}{mark}"))
+                if about:
+                    lines.append(t(f"      {about}"))
+        lines.append("")
     lines += [t("Ceo dan, ko je govorio i snimci:") + " " + day_page, t("Mikrofon uživo:") + " " + live, "", "-- ",
               t("Kako nastaje ovaj sažetak:") + " " + method,
               t("Dobijaš ga jer si se prijavio na mikrofon.zailiprotiv.rs.")]
@@ -139,163 +193,162 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     lines.append(t("Za ili Protiv") + f", {CONTACT}")
     text = "\n".join(lines) + "\n"
 
-    # The HTML: one column of 560 px at most; every part is a line of time like the live page's.
+    # The HTML: one column of 600 px at most, cards on a grey ground.
     font = f"font-family:{SANS};"
 
-    def dot(kind: str, colour: str = "") -> str:
-        """The live page's mark of a step: a filled circle a decision, a red square a measure, a small grey circle a
-        speaker."""
-        if kind == "odluka":
-            style = f"width:10px;height:10px;border-radius:50%;background:{INK};border:2px solid {INK}"
-        elif kind == "mera":
-            style = f"width:10px;height:10px;border-radius:2px;background:{STOP};border:2px solid {STOP}"
-        else:
-            style = f"width:10px;height:10px;border-radius:50%;background:{colour or PAPER};border:2px solid {colour or MUTED}"
-        return f'<div style="{style};margin:5px auto 0;line-height:0;font-size:0">&nbsp;</div>'
+    def table(rows: str, extra: str = "") -> str:
+        return f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0"{" " + extra if extra else ""}>{rows}</table>'
 
-    def row(time: str, kind: str, body: str, last: bool, colour: str = "") -> str:
-        rail = "" if last else f"background:linear-gradient({LINE},{LINE}) no-repeat center 18px/2px 100%;"
-        return (f'<tr><td valign="top" align="right" style="{font}font-size:13px;color:{MUTED};padding:2px 8px 16px 0;'
-                f'white-space:nowrap;width:40px">{html.escape(time)}</td>'
-                f'<td valign="top" style="width:18px;padding:0;{rail}">{dot(kind, colour)}</td>'
-                f'<td valign="top" style="{font}font-size:15px;line-height:1.45;color:{INK};padding:0 0 16px 10px">{body}</td></tr>')
+    def face(mp: MP, px: int, colour: str) -> str:
+        """The MP's portrait from the site, the same address for every reader, cut round from its top; the initials
+        in the list's colour when the list has no portrait, and under the picture until it is loaded."""
+        ring = f"width:{px}px;height:{px}px;border-radius:50%;overflow:hidden;background:{colour};"
+        if mp.photo and mp.photo.replace(".", "").replace("-", "").isalnum():
+            return (f'<div style="{ring}"><img src="{SITE}foto/{html.escape(mp.photo)}" width="{px}" alt="" '
+                    f'style="display:block;width:{px}px;height:auto;border:0"></div>')
+        letters = "".join(w[:1] for w in given_first(mp.name).split()[:2])
+        return (f'<div style="{ring}{font}font-size:{px * 3 // 8}px;line-height:{px}px;font-weight:bold;color:{PAPER};'
+                f'text-align:center">{e(letters)}</div>')
 
-    def timeline(items: list[tuple]) -> str:
-        return ('<table role="presentation" cellpadding="0" cellspacing="0" width="100%">'
-                + "".join(row(*it[:3], i == len(items) - 1, *it[3:]) for i, it in enumerate(items)) + "</table>")
+    def heading(words: str, under: str = "") -> str:
+        note = f'<div style="{font}font-size:14px;line-height:1.5;color:{MUTED};padding-top:6px">{e(under)}</div>' if under else ""
+        return (f'<tr><td style="padding:34px 4px 0"><div style="font-family:{SERIF};font-size:27px;line-height:1.15;font-weight:bold;'
+                f'color:{INK}">{e(words)}</div>{note}</td></tr>')
 
-    def head(title: str, count: str = "") -> str:
-        return (f'<tr><td style="padding:26px 0 12px"><span style="font-family:{SERIF};font-size:19px;font-weight:bold;color:{INK}">'
-                f'{e(title)}</span>' + (f' <span style="{font}font-size:13px;color:{MUTED}">{e(count)}</span>' if count else "")
+    def band(name: str, colour: str, count: str, rows: str) -> str:
+        return ('<tr><td style="padding:14px 0 0">'
+                + table(f'<tr><td bgcolor="{colour}" style="background:{colour};border-radius:14px 14px 0 0;padding:11px 20px;{font}'
+                        f'font-size:15px;font-weight:bold;color:{PAPER}">{e(name)}<span style="font-weight:normal"> · {e(count)}</span></td></tr>'
+                        f'<tr><td bgcolor="{PAPER}" style="background:{PAPER};border-radius:0 0 14px 14px;padding:0 20px 6px">{table(rows)}</td></tr>')
                 + "</td></tr>")
 
-    def votes(text_: str) -> str:
-        """A vote's figures as the code wrote them ("za 136, protiv 0, ..., prisutno 234"): a bar of the hall, "za" blue
-        and "protiv" orange as everywhere on the site, and the figures that are not nought under it."""
-        v = {k: int(x) for k, x in re.findall(r"(za|protiv|uzdržano|nevažeći|nije glasalo|glasalo|prisutno) (\d+)", text_)}
-        kinds = [("za", ZA), ("protiv", PROTIV), ("uzdržano", "#8a919c"), ("nevažeći", "#8a919c"), ("nije glasalo", "#c9ced6")]
-        there = [(k, v[k], c) for k, c in kinds if v.get(k)]
-        whole = sum(x for _, x, _ in there)
-        if not whole:
-            return html.escape(t(text_))
-        cells = "".join(f'<td width="{max(1, round(100 * x / whole))}%" bgcolor="{c}" style="background:{c};height:8px;line-height:0;font-size:0">&nbsp;</td>'
-                        for _, x, c in there)
-        said = " · ".join(f'<b style="color:{c if k in ("za", "protiv") else INK}">{v[k]} {e(k)}</b>' if k in ("za", "protiv") else f"{v[k]} {e(k)}"
-                          for k, c in kinds if v.get(k) or (k == "protiv" and k in v))
-        return (f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:7px 0 5px;border-radius:4px;overflow:hidden"><tr>{cells}</tr></table>'
-                + said)
+    def vote(text_: str) -> str:
+        """A vote under its decision: "za" and "protiv" in large figures, blue and orange as everywhere on the site, a
+        bar of the hall, and the other figures that are not nought under it."""
+        v = _votes(text_)
+        parts_ = [("za", ZA_DARK), ("protiv", WARM), ("uzdržano", "#8d939c"), ("nevažeći", "#8d939c"), ("nije glasalo", "#5b616b")]
+        whole = sum(v.get(k, 0) for k, _ in parts_)
+        if not whole or "za" not in v:
+            return f'<br><span style="font-size:14px;font-weight:normal;color:{PALE}">{e(text_)}</span>'
+        big = lambda k, c: f'<span style="font-family:{SERIF};font-size:44px;line-height:1;font-weight:bold;color:{c}">{v.get(k, 0)}</span>'  # noqa: E731
+        cells = "".join(f'<td width="{max(1, round(100 * v[k] / whole))}%" bgcolor="{c}" style="background:{c};height:8px;line-height:0;font-size:0">&nbsp;</td>'
+                        for k, c in parts_ if v.get(k))
+        rest = ", ".join(f"{e(k)} {v[k]}" for k in ("prisutno", "uzdržano", "nevažeći", "nije glasalo") if v.get(k))
+        return (table(f'<tr><td valign="bottom" style="{font}font-size:14px;font-weight:normal;color:{PALE}">{big("za", ZA_DARK)} {e("za")}</td>'
+                      f'<td valign="bottom" align="right" style="{font}font-size:14px;font-weight:normal;color:{PALE}">{e("protiv")} {big("protiv", WARM)}</td></tr>',
+                      'style="margin-top:8px"')
+                + table(f"<tr>{cells}</tr>", 'style="margin:8px 0 6px;border-radius:4px;overflow:hidden"')
+                + (f'<span style="font-size:13px;font-weight:normal;color:{PALE}">{rest}</span>' if rest else ""))
+
+    def event(when_: str, kind: str, x, last: bool) -> str:
+        """One step of the day: a decision white and bold (larger with a vote), a measure amber, the rest grey."""
+        small = f'<br><span style="font-size:14px;font-weight:normal;color:{PALE}">'
+        if kind == "odluka":
+            words, dot, size = f'<b>{e(str(x.get("sta", "")).rstrip("."))}</b>' + (vote(x["glasovi"]) if x.get("glasovi") else ""), PAPER, 14 if x.get("glasovi") else 10
+        elif kind == "mera":
+            what, to = measure_words(x)
+            words = f'<b>{e(what)}{": " + e(to) if to else ""}</b>' + ("" if to else f'{small}{e("ime nije izgovoreno")}</span>')
+            dot, size = AMBER, 10
+        else:
+            words, dot, size = e(str(x["sta"]).rstrip(".")), "#5b616b", 10
+        pad = 0 if last else 18
+        return (f'<tr><td valign="top" align="right" style="width:46px;{font}font-size:14px;line-height:22px;font-weight:bold;'
+                f'color:{PAPER if kind else DIM};padding:0 12px {pad}px 0">{html.escape(when_)}</td>'
+                f'<td valign="top" style="border-left:2px solid #34383f;padding:0 0 {pad}px 18px;{font}font-size:{16 if kind else 15}px;'
+                f'line-height:22px;color:{PAPER if kind else PALE}">'
+                f'<div style="float:left;width:{size}px;height:{size}px;border-radius:50%;background:{dot};'
+                f'margin:{(22 - size) // 2}px 0 0 -{19 + size // 2}px;line-height:0;font-size:0">&nbsp;</div>{words}</td></tr>')
+
+    # The top: dark, the day in one line and then by the clock.
+    line = "".join(event(when_, kind, x, i == len(events) - 1) for i, (when_, _, kind, x) in enumerate(events))
+    headline = (f'<div style="font-family:{SERIF};font-size:30px;line-height:1.14;font-weight:bold;color:{PAPER};padding:10px 0 24px">{e(title)}</div>'
+                if title else f'<div style="font-family:{SERIF};font-size:20px;line-height:1.4;color:{PAPER};padding:10px 0 24px">{e(brief)}</div>')
+    top = (f'<tr><td bgcolor="{DARK}" style="background:{DARK};border-radius:18px;padding:24px 20px">'
+           f'<div style="{font}font-size:12px;font-weight:bold;letter-spacing:1.5px;color:{PALE}">{e("DAN U SKUPŠTINI, PO SATU")}</div>'
+           f'{headline}{table(line) if line else ""}</td></tr>')
 
     parts = []
-    if decisions:
-        parts.append(head("Odluke"))
-        parts.append("<tr><td>" + timeline([(d.get("vreme", ""), "odluka", e(d.get("sta", ""))
-                                             + (f'<div style="font-size:13px;color:{MUTED};margin-top:3px">{votes(d["glasovi"])}</div>' if d.get("glasovi") else ""))
-                                            for d in decisions]) + "</td></tr>")
-    if tiles:  # light figures of the day, the code's (brojevi.py), two in a row
-        cell = lambda a, b, span_: (f'<td valign="top" width="50%"{" colspan=2" if span_ else ""} style="padding:12px 11px;border:1px solid {LINE};background:{SOFT}">'  # noqa: E731
-                                    f'<div style="font-family:{SERIF};font-size:21px;font-weight:bold;color:{INK};line-height:1.15">{e(a)}</div>'
-                                    f'<div style="{font}font-size:13px;line-height:1.4;color:{MUTED};margin-top:4px">{e(b)}</div></td>')
-        rows_ = "".join("<tr>" + "".join(cell(*x, len(tiles[i:i + 2]) == 1) for x in tiles[i:i + 2]) + "</tr>" for i in range(0, len(tiles), 2))
-        parts.append(head("Dan u brojevima"))
-        parts.append(f'<tr><td><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed">{rows_}</table></td></tr>')
+    if said:  # the maintainer's own choice, checked by hand; never the service's
+        parts.append(heading("Rečeno u sali", QUOTES_NOTE))
+        for name, colour, rows in by_lists(said, roll):
+            out = ""
+            for k, (mp, q) in enumerate(rows):
+                under = (f'<span style="color:{colour};font-weight:600">{e(mp.label)}</span> · ' if not mp.group else "") + e(str(q.get("o_cemu", "")))
+                play = str(q.get("snimak", ""))
+                out += (f'<tr><td style="padding:20px 0;{"" if k == 0 else f"border-top:1px solid {LINE};"}">'
+                        + table(f'<tr><td width="56" valign="middle" style="width:56px">{face(mp, 56, colour)}</td><td valign="middle" style="padding-left:12px;{font}'
+                                f'font-size:14px;line-height:1.4;color:{MUTED}"><b style="font-size:17px;color:{INK}">{e(given_first(mp.name))}</b><br>{under}</td></tr>')
+                        + f'<div style="font-family:{SERIF};font-size:21px;line-height:1.38;color:{INK};padding:14px 0 {16 if play else 0}px">'
+                        f'<span style="color:{colour};font-weight:bold">„</span>{e(str(q["tekst"]))}<span style="color:{colour};font-weight:bold">“</span></div>'
+                        + (f'<a href="{html.escape(play)}" style="display:inline-block;{font}font-size:14px;font-weight:bold;color:{colour};text-decoration:none;'
+                           f'background:{SOFT};border-radius:999px;padding:13px 18px">&#9654;&#65038; {e("Pusti od")} {html.escape(str(q.get("vreme", "")))}</a>'
+                           if play.startswith("https://") else "") + "</td></tr>")
+            n = len(rows)
+            parts.append(band(name, colour, f"{n} {plural(n, 'rečenica', 'rečenice', 'rečenica')}", out))
 
-    def name_of(p: MP) -> str:
-        return f'<span style="color:{LISTS.get(p.label, OTHER_LIST)};font-weight:600">{e(given_first(p.name))}</span>'
-
-    if measures:
-        items = [(m.vreme, "mera", f'<b style="font-weight:600">{e(m.mera[:1].upper() + m.mera[1:])}</b>'
-                  + (f'<div style="font-size:14px">{", ".join(name_of(p) for p in m.kome)}</div>' if m.kome
-                     else f'<div style="color:{MUTED};font-size:14px">{e("ime nije izgovoreno")}</div>'))
-                 for m in measures]
-        parts.append(head("Opomene i mere", f"· {len(measures)}"))
-        parts.append("<tr><td>" + timeline(items) + "</td></tr>")
-    # The call for support, where the mail turns from what was decided to what was said (23 Nov 2026, the maintainer:
-    # "izrazi podrži i stavi ga na sredinu"): a dark card, the one thing in the mail that asks something of the reader.
-    # The amounts lead to their codes on the page; a heart as a letter, nothing loaded, nothing that says who pressed.
+    # The call for support, where the mail turns from what happened to who spoke (23 Nov 2026, the maintainer: "izrazi
+    # podrži i stavi ga na sredinu"): a dark card, the one thing in the mail that asks something of the reader. The
+    # amounts lead to their codes on the page; nothing that says who pressed.
     pill = (f"display:inline-block;{font}font-size:15px;font-weight:bold;text-decoration:none;white-space:nowrap;"
-            "border-radius:999px;padding:10px 12px;margin:0 5px 8px 0;")
-    amounts = "".join(f'<a href="{html.escape(support)}#din-{a}" style="{pill}background:{PAPER};color:{INK};border:1px solid {PAPER}">'
-                      f'{a} {e("din")}</a>' for a in config.SUPPORT_AMOUNTS)
+            "border-radius:999px;padding:14px 17px;margin:0 6px 6px 0;")
+    amounts = "".join(f'<a href="{html.escape(support)}#din-{a}" style="{pill}background:{PAPER};color:{INK}">{a} {e("din")}</a>'
+                      for a in config.SUPPORT_AMOUNTS)
     other = e("ili koliko želiš") if amounts else e("Podrži sajt")
-    card = (f'<tr><td style="padding:22px 0 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-            f'bgcolor="{DARK}" style="background:{DARK};border-radius:14px"><tr><td style="padding:22px 20px 16px">'
-            f'<div style="{font}font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:bold;color:{WARM}">'
-            f'<span style="font-size:17px;vertical-align:-1px">&#9829;&#65038;</span> {e("Podrži Za ili Protiv")}</div>'
-            f'<div style="font-family:{SERIF};font-size:21px;line-height:1.25;font-weight:bold;color:{PAPER};padding:8px 0 6px">{e(SUPPORT_TITLE)}</div>'
-            f'<div style="{font}font-size:15px;line-height:1.5;color:{PALE};padding:0 0 16px">{e(SUPPORT_LINE)}</div>'
-            f'<div>{amounts}<a href="{html.escape(support)}" style="display:inline-block;{font}font-size:15px;font-weight:bold;'
-            f'color:{PAPER};padding:10px 4px;margin:0 0 8px;white-space:nowrap">{other} →</a></div>'
-            "</td></tr></table></td></tr>")
-    if parts:
-        parts.append(card)
-    if speakers:
-        parts.append(head("Ko je šta rekao", "· po redu kojim su govorili"))
-        items = []
-        pill = "display:inline-block;font-size:11px;font-weight:bold;border-radius:999px;padding:0 7px;vertical-align:1px;"
-        for mp, said in people:
-            colour = MUTED if mp.label == "van poslaničkih grupa" else LISTS.get(mp.label, OTHER_LIST)
-            sec = spoke.get(mp.name, 0)
-            tags = ""
-            if mp.name in warned:
-                tags += f' <span style="{pill}color:{STOP};border:1px solid {STOP}">{e("opomena")}</span>'
-            if sec and longest.index(sec) < 3:
-                tags += f' <span style="{pill}color:{PAPER};background:{INK};border:1px solid {INK}">{e("najduže" if sec == top else "među najdužim")}</span>'
-            minutes = _minutes(sec)
-            label = e(mp.label) + (f'<span style="color:{MUTED};font-weight:400"> · {e(minutes)}</span>' if minutes else "")
-            bar = (f'<div style="height:4px;background:{SOFT};border-radius:2px;margin:5px 0 2px"><div style="height:4px;'
-                   f'width:{max(3, round(100 * sec / top))}%;background:{colour};border-radius:2px;line-height:0;font-size:0">&nbsp;</div></div>'
-                   if sec and top else "")
-            body = (f'<b style="font-weight:650">{e(given_first(mp.name))}</b>{tags}'
-                    f'<div style="font-size:13px;color:{colour};font-weight:600">{label}</div>{bar}'
-                    + (f'<div style="font-size:14px;line-height:1.45;margin-top:3px">{e(said)}</div>' if said else ""))
-            items.append(("", "rec", body, colour))
-        parts.append("<tr><td>" + timeline(items).replace("width:40px", "width:0px;padding-right:0") + "</td></tr>")
+    parts.append(f'<tr><td style="padding:30px 0 0">' + table(
+        f'<tr><td bgcolor="{DARK}" style="background:{DARK};border-radius:14px;padding:20px 20px 12px">'
+        f'<div style="{font}font-size:12px;letter-spacing:1.5px;font-weight:bold;color:{WARM}">'
+        f'<span style="font-size:15px">&#9829;&#65038;</span> {e("PODRŽI ZA ILI PROTIV")}</div>'
+        f'<div style="font-family:{SERIF};font-size:19px;line-height:1.3;font-weight:bold;color:{PAPER};padding:8px 0 5px">{e(SUPPORT_TITLE)}</div>'
+        f'<div style="{font}font-size:15px;line-height:1.5;color:{PALE};padding:0 0 14px">{e(SUPPORT_LINE)}</div>'
+        f'{amounts}<a href="{html.escape(support)}" style="display:inline-block;{font}font-size:14px;font-weight:bold;color:{PAPER};'
+        f'padding:14px 4px;white-space:nowrap">{other} →</a></td></tr>') + "</td></tr>")
 
-    if card not in parts:  # a day without a decision or a measure: after what was said
-        parts.append(card)
+    if people:
+        parts.append(heading("Govorili su", f"{len(people)} {plural(len(people), 'poslanik', 'poslanika', 'poslanika')}, po listama, najduže prvo. "
+                             "Opise je napisao model iz automatskog prepisa i može da pogreši."))
+        for name, colour, rows in by_lists(people, roll):
+            out = ""
+            for k, (mp, about) in enumerate(rows):
+                mark = (f' <span style="display:inline-block;font-size:11px;font-weight:bold;color:#8a4b00;background:#fdecc8;border-radius:999px;'
+                        f'padding:1px 8px;vertical-align:2px;white-space:nowrap">{e(given[mp.name].mera)} {e("u")} {html.escape(given[mp.name].vreme)}</span>'
+                        if mp.name in given else "")
+                side = (f'<span style="color:{colour};font-weight:600">{e(mp.label)}</span>' if not mp.group and mp.label != "van poslaničkih grupa" else "")
+                minutes = _minutes(spoke.get(mp.name, 0))
+                side += (" · " if side and minutes else "") + e(minutes)
+                out += (f'<tr><td width="44" valign="top" style="width:44px;padding:16px 0 15px;{"" if k == 0 else f"border-top:1px solid {LINE};"}">{face(mp, 44, colour)}</td>'
+                        f'<td valign="top" style="padding:14px 0 15px 12px;{"" if k == 0 else f"border-top:1px solid {LINE};"}{font}font-size:15px;line-height:1.5;color:#3a3f47">'
+                        + (f'<div style="float:right;font-size:13px;line-height:1.7;color:{MUTED};white-space:nowrap;padding-left:8px">{side}</div>' if side else "")
+                        + f'<b style="font-size:16px;line-height:1.35;color:{INK}">{e(given_first(mp.name))}</b>{mark}'
+                        + (f'<div style="padding-top:3px">{e(about)}</div>' if about else "") + "</td></tr>")
+            n = len(rows)
+            parts.append(band(name, colour, f"{n} {plural(n, 'poslanik', 'poslanika', 'poslanika')}", out))
 
-    # The top: dark, the day as a leaf of a calendar (as on the live page), and the day in one line; with decisions
-    # under it their list is the summary, so the sentence that says them again stays for the preview and the text.
-    lead = "" if title and decisions else brief if title else ""
-    leaf = (f'<table role="presentation" cellpadding="0" cellspacing="0" width="64" bgcolor="{PAPER}" style="background:{PAPER};border-radius:10px"><tr>'
-            f'<td align="center" style="padding:8px 4px 7px;{font}font-size:11px;font-weight:bold;letter-spacing:.06em;text-transform:uppercase;color:{STOP};line-height:1.1">{e(weekday[:3])}'
-            f'<div style="font-family:{SERIF};font-size:28px;color:{INK};letter-spacing:0;line-height:1.1">{day.day}</div>'
-            f'<span style="color:{INK}">{e(MONTHS[day.month - 1][:3])}</span></td></tr></table>')
-    hero = (f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td width="64" valign="middle">{leaf}</td>'
-            f'<td valign="middle" style="padding:0 0 0 16px"><div style="font-family:{SERIF};font-size:20px;font-weight:bold;color:{PAPER};line-height:1.2">{e("Dan u Skupštini")}</div>'
-            f'<div style="{font}font-size:14px;color:{PALE};padding-top:3px">{e(weekday)}{", " + hours if hours else ""}</div></td></tr></table>'
-            + (f'<div style="font-family:{SERIF};font-size:26px;line-height:1.22;font-weight:bold;color:{PAPER};padding:20px 0 0">{e(title)}</div>' if title
-               else f'<div style="font-family:{SERIF};font-size:19px;line-height:1.45;color:{PAPER};padding:18px 0 0">{e(brief)}</div>')
-            + (f'<div style="{font}font-size:16px;line-height:1.5;color:{PALE};padding:10px 0 0">{e(lead)}</div>' if lead else ""))
-    button = (lambda href, label, solid: f'<a href="{html.escape(href)}" style="display:inline-block;{font}font-size:15px;'
-              f'font-weight:bold;text-decoration:none;padding:11px 18px;border-radius:999px;margin:0 8px 8px 0;'
-              + (f"background:{INK};color:{PAPER};border:1px solid {INK}" if solid else f"color:{INK};border:1px solid {INK}")
-              + f'">{e(label)}</a>')
+    button = (lambda href, label, solid: f'<tr><td style="padding:{22 if solid else 10}px 0 0"><a href="{html.escape(href)}" style="display:block;{font}'
+              f'font-size:16px;font-weight:bold;text-align:center;text-decoration:none;border-radius:14px;padding:17px 18px;'
+              + (f"background:{DARK};color:{PAPER};border:1px solid {DARK}" if solid else f"color:{INK};border:1px solid {INK}")
+              + f'">{e(label)}</a></td></tr>')
     foot = [f'<a href="{html.escape(method)}" style="color:{MUTED}">{e("Kako nastaje ovaj sažetak")}</a>']
     if unsubscribe:
         foot.append(f'<a href="{html.escape(unsubscribe)}" style="color:{MUTED}">{e("Odjavi se")}</a>')
     if other_script:
         foot.append(f'<a href="{html.escape(other_script)}" style="color:{MUTED}">{"Latinica" if cyr else "Ћирилица"}</a>')
-    brand = (f'<span style="color:{ZA_DARK}">{e("Za")}</span> {e("ili")} <span style="color:{WARM}">{e("Protiv")}</span>')
+    brand = (f'<span style="color:{ZA}">{e("Za")}</span><span style="color:{INK}"> {e("ili")} </span><span style="color:{PROTIV}">{e("Protiv")}</span>')
+    portraits = e("Portreti: Narodna skupština, učitavaju se sa zailiprotiv.rs.") + "<br>" if "<img" in "".join(parts) else ""
+    inside = top + "".join(parts)
+    read = max(1, round(len(re.sub(r"<[^>]+>", " ", inside).split()) / 200))
     body = f"""<!doctype html>
 <html lang="{'sr-Cyrl' if cyr else 'sr-Latn'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><title>{html.escape(subject)}</title></head>
 <body style="margin:0;padding:0;background:{BACK}">
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all">{e(brief)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{BACK}"><tr><td align="center" style="padding:20px 12px 28px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
-<tr><td bgcolor="{DARK}" style="background:{DARK};border-radius:14px 14px 0 0;padding:18px 24px 24px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px"><tr>
-<td style="font-family:{SERIF};font-size:18px;font-weight:bold;color:{PAPER}">{brand}</td>
-<td align="right" style="{font}font-size:13px;color:{PALE}">{e("Sažetak dana")}</td></tr></table>
-{hero}</td></tr>
-<tr><td style="background:{PAPER};border-radius:0 0 14px 14px;padding:4px 24px 22px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-{"".join(parts)}
-<tr><td style="padding:10px 0 0">{button(day_page, "Ceo dan na sajtu", True)}{button(live, "Mikrofon uživo", False)}</td></tr>
-</table></td></tr>
-<tr><td style="{font}font-size:12px;line-height:1.6;color:{MUTED};padding:16px 8px 0;text-align:center">
-{" &nbsp;·&nbsp; ".join(foot)}<br>{e("Dobijaš ovaj mejl jer si se prijavio na mikrofon.zailiprotiv.rs.")}<br>{e("Za ili Protiv")} · {CONTACT}</td></tr>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="{BACK}" style="background:{BACK}"><tr><td align="center" style="padding:14px 12px 28px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px">
+<tr><td style="padding:4px 4px 14px">{table(f'<tr><td style="font-family:{SERIF};font-size:22px;font-weight:bold">{brand}</td>'
+                                             f'<td align="right" style="{font}font-size:13px;line-height:1.4;color:{MUTED}">{e(weekday)}, {e(when)}<br>{e("čitanje")} {read} min</td></tr>')}</td></tr>
+{inside}
+{button(day_page, "Ceo dan na sajtu", True)}{button(live, "Mikrofon uživo", False)}
+<tr><td style="{font}font-size:12px;line-height:1.8;color:{MUTED};padding:18px 8px 0;text-align:center">
+{" &nbsp;·&nbsp; ".join(foot)}<br>{portraits}{e("Dobijaš ovaj mejl jer si se prijavio na mikrofon.zailiprotiv.rs.")}<br>{e("Za ili Protiv")} · {CONTACT}</td></tr>
 </table></td></tr></table></body></html>
 """
     return Mail(subject, text, body)
