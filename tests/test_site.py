@@ -169,6 +169,13 @@ def test_site_builds_every_convocation(tmp_path):
     laws = json.loads((root / "13" / "laws.json").read_text())
     laws["laws"]["L"].update(passed="2023-07-10", votes=list(store["votes"]), final_vote=next(iter(store["votes"])))
     (root / "13" / "laws.json").write_text(json.dumps(laws))
+    # an overview from the notes of a convocation with no law yet (25 Nov 2026: no build went through for it)
+    (root / "profiles").mkdir()
+    quote = {"tekst": "Овај закон не ваља.", "date": "2026-11-19", "url": "https://www.parlament.gov.rs/x.docx"}
+    (root / "profiles" / "x.json").write_text(json.dumps({
+        "mp": "ненад абрамовић", "model": "claude-opus-5-5", "read": 5, "speeches": 5, "sittings": 2, "points": [
+            {"tekst": "Говори о ловцима.", "govora": 2, "sazivi": ["13"], "citat": quote},
+            {"tekst": "Говори о оружју.", "govora": 3, "sazivi": ["14", "15"], "citat": quote}]}))
     out = tmp_path / "_site"
     stats = site.build(root, out, None)
     assert stats["laws"] == 1 and stats["all_laws"] == 2
@@ -178,6 +185,8 @@ def test_site_builds_every_convocation(tmp_path):
     mp = (out / "poslanik" / "abramovic-nenad-glasovi.html").read_text()
     assert "zakon-o-oruzju.html" in mp and "zakon-o-oruzju-2.html" in mp
     assert "abramovic-nenad.html" in (out / "poslanici.html").read_text()  # one page of MPs per convocation
+    mp = (out / "poslanik" / "abramovic-nenad.html").read_text()
+    assert "Govori o lovcima." in mp and "Govori o oružju." in mp and "2024–2026, 2026–" in mp
     assert "abramovic-nenad.html" in (out / "poslanici-13.html").read_text()
     assert 'href="poslanici-13.html"' in (out / "poslanici.html").read_text()
 
