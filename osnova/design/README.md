@@ -20,6 +20,8 @@ This folder is a copy. It is written in `javni-uvid/osnova` (`shared/design/`): 
    font or base colour of its own. `--ju-wide` is set to the width of the site's header.
 3. Every page begins with the bar and ends with the footer block, as in `family.html`, filled from `sites.json`
    in the page's script, the site itself marked `aria-current="page"` in the bar.
+   On a phone (640 px and less) the bar is not shown where the page ends with the block, which names the same sites (25 Nov
+   2026, the maintainer: 44 px of every first screen).
 4. A site's own dark switch sets `data-theme` on the root; without one the reader's system decides.
 
 A new site is added to `sites.json` here; the others show it after their next copy and build.

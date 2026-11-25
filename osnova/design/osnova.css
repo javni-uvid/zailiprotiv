@@ -46,6 +46,9 @@
 .ju-bar .ju-name { font-family: var(--ju-serif); font-weight: 700; font-size: var(--ju-t-2); color: var(--ju-fg); margin-right: auto; padding-right: .6rem; }
 .ju-bar a[aria-current] { color: var(--ju-fg); font-weight: 600; }
 .ju-mark { width: 1.05em; height: 1.05em; flex: none; }
+/* On a phone the family stands at the foot of the page only, in the footer's block, which names the same sites: the bar
+   took 44 px of every first screen (25 Nov 2026, the maintainer). A page without that block keeps the bar on top. */
+@media (max-width: 640px) { body:has(.ju-foot) .ju-bar { display: none; } }
 @media print { .ju-bar { display: none; } }
 
 /* The family's block in a site's footer: what the family promises, and its sites with a line on each. */
