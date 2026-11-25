@@ -260,8 +260,8 @@ as the change. The principles and the rules of work are in AGENTS.md.
 - **The live records alone were never committed** (found the same day): beside the changed times of reading `git pull
   --rebase` refuses to run, and the loop ended in silence.
 - **One way to send what a workflow read, `tools/predaj.sh`** (25 Nov 2026, the maintainer: "Može 1 2 i 5"). Eight workflows
-  commit to `main`; the mend of 24 Nov's lost hour was in **votes** only, and five of the others did not even look whether the
-  push went. The script commits what is staged, rebases on the server's branch beside whatever is not staged, pushes, and then
+  commit to `main`; the mend of 24 Nov's lost hour was in **votes** only: three of the others had the check that let it pass
+  (`git status -sb | grep ahead`), and three none. The script commits what is staged, rebases on the server's branch beside whatever is not staged, pushes, and then
   asks the server whether the commit is there: 0 only if it is, otherwise 1 and the run is red. `tests/test_predaj.py` takes each
   workflow's own commit steps and runs them against a server where another has changed the same files: the run must end red and
   start nothing; and no workflow may push any other way (but **osnova**, one push that fails aloud). The checkout is of
