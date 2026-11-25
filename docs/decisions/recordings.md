@@ -262,3 +262,7 @@ records and recordings stays here:
   - Suspected, not proven: since the record's turns begin with the sound, `refine` puts a caption's first frame, some 15
     s into a speech, at the turn's beginning. (It does not explain the fifth's minute.) A file placed by few frames since
     24 Nov is suspect for it: the 25th's, by four.
+- **24 Nov is written from the notes** (25 Nov 2026, by the rule of 20 Nov: notes lined up with the sound replace whatever
+  the day had). 103 turns of 43 speakers for 95 of 41; 364 minutes for 357; 18 short speeches (147 words) have no place. A
+  speaker whose first turn anywhere gives no list (a day before the groups were formed) has the one the list of MPs gives
+  now: Vjerica Radeta's would have left her list's sum. 25 Nov waits: its recording is not written down.

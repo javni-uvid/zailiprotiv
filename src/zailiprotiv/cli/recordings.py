@@ -122,12 +122,15 @@ def govor_cmd(args) -> int:
         k = mps.key(speaker)
         if k not in known and k not in members:  # misspelt in the notes: the one listed name near it
             k = govor.nearest(k, {**known, **members}) or k
+        m = members.get(k)
         if k in known:
             t = known[k]
-            return {"ime": t["ime"], "adresa": t["adresa"], "grupa": t.get("grupa", ""), "uloga": t.get("uloga", "")}
+            # A day before the groups were formed gives none: the list of MPs' then (25 Nov 2026: Vjerica Radeta's 12
+            # minutes of the 24th would have stood under no list, for the 17th).
+            group = t.get("grupa", "") or ("" if t.get("uloga") or not m else translit.latin(m["group"]))
+            return {"ime": t["ime"], "adresa": t["adresa"], "grupa": group, "uloga": t.get("uloga", "")}
         words = translit.latin(speaker).title().split()
         name = " ".join(words[-1:] + words[:-1])
-        m = members.get(k)
         return {"ime": name, "adresa": site_slug(name, 60) if m else "", "grupa": translit.latin(m["group"]) if m else "",
                 "uloga": translit.latin(m["group"]) if m else ""}
 
