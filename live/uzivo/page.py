@@ -788,7 +788,7 @@ def countdown(snap: dict, *, cyr: bool, tz: ZoneInfo, now: float | None = None) 
         day = datetime.strptime(p[:10], "%Y-%m-%d").date()
     except ValueError:
         return ""
-    now = time.time() if now is None else now
+    now = _now().timestamp() if now is None else now
     t = lambda k: escape(_t(k, cyr))
     hour = p[11:16] if len(p) >= 16 else ""
     when = f'{WEEKDAYS[day.weekday()].capitalize()}, {_date(p[:10])}' + (f' {TEXT["at"]} {hour}' if hour else "")
