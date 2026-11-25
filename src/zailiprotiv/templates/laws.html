@@ -17,7 +17,7 @@
 </section>
 {% endif %}
 {% if votes_api %}<p class="vote-line"><a class="lb-btn" href="kviz/podelili-salu.html">Kako ti glasaš?</a> <span>Kviz od deset zakona, ili glasaj na strani bilo kog zakona. Tvoji glasovi stoje uz zakone na ovom spisku.</span></p>{% endif %}
-<div class="finder js-only" hidden data-filter="f-rows">
+<div class="finder js-only" hidden data-filter="f-rows" data-none="Nema zakona za ovaj izbor.">
   <label class="sr" for="f-q">Pretraži zakone</label>
   <input id="f-q" type="search" placeholder="Pretraži {{ total }} {{ plural(total, "zakon", "zakona", "zakona") }} ovog saziva" autocomplete="off">
   <div class="chips" role="group" aria-label="Prikaži">

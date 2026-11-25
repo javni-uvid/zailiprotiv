@@ -498,7 +498,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (ok) shown++;
     });
     box.classList.toggle("on", words.length > 0);
-    count.textContent = quiet || shown === rows.length ? "" : (shown ? "Prikazano " + shown + " od " + rows.length : box.dataset.none || "Niko pod tim imenom među govornicima ovog saziva.");
+    count.textContent = quiet || shown === rows.length ? "" : (!shown && box.dataset.none || "Prikazano " + shown + " od " + rows.length);  // nothing found: the list's own sentence, or the count
   }
   function order() {
     var key = sort ? sort.value : "";
