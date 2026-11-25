@@ -85,6 +85,23 @@ def _votes(text_: str) -> dict[str, int]:
     return {k: int(x) for k, x in re.findall(r"(za|protiv|uzdržano|nevažeći|nije glasalo|glasalo|prisutno) (\d+)", text_ or "")}
 
 
+def short_steps(flow: list[dict]) -> list[dict]:
+    """The summary's steps as the mail's line has room for them (25 Nov 2026, the maintainer: shorter). A break and the
+    work going on after it are one step, in the code's words with the hour the next step gives ("Pauza do 11:23"); of
+    a step in two parts ("…; …") the first is kept. The same for every day; nothing is added to what a step says."""
+    steps = [f for f in flow if f.get("sta") and _clock(f.get("vreme", "")) >= 0]
+    out, k = [], 0
+    while k < len(steps):
+        f, after = steps[k], steps[k + 1] if k + 1 < len(steps) else None
+        if re.search(r"\bpauz", f["sta"], re.I) and after and re.match(r"\W*(nastav|konstatovan kvorum|rad je nastavljen)", after["sta"], re.I):
+            out.append({"vreme": f["vreme"], "sta": f"Pauza do {after['vreme']}"})
+            k += 2
+            continue
+        out.append({"vreme": f["vreme"], "sta": f["sta"].split(";")[0].strip()})
+        k += 1
+    return out
+
+
 def by_lists(people: list, roll: Roll, label=lambda x: x[0]) -> list[tuple[str, str, list]]:
     """People in bands, one per parliamentary group and one for everybody outside the groups: (the band's name, its
     colour, its people in the order given). The groups by their seats in the list, most first, then by the alphabet;
@@ -145,8 +162,8 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     decided = {d.get("vreme", "") for d in decisions}
     events = [(d.get("vreme", ""), 0, "odluka", d) for d in decisions]
     events += [(m.vreme, 1, "mera", m) for m in measures]
-    events += [(f.get("vreme", ""), 2, "", f) for f in flow
-               if f.get("sta") and f.get("vreme", "") not in decided and not re.search(r"opomen|oduz\w+ reč", f["sta"], re.I)]
+    events += [(f.get("vreme", ""), 2, "", f) for f in short_steps(flow)
+               if f.get("vreme", "") not in decided and not re.search(r"opomen|oduz\w+ reč", f["sta"], re.I)]
     clocks = [_clock(x[0]) for x in events if _clock(x[0]) >= 0]
     start = next((_clock(f.get("vreme", "")) for f in flow if _clock(f.get("vreme", "")) >= 0), min(clocks, default=0))  # the summary's first step
     events.sort(key=lambda x: ((_clock(x[0]) - start) % 1440, x[1]))  # a day that ends after midnight stays in order

@@ -13,6 +13,7 @@ import hashlib
 import hmac
 import json
 import logging
+import re
 import socket
 import threading
 import urllib.error
@@ -103,6 +104,7 @@ class Mailer:
         self.folder = Path(folder)  # /data/mejl: what went, by day
         self.build = build          # day, cyr, unsubscribe link → mejl.Mail of that day, or None
         self._lock = threading.Lock()  # one sending at a time: the button pressed twice is one sending
+        self.hints = getattr(build, "hints", None)  # day → what the chair said after a measure with no name
 
     def _state(self, day: date) -> dict:
         f = self.folder / f"{day.isoformat()}.json"
@@ -117,7 +119,7 @@ class Mailer:
         try:
             kept = json.loads(f.read_text(encoding="utf-8"))
         except (OSError, ValueError):
-            return "<p><b>Pažnja:</b> sažetak je napisao slabiji model iz sažetaka delova. Proveri rečenice po govorniku.</p>"
+            return WEAK
         weak = kept.get("bez_oslonca") or []
         rows = "".join(f"<li><b>{escape(n)}</b>{' (OSLONAC NIJE NAĐEN)' if n in weak else ''}: "
                        f"{escape(' … '.join(str(x) for x in said))}</li>"
@@ -147,8 +149,9 @@ class Mailer:
             link = f"{config.PUBLIC_URL.rstrip('/')}/mejl/posalji?dan={day.isoformat()}&k={link_key(day)}"
             note = (f"<p><b>Ne može svima:</b> reč u dva pisma ({escape(', '.join(slips))}). Ispravi sažetak dana, pa će stići novi.</p>"
                     if slips else f'<p><a href="{escape(link)}"><b>Pošalji svima</b></a> (do podneva, jednom).</p>')
-            top = f'<div style="font-family:sans-serif;padding:12px;background:#fbf0dc">{note}{self._basis(day)}</div>'
-            sent, failed = send([{"to": config.MAIL_EDITOR, "subject": "[za tebe] " + m.subject,
+            basis = self._basis(day)
+            top = f'<div style="font-family:sans-serif;padding:12px;background:#fbf0dc">{note}{basis}{self.hints(day) if self.hints else ""}</div>'
+            sent, failed = send([{"to": config.MAIL_EDITOR, "subject": ("[za tebe, SLABIJI MODEL] " if basis == WEAK else "[za tebe] ") + m.subject,
                                   "html": _with_top(m.html, top),
                                   "text": ("NE MOŽE SVIMA: " + ", ".join(slips) if slips else "Pošalji svima: " + link) + "\n\n" + m.text}])
             if sent:
@@ -232,6 +235,33 @@ class Mailer:
         return ("nesigurno" if unsure else "ok"), len(done)
 
 
+WEAK = "<p><b>Pažnja:</b> sažetak je napisao slabiji model iz sažetaka delova. Proveri rečenice po govorniku.</p>"
+HINT_AFTER = 300  # seconds after a measure with no name in which the chair's words may say whose it was
+
+
+def hints(measures: list, said: dict, roll: mere.Roll, day: date) -> str:
+    """For the maintainer's mail only (25 Nov 2026: on 24 Nov the chair named whom he had warned three minutes later,
+    "imam potrebu da objasnim koleginici Kuburović, bila su dva upozorenja pre opomene", and no rule took it): under
+    each measure with no name, the chair's pieces of the next five minutes that name a sitting MP and speak of a
+    warning, word for word. Nothing is named by it: the maintainer reads and decides."""
+    rows = []
+    for m in measures:
+        if m.kome:
+            continue
+        h, mi = m.vreme.split(":")
+        t0 = datetime(day.year, day.month, day.day, int(h), int(mi), tzinfo=TZ).timestamp()
+        for k in sorted((k for k in said if k[:1] == "p" and k[1:].isdigit()), key=lambda k: int(k[1:])):
+            text = str(said[k])
+            if t0 + 60 <= int(k[1:]) <= t0 + 60 + HINT_AFTER and re.search(r"opomen|upozoren", text, re.I):
+                who = roll.find(text)
+                if who:
+                    at = datetime.fromtimestamp(int(k[1:]), TZ).strftime("%H:%M")
+                    rows.append(f"<li><b>{escape(m.vreme)} {escape(m.mera)}, bez imena.</b> Predsedavajući u {at} pominje "
+                                f"{escape(', '.join(p.name for p in who))}: „{escape(text[:300])}“</li>")
+    return ("<p>Mere bez imena posle kojih predsedavajući nekoga pominje (samo za tebe; ništa nije upisano):</p><ul>"
+            + "".join(rows) + "</ul>") if rows else ""
+
+
 def _with_top(html: str, top: str) -> str:
     """The maintainer's note above the mail: right after <body …>."""
     i = html.find(">", html.find("<body"))
@@ -273,6 +303,17 @@ def day_mail(tracker):
         other = f"{(config.PUBLIC_URL or 'https://mikrofon.zailiprotiv.rs').rstrip('/')}/{'' if cyr else 'cir/'}"
         return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other,
                           quotes=quotes if isinstance(quotes, list) else [])
+    def hint(day: date) -> str:
+        kept = tracker.summary_of(day.isoformat()) or {}
+        f, p = base / "hronika" / f"{day.isoformat()}.json", base / "prepis" / f"{day.isoformat()}.json"
+        try:
+            lines = json.loads(f.read_text(encoding="utf-8")) if f.exists() else []
+            said = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+        except ValueError:
+            return ""
+        roll = roll_of(getattr(tracker, "facts", {}))
+        return hints(mere.measures(lines, kept.get("delovi") or [], roll, TZ), said, roll, day)
+    build.hints = hint
     return build
 
 

@@ -128,3 +128,13 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   to its place in the archive; the mail says so. The rule that the automatic transcript is never a quote stands: the
   service shows none by itself. A file that cannot be read sends the mail without them. With 39 speakers the HTML is
   58 KB (70 KB with seven sentences), under the 102 KB at which Gmail cuts a mail.
+- **The mail's line is shorter, and two helps stand on top of the maintainer's mail** (25 Nov 2026, the maintainer, of a
+  list of what could be better: "može", "da", "poboljšaj ako treba"). `mejl.short_steps`: a break and the work going on
+  after it are one step in the code's words ("Pauza do 11:23", the hour the next step gives), and of a step in two
+  parts ("…; …") the first is kept; 24 Nov's line went from 20 rows to 15. Nothing is added to what a step says.
+  **The weaker model in the subject**: "[za tebe, SLABIJI MODEL]" when the stronger one did not write the day (the
+  note inside was there; on 24 Nov a wrong line of the weaker one went to all). **Whom the chair named after a measure
+  with no name** (`pretplata.hints`): the chair's pieces of the five minutes after it that name a sitting MP and speak
+  of a warning, word for word, for the maintainer only. No rule names anybody by it: tried on 24 Nov it shows
+  Kuburović at 13:27, rightly, and Vučić at 12:15, wrongly (the chair only gave him the floor), so a rule would
+  have named a wrong MP. A name the maintainer confirms is put in the day's line by hand (`vise.kome`).

@@ -172,3 +172,28 @@ def test_the_maintainers_sentences_are_shown_only_when_added():
     assert "Rečeno u sali" in m.html and "izabrao i proverio urednik" in m.html and "REČENO U SALI" in m.text
     assert "Mediji su &lt;slobodni&gt;." in m.html and 'href="https://arhiva.videonet.co.rs/x.mp4#t=5"' in m.html and "Pusti od 12:38" in m.html
     assert "javascript" not in m.html and "„Manjine.“" in m.text  # a link only to a recording's address
+
+
+def test_the_mails_line_joins_a_break_with_its_end_and_keeps_a_steps_first_part():
+    flow = [{"vreme": "10:00", "sta": "Otvoren nastavak sednice; pozdravljeni gosti."}, {"vreme": "10:07", "sta": "Proglašena pauza od jednog sata."},
+            {"vreme": "11:23", "sta": "Nastavak rada i prelazak na petu tačku."}, {"vreme": "14:10", "sta": "Proglašena pauza do 15:10."},
+            {"vreme": "15:20", "sta": "Otvoren pretres."}, {"vreme": "18:08", "sta": "Proglašena pauza."}]
+    assert [(f["vreme"], f["sta"]) for f in mejl.short_steps(flow)] == [
+        ("10:00", "Otvoren nastavak sednice"), ("10:07", "Pauza do 11:23"),
+        ("14:10", "Proglašena pauza do 15:10."),  # what follows is no going on: the step stands as told
+        ("15:20", "Otvoren pretres."), ("18:08", "Proglašena pauza.")]
+    m = mejl.build(date(2026, 11, 19), {**SUMMARY, "tok": flow}, [], ROLL)
+    assert "Pauza do 11:23" in m.html and "Nastavak rada i prelazak" not in m.html and "pozdravljeni gosti" not in m.text
+
+
+def test_the_maintainer_is_shown_whom_the_chair_named_after_a_measure_with_no_name():
+    from uzivo import pretplata
+    ms = [mere.Measure("13:24", "opomena"), mere.Measure("17:10", "opomena", [ROLL.one("Radeta Vjerica")], "ime")]
+    said = {"p" + str(int(at("13:27"))): "imam potrebu da objasnim koleginici Brnabić, bila su dva upozorenja pre opomene",
+            str(int(at("13:26"))): "Brnabić je dobila opomenu, sram vas bilo",          # an MP's words: not the chair's
+            "p" + str(int(at("13:40"))): "Brnabić, opomena je bila zaslužena",           # too late
+            "p" + str(int(at("17:12"))): "gospodine Bakiću, opomena je izrečena"}        # that measure has its name
+    got = pretplata.hints(ms, said, ROLL, date(2026, 11, 19))
+    assert got.count("<li>") == 1 and "13:24 opomena, bez imena" in got and "u 13:27 pominje Brnabić Ana" in got and "ništa nije upisano" in got
+    assert pretplata.hints(ms[1:], said, ROLL, date(2026, 11, 19)) == ""
+
