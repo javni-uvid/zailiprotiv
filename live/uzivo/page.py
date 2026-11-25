@@ -234,13 +234,14 @@ def _status(snap: dict, *, cyr: bool) -> str:
     the Assembly sits ("Uživo", while the broadcast is on) or not, and the agenda's item under way or next."""
     t = lambda k: escape(_t(k, cyr))
     items = (snap.get("dnevni_red") or {}).get("tacke") or []
+    word = t("status_break" if _paused(snap) else "status_live")  # "Pauza" while a break is known (25 Nov 2026, the maintainer)
     off = snap["stanje"] == "nema_prenosa"  # nothing is under way then, whatever was heard last (25 Nov 2026)
     on = (next((x for x in items if x.get("stanje") == "u_toku" and not off), None)
           or next((x for x in items if x.get("stanje") == "na_redu"), None))
     if off:
         pill = f'<span class="pill off">{t("status_off")}</span>'
     else:
-        pill = f'<span class="pill"><i aria-hidden="true"></i>{t("status_live")}</span>'
+        pill = f'<span class="pill"><i aria-hidden="true"></i>{word}</span>'
     what = ""
     if on:
         what = (f'<span class="status-on">{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}: '
@@ -264,7 +265,7 @@ def _status(snap: dict, *, cyr: bool) -> str:
     if on and snap["stanje"] != "nema_prenosa":  # on the air: the same card, the tile says so
         head = f'{t("ag_now" if on["stanje"] == "u_toku" else "ag_next")}:'
         chair_ = what[what.index('<span class="status-chair">'):] if "status-chair" in what else ""
-        return (f'<div class="status st-card st-live"><p class="st-tile"><i aria-hidden="true"></i><span>{t("status_live")}</span></p>'
+        return (f'<div class="status st-card st-live"><p class="st-tile"><i aria-hidden="true"></i><span>{word}</span></p>'
                 f'<div class="st-in"><p class="st-when"><span class="st-h">{head}</span> {escape(_short_item(on, cyr))}</p>{chair_}</div></div>')
     return f'<div class="status"><p>{pill}{what}</p></div>'
 

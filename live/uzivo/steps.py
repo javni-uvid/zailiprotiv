@@ -22,6 +22,7 @@ WHY_SOON = 60  # seconds: a measure said again this soon with its reason is the 
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said
 RESUMED_AFTER = 300  # seconds after a break for words or a turn to be its end
+SEEN_SAME = 300  # seconds: a break known from the picture ("slika") and one heard, this near, are one break
 STEP_IDLE = 600  # work is resumed when nobody was at the rostrum for this long before the chair says so
 _UNDER_WAY = {"Glasanje", "Glasanje zaključeno", "Pretres otvoren", "Pretres zaključen"}
 # Steps said in the same second, in the order the Assembly's work takes them.
@@ -45,6 +46,21 @@ def _in_order(kind: str, debate: str, voting: bool) -> tuple[bool, str, bool]:
     if kind == "Glasanje zaključeno":
         return (voting, debate, False)
     return (True, debate, voting)
+
+
+def _seen_break(out: list[dict], e: dict) -> bool:
+    """A break the chair declared and the broadcast's graphic bore out (state.Tracker.screen): a step at once, without the
+    four minutes a break only heard waits for. Whether it was put: not beside one heard already."""
+    if any(x["naslov"] == STEP_TITLES["Pauza"] and abs(x["t"] - e["t"]) <= SEEN_SAME for x in out):
+        return False
+    out.append({"t": e["t"], "izvor": "prepis", "naslov": STEP_TITLES["Pauza"], "opis": "", "url": "", "slika": True,
+                "pojam": STEP_TERM["Pauza"]})
+    return True
+
+
+def _heard_break(out: list[dict], t: int) -> None:
+    """A break heard takes the place of the same one seen: it says until when."""
+    out[:] = [x for x in out if not (x.get("slika") and abs(x["t"] - t) <= SEEN_SAME)]
 
 
 def steps_shown(snap: dict) -> list[dict]:
@@ -85,6 +101,10 @@ def steps_shown(snap: dict) -> list[dict]:
             out.append({"t": e["t"], "izvor": "sajt", "naslov": "", "opis": e.get("tekst", ""), "url": e.get("url", "")})
             continue
         kind, more, t = e.get("vrsta", ""), "", e["t"]
+        if e.get("izvor") == "slika":
+            if kind == "Pauza" and _seen_break(out, e):
+                paused, resumed = True, ""
+            continue
         if kind == "Reč ima":  # the chair named a sitting MP (hronika.floor); only while the picture names nobody
             title = "Reč ima: " + given_first(e.get("tekst", ""))
             if any(a < t + 180 and b > t - 60 for a, b in turns) or t - last.get(title, -10 ** 9) < STEP_SAME:
@@ -129,6 +149,8 @@ def steps_shown(snap: dict) -> list[dict]:
             debate, voting = ("open" if "pretres" in e.get("tekst", "").lower() else ""), False
         paused = kind in ("Pauza", "Kraj rada") or (paused and kind != "Nastavak rada")
         resumed = "on" if kind == "Nastavak rada" else ("" if paused else resumed)
+        if kind == "Pauza":
+            _heard_break(out, t)
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": more, "url": "", "pojam": STEP_TERM.get(kind, "")})
     return out[::-1]
 
@@ -196,6 +218,9 @@ def model_steps(snap: dict) -> list[dict]:
             out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": "", "url": "", "adresa": e.get("url", ""),
                         "rec": True, "model": True})
             continue
+        if src == "slika" and kind == "Pauza":
+            _seen_break(out, e)
+            continue
         if src != "model" or kind not in MODEL_TITLES or _mps_words(kind, t, turns):
             continue
         if kind == "Mera predsedavajućeg" and not given(e.get("tekst", "")):
@@ -244,6 +269,8 @@ def model_steps(snap: dict) -> list[dict]:
         elif kind not in _UNDER_WAY and kind != "Rezultat glasanja" and t - last.get(key, -10 ** 9) < STEP_SAME:
             continue
         last[key] = t
+        if kind == "Pauza":
+            _heard_break(out, t)
         out.append({"t": t, "izvor": "prepis", "naslov": title, "opis": what, "url": "", "model": True,
                     "pojam": STEP_TERM.get(kind, ""),
                     **({"recenica": sentence, **({"razlog": why} if why else {})} if kind == "Mera predsedavajućeg" else {})})

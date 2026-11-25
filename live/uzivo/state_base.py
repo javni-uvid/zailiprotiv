@@ -36,6 +36,13 @@ BREAK = re.compile(r"\b(?:proglaš\w*m|određujem|pozivam|pravimo|dajem)(?: sada
                    r"|\b(?:ću|ćemo) sada? da (?:pozovem|proglasim|odredim|napravimo) pauzu\b"
                    r"|(?:^|[.!?]\s+)pauza (?:od |u trajanju od |do )?(?:\w+ ){1,2}(?:minut|sat|čas)", re.I)
 
+GRAPHIC = 0.25  # the blue share from which the broadcast's graphic is up (grafika.blue: 0.34 and over with it, 0.13 and under without)
+GRAPHIC_FRAMES = 3  # frames in a row with it (a frame each five seconds)
+GRAPHIC_GAP = 30  # seconds between two frames from which they are not in a row
+GRAPHIC_WORDS = 900  # seconds after the chair's words of a break in which the graphic bears them out
+GOES_ON = {"Nastavak rada", "Tačka dnevnog reda", "Kraj rada", "Sednica otvorena", "Pretres otvoren", "Pretres zaključen",
+           "Glasanje", "Glasanje zaključeno", "Rezultat glasanja", "Izbor", "Reč ima"}  # heard after them: no break now
+
 
 def speakers_own(ts: float, text: str, start: float, end: float) -> bool:
     """Whether a piece of sound in no turn when it was written (kept as the chair's) is the speaker's of a turn that came
