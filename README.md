@@ -53,7 +53,7 @@ name. Every page is also in Cyrillic, under `cir/`.
   pages where a term appears link there.
 - **Ko koliko govori:** per sitting day read from the recording (`govornici/<date>`), each speaker's time and the
   time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a
-  link to share it and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`).
+  link to share it (opened, it starts the recording there where the browser lets it) and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`).
   With the model's summary of the day from the live page ("Sažetak dana", labelled). A day whose broadcast shows no speaker's caption is read from what was said: the notes lined up with the
   recording written down word by word (`zailiprotiv govor <day> <folder>`, the words from `live/uzivo/zvuk_dana.py`). How right the live record of who spoke when was on such a day: `zailiprotiv tacnost [day]`. Until the notes, a day can be read from its recording (`zailiprotiv glas-dan <day> <folder> --uzorci <folders of other days>`, with numpy): the sound cut where the voice changes, each piece named by the caption, the chair's words or a known voice.
 - **Glasaj i ti:** the visitor's ballot ("Moj listić", kept in the browser) beside the Assembly's results and the

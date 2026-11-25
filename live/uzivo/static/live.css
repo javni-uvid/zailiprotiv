@@ -380,3 +380,8 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-x { order: 7; } .ml[open] + .ml
 .tn { margin: 0; font-weight: 700; } .tn .meta { font-weight: 400; } .turns .rz { color: var(--fg); } .ts { margin: .15rem 0 0; font-size: var(--t-1); }
 .turns a.tp, .turns .tp { align-self: start; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 .8rem; margin: 0; border: 1px solid var(--line); border-radius: 99px; font-size: var(--t-2); font-weight: 600; text-decoration: none; color: var(--fg); white-space: nowrap; } .turns span.tp { border-color: transparent; color: var(--muted); padding: 0; }
 
+/* "podeli" beside a speech (25 Nov 2026): in the small line, with a place to press 44 px high around it; under the player
+   the way back to the broadcast, or that a shared speech has no recording yet. */
+.share-turn { position: relative; display: inline-block; margin: 0 0 0 .35rem; padding: 0; border: 0; background: none; color: var(--fg); font: 600 var(--t-1)/1.45 system-ui, sans-serif; white-space: nowrap; cursor: pointer; } .share-turn::after { content: ""; position: absolute; inset: -.9rem -.6rem; } .share-turn span { text-decoration: underline; text-underline-offset: 2px; } .share-turn .ic-share { margin-right: .3rem; }
+.tn .ko { display: inline; font: inherit; color: inherit; }
+main > .govor-no, main > .govor-live { order: 10; align-self: flex-start; margin: .6rem 0 0; } main:has(#deo[data-stanje="nema_prenosa"]) > .govor-no, main:has(#deo[data-stanje="nema_prenosa"]) > .govor-live { order: 3; }

@@ -19,12 +19,13 @@
 {% if day_parts or first %}
 <section class="player"><div class="screen" id="screen"><button type="button" class="play" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button><button type="button" class="play listen" data-zvuk data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">🎧 Slušaj samo zvuk</button></div>
 {% if day_parts|length > 1 %}<ul class="parts">{% for p in day_parts %}<li><button type="button" class="part" data-file="{{ p.url }}" data-t="0">Deo {{ loop.index }} · {{ p.from }}–{{ p.to }}</button></li>{% endfor %}</ul>{% endif %}
-<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik. Klik na „▶ snimak“ kod govora pušta ga od tog mesta. Samo zvuk svira i kad je ekran zaključan; tamo piše ko govori, a ⏮ i ⏭ vode na prethodni i sledeći govor.</p></section>
+<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik; samo iz linka ka podeljenom govoru kreće sam, ako pregledač to dozvoli. Klik na „▶ snimak“ kod govora pušta ga od tog mesta. Samo zvuk svira i kad je ekran zaključan; tamo piše ko govori, a ⏮ i ⏭ vode na prethodni i sledeći govor.</p></section>
 {% endif %}
 <p class="label">Pročitano posle sednice sa celog snimka prenosa, iz potpisa ispod govornika, isto za svakog: govor traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku. Automatsko čitanje može da pogreši.</p>
 <p><a href="{{ root }}govornici/{{ day }}.html">Ko je koliko govorio tog dana, svaki govor sa snimkom i linkom za deljenje</a> · <a href="{{ root }}govornici.html">Ko koliko govori u celom sazivu</a></p>
+<div id="deljen" hidden><span data-w="p">Pusti govor</span><span data-w="d">{{ day|day_of }} u</span><span data-w="s">Narodna skupština</span><span data-w="c">link je kopiran</span><span data-w="n">Mesto ovog govora na snimku još nije poznato.</span></div>
 <ol class="plain turns">
-  {% for t in day_turns %}<li><span class="label">{{ t.from }}–{{ t.to }}</span> {% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %}</li>
+  {% for t in day_turns %}<li data-od="{{ t.od }}" data-do="{{ t.do }}"><span class="label">{{ t.from }}–{{ t.to }}</span> <span class="ko">{% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</span>{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %}</li>
   {% endfor %}
 </ol>
 {% endif %}

@@ -37,7 +37,7 @@ def test_the_last_day_read_from_the_recording():
         {"ime": "Jović Jova", "adresa": "", "grupa": "", "uloga": "", "od": 1794926500, "do": 1794926505, "okvira": 1,
          "video": "qkm", "snimak": 20370}]}
     out = pages_mikrofon.turns(day)
-    assert out == [{"from": "14:04", "to": "15:40", "name": "Aleksandar Vučić", "slug": "vucic-aleksandar",
+    assert out == [{"od": 1794920657, "do": 1794926412, "from": "14:04", "to": "15:40", "name": "Aleksandar Vučić", "slug": "vucic-aleksandar",
                     "side": "Lista A", "minutes": 96, "recording": "https://www.youtube.com/watch?v=qkm&t=14527s",
                     "file": "", "t": 14527}]
 

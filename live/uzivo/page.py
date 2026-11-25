@@ -12,6 +12,7 @@ from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from . import config
+from .deljenje import turn_at
 from .names import cyrillic, given_first
 from .steps import steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
@@ -76,9 +77,13 @@ def _turn(d: dict, snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     said = f' · <a class="said" href="{"/cir" if cyr else ""}/prepis#t{int(d["od"])}">{t("said_link")}</a>' if d.get("reci") else ""
     topic = f'<p class="rz">{escape(_name(d["rezime"], cyr))}</p>' if d.get("rezime") else ""
     shade = LIST_COLOURS.get(d.get("lista") or "", "l1")
-    return (f'<li id="t{int(d["od"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(side)}"><span class="tf-w {shade}">{face}</span>'
-            f'<div class="tm"><p class="tn">{nm} <span class="meta">{_minutes(d["sekundi"])} {t("min")}</span></p>{topic}'
-            f'<p class="ts meta">{escape(_name(side, cyr))}{how}{said}</p></div>{play}</li>')
+    # the speech's own link (25 Nov 2026, the maintainer; deljenje.py): the same beside every finished speech
+    share = (f'<button type="button" class="share-turn" data-share="{"/cir" if cyr else ""}/govor/{int(d["od"])}">'
+             f'{SHARE}<span>{t("sp_share")}</span></button>')
+    return (f'<li id="t{int(d["od"])}" data-od="{int(d["od"])}" data-do="{int(d["do"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(side)}">'
+            f'<span class="tf-w {shade}">{face}</span>'
+            f'<div class="tm"><p class="tn"><span class="ko">{nm}</span> <span class="meta">{_minutes(d["sekundi"])} {t("min")}</span></p>{topic}'
+            f'<p class="ts meta">{escape(_name(side, cyr))}{how}{said} {share}</p></div>{play}</li>')
 
 
 def _by_hour(turns: list[dict], rows: list[str], a: int, b: int, tz: ZoneInfo, cyr: bool) -> str:
@@ -1235,18 +1240,34 @@ def og_text(snap: dict, *, cyr: bool, tz: ZoneInfo) -> tuple[str, str]:
     return _t("title", cyr), f'{_t("og_live", cyr)}.'
 
 
-def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo) -> str:
+def speech_title(snap: dict, at: int, *, cyr: bool, tz: ZoneInfo) -> str:
+    """What a link to a speech says (25 Nov 2026): whose it is (config.SHARE_NAME), as the record has the name now, and
+    when; the same form for everyone, and nothing of what was said."""
+    d = turn_at(snap.get("danas") or [], at)
+    at = int(d["od"]) if d else at
+    when = f'{_on_day(datetime.fromtimestamp(at, tz).date().isoformat())} {TEXT["at"]} {_clock(at, tz)}'
+    if config.SHARE_NAME and d:
+        return _name(_fill(TEXT["sp_title_name"], given_first(d["ime"]), when), cyr)
+    return _name(_fill(TEXT["sp_title"], when), cyr)
+
+
+def _og(snap: dict, *, cyr: bool, url: str, tz: ZoneInfo, speech: int | None = None) -> str:
     """What a pasted link shows (X, Viber, Facebook): the title and line above and the picture of the moment
-    (`picture.py`). Nothing in it goes stale; the picture's address changes only with what is drawn on it."""
+    (`picture.py`). Nothing in it goes stale; the picture's address changes only with what is drawn on it. A link to a
+    speech (`speech`, its second) says that, with the still picture, before a sitting too."""
     if not url:
         return ""
+    own = "cir/" if cyr else ""
     title, line = og_text(snap, cyr=cyr, tz=tz)
     mark = "s4"  # the still picture is always the same (picture.render)
     if announced(snap)[0]:  # another picture, so another address: a service keeps a picture by its address
         mark = f'najava3-{announced(snap)[1].get("od", "")}'
-    img = f'{url}{"cir/" if cyr else ""}slika.png?v={mark}'
+    img = f'{url}{own}slika.png?v={mark}'
+    if speech:
+        title, line = speech_title(snap, speech, cyr=cyr, tz=tz), _t("og_still_line", cyr)
+        own, img = f"{own}govor/{int(speech)}", f"{url}{own}govor.png?v=s4"
     e = escape
-    return (f'<meta property="og:type" content="website"><meta property="og:url" content="{e(url + ("cir/" if cyr else ""))}">'
+    return (f'<meta property="og:type" content="website"><meta property="og:url" content="{e(url + own)}">'
             f'<meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(line)}">'
             f'<meta property="og:image" content="{e(img)}"><meta property="og:image:width" content="1200">'
             f'<meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">'
@@ -1262,7 +1283,7 @@ def _beacon(token: str) -> str:
             f'data-cf-beacon=\'{{"token": "{token}"}}\'></script>')
 
 
-def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None) -> str:
+def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None, speech: int | None = None) -> str:
     """The player: while the broadcast is on, the YouTube video of it; between sittings, the last day's recording in
     the broadcaster's archive, from its first turn. Only a button until clicked (AGENTS.md, principle 5)."""
     t = lambda k: escape(_t(k, cyr))
@@ -1294,7 +1315,7 @@ def player(snap: dict, *, cyr: bool, live: str = "", tz: ZoneInfo | None = None)
         url, at = (parts[0]["url"], 0) if parts else (first["datoteka"], int(first["snimak"]))
         button = (f'<button type="button" class="play" data-file="{escape(url)}" data-t="{at}">▶ {t("play_day")}</button>'
                   f'<button type="button" class="play listen" data-zvuk data-file="{escape(url)}" data-t="{at}">🎧 {t("listen_day")}</button>')
-        note = escape(_fill(_t("archive_note", cyr), _name(_on_day(snap.get("dan", "")), cyr))) + " " + t("listen_note")
+        note = escape(_fill(_t("archive_from" if speech else "archive_note", cyr), _name(_on_day(snap.get("dan", "")), cyr))) + " " + t("listen_note")
         if len(parts) > 1:  # the day in several files: each one, by the hours it covers
             chips = "".join(f'<li><button type="button" class="part" data-file="{escape(p["url"])}" data-t="0">'
                             f'{t("part")} {i} · {_clock(p["od"], tz)}–{_clock(p["od"] + p["trajanje"], tz)}</button></li>'
@@ -1310,6 +1331,16 @@ def _stage(button: str, onair: str, cyr: bool) -> str:
     script has kept it on top while the page is read (22 Nov 2026, the maintainer: watch and read at once)."""
     return (f'<div class="stage"><div class="screen" id="screen">{button}</div>{onair}'
             f'<button type="button" class="mini-x" hidden aria-label="{escape(_t("mini_x", cyr))}">×</button></div>')
+
+
+def _shared_words(snap: dict, *, cyr: bool, live: bool) -> str:
+    """The words of a speech whose link was opened, for the shared script (mikrofon.js), which writes it here and on
+    the site's page of the day alike; under the player, where the script says when there is no recording yet."""
+    t = lambda k: escape(_t(k, cyr))
+    day = escape(_name(f'{_on_day(snap.get("dan", ""))} {TEXT["at"]}', cyr))
+    back = f'<a data-w="l" href="{"/cir/" if cyr else "/"}" hidden>{t("sp_live")} →</a>' if live else ""
+    return (f'<div id="deljen" hidden><span data-w="p">{t("sp_go")}</span><span data-w="d">{day}</span>'
+            f'<span data-w="s">{t("sp_where")}</span><span data-w="c">{t("sp_copied")}</span><span data-w="n">{t("sp_none")}</span>{back}</div>')
 
 
 def waiting_part(w: dict | None, *, cyr: bool, site: str) -> str:
@@ -1365,16 +1396,21 @@ def _site_name(url: str) -> str:
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
          live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "",
-         sample: bool = False) -> str:
+         sample: bool = False, speech: int | None = None) -> str:
+    """`speech`: the second a shared speech began, when its link was opened (deljenje.py): the same page, with that
+    link's preview, and the script's button for it."""
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
-    other = "/" if cyr else "/cir/"
+    other = ("/" if cyr else "/cir/") + (f"govor/{int(speech)}" if speech else "")
     other_label = "Latinica" if cyr else TEXT["script"]
     home = site + ("cir/" if cyr else "")
     alt = (f'<link rel="canonical" href="{escape(url + base[1:])}">'
            f'<link rel="alternate" hreflang="sr-Latn" href="{escape(url)}">'
            f'<link rel="alternate" hreflang="sr-Cyrl" href="{escape(url + "cir/")}">') if url else ""
+    title = t("h1")
+    if speech:  # not a page for a search engine: the speeches are the site's (govornici/<day>)
+        alt, title = '<meta name="robots" content="noindex">', escape(speech_title(snap, speech, cyr=cyr, tz=tz))
     brand = _brand(cyr)
     sup = [escape(w) for w in _t("support_cta", cyr).split(" ", 1)]  # "Podrži", and " sajt" where there is room
     day = fragment(snap, cyr=cyr, site=site, tz=tz)
@@ -1423,11 +1459,11 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{t("h1")} · {t("title_tail")}</title>
+<title>{title} · {t("title_tail")}</title>
 <meta name="description" content="{t("lead")}">
 {alt}
-{_og(snap, cyr=cyr, url=url, tz=tz)}
-{_site_name(url) if url and not cyr else ""}
+{_og(snap, cyr=cyr, url=url, tz=tz, speech=speech)}
+{_site_name(url) if url and not cyr and not speech else ""}
 <link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
 <link rel="manifest" href="{base}manifest.webmanifest">
 <link rel="apple-touch-icon" href="/ikona-180.png">
@@ -1442,13 +1478,14 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <main>
 <p class="sr" id="ko" aria-live="polite"></p>
 <section class="hero"><h1>{t("h1")}</h1></section>
-{player(snap, cyr=cyr, live=live, tz=tz)}
+{player(snap, cyr=cyr, live=live, tz=tz, speech=speech)}
+{_shared_words(snap, cyr=cyr, live=bool(live) and snap["stanje"] != "nema_prenosa")}
 {pills}
 {(add + day) if snap["stanje"] == "nema_prenosa" else (day + add)}
 <p class="rules-cta"><a href="{escape(home + "podrzi")}"><b>{t("support_cta")} →</b><span>{t("support_sub")}</span></a></p>
 <p class="site-cta"><a href="{escape(home)}">{t("site_cta")}: zailiprotiv.rs →</a></p>
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
-{mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p><p>{t("why_how")}</p>{how_time}</details>
+{mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("sp_how")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p><p>{t("why_how")}</p>{how_time}</details>
 </main>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{t("rules_word")}</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{uses}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>

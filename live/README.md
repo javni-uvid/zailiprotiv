@@ -42,6 +42,12 @@ when the service saw the broadcast at all (`pokriveno`; outside them there is no
 the first segment that named the speaker, less one, times the segment's length; `RECORDING_LEAD`). After the sitting
 day, the list stays, under "Poslednji dan sednice" and its date, until someone is read at the next sitting.
 
+**A speech's own link** (25 Nov 2026; `deljenje.py`, `mikrofon.js`): "podeli" beside each finished turn gives
+`/govor/<second it began>` (and `/cir/govor/…`): the page with that speech in the player's place, starting by itself where
+the browser lets a page sound without a press, else on its button; the link's card has the speaker's name and the time
+(`DELI_IME=0`: no name) and `/govor.png`. A speech of an earlier day leads to the site's page of that day, if the site
+lists it (`dani` in `mikrofon-cekanje.json`), and anything else to the page. The edge keeps `/govor/…` three seconds, as `/`.
+
 **Between sittings** the service looks for a broadcast once a minute, quietly (one line in the log, not one per
 look; yt-dlp's own "not live" errors are kept out of it), and starts reading within a minute of the next sitting
 going live. Each sitting day is a new YouTube video, so the broadcaster's page is read afresh every time; `YOUTUBE_URL`
@@ -67,7 +73,7 @@ to the page that says how it is computed. The same file's quiz is no longer show
 "▶ Gledaj prenos", whose press (or that of the same words on the button after "Slušaj") loads the YouTube video of it (`youtube-nocookie.com`), playing, and adds one to the
 site's counter (`mikrofon.pusti`, "Slušaj" `mikrofon.slusaj`: sums per day and hour; `VOTES_API=` empty turns it off); between sittings the last day's recording from the broadcaster's archive (a plain
 `<video>`), and each turn's "▶ snimak" plays that file from the turn's second. Nothing from YouTube or the archive
-loads before a click (AGENTS.md, principle 5); without the script the links open the recording.
+loads before a click (AGENTS.md, principle 5; a link to a speech starts by itself, see above); without the script the links open the recording.
 
 **The next sitting and the home screen** (20 Nov 2026). Between sittings, under "no sitting now", the next sitting
 convened, or one begun that goes on on another day as its page at the Assembly says (`sazvano` in

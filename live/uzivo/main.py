@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 
-from . import config, picture, pretplata, slusaj
+from . import config, deljenje, picture, pretplata, slusaj
 from .obavesti import Bell
 from .page import admin_page, fragment, listen_html, manifest, page, service_worker, transcript_page
 
@@ -53,11 +53,12 @@ app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
 # tells the maintainer, and an open page keeps what it shows. The days kept, the mail and the rest go on.
 MOMENT = {"/", "/cir", "/cir/", "/deo", "/cir/deo", "/stanje.json", "/stanje.js", "/slika.png", "/cir/slika.png", "/prica.png",
           "/cir/prica.png"}
+SPEECH = re.compile(r"/(cir/)?govor/")
 
 
 @app.middleware("http")
 async def only_while_measured(request: Request, call_next):
-    if APART and request.url.path in MOMENT and not await asyncio.to_thread(tracker.alive):
+    if APART and (request.url.path in MOMENT or SPEECH.match(request.url.path)) and not await asyncio.to_thread(tracker.alive):
         return Response("Servis trenutno ne radi.", status_code=503, media_type="text/plain; charset=utf-8",
                         headers={**NO_STORE, "Retry-After": "30"})
     return await call_next(request)
@@ -82,11 +83,11 @@ def _versions() -> dict:
     return {"verzija": config.VERSION, "merenje": str(tracker.sada.get("verzija") or "") if APART else config.VERSION}
 
 
-def _page(cyr: bool) -> HTMLResponse:
+def _page(cyr: bool, speech: int | None = None) -> HTMLResponse:
     snap = tracker.snapshot()  # first: the rest is read with it
     return HTMLResponse(page(snap, cyr=cyr, site=config.SITE, tz=_tz, url=URL, waiting=tracker.waiting,
                              live=_video(), analytics=config.ANALYTICS_TOKEN, api=config.VOTES_API,
-                             push_key=config.PUSH_KEY, version=config.VERSION, sample=bool(_sample_day())),
+                             push_key=config.PUSH_KEY, version=config.VERSION, sample=bool(_sample_day()), speech=speech),
                         headers=NO_STORE)
 
 
@@ -155,6 +156,29 @@ def cyrillic_page() -> HTMLResponse:
     return _page(True)
 
 
+def _speech(cyr: bool, sek: str) -> Response:
+    """A shared speech (deljenje.py): the page with it, while its day is on the page; else the site's own page of that
+    day, when the site has one; else the page as it is."""
+    at = deljenje.moment(sek)
+    if at:
+        if deljenje.turn_at(tracker.snapshot().get("danas") or [], at):
+            return _page(cyr, at)
+        to = deljenje.elsewhere(at, tracker.waiting, cyr=cyr, tz=_tz)
+        if to:
+            return RedirectResponse(to, status_code=302, headers=NO_STORE)
+    return RedirectResponse("/cir/" if cyr else "/", status_code=302, headers=NO_STORE)
+
+
+@app.get("/govor/{sek}")
+def latin_speech(sek: str) -> Response:
+    return _speech(False, sek)
+
+
+@app.get("/cir/govor/{sek}")
+def cyrillic_speech(sek: str) -> Response:
+    return _speech(True, sek)
+
+
 @app.get("/deo")
 def latin_part(request: Request) -> Response:
     return _part(False, request)
@@ -190,6 +214,26 @@ def latin_picture() -> Response:
 @app.get("/cir/slika.png")
 def cyrillic_picture() -> Response:
     return _picture(True)
+
+
+_still: dict[bool, bytes] = {}
+
+
+def _speech_picture(cyr: bool) -> Response:
+    """The picture of a link to a speech: the still one (no speaker, no day), before a sitting too. Drawn once."""
+    if cyr not in _still:
+        _still[cyr] = picture.render({}, cyr=cyr, tz=_tz, host=URL.split("//")[-1].strip("/"))
+    return Response(_still[cyr], media_type="image/png", headers=DAY)
+
+
+@app.get("/govor.png")
+def latin_speech_picture() -> Response:
+    return _speech_picture(False)
+
+
+@app.get("/cir/govor.png")
+def cyrillic_speech_picture() -> Response:
+    return _speech_picture(True)
 
 
 @app.get("/prica.png")

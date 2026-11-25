@@ -204,6 +204,15 @@ TEXT = {
     "from_recording": "Pročitano posle sednice sa celog snimka prenosa, istim pravilom za svakog govornika: govor "
                       "traje od prvog do poslednjeg kadra s imenom. Predsedavajući nema potpis i nije u spisku.",
     "recording": "snimak",
+    "sp_go": "Pusti govor",  # a speech whose link was opened (deljenje.py), and the link's own words
+    "sp_share": "podeli",
+    "sp_copied": "link je kopiran",
+    "sp_none": "Mesto ovog govora na snimku još nije poznato.",
+    "sp_live": "Gledaj prenos uživo",
+    "sp_where": "Narodna skupština",
+    "sp_how": "Link ka podeljenom govoru jedini pušta sam: kad ga otvorite, prenos sa Jutjuba ili snimak iz arhive Skupštine učitava se i kreće od tog govora, ako pregledač to dozvoli; inače na klik.",
+    "sp_title": "Govor u Skupštini, %1",
+    "sp_title_name": "%1, govor u Skupštini, %2",
     "recording_title": "Na snimku prenosa, od mesta gde je govor počeo",
     "checked": "provereno pre",
     "s": "s",
@@ -233,6 +242,7 @@ TEXT = {
     "by_short_prepis": "po rečima predsedavajućeg",
     "cc_note": "Automatski prepis: kasni i može da greši, nije citat.",
     "mini_x": "Vrati snimak na njegovo mesto",
+    "archive_from": "Snimak od %1 (Videonet, arhiva Skupštine).",  # where a shared speech starts by itself
     "archive_note": "Snimak od %1 (Videonet, arhiva Skupštine) učitava se tek na klik.",
     "counted": "Bez kolačića; posete se samo broje (Cloudflare Web Analytics, bez praćenja pojedinaca)",
     "uses_counter": "Brojač sajta",  # in the footer a link to what is counted (the method page)

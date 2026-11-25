@@ -664,7 +664,11 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
     assert "Poslednji dan sednice, 17. novembar 2026." in page and "Petar Petrović" in page and "· 96 min" in page
     assert "youtube.com/watch?v=qkm&amp;t=14527s" in page and "Петар Петровић" in (out / "cir" / "mikrofon.html").read_text()
     assert json.loads((out / "mikrofon-dan.json").read_text())["dan"] == "2026-11-17"
-    assert set(json.loads((out / "mikrofon-cekanje.json").read_text())) == {"kviz", "cinjenice"}
+    told = json.loads((out / "mikrofon-cekanje.json").read_text())
+    assert set(told) == {"kviz", "cinjenice", "dani"} and told["dani"] == ["2026-11-17"]  # where a shared speech may lead
+    row = (out / "govornici" / "2026-11-17.html").read_text()
+    assert 'data-od="1794920657" data-do="1794926412"' in row and 'data-share="#govor-1794920657"' in row
+    assert 'data-w="d">17. novembra 2026 u<' in row and "Пусти говор" in (out / "cir/govornici/2026-11-17.html").read_text()
     day["govori"][0].update(video="", datoteka="https://arhiva.videonet.co.rs/f/zas.mp4", snimak=60)
     (root / "15" / "snimak" / "2026-11-17.json").write_text(json.dumps(day))
     site.build(root, out, "zailiprotiv.rs", cyrillic=True)
