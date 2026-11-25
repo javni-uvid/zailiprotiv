@@ -330,3 +330,14 @@ records and recordings stays here:
   which the same speaker goes on, are the speaker's time, one turn ("svo vreme treba biti kartica za tandira"), until the
   chair speaks at length and gives the floor on ("za rec su se javili"). His words in full are kept with the doubtful
   cases (`ko-govori-primeri/ODLUKE-ODRZAVAOCA.md`). How far the day files keep this is measured next.
+- **A piece of the same speaker with no place does not end the turn** (26 Nov 2026, the conductor, by the maintainer's
+  ruling above: one card "sve dok predsedavajuci ne krene duze da prica"; `govor.day`). One speaker's speeches with only
+  the chair's words between them, in one stretch of a file and within `MERGE` (120 s), were one turn, but a piece of the
+  same speaker that the recording could not place (too short for two runs) ended it, so a speech broken by the chair's
+  short words came out as several turns (19 Nov 24 times, 24 Nov 21, 25 Nov 9; the doubtful case 2.12 is one). Now only
+  another speaker's piece ends it. Turns 19 Nov 92 to 81, 24 Nov 103 to 98, 25 Nov 22 to 19; 17 and 18 Nov the same.
+  Time +139, +104 and +19 s, all of it the gaps between the joined pieces: the unplaced pieces' own words and the
+  chair's short words, no other speaker's (19 Nov Vučić +74, Jovanov, Bakić and Stojković +16 each, Balać +11, Tandir +6;
+  24 Nov Vučić +90, Radeta +9, Kokanović +5; 25 Nov Vučić +11, Radeta +10, Đukanović -2 by rounding). Every old link to a
+  joined turn's later part now opens the same speaker, from the turn's beginning. The 120 s limit itself is still
+  arbitrary.

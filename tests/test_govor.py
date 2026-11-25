@@ -92,6 +92,20 @@ def test_day_joins_one_speaker_across_the_chair():
     assert [(t["ime"], t["od"], t["do"], t["okvira"]) for t in turns] == [("A", 10, 90, 5), ("B", 100, 120, 2)]
 
 
+def test_a_piece_of_the_same_speaker_with_no_place_does_not_end_the_turn():
+    """26 Nov 2026, the maintainer: one card for a speaker until the chair speaks at length. A short piece of the same
+    speaker with no place, between the chair's words, keeps the turn whole; another speaker's piece ends it."""
+    a = {"key": "1", "speaker": "A", "datoteka": F, "od": 10.0, "do": 50.0, "sidra": 3}
+    c = {"key": "2", "speaker": "P", "chair": True}
+    gap = {"key": "3", "speaker": "A", "sidra": 1}  # no place
+    b = {"key": "5", "speaker": "A", "datoteka": F, "od": 60.0, "do": 90.0, "sidra": 2}
+    who = lambda s: {"ime": s, "adresa": "", "grupa": "", "uloga": ""}
+    turns = govor.day([a, c, gap, dict(c, key="4"), b], [{"url": F, "od": 0}], who)
+    assert [(t["ime"], t["od"], t["do"]) for t in turns] == [("A", 10, 90)]
+    other = dict(gap, speaker="B")
+    assert len(govor.day([a, c, other, dict(c, key="4"), b], [{"url": F, "od": 0}], who)) == 2
+
+
 def test_a_days_part_the_archive_holds_before_its_page_lists_it():
     from zailiprotiv import videos
     base = "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910"
