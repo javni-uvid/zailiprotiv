@@ -173,6 +173,11 @@ TEXT = {
     "app_pill": "Dodaj kao aplikaciju",
     "listen_pill": "Slušaj",
     "listen_locked": "radi i sa zaključanim telefonom",  # under "Slušaj", on the pill itself (25 Nov 2026)
+    "nt_resume": "Javi kad se nastavi",  # the bell in a break (25 Nov 2026, the maintainer's words, as the next four)
+    "in_app": "Da ti javimo kad se nastavi, otvori stranu u pregledaču (meni ⋯).",
+    "ml_today": "stiže kad se današnja sednica završi",
+    "ml_soon": "današnji stiže kad bude gotov",
+    "ml_next": "stiže posle sledećeg dana sednice",
     "ml_slim": "posle svake sednice",
     "ml_hide": "Ne prikazuj više",
     "ml_off": "Sažetak dana na mejl je sklonjen.",
