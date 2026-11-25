@@ -21,7 +21,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from zailiprotiv import family, jsonfile, kinds, mps, skupstina
+from zailiprotiv import family, jsonfile, kinds, members, mps, skupstina
 from zailiprotiv.config import CONVOCATIONS
 from zailiprotiv.months import day, day_of  # noqa: F401  (site.day, as other modules use it)
 from zailiprotiv.translit import latin
@@ -778,7 +778,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     twice = {k for k, n in Counter(r["key"] for r in member_rows).items() if n > 1}
     for c, rows in src.offices.items():
         for o in rows:
-            k = mp_years.key(o["name"], c)
+            k = mp_years.key(members.clean(o["name"]), c)  # "ПЕТРОВИЋ - РОПРЕТ" as the list of MPs is read
             if c == members_conv and k in twice:
                 continue
             offices_by.setdefault(k, {}).setdefault(c, []).append({**o, "text": offices_mod.say(o, latin)})

@@ -303,11 +303,15 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   was no). The names on the bodies' pages are links to the MPs' pages since the Fifteenth; the reader wanted a bare name,
   kept nobody, and asked for every page again each hour. `offices.py` reads a cell by its lines of text now, whatever
   stands around a name. The name stays what an office is matched by: the link's number of the MP's page would need a
-  list of numbers we do not keep, and no two of the Fifteenth's 250 share a name (two that do get no office, as before).
-  - **The list's "Број чланова" is the check.** A body listed with members whose page gives none is kept under `unread`
-    in `data/<N>/offices.json`, keeps the members read before, is asked for again once a day, and **votes** opens an issue
+  list of numbers we do not keep, and no two of the Fifteenth's 250 share a name (two that do get no office, as before). A double surname
+  is matched as the list of MPs is read ("ПЕТРОВИЋ - РОПРЕТ", `members.clean`), the archives' rows too.
+  - **The list's "Број чланова" is the check.** A body whose page gives fewer members than listed is kept under
+    `unread` in `data/<N>/offices.json` with how many are missing (one that gives nobody keeps the members read before), the
+    pages are asked for again once a day, and **votes** opens an issue
     (one while it is open, as for an unread roll call; not a red step, which would hide the run's other faults under an
-    hourly comment). A number that differs from what was read is in the run's log. Nothing read of the bodies for eight
+    hourly comment). The first run showed why fewer and not
+    only none: Aleksandar Čupić was missing from "Одбор за права детета", whose cell of a member without a deputy the page
+    never closes (the last one's ran to the table's end). More than listed is in the run's log only. Nothing read of the bodies for eight
     days is said too.
   - The bodies' pages are read when the lists change (a body, or a number), when a relevant news item is new, weekly
     otherwise. What was listed and when it was read are on lines of their own in the file: the workflow's commit passes

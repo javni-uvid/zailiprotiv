@@ -190,6 +190,23 @@ def test_a_row_the_archive_breaks_is_read():
         ("ЛАКИЋ САЊА", "члан", "А"), ("ВАСИЉЕВИЋ БРАТИМИР", "заменик члана", "А")]
 
 
+def test_members_without_a_deputy_stand_in_cells_never_closed():
+    """"Одбор за права детета", 25 Nov 2026: 10 listed, the last one was not read."""
+    link = '<tr><td align="left"><strong> <a href="/x.1.245.html">{}</a> </strong> (члан)<br />Посланичка група „А“<br />'
+    page = WRAP.format("<table>" + link.format("БЈЕЛОБРК  МАРИЈА") + link.format("МИЛОВАНОВИЋ  МАРИЈА")
+                       + '<a href="/y.2.245.html"> ПУРИЋ  ДАЛИБОРКА </a> (заменик члана) <br/> Посланичка група „А“ </td></tr>'
+                       + link.format("ЧУПИЋ  АЛЕКСАНДАР") + "</table><p>Активности</p>")
+    assert [(r["name"], r["role"], r["group"]) for r in offices.committee(page)] == [
+        ("БЈЕЛОБРК МАРИЈА", "члан", "„А“"), ("МИЛОВАНОВИЋ МАРИЈА", "члан", "„А“"),
+        ("ПУРИЋ ДАЛИБОРКА", "заменик члана", "„А“"), ("ЧУПИЋ АЛЕКСАНДАР", "члан", "„А“")]
+
+
+def test_fewer_members_than_listed_are_said():
+    now = dt.datetime(2026, 11, 25, tzinfo=dt.timezone.utc)
+    kept = json.loads(offices.dumps("f", [], now.isoformat(), {"u": 10, "v": 9}, {"u": 1}))
+    assert offices.unread(kept, now) == ["- u (na spisku 10, nije pročitano 1)"]
+
+
 def test_bodies_are_not_asked_for_every_hour_and_those_unread_are_said(tmp_path, monkeypatch, capsys):
     from zailiprotiv.config import NEWEST
     kept = tmp_path / NEWEST / "offices.json"
@@ -235,7 +252,7 @@ def test_bodies_are_not_asked_for_every_hour_and_those_unread_are_said(tmp_path,
     shape["committee"] = WRAP.format("<table><tr><td><p>ФРИЦ САЊА, члан</p></td></tr></table>")
     assert run(7 * 24) == 32 and run(1) == 0 and run(22) == 0
     lines = said()
-    assert len(lines) == 20 and lines[0].startswith("- https://www.parlament.gov.rs/") and "(na spisku " in lines[0]
+    assert len(lines) == 20 and lines[0].startswith("- https://www.parlament.gov.rs/") and "(na spisku 10, nije pročitano 10)" in lines[0]
     after = json.loads(kept.read_text(encoding="utf-8"))
     assert [o for o in after["offices"] if o["kind"] == "committee"] == before
     assert run(2) == 32

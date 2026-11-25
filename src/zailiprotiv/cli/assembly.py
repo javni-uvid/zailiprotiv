@@ -418,7 +418,7 @@ def offices_cmd(args) -> int:
     """Who holds which office in the newest convocation (the Speaker, the deputy Speakers, the groups' chairs, the
     committees, the delegations) → data/<N>/offices.json, and the Assembly's news → data/vesti.json (offices.py). The
     committees' and delegations' own pages are read when their lists changed (a body, or its number of members), when
-    a relevant news item is new, or once a week (once a day while a body's page gives nobody); an earlier
+    a relevant news item is new, or once a week (once a day while a body's page gives fewer members than listed); an earlier
     convocation's (offices.ARCHIVE) once. With --unread, only what the kept file shows was not read: nothing is asked."""
     from zailiprotiv import offices
     from zailiprotiv.config import NEWEST
@@ -489,12 +489,14 @@ def offices_cmd(args) -> int:
              or (now - last).total_seconds() > (offices.DAY if missed else offices.WEEK))
     if again:
         parts = {k: read_parts(bodies[k]) for k in bodies}
-        missed = {url: said[url] for k in parts for _, url, got in parts[k] if said[url] and not got}
+        missed = {}
         for k in parts:
             for t, url, got in parts[k]:
                 n = sum(m["role"] != "заменик члана" for m in got)  # the committees' lists count no deputies
                 if n != said[url]:
                     print(f"  {t}: {n} read, {said[url]} listed ({url})")
+                if n < said[url]:
+                    missed[url] = said[url] - n
         parts = {k: offices.keep_unread(old["offices"], said, parts[k], k) for k in parts}
         read_at = now.isoformat()
     else:  # the committees and delegations as last read
