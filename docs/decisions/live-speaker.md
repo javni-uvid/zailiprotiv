@@ -189,22 +189,24 @@ presided (not done).
   **(3)** A turn the chair's words gave, a minute on and of one voice, is that MP's voice until the day ends, in memory only
   (not in `glasovi.npz`), never of an MP known already or of a presiding officer, and never used to judge the turn it
   came from: the floor is then known again after a pause or an interruption.
-  Scored on 17-19 Nov by running the service's own `Tracker` and `Listener` over the kept windows, words and captions at their own
-  seconds (voices of earlier days only; the replay of the rules until now gives 18 Nov 88.9% and 308 s wrong, the live
-  record of that day 89.0% and 293 s): % right, seconds under a wrong name, extra.
+  Scored on 17-19 Nov by `tools/uzivo_ponovo.py`, the service's own `Tracker` and `Listener` run over the kept windows, words
+  and captions at their own seconds (voices of earlier days only; the rules until now give 18 Nov 88.9% and 308 s wrong, the
+  live record of that day 89.0% and 293 s): % right, seconds wrong / missing / extra.
 
   | | 17 Nov | 18 Nov | 19 Nov |
   |---|---|---|---|
-  | until now, captions as they were | 26.0%, 87, 151 | 88.9%, 308, 230 | 88.1%, 370, 371 |
-  | **now** | **84.1%, 0, 36** | **88.9%, 307, 261** | **90.1%, 120, 331** |
-  | until now, every caption for ten seconds only (as on 24 Nov) | 27.4%, 89, 150 | 86.4%, 114, 236 | 81.6%, 813, 371 |
-  | **now** | **84.1%, 0, 36** | **87.2%, 119, 178** | **83.6%, 43, 294** |
+  | until now, captions as they were | 26.0%, 87/9431/151 | 88.9%, 308/2128/230 | 88.0%, 328/3030/354 |
+  | **now** | **84.1%, 0/2045/36** | **88.9%, 307/2124/261** | **90.1%, 78/2707/315** |
+  | until now, every caption for ten seconds only (as on 24 Nov) | 27.4%, 89/9251/150 | 86.4%, 114/2856/236 | 81.6%, 771/4404/354 |
+  | **now** | **84.1%, 0/2045/36** | **87.2%, 119/2692/178** | **83.6%, 1/4590/278** |
 
-  Of 18 Nov's 307 s wrong 211 are names spelt otherwise in the record or the notes. One number rose: 119 for 114 s wrong, 18
-  Nov with captions of ten seconds. The bars are the recordings' and were seen on these days; 0.5 in (2) is
-  the one chosen on this replay (0.4 to 0.6 and no bar: the same to a point of a percent). Not scored: 24 and 25 Nov (no notes
-  yet), and Whisper's words are those written afterwards from the recording, some better than the live ones. Tried
-  without (3): 17 Nov 35.3%; with a voice judging its own turn: 19 Nov 88.0%.
+  Of 18 Nov's 307 s wrong 211 are names spelt otherwise in the record or the notes. Up: 119 for 114 s wrong, 18 Nov with captions
+  of ten seconds, and 18 Nov's extra, 261 for 230. (Pull request #239 said 370 to 120 and 813 to 43 s wrong for 19 Nov: by a first
+  replay that put the words in the order of their seconds and not as Whisper wrote them, which the service sees; one turn
+  differs.) The bars are the recordings' and were seen on these days; the 0.5 of (2) was chosen on this replay, compared as
+  built only with no bar at all (19 Nov 90.1 for 89.9%, captions of ten seconds 83.6 for 82.7%). Not scored: 24 and 25 Nov (no
+  notes yet), and Whisper's words are those written afterwards, some better than the live ones. Without (3)
+  17 Nov is 35.3%; with a turn judged by the voice learnt from it 19 Nov lost 2 points.
 - **A caption with a surname unread is the sitting MP's** (25 Nov 2026; `Roster._shorter`). "Biljana Pantić" was Biljana
   Pantić Pilja: whole for a former MP of those two words, which took some 80 s of hers on 18 Nov (the list was not yet the
   service's then). Words that are the name of one sitting MP but for one word are that MP's, before any former MP is looked
