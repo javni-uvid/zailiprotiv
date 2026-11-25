@@ -76,18 +76,6 @@ th { font-size: var(--t-1); color: var(--muted); font-weight: 600; text-transfor
 details { margin: 1.2rem 0; }
 summary { cursor: pointer; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
 .plain { padding-left: 1.1rem; }
-/* The Rules' articles invoked: a row an article, its count as a bar from zero (grey: a count is no vote), the
-   article's first sentence under it. Only the article's name is underlined, as what opens the row. */
-.rules-cited { list-style: none; padding: 0; max-width: 42rem; }
-.rules-cited li { border-top: 1px solid var(--line); }
-.rules-cited details { margin: 0; }
-.rules-cited details[open] { padding-bottom: .6rem; }
-.rules-cited summary { font-weight: 400; text-decoration: none; padding: .7rem 0; min-height: 2.75rem; }
-.rules-cited summary b { text-decoration: underline; text-underline-offset: 2px; }
-.rc-bar { display: block; height: 6px; background: var(--card); margin: .45rem 0 .4rem; }
-.rc-bar i { display: block; height: 100%; min-width: 2px; background: var(--muted); }
-.rc-short { display: block; font-size: var(--t-2); color: var(--muted); }
-.rules-cited details[open] .rc-short { display: none; }  /* the whole article follows: its first sentence is not said twice */
 @media (max-width: 640px) {
   .vote-cell { width: auto; }
   table.laws thead { display: none; }
@@ -259,9 +247,6 @@ table.agree tr.own td:first-child { font-weight: 600; }
 #glasanje, section[id] { scroll-margin-top: 1rem; }
 details.inline { margin-top: .2rem; font-size: var(--t-2); }
 details.inline summary { color: var(--muted); cursor: pointer; }
-.rule-terms dt { font-weight: 700; margin-top: 1.6rem; }
-.rule-terms dd { margin: .3rem 0 0; max-width: 42rem; }
-.rule-terms dd > p, .rule-terms details > p { margin: .4rem 0; }
 .page-menu { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 1rem 0 1.5rem; padding: .6rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: var(--t-3); }
 .page-menu a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
 .page-menu a:hover { border-bottom-color: currentColor; }
@@ -1297,3 +1282,73 @@ main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone u
 @media (min-width: 360px) and (max-width: 640px) { html:not([lang="sr-Cyrl"]) .top .nav-support .wide-only { display: inline; } }
 @media (min-width: 400px) and (max-width: 640px) { html[lang="sr-Cyrl"] .top .nav-support .wide-only { display: inline; } }
 @media (max-width: 430px) { .top .brand { gap: .3rem; } .top .brand-mark { width: 1.5rem; } .top nav .nav-search { width: 2rem; } .top .nav-support img { width: 1.9rem; } .top nav .script-switch { padding: .25rem .4rem; } }
+
+/* The page of the Rules (25 Nov 2026). Two voices, told apart by their form alone: ours (the retelling) in the page's
+   letters, the Assembly's (an article's text) in the serif behind a line. No colour: nothing here is a vote. */
+.rules .lead { margin: 0 0 .4rem; }
+.rules .page-menu { padding-top: 0; padding-bottom: 0; } .rules .page-menu a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.rules h2 + .finder { margin-top: 1rem; }
+.rules .row-meta:empty { display: none; }
+.rt-i { flex: none; width: 1.5rem; height: 1.5rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.rt-index { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 2rem; margin: 1.2rem 0 0; }
+.rt-index ul { list-style: none; margin: 0; padding: 0; }
+.rt-part { margin: 0; padding: 0 0 .5rem; border-bottom: 2px solid var(--fg); font-size: var(--t-1); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.rt-index a { display: flex; align-items: center; gap: .7rem; min-height: 2.75rem; padding: .35rem 0; border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 550; line-height: 1.25; }
+.rt-index a:hover span { text-decoration: underline; text-underline-offset: 2px; }
+.finder.on ~ .rt-index, .rt-group:not(:has(.rt:not([hidden]))), .finder.on ~ .rt-foot { display: none; }
+.rt-group > h3 { margin: 3rem 0 0; padding-bottom: .5rem; border-bottom: 3px solid var(--fg); font-family: var(--serif); font-size: var(--t-6); line-height: 1.2; }
+.rt { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 25rem); gap: 0 3rem; padding: 1.8rem 0; border-bottom: 1px solid var(--line); }
+.rt[hidden] { display: none; }
+.rt-ours { max-width: 38rem; align-self: start; }
+.rt h4 { scroll-margin-top: 1.5rem; display: flex; align-items: center; gap: .7rem; margin: 0 0 .7rem; font-family: var(--serif); font-size: var(--t-5); line-height: 1.2; }
+.rt h4 .rt-i { box-sizing: content-box; padding: .45rem; border-radius: 50%; background: var(--card); }
+.rt h4:target .rt-i { background: var(--fg); color: var(--bg); }
+.rt-ours p { margin: 0 0 .55rem; }
+.rt-ours strong { white-space: nowrap; }
+.rt-first { font-size: var(--t-4); line-height: 1.45; }
+.rt-ours .rt-site { margin-top: .9rem; padding: .7rem .9rem; background: var(--card); font-size: var(--t-2); line-height: 1.45; }
+.rt-src { margin: .5rem 0 .4rem; font-size: var(--t-1); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.rt-law details { margin: 0; border-top: 1px solid var(--line); }
+.rt-law summary, .rules-cited summary { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr) 1rem; gap: 0 .9rem; min-height: 2.75rem; padding: .8rem 0; font-weight: 400; text-decoration: none; list-style: none; }
+.rt-law summary::-webkit-details-marker, .rules-cited summary::-webkit-details-marker { display: none; }
+.rc-n { font-family: var(--serif); font-size: var(--t-6); font-weight: 700; line-height: 1.1; font-variant-numeric: lining-nums; }
+.rc-n small { display: inline-block; width: 100%; font-family: var(--ju-sans); font-size: var(--t-1); font-weight: 400; color: var(--muted); }
+.rt-peek, .rc-short { font-family: var(--serif); font-size: var(--t-2); line-height: 1.45; color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.rt-law summary:hover .rt-peek, .rules-cited summary:hover .rc-short { color: var(--fg); }
+/* What opens says so at the row's end. Opened, the beginning is not said twice. */
+.rules summary::after { content: "+"; justify-self: end; font-size: var(--t-5); line-height: 1.2; color: var(--muted); }
+.rules details[open] > summary::after { content: "–"; }
+.rules details[open] .rt-peek, .rules details[open] .rc-short { display: none; }
+.law-text { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(--fg); font-family: var(--serif); line-height: 1.55; max-width: 40rem; }
+.law-text p { margin: 0 0 .7rem; } .law-text p:last-child { margin: 0; }
+.rules details > .meta, .rc-in > .meta { margin: .3rem 0; } .rt-law details > .meta:last-child, .rc-in > .meta:last-child { padding-bottom: .9rem; }
+.rt-foot { margin-top: 1.2rem; }
+/* The articles invoked: a row an article, its count as a bar from zero (grey: a count is no vote). */
+.rules-cited { list-style: none; margin: 1.2rem 0 0; padding: 0; max-width: none; border-bottom: 1px solid var(--line); }
+main section > ol.rules-cited { max-width: 52rem; }
+.rules-cited li { border-top: 1px solid var(--line); }
+.rules-cited li[hidden] { display: none; }
+/* The first twelve and a button for the rest, on a wide screen too (site.js, data-more). */
+.rules-cited.capped > .over { display: none; }
+.rules .more-btn { display: block; width: 100%; max-width: 52rem; margin: 1rem 0 1.6rem; padding: .85rem 1rem; font: inherit; font-weight: 600; background: var(--bg); color: var(--fg); border: 2px solid var(--fg); cursor: pointer; }
+.rules-cited details { margin: 0; }
+.rc-head { display: block; min-width: 0; }
+.rc-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.rc-sec { font-weight: 600; line-height: 1.3; } .rc-count { white-space: nowrap; } .rc-count b { font-size: var(--t-4); font-variant-numeric: tabular-nums; }
+.rc-bar { display: block; height: 6px; background: var(--card); margin: .45rem 0 .5rem; }
+.rc-bar i { display: block; height: 100%; min-width: 2px; background: var(--muted); }
+.rc-in { padding-left: 5.1rem; }
+.rules-cited li:target > details > summary .rc-n { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
+@media (min-width: 641px) { .rt:has(details[open]) .rt-ours { position: sticky; top: 1rem; } }
+@media (max-width: 860px) { .rt { grid-template-columns: minmax(0, 1fr); } .rt-src { margin-top: 1rem; } .rt:has(details[open]) .rt-ours { position: static; } .rt-index { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .rules .lead { font-size: var(--t-3); line-height: 1.45; }
+  .rules #pojmovi > h2 { margin-top: 1.2rem; }
+  .rt-index { display: block; } .rt-index > div + div { margin-top: 1.3rem; }
+  .rt-index ul { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 1rem; }
+  .rt-index a { gap: .5rem; height: 100%; min-height: 3.1rem; font-size: var(--t-2); overflow-wrap: anywhere; } .rt-index .rt-i { width: 1.35rem; height: 1.35rem; }
+  .rt { padding: 1.4rem 0 1.2rem; }
+  .rt-first { font-size: var(--t-4); }
+  .rt-law summary, .rules-cited summary { grid-template-columns: 3.3rem minmax(0, 1fr) .8rem; gap: 0 .7rem; }
+  .rc-in { padding-left: 0; } .rc-top { gap: .6rem; }
+}

@@ -214,23 +214,58 @@ def invoked_articles(total: Counter, by_conv: list[dict], rules: dict | None) ->
         out.append({"n": n, "label": a["oznaka"], "count": count,
                     "convs": [{"name": c["name"], "count": c["invoked"][n]} for c in by_conv if c.get("invoked", {}).get(n)],
                     "chapter": latin(ch.get("naslov", "")).capitalize(), "section": latin(a.get("odeljak", "")),
-                    "short": latin(poslovnik.short(a)), "text": [latin(s) for s in a["stavovi"]], "url": ch.get("url", "")})
+                    "short": latin(peek(a["stavovi"])), "text": [latin(s) for s in a["stavovi"]], "url": ch.get("url", "")})
     return out
 
 
 def rule_terms(terms: list[dict], invoked: list[dict], rules: dict | None) -> list[dict]:
     """The site's terms explained from the Rules (poslovnik.terms), in Latin script: our sentence (None once an
-    article it rests on has changed), how the site counts it, and each article with its text, its chapter's page at the
-    Assembly and whether it is in the list of invoked articles (then it leads there too)."""
+    article it rests on has changed) whole and by sentences (`retold`), the part of the page it belongs to, how the
+    site counts it, and each article with its text, its chapter's page at the Assembly and whether it is in the list of
+    invoked articles (then it leads there too). Each invoked article gets the terms that rest on it (`terms`)."""
     if not rules:
         return []
     chapters = {c["broj"]: c for c in rules["glave"]}
-    listed = {a["n"] for a in invoked}
-    return [{"id": t["id"], "name": t["pojam"], "explained": None if t["changed"] else t["objasnjenje"],
-             "on_site": t.get("na_sajtu", ""), "method": t.get("kako", ""),
-             "articles": [{"n": a["n"], "label": a["label"], "text": [latin(x) for x in a["text"]],
-                           "url": chapters.get(a["glava"], {}).get("url", ""), "listed": a["n"] in listed}
-                          for a in t["articles"]]} for t in terms]
+    listed = {a["n"]: a for a in invoked}
+    out = [{"id": t["id"], "name": t["pojam"], "explained": None if t["changed"] else t["objasnjenje"],
+            "sentences": [] if t["changed"] else retold(t["objasnjenje"]), "part": t.get("deo", ""),
+            "on_site": t.get("na_sajtu", ""), "method": t.get("kako", ""),
+            "articles": [{"n": a["n"], "label": a["label"], "text": [latin(x) for x in a["text"]],
+                          "short": latin(peek(a["text"])),
+                          "url": chapters.get(a["glava"], {}).get("url", ""), "listed": a["n"] in listed,
+                          "count": listed[a["n"]].get("count", 0) if a["n"] in listed else 0}
+                         for a in t["articles"]]} for t in terms]
+    for a in invoked:
+        a["terms"] = [{"id": t["id"], "name": t["name"]} for t in out if any(x["n"] == a["n"] for x in t["articles"])]
+    return out
+
+
+def peek(text: list[str]) -> str:
+    """The beginning of an article's text, over its paragraphs, for the row that opens it (article 109's first is only
+    "Опомена се изриче народном посланику:")."""
+    return poslovnik.short({"stavovi": [" ".join(text)]})
+
+
+# The parts of the page of the Rules, in the order the page has them (25 Nov 2026): a term's "deo" in pojmovi.json.
+RULE_PARTS = (("tok-sednice", "Tok sednice"), ("rec-i-red", "Reč i red u sali"), ("donosenje-zakona", "Donošenje zakona"))
+
+
+def rule_parts(terms: list[dict]) -> list[dict]:
+    """The terms by the page's parts, in the file's order inside each; those with no part last, under no name."""
+    return [p for p in ({"id": id_, "name": name, "terms": [t for t in terms if t["part"] == id_]}
+                        for id_, name in (*RULE_PARTS, ("", ""))) if p["terms"]]
+
+
+# A retelling on the page (25 Nov 2026): a paragraph a sentence, and in each the numbers in bold (how long, how many,
+# by when), which is what a reader comes for. By this one rule for every term; the words are never touched.
+_SENTENCE = re.compile(r"(?<=\.) (?=[A-ZČĆŽŠĐ])")
+_NUMBERS = re.compile(r"(\b\d+%|\b(?:\d+ do )?(?:\d+|jedan|jednog|dva|tri|pet|deset) "
+                      r"(?:minuta|čas(?:a|ova)?|sata?|dana|poslanika)\b)")
+
+
+def retold(text: str) -> list[list[tuple[str, bool]]]:
+    """A retelling as the page shows it: its sentences, each in pieces (text, in bold)."""
+    return [[(x, bool(k % 2)) for k, x in enumerate(_NUMBERS.split(s)) if x] for s in _SENTENCE.split(text)]
 
 
 @dataclass
@@ -496,9 +531,9 @@ def render(floor: Floor, *, env, common, out: Path) -> None:
             **common, c=floor.everyone, by_conv=by_conv, part="svi", all_page=ALL, root="",
             invoked=floor.invoked), encoding="utf-8")
     if floor.invoked or floor.terms:  # a page of its own (20 Nov 2026: with the articles' text, varnice-svi grew past 1 MB in Cyrillic)
-        (out / RULES).write_text(env.get_template("rules_cited.html").render(**common, invoked=floor.invoked,
-                                                                             terms=floor.terms, root=""),
-                                 encoding="utf-8")
+        (out / RULES).write_text(env.get_template("rules_cited.html").render(
+            **common, invoked=floor.invoked, terms=floor.terms, parts=rule_parts(floor.terms), whole=poslovnik.PAGE,
+            root=""), encoding="utf-8")
 
 
 def harsh_quote(people: list[dict]) -> dict | None:

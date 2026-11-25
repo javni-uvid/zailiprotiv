@@ -1,29 +1,58 @@
 {% extends "base.html" %}
 {% from "macros.html" import plural with context %}
+{% from "rules_icons.html" import icon %}
 {% block title %}Poslovnik Narodne skupštine: pojmovi i članovi na koje se poslanici pozivaju — Za ili Protiv{% endblock %}
 {% block description %}Šta po Poslovniku Narodne skupštine znače replika, opomena, oduzimanje reči, hitni postupak i drugi pojmovi sa sajta, i članovi Poslovnika koje poslanici navode u govorima, svi sazivi od 2012.{% endblock %}
+{# An article's own words, as the Assembly publishes them: in the serif, behind a line, never mistaken for ours. #}
+{% macro law(paragraphs) %}<div class="law-text">{% for x in paragraphs %}<p>{{ x }}</p>{% endfor %}</div>{% endmacro %}
 {% block main %}
+<div class="rules">
 <p class="crumbs"><a href="varnice-svi.html">Varnice u sali</a></p>
 <h1>Poslovnik Narodne skupštine</h1>
-{% if terms and invoked %}<nav class="page-menu" aria-label="Na ovoj strani"><a href="#pojmovi">Pojmovi</a><a href="#clanovi">Članovi na koje se poslanici pozivaju</a></nav>{% endif %}
+{% if terms %}<p class="lead">Šta reči koje sajt koristi znače po Poslovniku: naše kratko prepričavanje člana, a ispod njega tekst člana iz današnjeg prečišćenog teksta sa sajta Skupštine.</p>{% endif %}
+{% if terms and invoked %}<nav class="page-menu" aria-label="Na ovoj strani"><a href="#pojmovi">Pojmovi</a>{% for g in parts if g.name %}<a href="#{{ g.id }}">{{ g.name }}</a>{% endfor %}<a href="#clanovi">Članovi na koje se poslanici pozivaju</a></nav>{% endif %}
 {% if terms %}
 <section id="pojmovi">
   <h2>Pojmovi sa sajta, po Poslovniku</h2>
-  <p class="label">Šta reči koje sajt koristi znače po Poslovniku: naše kratko prepričavanje člana, a ispod njega tekst člana iz današnjeg prečišćenog teksta sa sajta Skupštine. Kad se član izmeni posle našeg prepričavanja, ostaje samo njegov tekst dok ga ne napišemo ponovo.</p>
-  <dl class="rule-terms">
-  {% for t in terms %}
-    <dt id="pojam-{{ t.id }}">{{ t.name }} <span class="meta">· {{ plural(t.articles|length, "član", "članovi", "članovi") }} {% for a in t.articles %}{% if a.listed %}<a href="#clan-{{ a.n }}">{{ a.label }}</a>{% else %}{{ a.label }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</span></dt>
-    <dd>
-      {% if t.explained %}<p>{{ t.explained }}</p>{% else %}<p class="meta">Član je izmenjen posle našeg prepričavanja: važi tekst ispod.</p>{% endif %}
-      {% if t.on_site %}<p class="meta">{{ t.on_site }} <a href="kako-racunamo.html{% if t.method %}#{{ t.method }}{% endif %}">Kako računamo</a></p>{% endif %}
-      <details class="inline"{% if not t.explained %} open{% endif %}>
-        <summary>Tekst {{ plural(t.articles|length, "člana", "članova", "članova") }} {% for a in t.articles %}{{ a.label }}{% if not loop.last %}, {% endif %}{% endfor %}</summary>
-        {% for a in t.articles %}<p><b>Član {{ a.label }}</b>{% if a.url %} <span class="meta">· <a href="{{ a.url }}">na sajtu Skupštine ↗</a></span>{% endif %}</p>
-        {% for x in a.text %}<p>{{ x }}</p>{% endfor %}{% endfor %}
-      </details>
-    </dd>
+  <div class="finder js-only" hidden data-filter="{% for g in parts %}rt-{{ loop.index }} {% endfor %}rc-rows" data-none="Nema te reči među pojmovima i članovima na ovoj strani.">
+    <label class="sr" for="f-q">Nađi pojam ili član</label>
+    <input id="f-q" type="search" placeholder="Nađi pojam ili broj člana" autocomplete="off">
+  </div>
+  <p id="f-n" class="row-meta" aria-live="polite"></p>
+  <div class="rt-index">
+  {% for g in parts %}
+    <div>{% if g.name %}<p class="rt-part">{{ g.name }}</p>{% endif %}
+    <ul>{% for t in g.terms %}<li><a href="#pojam-{{ t.id }}">{{ icon(t.id) }}<span>{{ t.name }}</span></a></li>{% endfor %}</ul></div>
   {% endfor %}
-  </dl>
+  </div>
+  {% for g in parts %}
+  <section class="rt-group"{% if g.id %} id="{{ g.id }}"{% endif %}>
+    {% if g.name %}<h3>{{ g.name }}</h3>{% endif %}
+    <div class="rt-list" id="rt-{{ loop.index }}">
+    {% for t in g.terms %}
+    <article class="rt" data-n="{% for a in t.articles %}{{ a.label }} {% endfor %}">
+      <div class="rt-ours row-main">
+        <h4 id="pojam-{{ t.id }}">{{ icon(t.id) }}<span>{{ t.name }}</span></h4>
+        {% if t.sentences %}{% for s in t.sentences %}<p{% if loop.first %} class="rt-first"{% endif %}>{% for x, b in s %}{% if b %}<strong>{{ x }}</strong>{% else %}{{ x }}{% endif %}{% endfor %}</p>{% endfor %}
+        {% else %}<p class="meta">Član je izmenjen posle našeg prepričavanja: važi tekst ispod.</p>{% endif %}
+        {% if t.on_site %}<p class="rt-site">{{ t.on_site }} <a href="kako-racunamo.html{% if t.method %}#{{ t.method }}{% endif %}">Kako računamo</a></p>{% endif %}
+      </div>
+      <div class="rt-law">
+        <p class="rt-src">Tekst {{ plural(t.articles|length, "člana", "članova", "članova") }}</p>
+        {% for a in t.articles %}
+        <details{% if not t.explained %} open{% endif %}>
+          <summary><span class="rc-n"><small>Član</small> {{ a.label }}</span><span class="rt-peek">{{ a.short }}</span></summary>
+          {{ law(a.text) }}
+          <p class="meta">{% if a.url %}<a href="{{ a.url }}">na sajtu Skupštine ↗</a>{% endif %}{% if a.listed %}{% if a.url %} · {% endif %}<a href="#clan-{{ a.n }}">u govorima {{ a.count }} {{ plural(a.count, "put", "puta", "puta") }}</a>{% endif %}</p>
+        </details>
+        {% endfor %}
+      </div>
+    </article>
+    {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  <p class="label rt-foot">Kad se član izmeni posle našeg prepričavanja, ostaje samo njegov tekst dok ga ne napišemo ponovo.{% if whole %} <a href="{{ whole }}">Ceo Poslovnik na sajtu Skupštine ↗</a>{% endif %}</p>
 </section>
 {% endif %}
 {% if invoked %}
@@ -32,20 +61,25 @@
   {% set top = invoked[0] %}
   <p class="standfirst">{{ invoked|length }} {{ plural(invoked|length, "član", "člana", "članova") }} Poslovnika {{ plural(invoked|length, "naveden je", "navedena su", "navedeno je") }} u govorima u sali; najčešće član {{ top.label }}, {{ top.count }} {{ plural(top.count, "put", "puta", "puta") }}.</p>
   <p class="label">Članovi Poslovnika Narodne skupštine navedeni u govorima kojima poslanik ukazuje na povredu Poslovnika (na početku govora), i član naveden uz reč „Poslovnik“ bilo gde u govoru; jedan govor broji se jednom po članu. Isto pravilo za svakoga. Tekst je današnji prečišćeni tekst Poslovnika sa sajta Skupštine: član je ranije mogao da glasi drugačije. <a href="kako-racunamo.html#poslovnik">Kako brojimo</a></p>
-  <ol class="plain rules-cited">
+  <ol class="rules-cited" id="rc-rows" data-more="12">
   {% for a in invoked %}
-    <li id="clan-{{ a.n }}">
-      <details>
-        <summary><b>Član {{ a.label }}</b> · {{ a.count }} {{ plural(a.count, "put", "puta", "puta") }}{% if a.section %} <span class="meta">· {{ a.section }}</span>{% endif %}
+    <li id="clan-{{ a.n }}" data-n="{{ a.label }}">
+      <details class="row-main">
+        <summary><span class="rc-n"><small>Član</small> {{ a.label }}</span>
+          <span class="rc-head"><span class="rc-top"><span class="rc-sec">{{ a.section or a.chapter }}</span><span class="rc-count"><b>{{ a.count }}</b> {{ plural(a.count, "put", "puta", "puta") }}</span></span>
           <span class="rc-bar" aria-hidden="true"><i style="width:{{ (100 * a.count / top.count)|round(1) }}%"></i></span>
-          <span class="rc-short">{{ a.short }}</span></summary>
-        {% for s in a.text %}<p>{{ s }}</p>{% endfor %}
+          <span class="rc-short">{{ a.short }}</span></span></summary>
+        <div class="rc-in">
+        {{ law(a.text) }}
+        {% if a.terms %}<p class="meta">Pojam: {% for t in a.terms %}<a href="#pojam-{{ t.id }}">{{ t.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
         <p class="meta">{% for x in a.convs %}{{ x.name }} saziv: {{ x.count }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
         <p class="meta">{{ a.chapter }}{% if a.url %} · <a href="{{ a.url }}">Poslovnik na sajtu Skupštine ↗</a>{% endif %}</p>
+        </div>
       </details>
     </li>
   {% endfor %}
   </ol>
 </section>
 {% endif %}
+</div>
 {% endblock %}
