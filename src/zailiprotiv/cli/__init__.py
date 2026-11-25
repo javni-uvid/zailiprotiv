@@ -12,7 +12,7 @@ from zailiprotiv.cli import common
 from zailiprotiv.cli.common import _pending, _shrunk, file_name  # noqa: F401 (the tests use them)
 from zailiprotiv.cli.assembly import (
     adopted, download, in_procedure, index, linked, members_cmd, memoranda, mp_years_cmd, notes_of_debate,
-    offices_cmd, photos_cmd, poslovnik_cmd, votes,
+    offices_cmd, photos_cmd, poslovnik_cmd, unread, votes,
 )
 from zailiprotiv.cli.recordings import (
     arhiva_cmd, glas_dan_cmd, govor_cmd, prepis_cmd, tacnost_cmd, uzivo_pull, videos_cmd,
@@ -227,6 +227,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--limit", type=int, default=0, help="read at most this many PDFs (0: all)")
     p.add_argument("--reread", default="", help="read again the PDFs whose address contains this text")
     p.set_defaults(run=votes)
+    commands.add_parser("unread", help="the roll calls listed and not read, if any").set_defaults(run=unread)
     p = commands.add_parser("download", help="save roll-call PDFs into a folder (test fixtures)")
     p.add_argument("--to", default="tests/fixtures")
     p.add_argument("urls", nargs="+")

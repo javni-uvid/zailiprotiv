@@ -15,6 +15,7 @@ from pathlib import Path
 
 from zailiprotiv import bills, jsonfile, kinds, laws, link, rollcall, skupstina, transcripts
 from zailiprotiv.config import CONVOCATIONS, CURRENT
+from zailiprotiv.translit import latin
 
 from zailiprotiv.cli import common
 from zailiprotiv.cli.common import _shrunk, _waiting, all_votes, file_name, sitting_id
@@ -71,8 +72,9 @@ def adopted(args) -> int:
     jsonfile.save(Path(args.out), store, "laws")
     print(f"laws: {len(found)} (of {listed} on the page), international treaties: {sum(l.treaty for l in found)}, "
           f"without a bill: {sum(not l.bill_pdf for l in found)}")
-    # A page that lists nothing is broken; a new convocation that has passed nothing yet is not.
-    return 0 if found or listed else 1
+    # A page that lists nothing is broken, but for a convocation newer than the current one (config.CURRENT): the page
+    # is empty until its first law, as it was from 17 Nov 2026.
+    return 0 if found or listed or int(common.CONVOCATION) > int(CURRENT) else 1
 
 
 def linked(args) -> int:
@@ -245,6 +247,19 @@ def votes(args) -> int:
     for p in problems[:50]:
         print(f"  problem: {p}")
     return 1 if failed and not read else 0
+
+
+def unread(args) -> int:
+    """The roll calls the sittings' index lists and no file of votes has: one line each, nothing when all are read. A
+    reading that a run skipped shows here (17-25 Nov 2026: the Fifteenth's, in silence)."""
+    have: set[str] = set()
+    for path in sorted((common.DATA / "votes").glob("*.json")):
+        have |= set(jsonfile.load(path)["pdfs"])
+    for sitting in jsonfile.load(common.DATA / "index.json", {}).get("sittings", {}).values():
+        for item, pdf in sitting["votes"]:
+            if pdf not in have:
+                print(f"- saziv {common.CONVOCATION}: {latin(item)} ({urllib.parse.quote(urllib.parse.unquote(pdf), safe=':/')})")
+    return 0
 
 
 def download(args) -> int:

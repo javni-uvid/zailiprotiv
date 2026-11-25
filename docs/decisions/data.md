@@ -244,6 +244,21 @@ as the change. The principles and the rules of work are in AGENTS.md.
   half way, `git status -sb` had no "ahead" to show, and the run was green with its hour's reading lost. It checks out
   `github.ref` now, takes an unfinished rebase back before it tries again, and is red when the push did not go. The
   other data workflows share the loop without the check and are as they were.
+- **The roll calls before the recordings, with their own commit** (25 Nov 2026, the maintainer: "Može 1 2 i 5"). Measured
+  on the runs of 24 and 25 Nov: everything but the recordings took 2 to 4 minutes, and `arhiva` of the newest
+  convocation 59 to 97 in nine runs; nothing was committed before its end. `votes`, `link` and `bills` read nothing it
+  writes (`arhiva.json`, `snimak/`). So: the sittings, then the newest convocation's and the current one's laws, roll calls and
+  links, the bills; a commit and **pages**; then the recordings, offices, portraits, the Rules and the live records, with
+  a commit of their own. The chain (notes, the model's writing) is started once, at the end, as before. A roll call listed
+  when a run begins is committed about two minutes later (an estimate), not 61 to 97 as it was; one listed just after a run read the page waits for
+  the next run, which queues behind the recordings: that wait stays.
+- **The Fifteenth's roll calls were not read from 17 to 25 Nov 2026**, five of them. The line was `laws && votes && link ||
+  true`, and `laws` ends with 1 while the page of passed laws is empty. Nobody saw it: the run was green, and a
+  convocation newer than the current one is read and not shown (`site.convocations`). Now `laws` takes an empty page as
+  no fault there, each command runs by itself, a test forbids such a line, and the run's step "Every roll call listed is read"
+  compares the index with the files (`zailiprotiv unread`) and opens an issue, one while it is open.
+- **The live records alone were never committed** (found the same day): beside the changed times of reading `git pull
+  --rebase` refuses to run, and the loop ended in silence. The times are put back first now.
 
 ## Changing convocation
 
