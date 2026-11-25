@@ -636,6 +636,9 @@ def test_the_pages_uses_go_to_the_projects_own_counter_and_say_so():
     html = page(snap, cyr=False, site="", tz=TZ, api="https://glasovi.zailiprotiv.rs")
     foot = lambda h: h.split("<footer>")[1].split("</footer>")[0]
     assert 'data-api="https://glasovi.zailiprotiv.rs"' in html and "zbraja po danu" in foot(html)
+    assert html.count("kako-racunamo#posetioci") == 1  # what is counted is on the method page, linked in one place
+    assert '<a href="https://s.rs/cir/kako-racunamo#posetioci">Бројач сајта</a> збраја по дану' in foot(
+        page(snap, cyr=True, site="https://s.rs/", tz=TZ, api="https://glasovi.zailiprotiv.rs"))
     plain = page(snap, cyr=False, site="", tz=TZ)
     assert "zbraja" not in foot(plain) and 'data-api="' not in plain
     assert "zbraja" not in foot(page(snap, cyr=False, site="", tz=TZ, api='x" onload="y'))

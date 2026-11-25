@@ -294,8 +294,10 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   `mikrofon.pusti` is, once per page opened. It and `pusti`, `1min`, `5min` are also summed per hour (UTC; the table
   `events_hours`: hour, use, how many, nothing of a reader), to be read beside `tools/watching.py`. **visits** prints
   them (`tools/uses.py`, from `/pregled`, `uses_by_hour`, two weeks); an hour's sum under three is left out by the
-  counter itself, as both the overview and the run's log are public. The live page's footer, the method page and the
-  privacy page say it.
+  counter itself, as both the overview and the run's log are public. The method page says it all (the maintainer, the
+  same day, on the words: "Ništa ne stavljaj na dno stranice. Sve neka ide na metod pa linkuj na jednom mestu"): the
+  live page's footer keeps its words, of which "Brojač sajta" is the one link to it; the privacy page no longer says
+  "only per day" and points there.
 
 ## Search engines
 

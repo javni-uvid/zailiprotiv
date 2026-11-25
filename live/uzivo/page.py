@@ -1381,6 +1381,8 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 """
         mail_back = f'<p class="ml-back" hidden><span>{t("ml_off")}</span> <button type="button">{t("ml_show")}</button></p>\n'
     mail_back = mail_back if api.startswith("https://") else ""
+    uses = (f'. <a href="{escape(site)}{"cir/" if cyr else ""}kako-racunamo#posetioci">{t("uses_counter")}</a> {t("uses_counted")}'
+            if api.startswith("https://") else "")
     how_time = (f'<p>{t("gt_how")} <a href="{escape(site)}{"cir/" if cyr else ""}poslovnik-clanovi#pojam-vreme-rasprave">{t("gt_rules")} →</a></p>'
                 if config.SHOW_GROUP_TIME else "")
     return f"""<!doctype html>
@@ -1415,7 +1417,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 {mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p><p>{t("why_how")}</p>{how_time}</details>
 </main>
-<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{t("rules_word")}</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{(". " + t("uses_counted")) if api.startswith("https://") else ""}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
+<footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{t("rules_word")}</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{uses}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
 </body>
