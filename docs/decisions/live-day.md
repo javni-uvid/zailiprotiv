@@ -247,3 +247,19 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   after. A day of steps with no model step, kept before, is read again by it. The rule is loaded by both containers: what
   it notes while a sitting is on changes with the measuring's release. The model called the same sentence "Nastavak rada":
   its own text, left. A break said with an hour or a length stays one.
+- **A break known from the chair's words and the broadcast's graphic** (25 Nov 2026, the maintainer: "Pauzu možemo računati kada
+  stave veliki onaj grafik preko ekrana"; then, of the numbers below and the two signals together, "1 da"). The graphic, a blue
+  oval with the Assembly's building and its address over the hall, has no word of a break, and the same one stands before
+  a sitting and after its end. Told by the blue share of the picture's middle (`grafika.blue`): 0.34 to 0.45 with it, at most
+  0.13 without, in 4,226 frames of 24 and 25 Nov (YouTube's storyboards, one each ten seconds); from 0.25 it is up. Against
+  the chair's words it came 5:05 later (24 Nov 10:07), at once (14:10), 0:29 (18:08) and 7:59 (25 Nov 10:30, for 130 s only); in
+  19 Nov's breaks of 16:32, 18:06 and 23:30 never; and at both days' ends (20 and 100 s) and beginnings. So by itself it would be
+  later than the words on two of four and wrong at the ends. The rule (`Tracker.screen`): the chair's words of a break
+  (`state_base.BREAK`) within 15 minutes, nobody at the rostrum and no step heard since, and the graphic in three frames in a
+  row (15 s): a step "slika" at the words' second, shown at once; else as before (the model's step, four minutes of nobody).
+  The same break heard takes its place (it says until when). By those days: 24 Nov 14:10 and 18:08 known some three
+  minutes sooner, the other two as before, no false one. The graphic's going down ends nothing: on 25 Nov it went down three
+  minutes before the work went on. Frames with it are not read for captions: in that of 24 Nov 11:10 an MP was read
+  from the picture's noise. A frame costs about 1.3 ms, and 1.4 ms more while the graphic is up. The share of each frame is
+  kept with the day's lines (`/data/ulazi`, a number), to be scored again. What the 14th convocation's graphic looked like,
+  and a technical fault's picture, were not seen.

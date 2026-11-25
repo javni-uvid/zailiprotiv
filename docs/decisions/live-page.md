@@ -377,3 +377,5 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   5 and 1, as links are beginnings, and a second a little inside the speech before is a moved one. The same number in
   `deljenje.py` and `mikrofon.js` (a test asks both); the edge has no rule of its own. One day written again is the whole
   sample. Changes "within 45 s" above.
+- **"Pauza" in the tile while a break is known** (25 Nov 2026, the maintainer: "2 moze"): in place of "Uživo", which was all the
+  first screen said in a break; gone with the break (`page._paused`). The player's "Uživo · iz Skupštine" stays.

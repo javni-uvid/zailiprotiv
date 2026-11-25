@@ -11,6 +11,7 @@ TEXT = {
     "intro": "Ko upravo govori u Narodnoj skupštini i koliko dugo, čitano uživo iz potpisa u prenosu. Deo sajta",
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
     "status_live": "Uživo",
+    "status_break": "Pauza",  # in its place while a break is known
     "status_off": "Ne zaseda",
     "h1": "Za ili Protiv: Jutrić, Kafica, Skupštinica",
     "title_tail": "Skupština uživo",  # the words people search for, after the name in the tab's title

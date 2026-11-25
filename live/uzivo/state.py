@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .names import Person, Roster
-from .state_base import HOLD_VOICE, CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, BREAK, REJOIN, REJOIN_WORDS
+from .state_base import HOLD_VOICE, CLOCK_JOIN, LONGEST_CLOCK, SURE_FRAMES, NO_STREAM, SPEAKING, UNKNOWN, _write, counted, CHAIRS, BREAK, REJOIN, REJOIN_WORDS, GRAPHIC, GRAPHIC_FRAMES, GRAPHIC_GAP, GRAPHIC_WORDS, GOES_ON
 from .state_chronicle import Chronicle
 from .state_said import Said
 from .state_view import View
@@ -57,6 +57,7 @@ class Tracker(Said, Chronicle, View):
         self.presiding: dict = {}  # who presides, by the voice (glas.py): name, address, from, to
         self.captions: list[dict] = []  # the line under the picture, its last lines (prepis.Captions); not kept
         self._forms: tuple = (None, {})  # the sitting MPs' names in their cases, for the transcript's corrections
+        self._screen = (0, 0.0)  # frames in a row with the broadcast's graphic, and when the last frame was looked at
         self._others = 0  # frames in a row naming someone other than the current speaker
         self.recording_file = Path(path).with_name("snimak.json") if path else None
         self.recording: dict = {}  # the last sitting day read from the recording (the site's mikrofon-dan.json)
@@ -464,6 +465,34 @@ class Tracker(Said, Chronicle, View):
             self.status = UNKNOWN
         self._snap = None
         self._save()
+
+    def screen(self, share: float, now: float | None = None) -> None:
+        """How blue a frame's middle is (grafika.blue). The broadcast's graphic in GRAPHIC_FRAMES frames in a row, and a break the
+        chair declared before it with nothing said to go on since: the break is known at once, a step of its own ("slika").
+        By itself the graphic says nothing: it stands before a sitting and after its end too. Its going down is no break's
+        end (25 Nov 2026: down three minutes before the work went on)."""
+        now = time.time() if now is None else now
+        row = self._screen[0] + 1 if now - self._screen[1] <= GRAPHIC_GAP else 1
+        self._screen = (row if share >= GRAPHIC else 0, now)
+        if self._screen[0] < GRAPHIC_FRAMES:
+            return
+        with self._lock:
+            ts, text = self._break_said(now)
+        if ts and self.note(ts, "Pauza", text, "slika"):
+            self._snap = None
+
+    def _break_said(self, now: float) -> tuple[int, str]:
+        """The last break the chair declared in GRAPHIC_WORDS, from its words on, or (0, "") when there is none, somebody has
+        had the floor since or a step was heard after it. Called with the lock held."""
+        if self.status in (NO_STREAM, SPEAKING):
+            return 0, ""
+        said = sorted((int(k[1:]), v) for k, v in self.said.items()
+                      if k[:1] == "p" and k[1:].isdigit() and now - GRAPHIC_WORDS <= int(k[1:]) <= now)
+        ts, text = next(((t, v) for t, v in reversed(said) if BREAK.search(v)), (0, ""))
+        if not ts or any(t["seen"] > ts + 30 for t in self.turns) or any(
+                e["t"] > ts + 30 and e.get("vrsta") in GOES_ON and e.get("izvor") != "sajt" for e in self.events):
+            return 0, ""
+        return ts, text[BREAK.search(text).start():].lstrip(" .!?")[:220]
 
     def _mend(self) -> None:
         """The same speaker named again, joined once the words between are written down: they come half a minute after the

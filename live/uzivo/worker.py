@@ -11,11 +11,12 @@ from pathlib import Path
 from PIL import Image
 
 from . import config, mreza
-from .caption import differs, role, sure, who
+from .caption import Caption, differs, role, sure, who
+from .grafika import blue
 from .names import Roster
 from .ocr import caption, clock, outlined
 from .state import Tracker
-from .state_base import write_text
+from .state_base import GRAPHIC, write_text
 from .stream import VIDEO, NotLive, resolve_input, start_ffmpeg
 
 log = logging.getLogger("worker")
@@ -104,13 +105,17 @@ def run(tracker: Tracker, stop: threading.Event, bell=None) -> None:
                           "seg": getattr(proc, "seg_dur", None)}
                     try:
                         frame = Image.open(config.FRAME_PATH).convert("RGB")
-                        cap = caption(frame)
+                        share = blue(frame)
+                        tracker.screen(share)
+                        # nobody's caption is under the graphic, and noise over it was read as an MP's name (24 Nov 2026, 11:10)
+                        covered = share >= GRAPHIC
+                        cap = Caption() if covered else caption(frame)
                     except Exception:  # a broken frame or an OCR error: skip it
                         log.exception("frame not read")
                         continue
                     person = who(cap, roster.get(), config.MATCH)
                     under = role(cap.role_line, person, roster.get(), config.MATCH) if cap.role_clean else ""
-                    if not person:  # the caption as it looked on 24 Nov 2026 (ocr.outlined)
+                    if not person and not covered:  # the caption as it looked on 24 Nov 2026 (ocr.outlined)
                         try:
                             found = ((c, sure(c, roster.get(), config.MATCH)) for c in outlined(frame))
                             hit = next(((c, p) for c, p in found if p), None)
