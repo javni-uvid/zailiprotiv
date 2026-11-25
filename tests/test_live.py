@@ -2034,6 +2034,30 @@ def test_a_steps_time_leads_to_its_moment():
     assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="1000"' in arch
 
 
+def test_a_decisions_time_leads_to_its_moment_as_a_steps_does():
+    """25 Nov 2026, the maintainer: "na vremenskoj oznaci stavi link da prebaci na taj deo videa". The day's decisions too,
+    to the minute they carry, wherever a step's time leads; the time alone where nothing holds it."""
+    from datetime import datetime
+    from uzivo.page import _at_clock
+    noon = datetime(2026, 11, 25, 11, 58, tzinfo=TZ).timestamp()
+    assert _at_clock("2026-11-25", "11:58", TZ) == noon and _at_clock("2026-11-25", "00:30", TZ) == noon + (12 * 60 + 32) * 60
+    assert not _at_clock("2026-11-25", "", TZ) and not _at_clock("", "11:58", TZ) and not _at_clock("2026-11-25", "x:y", TZ)
+    snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nema_prenosa", "dan": "2026-11-25", "ranije": True, "provereno": noon + 9000,
+            "sazetak": {"vrsta": "dan", "odluke": [{"vreme": "11:58", "sta": "Zaključena je sednica."}, {"vreme": "", "sta": "Bez vremena."}]}}
+    draw = lambda cyr=False, **kw: fragment({**snap, **kw}, cyr=cyr, site="https://zailiprotiv.rs/", tz=TZ)
+    plain = draw()
+    assert '<span class="time">11:58</span>' in plain and 'class="time" href' not in plain
+    video = {"video": "dQw4w9WgXcQ", "od": noon - 5000, "do": noon + 5000, "pocetak": noon - 5000}
+    part = {"url": "https://arhiva.videonet.co.rs/a.mp4", "od": noon - 600, "trajanje": 3000}
+    for cyr in (False, True):
+        # the broadcast over, its video still public; then the archive's file, which comes first
+        assert 'data-yt="dQw4w9WgXcQ" data-t="5000"' in draw(cyr, otvoreno=[video]) and "&amp;t=5000s" in draw(cyr, otvoreno=[video])
+        assert 'data-file="https://arhiva.videonet.co.rs/a.mp4" data-t="600"' in draw(cyr, otvoreno=[video], datoteke=[part])
+    assert 'class="time" href' not in draw(otvoreno=[{**video, "od": noon + 1000, "pocetak": noon + 1000}])  # read from later on
+    live = draw(stanje="govori", ranije=False, prenos={"video": "dQw4w9WgXcQ", "od": noon - 60})
+    assert 'data-yt="dQw4w9WgXcQ" data-t="60"' in live
+
+
 def test_a_turn_found_without_a_caption_has_its_place_in_the_broadcast():
     """24 Nov 2026, the maintainer: in "Svi govori redom" a way back to the moment; found turns had no place."""
     now = 1795519000.0
