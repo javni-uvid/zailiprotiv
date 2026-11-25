@@ -254,3 +254,10 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   - **Not tried:** the 503 after the third end (it comes at 300 s of standing); a hang with a summary or a mail being made (tests
     only); a hang in the one-process form with 180 s; a real broadcast of the Assembly's. A release puts it live with
     `uzivo -Deo merenje`, not during a sitting; the way back is `nazad -Deo merenje`.
+- **The site is asked while no broadcast is on too, once an hour** (25 Nov 2026, the conductor). The measuring asked for the site's
+  files (the list of MPs, the last day, "Dok čekate", the facts) at its start and while frames came, so between sittings
+  never: a day corrected from the notes (25 Nov, a speech of 10:16 given to its speaker) reached the page only at a restart.
+  `RosterKeeper.get` now also in the loop's turn without a broadcast, with its own limit of an hour. A site that does not
+  answer costs its own time and is asked again the next hour: ten seconds a step of the net, twenty for reading a file
+  whole (`mreza.site`'s `whole`: pieces that come one by one are each in time, so a file could have held the loop for
+  ever), the loop's clock set between files, under the guard's 180 s; no error of it ends the loop.
