@@ -183,3 +183,10 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   - `/stanje.json` has `merenje`, the measuring's commit, beside `verzija`. The live sound's freshness and address come from
     `sada.json`; without the bucket the page serves the playlist from `LISTEN_PATH`, a folder both must then have.
   - Measured: the page 97 MB after 150 pages and pictures of a made-up day of 230 turns and 2,500 pieces (the budget was 150).
+- **The test as two, when asked** (25 Nov 2026, step 3): `mikrofon.ps1 test -Dva` runs the tree's test as `merenje` and `uzivo` (the page),
+  `docker-compose.test.dva.yml` over the test's own file; plain `test` stays one container, since that is the form `uzivo` puts
+  live until step 4, and a test must run what goes live. Same image, names, port, project and volume, so `pocisti-projekat.sh` (it goes
+  by the project's label and the names) needed no change. The form that ran before is stopped first: the measuring waits for the lock, and
+  the page for a healthy measuring (which makes `/data/mejl` on a new volume), so a one-container test left running would hold
+  both. Tried with no broadcast: the page cannot write outside `mejl`, the page replaced while the measuring went on, one form
+  and the other in turn.

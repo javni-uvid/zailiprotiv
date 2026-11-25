@@ -1,7 +1,8 @@
 # The live service's images: a change is tried as a test, and only an image of a clean origin/main goes live.
-#   .\mikrofon.ps1 test [-Novo]   build this working tree and run it beside the live service (-Novo: everything fetched
+#   .\mikrofon.ps1 test [-Novo] [-Dva]   build this working tree and run it beside the live service (-Novo: everything fetched
 #                                 afresh, the newest yt-dlp among it). From the main clone on main: mikrofon:test at
 #                                 http://127.0.0.1:8001/; from a worktree: mikrofon:test-<branch> on a port of its own.
+#                                 -Dva: as two containers, the measuring and the page (what goes live is still one).
 #   .\mikrofon.ps1 uzivo          mikrofon:test goes live (mikrofon:uzivo), if it was built from a clean origin/main
 #                                 (-Ipak: whatever it is). While someone speaks it waits for the turn to end (-Cekaj
 #                                 minutes at most, 10 by default; -Odmah: at once). If the new one doesn't answer
@@ -18,6 +19,7 @@ param(
     [switch]$Odmah,
     [switch]$Ipak,
     [switch]$Test,
+    [switch]$Dva,
     [int]$Cekaj = 10
 )
 # Not "Stop": Windows PowerShell takes docker's progress on stderr for an error. Exit codes are checked (Assert-Ok).
@@ -71,6 +73,11 @@ if (-not (Test-Path .env) -and (Test-Path (Join-Path $Tree.Main "live\.env"))) {
 # Whisper's model, shared by the live service and every test, fetched once.
 docker volume inspect mikrofon-whisper *> $null
 if ($LASTEXITCODE -ne 0) { docker volume create mikrofon-whisper | Out-Null }
+
+# The test's compose files: the second makes it two containers (-Dva). Both name every container a test may have, so
+# that stopping it and its log take both.
+$TestOne = @("-f", "docker-compose.test.yml")
+$TestTwo = $TestOne + @("-f", "docker-compose.test.dva.yml")
 
 # Until the page answers on its port (and, given a commit, says it runs that one): $true, or $false after $Seconds.
 function Wait-Page([int]$Port, [string]$Version, [int]$Seconds = 90) {
@@ -128,9 +135,20 @@ function Show-Image([string]$Tag) {
 switch ($Korak) {
     "test" {
         if ($Novo) { docker compose -f docker-compose.test.yml build --pull --no-cache; Assert-Ok "Build" }
-        docker compose -f docker-compose.test.yml up -d --build; Assert-Ok "Pokretanje testa"
+        # Two services never write in one volume (the lock, uzivo/sada.py): the form that ran before is stopped first, or
+        # the new measuring would wait for it.
+        if ($Dva) {
+            docker compose @TestTwo build; Assert-Ok "Build"
+            docker compose @TestTwo stop; Assert-Ok "Zaustavljanje testa"
+            docker compose @TestTwo up -d; Assert-Ok "Pokretanje testa"
+        } else {
+            docker compose @TestOne build; Assert-Ok "Build"
+            docker compose @TestTwo rm -f -s merenje; Assert-Ok "Uklanjanje merenja"
+            docker compose @TestOne up -d; Assert-Ok "Pokretanje testa"
+        }
         $ok = Wait-Page $Tree.Port $Tree.Sha 90
         $dirty = if ($Tree.Clean -eq "ne") { ", sa izmenama koje nisu commit-ovane" } else { "" }
+        if ($Dva) { Write-Host "Kao dva kontejnera: merenje i strana." }
         Write-Host "Test $($Tree.Image): $($Tree.Sha) sa grane $($Tree.Branch)$dirty"
         if ($ok) { Write-Host "Radi na http://127.0.0.1:$($Tree.Port)/  (logovi: .\mikrofon.ps1 logovi -Test)" }
         else { Write-Host "Ne odgovara posle 90 s: .\mikrofon.ps1 logovi -Test" }
@@ -156,7 +174,7 @@ switch ($Korak) {
         }
         Set-Live $v
         # The test reads the same broadcast with Whisper too; once its image is live it only takes the cores.
-        docker compose -f docker-compose.test.yml stop
+        docker compose @TestTwo stop
         Write-Host "Uzivo radi $v (https://mikrofon.zailiprotiv.rs/stanje.json kaze `"verzija`"); test zaustavljen."
     }
     "nazad" {
@@ -176,7 +194,7 @@ switch ($Korak) {
         catch { Write-Host "Uzivo ne odgovara na 127.0.0.1:8000." }
     }
     "logovi" {
-        if ($Test) { docker compose -f docker-compose.test.yml logs -f --tail 100 uzivo }
+        if ($Test) { docker compose @TestTwo logs -f --tail 100 }
         else { docker compose logs -f --tail 100 uzivo }
     }
     "ocisti" {

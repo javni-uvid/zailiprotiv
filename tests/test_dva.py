@@ -262,3 +262,15 @@ def test_the_page_s_modules_load_no_model_stream_or_ocr():
     imported = set(re.findall(r"\w+", " ".join(re.findall(r"^ *(?:from|import) (.+)$", apart, re.M))))
     assert {"pretplata", "Reader"} <= imported
     assert not imported & {"worker", "prepis", "glas", "sudija", "hronika", "ocr", "numpy", "stream", "sada"}
+
+
+def test_the_test_as_two_gives_the_page_only_what_went_by_mail_to_write():
+    """live/docker-compose.test.dva.yml: the measuring takes the test's service as it is (its secrets emptied there), and
+    the page reads the volume and writes its `mejl` alone."""
+    two = (LIVE / "docker-compose.test.dva.yml").read_text(encoding="utf-8")
+    measuring, page = two[two.index("  merenje:"):].split("\n  uzivo:\n")
+    assert "extends:" in measuring and "service: uzivo" in measuring and "ports: !reset []" in measuring
+    assert "ULOGA: merenje" in measuring and '"uzivo.merenje"]' in measuring
+    assert "ULOGA: strana" in page and "volumes: !override" in page
+    assert re.search(r"target: /data\n +read_only: true", page) and re.search(r"target: /data/mejl.*\n +volume:\n +subpath: mejl", page)
+    assert not re.search(r"^ +\w*(KEY|TOKEN|KLJUC|TAJNA|SECRET|R2_|MEJL_)\w*:", two, re.M) and "env_file" not in two
