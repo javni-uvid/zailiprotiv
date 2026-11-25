@@ -12,7 +12,6 @@ TEXT = {
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
     "status_live": "Uživo",
     "status_off": "Ne zaseda",
-    "goes_on": "Skupština nastavlja sa radom %1.",
     "h1": "Za ili Protiv: Jutrić, Kafica, Skupštinica",
     "title_tail": "Skupština uživo",  # the words people search for, after the name in the tab's title
     "st_today": "Sednica danas u %1",
@@ -124,6 +123,7 @@ TEXT = {
     "news": "Novo:",
     "news_page": "stranica poslanika",
     "coming": "Sledeća sednica",
+    "coming_on": "Nastavak sednice",  # one already begun, when its page says it goes on (25 Nov 2026)
     "at": "u",
     "nx_in": "počinje za",
     "nx_soon": "Počinje uskoro",

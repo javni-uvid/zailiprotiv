@@ -2935,6 +2935,60 @@ def test_before_a_sitting_a_pasted_link_announces_it_and_past_the_hour_it_does_n
     assert page.announced(jan)[0] and not page.announced({**jan, "stanje": "govori"})[0]
 
 
+def test_the_assemblys_listing_announces_a_sitting_by_one_rule_begun_or_convened(monkeypatch):
+    """25 Nov 2026: what had a hand in it (the notice) comes from the Assembly's listing ("sazvano"); the card on top, the
+    link's line and picture, for a sitting that goes on and for one convened."""
+    from datetime import datetime
+    from uzivo import page, picture
+    url = "https://www.parlament.gov.rs/x.html"
+    agenda = {"url": url, "tacke": [{"n": 5, "tekst": "Izbor članova radnih tela", "stanje": "gotova", "izvor": "sajt"},
+                                    {"n": 6, "tekst": "Izbor delegacija", "stanje": "na_redu"}]}
+    snap = {**Tracker(None, "Europe/Belgrade").snapshot(), "stanje": "nema_prenosa", "dnevni_red": agenda,
+            "sazvano": {"naslov": "Prva sednica", "url": url, "pocinje": "2026-11-25T10:00", "tacke": [], "nastavak": True}}
+    monkeypatch.setattr(page, "_now", lambda: datetime(2026, 11, 24, 21, 0, tzinfo=TZ))
+    html = fragment(snap, cyr=False, site="", tz=TZ)
+    assert "Sednica sutra u 10 h" in html and "<li>6. Izbor delegacija</li>" in html and "5. Izbor" not in html.split("st-bell")[0]
+    assert "Skupština nastavlja sa radom u sredu, 25. novembra, u 10.00." in html and f'href="{url}"' in html
+    assert 'class="nx"' not in html  # the card says it once
+    assert page.og_text(snap, cyr=False, tz=TZ)[0] == "Skupština nastavlja sa radom u sredu, 25. novembra, u 10.00"
+    assert "najava3-2026-11-25T1000" in page._og(snap, cyr=False, url="https://m/", tz=TZ)
+    assert picture.render(snap, cyr=True, tz=TZ) != picture.render({**snap, "sazvano": None}, cyr=True, tz=TZ)
+    other = fragment({**snap, "dnevni_red": {**agenda, "url": "https://www.parlament.gov.rs/y.html"}}, cyr=False, site="", tz=TZ)
+    assert "<li>6. Izbor" not in other.split("st-bell")[0]  # another sitting's agenda is not this one's
+    # one convened: its own items, and it goes on with nothing; the countdown stays, with its agenda
+    new = {**snap, "sazvano": {"naslov": "Druga sednica", "url": url, "pocinje": "2026-11-25T10:00", "tacke": ["Budžet"]}}
+    html = fragment(new, cyr=False, site="", tz=TZ)
+    assert "Sednica sutra u 10 h" in html and "<li>1. Budžet</li>" in html and 'class="nx"' in html and "nastavlja" not in html
+    assert page.og_text(new, cyr=False, tz=TZ) == ("Skupština u sredu, 25. novembra, u 10.00",
+        "Na redu: Budžet. Uživo: ko govori, opomene, glasanja i snimak svakog govora.")
+    # the notice by hand in the words of that morning; with a nearer sitting in the listing that one is said
+    note = {"od": "2026-11-25", "do": "2026-11-26", "url": url,
+            "tekst": "Narodna skupština nastavlja rad u četvrtak, 26. novembra 2026. godine, sa početkom u 10.00 časova."}
+    assert page._resumes(note["tekst"]) == "u četvrtak, 26. novembra, u 10.00"
+    assert page.announcement({**snap, "obavestenja": [note]})[2].day == 25
+    assert page.announcement({**snap, "sazvano": None, "obavestenja": [note]})[2].day == 26
+    # its hour come and no broadcast yet: the countdown, by its own name; a day with no hour too
+    monkeypatch.setattr(page, "_now", lambda: datetime(2026, 11, 25, 10, 5, tzinfo=TZ))
+    late = page.countdown(snap, cyr=False, tz=TZ, now=datetime(2026, 11, 25, 10, 5, tzinfo=TZ).timestamp())
+    assert page.announced(snap) == ("", {}) and "Nastavak sednice" in late and "Počinje uskoro" in late
+    assert page.announcement({**snap, "sazvano": {**snap["sazvano"], "pocinje": "2026-11-26"}})[2] is None
+
+
+def test_a_sitting_that_has_begun_is_no_longer_the_next_one():
+    """25 Nov 2026: in its break and on its evening the page would have said that it begins soon."""
+    from datetime import datetime
+    t = Tracker(None, "Europe/Belgrade")
+    at = lambda h, m=0: datetime(2026, 11, 25, h, m, tzinfo=TZ).timestamp()
+    t.use_waiting({"kviz": [], "cinjenice": [], "sazvano": {"naslov": "Prva", "url": "https://www.parlament.gov.rs/x",
+                   "pocinje": "2026-11-25T10:00", "tacke": [], "nastavak": True}})
+    t._load("2026-11-25")
+    assert t.snapshot(now=at(9))["sazvano"]
+    t.observe(None, now=at(9, 55))  # the broadcast is on before its hour
+    assert t.snapshot(now=at(9, 56))["sazvano"]
+    t.observe(None, now=at(10, 1))
+    assert t.snapshot(now=at(10, 2))["sazvano"] is None and t.snapshot(now=at(19))["sazvano"] is None
+
+
 def test_the_app_and_the_notification_say_what_they_give_with_a_mark_each():
     """23 Nov 2026, the maintainer: say that the page becomes an app, and mark both buttons."""
     from uzivo import page

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import time
+from datetime import datetime
 
 from . import config
 from .names import Person
@@ -20,6 +21,12 @@ def _filed(rec: dict, done: list[dict]) -> tuple[list[dict], list[dict]]:
         p = next((p for p in parts if p["od"] <= d["od"] < p["od"] + p["trajanje"]), None)
         out.append({**d, "datoteka": p["url"], "snimak": int(d["od"] - p["od"])} if p else d)
     return parts, out
+
+
+def _begun(starts: str, frame: float, tz) -> bool:
+    """Whether a sitting convened for a day and an hour ("2026-11-25T10:00") has begun: a frame of a broadcast was read
+    at that hour or after it."""
+    return len(starts) >= 16 and datetime.fromtimestamp(frame, tz).strftime("%Y-%m-%dT%H:%M") >= starts[:16]
 
 
 def _older(rec: dict, turns: list[dict]) -> bool:
@@ -222,6 +229,8 @@ class View:
             coming = self.waiting.get("sazvano") if isinstance(self.waiting, dict) else None
             if not (isinstance(coming, dict) and str(coming.get("pocinje", ""))[:10] >= today and not current):
                 coming = None  # shown only while nobody is on, and not once its day has passed
+            if coming and self.day == today and self.cover and _begun(str(coming["pocinje"]), self.cover[-1][1], self.tz):
+                coming = None  # nor once it has begun: in its break, and on its evening, it is not the next one
             news = [n for n in (self.waiting.get("obavestenja") or []) if isinstance(n, dict) and n.get("tekst")
                     and str(n.get("od", "")) <= today <= (str(n.get("do", "")) or "9999")] if isinstance(self.waiting, dict) else []
             return {"stanje": self.status, "provereno": int(self.last_frame), "sada": current, "sazvano": coming,

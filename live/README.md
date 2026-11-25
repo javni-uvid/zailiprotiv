@@ -70,8 +70,9 @@ site's counter (`mikrofon.pusti`, "Slušaj" `mikrofon.slusaj`: sums per day and 
 loads before a click (AGENTS.md, principle 5); without the script the links open the recording.
 
 **The next sitting and the home screen** (20 Nov 2026). Between sittings, under "no sitting now", the next sitting
-convened (`sazvano` in `mikrofon-cekanje.json`: the first one for today or later, from the current and the newest
-convocation) is counted down each second, with its day, hour, title and agenda. The page has a manifest
+convened, or one begun that goes on on another day as its page at the Assembly says (`sazvano` in
+`mikrofon-cekanje.json`: the first one still to come, from the current and the newest convocation; `nastavak` for one
+begun), stands on a card on top and in the link's picture, with no hand in it. One convened is also counted down each second, with its day, hour, title and agenda. The page has a manifest
 (`/manifest.webmanifest`, `/cir/manifest.webmanifest`) and icons drawn from its microphone (`/ikona-*.png`,
 `picture.icon`), so a phone can keep it on its home screen; where the browser offers that (Chrome, Edge, Samsung)
 the page shows its own button for it, and on an iPhone a line saying where Safari keeps it. On a phone the head is

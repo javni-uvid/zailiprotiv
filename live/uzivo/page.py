@@ -163,7 +163,9 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     else:
         above = ""
         if snap["stanje"] == "nema_prenosa":  # the line on top says so ("Ne zaseda")
-            above = countdown(snap, cyr=cyr, tz=tz)
+            # the card on top says when; the countdown stands where it lists a sitting's agenda, or no hour is known
+            top = announcement(snap)[1].get("sazvano")
+            above = "" if top and not top.get("tacke") else countdown(snap, cyr=cyr, tz=tz)
         elif snap["stanje"] != "nepoznato":
             above = f'<p class="state">{t("none")}</p>'
         out.append(above)
@@ -234,17 +236,17 @@ def _status(snap: dict, *, cyr: bool) -> str:
     chair = snap.get("predsedava") if snap["stanje"] != "nema_prenosa" else None
     if chair and chair.get("ime"):  # who presides, by the voice (22 Nov 2026); how is under "Kako ovo radi" (24 Nov)
         what += f'<span class="status-chair">{t("presides")}: {escape(_name(given_first(chair["ime"]), cyr))}</span>'
-    _, notice, start = announcement(snap)
+    words, notice, start = announcement(snap)
     if start:  # the sitting's card: the day as a leaf of a calendar, when, what is next (23 Nov 2026, the maintainer's
         # choice of three); the bell presses the notification's own button (live.js), shown while that one would be
         src = (f'<p class="st-src"><a href="{escape(notice["url"])}">{t("steps_site")} ↗</a></p>'
                if str(notice.get("url", "")).startswith("https://") else "")
-        rest = [x for x in items if x.get("stanje") != "gotova"][:2]
+        rest = announced_items(snap)[:2]
         lines = "".join(f'<li>{escape(_short_item(x, cyr))}</li>' for x in rest)
         month = MONTHS[start.month - 1][:3]
         return (f'<div class="status st-card"><p class="st-tile" aria-hidden="true"><span>{escape(_name(_WD[start.weekday()], cyr))}</span>'
                 f'<b>{start.day}</b><span>{escape(_name(month, cyr))}</span></p><div class="st-in">'
-                f'<p class="st-when" title="{escape(_name(_fill(TEXT["goes_on"], announced(snap)[0]), cyr))}">{escape(_said_soon(start, cyr))}</p>'
+                f'<p class="st-when" title="{escape(_name(_says(words, notice), cyr))}.">{escape(_said_soon(start, cyr))}</p>'
                 f'{f"<ul>{lines}</ul>" if lines else ""}{src}</div>'
                 f'<button type="button" class="st-bell">{BELL}<span>{t("st_bell")}</span></button></div>')
     if on and snap["stanje"] != "nema_prenosa":  # on the air: the same card, the tile says so
@@ -472,7 +474,7 @@ def _resumes(text: str) -> str:
     """The Assembly's notice that it goes on, said short: "Skupština nastavlja sa radom u utorak, 24. novembra, u
     10.00" (22 Nov 2026, the maintainer: say that part as when it goes on). Only when the notice says it in the
     Assembly's set words with a day and an hour; otherwise nothing, and the notice stands as it is."""
-    m = re.search(r"nastavlja sa radom,? u (\w+),? (\d{1,2})\. (\w+)(?: \d{4}\.?)?(?: godine)?,? u (\d{1,2})[.:](\d{2})", str(text))
+    m = re.search(r"nastavlja (?:sa radom|rad),? u (\w+),? (\d{1,2})\. (\w+)(?: \d{4}\.?)?(?: godine)?,?(?: sa početkom)? u (\d{1,2})[.:](\d{2})", str(text))
     if not m or m.group(1).lower() not in _WEEKDAYS_ON or m.group(3).lower() not in MONTHS_OF:
         return ""
     return f"{_WEEKDAYS_ON[m.group(1).lower()]}, {int(m.group(2))}. {m.group(3).lower()}, u {int(m.group(4))}.{m.group(5)}"
@@ -497,18 +499,50 @@ def _resume_start(notice: dict) -> datetime | None:
 
 
 def announcement(snap: dict) -> tuple[str, dict, datetime | None]:
-    """When the Assembly has said it goes on (its words and the moment) and its notice, while nobody is on the air and
-    that hour has not come ("", {}, None otherwise): the card on top, and what a pasted link shows. Past the hour the
-    notice is no news: the evening of a sitting would say it goes on that morning (23 Nov 2026)."""
+    """When the Assembly sits next (in words, and the moment) and where it says so, while nobody is on the air and that
+    hour has not come ("", {}, None otherwise): the card on top, and what a pasted link shows. From the notice written
+    by hand in the Assembly's words, and since 25 Nov 2026 from the Assembly's own listing ("sazvano"): a sitting
+    convened, or one begun that goes on, by the same rule; the nearest. Past the hour it is no news: the evening of a
+    sitting would say it goes on that morning (23 Nov 2026)."""
     if snap.get("stanje") != "nema_prenosa":
         return "", {}, None
-    newest = sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]
-    start = _resume_start(newest[0]) if newest else None
-    return (_resumes(newest[0]["tekst"]), newest[0], start) if start and _now() < start else ("", {}, None)
+    found = []
+    for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:
+        found.append((_resume_start(n), _resumes(n.get("tekst", "")), n))
+    c = snap.get("sazvano") or {}
+    p = str(c.get("pocinje") or "")[:16]
+    try:
+        at = datetime.strptime(p, "%Y-%m-%dT%H:%M").replace(tzinfo=_now().tzinfo)
+    except ValueError:  # none, or a day with no hour: the countdown says it by days
+        at = None
+    if at:
+        words = f"{_WD_ON[at.weekday()]}, {at.day}. {MONTHS_OF[at.month - 1]}, u {at.hour}.{at.minute:02d}"
+        found.append((at, words, {"url": c.get("url", ""), "od": p.replace(":", ""), "sazvano": c}))
+    found = [f for f in found if f[0] and _now() < f[0]]
+    start, words, notice = min(found, key=lambda f: f[0], default=(None, "", {}))
+    return words, notice, start
 
 
 def announced(snap: dict) -> tuple[str, dict]:
     return announcement(snap)[:2]
+
+
+def _says(words: str, notice: dict) -> str:
+    """What is announced as a sentence: "Skupština nastavlja sa radom u utorak, …"; a sitting convened goes on with
+    nothing, so "Skupština u utorak, …" (the words of the link's picture)."""
+    c = notice.get("sazvano")
+    return f'{TEXT["og_sitting"]} {words}' if c and not c.get("nastavak") else _fill(TEXT["og_goes_on"], words)
+
+
+def announced_items(snap: dict) -> list[dict]:
+    """What is next on what is announced: a convened sitting's own items; else those of the agenda shown not done yet."""
+    c = announcement(snap)[1].get("sazvano")
+    if c and not c.get("nastavak"):
+        return [{"n": i, "tekst": x} for i, x in enumerate(c.get("tacke") or [], 1)]
+    a = snap.get("dnevni_red") or {}
+    if c and a.get("url") != c.get("url"):
+        return []  # the agenda shown is another sitting's
+    return [x for x in a.get("tacke") or [] if x.get("stanje") != "gotova"]
 
 
 _WD = ("pon", "uto", "sre", "čet", "pet", "sub", "ned")
@@ -538,7 +572,10 @@ def _short_item(x: dict, cyr: bool) -> str:
 
 
 def next_item(snap: dict) -> dict | None:
-    """The item of the agenda that is next ("na redu"), when the Assembly's page says it."""
+    """The item of the agenda that is next ("na redu"), when the Assembly's page says it; the first one
+    of what is announced, when the Assembly's listing announces it."""
+    if announcement(snap)[1].get("sazvano"):
+        return next(iter(announced_items(snap)), None)
     return next((x for x in ((snap.get("dnevni_red") or {}).get("tacke") or []) if x.get("stanje") == "na_redu"), None)
 
 
@@ -757,7 +794,7 @@ def countdown(snap: dict, *, cyr: bool, tz: ZoneInfo, now: float | None = None) 
     items = [x for x in c.get("tacke") or [] if x]
     agenda = (f'<details class="nx-ag" id="nx-ag"><summary>{t("nx_agenda")} ({len(items)})</summary><ol>'
               + "".join(f'<li>{escape(_name(x, cyr))}</li>' for x in items) + "</ol></details>") if items else ""
-    return (f'<div class="nx"><p class="src">{t("coming")}</p>{big}'
+    return (f'<div class="nx"><p class="src">{t("coming_on" if c.get("nastavak") else "coming")}</p>{big}'
             f'<p class="nx-when">{escape(_name(when, cyr))}</p><p class="nx-title">{title}</p>{agenda}'
             f'<p class="meta">{t("nx_note")}</p></div>')
 
@@ -893,7 +930,7 @@ def _pause(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     title = escape(_name(coming.get("naslov", ""), cyr))
     if str(coming.get("url", "")).startswith("https://"):
         title = f'<a href="{escape(coming["url"])}">{title}</a>'
-    return f'<p class="pz-next"><b>{t("coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
+    return f'<p class="pz-next"><b>{t("coming_on" if coming.get("nastavak") else "coming")}:</b> {escape(cyrillic(day) if cyr else day)}{hour}. {title}</p>'
 
 
 def _dur(sec: int, cyr: bool = False) -> str:
@@ -1193,12 +1230,12 @@ self.addEventListener("pushsubscriptionchange", function (e) {{
 def og_text(snap: dict, *, cyr: bool, tz: ZoneInfo) -> tuple[str, str]:
     """The link preview's title and line: what the page is, always the same (24 Nov 2026, the maintainer: a service keeps
     a link's card, so who speaks goes stale), and before a sitting when it goes on."""
-    when, _ = announced(snap)
+    when, notice = announced(snap)
     if when:  # before a sitting: when it goes on, what is next and what is here then (23 Nov 2026, the maintainer: not
         # who spoke how long on the last day, which is what a link pasted before a sitting had been saying)
         nxt = next_item(snap)
         what = f'{_t("ag_next", cyr).capitalize()}: {_name(nxt["tekst"], cyr)}. ' if nxt else ""
-        return _fill(_t("og_goes_on", cyr), _name(when, cyr)), f'{what}{_t("og_live", cyr)}.'
+        return _name(_says(when, notice), cyr), f'{what}{_t("og_live", cyr)}.'
     return _t("title", cyr), f'{_t("og_live", cyr)}.'
 
 

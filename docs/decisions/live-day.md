@@ -219,3 +219,17 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
 - **The chair's own figure stands under a group's time** (25 Nov 2026, the maintainer: "može"): "predsedavajući u 18:43:
   još 23 min 21 s" under the bar of the group it was said for (`receno`), so the reader sees what the estimate goes
   on from and when that was. "Kako ovo radi" says so.
+- **The next sitting is announced from the Assembly's listing, one begun by the same rule as one convened** (25 Nov 2026, the
+  maintainer: "Zašto automatski ne pripremamo stranicu prema skupštinskom kalendaru?"). That morning the page said
+  only "Ne zaseda" an hour before the first sitting went on; why the listing missed it and where it is read from now is in
+  `data.md` ("When a sitting already begun goes on"). `sazvano` in `mikrofon-cekanje.json` carries such a sitting too (`"nastavak": true`,
+  no agenda of its own). The card on top, the link's line and picture, which came only from the notice by hand, come from `sazvano` as well
+  (`page.announcement`, the nearest still to come); a convened sitting's card has its own first items and says
+  "Skupština u …", as it goes on with nothing. Where the card says it, the countdown stands only for what it adds: a
+  convened sitting's agenda, a day with no hour, the hour come and no broadcast yet; of a sitting begun it is called
+  "Nastavak sednice". Once a frame was read since its hour it is nobody's next sitting (`state_view._begun`): in the
+  break and on the evening the page would have said "Počinje uskoro". The notice by hand stays for what the Assembly
+  has decided, and for a day said in words `skupstina.continues` does not read; "nastavlja rad …, sa početkom u", the
+  words of that morning, put the card on top too. How fast: **votes** reads the page hourly (6:47 to 22:47), a build takes 8
+  minutes or twice that behind another, the service takes the file every ten: between 20 and 90 minutes; on a
+  sitting's evening a run waits for the one before it to end, so up to some two and a half hours.

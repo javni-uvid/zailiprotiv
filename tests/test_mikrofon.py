@@ -107,3 +107,22 @@ def test_the_next_sitting_is_one_convened_for_today_or_later_with_its_agenda(tmp
     assert w["sazvano"] == {"naslov": "Druga sednica", "url": "https://a/druga", "pocinje": "2026-11-24T10:00",
                             "tacke": ["Izbor sudija"]}
     assert "sazvano" not in pages_mikrofon.waiting([], [], coming, now=dt_(2026, 11, 20, tzinfo=pages_mikrofon.TZ))
+
+
+def test_a_sitting_begun_is_announced_when_its_page_says_it_goes_on(tmp_path):
+    """25 Nov 2026: the first sitting had a roll call, so it was taken as over, and the live page said only "Ne zaseda"."""
+    from datetime import datetime as dt_
+    (tmp_path / "15").mkdir()
+    put = lambda **more: (tmp_path / "15" / "index.json").write_text(json.dumps({"sittings": {
+        "https://a/prva": {"title": "Прва седница", "starts": "", "agenda": ["Избор председника"], "votes": [["x", "y"]],
+                           "continues": "2026-11-25T10:00"}, **more}}), encoding="utf-8")
+    at = lambda *t: pages_mikrofon.waiting([], [], pages_mikrofon.upcoming(tmp_path, [], "15"),
+                                           now=dt_(*t, tzinfo=pages_mikrofon.TZ)).get("sazvano")
+    put()
+    first = {"naslov": "Prva sednica", "url": "https://a/prva", "pocinje": "2026-11-25T10:00", "tacke": [], "nastavak": True}
+    assert at(2026, 11, 24, 22) == first and at(2026, 11, 25, 9, 59) == first
+    assert at(2026, 11, 25, 12) == first  # its hour come and no other known: the live page knows whether it has begun
+    assert at(2026, 11, 26, 0, 1) is None
+    put(**{"https://a/druga": {"title": "Друга седница", "starts": "2026-11-26T10:00", "agenda": ["Буџет"], "votes": []}})
+    assert at(2026, 11, 25, 9) == first and at(2026, 11, 25, 12)["naslov"] == "Druga sednica"  # the nearest to come
+    assert "nastavak" not in at(2026, 11, 25, 12)
