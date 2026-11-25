@@ -22,6 +22,10 @@ def _write(f: Path, data) -> None:
     write_text(f, json.dumps(data, ensure_ascii=False))
 
 
+# What the page must be able to read: raised when a field it needs, in sada.json or in the day's files, changes its meaning.
+# A page of another format serves nothing of the moment (citac.alive); the image says it too (Dockerfile), and mikrofon.ps1
+# puts the page and the measuring live apart only when theirs are the same.
+FORMAT = 1
 SPEAKING, UNKNOWN, NO_STREAM = "govori", "nepoznato", "nema_prenosa"
 # words only the chair says: with one of them between, the same speaker named again begins anew (24 Nov 2026: 104 s of the
 # chair's before a reply were about to be the next speaker's)

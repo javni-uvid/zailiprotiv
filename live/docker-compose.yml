@@ -1,32 +1,91 @@
-# The live service at mikrofon.zailiprotiv.rs. It runs the image the test passed (mikrofon:uzivo) and never builds:
-# a change is built and tried with docker-compose.test.yml first, then promoted (mikrofon.ps1 uzivo).
+# The live service at mikrofon.zailiprotiv.rs, as two containers (docs/decisions/live-service.md, 25 Nov 2026): `merenje`
+# reads the broadcast and writes what is kept, `uzivo` is the page and the mail. Each runs the image the test passed and
+# never builds; mikrofon.ps1 puts one or the other live (`uzivo -Deo`), so a release of the page does not stop the
+# measuring. Not by `docker compose up` alone: it would replace both.
+# Both read the one .env. Each is given the others' secrets empty, by name (a test asks for it), so a new secret is given
+# its place here. docker-compose.jedan.yml is the form before, one container, which takes the whole .env.
 name: mikrofon
 services:
-  uzivo:
+  merenje:
     image: mikrofon:uzivo
     pull_policy: never
+    command: ["python", "-m", "uzivo.merenje"]
+    env_file: .env
     environment:
+      ULOGA: merenje
       # Whisper on the graphics card (live/whisper-gpu.ps1); while it does not answer the CPU writes. A WHISPER_URL in
       # .env, empty too, wins.
       WHISPER_URL: "${WHISPER_URL-http://host.docker.internal:8178}"
-      SOUND_PATH: /data/zvuk    # the sound not written down yet, on the volume: a restart loses none of it
-    env_file: .env
+      SOUND_PATH: /data/zvuk      # the sound not written down yet, on the volume: a restart loses none of it
+      LISTEN_PATH: /data/slusaj   # the live sound's last minute, which the page serves when there is no bucket
+      # The readers' addresses are opened by the page alone (25 Nov 2026, the maintainer): what reads video from outside
+      # has neither the key nor the maintainer's own address.
+      MEJL_KLJUC: ""
+      MEJL_UREDNIK: ""
     extra_hosts:
       - "host.docker.internal:host-gateway"   # the computer itself, where Whisper's server on the graphics card runs
     volumes:
-      - podaci:/data              # today's turns and the last list of MPs, kept across restarts
+      - podaci:/data              # what is kept: the days, the transcript, the last list of MPs
       - whisper:/data/hf          # Whisper's model, shared with the test
     security_opt:
       - no-new-privileges:true    # nothing in it can become root again
     cap_drop: [ALL]
     # What the entry needs to hand /data over and become the user (ulaz.sh); DAC_OVERRIDE so that an image from
-    # before 20 Nov 2026, which runs as root, can still write there when `vrati` puts it back. The service's own
+    # before 20 Nov 2026, which runs as root, can still write there when `nazad` puts it back. The service's own
     # process has none of them: it isn't root, and can't become it.
     cap_add: [CHOWN, SETUID, SETGID, DAC_OVERRIDE]
-    ports:
-      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-m", "uzivo.merenje", "zdravo"]
+      interval: 15s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
     restart: unless-stopped
     cpu_shares: 4096              # ahead of anything else on the computer (a recording read with Whisper) when both want it
+    # No mem_limit: some 300 MB, but 2.1 GiB once the CPU has written (Whisper's model stays loaded; 25 Nov 2026)
+
+  uzivo:                          # the page: it keeps the name and the port, so the tunnel and the edge know of nothing new
+    image: mikrofon:strana
+    pull_policy: never
+    depends_on:
+      merenje:
+        condition: service_healthy  # it makes the folder the page writes, on a volume that has none
+    env_file: .env
+    environment:
+      ULOGA: strana
+      LISTEN_PATH: /data/slusaj
+      # What only the measuring does: the model, and the live sound's bucket (its address comes with the moment).
+      ANTHROPIC_API_KEY: ""
+      ZVUK_R2_ENDPOINT: ""
+      ZVUK_R2_BUCKET: ""
+      ZVUK_R2_KLJUC: ""
+      ZVUK_R2_TAJNA: ""
+    volumes:
+      - type: volume
+        source: podaci
+        target: /data
+        read_only: true           # the page reads what the measuring keeps …
+      - type: volume
+        source: podaci
+        target: /data/mejl        # … and writes only what went by mail
+        volume:
+          subpath: mejl
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETUID, SETGID]   # the entry's, as above
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/zdravlje', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    restart: unless-stopped
+    cpu_shares: 4096
+    mem_limit: 300m               # measured: 97 MB on a long day (25 Nov 2026); a fault here takes none of the measuring's
+    stop_grace_period: 120s       # a mail being sent ends first
 
   tunel:                          # Cloudflare's named tunnel: mikrofon.zailiprotiv.rs → http://uzivo:8000
     image: cloudflare/cloudflared:2026.11.1@sha256:e613aadbc2d9511785d2e67a86b0c8ac18dd63a3f9af0d06faf04cbfdcb35f2d

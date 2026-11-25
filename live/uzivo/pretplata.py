@@ -134,7 +134,7 @@ class Mailer:
 
     def ready(self, day: date) -> bool:
         """The day's summary is on the page: the maintainer gets the mail and the link. Asked again every few minutes
-        (sudija.Judge._tell): once it went it goes no more, unless it said a word is in two scripts and that has
+        (Watch): once it went it goes no more, unless it said a word is in two scripts and that has
         changed since; one that did not go is tried again."""
         if not (config.MAIL_KEY and config.MAIL_EDITOR and config.PUSH_TOKEN) or not self._lock.acquire(blocking=False):
             return False

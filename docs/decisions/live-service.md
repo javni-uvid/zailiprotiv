@@ -190,3 +190,35 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   the page for a healthy measuring (which makes `/data/mejl` on a new volume), so a one-container test left running would hold
   both. Tried with no broadcast: the page cannot write outside `mejl`, the page replaced while the measuring went on, one form
   and the other in turn.
+- **Live as two containers** (25 Nov 2026, step 4; the maintainer on who holds the mail's keys, asked with the page proposed
+  and "if it is the same to you I go with the page": "3 stranica, svejedno mi je").
+  - **The keys.** The page alone has `MEJL_KLJUC` and `MEJL_UREDNIK`: the measuring runs ffmpeg, yt-dlp and tesseract on video from
+    outside, the likeliest way in, and the mail is made of kept files. Against: the page answers the internet; what
+    answers there is fixed routes, and it no longer has the model's key or the bucket's, which the measuring alone has. `PUSH_TOKEN`
+    (the bell; the mail) and `PREPIS_KLJUC` both. With the token alone the sealed addresses can be fetched, not opened. One `.env`
+    as before, emptied by name in `docker-compose.yml`: splitting the file would have secrets moved by hand, and the way back
+    needs them all in one place. A test names every secret and whose it is, so a new one fails it until it is placed.
+  - **The volume.** The measuring writes `/data`; the page has it read-only, but for the subpath `mejl`. A `cookies.txt` put there for
+    yt-dlp would be readable by the page (as in one container, which could write it too).
+  - **Memory.** 300 MB at most on the page, so a fault there takes none of the measuring's. None on the measuring: some 300 MB, but
+    2.1 GiB once Whisper has written on the CPU, as on 25 Nov at 10:07, when the card did not answer once and the model
+    stayed loaded. The plan's 318 MB for the whole service was a reading before that.
+  - **Releases by part** (`mikrofon.ps1 uzivo -Deo strana|merenje|oba`, the page when none is named), each part with its image before kept.
+    `nazad` must be told which part: with two, going back by habit could take the wrong one. Parts of two formats
+    (`state_base.FORMAT`) go only together, and a page that meets another format serves nothing of the moment rather than misread it.
+    `uzivo -Jedan` releases as one while live is one. A test container is two by default, as what goes live is; `-Jedan` one.
+  - **The measuring's check asks for its own commit:** `sada.json` of the run before is fresh for half a minute, so a new
+    measuring that dies at once would have passed for a healthy one, and would not have been put back.
+  - **The switch** stops the old container first: the new measuring would wait for its lock and the page for a healthy measuring. It
+    undoes itself when either does not answer in 90 s. `docker-compose.jedan.yml` is the form before, kept until step 5.
+  - **Tried** on a renamed copy of the script and the compose files (another project, port, volume and images, the tunnel a
+    sleeping container), on a live broadcast, asking the page four times a second. Without an answer: to two 9 s; the page
+    released 1 s, the measuring 0 (the page goes on); both 1 s; back to one 1 s; one container released as before 1.5 s. A page or a
+    measuring that fails at its start was put back after 90 s by itself (the measuring's: the page answered 200 for 30 s and 503
+    for 64), and so was a switch that failed (93 s without an answer, under the edge's 120). Formats that differ refused, a page
+    released while the measuring is down, a request of 25 s under way ended before its page was replaced, the tunnel
+    never restarted. As two on the rebroadcast of the sitting of 25 Nov: captions, steps, the live sound without a bucket; the
+    measuring killed or paused, 503 after 30 s and 200 within 2 s of its return.
+  - **Not tried:** the mail really sent from the page's container (a test has no keys); the bucket's live sound with two (the
+    page takes its address from `sada.json`); a name read from a caption on a live broadcast (the rebroadcast's
+    captions were covered), which `tests/test_dva.py` compares step by step instead; a whole sitting.

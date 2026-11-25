@@ -1,4 +1,4 @@
-# Beside docker-compose.test.yml (mikrofon.ps1 test -Dva): the same test as two containers, the measuring and the page
+# Over docker-compose.test.yml (mikrofon.ps1 test; -Jedan leaves it out): the same test as two containers, the measuring and the page
 # (docs/decisions/live-service.md, 25 Nov 2026), on one volume. `uzivo` is the page: it keeps the name and the port.
 services:
   merenje:

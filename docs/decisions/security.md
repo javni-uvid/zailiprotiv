@@ -35,7 +35,10 @@ The site is static and public, with no accounts and nothing private about a visi
   tag doesn't start. A new action is first allowed there (Settings → Actions → General), by the maintainer or
   an agent with their rights, and said in the pull request.
 - **The live service (`live/`).** Behind Cloudflare's tunnel with no port open to the network; not root, no
-  capabilities, images and packages named by content (`live-service.md`). What a request names never becomes a
+  capabilities, images and packages named by content (`live-service.md`). Two containers (25 Nov 2026): what reads video
+  from outside (ffmpeg, yt-dlp, tesseract) has neither the key of the readers' addresses nor the maintainer's own address; what
+  answers the internet has those, and neither the model's key nor the bucket's, reads the kept files and writes only what
+  went by mail. Both have the counter's token and the key of the maintainer's pages. What a request names never becomes a
   path or markup. The maintainer's pages are opened by a key of 12 characters or more, compared in constant time.
 - **The counter (`worker/`).** Takes a vote only from the site's own pages (the `Origin`), for items it knows,
   within a rate limit per address; the tokens are compared in constant time; it answers other sites' scripts

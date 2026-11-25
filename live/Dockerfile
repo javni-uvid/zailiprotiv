@@ -34,6 +34,8 @@ ARG VERZIJA=""
 ARG GRANA=""
 ARG CISTO=""
 LABEL zailiprotiv.verzija=$VERZIJA zailiprotiv.grana=$GRANA zailiprotiv.cisto=$CISTO
+# state_base.FORMAT: whether the page of this image reads what the measuring of another keeps (a test: the two are the same)
+LABEL zailiprotiv.format=1
 ENV VERZIJA=$VERZIJA
 # `docker ps` says whether it answers (mikrofon.ps1 waits for the page itself)
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \

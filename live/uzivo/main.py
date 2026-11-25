@@ -66,8 +66,9 @@ async def only_while_measured(request: Request, call_next):
 
 @app.get("/zdravlje")
 def health() -> JSONResponse:
-    """That this process answers (Docker's check of the page's container): the measuring has a check of its own."""
-    return JSONResponse({"ok": True}, headers=NO_STORE)
+    """That this process answers, and which commit it is (Docker's check of the page's container, and mikrofon.ps1's while
+    the measuring is down): the measuring has a check of its own."""
+    return JSONResponse({"ok": True, "verzija": config.VERSION}, headers=NO_STORE)
 
 
 def _video() -> str:

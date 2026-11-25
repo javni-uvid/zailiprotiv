@@ -125,6 +125,9 @@ def test_the_page_is_not_served_without_a_heartbeat(two):
     t.looped = NOW
     pulse.step(NOW)
     assert reader.alive(NOW + citac.BEAT_OLD) and not reader.alive(NOW + citac.BEAT_OLD + 1)
+    m = json.loads((base / "sada.json").read_text(encoding="utf-8"))
+    _write(base / "sada.json", m | {"format": sada.FORMAT + 1})  # a measuring this page cannot read
+    assert not reader.alive(NOW)
     (base / "sada.json").write_text('{"t": "x"}', encoding="utf-8")
     assert not reader.alive(NOW + 1)
 
@@ -245,7 +248,11 @@ def test_the_measuring_s_check_goes_by_the_page_s_own_rule(two, monkeypatch):
     pulse.step(NOW)
     monkeypatch.setattr(citac.time, "time", lambda: NOW + 10)
     assert merenje.healthy()
-    monkeypatch.setattr(citac.time, "time", lambda: NOW + citac.BEAT_OLD + 1)
+    monkeypatch.setattr(config, "VERSION", "novi")  # what the run before left is not this one's, however fresh
+    assert not merenje.healthy()
+    pulse.step(NOW + 10)
+    assert merenje.healthy()
+    monkeypatch.setattr(citac.time, "time", lambda: NOW + 10 + citac.BEAT_OLD + 1)
     assert not merenje.healthy()
 
 
@@ -274,3 +281,74 @@ def test_the_test_as_two_gives_the_page_only_what_went_by_mail_to_write():
     assert "ULOGA: strana" in page and "volumes: !override" in page
     assert re.search(r"target: /data\n +read_only: true", page) and re.search(r"target: /data/mejl.*\n +volume:\n +subpath: mejl", page)
     assert not re.search(r"^ +\w*(KEY|TOKEN|KLJUC|TAJNA|SECRET|R2_|MEJL_)\w*:", two, re.M) and "env_file" not in two
+
+
+def _services(name: str) -> dict[str, str]:
+    """A compose file's services, each as its text."""
+    text = (LIVE / name).read_text(encoding="utf-8").split("\nservices:\n")[1].split("\nvolumes:\n")[0]
+    parts = re.split(r"^  (\w+):.*$", text, flags=re.M)
+    return {k: v.strip() for k, v in zip(parts[1::2], parts[2::2])}
+
+
+def test_each_of_the_two_has_only_the_secrets_it_uses():
+    """25 Nov 2026, the maintainer's answer on the keys ("3 stranica, svejedno mi je"): the page alone opens the readers'
+    addresses, the measuring alone asks the model and fills the live sound's bucket. Both read one .env, so what one must
+    not have is emptied by name; a new secret is given its place here and there."""
+    empty = {"merenje": {"MEJL_KLJUC", "MEJL_UREDNIK"},
+             "uzivo": {"ANTHROPIC_API_KEY", "ZVUK_R2_ENDPOINT", "ZVUK_R2_BUCKET", "ZVUK_R2_KLJUC", "ZVUK_R2_TAJNA"}}
+    both = {"PUSH_TOKEN", "PREPIS_KLJUC"}  # the counter's word (the bell; the mail), and the maintainer's pages' key
+    read = set()
+    for f in (LIVE / "uzivo").glob("*.py"):
+        read |= set(re.findall(r'environ(?:\.get\(|\[)"([A-Z0-9_]+)"', f.read_text(encoding="utf-8")))
+    secret = {n for n in read if re.search(r"KEY|TOKEN|KLJUC|TAJNA|SECRET|LOZINKA|R2_(ENDPOINT|BUCKET)|MEJL", n)}
+    assert secret == both.union(*empty.values())
+    services = _services("docker-compose.yml")
+    for name, mine in empty.items():
+        assert set(re.findall(r'^ {6}([A-Z0-9_]+): ""$', services[name], re.M)) == mine, name
+
+
+def test_the_live_page_writes_only_what_went_by_mail_and_takes_nothing_of_the_measuring_s():
+    two, one = _services("docker-compose.yml"), _services("docker-compose.jedan.yml")
+    assert set(two) == {"merenje", "uzivo", "tunel"} and set(one) == {"uzivo", "tunel"}
+    measuring, page = two["merenje"], two["uzivo"]
+    assert "ULOGA: merenje" in measuring and '"uzivo.merenje"]' in measuring and "ports:" not in measuring
+    assert "ULOGA: strana" in page and '"127.0.0.1:8000:8000"' in page and "mikrofon:strana" in page
+    assert re.search(r"target: /data\n +read_only: true", page) and re.search(r"target: /data/mejl.*\n +volume:\n +subpath: mejl", page)
+    assert "podaci:/data" not in page and "whisper" not in page
+    assert "mem_limit: 300m" in page and not re.search(r"^ +mem_limit", measuring, re.M) and "stop_grace_period: 120s" in page
+    for service in (measuring, page):
+        assert "no-new-privileges:true" in service and "cap_drop: [ALL]" in service and "build:" not in service
+    assert "ULOGA" not in one["uzivo"] and "mikrofon:uzivo" in one["uzivo"]
+    assert two["tunel"] == one["tunel"]  # so that going from one form to the other does not restart the tunnel
+
+
+def test_the_image_says_the_format_its_page_reads():
+    label = re.search(r"^LABEL zailiprotiv\.format=(\d+)$", (LIVE / "Dockerfile").read_text(encoding="utf-8"), re.M)
+    assert label and int(label[1]) == sada.FORMAT
+
+
+def test_the_release_script_knows_which_modules_are_whose():
+    """`mikrofon.ps1 stanje` says which commits wait for the page and which for the measuring, by these lists."""
+    import ast
+    folder = LIVE / "uzivo"
+    names = {f.stem for f in folder.glob("*.py")}
+
+    def imports(m: str) -> set[str]:
+        out: set[str] = set()
+        for n in ast.walk(ast.parse((folder / f"{m}.py").read_text(encoding="utf-8"))):
+            if isinstance(n, ast.ImportFrom) and n.level == 1:
+                out |= {n.module.split(".")[0]} if n.module else {a.name for a in n.names}
+        return out & names
+
+    def reached(root: str, without: str = "") -> set[str]:
+        seen, todo = set(), [root]
+        while todo:
+            m = todo.pop()
+            if m not in seen and m != without:
+                seen.add(m)
+                todo += imports(m)
+        return seen
+    page, measuring = reached("main", without="merenje"), reached("merenje")
+    script = (LIVE / "mikrofon.ps1").read_text(encoding="utf-8")
+    listed = {k: set(re.findall(r'"(\w+)"', re.search(rf"^\${k} = @\((.+)\)$", script, re.M)[1])) for k in ("OnlyPage", "OnlyMeasuring")}
+    assert listed["OnlyPage"] == page - measuring and listed["OnlyMeasuring"] == measuring - page
