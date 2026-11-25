@@ -21,7 +21,7 @@ from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import brojevi, config, mejl, mere, mreza
+from . import config, mejl, mere, mreza
 from .state_base import _write
 
 log = logging.getLogger("uzivo.pretplata")
@@ -240,7 +240,7 @@ def _with_top(html: str, top: str) -> str:
 
 def roll_of(facts: dict) -> mere.Roll:
     """The convocation's MPs as the site gives them to this service (mikrofon-poslanici.json: "ime", "lista", "stranka")."""
-    return mere.Roll([mere.MP(f["ime"], slug, f.get("lista", ""), f.get("stranka", "")) for slug, f in (facts or {}).items()
+    return mere.Roll([mere.MP(f["ime"], slug, f.get("lista", ""), f.get("stranka", ""), str(f.get("foto") or "")) for slug, f in (facts or {}).items()
                       if isinstance(f, dict) and f.get("ime")])
 
 
@@ -264,9 +264,15 @@ def day_mail(tracker):
                 name = mp.name if mp else t.get("ime", "")
                 spoke[name] = spoke.get(name, 0) + int(t.get("sekundi") or 0)
         measures = mere.measures(lines, kept.get("delovi") or [], roll, TZ)
-        numbers = brojevi.kept(base, day, kept["dan"].get("tok") or [], lines, TZ)
+        q = base / "mejl" / f"recenice-{day.isoformat()}.json"  # the maintainer's own, added by hand before the click
+        try:
+            quotes = json.loads(q.read_text(encoding="utf-8")) if q.exists() else []
+        except ValueError:
+            log.warning("mejl %s: recenice se ne citaju, mejl ide bez njih", day)
+            quotes = []
         other = f"{(config.PUBLIC_URL or 'https://mikrofon.zailiprotiv.rs').rstrip('/')}/{'' if cyr else 'cir/'}"
-        return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other, numbers=numbers)
+        return mejl.build(day, kept["dan"], measures, roll, spoke, cyr=cyr, unsubscribe=out, other_script=other,
+                          quotes=quotes if isinstance(quotes, list) else [])
     return build
 
 
