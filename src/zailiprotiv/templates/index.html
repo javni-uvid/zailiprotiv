@@ -6,6 +6,12 @@
 {# On the home page the bar leads to "Ko sada govori" alone, which has the broadcast on it (19 Nov 2026, the maintainer's
    decision); where the live page is, its strip stands in the bar's place, a sitting on or not (22 Nov 2026). #}
 {% from "macros.html" import live_bar, mic_strip with context %}{% if live_page %}{{ mic_strip() }}{% else %}{{ live_bar(false) }}{% endif %}
+{# The way to the Rules, after the live page's strip and in its form (25 Nov 2026): the page's own name, and what is on it. #}
+{% if rule_terms %}{% from "rules_icons.html" import icon %}<section class="mic to-rules" aria-labelledby="tr">
+<span class="mic-ic" aria-hidden="true">{{ icon("") }}</span>
+<h2 class="mic-m" id="tr"><a href="poslovnik-clanovi.html">Poslovnik Narodne skupštine</a></h2>
+<p class="mic-s">Šta po Poslovniku Skupštine znače <a href="poslovnik-clanovi.html#pojam-otvaranje-sednice">kvorum</a>, <a href="poslovnik-clanovi.html#pojam-replika">replika</a>, <a href="poslovnik-clanovi.html#pojam-opomena">opomena</a>, <a href="poslovnik-clanovi.html#pojam-hitni-postupak">hitni postupak</a> i <a href="poslovnik-clanovi.html#pojmovi">drugi pojmovi sa sednice</a>, iz teksta članova.</p>
+</section>{% endif %}
 <section class="home-hero">
   <div class="hero-text">
     <h1>Za ili Protiv: svaki glas i svaka reč iz Skupštine</h1>
@@ -54,10 +60,6 @@
       </ul>
     </div>
   </div>
-  {% if rule_terms %}<div class="hc-rules">
-    <h3><a href="poslovnik-clanovi.html#pojmovi">Sednica po Poslovniku</a></h3>
-    <p>Šta po Poslovniku Skupštine znače <a href="poslovnik-clanovi.html#pojam-otvaranje-sednice">kvorum</a>, <a href="poslovnik-clanovi.html#pojam-replika">replika</a>, <a href="poslovnik-clanovi.html#pojam-opomena">opomena</a>, <a href="poslovnik-clanovi.html#pojam-hitni-postupak">hitni postupak</a> i <a href="poslovnik-clanovi.html#pojmovi">drugi pojmovi sa sednice</a>, iz teksta članova.{% if live_page %} Dok sednica traje, <a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">na strani uživo</a> svaki korak (pauza, pretres, glasanje) vodi na član koji ga uređuje.{% endif %}</p>
-  </div>{% endif %}
   <p class="label">Novi saziv još nije usvojio nijedan zakon; glasanja će biti ovde od prve sednice na kojoj se glasa. Sve označeno sa „prethodni saziv“ je iz prethodnog, četrnaestog saziva.</p>
 </section>
 {% endif %}

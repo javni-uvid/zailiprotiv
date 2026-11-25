@@ -67,6 +67,11 @@ as the change. The principles and the rules of work are in AGENTS.md.
   the home page's box of the new convocation has "Sednica po Poslovniku" (kvorum, replika, opomena, hitni postupak,
   and that the live page's steps lead to their articles), the footer's "Skupština" column links "Poslovnik", the
   page shown at mikrofon while the service is down links it, and the live page has a box of its own.
+- **A way to the Rules of its own on the home page** (25 Nov 2026, the maintainer: "Trebamo na matičnoj zailiprotiv.rs
+  negde staviti da se lakše dosta dolazi do poslovnika"). The page was the most read after the live page, and the home
+  page's way to it stood last in the new convocation's box, two screens down on a phone. Now a strip of its own after
+  the live page's and in its form: the page's name, and the box's sentence with its terms; it stands whichever
+  convocation is on. The box's sentence on the live page's steps, which repeated the strip above, is gone.
 - **The groups' time for debate** (22 Nov 2026): term `vreme-rasprave` (97, 99, 158), the rule behind the live
   page's estimate of each group's time left (`live-day.md`).
 - **When a sitting already begun goes on** (25 Nov 2026, the maintainer: "Zašto automatski ne pripremamo stranicu prema

@@ -1134,7 +1134,6 @@ main:has(> .home-hero) > .live { order: -1; margin-bottom: .2rem; }  /* above th
 .ips-codes li { scroll-margin-top: 6rem; } .ips-codes li:target .ips-qr { outline: 3px solid var(--fg); outline-offset: 3px; } .ips-codes figure { margin: 0; } .ips-qr { display: block; width: 100%; max-width: 15rem; height: auto; background: #fff; border-radius: 6px; }
 .ips-codes figcaption { display: flex; justify-content: space-between; gap: .6rem; margin-top: .4rem; font-size: var(--t-3); }
 .support-order { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1.2rem; margin: .8rem 0; } .support-order dt { color: var(--muted); } .support-order dd { margin: 0; } .acct { font-size: var(--t-4); font-variant-numeric: tabular-nums; letter-spacing: .02em; user-select: all; }
-.hc-rules { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); } .hc-rules h3 { margin: 0 0 .4rem; font-size: var(--t-3); } .hc-rules p { margin: 0; max-width: 46rem; }
 
 /* The groups' colours in the newest convocation's bars (site.GROUP_COLOURS; the same hues as the live page), the
    "prethodni saziv" mark on what is the earlier convocation's, and a place kept for the new one's. */
@@ -1218,6 +1217,12 @@ em.prev.now { color: var(--fg); border-color: var(--fg); }
 .mic [hidden] { display: none; }
 @media (max-width: 640px) { .mic { grid-template-columns: auto 1fr; } .mic-go { grid-column: 1 / -1; grid-row: auto; } }
 main:has(> .home-hero) > .mic { order: 1; margin-top: 1.4rem; }  /* on a phone under the search, above the rest */
+/* The way to the Rules: the strip's form, the whole of it a link by its name; the terms in the line keep their own. */
+.mic.to-rules { position: relative; grid-template-columns: auto 1fr; margin-top: 0; border-width: 1px; border-color: var(--muted); }
+main:has(> .home-hero) > .mic.to-rules { margin-top: 0; }
+.to-rules .mic-ic { background: none; border: 2px solid var(--fg); color: var(--fg); } .to-rules .rt-i { width: 1.4rem; height: 1.4rem; }
+.to-rules h2 { margin: 0; font-family: inherit; letter-spacing: 0; } .to-rules h2 a { text-decoration: none; } .to-rules h2 a::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+.to-rules:hover { border-color: var(--fg); } .to-rules p { margin: 0; max-width: none; } .to-rules p a { position: relative; color: inherit; }
 .live.soon .live-dot { background: var(--muted); }
 .live[hidden] { display: none; }
 /* "Podrži": who makes the site, and what the money pays for (23 Nov 2026) */
