@@ -41,6 +41,8 @@ jobs:
     timeout-minutes: 350
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          ref: ${{ github.ref }}  # as it is when the run begins, not when it was asked for
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.12"
@@ -82,8 +84,6 @@ jobs:
           IN_CONVOCATION: ${{ inputs.convocation }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Of every sitting's notes only those already in the repository are committed (the contested laws');
           # the rest live in the bucket.
           if [ "${IN_ALL}" = "true" ]; then git add -u data; else git add data; fi
@@ -92,9 +92,7 @@ jobs:
           newest=$(uv run python -c 'from zailiprotiv.config import NEWEST, CURRENT; print(NEWEST if str(NEWEST) != str(CURRENT) else "")')
           if [ -n "$newest" ] && [ -d "data/$newest/transcripts" ]; then git add "data/$newest/transcripts"; fi
           if ! git diff --cached --quiet; then
-            git commit -m "Stenographic notes of the debates (convocation ${IN_CONVOCATION})"
-            for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-            if git status -sb | grep -q ahead; then exit 1; fi
+            sh tools/predaj.sh "Stenographic notes of the debates (convocation ${IN_CONVOCATION})"
           fi
           # The model writes only from the notes in the repository, so a run over every sitting starts none.
           if [ "${IN_ALL}" != "true" ]; then

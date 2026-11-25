@@ -31,6 +31,8 @@ jobs:
       PAGEFIND_GLOB: "[0-9]*/**/*.html"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          ref: ${{ github.ref }}  # as it is when the run begins, not when it was asked for
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.12"
@@ -88,13 +90,9 @@ jobs:
         id: commit
         if: always()
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/notes_manifest.json 2>/dev/null || exit 0
           git diff --cached --quiet && exit 0
-          git commit -m "Notes' pages sent to the bucket"
-          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-          if git status -sb | grep -q ahead; then exit 1; fi
+          sh tools/predaj.sh "Notes' pages sent to the bucket"
           echo changed=1 >> "$GITHUB_OUTPUT"
       - name: Do the pages answer?
         if: ${{ !inputs.dry }}

@@ -110,6 +110,8 @@ Assembly's site runs through the workflows.
 
 ## Workflows
 
+What a workflow read or wrote is committed with `tools/predaj.sh`, which ends red when the commit is not on `main`.
+
 | Workflow | When | What |
 |---|---|---|
 | votes | hourly by day (started by the worker), and by hand | sittings, laws, bills in procedure, roll calls and bills not read yet, links, committed first (an issue when a roll call listed is not read); then the archive's new recordings placed and each day's speeches linked into them; commits `data/<N>/`; `data/live.json` while the live page reads a sitting (the bar "Skupština sada zaseda" when the Assembly marks none "(у току)") |

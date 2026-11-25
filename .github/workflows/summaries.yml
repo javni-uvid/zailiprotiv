@@ -93,13 +93,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           git diff --cached --quiet && exit 0
-          git commit -m "Written by the model: summaries, debates, MP overviews"
-          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
-          if git status -sb | grep -q ahead; then exit 1; fi
+          sh tools/predaj.sh "Written by the model: summaries, debates, MP overviews"
           gh workflow run pages.yml --ref main
       - name: Tell the maintainer when this failed
         if: failure()
