@@ -256,7 +256,7 @@
   if (!words) return;
   var START = true;  // false: only on a press
   var SILENCE = "data:audio/wav;base64,UklGRsQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YaAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";  // 20 ms of nothing, to ask the browser whether it lets a page sound
-  var NEAR = 45;  // seconds, as deljenje.NEAR
+  var NEAR = 10;  // seconds, as deljenje.NEAR
   function w(k) { var el = words.querySelector('[data-w="' + k + '"]'); return el ? el.textContent.trim() : ""; }
   function clock(sec) { return new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Belgrade" }).format(new Date(sec * 1000)); }
   function who(li) { var k = li.querySelector(".ko"); return k ? k.textContent.trim() : ""; }

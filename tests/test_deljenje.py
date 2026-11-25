@@ -38,13 +38,33 @@ def test_only_a_second_of_a_day_that_can_have_been_kept_is_an_address():
         assert deljenje.moment(bad, now=A) is None, bad
 
 
-CASES = [(A, A), (A + 10, A), (B, B), (B - 45, A), (B - 20, B), (B + 46, B), (B + 500, B), (C - 45, C), (C - 46, None), (C + 901, None), (C + 800, C)]
+CASES = [(A, A), (A + 10, A), (A - 10, A), (A - 11, None), (B, B), (B - 45, A), (B - 20, A), (B - 11, None), (B - 10, B), (B + 46, B),
+         (B + 500, B), (C - 10, C), (C - 11, None), (C + 901, None), (C + 800, C)]
 
 
 def test_a_link_means_the_turn_that_begins_nearest_else_the_one_that_holds_the_second():
     for at, od in CASES:
         d = deljenje.turn_at(snapshot()["danas"], at)
         assert (d["od"] if d else None) == od, at
+
+
+# 24 Nov 2026: the second of a link made from the service's record and its speaker, the turns round it in the day written
+# from the notes (#278), and whom the link leads to now.
+MOVED = [
+    (1795523425, "Vučić", [("Đukanović", 1795523266, 1795523342), ("Bakić", 1795523386, 1795523406), ("Vučić", 1795523475, 1795523605)], None),
+    (1795530889, "Marić", [("Vučić", 1795530725, 1795530861), ("Radin", 1795530897, 1795531084)], "Radin"),  # her turn is gone: 8 s before his
+    (1795531141, "Vučić", [("Radin", 1795530897, 1795531084), ("Vučić", 1795531128, 1795531134), ("Ilić", 1795531152, 1795531989)], None),
+    (1795540080, "Radeta", [("Vučić", 1795539802, 1795539945), ("Đukanović", 1795539960, 1795540041)], None),
+    (1795543665, "Bakić", [("Vučić", 1795542975, 1795543614), ("Nešković", 1795543696, 1795543709)], None),
+    # a beginning three seconds inside the speech before it: the nearest beginning comes before the turn that holds it
+    (1795525062, "Vučić", [("Vučinić", 1795524911, 1795525065), ("Vučić", 1795525062, 1795525192)], "Vučić"),
+]
+
+
+def test_a_link_leads_to_nobody_rather_than_to_another_speaker():
+    for at, speaker, turns, to in MOVED:
+        d = deljenje.turn_at([{"ime": n, "od": od, "do": do} for n, od, do in turns], at)
+        assert (d["ime"] if d else None) == to, (at, speaker)
 
 
 def test_the_kept_days_links_are_found_in_the_day_read_again():

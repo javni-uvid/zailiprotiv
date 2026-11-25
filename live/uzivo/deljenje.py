@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 from . import config
 
 FIRST = 1794870000  # the midnight of 17 Nov 2026, the first day kept
-NEAR = 45  # seconds: the day read again from the recording moves a beginning (measured on 17-19 and 24 Nov)
+NEAR = 10  # seconds a beginning may have moved in a day written again (45 until 25 Nov 2026: four links led to another)
 
 
 def moment(text: str, now: float | None = None) -> int | None:
@@ -24,7 +24,8 @@ def moment(text: str, now: float | None = None) -> int | None:
 
 
 def turn_at(turns: list[dict], at: int) -> dict | None:
-    """The turn a link means: the one beginning nearest within NEAR, else the one that holds that second."""
+    """The turn a link means: the one beginning nearest within NEAR, else the one that holds that second; else none, as
+    another speaker under a link would be a false statement about a person."""
     near = [d for d in turns if abs(int(d["od"]) - at) <= NEAR]
     if near:
         return min(near, key=lambda d: (abs(int(d["od"]) - at), d["od"]))
