@@ -156,8 +156,8 @@
   var liveSound = swap ? swap.getAttribute("data-uzivo") : "", swapText = swap ? swap.innerHTML : "", watchText = facade ? facade.getAttribute("data-text") || "" : "";
   function offer(picture) {
     if (!swap || !facade) return;
-    if (picture) { swap.removeAttribute("data-uzivo"); swap.setAttribute("data-yt", facade.getAttribute("data-yt")); swap.setAttribute("data-t", "0"); swap.textContent = watchText; }
-    else { swap.removeAttribute("data-yt"); swap.setAttribute("data-uzivo", liveSound); swap.innerHTML = swapText; }
+    if (picture) { swap.removeAttribute("data-uzivo"); swap.setAttribute("data-yt", facade.getAttribute("data-yt")); swap.setAttribute("data-t", "0"); swap.setAttribute("data-e", facade.getAttribute("data-e") || ""); swap.textContent = watchText; }
+    else { swap.removeAttribute("data-yt"); swap.removeAttribute("data-e"); swap.setAttribute("data-uzivo", liveSound); swap.innerHTML = swapText; }
   }
   document.addEventListener("click", function (e) {
     var live = e.target.closest ? e.target.closest("[data-uzivo]") : null;
@@ -167,8 +167,8 @@
     var url = a.getAttribute("data-file"), id = a.getAttribute("data-yt"), t = +a.getAttribute("data-t") || 0;
     if (url ? !ARCHIVE.test(url) : !ID.test(id || "")) return;
     e.preventDefault();
+    count(a.getAttribute("data-e"));  // before the swap button is the sound's again
     if (url) file(url, t, a.hasAttribute("data-zvuk") ? true : undefined); else { yt(id, t); offer(false); }
-    count(a.getAttribute("data-e"));
     if (!screen.contains(a)) screen.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 })();

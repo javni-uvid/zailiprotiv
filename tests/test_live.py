@@ -533,6 +533,51 @@ def test_the_player_is_a_button_until_clicked():
     assert " data-api=" not in page(day, cyr=False, site="", tz=TZ, api='x" onload="y')
 
 
+def test_the_broadcast_started_after_the_sound_is_counted_once(tmp_path):
+    """25 Nov 2026: the button that offers the picture while the sound plays counts as the first ▶ does, once per page
+    opened whichever way the broadcast was started. The player's own script, on a page of three buttons."""
+    import json
+    import shutil
+    import subprocess
+    from pathlib import Path
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("no node")
+    js = (Path(__file__).parents[1] / "src/zailiprotiv/templates/mikrofon.js").read_text(encoding="utf-8")
+    harness = """
+const el = (attrs = {}) => ({ attrs, innerHTML: "", textContent: "", hidden: false, classList: { add() {}, toggle() {} },
+  getAttribute(k) { return k in attrs ? attrs[k] : null; }, setAttribute(k, v) { attrs[k] = v; }, removeAttribute(k) { delete attrs[k]; },
+  hasAttribute(k) { return k in attrs; }, appendChild() {}, insertAdjacentHTML() {}, scrollIntoView() {}, contains() { return false; },
+  querySelector() { return el(); }, addEventListener() {}, play() {},
+  closest(s) { return s.split(",").some(x => x.trim().slice(1, -1) in attrs) ? this : null; } });
+const screen = el(), sent = [];
+const facade = el({ "data-yt": "abcdefghijk", "data-t": "0", "data-e": "mikrofon.pusti", "data-text": "▶" });
+const swap = el({ "data-uzivo": "/slusaj/z.m3u8" });
+let press;
+globalThis.document = { getElementById: i => i === "screen" ? screen : null, createElement: () => el(), querySelectorAll: () => [],
+  querySelector: s => s === ".listen-live" ? swap : s.includes("facade") ? facade : null, documentElement: { lang: "sr" },
+  body: { getAttribute: () => "https://glasovi.example" },
+  addEventListener: (k, f) => { if (k === "click" && !press) press = f; } };
+globalThis.location = { origin: "https://mikrofon.zailiprotiv.rs", href: "" };
+globalThis.fetch = (u, o) => { sent.push(JSON.parse(o.body).e); return Promise.resolve(); };
+globalThis.setInterval = () => 0;
+const click = b => press({ target: b, preventDefault() {} });
+SCRIPT
+const out = [];
+for (const b of ORDER) { click(b); out.push([...sent]); }
+console.log(JSON.stringify(out));
+"""
+    def ran(order):
+        f = tmp_path / "p.cjs"
+        f.write_text(harness.replace("SCRIPT", js).replace("ORDER", order), encoding="utf-8")
+        r = subprocess.run([node, str(f)], capture_output=True, text=True, encoding="utf-8")
+        assert r.returncode == 0, r.stderr
+        return json.loads(r.stdout)
+    both = ["mikrofon.slusaj", "mikrofon.pusti"]
+    assert ran("[swap, swap, swap, swap]") == [both[:1], both, both, both]  # sound, picture, sound, picture
+    assert ran("[facade, swap, swap]") == [both[1:], both[::-1], both[::-1]]  # the first ▶, the sound, the picture again
+
+
 def test_a_day_in_several_files_plays_from_the_first_with_each_part_listed():
     from uzivo.page import player
     day = {"stanje": NO_STREAM, "danas": [], "datoteke": [
@@ -2249,6 +2294,7 @@ def test_the_mails_card_can_be_put_away():
     from uzivo.page import SCRIPT
     assert 'localStorage.setItem("mejl-sklonjen", "1")' in SCRIPT and 'localStorage.removeItem("mejl-sklonjen")' in SCRIPT
     assert "mejl-prijavljen" in SCRIPT  # signing up puts it away too
+    assert "mejl-skloni\"" not in SCRIPT  # and nothing of it is sent, as a sum either (25 Nov 2026)
 
 
 def test_a_turn_by_a_voice_merely_alike_goes_back_to_whose_speech_it_was():
