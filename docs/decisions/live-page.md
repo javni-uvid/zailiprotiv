@@ -369,3 +369,11 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     While a broadcast is on the app's pill gives its place to the row where the bell can be offered; an iPhone's Safari
     keeps it, as there it is the only way to the notifications.
   - Nothing new is kept or counted. Sign-ups per 1,000 pages opened before: 7.3 and 5.3 (24 and 25 Nov; `tools/pretplate.py`).
+- **A speech's link leads to nobody rather than to another speaker** (25 Nov 2026, the conductor, after 24 Nov was written again
+  from the notes: another speaker under a link is a false statement about a person, nothing is not). The nearest
+  beginning within 10 s (45 before), else the turn the second lies in, else none: the day opens and nobody is named. On
+  that day's 118 links: 113 the same speaker, 4 another, 1 none before; 111, 1 and 6 now (the one left: the linked
+  speaker's turn is gone and the next began 8 s later). "The turn the second lies in first" was scored and not taken: 112,
+  5 and 1, as links are beginnings, and a second a little inside the speech before is a moved one. The same number in
+  `deljenje.py` and `mikrofon.js` (a test asks both); the edge has no rule of its own. One day written again is the whole
+  sample. Changes "within 45 s" above.
