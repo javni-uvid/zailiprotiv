@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .deljenje import turn_at
-from .names import cyrillic, given_first
+from .names import cyrillic, given_first, latin
 from .prenosi import place
 from .steps import STEP_TITLES, steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
@@ -168,7 +168,8 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = Fal
     out.append('<section class="sp-top">')
     said = ""
     if snap["stanje"] == "govori" and cur:
-        head, box, said = _speaker(cur, cyr=cyr, site=site, tz=tz)
+        under_way = next((x for x in (snap.get("dnevni_red") or {}).get("tacke") or [] if x.get("stanje") == "u_toku"), None)
+        head, box, said = _speaker(cur, cyr=cyr, site=site, tz=tz, item=under_way)
         out.append(head + '</section><section class="sp">' + box)
         above = head + box
     else:
@@ -1051,11 +1052,86 @@ def _totals(turns: list[dict], *, cyr: bool, site: str, top: int = 5, shade: dic
     return "".join(out)
 
 
-def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str, str]:
+# "O govorniku" (26 Nov 2026, the maintainer's choice of variant C, with D as an addition): nothing is added to the
+# speaker's block; the portrait (or, with none, a small "i" after the name) opens a sheet of the MP's offices in the
+# convocation, from the site's file (pages_mikrofon.office, "fn"), in the one order the site uses for everyone
+# (offices.order). It is a <template> in the part; the script puts it in the page's one <dialog> (live.js), which
+# stays open while the part is replaced every five seconds. Without the script the portrait leads to the MP's
+# offices on the site. "U Skupštini", "Odbori", "Delegacije": the kinds of offices.json, each heading only when held.
+_OG_KINDS = (("og_assembly", ("speaker", "vice", "group")), ("og_committees", ("committee",)),
+             ("og_delegations", ("delegation",)))
+
+
+def _og_day(day: str) -> str:
+    y, m, d = (int(x) for x in day.split("-"))
+    return f"{d}. {MONTHS_OF[m - 1]} {y}."
+
+
+def about(cur: dict, *, cyr: bool, site: str) -> str:
+    """The sheet "O govorniku" of the speaker, as a <template> for the script; empty for one whose offices the site's
+    file does not say (not an MP of the list, or a name two MPs share): nothing is said rather than "none"."""
+    o = cur.get("o") or {}
+    fn = o.get("fn")
+    if not cur.get("adresa") or not isinstance(fn, list) or not o.get("fn_dan"):
+        return ""
+    t = lambda k: escape(_t(k, cyr))
+    s = lambda x: escape(_name(x, cyr))
+    page_ = f'{site}{"cir/" if cyr else ""}poslanik/{cur["adresa"]}'
+    side = cur.get("uloga") or cur.get("lista") or cur.get("grupa") or ""
+    out = [f'<p class="og-k">{t("og_title")}</p><h2 class="og-name" id="og-h">{s(given_first(cur["ime"]))}</h2>']
+    if side:
+        out.append(f'<p class="og-side"><i aria-hidden="true"></i>{s(side)}</p>')
+    for head, kinds in _OG_KINDS:
+        rows = [f for f in fn if isinstance(f, dict) and f.get("v") in kinds]
+        if rows:
+            out.append(f'<h3 class="og-g">{t(head)}</h3><ul class="og-l">' + "".join(
+                f'<li>{s(f.get("u", ""))}</li>' if not f.get("t") else
+                f'<li>{s(f["t"])} <span>· {s(f.get("u", ""))}</span></li>' for f in rows) + "</ul>")
+    if not fn:
+        out.append(f'<p class="og-none">{t("og_none")}</p>')
+    out.append(f'<p class="og-src">{s(_fill(TEXT["og_source"], _og_day(o["fn_dan"])))} '
+               f'<a href="{escape(page_)}">{t("og_page")} →</a></p>')
+    return f'<template id="og-t" data-adresa="{escape(cur["adresa"])}">{"".join(out)}</template>'
+
+
+def named(cur: dict, item: dict | None) -> list[dict]:
+    """D (26 Nov 2026): the speaker's committees and delegations that the agenda item under way names itself, word
+    for word, the body's first word ("Odbor", "Delegacija") in any grammatical case and the rest as the Assembly
+    writes it; never one guessed from what the item is about. In the speaker's order of offices."""
+    fn = (cur.get("o") or {}).get("fn")
+    if not item or not isinstance(fn, list):
+        return []
+    text = " ".join(latin(str(item.get("tekst", ""))).lower().split())
+    out = []
+    for f in fn:
+        if not isinstance(f, dict) or f.get("v") not in ("committee", "delegation") or " " not in f.get("t", "").strip():
+            continue
+        head, rest = " ".join(f["t"].lower().split()).split(" ", 1)
+        stem = head.rstrip("aeiou") or head
+        if re.search(r"(?<!\w)" + re.escape(stem) + r"\w*\s" + re.escape(rest) + r"(?!\w)", text):
+            out.append(f)
+    return out
+
+
+def _named_line(cur: dict, item: dict | None, *, cyr: bool) -> str:
+    """One line under the speaker, only when the item under way names their committee or delegation (`named`): the
+    first in their order, a committee by its name up to the first comma, a delegation whole, the item's number and
+    the seat. No line, and no room kept for one, otherwise."""
+    hit = named(cur, item)
+    if not hit:
+        return ""
+    f = hit[0]
+    body = f["t"].split(",")[0] if f["v"] == "committee" else f["t"]
+    text = f'{body} ({_fill(TEXT["og_item"], item.get("n", ""))}) · {f.get("u", "")}'
+    return f'<p class="sp-item">{escape(_name(text, cyr))}</p>'
+
+
+def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo, item: dict | None = None) -> tuple[str, str, str]:
     """The speaker: the portrait (an MP's, from the Assembly, served by the site), the name (the way to the MP's page),
     the list and a clock that runs, with how long the turn may last where that is heard (rok.py). The same for every
     speaker, by rules. The box under it (the day's numbers, lines about the MP, the pictures to share) is off since
-    24 Nov 2026, the maintainer. Returns the head, the box (empty) and the words now."""
+    24 Nov 2026, the maintainer. `item` is the agenda's item under way (D, `_named_line`). Returns the head, the box
+    (empty) and the words now."""
     t = lambda k: escape(_t(k, cyr))
     s = lambda x: escape(_name(x, cyr))
     o = cur.get("o") or {}
@@ -1063,10 +1139,22 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str
     name = s(given_first(cur["ime"]))
     shown = f'<a href="{escape(page_)}">{name}</a>' if page_ else name
     side = cur.get("uloga") or cur.get("lista") or cur.get("grupa") or ""
+    sheet = about(cur, cyr=cyr, site=site)
+    opens = (f'href="{escape(page_)}#funkcije" data-og aria-haspopup="dialog" aria-controls="og" '
+             f'aria-label="{t("og_title")}: {name}"')
     out = ['<div class="sp-head">']
-    if o.get("foto") and str(o["foto"]).replace(".", "").replace("-", "").isalnum():
-        out.append(f'<img class="ph" src="{escape(site)}foto/{escape(o["foto"])}" width="72" height="96" alt="">')
-    out.append(f'<div><p class="now"><span class="dot" aria-hidden="true"></span><span class="who">{shown}</span></p>')
+    photo = o.get("foto") and str(o["foto"]).replace(".", "").replace("-", "").isalnum()
+    if photo:
+        img = f'<img class="ph" src="{escape(site)}foto/{escape(o["foto"])}" width="72" height="96" alt="">'
+        out.append(f'<a class="ph-a" {opens}>{img}<span class="ph-i" aria-hidden="true">{t("og_i")}</span></a>'
+                   if sheet else img)
+    i = f' <a class="og-i" {opens}><span aria-hidden="true">{t("og_i")}</span></a>' if sheet and not photo else ""
+    # The name smaller on a phone by its longest word (26 Nov 2026, seen by the designer: at 360 px a long surname
+    # broke inside the word; at 320 px in Cyrillic every sitting MP's did): its letters in the script shown, the same
+    # rule for everyone; live.css gives each count its size, measured over the sitting MPs' names.
+    longest = max((len(w) for w in re.split(r"[\s-]+", _name(given_first(cur["ime"]), cyr)) if w), default=0)
+    size = f" who-{min(longest, 13)}" if longest >= 6 else ""
+    out.append(f'<div><p class="now"><span class="dot" aria-hidden="true"></span><span class="who{size}">{shown}{i}</span></p>')
     if side:
         out.append(f'<p class="side">{s(side)}</p>')
     if not cur["adresa"]:
@@ -1077,10 +1165,12 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> tuple[str, str
     of = ""
     if rok:
         kind = t("rk_" + rok["vrsta"]) if rok.get("vrsta") else ""
-        of = f'<span class="rk">/ {rok["sek"] // 60} {t("min")}{" · " + kind if kind else ""}</span>  · '
-    longer = (" · " + s(TEXT["longest"] if cur["duze"] >= 100 else TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
+        of = f' <span class="rk">/ {rok["sek"] // 60} {t("min")}{" · " + kind if kind else ""}</span>'
+    # "govori od HH:MM" off the line (26 Nov 2026, the maintainer: "Čak možda i govori od bih izbacio"): the clock and a
+    # reply's limit stay; the start stays in data-od, which the script counts from.
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
-               f'{_hms(max(0, cur["sekundi"]))}</b> {of}<span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
+               f'{_hms(max(0, cur["sekundi"]))}</b>{of}</p></div></div>')
+    out.append(_named_line(cur, item, cyr=cyr) + sheet)
     said = ""
     if cur.get("prepis"):
         tail = cur["prepis"]
@@ -1572,6 +1662,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 {waiting_part(waiting, cyr=cyr, site=site) if snap["stanje"] == "nema_prenosa" else ""}
 {mail_back}<details class="how"><summary>{t("how_title")}</summary><p>{t("how")}</p><p>{t("yt_live_note")} {t("sp_how")} {t("listen_live_note")}</p><p>{t("nt_how")}</p><p>{t("pr_how")}</p><p>{t("rk_how")}</p><p>{t("why_how")}</p>{how_time}</details>
 </main>
+<dialog class="og" id="og" aria-labelledby="og-h"><div class="og-in"><button type="button" class="og-x" aria-label="{t("og_close")}">×</button><div class="og-b"></div></div></dialog>
 <footer>{"За или Против" if cyr else "Za ili Protiv"}: <a href="{escape(home)}">zailiprotiv.rs</a> · <a href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">{t("rules_word")}</a> · <a href="https://www.instagram.com/zailiprotiv.rs/" rel="me">{"Инстаграм" if cyr else "Instagram"}</a>{(". " + t("counted")) if analytics else ""}{uses}.{f' <span class="ver">{t("version")} {escape(version)}</span>' if version else ""}</footer>
 <script>{SCRIPT}</script>
 {_beacon(analytics)}
