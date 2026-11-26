@@ -476,6 +476,14 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   project's name (10 clicks), a box with no text of its own beside the home page. It gets `noindex` (its links
   are followed, as on the other noindex pages) and so leaves the sitemap in both scripts; it works as before. The
   search's own files were already kept out (`Disallow: /pagefind/`).
+- **The live page's title says what people search for** (26 Nov 2026, the maintainer: "Uradi sve po tvojim
+  preporukama", of `PREDLOG.md` A): "skupstina uzivo" was shown 367 times in 18-24 Nov at place 10.2 and clicked once,
+  under "Za ili Protiv: Jutrić, Kafica, Skupštinica · Skupština uživo". The tab's title is now "Skupština uživo: prenos
+  i ko sada govori · Za ili Protiv", the description "Prenos Narodne skupštine uživo: ko je sada za govornicom i koliko
+  dugo, prepis i snimak svakog govora. Deo sajta Za ili Protiv.", in Cyrillic by the service's converter
+  (`live/uzivo/texts.py` `head_title`, `lead`). The h1 keeps the hook. What a pasted link and its picture say
+  (`title`, the moment's words) was never this title and stays; a speech's tab keeps "· Skupština uživo"; the site's
+  own `mikrofon.html`, shown while the service is down, says so and is noindex, and stays.
 
 ## Support
 
