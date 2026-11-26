@@ -64,6 +64,8 @@ def test_the_articles_a_speech_invokes():
     assert got("Како каже члан 107. Пословника, достојанство", p=False) == [107]       # the Rules named: anywhere
     assert got("Повреда Пословника, члан 98. Устава каже", ) == []                       # of the Constitution
     assert got("члан 5. закона о буџету", p=False) == [] and got("члан 900.") == []
+    assert got("Повреда Пословника чл.27. и чл.107. морали сте") == [27, 107]  # no space after "чл." (26 Nov 2026)
+    assert got("Члан27.") == []  # "члан" still wants its space: no such writing in the notes
     text = "Повреда Пословника, члан 103."
     (n, a, b), = poslovnik.cited(text, True)
     assert text[a:b] == "члан 103."
