@@ -414,6 +414,16 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   the mail's card is "kept in this browser only" (`live-page.md`, 24 Nov) and the code beside it says nothing is sent, so the sending
   is gone rather than the name added. Nothing asks for that sum. The words on the method page hold as they are.
   The test of the names sent missed it because it read `use("…")` only: it reads `mikrofonUse("…")` too.
+- **How far a quiz is taken** (26 Nov 2026, the maintainer: "Ubaci tracker na kvizu"): the counter had the results
+  reached (`kviz.kraj`: 208 in eleven days, 158 of them on 18-19 Nov) but not the starts, so no share. Now, each once
+  per page opened and as a sum per day, as the other uses: an answer given (`kviz.pocetak`, also a vote brought from the
+  home page's band), half the quiz's laws answered (`kviz.pola`, where the page says "Na pola si"), every law answered
+  (`kviz.sve`), the result reached (as before). Half and all fit every quiz, of 6 to 10 laws, without a count per
+  question. Each quiz use is also summed under the quiz's name, public anyway (`kviz.kraj:podelili-salu`), for a name the
+  site lists in `glasanje.json` only: the same table, `/pregled` the same shape. Nothing about a reader, no mark, nothing
+  more kept in the browser; never which answer or how many. The result opens after three answers, so a "finished" quiz
+  is the result reached. **visits** (`tools/uses.py`) prints the steps by day and by quiz, with the results reached per
+  quiz started. "Kako računamo" says so.
 
 ## Search engines
 
