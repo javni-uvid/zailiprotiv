@@ -448,17 +448,24 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     has them. `povreda.py` is the site's rule in Latin, and a test holds it to the same answers over the notes (500
     speeches of the Fifteenth: the same articles and negations).
   - *Measured* on the service's own transcript and turns of 24 and 25 Nov against the notes' labels of the same turns
-    (107 turns matched, 33 points of order, 31 naming an article):
+    (106 turns matched one to one, 32 points of order, 30 naming an article; a first count had one turn twice):
 
     | | kind: right, wrong, missed | article: right, wrong, missed |
     |---|---|---|
-    | before (the words alone, no article) | 14, 1, 19 | 0, 0, 31 |
-    | the kind as built, the article from the old window (the chair's pieces too) | 24, 1, 9 | 13, 2, 17 |
-    | as built (cut after the chair, numbers in words) | 24, 1, 9 | 19, 3, 10 |
-    | as built, without numbers in words | 24, 1, 9 | 19, 3, 10 |
+    | before (the words alone, no article) | 14, 1, 18 | 0, 0, 30 |
+    | the kind as built, the article from the old window (the chair's pieces too) | 24, 1, 8 | 13, 2, 16 |
+    | as built (cut after the chair, numbers in words) | 24, 1, 8 | 19, 3, 9 |
+    | as built, without numbers in words | 24, 1, 8 | 19, 3, 9 |
 
     Numbers in words made no difference on those days (the transcript wrote figures); the negations none either. The
-    missed are mostly turns whose opening the transcript did not hear.
+    errors, one by one (`POVREDA-ANALIZA.md` with the conductor): 6 misheard (mostly "član"), 3 worded otherwise (both
+    kinds' words, a bare number), 3 the window (no "reč ima" to cut at), 2 the notes' reading (the site's rule misses
+    "čl.27." without a space; a point of order the notes open otherwise). Measured and not taken, each adding as many
+    wrong as right or nothing: "povredi" and other cases, a cut after "po kom osnovu?", "replika" only at the opening, an
+    article said twice; the chair's "da li želite da se izjasnite" after the turn (live 8 of 32, never another turn; in
+    the notes of five days 23 of 72 and 11 others); the chair's "dva minuta"; the director's timer and the caption (the
+    timer counts up from 0:00 for both kinds). The label comes between the 30th and 60th second (the speaker's sound is
+    written in 30 s pieces): right at 10/20/40/60 s, 2/9/22/24. The text around a turn's start was there for all 106.
   - *Taken back*: recomputed with every snapshot from what has been heard, so a later word that denies it, or a reply's
     word, takes it off; past two and a half minutes nothing is shown; nothing is written down (no day file, mail or site
     page has it; the day page labels from the notes by its own rule). `POVREDA_CLAN=0` in the service's settings takes
