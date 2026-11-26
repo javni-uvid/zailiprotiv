@@ -55,6 +55,10 @@ the day the Assembly's pages were read and the way to the MP's page. From the si
 the script the portrait leads to the MP's offices on the site. One line under the speaker names their committee or
 delegation only when the agenda item under way names it word for word.
 
+**A point of order beside the clock** (26 Nov 2026; `rok.py`, `povreda.py`): "/ 2 min · Povreda Poslovnika", and the
+articles the speaker names at the opening ("· čl. 27 i 107", each linked to the site's page of the Rules), from the
+automatic transcript by the site's rule in Latin. `POVREDA_CLAN=0` takes the articles off.
+
 **After the broadcast** (25 Nov 2026; `prenosi.py`), until the archive has a file of the day, its speeches' and steps' times
 play the broadcast's own YouTube video, for as long as that is public: asked of YouTube's oEmbed at most once in ten minutes, and no
 link on any answer but yes. `/data/prenosi/<day>.json` keeps the video, when its first second was (`pocetak`) and what was read of

@@ -440,3 +440,5 @@ main > .govor-no, main > .govor-live { order: 10; align-self: flex-start; margin
   :lang(sr-Cyrl) .sp-head .who-10 { font-size: var(--t-4); }
   :lang(sr-Cyrl) .sp-head .who-11, :lang(sr-Cyrl) .sp-head .who-12, :lang(sr-Cyrl) .sp-head .who-13 { font-size: var(--t-3); }
 }
+/* A point of order's articles beside the clock (26 Nov 2026): the line breaks only between its parts */
+.clock .rk > span { white-space: nowrap; } .clock .rk a { color: inherit; }

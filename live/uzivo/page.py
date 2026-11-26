@@ -1164,8 +1164,15 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo, item: dict | None
     rok = cur.get("rok") or {}  # a reply's or a point of order's two minutes, where heard (rok.py)
     of = ""
     if rok:
+        # each part kept whole, the line breaking only between them: "/ 2 min", "· Povreda Poslovnika", "· čl. 27 i 107"
         kind = t("rk_" + rok["vrsta"]) if rok.get("vrsta") else ""
-        of = f' <span class="rk">/ {rok["sek"] // 60} {t("min")}{" · " + kind if kind else ""}</span>'
+        parts = [f'<span>/ {rok["sek"] // 60} {t("min")}</span>'] + ([f'<span>· {kind}</span>'] if kind else [])
+        named = [int(n) for n in rok.get("clanovi") or [] if str(n).isdigit() and 1 <= int(n) <= 298]
+        if named and rok.get("vrsta") == "povreda":  # each article leads to it on the site's page of the Rules
+            links = [f'<a href="{escape(site)}{"cir/" if cyr else ""}poslovnik-clanovi#clan-{n}">{n}</a>' for n in named]
+            joined = links[0] if len(links) == 1 else ", ".join(links[:-1]) + f' {t("rk_and")} ' + links[-1]
+            parts.append(f'<span>· {t("rk_art")} {joined}</span>')
+        of = f' <span class="rk">{" ".join(parts)}</span>'
     # "govori od HH:MM" off the line (26 Nov 2026, the maintainer: "Čak možda i govori od bih izbacio"): the clock and a
     # reply's limit stay; the start stays in data-od, which the script counts from.
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'

@@ -428,3 +428,38 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   `data-od`, from which the script counts. Nothing else read the words. The text `since` stays: `picture.py` uses it.
   Tried and not taken the same day: no clock, with "govori od" or with nothing (a bare "14:03" may read as the time of
   day; he chose the clock).
+- **"Povreda Poslovnika · čl. 107" beside the clock** (26 Nov 2026, the maintainer: "Trebamo promeniti i kad detektujemo
+  povredu poslovnika isto"; of the day pages' label, "1 u 10 je okej, mozemo i uzivo"). The clock's line said "/ 2 min ·
+  povreda Poslovnika" where a point of order was heard; it now says it in the words approved for the day pages, "/ 2 min
+  · Povreda Poslovnika", and, where the speaker names them, "· čl. 107" or "· čl. 27 i 107", each number leading to the
+  article on `poslovnik-clanovi` (both scripts). No new row: the line breaks only between its parts; with no article it
+  is as high as before, with one or two it takes one more line at 360 and 320 px (measured), the name and the clock as
+  they were. The small player's line keeps "/ 2 min".
+  - *The kind* (`rok.limit`, `label=True` for this line only; the groups' time and the exchanges keep the rule as it was):
+    as before, the chair's words giving the floor or the speaker's first words, with the site's negations (`povreda.NOT`:
+    "nije / nisam / ako smatrate … povreda", "pravo po Poslovniku") and the site's second sign, an article named at once.
+    **Live, the chair's words alone can make the label, unlike the day pages** (`notes_site.point_of_order` takes the
+    speaker's own words only): the automatic transcript has the speaker's opening at only some turns' starts, so without
+    the chair's "povreda Poslovnika" most points of order would go unlabelled; the notes have every word.
+  - *The articles* (`povreda.articles`): only the speaker's own words, after the chair's last words giving the floor
+    ("izvolite", "reč ima", "dajem reč"; the caption comes seconds after the speaker begins, so their opening is often in
+    the pieces with no caption), from 45 s before the turn to 30 s into it; a number in the chair's words before that is
+    not taken; numbers said in words are read ("član sto sedam"); only the Rules' articles (1-298), as `poslovnik.cited`
+    has them. `povreda.py` is the site's rule in Latin, and a test holds it to the same answers over the notes (500
+    speeches of the Fifteenth: the same articles and negations).
+  - *Measured* on the service's own transcript and turns of 24 and 25 Nov against the notes' labels of the same turns
+    (107 turns matched, 33 points of order, 31 naming an article):
+
+    | | kind: right, wrong, missed | article: right, wrong, missed |
+    |---|---|---|
+    | before (the words alone, no article) | 14, 1, 19 | 0, 0, 31 |
+    | the kind as built, the article from the old window (the chair's pieces too) | 24, 1, 9 | 13, 2, 17 |
+    | as built (cut after the chair, numbers in words) | 24, 1, 9 | 19, 3, 10 |
+    | as built, without numbers in words | 24, 1, 9 | 19, 3, 10 |
+
+    Numbers in words made no difference on those days (the transcript wrote figures); the negations none either. The
+    missed are mostly turns whose opening the transcript did not hear.
+  - *Taken back*: recomputed with every snapshot from what has been heard, so a later word that denies it, or a reply's
+    word, takes it off; past two and a half minutes nothing is shown; nothing is written down (no day file, mail or site
+    page has it; the day page labels from the notes by its own rule). `POVREDA_CLAN=0` in the service's settings takes
+    the articles off, the kind staying.

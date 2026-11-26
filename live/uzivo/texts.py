@@ -188,7 +188,9 @@ TEXT = {
     "gt_estimate": "gruba procena",
     "gt_said": "predsedavajući u %1: još %2",
     "rk_replika": "replika",
-    "rk_povreda": "povreda Poslovnika",
+    "rk_povreda": "Povreda Poslovnika",  # the words approved for the day pages (26 Nov 2026)
+    "rk_art": "čl.",  # "Povreda Poslovnika · čl. 27 i 107": the articles the speaker named
+    "rk_and": "i",
     "gt_over": "preko za",
     "gt_none": "vreme je potrošeno",
     "gt_rules": "Šta kaže Poslovnik",

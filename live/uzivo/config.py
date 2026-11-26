@@ -127,6 +127,8 @@ SHOW_SUMMARY = os.environ.get("SAZETAK_PRIKAZ", "0").strip() == "1"
 # The words of the chair's measures and of the exchanges in "Šta se desilo" (24 Nov 2026). Off the same day, by the
 # maintainer: the transcript's sentences were too often wrong; "1" puts them back.
 SHOW_QUOTES = os.environ.get("RECI_PRIKAZ", "0").strip() == "1"
+# The Rules' articles a speaker names on a point of order, beside the clock (povreda.py, 26 Nov 2026): "0" takes them off
+POINT_ARTICLES = os.environ.get("POVREDA_CLAN", "1").strip() != "0"
 # The speaker's name in what a pasted link to a speech shows (deljenje.py; 25 Nov 2026, the maintainer's choice, knowing
 # that a card a service keeps may keep a name mended later); "0": only that it is a speech, and when.
 SHARE_NAME = os.environ.get("DELI_IME", "1").strip() == "1"

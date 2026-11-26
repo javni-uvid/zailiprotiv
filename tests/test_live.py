@@ -2522,7 +2522,7 @@ def test_a_replys_and_a_point_of_orders_two_minutes_stand_by_the_clock():
             "sada": {"ime": "Petrović Petar", "adresa": "petrovic-petar", "od": int(start), "do": int(start + 30), "sekundi": 30,
                      "lista": "PG A", "rok": {"vrsta": "replika", "sek": 120}}}
     html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
-    assert '<span class="rk">/ 2 min · replika</span>' in html
+    assert '<span class="rk"><span>/ 2 min</span> <span>· replika</span></span>' in html
 
 
 def test_the_groups_time_left_stands_small_under_the_speaker(monkeypatch):
@@ -3697,3 +3697,70 @@ def test_the_site_gives_each_sitting_mp_their_offices_for_the_sheet():
     assert out["a"]["fn_dan"] == "2026-11-26"  # the day in Belgrade
     assert out["b"]["fn"] == [] and "fn" not in out["c"]  # none held is said; a name two MPs share says nothing
     assert "fn" not in pages_mikrofon.speakers([row("a", [vice])], {}, conv="15", spoken_={}, plain=str, latin=lat, day=str)["a"]
+
+
+# A point of order live, with the articles the speaker named (26 Nov 2026) ----------------------------------------------
+def test_the_articles_of_a_point_of_order_are_the_speakers_own_after_the_chair_gives_the_floor():
+    from uzivo import povreda
+    # the caption comes late: the speaker's first words are among the pieces with no caption, after the chair's
+    said = {"p1000": "Ne može član 15. Reč ima narodni poslanik Petar Petrović. Izvolite.",
+            "p1020": "Povreda Poslovnika, član 27. i član 107. Poslovnika.", "1031": "Hvala."}
+    assert povreda.split(said, 1030)[0].endswith("Izvolite")
+    assert povreda.articles(said, 1030) == [27, 107]
+    # a number the chair just said is not the speaker's; a number said in words is read
+    said = {"p1000": "Pitate po članu 15? Reč ima poslanik. Izvolite.", "p1020": "Član 15. i član sto sedam."}
+    assert povreda.articles(said, 1030) == [107]
+    assert povreda.digits("član dvadeset i sedam, član sto osmi, član trideset tri") == "član 27, član 108, član 33"
+    assert povreda.digits("član sedam sto") == "član sedam sto"  # not a number in order: left as said
+    # only the Rules' articles, never another act's
+    assert povreda.articles({"p1020": "Član 107. Ustava i član 300."}, 1030) == []
+    # the site's second sign: an article named at once
+    assert povreda.opens_with_article({"p1000": "Izvolite.", "p1010": "Član 107, predsedniče."}, 1015)
+    assert not povreda.opens_with_article({"p1000": "Izvolite.", "p1010": "Hvala, poštovani predsedniče."}, 1015)
+
+
+def test_the_live_rules_agree_with_the_sites_over_the_notes():
+    """povreda.py is notes_site's and poslovnik's rule in Latin: the same answers over the notes' speeches, turned to
+    Latin (the newest convocation's, where the repository has them)."""
+    from uzivo import povreda
+    from zailiprotiv import notes_site, pages_govornici, poslovnik
+    from zailiprotiv.translit import latin as lat
+    texts = pages_govornici._notes_texts(Path(__file__).parent.parent / "data", "15")
+    if not texts:
+        pytest.skip("no notes here")
+    for t, _ in texts.values():
+        assert [x[0] for x in povreda.cited(lat(t), True)] == [x[0] for x in poslovnik.cited(t, True)]
+        assert bool(povreda.NOT.search(lat(t))) == bool(notes_site._POINT_NOT.search(t))
+    assert povreda.LAST == 298 and povreda.CITE_HEAD == poslovnik.CITE_HEAD
+
+
+def test_the_clock_line_names_a_point_of_order_and_its_articles_only_where_asked():
+    from uzivo.rok import limit
+    chair = {"p1000": "Reč ima narodni poslanik Petar Petrović. Izvolite."}
+    said = {**chair, "p1020": "Povreda Poslovnika, član 107. Poslovnika."}
+    assert limit(said, 1030, 10, label=True) == {"vrsta": "povreda", "sek": 120, "clanovi": [107]}
+    assert limit(said, 1030, 10, label=True, articles=False) == {"vrsta": "povreda", "sek": 120}  # POVREDA_CLAN=0
+    assert limit(said, 1030, 10) == {"vrsta": "povreda", "sek": 120}  # the groups' time and razmene: as before
+    # denied, or in passing: none on the clock's line (the site's negations)
+    denied = {**chair, "p1020": "Ovo nije povreda Poslovnika, ali hoću da kažem."}
+    assert limit(denied, 1030, 10, label=True) is None and limit(denied, 1030, 10) is not None
+    # an article named at once is a point of order (the site's second sign); not when a reply is heard
+    assert limit({**chair, "p1020": "Član 107. Gospodine predsedniče."}, 1030, 10, label=True)["vrsta"] == "povreda"
+    assert limit({**chair, "p1020": "Replika. Član 107."}, 1030, 10, label=True)["vrsta"] == "replika"
+    assert limit({**chair, "p1020": "Član 107."}, 1030, 200, label=True) is None  # past the two minutes and a half
+
+
+def test_the_block_says_povreda_poslovnika_with_each_article_linked():
+    snap = _speaking(_FN)
+    snap["sada"]["rok"] = {"vrsta": "povreda", "sek": 120}
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<span class="rk"><span>/ 2 min</span> <span>· Povreda Poslovnika</span></span>' in html
+    snap["sada"]["rok"]["clanovi"] = [107]
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert ('<span>· čl. <a href="https://zailiprotiv.rs/poslovnik-clanovi#clan-107">107</a></span>') in html
+    snap["sada"]["rok"]["clanovi"] = [27, 107]
+    cyr = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert ('<span>· Повреда Пословника</span> <span>· чл. <a href="https://zailiprotiv.rs/cir/poslovnik-clanovi#clan-27">27</a> и '
+            '<a href="https://zailiprotiv.rs/cir/poslovnik-clanovi#clan-107">107</a></span>') in cyr
+    snap["sada"]["rok"] = {"vrsta": "replika", "sek": 120, "clanovi": [107]}  # a reply has no articles
+    assert "clan-107" not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
