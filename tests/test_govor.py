@@ -129,6 +129,23 @@ def test_a_beginning_from_the_speakers_timer_with_its_safeguards():
     assert govor.timer_starts(speech(), got, read(datoteka="u/other.mp4"))[0]["od"] == 6777  # another file
 
 
+def test_a_turn_ends_where_the_floor_is_given_anew_or_the_microphone_is_cut():
+    """26 Nov 2026, the maintainer: a reply and then the debate are two ("replika i posle kad dobije rec ... odvojene
+    stavke"); the microphone cut ends a speech; a warning or an argument while the speaker keeps the floor does not."""
+    who = lambda s: {"ime": s, "adresa": "", "grupa": "", "uloga": ""}
+    f = [{"url": F, "od": 0}]
+    a = {"key": "1", "speaker": "A", "datoteka": F, "od": 10.0, "do": 50.0, "sidra": 3, "text": "…"}
+    b = {"key": "3", "speaker": "A", "datoteka": F, "od": 60.0, "do": 90.0, "sidra": 2, "text": "…"}
+    def chair(text):
+        return {"key": "2", "speaker": "P", "chair": True, "text": text}
+    assert len(govor.day([a, chair("Дајем реч народном посланику. По претресу."), b], f, who)) == 2
+    assert len(govor.day([a, chair("Даћу вам право на реплику."), b], f, who)) == 2
+    assert len(govor.day([a, chair("Проглашавам паузу."), b], f, who)) == 2
+    assert len(govor.day([dict(a, text="Вратите ми време…(Искључен микрофон.)"), chair("Пријавите се поново."), b], f, who)) == 2
+    assert len(govor.day([a, chair("Молим вас за ред. Изричем опомену."), b], f, who)) == 1  # a warning ends nothing
+    assert len(govor.day([a, chair("Господин Вучић има реч, да заврши."), b], f, who)) == 1  # "let him finish"
+
+
 def test_a_days_part_the_archive_holds_before_its_page_lists_it():
     from zailiprotiv import videos
     base = "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910"

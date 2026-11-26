@@ -212,6 +212,20 @@ def nearest(name: str, keys: dict) -> str | None:
 
 LEAD = 5     # a turn's place in its file: this many seconds before its first word, as everywhere on the site
 MERGE = 120  # one speaker's speeches with only the chair's words between them, this close: one turn
+# A turn ends, though the same speaker goes on, where the chair's words between give the floor anew (to anyone, the same
+# speaker too: a reply and then the debate are two, 26 Nov 2026, the maintainer), or declare a break; or where the notes
+# say the microphone was cut. A warning, an explanation or an argument while the speaker keeps the floor ends nothing.
+FLOOR_GIVEN = ("реч има", "има реч", "дајем реч", "реч дајем", "дајем вам реч", "право на реплику")
+FLOOR_KEPT = ("има реч, да заврши", "има реч да заврши", "има реч, да настави", "има реч да настави")  # "let him finish"
+BREAK = ("пауз",)
+CUT = ("искључен микрофон",)
+
+
+def _says(text: str, words: tuple) -> bool:
+    t = re.sub(r"\s+", " ", text.lower())
+    for w in FLOOR_KEPT:
+        t = t.replace(w, "")
+    return any(w in t for w in words)
 
 NOTE = ("Ko je kad govorio, iz stenografskih beleški Skupštine poravnatih sa zvukom snimka dana u arhivi "
         "videonet.co.rs: snimak je automatski zapisan reč po reč (Whisper), a svaki govor iz beleški nađen u tom zapisu "
@@ -245,14 +259,18 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
     """The day's turns as data/<N>/snimak/ holds them, from placed speeches (place()) in the notes' order. files:
     [{"url", "od"}], each file's start on the clock (unix), or None where it is not known; who(speaker in the notes)
     → {"ime", "adresa", "grupa", "uloga"}. The chair is left out; a speaker's speeches with only the chair between
-    them, within MERGE seconds, are one turn."""
+    them, within MERGE seconds, are one turn, unless the chair gives the floor anew or declares a break between them, or
+    the microphone was cut (FLOOR_GIVEN, BREAK, CUT)."""
     by_url = {f["url"]: f for f in files}
     out: list[dict] = []
     last_speaker = None
+    ended = False  # since the speaker's last piece: the floor given anew, a break, or the microphone cut
     for s in speeches:
         if s.get("chair"):
+            ended |= _says(s.get("text") or "", FLOOR_GIVEN + BREAK)
             continue
         if "datoteka" not in s:
+            ended |= _says(s.get("text") or "", CUT)
             # A piece of the same speaker with no place (too short for two runs) does not end the turn: with only the
             # chair's words around it, the speaker who goes on after it never lost the floor (26 Nov 2026, the
             # maintainer: "svo vreme treba biti kartica za tandira"). Another speaker's piece does.
@@ -268,13 +286,14 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
                  "_od": part["od"], "_do": part["do"], "_s": base, "_e": end}
             prev = out[-1] if out else None
             if (prev and last_speaker == s["speaker"] and prev["datoteka"] == t["datoteka"] and prev["_e"] == t["_s"]
-                    and t["_od"] - prev["_do"] <= MERGE):
+                    and t["_od"] - prev["_do"] <= MERGE and not ended):
                 prev["do"], prev["_do"], prev["_e"] = t["do"], t["_do"], t["_e"]
                 prev["okvira"] += t["okvira"]
                 prev["beleske"] += t["beleske"]
             else:
                 out.append(t)
-            last_speaker = s["speaker"]
+            last_speaker, ended = s["speaker"], False
+        ended = _says(s.get("text") or "", CUT)
     for t in out:
         for k in ("_od", "_do", "_s", "_e"):
             t.pop(k)

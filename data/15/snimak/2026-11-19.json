@@ -843,17 +843,45 @@
    "grupa": "Studentska lista",
    "uloga": "Studentska lista",
    "od": 1795112878,
-   "do": 1795113178,
-   "okvira": 213,
+   "do": 1795112887,
+   "okvira": 7,
    "video": "",
    "snimak": 5560,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
    "beleske": [
-    "54098/00407",
+    "54098/00407"
+   ]
+  },
+  {
+   "ime": "Dimović Feđa",
+   "adresa": "dimovic-fedja",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795112944,
+   "do": 1795113033,
+   "okvira": 51,
+   "video": "",
+   "snimak": 5626,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
     "54098/00409",
     "54098/00411",
     "54098/00413",
-    "54098/00415",
+    "54098/00415"
+   ]
+  },
+  {
+   "ime": "Dimović Feđa",
+   "adresa": "dimovic-fedja",
+   "grupa": "Studentska lista",
+   "uloga": "Studentska lista",
+   "od": 1795113049,
+   "do": 1795113178,
+   "okvira": 155,
+   "video": "",
+   "snimak": 5731,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910c.mp4",
+   "beleske": [
     "54098/00417",
     "54098/00419",
     "54098/00421",
