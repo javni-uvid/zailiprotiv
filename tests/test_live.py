@@ -3617,7 +3617,8 @@ def test_the_portrait_opens_the_speakers_offices_and_the_block_gets_nothing_more
     assert "Sajt Skupštine, pročitano 26. novembra 2026." in sheet
     assert 'href="https://zailiprotiv.rs/poslanik/petrovic-petar">Stranica poslanika →' in sheet
     assert "govor danas" not in html  # C's line of today's speeches is left out (the maintainer: a light card)
-    assert "današnjih govora" not in html and "govori od" in head  # "duže od N%" off (26 Nov 2026, the maintainer)
+    assert "današnjih govora" not in html  # "duže od N%" off (26 Nov 2026, the maintainer)
+    assert "govori od" not in head and '<b class="clk" data-od="1794919000" data-sek="1000">16:40</b></p>' in head  # and "govori od"
     # one dialog for the page, outside the part that is replaced every five seconds
     assert html.count('<dialog class="og" id="og"') == 1 and html.index("<dialog") > html.index("</main>")
     assert 'id="og"' not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
