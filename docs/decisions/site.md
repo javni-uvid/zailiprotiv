@@ -506,6 +506,13 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   Assembly states for each person, and its members' list has no such field, while its notes name only some (of the 250
   sitting MPs, in the 14th and 15th convocations' notes: 14 only "narodna poslanica", 58 only "narodni poslanik", 6
   both, 172 neither). Never from the first name.
+- **Not done, and why** (26 Nov 2026, of the same proposal): breadcrumbs as structured data alone on the lists that
+  show none (`replike-N`, `zakoni-N`, `razmene-N`, a day of `govornici`, the quizzes): Google's general guidelines say
+  "Don't mark up content that is not visible to readers of the page", and its breadcrumb guidelines link to them; a
+  visible trail is more on a phone's screen, which the maintainer's direction keeps short. IndexNow for
+  `mikrofon.zailiprotiv.rs`: the key must be served on that host, which only the live service could do (a route in
+  `live/uzivo/main.py`), so it waits for the conductor. Not now, by the maintainer: Cyrillic pages out of the sitemap
+  (they bring clicks), the LIVE badge, Bing Webmaster Tools.
 
 ## Support
 
