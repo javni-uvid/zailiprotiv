@@ -40,7 +40,8 @@ name. Every page is also in Cyrillic, under `cir/`.
   group, activity on the floor, what they say and every speech linked to its notes; every vote on a page of its own;
   a page per parliamentary group; presence ranked by one rule for all. **Funkcije u Skupštini** on every MP's page:
   Speaker, deputy Speaker, a group's chair, each committee and delegation with the role, as the Assembly's pages of
-  its composition list them (`zailiprotiv offices`, beside the Assembly's news kept in `data/vesti.json`).
+  its composition list them (`zailiprotiv offices`, beside the Assembly's news kept in `data/vesti.json`). The live page
+  shows the speaker's under their portrait ("O govorniku").
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.

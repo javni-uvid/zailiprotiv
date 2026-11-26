@@ -506,3 +506,37 @@
   box.addEventListener("toggle", place);
   place();
 })();
+// "O govorniku" (26 Nov 2026, the maintainer's choice C): the portrait opens the speaker's offices in the page's one
+// dialog, outside the part, so that it stays open while the part is replaced; the part's <template> fills it. A new
+// speaker leaves an open sheet as it was (it is read about whom it was opened for); the next opening is theirs. The
+// dialog keeps the keyboard inside and closes on Esc, ×, or a press beside it; the focus goes back to the portrait.
+(function () {
+  var og = document.getElementById("og");
+  if (!og || typeof og.showModal !== "function") return;  // without it the portrait leads to the MP's page
+  var body = og.querySelector(".og-b"), put = "";
+  function fill(opening) {
+    var t = document.getElementById("og-t");
+    if (!t) return false;
+    if (!opening && og.getAttribute("data-adresa") !== t.getAttribute("data-adresa")) return true;
+    var d = document.getElementById("deo");
+    og.className = "og" + (d && d.className ? " " + d.className : "");
+    og.setAttribute("data-adresa", t.getAttribute("data-adresa"));
+    if (t.innerHTML !== put) { put = t.innerHTML; body.replaceChildren(t.content.cloneNode(true)); }
+    return true;
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("[data-og]");
+    if (!a || e.button || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || !fill(true)) return;
+    e.preventDefault();
+    og.showModal();
+  });
+  function back() {  // the portrait that opened it may have been replaced with the part: today's, then
+    var a = document.querySelector("#deo [data-og]");
+    if (a && document.activeElement !== a) a.focus({ preventScroll: true });
+  }
+  og.addEventListener("click", function (e) {
+    if (e.target === og || (e.target.closest && e.target.closest(".og-x"))) { og.close(); back(); }
+  });
+  og.addEventListener("close", back);  // Esc
+  document.addEventListener("deo", function () { if (og.open) fill(false); });
+})();

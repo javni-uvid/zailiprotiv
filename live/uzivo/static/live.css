@@ -394,3 +394,49 @@ main:has(#deo[data-gore="pauza"]) .pills .listen-live { order: 2; } main:has(#de
 .share-turn { position: relative; display: inline-block; margin: 0 0 0 .35rem; padding: 0; border: 0; background: none; color: var(--fg); font: 600 var(--t-1)/1.45 system-ui, sans-serif; white-space: nowrap; cursor: pointer; } .share-turn::after { content: ""; position: absolute; inset: -.9rem -.6rem; } .share-turn span { text-decoration: underline; text-underline-offset: 2px; } .share-turn .ic-share { margin-right: .3rem; }
 .tn .ko { display: inline; font: inherit; color: inherit; }
 main > .govor-no, main > .govor-live { order: 10; align-self: flex-start; margin: .6rem 0 0; } main:has(#deo[data-stanje="nema_prenosa"]) > .govor-no, main:has(#deo[data-stanje="nema_prenosa"]) > .govor-live { order: 3; }
+/* "O govorniku" (26 Nov 2026, the maintainer's choice C with D): nothing added to the speaker's block. The portrait
+   is the press, its "i" only the sign, drawn over the portrait's corner so the block keeps its height; with no
+   portrait a small "i" after the name. The sheet is a dialog: from the bottom on a phone, in the middle on a wide
+   screen. D: one line under the speaker only when the item under way names their committee or delegation. */
+.ph-a { position: relative; flex: none; display: block; border-radius: 6px; color: var(--fg); text-decoration: none; }
+.ph-a .ph { display: block; }
+.ph-i, .og-i span { display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 1px solid var(--muted); border-radius: 50%; background: var(--bg); color: var(--fg); font-family: var(--serif); font-weight: 700; font-size: var(--t-2); line-height: 1; }
+.ph-i { position: absolute; right: -.4rem; bottom: -.4rem; }
+.og-i { display: inline-block; vertical-align: middle; margin-left: .2rem; padding: .1rem; text-decoration: none; line-height: 0; }
+.og-i span { display: inline-grid; }
+.ph-a:hover .ph-i, .og-i:hover span { border-color: var(--fg); }
+.ph-a:focus-visible, .og-i:focus-visible { outline: 3px solid var(--za); outline-offset: 2px; }
+.sp-item { margin: .5rem 0 0; font-size: var(--t-2); font-weight: 600; overflow-wrap: break-word; }
+.og { box-sizing: border-box; width: 100%; max-width: 34rem; max-height: 85vh; margin: auto auto 0; padding: 0; border: 0; border-radius: 16px 16px 0 0; background: var(--bg); color: var(--fg); box-shadow: 0 -6px 24px rgba(0, 0, 0, .25); overflow: auto; overscroll-behavior: contain; }
+.og::backdrop { background: rgba(0, 0, 0, .5); }
+@media (min-width: 721px) { .og { margin: auto; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, .3); } }
+.og-in { position: relative; padding: 1rem 20px 1.2rem; }
+.og-x { position: absolute; top: .3rem; right: .4rem; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 50%; background: none; color: var(--muted); font-size: var(--t-6); line-height: 1; cursor: pointer; }
+.og-x:hover { color: var(--fg); } .og-x:focus-visible { outline: 3px solid var(--za); outline-offset: -3px; }
+.og-k { margin: 0 3rem 0 0; font-size: var(--t-1); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.og-name { margin: .15rem 3rem 0 0; font-family: var(--serif); font-weight: 700; font-size: var(--t-6); line-height: 1.15; overflow-wrap: break-word; }
+.og-side { margin: .2rem 0 0; font-size: var(--t-2); } .og-side i { display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; background: var(--lc, var(--muted)); margin-right: .4rem; }
+.og-g { margin: .9rem 0 .15rem; font-family: inherit; font-size: var(--t-1); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.og-l { list-style: none; margin: 0; padding: 0; font-size: var(--t-2); line-height: 1.4; } .og-l li { margin: .25rem 0; } .og-l span { color: var(--muted); }
+.og-none { margin: .8rem 0 0; font-size: var(--t-2); }
+.og-src { margin: .9rem 0 0; font-size: var(--t-1); color: var(--muted); }
+.og-src a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: var(--t-2); font-weight: 600; color: var(--fg); margin-left: .2rem; }
+/* The speaker's name on a phone by its longest word's letters (page._speaker, 26 Nov 2026): the size at which the
+   widest of the sitting MPs' words of that length fits beside the portrait, measured at 360 and 320 px in both scripts
+   (Cyrillic letters are wider). Over 520 px the name has room at its full size. */
+@media (max-width: 520px) {
+  .sp-head .who-9 { font-size: var(--t-7); }
+  .sp-head .who-10, .sp-head .who-11, .sp-head .who-12, .sp-head .who-13 { font-size: var(--t-6); }
+  :lang(sr-Cyrl) .sp-head .who-8 { font-size: var(--t-7); }
+  :lang(sr-Cyrl) .sp-head .who-9, :lang(sr-Cyrl) .sp-head .who-10 { font-size: var(--t-6); }
+  :lang(sr-Cyrl) .sp-head .who-11, :lang(sr-Cyrl) .sp-head .who-12, :lang(sr-Cyrl) .sp-head .who-13 { font-size: var(--t-5); }
+}
+@media (max-width: 359px) {
+  .sp-head .who-7, .sp-head .who-8, .sp-head .who-9 { font-size: var(--t-6); }
+  .sp-head .who-10 { font-size: var(--t-5); }
+  .sp-head .who-11, .sp-head .who-12, .sp-head .who-13 { font-size: var(--t-4); }
+  :lang(sr-Cyrl) .sp-head .who-6, :lang(sr-Cyrl) .sp-head .who-7 { font-size: var(--t-6); }
+  :lang(sr-Cyrl) .sp-head .who-8, :lang(sr-Cyrl) .sp-head .who-9 { font-size: var(--t-5); }
+  :lang(sr-Cyrl) .sp-head .who-10 { font-size: var(--t-4); }
+  :lang(sr-Cyrl) .sp-head .who-11, :lang(sr-Cyrl) .sp-head .who-12, :lang(sr-Cyrl) .sp-head .who-13 { font-size: var(--t-3); }
+}

@@ -3580,3 +3580,117 @@ def test_the_live_record_says_what_it_is_and_where_the_notes_corrected_it():
     assert rec["govori"][0]["ime"] == "Štimac Aleksandra"  # nothing taken out: the record as read
     t.use_waiting({"kviz": [], "cinjenice": [], "dani": [day], "iz_beleski": ["2026-11-24"]})
     assert "ispravljeno" not in t.record(day)
+
+
+# "O govorniku" (26 Nov 2026, the maintainer's choice C with D) -----------------------------------------------------
+_FN = [{"v": "vice", "t": "", "u": "Potpredsednik Narodne skupštine"},
+       {"v": "committee", "t": "Odbor za prava deteta", "u": "član"},
+       {"v": "committee", "t": "Odbor za finansije, republički budžet i kontrolu trošenja javnih sredstava", "u": "zamenik člana"},
+       {"v": "delegation", "t": "Delegacija u Parlamentarnoj skupštini Saveta Evrope", "u": "šef"}]
+
+
+def _speaking(fn, *, foto="12.jpg", item=None, ime="Petrović Petar"):
+    o = {"lista": "Lista za primer", **({"foto": foto} if foto else {})}
+    if fn is not None:
+        o.update(fn=fn, fn_dan="2026-11-26")
+    turn = {"ime": ime, "adresa": "petrovic-petar", "od": 1794919000, "do": 1794920000, "sekundi": 1000,
+            "lista": "Lista za primer", "o": o}
+    return {"stanje": "govori", "provereno": 1794920000, "danas": [], "dan": "2026-11-26", "hronika": [], "sada": turn,
+            "dnevni_red": {"tacke": [item]} if item else {}}
+
+
+def test_the_portrait_opens_the_speakers_offices_and_the_block_gets_nothing_more():
+    snap = _speaking(_FN)
+    html = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    start = html.index('<div class="sp-head">')
+    head = html[start:html.index("</section>", start)]
+    # the portrait is the press; without the script it leads to the MP's offices on the site
+    assert re.search(r'<a class="ph-a" href="https://zailiprotiv\.rs/poslanik/petrovic-petar#funkcije" data-og '
+                     r'aria-haspopup="dialog" aria-controls="og" aria-label="O govorniku: Petar Petrović"><img class="ph"', head)
+    sheet = head[head.index("<template"):]
+    # the one order for all: the Assembly's, committees, delegations, each heading only when held
+    assert re.findall(r'<h3 class="og-g">([^<]+)', sheet) == ["U Skupštini", "Odbori", "Delegacije"]
+    assert (sheet.index("Potpredsednik Narodne skupštine") < sheet.index("Odbor za prava deteta")
+            < sheet.index("Odbor za finansije, republički") < sheet.index("Saveta Evrope"))
+    assert "<span>· zamenik člana</span>" in sheet and "<span>· šef</span>" in sheet
+    assert "Sajt Skupštine, pročitano 26. novembra 2026." in sheet
+    assert 'href="https://zailiprotiv.rs/poslanik/petrovic-petar">Stranica poslanika →' in sheet
+    assert "govor danas" not in html  # C's line of today's speeches is left out (the maintainer: a light card)
+    # one dialog for the page, outside the part that is replaced every five seconds
+    assert html.count('<dialog class="og" id="og"') == 1 and html.index("<dialog") > html.index("</main>")
+    assert 'id="og"' not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "sp-item" not in head  # D: no line, no room kept for one
+    cyr = fragment(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "О говорнику" in cyr and "Одбор за права детета" in cyr and "Делегације" in cyr
+    assert "/cir/poslanik/petrovic-petar#funkcije" in cyr
+
+
+def test_an_mp_with_no_office_gets_the_sheet_saying_so_and_an_unknown_one_none():
+    html = fragment(_speaking([]), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "Bez funkcije, odbora i delegacije na sajtu Skupštine." in html and 'class="og-g"' not in html and "data-og" in html
+    # offices not said (a name two MPs share, a file of before): no sheet, and the portrait as it was
+    html = fragment(_speaking(None), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert "data-og" not in html and "<template" not in html
+    assert '<img class="ph" src="https://zailiprotiv.rs/foto/12.jpg"' in html
+    # no portrait: a small "i" after the name opens it
+    html = fragment(_speaking(_FN, foto=""), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<a class="og-i" href="https://zailiprotiv.rs/poslanik/petrovic-petar#funkcije" data-og' in html and "ph-a" not in html
+
+
+def test_d_names_a_committee_only_when_the_item_under_way_names_it_word_for_word():
+    from uzivo.page import named
+    cur = _speaking(_FN)["sada"]
+
+    def item(text, state="u_toku"):
+        return {"n": 3, "tekst": text, "stanje": state, "izvor": "sajt"}
+    # the head word in any case, the rest as written, either script
+    assert named(cur, item("Predlog odluke o izboru članova Odbora za prava deteta")) == [_FN[1]]
+    assert named(cur, item("Извештај о раду Одбора за финансије, републички буџет и контролу трошења јавних средстава")) == [_FN[2]]
+    assert named(cur, item("Izveštaj Delegacije u Parlamentarnoj skupštini Saveta Evrope")) == [_FN[3]]
+    # never by a guess: a finance bill names no committee, a name cut short is not the name
+    assert named(cur, item("Predlog zakona o budžetu Republike Srbije za 2027. godinu")) == []
+    assert named(cur, item("Predlog odluke o članovima Odbora za finansije")) == []
+    assert named(cur, item("Predlog zakona o pravima deteta")) == []
+    assert named(cur, None) == [] and named(_speaking(None)["sada"], item("Odbor za prava deteta")) == []
+    whole = "Predlog odluke o izboru članova Odbora za finansije, republički budžet i kontrolu trošenja javnih sredstava"
+    html = fragment(_speaking(_FN, item=item(whole)), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<p class="sp-item">Odbor za finansije (tačka 3) · zamenik člana</p>' in html
+    html = fragment(_speaking(_FN, item=item("Izveštaj Delegacije u Parlamentarnoj skupštini Saveta Evrope")), cyr=True,
+                    site="https://zailiprotiv.rs/", tz=TZ)
+    assert '<p class="sp-item">Делегација у Парламентарној скупштини Савета Европе (тачка 3) · шеф</p>' in html
+    # only the item under way
+    done = item("Izveštaj Delegacije u Parlamentarnoj skupštini Saveta Evrope", "gotova")
+    assert "sp-item" not in fragment(_speaking(_FN, item=done), cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+
+
+def test_a_long_name_is_a_step_smaller_on_a_phone_by_its_longest_word():
+    from uzivo.page import CSS
+
+    def cls(ime, cyr=False):
+        html = fragment(_speaking(_FN, ime=ime), cyr=cyr, site="https://zailiprotiv.rs/", tz=TZ)
+        return re.search(r'class="(who[^"]*)"', html).group(1)
+    assert cls("Bakić Ana") == "who"
+    assert cls("Milosavljević Ivan") == "who who-13" and cls("Milosavljević Ivan", True) == "who who-12"  # Љ is one letter
+    assert cls("Živković-Obradović Dragana") == "who who-9"  # a hyphen is a place to break
+    for n in range(6, 14):
+        assert re.search(rf"\.sp-head \.who-{n}\b", CSS)  # every count the rule gives has its size, in Cyrillic at least
+
+
+def test_the_site_gives_each_sitting_mp_their_offices_for_the_sheet():
+    from zailiprotiv import pages_mikrofon
+    from zailiprotiv.translit import latin as lat
+
+    def row(slug, offices, known=True):
+        return {"slug": slug, "new": True, "name": "Petrović Petar", "group": "", "party": "-", "offices": offices,
+                "offices_known": known}
+    vice = {"kind": "vice", "role": "потпредседник", "body": "Народна скупштина", "text": "Potpredsednik Narodne skupštine"}
+    deleg = {"kind": "delegation", "role": "шеф Делегације", "body": "Делегација у Парламентарној скупштини ОЕБС", "text": "x"}
+    comm = {"kind": "committee", "role": "заменик члана", "body": "Одбор за спољне послове", "text": "x"}
+    out = pages_mikrofon.speakers([row("a", [vice, comm, deleg]), row("b", []), row("c", [comm], known=False)], {}, conv="15",
+                                  spoken_={}, plain=str, latin=lat, day=str, offices_read="2026-11-25T23:30:00+00:00")
+    assert out["a"]["fn"] == [{"v": "vice", "t": "", "u": "Potpredsednik Narodne skupštine"},
+                              {"v": "committee", "t": "Odbor za spoljne poslove", "u": "zamenik člana"},
+                              {"v": "delegation", "t": "Delegacija u Parlamentarnoj skupštini OEBS", "u": "šef"}]
+    assert out["a"]["fn_dan"] == "2026-11-26"  # the day in Belgrade
+    assert out["b"]["fn"] == [] and "fn" not in out["c"]  # none held is said; a name two MPs share says nothing
+    assert "fn" not in pages_mikrofon.speakers([row("a", [vice])], {}, conv="15", spoken_={}, plain=str, latin=lat, day=str)["a"]

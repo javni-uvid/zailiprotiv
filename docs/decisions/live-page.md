@@ -379,3 +379,41 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   sample. Changes "within 45 s" above.
 - **"Pauza" in the tile while a break is known** (25 Nov 2026, the maintainer: "2 moze"): in place of "Uživo", which was all the
   first screen said in a break; gone with the break (`page._paused`). The player's "Uživo · iz Skupštine" stays.
+- **"O govorniku": the speaker's offices behind the portrait; a line when the item names their committee** (26 Nov 2026, the
+  maintainer, of four variants drawn on the page's own code: "D, kao dodatak uz C: jedan red samo kad tačka sama imenuje
+  odbor govornika; pošteno, ali retko, pa ne sme da bude jedino", and "Trebamo generalno gledati da ne opteretimo tu
+  karticu za govornika"; the conductor's reading: C's line of today's speeches is left out, as the card stays light).
+  - *C.* Nothing is added to the speaker's block: the whole portrait is the press, a small "i" on its corner only the sign
+    (with no portrait, a small "i" after the name). It opens "O govorniku": the name and list, then the MP's offices in the
+    convocation in the one order the site uses for everyone (`offices.order`): "U Skupštini" (the Speaker, a deputy, a
+    group's chair), "Odbori", "Delegacije", each with the seat in the Assembly's words; a heading only when held. An MP with
+    none: "Bez funkcije, odbora i delegacije na sajtu Skupštine." Then "Sajt Skupštine, pročitano <day>." and the MP's page.
+    Measured: the block closed is as high as before, at 360 and 320 px, both scripts.
+  - *A real dialog, not a `<details>`*: `showModal` keeps the keyboard inside, closes on Esc, ×, or a press beside it, and
+    is read as a dialog named by the MP's name; the focus goes back to the portrait. The part is replaced every five
+    seconds, so the dialog is outside it, once on the page, filled from a `<template>` in the part: it stays open, and stays
+    whose it was when another speaker comes on (the next press is theirs). Without the script the portrait is a link to
+    the MP's offices on the site (`#funkcije`). A `<details>` would have been closed or rebuilt with the part, and
+    a sheet over the page is not what it is for.
+  - *The timeline stays as it is*: the sheet there would need every turn's offices in the part, each day's tens of turns,
+    for a press already given by the name's link to the MP's page.
+  - *D.* One line under the speaker ("Odbor za finansije (tačka 3) · član") only when the agenda item under way names the
+    speaker's committee or delegation itself, word for word: its first word ("Odbor", "Delegacija") in any grammatical
+    case and the rest as the Assembly writes it, either script (`page.named`); never by what the item is about, and a name
+    cut short is not the name. The first in the speaker's order; a committee by its name up to the first comma, a
+    delegation whole. No line, and no room kept, otherwise. Counted on the agendas as the site has them: the Fifteenth's
+    six items so far name none; the Fourteenth's 560 items named one in 82, mostly as the proposer ("који је поднео Одбор
+    за финансије…", reports "са Предлогом закључка Одбора…"); the line says the seat, not why the item names it.
+  - *Data.* The site adds to `mikrofon-poslanici.json`, for every MP of the newest convocation, "fn" (each office: "v" the
+    kind as `offices.json` has it, "t" the body, "u" the seat, in Latin, `pages_mikrofon.office`) and "fn_dan" (the day
+    `offices.json` was fetched, in Belgrade). A name two MPs share gets no office on the site, and here no "fn": no sheet,
+    rather than "none". Nothing is invented: a committee with no chair read has none. On the data of 26 Nov the file grows
+    from 198 to 247 KB; the page with the longest sheet is 131 KB.
+  - *Words*: "O govorniku", "i", "Zatvori", "U Skupštini", "Odbori", "Delegacije", "Bez funkcije, odbora i delegacije na
+    sajtu Skupštine.", "Sajt Skupštine, pročitano …", "Stranica poslanika →", "(tačka N)" (`texts.py`, `og_*`), the
+    designer's `RECI.md`, put to the maintainer by the conductor before the merge.
+- **A long name smaller on a phone** (26 Nov 2026, seen by the designer: at 360 px a long surname broke inside the word). It
+  did for 51 of the 250 sitting MPs at 360 px in Latin, 118 in Cyrillic, and at 320 px for 185 and all 250. The name's size
+  now follows its longest word's letters in the script shown (`who-6` … `who-13`, a hyphen a place to break), one step of
+  the scale at a time, as measured over the sitting MPs' words (Cyrillic letters are wider); over 520 px it keeps its full
+  size. Measured after: none of the 250 breaks at 320, 360 or 400 px in either script. A short name is as it was.

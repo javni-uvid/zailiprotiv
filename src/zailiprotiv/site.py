@@ -806,6 +806,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         return rows + (gov_by.get(k, []) if len(bearers.get(k, ())) == 1 else [])
     for r in member_rows:
         r["offices"] = offices_by.get(r["key"], {}).get(members_conv, [])
+        r["offices_known"] = r["key"] not in twice
         r["office_rows"] = office_rows(r["key"], r["name"])
     # Each MP's turns on the floor in the newest convocation, from the days read from the recording: on the MP's own
     # page from the first day, before any vote or note (19 Nov 2026: visitors came from "Ko sada govori" to the new
@@ -1184,7 +1185,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     days_read = src.recorded.get(members_conv or "", [])
     (out / pages_mikrofon.SPEAKERS_FILE).write_text(json.dumps(pages_mikrofon.speakers(
         member_rows, live_facts, conv=members_conv or "", spoken_=pages_mikrofon.spoken(days_read), plain=_plain,
-        latin=latin, day=env.filters["day"]), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        latin=latin, day=env.filters["day"],
+        offices_read=jsonfile.load(root / (members_conv or "_") / "offices.json", {}).get("fetched", "")),
+        ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     from zailiprotiv.cyrillic import cyr
     (out / pages_mikrofon.FOLLOW_FILE).write_text(json.dumps(pages_mikrofon.followable(

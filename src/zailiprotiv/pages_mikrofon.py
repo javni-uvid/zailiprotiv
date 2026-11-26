@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from zailiprotiv import jsonfile, months
+from zailiprotiv import jsonfile, months, offices
 from zailiprotiv.config import LIVE
 from zailiprotiv.skupstina import sitting_title
 from zailiprotiv.translit import latin
@@ -234,12 +234,30 @@ def spoken(days: list[dict]) -> dict[str, dict]:
     return out
 
 
-def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: dict, plain, latin, day) -> dict:
+def office(o: dict, latin) -> dict:
+    """One office for the live page's sheet "O govorniku" (26 Nov 2026): {"v": the kind as offices.json has it, "t":
+    the body as the Assembly writes it, empty for the Assembly's own offices, "u": the role}, in Latin, the Assembly's
+    own words as on the MP's page (offices.say)."""
+    if o["kind"] in ("speaker", "vice"):
+        return {"v": o["kind"], "t": "", "u": offices.say(o, latin)}
+    role = re.sub(r"\s+делегације$", "", o["role"].strip(), flags=re.I) if o["kind"] == "delegation" else o["role"]
+    return {"v": o["kind"], "t": latin(o["body"]).strip(), "u": latin(role).strip().lower()}
+
+
+def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: dict, plain, latin, day,
+             offices_read: str = "") -> dict:
     """What the live page says under the speaker, for every MP of the newest convocation, by address. `rows` are its
-    members (pages_members.match, with "photo"); `known` has, for one the site knows from earlier roll calls,
-    {"tally", "facts" (the MP page's card), "convs", "quote"}. Each line of "c" says where it is from ("iz"), by the
-    same rule for every MP; "za"/"protiv"/"uzdrzan"/"f" stay for a service not yet rebuilt."""
+    members (pages_members.match, with "photo", "offices" in offices.order and "offices_known"); `known` has, for one
+    the site knows from earlier roll calls, {"tally", "facts" (the MP page's card), "convs", "quote"}. Each line of "c"
+    says where it is from ("iz"), by the same rule for every MP; "za"/"protiv"/"uzdrzan"/"f" stay for a service not
+    yet rebuilt. "fn" is every office of the convocation (`office`) and "fn_dan" the day the Assembly's pages were read
+    (`offices_read`, the file's "fetched", as a day in Belgrade), for every MP whose offices are known: none for a name
+    two MPs share, which gets no office."""
     out = {}
+    try:
+        read_on = datetime.fromisoformat(offices_read).astimezone(ZoneInfo("Europe/Belgrade")).date().isoformat()
+    except ValueError:
+        read_on = ""
     for r in rows:
         k = known.get(r["slug"]) if not r["new"] else None
         bio = " · ".join(x for x in (
@@ -284,6 +302,9 @@ def speakers(rows: list[dict], known: dict[str, dict], *, conv: str, spoken_: di
         if held:  # the offices in this convocation first (offices.py), the Assembly's own words, at most three
             lines.insert(0, {"t": "; ".join(held[:3]) + ("; …" if len(held) > 3 else "") + ".", "iz": "sajt Skupštine"})
         e["c"] = lines
+        if read_on and r.get("offices_known", True):
+            e["fn"] = [office(o, latin) for o in r.get("offices") or []]
+            e["fn_dan"] = read_on
         if r["slug"] in spoken_:
             e["sv"] = {**spoken_[r["slug"]], "saziv": conv}
         out[r["slug"]] = e

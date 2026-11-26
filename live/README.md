@@ -48,6 +48,13 @@ the browser lets a page sound without a press, else on its button; the link's ca
 (`DELI_IME=0`: no name) and `/govor.png`. A speech of an earlier day leads to the site's page of that day, if the site
 lists it (`dani` in `mikrofon-cekanje.json`), and anything else to the page. The edge keeps `/govor/…` three seconds, as `/`.
 
+**"O govorniku"** (26 Nov 2026; `page.about`, `page.named`, live.js): a press on the speaker's portrait (with no portrait, a
+small "i" after the name) opens a sheet of the MP's offices in the convocation: in the Assembly, committees, delegations,
+the day the Assembly's pages were read and the way to the MP's page. From the site's `mikrofon-poslanici.json` ("fn",
+"fn_dan"; `pages_mikrofon.office`). The sheet is the page's one `<dialog>`, filled from a `<template>` in the part; without
+the script the portrait leads to the MP's offices on the site. One line under the speaker names their committee or
+delegation only when the agenda item under way names it word for word.
+
 **After the broadcast** (25 Nov 2026; `prenosi.py`), until the archive has a file of the day, its speeches' and steps' times
 play the broadcast's own YouTube video, for as long as that is public: asked of YouTube's oEmbed at most once in ten minutes, and no
 link on any answer but yes. `/data/prenosi/<day>.json` keeps the video, when its first second was (`pocetak`) and what was read of
