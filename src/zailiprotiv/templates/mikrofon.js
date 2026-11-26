@@ -117,12 +117,15 @@
         var pov = li.getAttribute("data-povreda");
         if (pov !== null) {  // a point of order: the notes' label, or the live rule's on a day from the live record
           var lbl = el("span", "rc-pov", "· " + rcWord("pov"));
-          var ns = pov ? pov.split(",") : [];
+          // only the Rules' article numbers, and a link only to the site's own page of the Rules
+          var ns = (pov ? pov.split(",") : []).map(Number).filter(function (n) { return n >= 1 && n <= 298 && n === Math.floor(n); });
+          var clan = rc.getAttribute("data-clan") || "";
+          if (!/^(https:\/\/zailiprotiv\.rs\/(cir\/)?poslovnik-clanovi#clan-|(\.\.\/)*poslovnik-clanovi\.html#clan-)$/.test(clan)) clan = "";
           c.appendChild(lbl);
           if (ns.length) {  // each part kept whole, the line breaking only between them
             var cl = el("span", "rc-pov", " · " + rcWord("cl") + " ");
             ns.forEach(function (n, i) {
-              var a2 = el("a", "", n); a2.href = rc.getAttribute("data-clan") + n; cl.appendChild(a2);
+              var a2 = el("a", "", String(n)); if (clan) a2.href = clan + String(n); cl.appendChild(a2);
               if (i < ns.length - 2) cl.appendChild(document.createTextNode(", "));
               else if (i === ns.length - 2) cl.appendChild(document.createTextNode(" " + rcWord("i") + " "));
             });
