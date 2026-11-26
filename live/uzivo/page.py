@@ -1620,9 +1620,9 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
     alt = (f'<link rel="canonical" href="{escape(url + base[1:])}">'
            f'<link rel="alternate" hreflang="sr-Latn" href="{escape(url)}">'
            f'<link rel="alternate" hreflang="sr-Cyrl" href="{escape(url + "cir/")}">') if url else ""
-    title = t("h1")
+    title = t("head_title")
     if speech:  # not a page for a search engine: the speeches are the site's (govornici/<day>)
-        alt, title = '<meta name="robots" content="noindex">', escape(speech_title(snap, speech, cyr=cyr, tz=tz))
+        alt, title = '<meta name="robots" content="noindex">', escape(speech_title(snap, speech, cyr=cyr, tz=tz)) + " · " + t("title_tail")
     brand = _brand(cyr)
     sup = [escape(w) for w in _t("support_cta", cyr).split(" ", 1)]  # "Podrži", and " sajt" where there is room
     day = fragment(snap, cyr=cyr, site=site, tz=tz, sent=sent)
@@ -1674,7 +1674,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} · {t("title_tail")}</title>
+<title>{title}</title>
 <meta name="description" content="{t("lead")}">
 {alt}
 {_og(snap, cyr=cyr, url=url, tz=tz, speech=speech)}

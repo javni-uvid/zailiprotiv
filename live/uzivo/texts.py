@@ -7,14 +7,18 @@ from .names import cyrillic
 
 TEXT = {
     "title": "Skupština uživo: ko sada govori",
-    "lead": "Prenos Narodne skupštine uživo: ko je sada za govornicom i koliko dugo, pročitano iz potpisa u prenosu.",
+    # The tab's title and the description, what a search engine shows (26 Nov 2026, the maintainer: "Uradi sve po tvojim
+    # preporukama"): what people type first ("skupstina uzivo": 367 times shown, 1 click), the site's name last.
+    # The hook "Jutrić, Kafica, Skupštinica" stays the page's h1.
+    "head_title": "Skupština uživo: prenos i ko sada govori · Za ili Protiv",
+    "lead": "Prenos Narodne skupštine uživo: ko je sada za govornicom i koliko dugo, prepis i snimak svakog govora. Deo sajta Za ili Protiv.",
     "intro": "Ko upravo govori u Narodnoj skupštini i koliko dugo, čitano uživo iz potpisa u prenosu. Deo sajta",
     "intro_end": ": nezavisan, besplatan pregled svakog zakona i glasanja svakog poslanika.",
     "status_live": "Uživo",
     "status_break": "Pauza",  # in its place while a break is known
     "status_off": "Ne zaseda",
     "h1": "Za ili Protiv: Jutrić, Kafica, Skupštinica",
-    "title_tail": "Skupština uživo",  # the words people search for, after the name in the tab's title
+    "title_tail": "Skupština uživo",  # after a speech's title in the tab
     "st_today": "Sednica danas u %1",
     "st_tomorrow": "Sednica sutra u %1",
     "st_day": "Sednica %1 u %2",

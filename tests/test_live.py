@@ -156,10 +156,13 @@ def test_page_both_scripts():
     snap = t.snapshot()
     lat = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ, url="https://mikrofon.zailiprotiv.rs/")
     assert "Petar Petrović" in lat and 'href="https://zailiprotiv.rs/poslanik/petrovic-petar"' in lat
-    assert "<title>Za ili Protiv: Jutrić, Kafica, Skupštinica · Skupština uživo</title>" in lat and "Lista za primer" in lat
+    assert "<title>Skupština uživo: prenos i ko sada govori · Za ili Protiv</title>" in lat and "Lista za primer" in lat
+    assert '<meta name="description" content="Prenos Narodne skupštine uživo: ko je sada za govornicom i koliko dugo, prepis i snimak svakog govora. Deo sajta Za ili Protiv.">' in lat
+    assert "<h1>Za ili Protiv: Jutrić, Kafica, Skupštinica</h1>" in lat  # the hook stays on the page itself
     cyr = page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
     assert "Петар Петровић" in cyr and "https://zailiprotiv.rs/cir/poslanik/petrovic-petar" in cyr
-    assert "<title>За или Против: Јутрић, Кафица, Скупштиница · Скупштина уживо</title>" in cyr
+    assert "<title>Скупштина уживо: пренос и ко сада говори · За или Против</title>" in cyr
+    assert "Пренос Народне скупштине уживо: ко је сада за говорницом и колико дуго, препис и снимак сваког говора. Део сајта За или Против." in cyr
     # the Rules of Procedure, always under the day (20 Nov 2026: the new convocation's readers asked to find it)
     assert 'href="https://zailiprotiv.rs/poslovnik-clanovi#pojmovi"' in lat and ">Poslovnik<" in lat
     assert 'href="https://zailiprotiv.rs/cir/poslovnik-clanovi#pojmovi"' in cyr
@@ -3492,6 +3495,7 @@ def test_the_mails_row_says_what_comes_next_and_stands_higher_at_three_moments(m
     assert seen(page_.page(off, cyr=False, sent=True, **kw)) == [("sledeci", "stiže posle sledećeg dana sednice")]
     assert seen(page_.page({**off, "ranije": True}, cyr=True, **kw)) == [("svake", "после сваке седнице")]
     assert seen(page_.page({**off, "ranije": True}, cyr=True, speech=turn["od"], **kw)) == [("sledeci", "стиже после следећег дана седнице")]
+    assert re.search(r"<title>[^<]+ · Скупштина уживо</title>", page_.page(off, cyr=True, speech=turn["od"], **kw))  # a speech keeps its tail
     cyr = page_.page(snap, cyr=True, **kw)
     assert 'data-nastavak="Јави кад се настави">Обавести ме<' in cyr
     assert '<p class="in-app meta" hidden>Да ти јавимо кад се настави, отвори страну у прегледачу (мени ⋯).</p>' in cyr
