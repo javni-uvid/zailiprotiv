@@ -3784,3 +3784,76 @@ def test_a_turns_first_piece_is_written_from_20_s_and_the_rest_from_30_s(tmp_pat
     assert [x[0] for x in piece] == [begin + 20 + 5 * i for i in range(6)]
     # a turn shorter than 20 s is still not written while it is on
     assert prepis.choose(first, [], cur(15), now=115)[0] == []
+
+
+# The speaker's card while a recording plays (26 Nov 2026, the maintainer) ------------------------------------------
+def test_the_card_of_a_recording_has_its_place_outside_the_part_and_its_words():
+    snap = _speaking(_FN)
+    html = page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert html.count('<section class="rc" id="rc" hidden') == 1 and 'data-o="/o/"' in html
+    assert 'data-clan="https://zailiprotiv.rs/poslovnik-clanovi#clan-"' in html
+    assert '<span data-w="na">Na snimku</span>' in html and '<span data-w="izmedju">Između govora</span>' in html
+    part = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'id="rc"' not in part and 'data-dan-ime="26. novembra"' in part  # the part is replaced; the card is not
+    cyr = page(snap, cyr=True, site="https://zailiprotiv.rs/", tz=TZ)
+    assert 'data-o="/cir/o/"' in cyr and "На снимку" in cyr and "Између говора" in cyr and "cir/poslovnik-clanovi#clan-" in cyr
+
+
+def test_each_finished_turn_carries_what_its_card_needs():
+    t = Tracker(None, "Europe/Belgrade")
+    t.roster = ROSTER
+    t.use_facts({"petrovic-petar": {"lista": "Lista za primer", "foto": "12.jpg", "ime": "Petrović Petar"}})
+    petar, marko = ROSTER.match("Петар Петровић", 0.8), ROSTER.match("Марко Јовановић", 0.8)
+    now = 1794920000.0
+    for s_ in range(0, 101, 5):
+        t.observe(petar, now=now + s_)
+    t.say(int(now - 20), "Reč ima narodni poslanik Petar Petrović. Izvolite.", chair=True)
+    t.say(int(now + 1), "Povreda Poslovnika, član 107. Poslovnika, predsedniče.")
+    for s_ in range(110, 200, 5):
+        t.observe(marko, now=now + s_)
+    snap = t.snapshot(now=now + 200)
+    first = next(d for d in snap["danas"] if d["adresa"] == "petrovic-petar")
+    assert first["povreda"] == [107]  # the live rule on a finished turn, kept on the turn only
+    html = fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+    row = html[html.index(f'id="t{int(first["od"])}"'):]
+    row = row[:row.index(">")]
+    assert 'data-adresa="petrovic-petar"' in row and 'data-povreda="107"' in row and 'data-lc="' in row
+    assert "povreda" not in (snap["sada"] or {})  # the turn on now has the label beside its clock instead
+
+
+def test_a_day_from_the_notes_brings_the_notes_label(tmp_path):
+    from uzivo.state_view import View
+    turn = {"ime": "Petrović Petar", "adresa": "petrovic-petar", "od": 100, "do": 200, "povreda": [27, 107]}
+    assert View._recorded(turn)["povreda"] == [27, 107]
+    assert "povreda" not in View._recorded({**turn, "povreda": None})
+
+
+def test_the_site_gives_the_live_service_the_notes_labels(tmp_path):
+    import json as _json
+    from zailiprotiv import pages_govornici
+    conv = tmp_path / "15"
+    (conv / "snimak").mkdir(parents=True)
+    (conv / "transcripts").mkdir()
+    (conv / "transcripts" / "1.json").write_text(_json.dumps({"speeches": {
+        "001": {"chair": True, "text": "Реч има народни посланик Петар Петровић."},
+        "002": {"text": "Повреда Пословника, члан 107. Хвала."},
+        "003": {"text": "Поштовани грађани, данас говоримо о закону."}}}), encoding="utf-8")
+    day = {"dan": "2026-11-24", "izvor": "govor", "govori": [{"od": 1, "do": 2, "beleske": ["1/002"]},
+                                                           {"od": 3, "do": 4, "beleske": ["1/003"]}]}
+    (conv / "snimak" / "2026-11-24.json").write_text(_json.dumps(day), encoding="utf-8")
+    pages_govornici._TEXTS.clear()
+    got = pages_govornici.with_points(tmp_path, day)
+    assert got["govori"][0]["povreda"] == [107] and "povreda" not in got["govori"][1]
+    assert pages_govornici.with_points(tmp_path, {**day, "izvor": "uzivo"}) == {**day, "izvor": "uzivo"}
+    pages_govornici._TEXTS.clear()
+
+
+def test_a_speakers_sheet_is_given_by_address():
+    from uzivo.page import sheet
+    facts = {"petrovic-petar": {"ime": "Petrović Petar", "lista": "Lista za primer", "fn": _FN, "fn_dan": "2026-11-26"},
+             "bez-funkcija": {"ime": "Jovanović Jovan", "lista": "Lista"}}
+    got = sheet(facts, "petrovic-petar", cyr=False, site="https://zailiprotiv.rs/")
+    assert got.startswith('<p class="og-k">O govorniku</p>') and "<template" not in got and "Odbor za prava deteta" in got
+    assert "Одбор за права детета" in sheet(facts, "petrovic-petar", cyr=True, site="https://zailiprotiv.rs/")
+    for unknown in ("nepoznat", "../x", "bez-funkcija", ""):  # unknown, not an address, offices not said
+        assert sheet(facts, unknown, cyr=False, site="https://zailiprotiv.rs/") == ""

@@ -100,7 +100,25 @@ class View:
     def _recorded(t: dict) -> dict:
         return {"ime": t["ime"], "adresa": t.get("adresa", ""), "grupa": t.get("grupa", ""), "uloga": t.get("uloga", ""),
                 "od": int(t["od"]), "do": int(t["do"]), "sekundi": int(t["do"] - t["od"]),
-                "video": t.get("video") or "", "datoteka": t.get("datoteka") or "", "snimak": t.get("snimak")}
+                "video": t.get("video") or "", "datoteka": t.get("datoteka") or "", "snimak": t.get("snimak"),
+                **({"povreda": t["povreda"]} if isinstance(t.get("povreda"), list) else {})}
+
+    def _points(self, done: list[dict], day: str) -> None:
+        """A point of order's label on each finished turn, by the live rule (rok.limit, as beside the speaker's clock),
+        for the card while the turn's recording plays (26 Nov 2026, the maintainer: "izracunaj sad"): "povreda", the
+        articles named (may be empty). Kept on the turn only; worked out again only when the transcript has grown."""
+        from .rok import limit
+        said = self._said_of(day)
+        key = (day, len(said), config.POINT_ARTICLES)
+        if getattr(self, "_poo", (None,))[0] != key:
+            self._poo = (key, {})
+        memo = self._poo[1]
+        for d in done:
+            if d["od"] not in memo:
+                x = limit(said, d["od"], 0, label=True, articles=config.POINT_ARTICLES)
+                memo[d["od"]] = x.get("clanovi", []) if x and x["vrsta"] == "povreda" else None
+            if memo[d["od"]] is not None:
+                d["povreda"] = memo[d["od"]]
 
     def _named(self, turns: list[dict], merge: bool = True) -> list[dict]:
         """Turns as shown: a name read before the list knew it (or half read) given the MP's name from the list,
@@ -199,6 +217,8 @@ class View:
             if current and current["adresa"] in self.facts:
                 current["o"] = self.facts[current["adresa"]]
             self._lists(done, current, recorded)
+            if not (recorded and rec.get("izvor") == "govor"):  # a day from the notes carries the notes' own (the site's)
+                self._points(done, day)
             for d in done:
                 if d.get("adresa") in self.facts and self.facts[d["adresa"]].get("foto"):
                     d["foto"] = self.facts[d["adresa"]]["foto"]

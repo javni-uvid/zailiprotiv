@@ -117,6 +117,18 @@
     var text = lines.slice(-2).join(" "), span = cc.querySelector(".cc-t span");
     if (span.textContent !== text) span.textContent = text;
   }
+  // The speaker's card while YouTube's broadcast shows an earlier moment (26 Nov 2026, the maintainer; mikrofon.js draws
+  // it): the finished turn that holds the broadcast's second, by its own clock; none while it shows now, or plays nothing.
+  function recCard() {
+    if (!window.zipCard || !stage || stage.querySelector("video, audio")) return;  // the archive's file: mikrofon.js
+    var f = stage.querySelector("iframe");
+    if (!f || !shows || Date.now() - shows.at > 5000 || !past()) { window.zipCard.off(); return; }
+    var t = shows.t + (shows.playing ? (Date.now() - shows.at) / 1000 : 0), hit = null;
+    [].forEach.call(document.querySelectorAll("#deo li[data-od][data-do]"), function (li) {
+      if (+li.getAttribute("data-od") <= t && t <= +li.getAttribute("data-do") + 3) hit = li;
+    });
+    window.zipCard.show(hit, hit ? t - +hit.getAttribute("data-od") : 0);
+  }
   function tick() {
     var d = document.getElementById("deo"), c = document.querySelector("#checked span"), k = document.querySelector(".clk");
     if (d && c) c.textContent = Math.max(0, Math.round(Date.now() / 1000 - (+d.getAttribute("data-checked"))));
@@ -125,6 +137,7 @@
     until();
     onAir();
     captions();
+    recCard();
   }
   // Every five seconds, as the caption is read once a segment (five seconds); not while the tab is out of sight,
   // and once at once when it comes back. Each ask is a request through Cloudflare and to the computer it runs on.
@@ -531,12 +544,30 @@
     og.showModal();
   });
   function back() {  // the portrait that opened it may have been replaced with the part: today's, then
-    var a = document.querySelector("#deo [data-og]");
+    var a = document.querySelector("#rc:not([hidden]) [data-og-rec]") || document.querySelector("#deo [data-og]");
     if (a && document.activeElement !== a) a.focus({ preventScroll: true });
   }
   og.addEventListener("click", function (e) {
     if (e.target === og || (e.target.closest && e.target.closest(".og-x"))) { og.close(); back(); }
   });
   og.addEventListener("close", back);  // Esc
+  // The card of a recording's speaker (mikrofon.js): their sheet asked of the page's server when the portrait is pressed;
+  // when it does not answer, the MP's offices on the site, as without the script
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("[data-og-rec]"), rc = document.getElementById("rc");
+    if (!a || !rc || e.button || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    fetch(rc.getAttribute("data-o") + encodeURIComponent(a.getAttribute("data-og-rec")), { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (html) {
+        if (!html) { location.href = a.href; return; }
+        var lcm = rc.className.match(/(?:^| )(lc-[\w-]+)/);
+        og.className = "og" + (lcm ? " " + lcm[1] : "");
+        og.setAttribute("data-adresa", "snimak:" + a.getAttribute("data-og-rec"));  // the part's template leaves it be
+        put = ""; body.innerHTML = html;
+        og.showModal();
+      })
+      .catch(function () { location.href = a.href; });
+  });
   document.addEventListener("deo", function () { if (og.open) fill(false); });
 })();

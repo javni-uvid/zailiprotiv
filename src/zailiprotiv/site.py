@@ -1255,7 +1255,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     _gv.render(common=common, env=env, out=out, root=root, days=src.recorded, notes=floor_debates)
     # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
     floor_totals = floor.totals
-    pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=pages_mikrofon.last_day(root),
+    pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=_gv.with_points(root, pages_mikrofon.last_day(root)),
                           next_=pages_mikrofon.upcoming(root, coming, NEWEST_),
                           days_=[d["dan"] for days_ in src.recorded.values() for d in days_],
                           notes_=[d["dan"] for days_ in src.recorded.values() for d in days_ if d.get("izvor") == "govor"],

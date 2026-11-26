@@ -495,3 +495,9 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   (`prati.js`) only keeps the reader on the page. On a phone the box takes the page's width from under the portrait by a margin, as a `<details>`
   can't leave its column. It is no `section` with a heading, which a phone would fold. The hidden field says the script of the edition
   (`data-cir-value`, `cyrillic.page`). `prati-poslanici.json` names the sitting MPs for the counter, which takes nobody else.
+- **The day pages of who spoke when show the card of the speech playing** (26 Nov 2026, the maintainer, "4 da", of the
+  live page's card that follows a recording; live-page.md). On `govornici/<day>`, under the player, while its recording
+  plays: "Na snimku · <day> u <hour>", the name, the list, the time into the speech, a point of order's label with its
+  articles (the page's own, `data-povreda`), "Između govora" where no speech holds the place. No portrait and no sheet
+  (the rows have neither). The player stands far below a phone's first screen (some 4,300 px on 24 Nov), so the first
+  screen is unchanged; while a recording plays the card (~136 px) pushes the list under it down.

@@ -66,3 +66,24 @@ li.govor-on { background: color-mix(in srgb, var(--fg) 7%, transparent); box-sha
 .facts-list, .facts { padding-left: 1.1rem; } .facts-list li, .facts li { margin: .35rem 0; }
 @media (prefers-reduced-motion: reduce) { .mq-o, .mq-auto.run { transition: none; } }
 .listen-k { display: block; font-style: normal; font-size: var(--t-1); color: #c9ccd3; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .35rem; }
+/* The speaker's card while a recording plays (26 Nov 2026, the maintainer; mikrofon.js): lighter than the live one,
+   "Na snimku" on top and never the live dot; the time into the speech moves with the playback. */
+.rc { margin: 1rem 0 0; padding: .6rem .9rem .75rem; border-left: 6px solid var(--lc, var(--line, #ddd)); border-radius: 12px;
+  background: color-mix(in srgb, var(--lc, #888) 7%, var(--bg, #fff)); }
+.rc[hidden] { display: none; }
+.rc-k { margin: 0 0 .45rem; font-size: var(--t-1); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #666); }
+.rc-h { display: flex; gap: .8rem; align-items: flex-start; }
+.rc-ph { position: relative; flex: none; display: block; border-radius: 6px; color: inherit; text-decoration: none; }
+.rc-ph img { display: block; width: 56px; height: 75px; object-fit: cover; border-radius: 6px; background: var(--line, #ddd); }
+.rc-ph .ph-i { right: -.35rem; bottom: -.35rem; width: 1.4rem; height: 1.4rem; }
+.rc-b { min-width: 0; flex: 1; }
+.rc-who { margin: 0; font-family: var(--serif, serif); font-weight: 700; font-size: var(--t-6); line-height: 1.1; overflow-wrap: break-word; }
+.rc-who a { color: inherit; text-decoration: none; }
+.rc-side { margin: .2rem 0 0; font-size: var(--t-2); }
+.rc-side i { display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; background: var(--lc, var(--muted, #666)); margin-right: .4rem; }
+.rc-clk { margin: .3rem 0 0; font-size: var(--t-2); color: var(--muted, #666); }
+.rc-clk b { font-family: var(--serif, serif); font-size: var(--t-5); color: var(--fg, #111); font-variant-numeric: tabular-nums; margin-right: .35rem; }
+.rc-pov { font-weight: 600; white-space: nowrap; } .rc-pov a { color: inherit; }
+.rc-btw { margin: 0; font-size: var(--t-3); }
+.rc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+html.rec-on #deo[data-stanje="govori"] > .sp-top { display: none; }

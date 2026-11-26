@@ -442,3 +442,5 @@ main > .govor-no, main > .govor-live { order: 10; align-self: flex-start; margin
 }
 /* A point of order's articles beside the clock (26 Nov 2026): the line breaks only between its parts */
 .clock .rk > span { white-space: nowrap; } .clock .rk a { color: inherit; }
+/* The card of a recording's speaker (mikrofon.js) right under the player, in a sitting and between sittings */
+main > .rc { order: 11; } main:has(#deo[data-stanje="nema_prenosa"]) > .rc { order: 4; }

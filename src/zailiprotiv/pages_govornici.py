@@ -244,6 +244,25 @@ def day_summary(root: Path, conv: str, day: str) -> dict | None:
 _TEXTS: dict = {}
 
 
+def with_points(root: Path, day: dict | None) -> dict | None:
+    """The day as the live service gets it (mikrofon-dan.json), each turn from the notes that opens with a point of
+    order carrying it as the day page shows it: "povreda", the articles the speaker named (may be empty). For the
+    live page's card while its recording plays (26 Nov 2026, the maintainer: "izracunaj sad, pogotovo sto imamo
+    stenogram kao pomoc"). A day not from the notes is returned as it is."""
+    if not day or day.get("izvor") != "govor":
+        return day
+    conv = next((f.parent.parent.name for f in root.glob(f"*/snimak/{day['dan']}.json")), "")
+    texts = _notes_texts(root, conv) if conv else {}
+    if not texts:
+        return day
+    out = []
+    for t in day["govori"]:
+        ps = [texts.get(k, ("", "")) for k in t.get("beleske") or []]
+        point = notes_site.point_of_order([x for x, _ in ps], [c for _, c in ps]) if ps else None
+        out.append({**t, "povreda": point} if point is not None else t)
+    return {**day, "govori": out}
+
+
 def _notes_texts(root: Path, conv: str) -> dict[str, tuple[str, str]]:
     """Each speech's text in a convocation's notes, by the key the day files use ("<sitting>/<speech>"), with the
     chair's words just before it (the chair's speeches between it and the speech before that is not the chair's)."""

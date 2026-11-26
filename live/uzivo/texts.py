@@ -212,6 +212,10 @@ TEXT = {
     "og_source": "Sajt Skupštine, pročitano %1",
     "og_page": "Stranica poslanika",
     "og_item": "tačka %1",
+    # the speaker's card while a recording plays (26 Nov 2026, the maintainer: "1 moze")
+    "rc_na": "Na snimku",
+    "rc_between": "Između govora",
+    "rc_at": "u",
     "min": "min",
     "none": "Skupština sada ne zaseda ili prenos nije dostupan.",
     "not_listed": "ime iz potpisa; nije na spisku poslanika ovog sajta",

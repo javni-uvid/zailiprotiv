@@ -81,7 +81,12 @@ def _turn(d: dict, snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     # the speech's own link (25 Nov 2026, the maintainer; deljenje.py): the same beside every finished speech
     share = (f'<button type="button" class="share-turn" data-share="{"/cir" if cyr else ""}/govor/{int(d["od"])}">'
              f'{SHARE}<span>{t("sp_share")}</span></button>')
-    return (f'<li id="t{int(d["od"])}" data-od="{int(d["od"])}" data-do="{int(d["do"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(side)}">'
+    # what the card needs while the turn's recording plays (mikrofon.js, 26 Nov 2026): the MP's address, the list's
+    # colour, a point of order's articles ("" for one with none; no attribute for none)
+    point = d.get("povreda")
+    card = (f' data-adresa="{escape(d["adresa"])}"' if d["adresa"] else "") + f' data-lc="{shade}"' + (
+        f' data-povreda="{",".join(str(int(n)) for n in point if str(n).isdigit())}"' if isinstance(point, list) else "")
+    return (f'<li id="t{int(d["od"])}" data-od="{int(d["od"])}" data-do="{int(d["do"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(_name(side, cyr))}"{card}>'
             f'<span class="tf-w {shade}">{face}</span>'
             f'<div class="tm"><p class="tn"><span class="ko">{nm}</span> <span class="meta">{_minutes(d["sekundi"])} {t("min")}</span></p>{topic}'
             f'<p class="ts meta">{escape(_name(side, cyr))}{how}{said} {share}</p></div>{play}</li>')
@@ -150,7 +155,11 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = Fal
     lc = ""
     if snap["stanje"] == "govori" and cur:
         lc = f' class="lc-{_shades((snap.get("danas") or []) + [cur]).get(cur.get("lista") or "", "lx")}"'
-    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}"{_mail_attrs(snap, sent, tz)}>', _status(snap, cyr=cyr)]
+    shown_day = ""
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(snap.get("dan", ""))):  # the day of the list, for the card of a recording
+        y_, m_, d_ = (int(x) for x in snap["dan"].split("-"))
+        shown_day = f' data-dan-ime="{escape(_name(f"{d_}. {MONTHS_OF[m_ - 1]}", cyr))}"'
+    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}"{shown_day}{_mail_attrs(snap, sent, tz)}>', _status(snap, cyr=cyr)]
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
     for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:
@@ -1062,6 +1071,20 @@ _OG_KINDS = (("og_assembly", ("speaker", "vice", "group")), ("og_committees", ("
              ("og_delegations", ("delegation",)))
 
 
+def rec_card(*, cyr: bool, site: str) -> str:
+    """The place of the speaker's card while a recording plays (mikrofon.js draws it; 26 Nov 2026, the maintainer: "Da
+    li mozemo povezati karticu govornika sa timelineom"), and its words in the page's script, apart, as the script
+    redraws the card. Hidden until a recording plays; nothing without the script."""
+    t = lambda k: escape(_t(k, cyr))
+    words = "".join(f'<span data-w="{w}">{t(k)}</span>' for w, k in (
+        ("na", "rc_na"), ("izmedju", "rc_between"), ("u", "rc_at"), ("pov", "rk_povreda"), ("cl", "rk_art"),
+        ("i", "rk_and"), ("og", "og_title")))
+    base = "/cir/" if cyr else "/"
+    return (f'<section class="rc" id="rc" hidden data-o="{base}o/" '
+            f'data-clan="{escape(site)}{"cir/" if cyr else ""}poslovnik-clanovi#clan-"></section>'
+            f'<div id="rc-w" hidden>{words}</div>')
+
+
 def _og_day(day: str) -> str:
     y, m, d = (int(x) for x in day.split("-"))
     return f"{d}. {MONTHS_OF[m - 1]} {y}."
@@ -1092,6 +1115,16 @@ def about(cur: dict, *, cyr: bool, site: str) -> str:
     out.append(f'<p class="og-src">{s(_fill(TEXT["og_source"], _og_day(o["fn_dan"])))} '
                f'<a href="{escape(page_)}">{t("og_page")} →</a></p>')
     return f'<template id="og-t" data-adresa="{escape(cur["adresa"])}">{"".join(out)}</template>'
+
+
+def sheet(facts: dict, adresa: str, *, cyr: bool, site: str) -> str:
+    """The sheet "O govorniku" of an MP of the site's list by address, as the dialog's content (about's, no
+    <template>), for the card of a recording's speaker (/o/<adresa>, 26 Nov 2026); "" for an address it does not know."""
+    o = facts.get(adresa) if re.fullmatch(r"[a-z0-9-]{1,80}", adresa or "") else None
+    if not isinstance(o, dict) or not o.get("ime"):
+        return ""
+    html = about({"adresa": adresa, "ime": o["ime"], "lista": o.get("lista", ""), "o": o}, cyr=cyr, site=site)
+    return html[html.index(">") + 1:html.rindex("</template>")] if html else ""
 
 
 def named(cur: dict, item: dict | None) -> list[dict]:
@@ -1661,6 +1694,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="sr" id="ko" aria-live="polite"></p>
 <section class="hero"><h1>{t("h1")}</h1></section>
 {player(snap, cyr=cyr, live=live, tz=tz, speech=speech)}
+{rec_card(cyr=cyr, site=site)}
 {_shared_words(snap, cyr=cyr, live=bool(live) and snap["stanje"] != "nema_prenosa")}
 {pills}
 {(add + day) if snap["stanje"] == "nema_prenosa" else (day + add)}
