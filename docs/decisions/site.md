@@ -472,6 +472,10 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   by the old rule, 12 by the new. The days of 25 Nov stay until each page changes; no record holds the earlier
   ones. A lost cache makes every page new once (the first run's rule); the store is the cache, not the repository, so
   no commit follows from it.
+- **The search page out of the index** (26 Nov 2026): in 18-24 Nov Google showed `/pretraga` 163 times for the
+  project's name (10 clicks), a box with no text of its own beside the home page. It gets `noindex` (its links
+  are followed, as on the other noindex pages) and so leaves the sitemap in both scripts; it works as before. The
+  search's own files were already kept out (`Disallow: /pagefind/`).
 
 ## Support
 
