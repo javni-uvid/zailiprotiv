@@ -48,13 +48,115 @@
   // The lock screen's (and a car's, where the phone shows it) player (22 Nov 2026, the maintainer: the page as an
   // app, to listen in the car): who speaks now, the sitting's day, back and on by 15 and 30 s, and ⏮ ⏭ to the
   // turn before or after. Only for the archive's files, which the page plays itself; YouTube's player keeps its own.
+  // The speaker's card while a recording plays (26 Nov 2026, the maintainer: "Da li mozemo povezati karticu govornika
+  // sa timelineom"): who spoke at the playback's place, from the day's rows, with the time into that speech; "Na snimku",
+  // never "Uživo"; "Između govora" where the place lies in no turn (a turn holds from its start to its end and 3 s).
+  // Drawn into #rc, outside the part the live page replaces every five seconds. The live page's script (live.js) uses
+  // it for YouTube's broadcast rewound (window.zipCard).
+  var rc = document.getElementById("rc"), rcKey = null;
+  function rcWord(k) { var w = document.getElementById("rc-w"), e = w && w.querySelector('[data-w="' + k + '"]'); return e ? e.textContent : ""; }
+  function mmss(s) {
+    s = Math.max(0, Math.floor(s)); var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+    return (h ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (x < 10 ? "0" : "") + x;
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+  function rcDay() {
+    var d = document.getElementById("deo");
+    return (d && d.getAttribute("data-dan-ime")) || rcWord("dan");
+  }
+  function rcOff() {
+    if (!rc) return;
+    rc.hidden = true; rcKey = null;
+    document.documentElement.classList.remove("rec-on");
+  }
+  // li: the turn's row, or null between speeches; into: seconds into that turn
+  function rcShow(li, into) {
+    if (!rc) return;
+    var key = li ? li.id : "-";
+    if (key !== rcKey) {
+      rcKey = key;
+      rc.textContent = "";
+      var lc = li && li.getAttribute("data-lc");
+      rc.className = "rc" + (lc ? " lc-" + lc : "");
+      var t = li && (li.querySelector(".time") || li.querySelector(".label"));
+      var at = t && (t.textContent.match(/\d{1,2}:\d{2}/) || [""])[0];
+      var top = el("p", "rc-k", rcWord("na") + " · " + rcDay() + (at ? " " + rcWord("u") + " " + at : ""));
+      rc.appendChild(top);
+      var sr = el("p", "rc-sr");
+      sr.setAttribute("aria-live", "polite");
+      if (!li) {
+        rc.appendChild(el("p", "rc-btw", rcWord("izmedju")));
+        sr.textContent = rcWord("na") + ": " + rcWord("izmedju");
+      } else {
+        var h = el("div", "rc-h"), name = li.querySelector(".ko a") || li.querySelector(".ko");
+        var who = name ? name.textContent.trim() : (li.getAttribute("data-ime") || "");
+        var img = li.querySelector("img.tf"), adresa = li.getAttribute("data-adresa");
+        if (img) {
+          var ph = el("a", "rc-ph"), pic = document.createElement("img");
+          pic.src = img.getAttribute("src"); pic.alt = ""; pic.width = 56; pic.height = 75;
+          ph.appendChild(pic);
+          if (name && name.href) ph.href = name.href + "#funkcije";
+          if (adresa && rc.getAttribute("data-o")) {  // the sheet "O govorniku" on the live page (live.js)
+            ph.setAttribute("data-og-rec", adresa);
+            ph.setAttribute("aria-label", rcWord("og") + ": " + who);
+            ph.appendChild(el("span", "ph-i", rcWord("i")));
+            ph.lastChild.setAttribute("aria-hidden", "true");
+          }
+          h.appendChild(ph);
+        }
+        var body = el("div", "rc-b"), w = el("p", "rc-who");
+        if (name && name.href) { var a = el("a", "", who); a.href = name.href; w.appendChild(a); } else w.textContent = who;
+        body.appendChild(w);
+        var side = li.getAttribute("data-strana") || "";
+        if (!side) {
+          var lab = [].filter.call(li.querySelectorAll(":scope > .label"), function (m) { return !/^[·\d]/.test(m.textContent.trim()) && !/Povreda|Повреда/.test(m.textContent); })[0];
+          side = lab ? lab.textContent.trim() : "";
+        }
+        if (side) { var sd = el("p", "rc-side"); sd.appendChild(el("i")); sd.lastChild.setAttribute("aria-hidden", "true"); sd.appendChild(document.createTextNode(side)); body.appendChild(sd); }
+        var c = el("p", "rc-clk"); c.appendChild(el("b", "rc-t", ""));
+        var pov = li.getAttribute("data-povreda");
+        if (pov !== null) {  // a point of order: the notes' label, or the live rule's on a day from the live record
+          var lbl = el("span", "rc-pov", "· " + rcWord("pov"));
+          var ns = pov ? pov.split(",") : [];
+          c.appendChild(lbl);
+          if (ns.length) {  // each part kept whole, the line breaking only between them
+            var cl = el("span", "rc-pov", " · " + rcWord("cl") + " ");
+            ns.forEach(function (n, i) {
+              var a2 = el("a", "", n); a2.href = rc.getAttribute("data-clan") + n; cl.appendChild(a2);
+              if (i < ns.length - 2) cl.appendChild(document.createTextNode(", "));
+              else if (i === ns.length - 2) cl.appendChild(document.createTextNode(" " + rcWord("i") + " "));
+            });
+            c.appendChild(document.createTextNode(" "));
+            c.appendChild(cl);
+          }
+        }
+        body.appendChild(c);
+        h.appendChild(body);
+        rc.appendChild(h);
+        sr.textContent = rcWord("na") + ": " + who + (side ? ", " + side : "");
+      }
+      rc.appendChild(sr);
+    }
+    var clk = rc.querySelector(".rc-t");
+    if (clk) { var txt = mmss(into); if (clk.textContent !== txt) clk.textContent = txt; }
+    if (rc.hidden) { rc.hidden = false; document.documentElement.classList.add("rec-on"); }
+  }
+  // The row holding a second of a file: the last begun by then, while it lasts (its length from the record, and 3 s)
+  function holding(list, sec) {
+    var k = at(list, sec), x = k >= 0 ? list[k] : null;
+    if (!x) return null;
+    var len = (+x.li.getAttribute("data-do") || 0) - (+x.li.getAttribute("data-od") || 0);
+    return len > 0 && sec > x.t + len + 3 ? null : x;
+  }
+  if (typeof window !== "undefined") window.zipCard = { show: rcShow, off: rcOff };
   var title = (document.querySelector("h1") || {}).textContent || "Narodna skupština";
   var day = document.querySelector(".sec-h h2, main h2");
   function session(v, url) {
-    if (!("mediaSession" in navigator)) return;
-    var ms = navigator.mediaSession, shown = null;
+    // a browser with no lock-screen player still gets the marked row and the card
+    var ms = "mediaSession" in navigator ? navigator.mediaSession : { setActionHandler: function () {} }, shown = null;
     function now() {
       var list = turns(url), k = at(list, v.currentTime), x = k >= 0 ? list[k] : null;
+      if (v.tagName === "VIDEO") { var y = holding(list, v.currentTime); rcShow(y ? y.li : null, y ? v.currentTime - y.t : 0); }
       var key = x ? x.who + "|" + x.t : "";
       if (key !== shown) {
         shown = key;
@@ -89,6 +191,7 @@
     Object.keys(h).forEach(function (k) { try { ms.setActionHandler(k, h[k]); } catch (e) {} });
     var last = 0;
     v.addEventListener("timeupdate", function () { var n = Date.now(); if (n - last > 1000) { last = n; now(); } });
+    v.addEventListener("seeked", now);  // a seek, ⏮ ⏭ or a shared speech: the card at once
     v.addEventListener("play", function () { ms.playbackState = "playing"; now(); });
     v.addEventListener("pause", function () { ms.playbackState = "paused"; });
   }
@@ -105,7 +208,8 @@
       v.setAttribute("src", url);
       v.addEventListener("ended", function () {  // a day in several files: on to the next one
         var parts = document.querySelectorAll(".part[data-file]");
-        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0, sound); break; }
+        for (var i = 0; i < parts.length - 1; i++) if (parts[i].getAttribute("data-file") === url) { file(parts[i + 1].getAttribute("data-file"), 0, sound); return; }
+        rcOff();  // the day's recording is over: the card goes
       });
       if (sound) {
         var box = document.createElement("div");

@@ -59,6 +59,11 @@ delegation only when the agenda item under way names it word for word.
 articles the speaker names at the opening ("· čl. 27 i 107", each linked to the site's page of the Rules), from the
 automatic transcript by the site's rule in Latin. `POVREDA_CLAN=0` takes the articles off.
 
+**The card of a recording's speaker** (26 Nov 2026; `mikrofon.js`, `live.js`, `/o/<adresa>`): while the archive's recording
+plays, or the broadcast is rewound over two minutes, a card under the player says who spoke at that place ("Na snimku ·
+…"), the time into the speech, a point of order's label; "Između govora" between speeches. The same card on the site's
+day pages.
+
 **After the broadcast** (25 Nov 2026; `prenosi.py`), until the archive has a file of the day, its speeches' and steps' times
 play the broadcast's own YouTube video, for as long as that is public: asked of YouTube's oEmbed at most once in ten minutes, and no
 link on any answer but yes. `/data/prenosi/<day>.json` keeps the video, when its first second was (`pocetak`) and what was read of

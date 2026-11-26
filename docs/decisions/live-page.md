@@ -500,3 +500,22 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     the text: 24 of 34, against 27 for the speaker's piece alone): led by the chair's 20 s, Whisper drops or condenses
     the first words. The one-piece hearing quoted above (30 of 34) was the speaker's piece alone, counted as heard
     anywhere; the gap to the label is the rule's (both kinds heard near the start, the windows), not the cut.
+- **The speaker's card follows a recording** (26 Nov 2026, the maintainer: "Da li mozemo povezati karticu govornika sa
+  timelineom? Znači ako se nalazimo na određenom segmentu videa da kartica tok govornika bude prikazana"; of the
+  proposal: "1 moze / 2 moze sa snimkom / 3 izracunaj sad, pogotovo sto imamo stenogram kao pomoc pa mozes porediti /
+  4 da"). While the archive's recording plays (the last day, a turn's "▶", a shared speech), or YouTube's broadcast
+  shows a moment over two minutes back, a card under the player shows who spoke at the playback's place: "Na snimku ·
+  24. novembra u 12:31" on top (the day, the hour the speech began), the portrait with "O govorniku" (its sheet asked
+  of the page's server, `/o/<adresa>`, from the facts it holds), the name, the list with its colour, the time into
+  that speech moving with the playback, and a point of order's label with its articles. Where the place lies in no
+  speech (a speech holds from its start to its end and 3 s): "Između govora". Never the live dot or "Uživo". It
+  follows seeking, ⏮ ⏭, the next file of the day and a shared link; a pause keeps it; the day's end, or YouTube back
+  within two minutes of now, takes it away. Drawn by the shared script (`mikrofon.js`) into `#rc`, outside the part
+  replaced every five seconds; nothing without the script. During a broadcast that is not rewound the first screen
+  is as it was (measured: the speaker's block at the same place and height, 360 and 320 px, both scripts).
+  - *The label of a point of order on a past speech* ("3 izracunaj sad"): a day from the notes carries the notes' own
+    (`notes_site.point_of_order`, the site's day pages' rule, in `mikrofon-dan.json` as "povreda"); a day from the live
+    record gets the live rule's (`rok.limit(label=True)`, worked out per finished turn, kept on the turn only, not
+    written down). Compared on 24-25 Nov, the live rule's against the notes' of the same turns: the kind 24 right, 1
+    wrong, 8 missed of 32; the article 20, 2, 9 of 31 (the table above); once a day's notes come, theirs replace it.
+  - The rows carry `data-adresa`, `data-lc` (the list's colour) and `data-povreda`; `data-strana` in the page's script.

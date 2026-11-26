@@ -247,6 +247,26 @@ def cyrillic_part(request: Request) -> Response:
     return _part(True, request)
 
 
+def _sheet(cyr: bool, adresa: str) -> Response:
+    """The sheet "O govorniku" of an MP of the list, for the card of a recording's speaker (page.about's words, no
+    <template>; 26 Nov 2026): from the site's facts this service holds, nothing kept or counted."""
+    from .page import sheet
+    html = sheet(getattr(tracker, "facts", {}) or {}, adresa, cyr=cyr, site=config.SITE)
+    if not html:
+        raise HTTPException(status_code=404)
+    return Response(html, media_type="text/plain; charset=utf-8", headers={"Cache-Control": "max-age=300"})
+
+
+@app.get("/o/{adresa}")
+def latin_sheet(adresa: str) -> Response:
+    return _sheet(False, adresa)
+
+
+@app.get("/cir/o/{adresa}")
+def cyrillic_sheet(adresa: str) -> Response:
+    return _sheet(True, adresa)
+
+
 _pictures: dict[tuple[bool, bool], tuple[float, bytes]] = {}
 PICTURE_KEEP = 20  # seconds a drawn picture serves everyone
 
