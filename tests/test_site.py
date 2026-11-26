@@ -97,6 +97,8 @@ def test_site_builds_every_page(built):
     # The MP's page is the one to find: the page of every vote is linked from it, kept out of search engines.
     assert "poslanik/abramovic-nenad.html" in sitemap and "-glasovi.html" not in sitemap
     assert '<meta name="robots" content="noindex">' in votes and "nedelja/" not in sitemap
+    # The search page works and is no result of its own: out of the index and the sitemap, its links followed.
+    assert '<meta name="robots" content="noindex">' in (out / "pretraga.html").read_text(encoding="utf-8") and "pretraga" not in sitemap
     assert not (out / "najvise-protiv.html").exists()
     assert "<dt>Glasovi protiv</dt><dd>50%" in law
     assert law.index("<dt>Glasovi protiv</dt><dd>50%") < law.index("Šta zakon menja") < law.index("Rasprava u Skupštini") \
