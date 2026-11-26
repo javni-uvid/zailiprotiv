@@ -395,4 +395,22 @@ records and recordings stays here:
   and Brnabić "Не желим да се изјасни, али …" (-34 s); 19 Nov Dimović "Да." (-12 s); and three that stood alone, 19 Nov
   Mavrić (4 s) and Đajić (2 s), 25 Nov Mikitišin's "Повреда Пословника, члан 107." (1 s), which the chair refused. An old
   link to Mavrić's 16:30:27 now opens Mitov's turn of 16:30:35; the other two open none.
+- **The chair's own words between speeches, as a card of the role** (26 Nov 2026, the maintainer, of case 3.17: "to je
+  govor predsedavajuceg"; of 3.15: "nekada mozda treba prepoznati i kada predsedavajuci drzi duzi govor i to isto da
+  belezimo"; of the length: "spustio bih prag na 30 sekundi"; and his condition: "ako ubacujemo karticu za
+  predsedavajuceg, moramo se postarati da ne razbijamo tudje govore, moramo se postarati da ne oduzimamo vreme pogresnoj
+  poslanickoj grupi ako je on clan njen, jer on je predsedavajuci"). `govor.chair_stretches` writes into the day file
+  (`"predsedavajuci"`) each stretch of the chair's placed words between two turns, the pieces joined while no member's
+  placed piece comes between, cut to the gap between the turns, of `CHAIR_CARD` (30 s) or more; never inside a member's
+  turn; a roll call read out is none. The day page shows each among the turns as "Predsedavajući · 2 min 14 s", "Vodi
+  sednicu. Ovo vreme ne pripada nijednoj poslaničkoj grupi." (approved): the role, as the notes head it, naming no
+  person, in no list's sum and in nobody's time as an MP; a presiding officer who speaks from the floor that day keeps
+  that as his own turn under his group, and nothing moves between them. With no `data-od`, a shared link or the player's
+  ⏮ ⏭ never lands on one. The page's "između govora" sum and "Predsedavajući nema potpis i nije uračunat" stay as they
+  are, still true. **The card's length is the seconds the chair is heard**, from the first word to the last, less every
+  silence of over 10 s (`GAP`: a minute of silence, a quorum count, a vote, the start of a break), so it can be shorter
+  than the card's span (from–to); a stretch heard under 30 s is no card (the conductor, after measuring: 7 of 76 spans
+  were more than half silence, e.g. 19 Nov 18:05:54 "Проглашавам паузу од десет минута." 86%, 25 Nov 10:07:04 a minute of
+  silence 77%). On 17-25 Nov: 9, 14, 21, 17 and 10 cards, 8,436 s heard; every turn the same. Inside a member's speech
+  (3.18) the maintainer has not chosen: "ovo zavisi da li predsedavajuci vraca vreme ili ne".
 

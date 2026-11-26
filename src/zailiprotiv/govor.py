@@ -318,6 +318,60 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
     return out
 
 
+CHAIR_CARD = 30  # seconds: a stretch of the chair's words between two turns this long or longer gets a card of its own
+JOIN_CHAIR = 30  # seconds: the chair's pieces this close, with no member's placed piece between, are one stretch
+
+
+def chair_stretches(speeches: list[dict], files: list[dict], turns: list[dict],
+                    got: list[tuple[str, str, float]] | None = None) -> list[dict]:
+    """The chair's own stretches between members' turns (26 Nov 2026, the maintainer, of case 3.17 "to je govor
+    predsedavajuceg", and of the card's length "spustio bih prag na 30 sekundi"): the chair's placed pieces with no
+    member's placed piece between them, from the first word to the last, kept where they last CHAIR_CARD seconds or more,
+    cut to the gap between the turns around them and never inside a turn. A roll call read out (`prozivka`) is none.
+    Its length ("trajanje") is the seconds the chair is heard (`got`, the recording's words): from the first word to the
+    last, less every hole of over GAP seconds (a minute of silence, a quorum count, a break begun); under CHAIR_CARD
+    heard, no card. Each: {"od", "do", "trajanje", "datoteka", "snimak", "beleske"}. It belongs to the role, not to a
+    person or a group."""
+    by_url = {f["url"]: f for f in files}
+    out: list[dict] = []
+    cur = None
+    for s in speeches:
+        if not s.get("chair") or s.get("prozivka"):
+            if "datoteka" in s or s.get("prozivka"):
+                cur = None  # a member's placed piece, or a roll call, ends the stretch
+            continue
+        if "datoteka" not in s:
+            continue
+        f = by_url.get(s["datoteka"], {})
+        base, end = start_at(f, s["od"]), start_at(f, s["do"])
+        if base is None:
+            cur = None
+            continue
+        a, b = base + s["od"], end + s["do"]
+        if cur and cur["datoteka"] == s["datoteka"] and a - cur["_do"] <= JOIN_CHAIR:
+            cur["_do"], cur["beleske"] = b, cur["beleske"] + [s["key"]]
+        else:
+            cur = {"_od": a, "_do": b, "datoteka": s["datoteka"], "_sek": s["od"], "beleske": [s["key"]]}
+            out.append(cur)
+    kept = []
+    spans = sorted((t["od"], t["do"]) for t in turns if t.get("od") is not None)
+    for c in out:
+        a, b = c["_od"], c["_do"]
+        if any(x < a and b < y for x, y in spans):
+            continue  # inside a member's turn: that turn's
+        before = [y for x, y in spans if x <= a]
+        after = [x for x, y in spans if x >= a]
+        a = max([a] + [y for y in before if y > a and y <= b])
+        b = min([b] + [x for x in after if a <= x < b])
+        sek = c["_sek"] + (a - c["_od"])  # the stretch's start, in its file
+        words = sorted(t for _, u, t in got or [] if u == c["datoteka"] and sek <= t <= sek + (b - a))
+        heard = sum(y - x for x, y in zip(words, words[1:]) if y - x <= GAP) if got is not None else b - a
+        if heard >= CHAIR_CARD:
+            kept.append({"od": int(a), "do": int(b), "trajanje": int(round(heard)), "datoteka": c["datoteka"],
+                         "snimak": int(max(0, sek - LEAD)), "beleske": c["beleske"]})
+    return kept
+
+
 VOICE_NOTE = ("Ko je kad govorio, dok Skupština ne objavi stenografske beleške ovog dana: zvuk snimka u arhivi podeljen je "
               "na delove gde se glas menja, a deo dobija ime po potpisu u prenosu (zapis stranice „Ko sada govori“), gde ga "
               "nije bilo po rečima predsedavajućeg kad daje reč (automatski zapis zvuka), a gde nema ni njih po glasu, "
