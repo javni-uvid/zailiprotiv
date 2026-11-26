@@ -385,4 +385,14 @@ records and recordings stays here:
   2.14: "tehnicki govor ovde krene tek kada rezija stavi traku za govornika mada je i rasprava pre toga bitna i mozemo
   obeleziti kao da je vucic govorio - kada izadje traka iz rezije svakako trebamo osveziti karticu sa time koliko neko
   prica prema tome"). The timer readings above follow it; for the live page it is the live page's worker's part.
+- **A very short answer to the chair is no speech** (26 Nov 2026, the maintainer, of case 3.16: "drugu istancu ne bih
+  klasifikovao kao govor, samo je odgovor predsedavajucem koji je jako kratak"; of the rule: "slazem se"; `govor._answer`).
+  A member's piece of at most `ANSWER` (20) words right after the chair's words that end in a question, where it would end
+  a turn or stand alone, is joined to no turn and is no turn of its own. Where the same speaker goes on after it, it stays
+  in the turn: inside a speech an exchange with the chair is part of it (2.9, 2.12), and nothing an MP says is left out of
+  the record of the speech (the conductor). The notes' pages keep every such piece under its speaker; only the day's turns
+  change. On 17-25 Nov seven pieces, -101 s: 17 Nov Jovanov "Не желим." (-13 s); 18 Nov Mitov "Нисам задовољан …" (-35 s)
+  and Brnabić "Не желим да се изјасни, али …" (-34 s); 19 Nov Dimović "Да." (-12 s); and three that stood alone, 19 Nov
+  Mavrić (4 s) and Đajić (2 s), 25 Nov Mikitišin's "Повреда Пословника, члан 107." (1 s), which the chair refused. An old
+  link to Mavrić's 16:30:27 now opens Mitov's turn of 16:30:35; the other two open none.
 

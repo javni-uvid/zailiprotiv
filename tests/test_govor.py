@@ -146,6 +146,24 @@ def test_a_turn_ends_where_the_floor_is_given_anew_or_the_microphone_is_cut():
     assert len(govor.day([a, chair("Господин Вучић има реч, да заврши."), b], f, who)) == 1  # "let him finish"
 
 
+def test_a_very_short_answer_to_the_chair_ends_or_stands_alone_and_is_no_speech():
+    """26 Nov 2026, the maintainer, of 3.16: a very short answer to the chair is no speech; where the same speaker goes
+    on after it, it stays in the turn."""
+    who = lambda s: {"ime": s, "adresa": "", "grupa": "", "uloga": ""}
+    f = [{"url": F, "od": 0}]
+    a = {"key": "1", "speaker": "A", "datoteka": F, "od": 10.0, "do": 50.0, "sidra": 3, "text": "…"}
+    ask = {"key": "2", "speaker": "P", "chair": True, "text": "Да ли желите да се Скупштина изјасни?"}
+    ans = {"key": "3", "speaker": "A", "datoteka": F, "od": 70.0, "do": 75.0, "sidra": 2, "text": "Не желим."}
+    b = {"key": "5", "speaker": "B", "datoteka": F, "od": 80.0, "do": 99.0, "sidra": 2, "text": "…"}
+    turns = govor.day([a, ask, ans, dict(ask, key="4", text="Хвала."), b], f, who)
+    assert [(t["ime"], t["od"], t["do"]) for t in turns] == [("A", 10, 50), ("B", 80, 99)]  # it would end A's turn
+    goes_on = dict(b, speaker="A")
+    turns = govor.day([a, ask, ans, dict(ask, key="4", text="Изволите."), goes_on], f, who)
+    assert [(t["ime"], t["od"], t["do"], t["beleske"]) for t in turns] == [("A", 10, 99, ["1", "3", "5"])]  # it stays
+    long_ = dict(ans, text=" ".join(["реч"] * 21))
+    assert len(govor.day([a, ask, long_, b], f, who)) == 2 and govor.day([a, ask, long_, b], f, who)[0]["do"] == 75
+
+
 def test_a_days_part_the_archive_holds_before_its_page_lists_it():
     from zailiprotiv import videos
     base = "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910"
