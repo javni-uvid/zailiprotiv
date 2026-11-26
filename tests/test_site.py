@@ -1203,3 +1203,22 @@ def test_a_phones_order_is_the_documents():
     assert members.index("scroll wide-li") < members.index('id="f-rows"') < members.index("scroll phone-list")
     mp = (here / "templates/mp.html").read_text(encoding="utf-8")
     assert mp.index("mp-line wide-li") < mp.index("offices_part(offices") < mp.index("mp-line phone-list")
+
+
+def test_a_thin_sitting_waits_outside_the_sitemap(built):
+    """A sitting's page of fewer than 300 words of its own is left out of the sitemap (26 Nov 2026), open and linked as
+    before; the rule is its words alone, and only for the sittings."""
+    from zailiprotiv import downloads
+    out, _ = built
+    sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
+    sittings = list((out / "sednica").glob("*.html"))
+    assert sittings
+    for f in sittings:
+        listed = f"sednica/{f.name}</loc>" in sitemap
+        assert listed == (downloads.words(f.read_text(encoding="utf-8")) >= downloads.THIN_WORDS)
+        assert "noindex" not in f.read_text(encoding="utf-8")[:3000]  # still a page for search engines
+    short = "<main><h1>Sednica</h1><p>" + "reč " * 299 + "</p></main>"
+    assert downloads.words(short) == 300 and downloads.in_sitemap("sednica/x.html", short)
+    assert not downloads.in_sitemap("sednica/x.html", short.replace("reč ", "", 2))
+    assert downloads.in_sitemap("zakon/x.html", "<main>kratko</main>")  # other kinds are not judged by length
+    assert not downloads.in_sitemap("404.html", "<main>" + "reč " * 400 + "</main>")

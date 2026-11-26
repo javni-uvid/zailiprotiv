@@ -4,12 +4,36 @@ Moved out of `site.build` (13 Nov 2026); it takes what it needs from the build a
 """
 from __future__ import annotations
 
+import re
+
 from zailiprotiv.site import (  # noqa: F401
     ORDINAL_NAME, VOTES, json, latin, mps
 )
 
 
 NOINDEX = '<meta name="robots" content="noindex">'  # pages kept out of search engines are left out of the sitemap
+# A thin page waits outside the sitemap while Google reads the site's core (26 Nov 2026, the maintainer: "Uradi sve po
+# tvojim preporukama"): a sitting's page whose main part says fewer than THIN_WORDS words (most of the older
+# convocations', a title and a list of laws). It stays open, indexable and linked as before; the rule looks only at
+# the page's own words, the same for every page of the kinds in THIN_KINDS.
+THIN_WORDS = 300
+THIN_KINDS = ("sednica/",)
+_MAIN = re.compile(r"<main\b.*?</main>", re.S)
+_RAW = re.compile(r"<(script|style)\b.*?</\1>", re.S)
+_TAG = re.compile(r"<[^>]+>")
+
+
+def words(text: str) -> int:
+    """How many words a page's main part says (scripts and styles aside)."""
+    m = _MAIN.search(text)
+    return len(_TAG.sub(" ", _RAW.sub(" ", m.group(0) if m else text)).split())
+
+
+def in_sitemap(rel: str, text: str) -> bool:
+    """Whether a built page goes in the sitemap: not the 404, no noindex page, no thin page of a kind in THIN_KINDS."""
+    if rel == "404.html" or NOINDEX in text[:3000]:
+        return False
+    return not (rel.startswith(THIN_KINDS) and words(text) < THIN_WORDS)
 
 
 def dataset(env, domain: str, downloads: list) -> dict | None:
@@ -94,8 +118,8 @@ def write(*, common, domain, env, items_by_conv, out, people):
     if domain:
         (out / "CNAME").write_text(domain + "\n", encoding="utf-8")
         base = f"https://{domain}/"
-        pages = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.html")
-                       if p.name != "404.html" and NOINDEX not in p.read_text(encoding="utf-8")[:3000])
+        pages = sorted(r for p in out.rglob("*.html")
+                       if in_sitemap(r := p.relative_to(out).as_posix(), p.read_text(encoding="utf-8")))
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             + "".join(f"<url><loc>{base}{p}</loc></url>\n" for p in pages) + "</urlset>\n", encoding="utf-8")
