@@ -413,4 +413,37 @@ records and recordings stays here:
   were more than half silence, e.g. 19 Nov 18:05:54 "Проглашавам паузу од десет минута." 86%, 25 Nov 10:07:04 a minute of
   silence 77%). On 17-25 Nov: 9, 14, 21, 17 and 10 cards, 8,436 s heard; every turn the same. Inside a member's speech
   (3.18) the maintainer has not chosen: "ovo zavisi da li predsedavajuci vraca vreme ili ne".
+- **A turn that opens with a point of order says so, with the articles the speaker named** (26 Nov 2026, the maintainer, of
+  case 2.10: "dodatno trebamo naznaciti ako uspemo prepoznati kad se neko javi po povredi poslovnika"; "ako uspemo
+  zabeleziti i po clanu poslovnika se javlja govornik za povredu to bih isto ubacio u karticu zajedno sa linkom ka tom
+  clanu"; of the rule and its error, one in ten: "1 u 10 je okej, mozemo i uzivo"). On the day pages of days from the
+  notes (`notes_site.point_of_order`, `pages_govornici`): the turn's first piece decides, by the speaker's own words at the
+  opening (`_POINT_OF_ORDER` in the first 150 characters, not negated or in passing: `_POINT_NOT`, "није / нисам / ако
+  сматрате … повреда", "право по Пословнику") or an article named in the first 200; the chair's words alone do not count.
+  The articles are the speaker's own (`poslovnik.cited`), from the first piece, or, only when it names none, from the
+  first later piece of the turn that does, less any number the chair's words just before it name (19 Nov: "Рекао је да
+  је 15. став 2." / "Не може 15."). Words approved: "Povreda Poslovnika · čl. 107", "… · čl. 27 i 107", "Povreda
+  Poslovnika"; each number links to the article on `poslovnik-clanovi`. `poslovnik._CITE` also takes "члан је 89" (4 more
+  mentions in all the notes' 33,424, each an article named). Measured on 17-25 Nov: 95 speeches open so (97 before the two
+  negations, which took exactly the two wrong of twenty checked by eye), 72 turns labelled on the pages, 2 taking their
+  article from a later piece (25 Nov 2.8, čl. 89; 24 Nov 17:12, čl. 107 and 109, each checked); 19 Nov Jovanov's 15 left
+  out by the chair's rule. Missed by design: a point of order the chair announces whose speaker names none (19 Nov
+  Dimović 19:30:49). Live: measured apart, not built here. The method page says how the label is decided, in the words the
+  maintainer approved ("1 može"): "… Pravilo je isto za svakoga i automatsko, pa može da pogreši ili da propusti povredu."
+- **A declared break ends the speech before it** (26 Nov 2026, the maintainer, of the doubtful cases 24 and 40: "njeno vreme
+  moze teci ovde ali ona prestane da govori zbog generalno dobacivanja … predsedavajuci prica o tome i sazove pauzu, cim se
+  sazove pauza govor od prethodne osobe prekida"; "pauza je proglasena i to je to, samo vucicu nije ugasen mikrofon").
+  `BREAK` in the rule above already does so; 24 Nov 18:07 (Radeta's "Члан 27. Председниче Народне скупштине…", four words)
+  has no place in the recording, and the chair's words end "Ја ћу сада да дам паузу. Пауза 10 минута."
+- **The chair's words inside a member's speech stay the member's time until the director's timer is read** (26 Nov 2026,
+  the maintainer, of case 3.18: "jeste duzi govor predsedavajuceg ali i dalje je to unutar jednog neprekinut govora
+  vucica, treba razmisliti o ovome"; of the choice: "ovo zavisi da li predsedavajuci vraca vreme ili ne, ovo je kompleksnija
+  situacija, a bitna nam je za merenje vremena", then "možemo čekati sat režije"). Nothing is built: such a stretch counts
+  for the member, as before, until the director's timer is read by OCR on the runner (above). Measured: three stretches of
+  over 30 s inside a turn on 17-25 Nov (19 Nov 19:29:54 Dimović 34 s, 19 Nov 21:49:50 Vučić 33 s, 24 Nov 11:55:29 Vučić
+  99 s). On 19 Nov no caption shows either side; on 24 Nov a new bar appears after the chair's 99 s with its timer at 0:09,
+  the extension the chair had just promised: "Дакле, пошто не могу да вам вратим минут, могу да продужим минут. … То ће се
+  десити, да пише продужено" (54098/00567, after Vučić's "Само ми урачунајте време"). The chair's words on time in the
+  five days' notes, about eleven: extended ("Продужићу 15 секунди.", "Имате 20 секунди додатних."), reset ("Ресетоваћу
+  време."), taken away ("Ја ћу вам ово време одузети."), not extended ("Аплауз не може да продужи време заиста.").
 

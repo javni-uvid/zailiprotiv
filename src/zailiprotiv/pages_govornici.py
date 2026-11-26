@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from zailiprotiv import card, months
+from zailiprotiv import card, months, notes_site
 from zailiprotiv.pages_mikrofon import parts, turns as day_turns
 
 TZ = ZoneInfo("Europe/Belgrade")
@@ -241,6 +241,26 @@ def day_summary(root: Path, conv: str, day: str) -> dict | None:
     return {**{k: whole.get(k) for k in ("kratko", "ukratko", "odluke", "govornici")}, "model": kept.get("model", "")}
 
 
+_TEXTS: dict = {}
+
+
+def _notes_texts(root: Path, conv: str) -> dict[str, tuple[str, str]]:
+    """Each speech's text in a convocation's notes, by the key the day files use ("<sitting>/<speech>"), with the
+    chair's words just before it (the chair's speeches between it and the speech before that is not the chair's)."""
+    if conv not in _TEXTS:
+        out: dict[str, tuple[str, str]] = {}
+        for f in sorted((root / conv / "transcripts").glob("*.json")):
+            chair: list[str] = []
+            for k, s in sorted(json.loads(f.read_text(encoding="utf-8")).get("speeches", {}).items()):
+                if s.get("chair"):
+                    chair.append(s.get("text") or "")
+                    continue
+                out[f"{f.stem}/{k}"] = (s.get("text") or "", "\n".join(chair))
+                chair = []
+        _TEXTS[conv] = out
+    return _TEXTS[conv]
+
+
 def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None, notes: dict | None = None) -> list[dict]:
     """govornici/<date>.html per day read, govornici.html for each convocation's sum. Returns the days, newest first,
     for the pages that link them. `days`: load(root), when the caller has it; `notes`: the stenographic notes read,
@@ -256,9 +276,13 @@ def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None
             people, lists, whole = sums(day["govori"])
             turns = day_turns(day)
             said, model = transcript(root, conv, day["dan"]) if day["dan"] not in noted else ({}, "")
+            texts = _notes_texts(root, conv) if day.get("izvor") == "govor" else {}
             for t, raw in zip(turns, day["govori"]):
                 t["id"] = f"g{raw['od']}"
                 t["said"] = said.get(str(raw["od"]), "")
+                # A turn from the notes that opens with a point of order says so, with the articles the speaker named
+                pieces = [texts.get(k, ("", "")) for k in raw.get("beleske") or []]
+                t["point"] = notes_site.point_of_order([x for x, _ in pieces], [c for _, c in pieces]) if texts else None
             # The chair's own stretches between turns (govor.chair_stretches), as cards in time order: the role's,
             # in no sum, and with no data-od, so a shared link or the player's ⏮ ⏭ never lands on one.
             turns = sorted(turns + [{"chair": True, "od": c["od"], "dur": dur(c.get("trajanje", c["do"] - c["od"])),

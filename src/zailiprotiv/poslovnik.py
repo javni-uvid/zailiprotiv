@@ -164,7 +164,7 @@ def load(folder: Path, day: str | None = None) -> dict | None:
 # Пословника, члан 103"), the articles named in its first CITE_HEAD characters; anywhere, an article named with the
 # Rules' own name ("члан 107. Пословника"). An article named "of the Constitution" or "of the law" is not the Rules'.
 CITE_HEAD = 400
-_CITE = re.compile(r"\b(?:члан\w*|чл\.)\s+(\d{1,3})\b\.?(?:\s*(?:став|ст\.)\s*\d+\.?)?(?=(?P<after>[^.;:]{0,25}))", re.I)
+_CITE = re.compile(r"\b(?:члан\w*|чл\.)\s+(?:је\s+)?(\d{1,3})\b\.?(?:\s*(?:став|ст\.)\s*\d+\.?)?(?=(?P<after>[^.;:]{0,25}))", re.I)
 _OF_RULES = re.compile(r"^\s*(?:,\s*)?Пословник", re.I)
 _OTHER = re.compile(r"Устав|[Зз]акон", re.I)
 
