@@ -20,13 +20,19 @@ MAIN = re.compile(r"<main\b.*?</main>", re.S)
 # markup alone would have told the search engines of every page; HASH names the way it is made now.
 TAG = re.compile(r"<[^>]+>")
 LINK = re.compile(r'\b(?:href|src)="([^"]*)"')
-HASH = "2"
+# The notice of the next sitting ("Sutra u 10: sednica Skupštine", macros.mic_soon) stands in every page's <main>
+# from the day before a sitting until its broadcast begins: it is no part of what a page says. Counted, it made all
+# 7,252 pages new four times on 24-25 Nov 2026, and the sitemap's dates were the day of the last notice for 7,066 of
+# 7,254 pages, which Google then doesn't trust (26 Nov 2026). HASH "3" leaves it out.
+SOON = re.compile(r'<p class="live soon"[^>]*>.*?</p>', re.S)
+HASH = "3"
 
 
 def said(text: str) -> str:
-    """A page's main part as its words and links: the same for the same page in other markup."""
+    """A page's main part as its words and links: the same for the same page in other markup, and with or without
+    the notice of the next sitting."""
     m = MAIN.search(text)
-    part = VERSION.sub("", m.group(0) if m else text)
+    part = SOON.sub("", VERSION.sub("", m.group(0) if m else text))
     return " ".join(TAG.sub(" ", part).split()) + "\n" + "\n".join(LINK.findall(part))
 # The pictures of a page, for Google Images (image sitemap): its own share picture and an MP's portrait. The site's
 # general picture, on most pages, is left out.

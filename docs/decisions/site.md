@@ -462,6 +462,16 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   first of the plain results, while "zailiprotiv" was corrected by Google to "za ili protiv" and then showed the
   live page 8th. The project's Instagram (its only profile) is in `sameAs` and in both footers (`rel="me"`, a plain link). All four home pages are in the index, read that morning (`search.py` `home_pages`). Google titles
   the home page by its h1, which has no name in it; the h1 is the maintainer's choice and waits for them.
+- **A sitemap date only when the page's text changed** (26 Nov 2026): on 26 Nov 7,066 of the sitemap's 7,254
+  `<lastmod>` said 25 Nov, and Google ignores a sitemap's dates once they prove wrong. The rule was already the
+  text of `<main>` (`tools/indexnow.py`, the hashes and days in the Actions cache `.cache/indexnow.json`, carried
+  from build to build), but the notice of the next sitting (`macros.mic_soon`) stands inside every page's `<main>`
+  from the day before a sitting until it begins: four builds of 24-25 Nov took all 7,252 pages for new. It is left
+  out of the hash now (`HASH` "3": the change of rule dates no page). On the two sites published on 26 Nov (runs
+  45823295955, 45834340000) 12 pages changed by both rules; with the notice put into each page of the second, 7,254
+  by the old rule, 12 by the new. The days of 25 Nov stay until each page changes; no record holds the earlier
+  ones. A lost cache makes every page new once (the first run's rule); the store is the cache, not the repository, so
+  no commit follows from it.
 
 ## Support
 
