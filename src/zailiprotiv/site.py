@@ -635,7 +635,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             urgent=sum(1 for it in items if it["urgent"]), total=len(items), conv=conv,
             area_options=sorted({a for it in items for a in it.get("areas") or []}, key=lambda a: collate(latin(a))),
             year_options=sorted({(it["law"].get("passed") or "")[:4] for it in items if it["law"].get("passed")}, reverse=True),
-            conv_name=ORDINAL_NAME.get(conv, conv), root="")))
+            conv_name=ORDINAL_NAME.get(conv, conv), conv_page=laws_page(conv, current), root="")))
 
     by_key_all = {it["key"]: it for its in items_by_conv.values() for it in its}
     # One group under two names. The Assembly's listings changed how they write groups, and groups rename: within a

@@ -6,9 +6,8 @@
 <meta name="twitter:card" content="summary_large_image">{% endif %}{% endblock %}
 {% macro bars(rows, link) %}<div class="gv" data-more="10">{% for r in rows %}<div class="gv-r"><div class="gv-n">{% if link and r.slug %}<a href="{{ root }}poslanik/{{ r.slug }}.html">{{ r.name|given_first }}</a>{% elif link %}{{ r.name|given_first }}{% else %}{{ r.name }}{% endif %}</div><div class="gv-b"><i style="width:{{ r.width }}%"></i></div><div class="gv-v"><b>{{ r.time }}</b><span>{{ r.share }} %<i class="wide-only"> · {{ r.n }} {{ "govor" if r.n == 1 else "govora" }}{% if r.people %} · {{ r.people }} {{ "govornik" if r.people == 1 else "govornika" }}{% endif %}</i></span></div></div>{% endfor %}</div>{% endmacro %}
 {% block main %}
-<p class="kicker wide-only"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
+{% from "macros.html" import trail %}{{ trail(root, root ~ "govornici.html", "Ko koliko govori") }}
 <h1>Ko je koliko govorio u Skupštini, {{ when }}</h1>
-<p class="row-link phone-list"><a href="{{ root }}govornici.html">Ko koliko govori</a></p>
 <p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika.</p>
 {% if summary %}<section class="day-summary" id="sazetak">
 <h2>Sažetak dana</h2>
