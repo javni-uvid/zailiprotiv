@@ -32,6 +32,9 @@ from .state_base import SAID_LEAD
 log = logging.getLogger("prepis")
 RATE = 16000
 PIECE = 30  # seconds of unwritten sound of the speaker now on before a piece is written down
+# The turn's first piece sooner (26 Nov 2026, the maintainer: "da"): the label of a point of order and the first words
+# come some 10 s earlier, as good as from 30 s (measured on the kept sound of 24-25 Nov; 15 s and 10 s were much worse).
+FIRST_PIECE = 20
 LONGEST = 120  # seconds: the most sound written down at once
 SHORTEST = 20  # seconds: a shorter turn (a reply, a point of order) is not written down
 TAIL = 3  # seconds after a turn's last frame that still count as its sound
@@ -190,7 +193,10 @@ def choose(files: list[tuple[float, float, Path]], turns: list[dict], current: d
             drop += [y[2] for y in run]
     for span in sorted(by):
         mine = by[span]
-        if not span[3] or (sum(x[1] for x in mine) >= PIECE and span[2] >= SHORTEST):
+        # nothing of the turn written yet while its oldest unwritten sound is still within its first FIRST_PIECE seconds
+        # (a piece written would have taken at least that much)
+        enough = FIRST_PIECE if mine[0][0] - span[0] < FIRST_PIECE else PIECE
+        if not span[3] or (sum(x[1] for x in mine) >= enough and span[2] >= SHORTEST):
             piece, total = [], 0.0
             for x in mine:  # a long wait (a finished turn, or the computer behind) goes in pieces, so text keeps coming
                 piece.append(x)
