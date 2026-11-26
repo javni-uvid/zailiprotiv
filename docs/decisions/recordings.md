@@ -446,4 +446,8 @@ records and recordings stays here:
   десити, да пише продужено" (54098/00567, after Vučić's "Само ми урачунајте време"). The chair's words on time in the
   five days' notes, about eleven: extended ("Продужићу 15 секунди.", "Имате 20 секунди додатних."), reset ("Ресетоваћу
   време."), taken away ("Ја ћу вам ово време одузети."), not extended ("Аплауз не може да продужи време заиста.").
-
+- **"чл.27." with no space is an article too** (26 Nov 2026, the conductor: a fault of reading, found measuring the live
+  label against the notes). `poslovnik.cited` wanted a space after "чл."; the notes write "чл.27." at times. Over every
+  convocation's notes: the mentions linked in the notes' pages 3,437 → 3,439, the articles invoked (per speech, summed,
+  `pages_floor`) 3,140 → 3,142, all in the Fifteenth, one speech (24 Nov 2026, 12:05); its turn on the day page now reads
+  "Povreda Poslovnika · čl. 27 i 107" where it read "Povreda Poslovnika". "члан" still wants its space.
