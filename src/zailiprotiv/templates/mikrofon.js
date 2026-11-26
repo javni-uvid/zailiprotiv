@@ -119,8 +119,11 @@
           var lbl = el("span", "rc-pov", "· " + rcWord("pov"));
           // only the Rules' article numbers, and a link only to the site's own page of the Rules
           var ns = (pov ? pov.split(",") : []).map(Number).filter(function (n) { return n >= 1 && n <= 298 && n === Math.floor(n); });
-          var clan = rc.getAttribute("data-clan") || "";
-          if (!/^(https:\/\/zailiprotiv\.rs\/(cir\/)?poslovnik-clanovi#clan-|(\.\.\/)*poslovnik-clanovi\.html#clan-)$/.test(clan)) clan = "";
+          // the link's base is one of the site's own addresses of its page of the Rules, picked, never the attribute itself
+          var asked = rc.getAttribute("data-clan"), clan = "";
+          ["https://zailiprotiv.rs/poslovnik-clanovi#clan-", "https://zailiprotiv.rs/cir/poslovnik-clanovi#clan-",
+           "poslovnik-clanovi.html#clan-", "../poslovnik-clanovi.html#clan-", "../../poslovnik-clanovi.html#clan-"]
+            .forEach(function (k) { if (k === asked) clan = k; });
           c.appendChild(lbl);
           if (ns.length) {  // each part kept whole, the line breaking only between them
             var cl = el("span", "rc-pov", " · " + rcWord("cl") + " ");
