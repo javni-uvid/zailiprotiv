@@ -499,6 +499,13 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   stays open, indexable and linked as before. The rule is the page's own words only, the same for every sitting; the
   other kinds are not judged by it (their pages are long: a law's median some 1,660 words, an MP's 1,090). On the site
   of 26 Nov: sittings 229 to 88 in each script, the sitemap 7,254 to 6,972.
+- **An MP's name both ways round** (26 Nov 2026, the maintainer: "Uradi sve po tvojim preporukama"): people search
+  "aleksandrov andrijana" (63 shown, place 6.3) as much as "andrijana aleksandrov" (54, 7.4). The h1 and the crumbs
+  already had the Assembly's form, surname first; `Person` now names it too (`alternateName`), the same for every MP;
+  the title and the description stay. A woman MP's title keeps "poslanik": the form is built only from what the
+  Assembly states for each person, and its members' list has no such field, while its notes name only some (of the 250
+  sitting MPs, in the 14th and 15th convocations' notes: 14 only "narodna poslanica", 58 only "narodni poslanik", 6
+  both, 172 neither). Never from the first name.
 
 ## Support
 
