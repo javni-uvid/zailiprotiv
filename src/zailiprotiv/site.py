@@ -369,7 +369,7 @@ def patch_static(out: Path) -> dict:
     shutil.rmtree(out / "fonts", ignore_errors=True)
     shutil.copytree(HERE / "static" / "fonts", out / "fonts")
     if (out / "CNAME").exists():
-        _CLEAN.update(out=out, site="", folders=set())  # only the scripts' link change is used
+        _CLEAN.update(out=out, site="")  # only the scripts' link change is used
         for name in STATIC_FILES + ("glasaj.js",):
             if name.endswith(".js"):
                 _clean_file(str(out / name))

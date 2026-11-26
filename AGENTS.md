@@ -55,7 +55,8 @@ it. Dates are the maintainer's decisions unless said otherwise.
 - **Workflows, safely:** the rules are in `osnova/security.md`; what this project guards besides, and what it
   accepts as it is, in `docs/decisions/security.md`. `.github/zizmor.yml` lists the accepted findings.
 - **Links have no ".html"** (13 Nov 2026): files keep their names, GitHub Pages serves `page.html` at `/page`, and
-  `publish.clean_urls` rewrites links after the build. A page named like a folder (`podaci.html`) keeps its ending.
+  `publish.clean_urls` rewrites links after the build. A page named like a folder (`podaci.html`) is no exception (26 Nov 2026): GitHub
+  Pages serves it at `/podaci` too, and only `/podaci/` is the folder.
   `zailiprotiv site --html-links` keeps the endings, to open the built pages from disk.
 - **`zailiprotiv status`** says what the data still lacks per convocation; look before and after a data run.
 - **How fast the pages are, measured before any work on speed** (20 Nov 2026): **visits** also prints the Core Web

@@ -25,7 +25,10 @@ LINK = re.compile(r'\b(?:href|src)="([^"]*)"')
 # 7,252 pages new four times on 24-25 Nov 2026, and the sitemap's dates were the day of the last notice for 7,066 of
 # 7,254 pages, which Google then doesn't trust (26 Nov 2026). HASH "3" leaves it out.
 SOON = re.compile(r'<p class="live soon"[^>]*>.*?</p>', re.S)
-HASH = "3"
+# A link's ending is no change of where it leads: "podaci.html" and "podaci" open the same page (26 Nov 2026, when the
+# pages named like a folder lost theirs). HASH "4" reads links without it.
+ENDING = re.compile(r"\.html(?=$|[#?])")
+HASH = "4"
 
 
 def said(text: str) -> str:
@@ -33,7 +36,7 @@ def said(text: str) -> str:
     the notice of the next sitting."""
     m = MAIN.search(text)
     part = SOON.sub("", VERSION.sub("", m.group(0) if m else text))
-    return " ".join(TAG.sub(" ", part).split()) + "\n" + "\n".join(LINK.findall(part))
+    return " ".join(TAG.sub(" ", part).split()) + "\n" + "\n".join(ENDING.sub("", x) for x in LINK.findall(part))
 # The pictures of a page, for Google Images (image sitemap): its own share picture and an MP's portrait. The site's
 # general picture, on most pages, is left out.
 OG = re.compile(r'<meta property="og:image" content="([^"]+)"')
