@@ -164,6 +164,22 @@ def test_a_very_short_answer_to_the_chair_ends_or_stands_alone_and_is_no_speech(
     assert len(govor.day([a, ask, long_, b], f, who)) == 2 and govor.day([a, ask, long_, b], f, who)[0]["do"] == 75
 
 
+def test_the_chairs_own_stretches_between_turns():
+    """26 Nov 2026, the maintainer: the chair's long words between speeches are the chair's ("to je govor
+    predsedavajuceg"), a card from 30 s ("spustio bih prag na 30 sekundi"); never inside a member's turn, never a roll call."""
+    f = [{"url": F, "od": 0}]
+    def ch(key, od, do, **kw):
+        return {"key": key, "speaker": "P", "chair": True, "datoteka": F, "od": od, "do": do, "text": "…", **kw}
+    mp = lambda key, od, do: {"key": key, "speaker": "A", "datoteka": F, "od": od, "do": do, "sidra": 3, "text": "…"}
+    speeches = [mp("1", 0.0, 100.0), ch("2", 101.0, 120.0), ch("3", 125.0, 160.0), mp("4", 165.0, 300.0),
+                ch("5", 301.0, 310.0), mp("6", 312.0, 400.0), ch("7", 410.0, 500.0, prozivka=True), mp("8", 505.0, 600.0)]
+    turns = [{"od": 0, "do": 100}, {"od": 165, "do": 300}, {"od": 312, "do": 400}, {"od": 505, "do": 600}]
+    got = govor.chair_stretches(speeches, f, turns)
+    assert [(c["od"], c["do"], c["beleske"]) for c in got] == [(101, 160, ["2", "3"])]  # 9 s too short; a roll call none
+    inside = [mp("1", 0.0, 100.0), ch("2", 30.0, 80.0)]
+    assert govor.chair_stretches(inside, f, [{"od": 0, "do": 100}]) == []
+
+
 def test_a_days_part_the_archive_holds_before_its_page_lists_it():
     from zailiprotiv import videos
     base = "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910"

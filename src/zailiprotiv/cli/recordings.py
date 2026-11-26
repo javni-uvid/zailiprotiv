@@ -108,7 +108,7 @@ def govor_cmd(args) -> int:
         return 1
     for s in speeches:
         if not s.get("chair") and govor.roll_call(s["text"]):
-            s["chair"] = True  # a vote read out by name is no speech
+            s["chair"] = s["prozivka"] = True  # a vote read out by name is no speech
     words = govor.heard(Path(args.heard), day_files)
     placed = govor.place(speeches, words)
     # Beginnings Whisper missed, from the speaker's timer in the caption, read by hand (data/<N>/merac.json, 26 Nov 2026)
@@ -166,6 +166,8 @@ def govor_cmd(args) -> int:
     out = {"dan": args.day, "izvor": "govor", "napomena": govor.NOTE + (args.note or ""),
            "pokriveno": [{"od": min(t["od"] for t in turns), "do": max(t["do"] for t in turns)}] if turns else [],
            "govori": turns,
+           # the chair's own stretches between turns, of CHAIR_CARD seconds or more: the role's, no one's time
+           "predsedavajuci": govor.chair_stretches(placed, files, turns),
            "datoteke": [p for f in files if f["od"] is not None
                         for p in govor.stretches(f, int(kept.get(f["url"], {}).get("trajanje") or 0))]}
     if args.dry_run:
