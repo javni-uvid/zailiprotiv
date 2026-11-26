@@ -484,6 +484,14 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   (`live/uzivo/texts.py` `head_title`, `lead`). The h1 keeps the hook. What a pasted link and its picture say
   (`title`, the moment's words) was never this title and stays; a speech's tab keeps "· Skupština uživo"; the site's
   own `mikrofon.html`, shown while the service is down, says so and is noindex, and stays.
+- **One address for a page named like a folder** (26 Nov 2026, technical, the conductor's under the maintainer's
+  "Uradi sve po tvojim preporukama"): `govornici.html`, `cir/govornici.html` and `podaci.html` kept their ending in
+  links, canonicals and the sitemap since 19 Nov, as the short address was taken to open the folder. It doesn't:
+  **peek** of 26 Nov found `/govornici` and `/podaci` answering 200 with the page and only `/govornici/` the folder
+  (404), and Google had both `/govornici` (59 shown, 5 clicks in 18-24 Nov) and `/govornici.html` (37, 7).
+  `publish.clean_urls` makes no exception now: the short address everywhere, and the `.html` one, which still answers,
+  names it as canonical. Run over the published site: no own `.html` link left, the sitemap's four entries short. A
+  link's ending is no change of the page (`tools/indexnow.py`, HASH "4"), so the change dates no page.
 
 ## Support
 

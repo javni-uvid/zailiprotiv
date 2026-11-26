@@ -110,17 +110,17 @@ def lighten(out: Path) -> int:
     return sum(_pool_map(_lighten_file, [str(f) for f in out.rglob("*.html")]))
 
 
-# What a worker of clean_urls needs, set once per process (the folders are many: sent once, not with every file).
+# What a worker of clean_urls needs, set once per process.
 _CLEAN: dict = {}
 
 
-def _clean_init(out: str, site: str | None, folders: set[str]) -> None:
-    _CLEAN.update(out=Path(out), site=site, folders=folders)
+def _clean_init(out: str, site: str | None) -> None:
+    _CLEAN.update(out=Path(out), site=site)
 
 
 def _clean_file(name: str) -> None:
     """One file of clean_urls."""
-    out, site, folders = _CLEAN["out"], _CLEAN["site"], _CLEAN["folders"]
+    out, site = _CLEAN["out"], _CLEAN["site"]
     f = Path(name)
 
     def absolute(m):
@@ -129,20 +129,18 @@ def _clean_file(name: str) -> None:
             return m.group(0)
         if rel == "index" or rel.endswith("/index"):
             return m.group(1) + rel[:-5]
-        return m.group(0) if os.path.normpath(os.path.join(out, rel)) in folders else m.group(1) + rel
+        return m.group(1) + rel
     if f.suffix == ".html":
-        def link(m, here=str(f.parent)):
+        def link(m):
             path = m.group(2)
             if path == "index" or path.endswith("/index"):
                 path = path[:-5] or "./"
-            elif os.path.normpath(os.path.join(here, path)) in folders:
-                return m.group(0)
             return m.group(1) + path + m.group(3)
         text = fit_head(_HREF.sub(link, f.read_text(encoding="utf-8")))  # relative links: no scheme, so no colon
         if site:  # the page's one address, as the old ones with ".html" still open, and its twin in the other script
             def address(file: str) -> str:
                 rel = file[:-5]
-                return rel[:-5] if rel == "index" or rel.endswith("/index") else rel + (".html" if os.path.normpath(os.path.join(out, rel)) in folders else "")
+                return rel[:-5] if rel == "index" or rel.endswith("/index") else rel
             file = f.relative_to(out).as_posix()
             if f.name == "404.html":  # served at any address: not a page of its own
                 f.write_text(_OWN.sub(absolute, text.replace("</head>", '<meta name="robots" content="noindex">\n</head>', 1)), encoding="utf-8")
@@ -185,17 +183,16 @@ def _pool_map(fn, items: list, init=None, initargs=()) -> list:
 def clean_urls(out: Path) -> None:
     """Addresses without ".html" (the maintainer, 13 Nov 2026): GitHub Pages serves page.html at /page, so the files
     keep their names and only the links change, in pages, feeds, the sitemap and the site's own scripts. "index"
-    becomes the folder itself. A page that shares its name with a folder ("podaci.html" beside "podaci/") keeps its
-    ending, as the short address would open the folder. Links to other sites are left as they are. Each file is
-    changed on its own, so the files are shared among the machine's processors."""
+    becomes the folder itself. A page that shares its name with a folder ("podaci.html" beside "podaci/") is no
+    exception (26 Nov 2026): GitHub Pages serves it at "podaci" all the same, and only "podaci/" is the folder. Links
+    to other sites are left as they are. Each file is changed on its own, so the files are shared among the
+    machine's processors."""
     site = None
     cname = out / "CNAME"
     if cname.exists():
         site = "https://" + cname.read_text(encoding="utf-8").strip() + "/"
-    # The site's folders, listed once: asking the disk about each of two million links took a minute.
-    folders = {os.path.normpath(d) for d, _, _ in os.walk(out)}
     files = [str(f) for f in out.rglob("*") if f.suffix in (".html", ".xml", ".js")]
-    _pool_map(_clean_file, files, _clean_init, (str(out), site, folders))
+    _pool_map(_clean_file, files, _clean_init, (str(out), site))
 
 
 # What every built page must keep to (project principles): nothing loaded from another site, and pages light enough

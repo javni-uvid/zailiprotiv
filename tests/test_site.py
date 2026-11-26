@@ -250,12 +250,15 @@ def test_links_without_html_when_published(tmp_path):
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text()  # the file keeps its name; GitHub Pages serves it without
     assert 'href="../poslanik/abramovic-nenad"' in law and 'href="../kako-racunamo#' in law and 'href="../"' in law
     assert 'content="https://zailiprotiv.rs/zakon/zakon-o-oruzju"' in law and "zakon-o-oruzju.png" in law
-    assert "www.parlament.gov.rs" in law and not re.search(r'href="(?!https?:)(?!\.\./podaci\.html)[^"]*\.html', law)
+    assert "www.parlament.gov.rs" in law and not re.search(r'href="(?!https?:)[^"]*\.html', law)
     home = (out / "index.html").read_text()
     assert 'href="zakoni"' in home and 'href="./"' in home and 'href="zakon/zakon-o-oruzju"' in home
-    assert "zakon/zakon-o-oruzju</loc>" in (out / "sitemap.xml").read_text() and (out / "sitemap.xml").read_text().count(".html") == 1
+    assert "zakon/zakon-o-oruzju</loc>" in (out / "sitemap.xml").read_text() and ".html" not in (out / "sitemap.xml").read_text()
     assert "/zakon/zakon-o-oruzju\"" in (out / "zakoni.xml").read_text()
-    assert 'href="podaci.html"' in home  # beside the folder podaci/, so it keeps its ending
+    # A page named like a folder is no exception (26 Nov 2026): GitHub Pages serves podaci.html at /podaci, the folder is podaci/.
+    assert 'href="podaci"' in home and 'href="podaci/' not in home.replace('href="podaci/zakoni', "")
+    page_data = (out / "podaci.html").read_text()
+    assert '<link rel="canonical" href="https://zailiprotiv.rs/podaci">' in page_data and "<loc>https://zailiprotiv.rs/podaci</loc>" in (out / "sitemap.xml").read_text()
     assert '+ ".html"' not in (out / "site.js").read_text() and '+ ".html"' not in (out / "glasaj.js").read_text()
 
 
@@ -1136,6 +1139,8 @@ def test_a_change_of_markup_alone_tells_the_search_engines_nothing(tmp_path, mon
     assert run(soon + '<a href="q">x</a>', soon + "z") == []
     assert (site_ / "sitemap.xml").read_text(encoding="utf-8") == days
     assert run('<a href="q">x</a>', soon + "w") == [urls[1]]  # what the page says still counts beside it
+    assert run('<a href="q.html">x</a>', "w") == []  # a link's ending is not where it leads
+    assert run('<a href="q.html#a">x</a>', "w") == [urls[0]]  # an anchor is
 
 
 def test_the_support_pages_uses_are_known_to_the_counter_and_say_nothing_of_who():
