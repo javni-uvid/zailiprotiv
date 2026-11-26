@@ -133,3 +133,14 @@ in 50 s.
   each restart lost the seconds not transcribed (the break to 15:10 was lost so). `SOUND_PATH=/data/zvuk`; a piece is deleted as
   soon as it is written down, and what a run left behind is taken up unless over 15 minutes old. A restart waits 20 s after a
   turn's end at most (`mikrofon.ps1`).
+- **A turn's first piece at 20 s of sound** (26 Nov 2026, the maintainer: "da", of the proposal in the measurement of the
+  point-of-order label, live-page.md). The speaker now on was written once 30 s of their sound had gathered; now the
+  turn's first piece goes at 20 s (`prepis.FIRST_PIECE`), the rest at 30 s as before; a turn under 20 s is still not
+  written while it is on (`SHORTEST`), so a first piece goes when the turn is 20 s old, with the ~26 s of sound then
+  gathered. Measured on the kept sound of 24-25 Nov through the server: the article right 28 of 35 from 20 s against 27
+  from 30 s; 15 s and 10 s were much worse (11 and 2). The label and the turn's first words come some 10 s sooner. Cost:
+  at most one more call a turn (24 Nov: ~15 turns an hour, ~1 s each on the server, against ~120 calls an hour while
+  someone speaks). What is kept in `/data/prepis/<day>.json` is the same pieces by the second they begin, the first of
+  a turn ~20-26 s long; nothing that reads it assumes 30 s (the steps, the day's summary, the lines on speeches, the
+  mail, the site's placing read pieces by their start). `razmene.PIECE` (25 s: a piece wholly inside a turn) only grows
+  more careful with a shorter one.

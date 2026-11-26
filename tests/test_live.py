@@ -3764,3 +3764,23 @@ def test_the_block_says_povreda_poslovnika_with_each_article_linked():
             '<a href="https://zailiprotiv.rs/cir/poslovnik-clanovi#clan-107">107</a></span>') in cyr
     snap["sada"]["rok"] = {"vrsta": "replika", "sek": 120, "clanovi": [107]}  # a reply has no articles
     assert "clan-107" not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)
+
+
+def test_a_turns_first_piece_is_written_from_20_s_and_the_rest_from_30_s(tmp_path):
+    """26 Nov 2026, the maintainer: the first piece of the speaker now on at 20 s of sound, the rest at 30 s as before."""
+    from uzivo import prepis
+    from uzivo.state_base import SAID_LEAD
+    f = lambda at: (at, 5.0, tmp_path / f"{at}.pcm")  # noqa: E731
+    begin = 100 - SAID_LEAD  # the turn's sound begins before its first frame
+    cur = lambda secs: {"od": 100, "sekundi": secs}  # noqa: E731
+    first = [f(begin + 5 * i) for i in range(4)]  # 20 s
+    piece, drop, chair = prepis.choose(first, [], cur(20), now=100 + 20)
+    assert not chair and [x[0] for x in piece] == [x[0] for x in first] and not drop
+    assert prepis.choose(first[:3], [], cur(20), now=120)[0] == []  # 15 s: not yet
+    # once the first piece is written, the next waits for 30 s, as before
+    later = [f(begin + 20 + 5 * i) for i in range(5)]  # 25 s
+    assert prepis.choose(later, [], cur(45), now=145)[0] == []
+    piece = prepis.choose(later + [f(begin + 45)], [], cur(50), now=150)[0]
+    assert [x[0] for x in piece] == [begin + 20 + 5 * i for i in range(6)]
+    # a turn shorter than 20 s is still not written while it is on
+    assert prepis.choose(first, [], cur(15), now=115)[0] == []
