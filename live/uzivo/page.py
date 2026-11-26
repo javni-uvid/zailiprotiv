@@ -1166,9 +1166,8 @@ def _speaker(cur: dict, *, cyr: bool, site: str, tz: ZoneInfo, item: dict | None
     if rok:
         kind = t("rk_" + rok["vrsta"]) if rok.get("vrsta") else ""
         of = f'<span class="rk">/ {rok["sek"] // 60} {t("min")}{" · " + kind if kind else ""}</span>  · '
-    longer = (" · " + s(TEXT["longest"] if cur["duze"] >= 100 else TEXT["longer"].format(p=cur["duze"]))) if cur.get("duze", 0) >= 50 else ""
     out.append(f'<p class="clock"><b class="clk" data-od="{int(cur["od"])}" data-sek="{int(cur["sekundi"])}">'
-               f'{_hms(max(0, cur["sekundi"]))}</b> {of}<span>{t("since")} {_clock(cur["od"], tz)}{longer}</span></p></div></div>')
+               f'{_hms(max(0, cur["sekundi"]))}</b> {of}<span>{t("since")} {_clock(cur["od"], tz)}</span></p></div></div>')
     out.append(_named_line(cur, item, cyr=cyr) + sheet)
     said = ""
     if cur.get("prepis"):

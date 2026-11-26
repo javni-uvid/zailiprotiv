@@ -344,8 +344,8 @@ class View:
     @staticmethod
     def _today(done: list[dict], current: dict, day: str) -> None:
         """The speaker's day so far, by the same rule for every speaker: which turn of theirs this is, their time
-        today and its place among today's speakers; how many of today's finished turns this one has outlasted (with
-        five or more to compare with); and their time in the convocation, the site's sum of the days read plus today."""
+        today and its place among today's speakers; and their time in the convocation, the site's sum of the days
+        read plus today. ("duze", the share of today's turns this one outlasted, is off since 26 Nov 2026.)"""
         sums: dict[str, int] = {}
         for d in done + [current]:
             sums[d["ime"]] = sums.get(d["ime"], 0) + max(0, d["sekundi"])
@@ -353,8 +353,6 @@ class View:
         total = sums[current["ime"]]
         current["danas"] = {"n": mine, "sek": total, "mesto": 1 + sum(1 for v in sums.values() if v > total),
                             "od": len(sums)}
-        if len(done) >= 5:
-            current["duze"] = round(100 * sum(1 for d in done if d["sekundi"] < current["sekundi"]) / len(done))
         sv = (current.get("o") or {}).get("sv")
         if sv:
             more = sv.get("do", "") < day  # the site's sum doesn't hold today yet

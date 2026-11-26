@@ -27,8 +27,6 @@ TEXT = {
     "og_live": "Uživo: ko govori, opomene, glasanja i snimak svakog govora",
     "parts": "Delovi dana",
     "speaks": "govori",
-    "longer": "duže od {p}% današnjih govora",
-    "longest": "najduži govor danas",
     "d_today": "Danas",
     "d_conv": "saziv",
     "d_turn": "{n}. put za govornicom",

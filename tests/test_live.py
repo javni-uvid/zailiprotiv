@@ -3595,6 +3595,7 @@ def _speaking(fn, *, foto="12.jpg", item=None, ime="Petrović Petar"):
         o.update(fn=fn, fn_dan="2026-11-26")
     turn = {"ime": ime, "adresa": "petrovic-petar", "od": 1794919000, "do": 1794920000, "sekundi": 1000,
             "lista": "Lista za primer", "o": o}
+    turn["duze"] = 70  # a snapshot of a service not yet rebuilt still carries it
     return {"stanje": "govori", "provereno": 1794920000, "danas": [], "dan": "2026-11-26", "hronika": [], "sada": turn,
             "dnevni_red": {"tacke": [item]} if item else {}}
 
@@ -3616,6 +3617,7 @@ def test_the_portrait_opens_the_speakers_offices_and_the_block_gets_nothing_more
     assert "Sajt Skupštine, pročitano 26. novembra 2026." in sheet
     assert 'href="https://zailiprotiv.rs/poslanik/petrovic-petar">Stranica poslanika →' in sheet
     assert "govor danas" not in html  # C's line of today's speeches is left out (the maintainer: a light card)
+    assert "današnjih govora" not in html and "govori od" in head  # "duže od N%" off (26 Nov 2026, the maintainer)
     # one dialog for the page, outside the part that is replaced every five seconds
     assert html.count('<dialog class="og" id="og"') == 1 and html.index("<dialog") > html.index("</main>")
     assert 'id="og"' not in fragment(snap, cyr=False, site="https://zailiprotiv.rs/", tz=TZ)

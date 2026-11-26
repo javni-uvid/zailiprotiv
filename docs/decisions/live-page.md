@@ -417,3 +417,7 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   now follows its longest word's letters in the script shown (`who-6` … `who-13`, a hyphen a place to break), one step of
   the scale at a time, as measured over the sitting MPs' words (Cyrillic letters are wider); over 520 px it keeps its full
   size. Measured after: none of the 250 breaks at 320, 360 or 400 px in either script. A short name is as it was.
+- **"duže od N% današnjih govora" off** (26 Nov 2026, the maintainer, on the pictures of "O govorniku": "Izbaci duze od 70%
+  govora jako nebitna cinjenica"). The speaker's clock line says only "govori od HH:MM" (and a reply's two minutes, where
+  heard); the share of today's finished turns this one outlasted (`duze`, from five turns on, shown from 50%; "The speaker's
+  box", 19 Nov) is no longer computed or shown, nor "najduži govor danas".
