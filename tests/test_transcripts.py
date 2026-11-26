@@ -166,3 +166,20 @@ def test_a_speech_with_no_speaker_breaks_nothing_that_reads_names():
           {"speaker": "ПРЕДСЕДНИК", "chair": True, "day": 1, "text": "Изричем опомену."}]
     assert debates.whole_names(sp) == {}
     measures.measures(sp)
+
+
+def test_a_turn_that_opens_with_a_point_of_order_and_its_articles():
+    """26 Nov 2026, the maintainer: "1 u 10 je okej". The first piece decides; its own articles, or, only when it names
+    none, a later piece's, but not a number the chair's words just before it name; negations and mentions in passing
+    are no point of order."""
+    from zailiprotiv.notes_site import point_of_order as p
+    assert p(["Рекламирам повреду Пословника, члан 27. као и члан 107. Грубо је …"]) == [27, 107]
+    assert p(["Члан 107 – достојанство Парламента. Ви сте били дужни …"]) == [107]
+    assert p(["Јавио сам се по повреди Пословника, пошто видим …", "Ако нисам, члан је 89. на који се нисам позивао."],
+             ["", "Нисте."]) == [89]  # 25 Nov, case 2.8
+    assert p(["Повреда Пословника.", "Не може 15. Како ћете 15? Вама у члану 15. пише …"], ["", "Рекао је да је 15. став 2."]) == []
+    assert p(["Повреда Пословника, члан 103.", "… а члан 107. каже …"]) == [103]  # a later piece never adds
+    assert p(["Не, није повреда Пословника. Јавио сам се за реч."]) is None
+    assert p(["Е, сада, видите, ако сматрате да је то била повреда Пословника, ја вам читам …"]) is None
+    assert p(["Ако ја немам право да говорим ви ми реците … То имам право по Пословнику."]) is None
+    assert p(["Реплика."]) is None and p([]) is None

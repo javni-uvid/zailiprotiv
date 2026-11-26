@@ -25,6 +25,37 @@ MAIN = "https://zailiprotiv.rs/"
 NOTES = "https://beleske.zailiprotiv.rs/"  # where the bucket is served: the pages' own addresses, for search engines
 # A speech pointing out a breach of the Rules (as pages_floor._POINT, which imports this module)
 _POINT_OF_ORDER = re.compile(r"повред\w* Пословника|по Пословнику|рекламирам\w* члан|члан\w* \d+\.? ?Пословника", re.I)
+# A turn that opens with a point of order (26 Nov 2026, the maintainer: "1 u 10 je okej"): its first piece's own words
+# at the opening, not negated or in passing, or an article named at once. Measured on the Fifteenth's five days: 95.
+_POINT_NOT = re.compile(r"(?:није|нисам|ако сматрате|једино ако је)[^.?!]{0,40}?(?:повред|по Пословнику)|право по Пословнику",
+                        re.I)
+POINT_OPENING, POINT_ARTICLE = 150, 200  # characters
+
+
+def point_of_order(pieces: list[str], chair: list[str] | None = None) -> list[int] | None:
+    """For a turn's pieces in the notes, in order: None when it does not open with a point of order; else the Rules'
+    articles the speaker names (poslovnik.cited), from the first piece, or, only when it names none, from the first
+    later piece that does (25 Nov: "Ако нисам, члан је 89." after the chair asked). Only what the speaker said: a later
+    piece's article the chair's words just before it already name (`chair`, by piece) is an answer about it, not the
+    speaker's own (19 Nov: "Рекао је да је 15. став 2." / "Не може 15. Како ћете 15?")."""
+    if not pieces:
+        return None
+    first = pieces[0]
+    m = _POINT_OF_ORDER.search(first[:POINT_OPENING])
+    own = bool(m) and not _POINT_NOT.search(first[:m.start() + 40])
+    if not own and not any(a < POINT_ARTICLE for _, a, _ in poslovnik.cited(first, True)):
+        return None
+    chair = chair or [""] * len(pieces)
+    for i, text in enumerate(pieces):
+        arts = sorted({n for n, a, _ in poslovnik.cited(text, True) if a < poslovnik.CITE_HEAD})
+        if i and arts:
+            said = {int(x) for x in re.findall(r"\b(\d{1,3})\b", chair[i] if i < len(chair) else "")}
+            arts = [n for n in arts if n not in said]
+        if arts:
+            return arts
+    return []
+
+
 _MARK = re.compile(r"^\s*\d+/\d+\s*[A-ZА-ЯЈЉЊЂЋЏ]{1,3}\s*/\s*[A-ZА-ЯЈЉЊЂЋЏ]{1,3}\s*$", re.M)
 
 
