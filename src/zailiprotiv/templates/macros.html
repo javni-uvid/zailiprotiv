@@ -253,3 +253,8 @@
 </form></details>
 <script src="{{ root }}prati.js?v={{ css }}" defer></script>
 {% endif %}{% endmacro %}
+
+{# The page's place in the site, one short line above the heading on every screen (26 Nov 2026, the maintainer: "Idemo
+   sa B"): the site, then the list the page belongs to, both by the names their pages have. Its BreadcrumbList is made
+   of this line and the heading (publish.structured): Google takes a trail only as readers see it, on a phone too. #}
+{% macro trail(root, href, name) %}<p class="crumbs trail"><a href="{{ root }}index.html">Za ili Protiv</a> › <a href="{{ href }}">{{ name }}</a></p>{% endmacro %}

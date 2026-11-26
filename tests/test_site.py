@@ -188,6 +188,7 @@ def test_site_builds_every_convocation(tmp_path):
     assert (out / "zakon" / "zakon-o-oruzju.html").exists()  # the current convocation keeps the plain address
     assert "Trinaesti saziv" in (out / "zakon" / "zakon-o-oruzju-2.html").read_text()
     assert (out / "zakoni-13.html").exists() and "zakoni-13.html" in (out / "zakoni.html").read_text()
+    assert '<a href="zakoni.html">Zakoni</a></p>' in (out / "zakoni-13.html").read_text() and 'class="crumbs trail"' not in (out / "zakoni.html").read_text()
     mp = (out / "poslanik" / "abramovic-nenad-glasovi.html").read_text()
     assert "zakon-o-oruzju.html" in mp and "zakon-o-oruzju-2.html" in mp
     assert "abramovic-nenad.html" in (out / "poslanici.html").read_text()  # one page of MPs per convocation
@@ -261,6 +262,14 @@ def test_links_without_html_when_published(tmp_path):
     assert "/zakon/zakon-o-oruzju\"" in (out / "zakoni.xml").read_text()
     # A page named like a folder is no exception (26 Nov 2026): GitHub Pages serves podaci.html at /podaci, the folder is podaci/.
     assert 'href="podaci"' in home and 'href="podaci/' not in home.replace('href="podaci/zakoni', "")
+    # The quiz's line and the BreadcrumbList made of it and the heading, the same three places.
+    import json as json_
+    quiz_ = (out / "kviz" / "podelili-salu.html").read_text(encoding="utf-8")
+    assert '<p class="crumbs trail"><a href="../">Za ili Protiv</a> › <a href="../glasaj">Glasaj i ti</a></p>' in quiz_
+    crumbs = [json_.loads(x) for x in re.findall(r'<script type="application/ld\+json">(.*?)</script>', quiz_) if "BreadcrumbList" in x][0]
+    assert [(i["name"], i["item"]) for i in crumbs["itemListElement"]] == [
+        ("Za ili Protiv", "https://zailiprotiv.rs/"), ("Glasaj i ti", "https://zailiprotiv.rs/glasaj"),
+        ("Kako ti glasaš?", "https://zailiprotiv.rs/kviz/podelili-salu")]
     page_data = (out / "podaci.html").read_text()
     assert '<link rel="canonical" href="https://zailiprotiv.rs/podaci">' in page_data and "<loc>https://zailiprotiv.rs/podaci</loc>" in (out / "sitemap.xml").read_text()
     assert '+ ".html"' not in (out / "site.js").read_text() and '+ ".html"' not in (out / "glasaj.js").read_text()
@@ -796,6 +805,10 @@ def test_who_spoke_how_long_a_page_per_day_and_the_convocations_sum(tmp_path):
     assert "Automatski prepis" in page and "Poštovani predsedniče" in page and "nije citat" in page
     total = (out / "govornici.html").read_text()
     assert "Ko koliko govori u 15. sazivu" in total and "govornici/2026-11-17.html" in total
+    # The day's place, one line above the heading, in place of the link above it on a wide screen and under it on a phone.
+    main = page.split('<main', 1)[1]
+    assert '<p class="crumbs trail"><a href="../index.html">Za ili Protiv</a> › <a href="../govornici.html">Ko koliko govori</a></p>' in main
+    assert main.count(">Ko koliko govori</a>") == 1 and main.index("crumbs trail") < main.index("<h1")
     assert "Po danima" in total and "<th>Prosečno</th>" in total
     mp_page = (out / "poslanik" / "petrovic-petar.html").read_text() if (out / "poslanik" / "petrovic-petar.html").exists() else ""
     if mp_page:  # the MP's turns from the recording on the MP's own page, and the way on
@@ -1051,6 +1064,10 @@ def test_the_chairs_measures_are_paged_and_linked_where_they_stand(tmp_path, mon
     links = re.findall(r'href="\.\./(replike(?:-s2)?\.html)#([^"]+)"', (out / "poslanik" / "abramovic-nenad.html").read_text(encoding="utf-8"))
     assert {p for p, _ in links} == {"replike.html", "replike-s2.html"}
     assert all(f'id="{i}"' in (out / p).read_text(encoding="utf-8") for p, i in links)
+    # The line of the page's place (26 Nov 2026): on every Varnice page but the list's own first one.
+    assert 'class="crumbs trail"' not in first
+    assert '<p class="crumbs trail"><a href="index.html">Za ili Protiv</a> › <a href="replike.html">Varnice u sali</a></p>' in second
+    assert all('class="crumbs trail"' in (out / n).read_text(encoding="utf-8") for n in ("razmene.html", "ko-najvise.html"))
 
 
 def test_a_lighter_page_is_the_same_page():

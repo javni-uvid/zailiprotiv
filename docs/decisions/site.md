@@ -513,6 +513,18 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   `mikrofon.zailiprotiv.rs`: the key must be served on that host, which only the live service could do (a route in
   `live/uzivo/main.py`), so it waits for the conductor. Not now, by the maintainer: Cyrillic pages out of the sitemap
   (they bring clicks), the LIVE badge, Bing Webmaster Tools.
+- **A list's place in one short line** (26 Nov 2026, the maintainer: "Idemo sa B", of pictures of three lists at 360 px):
+  Google takes breadcrumbs as structured data only when readers see the trail ("Don't mark up content that is not visible
+  to readers of the page"), and it reads the phone's page. The lists that had none now have one line above the heading,
+  on every screen, small and muted, no box: "Za ili Protiv › " and the list the page belongs to, by the names their
+  pages have (`macros.trail`), and their BreadcrumbList is made of that line and the heading. On: every Varnice page
+  but the list's own first (`replike.html`): "Varnice u sali"; an earlier convocation's laws (`zakoni-N`): "Zakoni";
+  a day of speakers: "Ko koliko govori", in place of the link that stood above its heading on a wide screen and under
+  it on a phone (one link, not two); the quizzes: "Glasaj i ti", in place of the row the wide screen had ("Glasaj i
+  ti › Kviz", hidden on a phone, and without structured data). Some 26 px above the heading. An MP's page and the Rules
+  keep their crumbs hidden on a phone, as round two decided, and keep their BreadcrumbList; that markup likely does
+  not count where Google reads ("Only the content shown on the mobile site is used for indexing"). Since January 2025
+  Google shows breadcrumbs only in desktop results, 27% of the times the site was shown in 18-24 Nov.
 
 ## Support
 

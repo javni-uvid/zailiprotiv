@@ -37,7 +37,7 @@ def fit_head(text: str) -> str:
     return _SAID.sub(said, _TITLE.sub(title, text, 1))
 
 
-_CRUMBS = re.compile(r'<p class="crumbs">(.*?)</p>', re.S)
+_CRUMBS = re.compile(r'<p class="crumbs(?: trail)?">(.*?)</p>', re.S)
 _CRUMB = re.compile(r'<a href="([^"#]*)">([^<]+)</a>')
 _H1 = re.compile(r"<h1\b[^>]*>(.*?)</h1>", re.S)
 

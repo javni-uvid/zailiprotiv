@@ -38,6 +38,8 @@ h2 { font-size: var(--t-7); line-height: 1.15; margin: 2.6rem 0 .8rem; }
 h3 { font-size: var(--t-3); margin: 1.4rem 0 .4rem; }
 .lead { font-size: var(--t-4); color: var(--muted); max-width: 42rem; }
 .meta, .crumbs { color: var(--muted); font-size: var(--t-2); }
+/* The one short line of a list's place in the site (macros.trail), on every screen: small, muted, no box. */
+.crumbs.trail { font-size: var(--t-1); margin: .6rem 0 0; line-height: 1.3; } .crumbs.trail a { color: inherit; }
 .small { font-size: var(--t-2); }
 .nowrap { white-space: nowrap; }
 .hero { padding: 1rem 0 .5rem; }
@@ -993,7 +995,7 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
    each, and the three buttons stay at the bottom of the screen until the law is voted on. */
 .q-short { display: none; }
 @media (max-width: 640px) {
-  .q-crumbs, .q-lead, .q-long, .q-strip .q-strip-end:disabled { display: none; }
+  .q-lead, .q-long, .q-strip .q-strip-end:disabled { display: none; }
   .q-short { display: inline; }
   .q-h1 { font-size: var(--t-6); margin: .9rem 0 .3rem; }
   .q-notice { margin-bottom: .7rem; font-size: var(--t-1); }
