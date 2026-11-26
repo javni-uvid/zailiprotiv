@@ -421,7 +421,10 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   govora jako nebitna cinjenica"). The speaker's clock line says only "govori od HH:MM" (and a reply's two minutes, where
   heard); the share of today's finished turns this one outlasted (`duze`, from five turns on, shown from 50%; "The speaker's
   box", 19 Nov) is no longer computed or shown, nor "najduži govor danas".
-- **"govori od HH:MM" off the speaker's clock line too** (26 Nov 2026, the maintainer, unsure: "Čak možda i govori od bih
-  izbacio"; a commit of its own, to be dropped if he says no). The line is the running clock alone, or the clock and a
-  reply's or a point of order's limit ("/ 2 min · replika"). The start stays in the clock's `data-od`, from which the
-  script counts. Nothing else read the words. The text `since` stays: `picture.py` uses it.
+- **"govori od HH:MM" off the speaker's clock line too** (26 Nov 2026, the maintainer: first "Čak možda i govori od bih
+  izbacio", then, shown variants without the clock as well, "ostavi samo sat, izbaci govori od i to je to"; "i to je to"
+  his yes to the rest of "O govorniku" above, its words, D's line and the name's size). The line is the running clock
+  alone, or the clock and a reply's or a point of order's limit ("/ 2 min · replika"). The start stays in the clock's
+  `data-od`, from which the script counts. Nothing else read the words. The text `since` stays: `picture.py` uses it.
+  Tried and not taken the same day: no clock, with "govori od" or with nothing (a bare "14:03" may read as the time of
+  day; he chose the clock).
