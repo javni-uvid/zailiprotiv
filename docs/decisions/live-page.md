@@ -485,3 +485,18 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     decides, with "po Poslovniku", was measured: fewer wrong on the notes (18 → 11), +2 right and +2 wrong live, and it
     moves the reply's label on 6 ordinary turns with nothing to check them against: not taken.
   - *"čl.27." with no space* is read in the live copy as on the site (#307).
+  - *One joined piece, measured and not taken; merged on the maintainer's word* (26 Nov 2026: "1 da", to merge and release
+    it, of the table below). The same 106 turns, the archive's sound through the server, the prompt as above:
+
+    | | kind: right, wrong, missed | article: right, wrong, missed |
+    |---|---|---|
+    | before | 14, 1, 18 | 0, 0, 31 |
+    | as built (the live transcript) | 24, 1, 8 | 20, 2, 9 |
+    | as built, the archive's sound in two pieces | 22, 4, 10 | 19, 1, 12 |
+    | the chair's 20 s and the speaker's 30 s written as one | 20, 4, 12 | 17, 2, 14 |
+    | the same with the speaker's 20 s | 22, 3, 10 | 19, 2, 12 |
+
+    (31 articles since #307.) The joined piece hears the speaker's opening worse ("član" with the right number anywhere in
+    the text: 24 of 34, against 27 for the speaker's piece alone): led by the chair's 20 s, Whisper drops or condenses
+    the first words. The one-piece hearing quoted above (30 of 34) was the speaker's piece alone, counted as heard
+    anywhere; the gap to the label is the rule's (both kinds heard near the start, the windows), not the cut.
