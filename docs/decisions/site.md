@@ -492,6 +492,13 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   `publish.clean_urls` makes no exception now: the short address everywhere, and the `.html` one, which still answers,
   names it as canonical. Run over the published site: no own `.html` link left, the sitemap's four entries short. A
   link's ending is no change of the page (`tools/indexnow.py`, HASH "4"), so the change dates no page.
+- **Thin sittings wait outside the sitemap** (26 Nov 2026, the maintainer: "Uradi sve po tvojim preporukama"): of the
+  pages Google was asked to read, the sittings were among the least indexed, and 141 of 229 say fewer than 300 words in
+  their main part (mostly older convocations: a title and a list of laws). A sitting's page under 300 words
+  (`downloads.THIN_WORDS`, `in_sitemap`) is left out of the sitemap, in both scripts, until the core is indexed; it
+  stays open, indexable and linked as before. The rule is the page's own words only, the same for every sitting; the
+  other kinds are not judged by it (their pages are long: a law's median some 1,660 words, an MP's 1,090). On the site
+  of 26 Nov: sittings 229 to 88 in each script, the sitemap 7,254 to 6,972.
 
 ## Support
 
