@@ -361,4 +361,28 @@ records and recordings stays here:
     has ffmpeg and Tesseract there) reads two frames a few seconds after the first word heard, the caption's name by the
     live page's OCR and the timer by a digits-only read, and writes them into `merac.json` (`"procitao": "OCR"`); `govor`
     applies them by the same safeguards, and a reading by hand is kept over one by OCR.
+- **A turn ends where the chair gives the floor anew, or the microphone is cut** (26 Nov 2026, the conductor, by the
+  maintainer's rulings on the doubtful cases 2.8-2.14, quoted: 2.13 "ovo su tehnicki dva govora - replika i posle kad dobije
+  rec - jeste jedna osoba ali su odvojene stavke"; 2.12 "tehnicki i dalje ovo tretiramo kao govor vucica - jer cak i
+  predsedavajuci kaze ajde nastavite a i nigde nije oduzimanje reci ili gasenje mikrofona"; 2.10 and 2.11, the speech ends
+  when the microphone is cut; 2.9 "govori budu neke upadice, rasprava sa predsedavajucim, ali vreme tece"). One speaker's
+  pieces with only the chair between them were one turn within 120 s, so on 24 Nov a reply and the speech in the debate
+  after it, the floor given anew between them ("Дајем реч народном посланику Александру Вучићу. … По претресу."), stood as
+  one turn of 26 minutes. Now `govor.day` ends a turn, though the same speaker goes on, where the chair's words between
+  the pieces hold one of `FLOOR_GIVEN` ("реч има", "има реч", "дајем реч", "реч дајем", "дајем вам реч", "право на
+  реплику") or `BREAK` ("пауз"), or where the notes end the speaker's piece before with `CUT` ("искључен микрофон"). Not
+  `FLOOR_KEPT`: "има реч, да заврши / да настави" lets the speaker finish (19 Nov 00356, the one false match found). A
+  warning, an explanation or an argument while the speaker keeps the floor ends nothing; the 120 s stays until the
+  maintainer rules on the chair speaking at length (group 3: on 17 Nov, with no time limit, Hubač's two speeches across
+  134 and 166 s of the chair's words would be one). The turns it splits: 19 Nov Dimović 19:27:58 twice (his point of order
+  given after his reply, and after "(Искључен микрофон.)" the floor given again); 24 Nov Vučić 17:12:36 ("Даћу вам право
+  на реплику") and 18:40:55 (2.13); 25 Nov Vučić 10:11:18 (the floor given to Aleksandra Štimac by mistake, then back) and
+  10:50:43 (as representative after the proposals). Turns 19 Nov 81 to 83 (-73 s), 24 Nov 98 to 100 (-84 s), 25 Nov 19 to
+  21 (-205 s); 17 and 18 Nov the same. The seconds that leave the speakers are the chair's words between the two parts,
+  now counted for nobody. Every old link opens the same turn: they all pointed at a turn's beginning, which stays.
+  (Measured first with a pattern that missed the cut microphone by a letter: it gave 19 Nov 82 turns and -57 s.)
+- **The bar from the director is the authority for a speech's beginning and length** (26 Nov 2026, the maintainer, of
+  2.14: "tehnicki govor ovde krene tek kada rezija stavi traku za govornika mada je i rasprava pre toga bitna i mozemo
+  obeleziti kao da je vucic govorio - kada izadje traka iz rezije svakako trebamo osveziti karticu sa time koliko neko
+  prica prema tome"). The timer readings above follow it; for the live page it is the live page's worker's part.
 

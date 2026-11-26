@@ -1176,14 +1176,28 @@
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795536756,
-   "do": 1795537054,
-   "okvira": 383,
+   "do": 1795536881,
+   "okvira": 172,
    "video": "",
    "snimak": 13,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410c.mp4",
    "beleske": [
     "54098/00832",
-    "54098/00834",
+    "54098/00834"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795536930,
+   "do": 1795537054,
+   "okvira": 211,
+   "video": "",
+   "snimak": 187,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410c.mp4",
+   "beleske": [
     "54098/00836"
    ]
   },
@@ -1440,8 +1454,8 @@
    "grupa": "",
    "uloga": "Aleksandar Vučić - Srbija pobeđuje",
    "od": 1795542055,
-   "do": 1795543614,
-   "okvira": 2365,
+   "do": 1795542209,
+   "okvira": 233,
    "video": "",
    "snimak": 1000,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410d.mp4",
@@ -1449,7 +1463,21 @@
     "54098/00889",
     "54098/00891",
     "54098/00893",
-    "54098/00895",
+    "54098/00895"
+   ]
+  },
+  {
+   "ime": "Vučić Aleksandar",
+   "adresa": "vucic-aleksandar",
+   "grupa": "",
+   "uloga": "Aleksandar Vučić - Srbija pobeđuje",
+   "od": 1795542244,
+   "do": 1795543614,
+   "okvira": 2132,
+   "video": "",
+   "snimak": 1189,
+   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026112410d.mp4",
+   "beleske": [
     "54098/00897",
     "54098/00899",
     "54098/00903",
