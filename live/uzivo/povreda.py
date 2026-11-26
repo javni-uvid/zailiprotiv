@@ -16,7 +16,7 @@ LAST = 298  # the Rules' last article (poslovnik.cited's `last`)
 CITE_HEAD = 400  # characters of a point of order whose articles count (poslovnik.CITE_HEAD)
 
 # poslovnik._CITE, _OF_RULES, _OTHER in Latin
-_CITE = re.compile(r"\b(?:član\w*|čl\.)\s+(?:je\s+)?(\d{1,3})\b\.?(?:\s*(?:stav|st\.)\s*\d+\.?)?(?=(?P<after>[^.;:]{0,25}))", re.I)
+_CITE = re.compile(r"\b(?:član\w*\s+|čl\.\s*)(?:je\s+)?(\d{1,3})\b\.?(?:\s*(?:stav|st\.)\s*\d+\.?)?(?=(?P<after>[^.;:]{0,25}))", re.I)
 _OF_RULES = re.compile(r"^\s*(?:,\s*)?Poslovnik", re.I)
 _OTHER = re.compile(r"Ustav|[Zz]akon", re.I)
 # notes_site._POINT_NOT in Latin: a point of order denied or in passing

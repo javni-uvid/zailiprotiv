@@ -470,3 +470,18 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     word, takes it off; past two and a half minutes nothing is shown; nothing is written down (no day file, mail or site
     page has it; the day page labels from the notes by its own rule). `POVREDA_CLAN=0` in the service's settings takes
     the articles off, the kind staying.
+  - *Whisper's prompt with "član"* (26 Nov 2026, the maintainer: "sačekaj probe sa whisperom, dodatno na probu pošalji i
+    šta god drugo ima smisla"). On the kept sound of 24-25 Nov, through the service's own server with no broadcast on, one
+    request at a time, cut as the service cuts (the chair's 20 s, the speaker's first 30 s): 37 points of order, 5 replies,
+    10 ordinary openings, one change at a time. `prepis.Writer.TERMS` now says "član 27, član 103, član 107, član 108"
+    after "povreda Poslovnika" (examples, no names added): "član" heard 32 → 33 of 35, the article 27 → 28, "Poslovnik" 33
+    → 34 of 37, the speaker's name 43 → 44 of 52, the first sentence's word error 0.15 → 0.13; nothing worse. Measured and
+    not taken: the same with cases (no better), without the day's names (worse: 0.21), the cut 3 or 6 s earlier (worse),
+    `beam_size` 5 (the server takes it; mixed), `best_of` and no previous text (the server writes the same). The first
+    piece of 20 s is nearly as good as 30 s (the article 28/35), 15 s and 10 s much worse (11 and 2): an earlier first
+    piece is the maintainer's to decide (POVREDA-ANALIZA.md with the conductor). The same sound written as one piece
+    hears "član" in 32 of 34 openings and the article in 30, the very ones the live transcript misheard: part of the loss
+    is reading two pieces (the chair's, the speaker's), not hearing. A rule where the kind word nearest the turn's start
+    decides, with "po Poslovniku", was measured: fewer wrong on the notes (18 → 11), +2 right and +2 wrong live, and it
+    moves the reply's label on 6 ordinary turns with nothing to check them against: not taken.
+  - *"čl.27." with no space* is read in the live copy as on the site (#307).

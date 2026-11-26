@@ -244,8 +244,10 @@ class Writer(threading.Thread):
             return " ".join(s.text.strip() for s in segments).strip()
         return write
 
+    # "član" with numbers only as examples (26 Nov 2026): on the kept sound of 24-25 Nov through the server, the openings
+    # of 37 points of order heard "član" and the article a little more often, no other word worse (live-page.md)
     TERMS = ("Narodna skupština Republike Srbije. Predsedavajući, narodni poslanici, poslanička grupa, Poslovnik, "
-             "povreda Poslovnika, replika, dnevni red, amandman, pretres, glasanje.")
+             "povreda Poslovnika, član 27, član 103, član 107, član 108, replika, dnevni red, amandman, pretres, glasanje.")
 
     def hint_for(self, snap: dict) -> str:
         """What Whisper is told before a piece (19 Nov 2026): the Assembly's set terms and the names it is likeliest
