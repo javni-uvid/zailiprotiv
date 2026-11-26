@@ -1127,6 +1127,13 @@ def test_a_change_of_markup_alone_tells_the_search_engines_nothing(tmp_path, mon
     assert run("<p>\n  x", "y") == []
     assert run("x", "z") == [urls[1]]
     assert run('<a href="q">x</a>', "z") == [urls[0]]
+    # The notice of the next sitting, on every page the day before: neither a change nor a new day in the sitemap.
+    days = (site_ / "sitemap.xml").read_text(encoding="utf-8")
+    soon = ('<p class="live soon" data-pagefind-ignore data-show="1,2" hidden><span><b>Sutra u 10: sednica Skupštine.</b> '
+            '<a href="https://mikrofon.zailiprotiv.rs/" data-mik="najava">Mikrofon</a></span></p>')
+    assert run(soon + '<a href="q">x</a>', soon + "z") == []
+    assert (site_ / "sitemap.xml").read_text(encoding="utf-8") == days
+    assert run('<a href="q">x</a>', soon + "w") == [urls[1]]  # what the page says still counts beside it
 
 
 def test_the_support_pages_uses_are_known_to_the_counter_and_say_nothing_of_who():
