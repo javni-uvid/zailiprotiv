@@ -84,6 +84,10 @@ def test_site_builds_every_page(built):
     # What a search result shows: the MP's own counts first, the same sentence for everyone; who they are as data.
     assert re.search(r'<meta name="description" content="Nenad Abramović, poslanik: od \d+ konačn\w+ glasanja o zakonima \d+ za, \d+ protiv', mp)
     assert '"@type": "Person"' in mp and '"url": "https://zailiprotiv.rs/poslanik/abramovic-nenad"' in mp
+    # the form the Assembly and many searches use, surname first, as the page's h1 shows it (26 Nov 2026)
+    import json as json_
+    person = json_.loads(re.search(r'<script type="application/ld\+json">(\{[^<]*"Person"[^<]*)</script>', mp).group(1))
+    assert person["alternateName"] == "Abramović Nenad" and person["name"] == "Nenad Abramović"
     assert (out / "kako-racunamo.html").exists() and "kako-racunamo.html#" in (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
     import xml.dom.minidom as dom
     assert dom.parse(str(out / "zakoni.xml")).getElementsByTagName("entry")
