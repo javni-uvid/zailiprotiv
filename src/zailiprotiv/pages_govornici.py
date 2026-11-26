@@ -261,7 +261,7 @@ def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None
                 t["said"] = said.get(str(raw["od"]), "")
             # The chair's own stretches between turns (govor.chair_stretches), as cards in time order: the role's,
             # in no sum, and with no data-od, so a shared link or the player's ⏮ ⏭ never lands on one.
-            turns = sorted(turns + [{"chair": True, "od": c["od"], "dur": dur(c["do"] - c["od"]),
+            turns = sorted(turns + [{"chair": True, "od": c["od"], "dur": dur(c.get("trajanje", c["do"] - c["od"])),
                                      "from": datetime.fromtimestamp(c["od"], TZ).strftime("%H:%M"),
                                      "to": datetime.fromtimestamp(c["do"], TZ).strftime("%H:%M")}
                                     for c in day.get("predsedavajuci") or []], key=lambda t: t["od"])

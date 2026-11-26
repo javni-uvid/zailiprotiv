@@ -178,6 +178,12 @@ def test_the_chairs_own_stretches_between_turns():
     assert [(c["od"], c["do"], c["beleske"]) for c in got] == [(101, 160, ["2", "3"])]  # 9 s too short; a roll call none
     inside = [mp("1", 0.0, 100.0), ch("2", 30.0, 80.0)]
     assert govor.chair_stretches(inside, f, [{"od": 0, "do": 100}]) == []
+    # the length is the seconds the chair is heard: a minute of silence (no word for over GAP) is left out of it
+    heard = [("rec", F, float(t)) for t in [*range(101, 115, 2), *range(147, 161, 2)]]
+    got = govor.chair_stretches(speeches, f, turns, heard)
+    assert [(c["od"], c["do"], c["trajanje"]) for c in got] == []  # 12 + 12 s heard: under CHAIR_CARD, no card
+    heard += [("rec", F, float(t)) for t in range(115, 147, 2)]
+    assert [(c["od"], c["do"], c["trajanje"]) for c in govor.chair_stretches(speeches, f, turns, heard)] == [(101, 160, 58)]
 
 
 def test_a_days_part_the_archive_holds_before_its_page_lists_it():

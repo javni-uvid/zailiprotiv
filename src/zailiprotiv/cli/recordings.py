@@ -167,7 +167,7 @@ def govor_cmd(args) -> int:
            "pokriveno": [{"od": min(t["od"] for t in turns), "do": max(t["do"] for t in turns)}] if turns else [],
            "govori": turns,
            # the chair's own stretches between turns, of CHAIR_CARD seconds or more: the role's, no one's time
-           "predsedavajuci": govor.chair_stretches(placed, files, turns),
+           "predsedavajuci": govor.chair_stretches(placed, files, turns, words),
            "datoteke": [p for f in files if f["od"] is not None
                         for p in govor.stretches(f, int(kept.get(f["url"], {}).get("trajanje") or 0))]}
     if args.dry_run:

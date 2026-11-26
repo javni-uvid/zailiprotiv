@@ -407,6 +407,10 @@ records and recordings stays here:
   person, in no list's sum and in nobody's time as an MP; a presiding officer who speaks from the floor that day keeps
   that as his own turn under his group, and nothing moves between them. With no `data-od`, a shared link or the player's
   ⏮ ⏭ never lands on one. The page's "između govora" sum and "Predsedavajući nema potpis i nije uračunat" stay as they
-  are, still true. On 17-25 Nov: 9, 14, 24, 18 and 11 cards, 10,437 s; every turn the same. Inside a member's speech
+  are, still true. **The card's length is the seconds the chair is heard**, from the first word to the last, less every
+  silence of over 10 s (`GAP`: a minute of silence, a quorum count, a vote, the start of a break), so it can be shorter
+  than the card's span (from–to); a stretch heard under 30 s is no card (the conductor, after measuring: 7 of 76 spans
+  were more than half silence, e.g. 19 Nov 18:05:54 "Проглашавам паузу од десет минута." 86%, 25 Nov 10:07:04 a minute of
+  silence 77%). On 17-25 Nov: 9, 14, 21, 17 and 10 cards, 8,436 s heard; every turn the same. Inside a member's speech
   (3.18) the maintainer has not chosen: "ovo zavisi da li predsedavajuci vraca vreme ili ne".
 
