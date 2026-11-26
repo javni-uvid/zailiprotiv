@@ -428,3 +428,75 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   `data-od`, from which the script counts. Nothing else read the words. The text `since` stays: `picture.py` uses it.
   Tried and not taken the same day: no clock, with "govori od" or with nothing (a bare "14:03" may read as the time of
   day; he chose the clock).
+- **"Povreda Poslovnika · čl. 107" beside the clock** (26 Nov 2026, the maintainer: "Trebamo promeniti i kad detektujemo
+  povredu poslovnika isto"; of the day pages' label, "1 u 10 je okej, mozemo i uzivo"). The clock's line said "/ 2 min ·
+  povreda Poslovnika" where a point of order was heard; it now says it in the words approved for the day pages, "/ 2 min
+  · Povreda Poslovnika", and, where the speaker names them, "· čl. 107" or "· čl. 27 i 107", each number leading to the
+  article on `poslovnik-clanovi` (both scripts). No new row: the line breaks only between its parts; with no article it
+  is as high as before, with one or two it takes one more line at 360 and 320 px (measured), the name and the clock as
+  they were. The small player's line keeps "/ 2 min".
+  - *The kind* (`rok.limit`, `label=True` for this line only; the groups' time and the exchanges keep the rule as it was):
+    as before, the chair's words giving the floor or the speaker's first words, with the site's negations (`povreda.NOT`:
+    "nije / nisam / ako smatrate … povreda", "pravo po Poslovniku") and the site's second sign, an article named at once.
+    **Live, the chair's words alone can make the label, unlike the day pages** (`notes_site.point_of_order` takes the
+    speaker's own words only): the automatic transcript has the speaker's opening at only some turns' starts, so without
+    the chair's "povreda Poslovnika" most points of order would go unlabelled; the notes have every word.
+  - *The articles* (`povreda.articles`): only the speaker's own words, after the chair's last words giving the floor
+    ("izvolite", "reč ima", "dajem reč"; the caption comes seconds after the speaker begins, so their opening is often in
+    the pieces with no caption), from 45 s before the turn to 30 s into it; a number in the chair's words before that is
+    not taken; numbers said in words are read ("član sto sedam"); only the Rules' articles (1-298), as `poslovnik.cited`
+    has them. `povreda.py` is the site's rule in Latin, and a test holds it to the same answers over the notes (500
+    speeches of the Fifteenth: the same articles and negations).
+  - *Measured* on the service's own transcript and turns of 24 and 25 Nov against the notes' labels of the same turns
+    (106 turns matched one to one, 32 points of order, 30 naming an article; a first count had one turn twice):
+
+    | | kind: right, wrong, missed | article: right, wrong, missed |
+    |---|---|---|
+    | before (the words alone, no article) | 14, 1, 18 | 0, 0, 30 |
+    | the kind as built, the article from the old window (the chair's pieces too) | 24, 1, 8 | 13, 2, 16 |
+    | as built (cut after the chair, numbers in words) | 24, 1, 8 | 19, 3, 9 |
+    | as built, without numbers in words | 24, 1, 8 | 19, 3, 9 |
+
+    Numbers in words made no difference on those days (the transcript wrote figures); the negations none either. The
+    errors, one by one (`POVREDA-ANALIZA.md` with the conductor): 6 misheard (mostly "član"), 3 worded otherwise (both
+    kinds' words, a bare number), 3 the window (no "reč ima" to cut at), 2 the notes' reading (the site's rule misses
+    "čl.27." without a space; a point of order the notes open otherwise). Measured and not taken, each adding as many
+    wrong as right or nothing: "povredi" and other cases, a cut after "po kom osnovu?", "replika" only at the opening, an
+    article said twice; the chair's "da li želite da se izjasnite" after the turn (live 8 of 32, never another turn; in
+    the notes of five days 23 of 72 and 11 others); the chair's "dva minuta"; the director's timer and the caption (the
+    timer counts up from 0:00 for both kinds). The label comes between the 30th and 60th second (the speaker's sound is
+    written in 30 s pieces): right at 10/20/40/60 s, 2/9/22/24. The text around a turn's start was there for all 106.
+  - *Taken back*: recomputed with every snapshot from what has been heard, so a later word that denies it, or a reply's
+    word, takes it off; past two and a half minutes nothing is shown; nothing is written down (no day file, mail or site
+    page has it; the day page labels from the notes by its own rule). `POVREDA_CLAN=0` in the service's settings takes
+    the articles off, the kind staying.
+  - *Whisper's prompt with "član"* (26 Nov 2026, the maintainer: "sačekaj probe sa whisperom, dodatno na probu pošalji i
+    šta god drugo ima smisla"). On the kept sound of 24-25 Nov, through the service's own server with no broadcast on, one
+    request at a time, cut as the service cuts (the chair's 20 s, the speaker's first 30 s): 37 points of order, 5 replies,
+    10 ordinary openings, one change at a time. `prepis.Writer.TERMS` now says "član 27, član 103, član 107, član 108"
+    after "povreda Poslovnika" (examples, no names added): "član" heard 32 → 33 of 35, the article 27 → 28, "Poslovnik" 33
+    → 34 of 37, the speaker's name 43 → 44 of 52, the first sentence's word error 0.15 → 0.13; nothing worse. Measured and
+    not taken: the same with cases (no better), without the day's names (worse: 0.21), the cut 3 or 6 s earlier (worse),
+    `beam_size` 5 (the server takes it; mixed), `best_of` and no previous text (the server writes the same). The first
+    piece of 20 s is nearly as good as 30 s (the article 28/35), 15 s and 10 s much worse (11 and 2): an earlier first
+    piece is the maintainer's to decide (POVREDA-ANALIZA.md with the conductor). The same sound written as one piece
+    hears "član" in 32 of 34 openings and the article in 30, the very ones the live transcript misheard: part of the loss
+    is reading two pieces (the chair's, the speaker's), not hearing. A rule where the kind word nearest the turn's start
+    decides, with "po Poslovniku", was measured: fewer wrong on the notes (18 → 11), +2 right and +2 wrong live, and it
+    moves the reply's label on 6 ordinary turns with nothing to check them against: not taken.
+  - *"čl.27." with no space* is read in the live copy as on the site (#307).
+  - *One joined piece, measured and not taken; merged on the maintainer's word* (26 Nov 2026: "1 da", to merge and release
+    it, of the table below). The same 106 turns, the archive's sound through the server, the prompt as above:
+
+    | | kind: right, wrong, missed | article: right, wrong, missed |
+    |---|---|---|
+    | before | 14, 1, 18 | 0, 0, 31 |
+    | as built (the live transcript) | 24, 1, 8 | 20, 2, 9 |
+    | as built, the archive's sound in two pieces | 22, 4, 10 | 19, 1, 12 |
+    | the chair's 20 s and the speaker's 30 s written as one | 20, 4, 12 | 17, 2, 14 |
+    | the same with the speaker's 20 s | 22, 3, 10 | 19, 2, 12 |
+
+    (31 articles since #307.) The joined piece hears the speaker's opening worse ("član" with the right number anywhere in
+    the text: 24 of 34, against 27 for the speaker's piece alone): led by the chair's 20 s, Whisper drops or condenses
+    the first words. The one-piece hearing quoted above (30 of 34) was the speaker's piece alone, counted as heard
+    anywhere; the gap to the label is the rule's (both kinds heard near the start, the windows), not the cut.

@@ -5,10 +5,17 @@ representative has twenty minutes but may speak more by the chair's leave, the p
 Heard in what the chair said when giving the floor (the last 45 s) or in the speaker's first words: "povreda
 Poslovnika" (and "reklamiram povredu"), "replika". Both words heard, or neither kind told apart: no name, the two
 minutes alone. A turn that has gone on past it by more than half a minute is no such turn, or was let on: nothing is
-shown then. The same rule for every speaker."""
+shown then. The same rule for every speaker.
+
+A point of order denied or said in passing ("nije povreda Poslovnika", "pravo po Poslovniku": the site's negations,
+povreda.NOT) is none, and one is also a turn whose speaker names a Rules' article at once (the site's second sign,
+povreda.opens_with_article; 26 Nov 2026). Of one, the articles the speaker names at the opening (povreda.articles), never
+the chair's; `config.POINT_ARTICLES` ("POVREDA_CLAN=0") takes them off. Recomputed with every snapshot, kept nowhere."""
 from __future__ import annotations
 
 import re
+
+from . import povreda
 
 LIMIT = 120  # seconds (art. 103, para. 4; art. 104, para. 4)
 OVER = 30  # seconds past it before the limit is no longer shown
@@ -50,13 +57,26 @@ def proposer(said: dict[str, str], turn: dict) -> bool:
     return bool(_PROPOSER.search(_around(said, turn["od"])))
 
 
-def limit(said: dict[str, str], start: float, seconds: int, basis: bool = False) -> dict | None:
+def limit(said: dict[str, str], start: float, seconds: int, basis: bool = False, *, label: bool = False,
+          articles: bool = True) -> dict | None:
     """{"vrsta": "replika" | "povreda" | "", "sek": LIMIT} of the turn begun at `start`, `seconds` long so far; None
-    when nothing heard tells. With `basis`, the chair's "po kom osnovu" tells too, with no kind."""
+    when nothing heard tells. With `basis`, the chair's "po kom osnovu" tells too, with no kind. With `label` (the
+    speaker's clock line, 26 Nov 2026), the site's rules too: a denied point of order is none, an article named at once
+    makes one, and its articles ("clanovi", when any and `articles`). Without it, as before (the groups' time, razmene)."""
     if seconds > LIMIT + OVER:
         return None
     text = _around(said, start)
-    order, reply = bool(_ORDER.search(text)), bool(_REPLY.search(text))
+    m = _ORDER.search(text)
+    order, reply = bool(m), bool(_REPLY.search(text))
+    if label:
+        order = order and not povreda.denied(text, m.start())
+        if not order and not reply and povreda.opens_with_article(said, start):  # the site's second sign
+            order = True
     if not (order or reply or (basis and _BASIS.search(text))):
         return None
-    return {"vrsta": "" if order and reply else "povreda" if order else "replika", "sek": LIMIT}
+    out = {"vrsta": "" if order and reply else "povreda" if order else "replika", "sek": LIMIT}
+    if label and articles and out["vrsta"] == "povreda":
+        named = povreda.articles(said, start)
+        if named:
+            out["clanovi"] = named
+    return out
