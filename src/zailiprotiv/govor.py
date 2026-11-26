@@ -219,6 +219,17 @@ FLOOR_GIVEN = ("реч има", "има реч", "дајем реч", "реч д
 FLOOR_KEPT = ("има реч, да заврши", "има реч да заврши", "има реч, да настави", "има реч да настави")  # "let him finish"
 BREAK = ("пауз",)
 CUT = ("искључен микрофон",)
+ANSWER = 20  # words: a member's piece this short right after the chair's question is an answer to the chair, no speech
+
+
+def _answer(s: dict, asked: bool, goes_on: bool) -> bool:
+    """A very short answer to the chair (26 Nov 2026, the maintainer, of case 3.16: "drugu istancu ne bih klasifikovao
+    kao govor, samo je odgovor predsedavajucem koji je jako kratak"; of the rule: "slazem se"): a member's piece of at
+    most ANSWER words right after the chair's words that end in a question, where it would end a turn or stand alone. It
+    is no speech: joined to no turn and no turn of its own. Where the same speaker goes on after it (`goes_on`) it stays
+    in the turn: inside a speech an exchange with the chair is part of it (2.9, 2.12), and nothing an MP says is left out
+    of the record of the speech. The same for everyone; the notes' pages keep every piece."""
+    return asked and not goes_on and len(fold(s.get("text") or "")) <= ANSWER
 
 
 def _says(text: str, words: tuple) -> bool:
@@ -265,10 +276,17 @@ def day(speeches: list[dict], files: list[dict], who) -> list[dict]:
     out: list[dict] = []
     last_speaker = None
     ended = False  # since the speaker's last piece: the floor given anew, a break, or the microphone cut
-    for s in speeches:
+    asked = False  # the chair's last words end in a question
+    members = [i for i, s in enumerate(speeches) if not s.get("chair")]
+    after = {i: speeches[j]["speaker"] for i, j in zip(members, members[1:])}  # the next member's piece's speaker
+    for i, s in enumerate(speeches):
         if s.get("chair"):
             ended |= _says(s.get("text") or "", FLOOR_GIVEN + BREAK)
+            asked = (s.get("text") or "").rstrip().endswith("?")
             continue
+        if _answer(s, asked, after.get(i) == s["speaker"]):
+            continue
+        asked = False
         if "datoteka" not in s:
             ended |= _says(s.get("text") or "", CUT)
             # A piece of the same speaker with no place (too short for two runs) does not end the turn: with only the

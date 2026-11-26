@@ -5,7 +5,7 @@
  "pokriveno": [
   {
    "od": 1795079246,
-   "do": 1795128999
+   "do": 1795128986
   }
  ],
  "govori": [
@@ -241,15 +241,14 @@
    "grupa": "Studentska lista",
    "uloga": "Studentska lista",
    "od": 1795100894,
-   "do": 1795100969,
+   "do": 1795100957,
    "okvira": 81,
    "video": "",
    "snimak": 1568,
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
    "beleske": [
     "54098/00189",
-    "54098/00191",
-    "54098/00193"
+    "54098/00191"
    ]
   },
   {
@@ -320,21 +319,6 @@
     "54098/00223",
     "54098/00225",
     "54098/00227"
-   ]
-  },
-  {
-   "ime": "Mavrić Adem",
-   "adresa": "mavric-adem",
-   "grupa": "Studentska lista",
-   "uloga": "Studentska lista",
-   "od": 1795102227,
-   "do": 1795102231,
-   "okvira": 2,
-   "video": "",
-   "snimak": 2901,
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910b.mp4",
-   "beleske": [
-    "54098/00229"
    ]
   },
   {
@@ -1333,21 +1317,6 @@
    "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910e.mp4",
    "beleske": [
     "54098/00542"
-   ]
-  },
-  {
-   "ime": "Đajić Zoran",
-   "adresa": "djajic-zoran",
-   "grupa": "Studentska lista",
-   "uloga": "Studentska lista",
-   "od": 1795128997,
-   "do": 1795128999,
-   "okvira": 4,
-   "video": "",
-   "snimak": 6062,
-   "datoteka": "https://arhiva.videonet.co.rs/filesnsrs/zasedanja/zas2026111910e.mp4",
-   "beleske": [
-    "54098/00544"
    ]
   }
  ],
