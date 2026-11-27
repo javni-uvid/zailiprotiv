@@ -60,7 +60,8 @@ that file in the same commit, and here only when a line below no longer holds.
   `pieces` and `against`; its own rules are scored over kept days by `tools/uzivo_ponovo.py`. The name of a worktree's test is computed in `mikrofon.ps1` and `tools/pocisti-projekat.sh`: change both.
 - **What the page says about principle 5** (what loads, what is kept, what is counted) is on the page or the method
   page: a change there changes the words too, in both scripts.
-- The tests are `tests/test_live.py`, `test_pretplata.py` and `test_mejl.py`; OCR and the stream are tried against a
+- The tests are `tests/test_live.py`, `test_pretplata.py`, `test_mejl.py`, and for following by mail `test_prati.py` and
+  `test_prati_oblasti.py`; OCR and the stream are tried against a
   broadcast.
 
 **What Google shows of the live page (23 Nov 2026, from the maintainer's picture of the search).** The result's

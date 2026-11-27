@@ -1,4 +1,6 @@
-"""Following a sitting MP by mail (25 Nov 2026): the morning after a day on which the MP spoke in the hall.
+"""Following a sitting MP by mail (25 Nov 2026): the morning after a day on which the MP spoke in the hall. And an
+area of laws (27 Nov 2026): the morning after a bill of the area entered procedure, came on a sitting's agenda or was
+passed, by the site's events (`oblasti-dogadjaji.json`, the site's oblasti.py), in the same mail.
 
 The counter keeps who follows whom sealed (`worker/prati.js`); both are opened here, in memory, only to send, and never
 written down or logged. What is kept (`/data/mejl/prati/stanje.json`) is by the counter's row id: the day up to which a
@@ -9,6 +11,10 @@ alone is a guess (measured on 18, 24 and 25 Nov against the notes: the caption r
 a speech. The same rule for every MP. At most one mail a day to a reader: who has the day's summary too finds this in it
 (`Mailer._to_all`), and waits for it until noon; the rest get a mail of its own from nine. For as long as PRATI_SAMO is
 not set, only on the maintainer's click.
+
+An area's events are numbered here as they are first seen (`/data/mejl/prati/dogadjaji.json`: public, the same for all,
+nothing of any reader), and a reader is kept by the number up to which they were told, so nobody is told an event twice
+and the file says nothing of what anybody follows. A day with nothing new sends no mail.
 
 The mail's words are the code's, the same for all; a subject never has a name; nothing is loaded; the links are the same
 for every reader."""
@@ -24,7 +30,7 @@ from datetime import date, datetime, timedelta
 from html import escape
 from pathlib import Path
 
-from . import config, cuvar, mejl, pretplata
+from . import config, cuvar, mejl, mreza, pretplata
 from .names import cyrillic
 from .state_base import _write
 
@@ -33,6 +39,8 @@ TZ = pretplata.TZ
 FROM_HOUR, TO_HOUR = 9, 13  # the mail goes between these; what is not sent by then goes the next morning
 KEEP_DAYS = 3  # a day older than this is told no more
 EVERY = 300  # seconds between looks
+AREA_MOST = 10  # rows of one kind in an area's card; the rest are on the area's page
+KEEP_EVENTS = 60  # days an event's number is kept after it left the site's file
 METHOD = "kako-racunamo#pracenje"
 PRIVACY = "privatnost#pracenje"
 
@@ -43,6 +51,7 @@ class Followed:
     name: str
     since: date
     end: tuple[str, ...]  # the links that end it: more than one when the same MP was asked for twice
+    kind: str = "p"  # "p" a sitting MP, "o" an area of laws (its address and name on the site)
 
 
 @dataclass(frozen=True)
@@ -65,11 +74,12 @@ def opened(rows: list[dict]) -> list[Follower]:
             found: dict[str, Followed] = {}
             for p in r.get("prati") or []:
                 kind, slug, name = pretplata.unseal(config.MAIL_KEY, p["sta"]).rstrip().split("|", 2)
-                if kind != "p":
-                    continue
-                had = found.get(slug)
+                if kind not in ("p", "o"):
+                    continue  # a kind this service does not tell yet
+                had = found.get(f"{kind}|{slug}")
                 since = date.fromisoformat(p["od"])
-                found[slug] = Followed(slug, name, min(since, had.since) if had else since, (had.end if had else ()) + (p["kraj"],))
+                found[f"{kind}|{slug}"] = Followed(slug, name, min(since, had.since) if had else since,
+                                                   (had.end if had else ()) + (p["kraj"],), kind)
             if found:
                 out.append(Follower(r["id"], to, bool(r.get("cir")), r.get("mejl") or "", r["sve"], r["svega"], tuple(found.values())))
         except Exception:  # noqa: BLE001 — never sent, never shown
@@ -116,7 +126,7 @@ News = list[tuple[Followed, list[tuple[date, list[tuple[int, int]]]]]]
 
 def news(reader: Follower, days: dict[date, dict], facts: dict, told: date | None) -> News:
     out = []
-    for f in sorted(reader.follows, key=lambda f: _order(f.name)):
+    for f in sorted((f for f in reader.follows if f.kind == "p"), key=lambda f: _order(f.name)):
         slug = whose(f, facts)
         rows = [(d, days[d][slug]) for d in sorted(days) if days[d].get(slug) and d >= f.since and (told is None or d > told)]
         if rows:
@@ -131,6 +141,46 @@ def _order(name: str) -> list[int]:
     """By surname, in the Serbian Latin alphabet (lj, nj and dž by their letters)."""
     last = " ".join(name.split()[-1:] + name.split()[:-1]).lower()
     return [_ABC.get(c, -1) for c in last]
+
+
+# An area's events a reader is told: each followed area with its events, each event once (under the first area by its
+# point that the reader follows).
+AreaNews = list[tuple[Followed, list[dict]]]
+KINDS_ORDER = ("usvojen", "dnevni_red", "procedura")
+
+
+@dataclass(frozen=True)
+class Told:
+    """What one mail tells a reader: the MPs' speeches and the areas' events, and the number of the newest event in it."""
+    speeches: News
+    areas: AreaNews
+    seq: int = 0
+
+    def __bool__(self) -> bool:
+        return bool(self.speeches or self.areas)
+
+    def last(self, today: date) -> date:
+        """The day the mail is of: the last day of a speech in it, else the day before the mail."""
+        return max((d for _, rows in self.speeches for d, _ in rows), default=today - timedelta(days=1))
+
+
+def area_news(reader: Follower, events: list[dict], points: dict[str, int], told_seq: int, today: date) -> AreaNews:
+    """The events of the areas the reader follows not told yet: numbered after `told_seq`, of the last KEEP_DAYS days (by
+    the event's own day, or the day it was first listed, or a sitting to come), and not older than the following."""
+    areas = sorted((f for f in reader.follows if f.kind == "o"), key=lambda f: (points.get(f.name, 99), f.name))
+    by_point = {points.get(f.name): f for f in areas}
+    out: dict[str, list[dict]] = {}
+    order = lambda e: (KINDS_ORDER.index(e["vrsta"]) if e["vrsta"] in KINDS_ORDER else 9, e.get("naslov") or "")  # noqa: E731
+    for e in sorted(events, key=order):
+        mine = [by_point[a] for a in e.get("oblasti") or [] if a in by_point]
+        if not mine or e.get("seq", 0) <= told_seq:
+            continue
+        first = min(mine, key=lambda f: (points.get(f.name, 99), f.name))
+        own = max(e.get("dan") or "", e.get("poznato") or "")
+        if own < max(first.since, today - timedelta(days=KEEP_DAYS)).isoformat():
+            continue
+        out.setdefault(first.slug, []).append({**e, "i_u": [f.name for f in mine if f is not first]})
+    return [(f, out[f.slug]) for f in areas if f.slug in out]
 
 
 def _day(d: date) -> str:
@@ -168,6 +218,87 @@ def _rows(told: News, cyr: bool) -> tuple[str, list[str]]:
 
 
 CAPTION = "Po natpisu na prenosu. Prepoznavanje može da pogreši; merodavne su stenografske beleške."
+AREA_NOTE = ("Oblast je tačka člana 97. Ustava na koju se predlagač poziva. Zakoni bez oblasti, najčešće potvrđivanje "
+             "međunarodnih ugovora, ovde se ne javljaju.")
+AREA_SOURCE = "Iz spiska zakona u proceduri, dnevnog reda i poimeničnih glasanja koje objavljuje Narodna skupština."
+_GROUP = {"usvojen": ("Usvojen", "Usvojeno {n}"), "dnevni_red": ("Na dnevnom redu", "Na dnevnom redu"),
+          "procedura": ("Ušao u proceduru", "Ušlo u proceduru {n}")}
+
+
+def _when(at: str) -> str:
+    """A sitting's start, "2026-06-17T11:00" -> "sreda, 17. jun u 11" (with the minutes when they are not 0)."""
+    try:
+        t = datetime.fromisoformat(at)
+    except ValueError:
+        return _day(date.fromisoformat(at[:10])) if at[:10] else ""
+    if len(at) <= 10:
+        return _day(t.date())
+    return f"{_day(t.date())} u {t.hour}" + (f".{t.minute:02d}" if t.minute else "")
+
+
+def _event_lines(x: dict) -> list[str]:
+    """An event's line under its name, in Latin, its parts in order (the Assembly's own words as they are)."""
+    k = x["vrsta"]
+    if k == "usvojen":
+        out = [_day(date.fromisoformat(x["dan"]))]
+        if "za" in x:
+            out += [f"za {x['za']}", f"protiv {x['protiv']}", f"uzdržan {x['uzdrzan']}"]
+    elif k == "dnevni_red":
+        out = [f"sednica počinje: {_when(x.get('pocinje') or x['dan'])}"] + ([x["sednica"]] if x.get("sednica") else [])
+    else:
+        out = ([f"podneo: {x['predlagac']}"] if x.get("predlagac") else []) + [_day(date.fromisoformat(x["dan"]))]
+    if x.get("i_u"):
+        out.append("i u oblasti: " + ", ".join(x["i_u"]))
+    return out
+
+
+def _area_rows(told: AreaNews, cyr: bool) -> tuple[str, list[str]]:
+    """The areas' cards: each area, its events by kind (at most AREA_MOST of one kind, the rest on the area's page)."""
+    t = cyrillic if cyr else (lambda s: s)
+    e = lambda s: escape(t(s))  # noqa: E731
+    font, pre = f"font-family:{mejl.SANS};", "cir/" if cyr else ""
+    html, text = [], []
+    for f, evs in told:
+        page = f"{mejl.SITE}{pre}oblast/{f.slug}"
+        html.append(f'<div style="{font}font-size:16px;line-height:1.4;color:{mejl.INK};padding:22px 20px 2px"><b><a href="{escape(page)}" '
+                    f'style="color:{mejl.INK};font-weight:bold">{e(f.name)}</a></b></div>')
+        text += ["", t(f.name)]
+        for kind in KINDS_ORDER:
+            mine = [x for x in evs if x["vrsta"] == kind]
+            if not mine:
+                continue
+            one, many = _GROUP[kind]
+            label = one if len(mine) == 1 else many.format(n=len(mine))
+            html.append(f'<div style="{font}font-size:12px;letter-spacing:.06em;font-weight:bold;color:{mejl.MUTED};padding:12px 20px 0">{e(label.upper())}</div>')
+            text.append(t(label.upper()))
+            for x in mine[:AREA_MOST]:
+                parts = [t(p) for p in _event_lines(x)]
+                shown = [escape(p) for p in parts]
+                if "za" in x:  # the colours of "za" and "protiv", as on the site
+                    shown[1] = f'<b style="color:{mejl.ZA}">{shown[1]}</b>'
+                    shown[2] = f'<b style="color:{mejl.PROTIV}">{shown[2]}</b>'
+                name = t(x.get("naslov") or "")
+                href = f"{mejl.SITE}{pre}{x['strana']}" if x.get("strana") else page
+                html.append(f'<div style="{font}font-size:15px;line-height:1.45;color:{mejl.INK};padding:8px 20px"><a href="{escape(href)}" '
+                            f'style="color:{mejl.INK};font-weight:bold;text-decoration:underline">{escape(name)}</a><br>'
+                            f'<span style="color:{mejl.MUTED};font-size:14px">{" · ".join(shown)}</span></div>')
+                text.append(f"  {name} · " + " · ".join(parts) + f": {href}")
+            if len(mine) > AREA_MOST:
+                more = f"još {len(mine) - AREA_MOST} na strani oblasti"
+                html.append(f'<div style="{font}font-size:15px;color:{mejl.INK};padding:6px 20px"><a href="{escape(page)}" '
+                            f'style="color:{mejl.ZA};font-weight:bold">{e(more)}</a></div>')
+                text.append(f"  {t(more)}: {page}")
+    if told:
+        html.append(f'<div style="{font}font-size:13px;line-height:1.5;color:{mejl.MUTED};padding:18px 20px 0">{e(AREA_NOTE)}</div>'
+                    f'<div style="{font}font-size:13px;line-height:1.5;color:{mejl.MUTED};padding:6px 20px 0">{e(AREA_SOURCE)}</div>')
+        text += ["", t(AREA_NOTE), t(AREA_SOURCE)]
+    return "".join(html), text
+
+
+def _all_rows(told: Told, cyr: bool) -> tuple[str, list[str]]:
+    html, text = _rows(told.speeches, cyr) if told.speeches else ("", [])
+    more, lines = _area_rows(told.areas, cyr)
+    return html + more, text + lines
 
 
 def _manage(reader: Follower, cyr: bool) -> tuple[str, list[str]]:
@@ -178,24 +309,31 @@ def _manage(reader: Follower, cyr: bool) -> tuple[str, list[str]]:
     a = lambda href, words: f'<a href="{escape(href)}" style="color:{mejl.MUTED}">{e(words)}</a>'  # noqa: E731
     html = [f'<div style="{font}font-size:16px;font-weight:bold;color:{mejl.INK};padding:16px 20px 4px">{e("Sve što pratiš")}</div>']
     text = [t("Sve što pratiš")]
-    for f in sorted(reader.follows, key=lambda f: _order(f.name)):
-        html.append(f'<div style="{font}font-size:15px;line-height:1.5;color:{mejl.INK};padding:8px 20px">{e(f.name)} · {a(ends(f.end), "Prestani da pratiš")}</div>')
-        text.append(t(f"  {f.name} · Prestani da pratiš: ") + ends(f.end))
+    # The MPs by surname, then the areas by name: an area as "Oblast: …".
+    for f in sorted(reader.follows, key=lambda f: (f.kind != "p", _order(f.name) if f.kind == "p" else f.name)):
+        shown = f.name if f.kind == "p" else f"Oblast: {f.name}"
+        html.append(f'<div style="{font}font-size:15px;line-height:1.5;color:{mejl.INK};padding:8px 20px">{e(shown)} · {a(ends(f.end), "Prestani da pratiš")}</div>')
+        text.append(t(f"  {shown} · Prestani da pratiš: ") + ends(f.end))
     html.append(f'<div style="{font}font-size:15px;line-height:1.5;color:{mejl.MUTED};padding:8px 20px">{a(reader.all_end, "Prestani sve da pratiš")} · '
                 f'{a(reader.out, "Odjavi me sa svega")}</div>')
     text += [t("  Prestani sve da pratiš: ") + reader.all_end, t("  Odjavi me sa svega: ") + reader.out]
     return "".join(html), text
 
 
-def build(reader: Follower, told: News) -> mejl.Mail:
+def _told(told: Told | News) -> Told:
+    return told if isinstance(told, Told) else Told(told, [])
+
+
+def build(reader: Follower, told: Told | News, today: date | None = None) -> mejl.Mail:
     """A mail of its own (the plain list: variant B): the subject the same for all, no name in it."""
+    told = _told(told)
     cyr = reader.cir
     t = cyrillic if cyr else (lambda s: s)
     e = lambda s: escape(t(s))  # noqa: E731
     font, pre = f"font-family:{mejl.SANS};", "cir/" if cyr else ""
-    last = max(d for _, rows in told for d, _ in rows)
+    last = told.last(today or datetime.now(TZ).date())
     subject = t(f"Ono što pratiš: {_day(last)}")
-    rows, lines = _rows(told, cyr)
+    rows, lines = _all_rows(told, cyr)
     manage, tail = _manage(reader, cyr)
     method, privacy = f"{mejl.SITE}{pre}{METHOD}", f"{mejl.SITE}{pre}{PRIVACY}"
     html = f"""<!doctype html>
@@ -219,10 +357,10 @@ def build(reader: Follower, told: News) -> mejl.Mail:
     return mejl.Mail(subject, text, html)
 
 
-def block(reader: Follower, told: News, cyr: bool) -> tuple[str, list[str]]:
+def block(reader: Follower, told: Told | News, cyr: bool) -> tuple[str, list[str]]:
     """The same inside the day's summary, as a card, in the summary's script: (HTML, the plain text's lines)."""
     t = cyrillic if cyr else (lambda s: s)
-    rows, lines = _rows(told, cyr)
+    rows, lines = _all_rows(_told(told), cyr)
     manage, tail = _manage(reader, cyr)
     html = ('<tr><td style="padding:14px 0 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>'
             f'<td bgcolor="{mejl.PAPER}" style="background:{mejl.PAPER};border-radius:14px;padding:18px 0 10px">'
@@ -243,7 +381,10 @@ class Following(threading.Thread):
         super().__init__(daemon=True)
         self.tracker, self.mailer, self.halt = tracker, mailer, stop
         self.file = Path(mailer.folder) / "prati" / "stanje.json"
+        self.numbers = Path(mailer.folder) / "prati" / "dogadjaji.json"  # the areas' events by number: public, nobody's
         self._lock = threading.Lock()  # the state's
+        self.fetch = lambda: json.loads(mreza.site(config.AREAS_URL))  # the site's file of the areas' events
+        self.points: dict[str, int] = {}  # an area's name: its point of Article 97, from the same file
         mailer.following = self
 
     # What is kept.
@@ -253,6 +394,45 @@ class Following(threading.Thread):
             return kept if isinstance(kept, dict) else {}
         except (OSError, ValueError):
             return {}
+
+    def _told_seq(self, state: dict, rid: str) -> int:
+        """The number of the last area's event a reader was told (0: none)."""
+        n = (state.get("citaoci") or {}).get(rid, {}).get("o_do", 0)
+        return n if isinstance(n, int) else 0
+
+    def events(self, today: date) -> list[dict]:
+        """The site's events of the areas, each with its number: a new one gets the next, the day it is first seen here.
+        Not reached: none this time, and the numbers stay as they were."""
+        try:
+            got = self.fetch()
+            evs = [e for e in got.get("dogadjaji") or [] if isinstance(e, dict) and e.get("id")]
+            self.points = {v[0]: int(k) for k, v in (got.get("oblasti") or {}).items() if isinstance(v, list) and v}
+        except Exception as exc:  # noqa: BLE001
+            log.warning("praćenje oblasti: spisak događaja nije stigao (%s)", type(exc).__name__)
+            return []
+        with self._lock:
+            try:
+                kept = json.loads(self.numbers.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                kept = {}
+            n, ids = int(kept.get("n") or 0), dict(kept.get("ids") or {})
+            for e in evs:
+                if e["id"] not in ids:
+                    n += 1
+                    ids[e["id"]] = [n, today.isoformat()]
+            now = {e["id"] for e in evs}
+            old = (today - timedelta(days=KEEP_EVENTS)).isoformat()
+            ids = {k: v for k, v in ids.items() if k in now or v[1] >= old}
+            if ids != kept.get("ids") or n != kept.get("n"):
+                self.numbers.parent.mkdir(parents=True, exist_ok=True)
+                _write(self.numbers, {"n": n, "ids": ids})
+        return [{**e, "seq": ids[e["id"]][0]} for e in evs]
+
+    def told(self, p: Follower, days: dict[date, dict], events: list[dict], state: dict, today: date) -> Told:
+        """What a reader is to be told now: speeches since the day told, events since the number told."""
+        speeches = news(p, days, self._facts(), self._told(state, p.id))
+        areas = area_news(p, events, self.points, self._told_seq(state, p.id), today)
+        return Told(speeches, areas, max((e["seq"] for _, evs in areas for e in evs), default=0))
 
     def _told(self, state: dict, rid: str) -> date | None:
         try:
@@ -310,12 +490,13 @@ class Following(threading.Thread):
             log.warning("praćenje %s: spisak nije stigao (%s)", day, type(exc).__name__)
             return {}
         state, days = self._state(), self.days(day)
-        today = datetime.now(TZ).date().isoformat()
+        now = datetime.now(TZ).date()
+        events = self.events(now) if any(f.kind == "o" for p in people for f in p.follows) else []
         out = {}
         for p in people:
-            if (state.get("citaoci") or {}).get(p.id, {}).get("poslat") == today:
+            if (state.get("citaoci") or {}).get(p.id, {}).get("poslat") == now.isoformat():
                 continue  # a mail of its own went today already
-            told = news(p, days, self._facts(), self._told(state, p.id))
+            told = self.told(p, days, events, state, now)
             if told:
                 out[p.summary] = (p, told)
         return out
@@ -324,12 +505,21 @@ class Following(threading.Thread):
     def card(told: tuple[Follower, News], cyr: bool) -> tuple[str, list[str]]:
         return block(*told, cyr)
 
-    def begin(self, people: list[tuple[Follower, News]]) -> dict[str, dict | None]:
+    def begin(self, people: list[tuple[Follower, Told]]) -> dict[str, dict | None]:
         """Marked as told before the call that sends: whatever happens to it, nobody is told twice. Returns what stood."""
         with self._lock:
             before = {p.id: (self._state().get("citaoci") or {}).get(p.id) for p, _ in people}
         today = datetime.now(TZ).date().isoformat()
-        self._mark({p.id: {"do": max(d for _, rows in told for d, _ in rows).isoformat(), "poslat": today} for p, told in people})
+        marks = {}
+        for p, told in people:
+            told = _told(told)
+            m = {**(before.get(p.id) or {}), "poslat": today}
+            if told.speeches:
+                m["do"] = max(d for _, rows in told.speeches for d, _ in rows).isoformat()
+            if told.areas:
+                m["o_do"] = max(told.seq, m.get("o_do", 0) if isinstance(m.get("o_do"), int) else 0)
+            marks[p.id] = m
+        self._mark(marks)
         return before
 
     def undo(self, before: dict[str, dict | None], ids: list[str]) -> None:
@@ -343,14 +533,15 @@ class Following(threading.Thread):
         days = self.days(today - timedelta(days=1))
         ready, waits, seen = [], 0, set()
         people = self.followers()
+        events = self.events(today) if any(f.kind == "o" for p in people for f in p.follows) else []
         for p in people:
             if p.to.lower() in seen or (state.get("citaoci") or {}).get(p.id, {}).get("poslat") == today.isoformat():
                 continue
             seen.add(p.to.lower())
-            told = news(p, days, self._facts(), self._told(state, p.id))
+            told = self.told(p, days, events, state, today)
             if not told:
-                continue
-            held = p.summary and any(not self.mailer.went(d) and now <= pretplata.deadline(d) for _, rows in told for d, _ in rows)
+                continue  # nothing new: no mail (a day with no speech and no event sends nothing)
+            held = p.summary and any(not self.mailer.went(d) and now <= pretplata.deadline(d) for _, rows in told.speeches for d, _ in rows)
             if held:
                 waits += 1
             else:
@@ -360,14 +551,14 @@ class Following(threading.Thread):
             self._mark({i: None for i in gone})
         return ready, waits
 
-    def _send(self, people: list[tuple[Follower, News]]) -> tuple[int, int]:
+    def _send(self, people: list[tuple[Follower, Told]]) -> tuple[int, int]:
         """(how many went, how many did not): a batch at a time, marked before its call."""
         went = not_ = 0
         for i in range(0, len(people), pretplata.BATCH):
             batch = people[i:i + pretplata.BATCH]
             messages = []
             for p, told in batch:
-                m = build(p, told)
+                m = build(p, told, datetime.now(TZ).date())
                 messages.append({"to": p.to, "subject": m.subject, "html": m.html, "text": m.text, "odjava": p.all_end})
             before = self.begin(batch)
             try:
@@ -391,15 +582,30 @@ class Following(threading.Thread):
         name = lambda s: mejl.given_first(str((facts.get(s) or {}).get("ime") or s))  # noqa: E731
         heard = "".join(f"<li>{escape(_day(d))}: " + escape(", ".join(f"{name(s)} ({len(x)})" for s, x in sorted(
             days[d].items(), key=lambda kv: _order(name(kv[0]))))) + "</li>" for d in sorted(days))
-        last = max(days)
-        slug = min(days[last], key=lambda s: _order(name(s)))
-        shown = build(Follower("", "", False, "", "#", "#", (Followed(slug, name(slug), last, ("#",)),)),
-                      [(Followed(slug, name(slug), last, ("#",)), [(last, days[last][slug])])])
+        new = self.new_events(now.date())
+        if days:
+            last = max(days)
+            slug = min(days[last], key=lambda s: _order(name(s)))
+            one = Followed(slug, name(slug), last, ("#",))
+            shown = build(Follower("", "", False, "", "#", "#", (one,)), Told([(one, [(last, days[last][slug])])], []), now.date())
+        else:  # no MP spoke: the first area by its point with something new, as its follower would get it
+            point = min(a for e in new for a in e.get("oblasti") or [])
+            area = next(n for n, k in self.points.items() if k == point)
+            one = Followed(area, area, now.date() - timedelta(days=KEEP_DAYS), ("#",), "o")
+            reader = Follower("", "", False, "", "#", "#", (one,))
+            shown = build(reader, Told([], area_news(reader, new, self.points, 0, now.date())), now.date())
         url = f"{config.PUBLIC_URL.rstrip('/')}/mejl/prati?dan={now.date().isoformat()}&k={code(now.date())}"
         top = ('<div style="font-family:sans-serif;padding:12px;background:#fbf0dc"><p><a href="' + escape(url) + '"><b>Pošalji onima koji prate</b></a> '
-               f'(do {TO_HOUR} h). Spremno: {ready}; čekaju sažetak dana: {waits}.</p><p>Po natpisu su govorili:</p><ul>{heard}</ul>'
-               "<p>Primer, prvi po azbuci (linkovi za prekid ne vode nikuda):</p></div>")
+               f'(do {TO_HOUR} h). Spremno: {ready}; čekaju sažetak dana: {waits}.</p>'
+               + (f"<p>Po natpisu su govorili:</p><ul>{heard}</ul>" if days else "")
+               + (f"<p>Novo u oblastima zakona: {len(new)}.</p>" if new else "")
+               + "<p>Primer, prvi po azbuci ili po tački člana 97. (linkovi za prekid ne vode nikuda):</p></div>")
         return "[za tebe] " + shown.subject, pretplata._with_top(shown.html, top), f"Pošalji onima koji prate: {url}\n\n{shown.text}"
+
+    def new_events(self, today: date) -> list[dict]:
+        """The areas' events that some reader could still be told: of the last KEEP_DAYS days."""
+        since = (today - timedelta(days=KEEP_DAYS)).isoformat()
+        return [e for e in self.events(today) if max(e.get("dan") or "", e.get("poznato") or "") >= since]
 
     def step(self, now: datetime | None = None) -> bool:
         """A look: in the morning, the maintainer's mail once; then, when he clicked (or on its own), who is to be told."""
@@ -407,8 +613,8 @@ class Following(threading.Thread):
         if not (config.MAIL_KEY and config.MAIL_EDITOR and config.PUSH_TOKEN) or not FROM_HOUR <= now.hour < TO_HOUR:
             return False
         today, state = now.date().isoformat(), self._state()
-        if not self.days(now.date() - timedelta(days=1)):
-            return False
+        if not self.days(now.date() - timedelta(days=1)) and not self.new_events(now.date()):
+            return False  # nothing new to anybody: no mail, and the counter is not asked
         allowed = config.FOLLOW_ALONE or state.get("klik") == today
         if not allowed and state.get("uredniku") == today:
             return False  # nothing to do until the click

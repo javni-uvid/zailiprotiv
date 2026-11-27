@@ -332,6 +332,8 @@ def service(tmp_path, monkeypatch):
     box.built = built
     box.mailer = pretplata.Mailer(tmp_path, build)
     box.follow = prati.Following(box.days, box.mailer, threading.Event())
+    box.events = {"oblasti": {}, "dogadjaji": []}  # the site's file of the areas' events: none unless a test sets it
+    box.follow.fetch = lambda: box.events
     box.state = lambda: json.loads((tmp_path / "prati" / "stanje.json").read_text(encoding="utf-8"))
     box.click = lambda now=NEXT: box.follow.to_all(now.date(), prati.code(now.date()), now)
     return box

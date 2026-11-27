@@ -208,6 +208,22 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
     next sitting begins.
   - **Not in this step:** the notes' later names, votes, laws, groups, a correction's line of its own (a false name is mended in the next day's
     mail to all, by the maintainer), an MP's leaving.
+- **Following an area of laws, the sender** (27 Nov 2026, the maintainer: "Želim da neko može da se pretplati na celu oblast zakona …"; of
+  the proposal: "1 da / 2 … 4 da / … 9 vazi / recenice su ok"; on "Šta ako ništa nema update?": a day with nothing new sends nothing).
+  `prati.py` opens kind `o` beside `p` and tells an area's events from the site's `oblasti-dogadjaji.json` (oblasti.py, the site's
+  decision in site.md) in the same mail as the MPs, at most one a day, from nine, on the same click while `PRATI_SAMO` is unset.
+  - **What is kept:** each event gets a number the first time the service sees it (`/data/mejl/prati/dogadjaji.json`: the event's id,
+    its number and that day; public, the same for all, nothing of any reader; dropped 60 days after it left the site's file). A reader's
+    row in `stanje.json` keeps `o_do`, the number of the last event told, beside `do` and `poslat`: nothing says which area.
+  - **What is told:** an event numbered after `o_do`, of an area the reader follows, of the last three days by its own day (a bill by
+    the day it was first listed, a sitting to come by its day) and not before the following was asked. One event once, under the first
+    followed area by its point, with "i u oblasti: …". Ten of a kind at most, then "još N na strani oblasti". MPs first, then areas.
+  - **A day with nothing new:** no speech by the caption yesterday and no event of the last three days: `step` asks neither the counter
+    nor anybody, and nothing goes. A reader with nothing new gets nothing.
+  - **The summary's card** carries the areas too; only a speech waits for its day's summary, an area's event does not.
+  - **Checked on a year:** the sender's own rules, each morning over the site's events of 28 Nov 2025 – 27 Nov 2026, give each area's
+    mails as the proposal counted (`tests/test_prati_oblasti.py`). `tools/prati_primer.py <day>` writes what a morning would have sent
+    to a follower of each area, from `data/`, asking no one and sending nothing.
 - **"Sednica je počela" once the broadcast's graphic is down** (25 Nov 2026, the maintainer: "može"). It went at the third frame of
   a broadcast, and the graphic (blue oval, the building) stood 5 minutes before the sitting of 24 Nov and 12 before 25 Nov's:
   so it told of a sitting that had not begun. Now three frames and the first without the graphic (`grafika.blue` under
