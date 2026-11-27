@@ -1,17 +1,15 @@
 # A branch's real pages, to look at before its pull request is merged (27 Nov 2026, the conductor: the workers' computer
-# has no memory for a build). Started by hand with a branch of this repository and the pages to see; builds that branch
-# over the repository's data as **pages** does, but with no secret (so without the notes only the bucket holds and
-# without uploading anything), keeps ".html" in links so the pages open from disk, and uploads the chosen pages with
-# their styles, scripts and fonts for three days. Prints the site's size, folder by folder. Publishes nothing.
+# has no memory for a build). Started by hand ON the branch to see (`gh workflow run pregled --ref <branch> -f pages=…`),
+# so the run, its token and anything it could leave in GitHub's cache belong to that branch and never to main's (CodeQL:
+# a run of main's that checked out a branch's code could poison the cache **pages** reads); only a branch or tag of this
+# repository can be named. Builds it over the repository's data as **pages** does, but with no secret (so without the notes
+# only the bucket holds, and uploading nothing), keeps ".html" in links so the pages open from disk, and uploads the chosen
+# pages with their styles, scripts and fonts for three days. Prints the site's size, folder by folder. Publishes nothing.
 name: pregled
 
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: "A branch of this repository (its name only, e.g. markop-wd/ostala-glasanja)"
-        required: true
-        type: string
       pages:
         description: "Pages inside the site, separated by spaces or commas (e.g. sednica/x.html cir/poslanik/y.html)"
         required: true
@@ -30,19 +28,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      # Only a branch of this repository: a name, never a ref or a fork's pull request (refs/pull/…), checked before
-      # anything is checked out; the checkout below takes it as refs/heads/<name>.
-      - name: The branch is a branch name
-        env:
-          IN_BRANCH: ${{ inputs.branch }}
-        run: |
-          case "$IN_BRANCH" in
-            ""|-*|/*|*/|refs/*|*..*|*//*) echo "::error::not a branch name"; exit 1 ;;
-          esac
-          if ! printf '%s' "$IN_BRANCH" | grep -Eq '^[A-Za-z0-9._/-]{1,120}$'; then echo "::error::not a branch name"; exit 1; fi
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
-          ref: refs/heads/${{ inputs.branch }}
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:

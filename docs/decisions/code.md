@@ -65,7 +65,7 @@ the change. The principles and the rules of work are in AGENTS.md.
   (noindex, some 250 MB) to a bucket with the notes' pages, or the Cyrillic edition elsewhere; both change addresses, so
   the maintainer decides.
 - **A branch's real pages without a build here: pregled** (27 Nov 2026, the conductor: the workers' computer, 16 GB with
-  other workers on it, has no room for a build). `pregled` (workflow_dispatch: a branch and the pages) builds the branch on
+  other workers on it, has no room for a build). `pregled` (workflow_dispatch on the branch, `--ref`, with the pages) builds the branch on
   a runner over the repository's data as **pages** does (the share pictures and downloads moved out as there, the search
   index made, the pages lightened), with `--html-links`, and uploads the pages asked for with what they load
   (`tools/pregled.py`: only files of the built site, no path outside it) for three days; it prints the site's size and
