@@ -340,7 +340,8 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   number). On a phone each group is now a block: its name, its bar, then its numbers in a row, in the columns' order for
   every group, each with the column's own word ("Protiv 6  Nije glasao 1"); a column with nothing in it says nothing,
   as the cell was empty before. The words are hidden from screen readers (`aria-hidden`), which still hear the table's
-  header, kept but not seen on a phone; on a wide screen the table is as it was. Only this table (`group-votes`):
+  header, kept but not seen on a phone; the table's roles are written out (`role="table"`, `row`,
+  `cell`, …), as some browsers forget a table whose cells are laid out as blocks. On a wide screen the table is as it was. Only this table (`group-votes`):
   an MP's votes by area and kind have the same columns and are left for a look of their own.
 
 ## Design rules

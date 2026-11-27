@@ -1278,8 +1278,10 @@ def test_a_laws_groups_read_on_a_phone_without_a_sideways_swipe(built):
     seen only on a phone and hidden from screen readers, which hear the header; an empty column says nothing."""
     out, _ = built
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
-    table = law[law.index('<table class="groups group-votes">'):]
+    table = law[law.index('<table class="groups group-votes" role="table">'):]
     table = table[:table.index("</table>")]
     assert '<span class="gv-k" aria-hidden="true">Za </span>1' in table
     assert '<span class="gv-k" aria-hidden="true">Protiv </span>1' in table
-    assert '<th class="num">Za</th>' in table  # the header stays for wide screens and screen readers
+    assert '<th role="columnheader" class="num">Za</th>' in table  # the header stays for wide screens and screen readers
+    # its roles said outright, as a phone's layout makes the cells blocks and some browsers then forget the table
+    assert table.count('role="row"') == table.count("<tr") and table.count('role="cell"') == table.count("<td")
