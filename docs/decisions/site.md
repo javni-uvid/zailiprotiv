@@ -334,6 +334,14 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   as before; the live page (`mikrofon`) has its own page and no bar, so nothing there changed. What was looked at:
   the drafts' pictures (`donja-traka/galerija.html`, the conductor's folder) and the built bar's at 360, 390 and 430 px
   in both scripts.
+- **A law's groups read on a phone without a sideways swipe** (27 Nov 2026, the conductor, on a picture of the new bar:
+  in "Kako su glasale poslaničke grupe" only Grupa, the bar and "Za" fitted 360-390 px; "Protiv", "Uzdržan" and
+  "Nije glasao" were off the right edge of the table's sideways scroll, so a group that voted against seemed to have no
+  number). On a phone each group is now a block: its name, its bar, then its numbers in a row, in the columns' order for
+  every group, each with the column's own word ("Protiv 6  Nije glasao 1"); a column with nothing in it says nothing,
+  as the cell was empty before. The words are hidden from screen readers (`aria-hidden`), which still hear the table's
+  header, kept but not seen on a phone; on a wide screen the table is as it was. Only this table (`group-votes`):
+  an MP's votes by area and kind have the same columns and are left for a look of their own.
 
 ## Design rules
 

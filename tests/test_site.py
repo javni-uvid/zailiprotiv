@@ -1271,3 +1271,15 @@ def test_the_phones_bar_stays_and_turns_to_icons_while_read():
     assert "body" not in low  # the page's room is the full bar's at all times
     assert "body { padding-bottom: calc(var(--dno) + env(safe-area-inset-bottom)); }" in css
     assert 'y > end - 40' in js and 'root.classList.add("dno-away")' in js  # full again at the end of the page
+
+
+def test_a_laws_groups_read_on_a_phone_without_a_sideways_swipe(built):
+    """27 Nov 2026: on a phone the columns after "Za" were out of sight. Each number now carries its column's word,
+    seen only on a phone and hidden from screen readers, which hear the header; an empty column says nothing."""
+    out, _ = built
+    law = (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
+    table = law[law.index('<table class="groups group-votes">'):]
+    table = table[:table.index("</table>")]
+    assert '<span class="gv-k" aria-hidden="true">Za </span>1' in table
+    assert '<span class="gv-k" aria-hidden="true">Protiv </span>1' in table
+    assert '<th class="num">Za</th>' in table  # the header stays for wide screens and screen readers
