@@ -252,7 +252,8 @@
 <div class="prati-row"><label class="sr" for="prati-adresa">E-adresa</label><input type="email" id="prati-adresa" name="adresa" placeholder="E-adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="sta" value="{{ slug }}">{% if kind != "p" %}<input type="hidden" name="vrsta" value="{{ kind }}">{% endif %}<input type="hidden" name="pismo" value="lat" data-cir-value="cir"><button type="submit">Prati</button></div>
 <p class="prati-done" role="status" hidden>Proveri sanduče i klikni na dugme u mejlu: bez toga praćenje ne važi. Ako pratiš prvi put, prvo potvrdi taj mejl, pa dodaj sledeće.</p>
 <p class="prati-err" role="alert" hidden>Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.</p>
-<p class="prati-fine">Bez naloga. {% if kind == "o" %}Šta{% else %}Koga{% endif %} pratiš čuvamo šifrovano. Kraj jednim dugmetom u svakom mejlu. <a href="{{ root }}privatnost.html#pracenje">Politika o privatnosti</a>{% if kind == "o" %}<br>Oblast je tačka člana 97. Ustava na koju se predlagač poziva; zakon bez nje (najčešće potvrđivanje ugovora) ne javljamo.{% endif %}</p>
+<p class="prati-fine">Bez naloga. {% if kind == "o" %}Šta{% else %}Koga{% endif %} pratiš čuvamo šifrovano. Kraj jednim dugmetom u svakom mejlu. <a href="{{ root }}privatnost.html#pracenje">Politika o privatnosti</a></p>{% if kind == "o" %}
+<p class="prati-fine prati-also">Oblast je tačka člana 97. Ustava na koju se predlagač poziva; zakon bez nje (najčešće potvrđivanje ugovora) ne javljamo.</p>{% endif %}
 </form></details>
 <script src="{{ root }}prati.js?v={{ css }}" defer></script>
 {% endif %}{% endmacro %}
