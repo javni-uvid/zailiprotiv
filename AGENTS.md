@@ -121,6 +121,15 @@ The project's promises to its readers. Never change them without the maintainer.
      length, with no hash or count per MP, until the reader ends it (one press in every mail); no name in a subject, no picture; the
      links to speeches are the same for every reader and counted as one sum a day. What Cloudflare keeps of a mail it carries is on
      `privatnost`;
+   - **following an area of laws by mail, only to who asks** (27 Nov 2026, the maintainer: "Želim da neko može da se pretplati na
+     celu oblast zakona pa kada bude donesen novi zakon ili ubačen u proceduru ili se raspravlja o zakonima iz te oblasti da se
+     dobije mejl"; of the proposal's decisions: "1 da … 4 da / 5 moze / 6 vazi / 7 vazi / 8 dobro / 9 vazi / recenice su ok"): the
+     morning after a day on which a bill of the area (the point of Article 97 its proposer names) entered procedure, came on a
+     convened sitting's agenda or was passed in its final roll call, in the same mail as following an MP, at most one a day and
+     none on a day with nothing new; a law of no area goes to no one; explicit consent by a click in a mail that names the area,
+     for each one; the area kept sealed and padded to the same length as an MP, with no hash or count per area, until the reader
+     ends it (one press in every mail); no name in a subject, no picture, no model's sentence but the site's short names of laws;
+     the links are the site's own pages, the same for every reader;
    - things of others' making **served from the project itself**: the search (Pagefind), MPs' portraits from the
      Assembly (`photos.py`, `data/photos/`), and the project's own subdomains for the notes' pages and the downloads.
 6. **What MPs say is not censored and not shaped** (13 Nov 2026). Quotes are word for word, checked against the

@@ -614,6 +614,14 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   (`prati.js`) only keeps the reader on the page. On a phone the box takes the page's width from under the portrait by a margin, as a `<details>`
   can't leave its column. It is no `section` with a heading, which a phone would fold. The hidden field says the script of the edition
   (`data-cir-value`, `cyrillic.page`). `prati-poslanici.json` names the sitting MPs for the counter, which takes nobody else.
+- **"Prati mejlom" on every area's page** (27 Nov 2026, the maintainer, of the proposal for following an area of laws: "5 moze /
+  6 vazi"). All 17 points of Article 97 have a page now, one with no law yet saying so, as each can be followed. The same
+  `<details>` as an MP's (`follow_part(slug, "o")`, its hidden `vrsta`), under the line with the RSS feed, with the area's own
+  words and the line that a law of no area is not told. A law's page and a waiting bill's link to it beside each area ("prati
+  oblast mejlom"). The build writes `prati-oblasti.json` (the 17 areas, both scripts, for the counter) and
+  `oblasti-dogadjaji.json` (`oblasti.py`: the events of the last 30 days, the same for everyone, for the live service's
+  sender); what an event is and why: the module's docstring. On a year of the Fourteenth it gives the mails the proposal
+  counted, per area (`test_oblasti.py`).
 - **The day pages of who spoke when show the card of the speech playing** (26 Nov 2026, the maintainer, "4 da", of the
   live page's card that follows a recording; live-page.md). On `govornici/<day>`, under the player, while its recording
   plays: "Na snimku · <day> u <hour>", the name, the list, the time into the speech, a point of order's label with its

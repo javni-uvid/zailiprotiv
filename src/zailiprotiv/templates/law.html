@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "zakoni" %}
-{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox, term with context %}
+{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox, term, area_follow with context %}
 {% block title %}{{ law.title }}{% if law.title in twice and law.passed %} ({{ law.passed|day }}){% elif law.title|length < 25 %}: kako su glasali poslanici{% endif %} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.short }}{% if law.passed %} (usvojen {{ law.passed|day }}){% endif %}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
@@ -34,7 +34,7 @@
     {% if it.urgent or it.days is not none %}<div><dt>Postupak</dt><dd>{% if it.urgent %}<span class="t-warn">hitan</span>{% if it.days is not none %}, {% endif %}{% endif %}{% if it.days is not none %}{{ it.days }} {{ plural(it.days, "dan", "dana", "dana") }} od predloga do usvajanja{% endif %}</dd></div>{% endif %}
     {% if db and (db.joint or db.amendments) %}<div><dt>Rasprava</dt><dd>{% if db.joint %}zajedno sa još {{ db.joint|length }} {{ plural(db.joint|length, "tačkom", "tačke", "tačaka") }}{% if db.amendments %}, {% endif %}{% endif %}{% if db.amendments %}{{ db.amendments }} {{ plural(db.amendments, "amandman", "amandmana", "amandmana") }}{% endif %}</dd></div>{% endif %}
     {% if it.rank %}<div><dt>Glasovi protiv</dt><dd>{{ (100 * it.share)|round|int }}%, {{ it.rank }}. u sazivu ({{ how("protiv") }})</dd></div>{% endif %}
-    {% if it.areas %}<div><dt>Oblast</dt><dd>{% for a in it.areas %}<a href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</dd></div>{% endif %}
+    {% if it.areas %}<div><dt>Oblast</dt><dd>{% for a in it.areas %}<a href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{{ area_follow(a, "../") }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>{% endif %}
   </dl>
 </section>
 {% else %}

@@ -240,16 +240,20 @@
 </nav>
 {% endmacro %}
 
+{# The link from a law's or a bill's page to following its area by mail (the area's page, its "Prati mejlom"). #}
+{% macro area_follow(a, root) %}{% if votes_api %} · <a class="prati-link" href="{{ root }}oblast/{{ a|area_slug }}.html#prati">prati oblast mejlom</a>{% endif %}{% endmacro %}
+
 {# Following a sitting MP by mail (prati.js, the counter's worker/prati.js): a quiet row under the name that opens in
    place. A form to the counter that works without the script; the hidden field says the edition's script. #}
-{% macro follow_part(slug) %}{% if votes_api %}
-<details class="prati" id="prati" data-pagefind-ignore><summary><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 5h18v14H3zM3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Prati mejlom</summary>
+{% macro follow_part(slug, kind="p") %}{% if votes_api %}
+<details class="prati{% if kind != "p" %} prati-{{ kind }}{% endif %}" id="prati" data-pagefind-ignore><summary><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 5h18v14H3zM3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Prati mejlom</summary>
 <form class="prati-box" method="post" action="{{ votes_api.rstrip("/") }}/m/prati">
-<p class="prati-what">Kad govori u sali · najviše jedan mejl dnevno</p>
-<div class="prati-row"><label class="sr" for="prati-adresa">E-adresa</label><input type="email" id="prati-adresa" name="adresa" placeholder="E-adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="sta" value="{{ slug }}"><input type="hidden" name="pismo" value="lat" data-cir-value="cir"><button type="submit">Prati</button></div>
+<p class="prati-what">{% if kind == "o" %}Kad zakon iz ove oblasti uđe u proceduru, dođe na dnevni red ili bude usvojen{% else %}Kad govori u sali{% endif %} · najviše jedan mejl dnevno</p>
+<div class="prati-row"><label class="sr" for="prati-adresa">E-adresa</label><input type="email" id="prati-adresa" name="adresa" placeholder="E-adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="sta" value="{{ slug }}">{% if kind != "p" %}<input type="hidden" name="vrsta" value="{{ kind }}">{% endif %}<input type="hidden" name="pismo" value="lat" data-cir-value="cir"><button type="submit">Prati</button></div>
 <p class="prati-done" role="status" hidden>Proveri sanduče i klikni na dugme u mejlu: bez toga praćenje ne važi. Ako pratiš prvi put, prvo potvrdi taj mejl, pa dodaj sledeće.</p>
 <p class="prati-err" role="alert" hidden>Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.</p>
-<p class="prati-fine">Bez naloga. Koga pratiš čuvamo šifrovano. Kraj jednim dugmetom u svakom mejlu. <a href="{{ root }}privatnost.html#pracenje">Politika o privatnosti</a></p>
+<p class="prati-fine">Bez naloga. {% if kind == "o" %}Šta{% else %}Koga{% endif %} pratiš čuvamo šifrovano. Kraj jednim dugmetom u svakom mejlu. <a href="{{ root }}privatnost.html#pracenje">Politika o privatnosti</a></p>{% if kind == "o" %}
+<p class="prati-fine prati-also">Oblast je tačka člana 97. Ustava na koju se predlagač poziva; zakon bez nje (najčešće potvrđivanje ugovora) ne javljamo.</p>{% endif %}
 </form></details>
 <script src="{{ root }}prati.js?v={{ css }}" defer></script>
 {% endif %}{% endmacro %}
