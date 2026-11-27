@@ -1,13 +1,16 @@
-// Following a sitting MP by mail (25 Nov 2026): who asked, and whom they follow, kept so that this worker can write
-// both and read neither.
+// Following a sitting MP (25 Nov 2026) or an area of laws (27 Nov 2026) by mail: who asked, and whom or what they
+// follow, kept so that this worker can write both and read neither.
 //
 // The address and what is followed are each sealed with the public half of the maintainer's key (mejl.js, seal),
 // padded first to one length, so that the length of neither says anything. Beside them: the same hash of the address
 // as the summary's (to know it again, and to leave everything at once), the script, the day asked and confirmed.
-// There is no column, hash or count from which an MP can be told: two hundred and fifty names are guessed in a moment.
+// There is no column, hash or count from which an MP or an area can be told: two hundred and fifty names are guessed
+// in a moment. What is followed is sealed as "<kind>|<address>|<name>", every kind padded to the same length, so the
+// kind does not show either: "p" a sitting MP, "o" an area (a point of Article 97); another kind is one more entry in
+// KINDS, with no change to the tables.
 // What is asked for is confirmed by a mail that names it, each one anew, as anybody can write anybody's address.
 //
-//   POST /m/prati          ← {"adresa", "sta": the MP's address on the site, "pismo"}, from the site's own pages
+//   POST /m/prati          ← {"adresa", "sta": the address on the site, "vrsta": "p" (none) or "o", "pismo"}, from the site's own pages
 //   GET  /m/prati/potvrdi  ?k= → a page with one button; POST (the button) is the consent
 //   GET  /m/prati/kraj     ?i=&k= (repeated, when one MP was asked for twice) → a button; POST ends those
 //   GET  /m/prati/sve      ?i=&k= → a button; POST ends all of them (also the mail reader's own button: One-Click)
@@ -17,9 +20,10 @@
 import { ADDRESS, KEEP_UNCONFIRMED, REPLY, FROM, SELF, PRIVACY, WORDS, seal, sha, random, page, form, esc } from "./mejl.js";
 
 const SITE = "https://zailiprotiv.rs";
-const LIST = SITE + "/prati-poslanici.json";  // {address: [name, the name in Cyrillic]} of the sitting MPs
+// What can be followed, by kind: the site's list of each, {address: [name, the name in Cyrillic]}.
+export const KINDS = { p: SITE + "/prati-poslanici.json", o: SITE + "/prati-oblasti.json" };
 const PAD = { adresa: 416, sta: 256 };  // bytes: longer than any that is taken
-export const MOST = { unconfirmed: 1, confirmed: 5, together: 20, mails: 300 };  // a day, a day, at once, a day from all
+export const MOST = { unconfirmed: 1, confirmed: 5, together: 40, mails: 300 };  // a day, a day, at once, a day from all
 
 const enc = new TextEncoder();
 // Padded with spaces to `n` bytes; null for what does not fit.
@@ -37,7 +41,7 @@ const SAID = {
          bad: "Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.",
          confirmTitle: "Poslednji korak", confirmText: "Klikni na dugme: time pristaješ na praćenje koje piše u mejlu. Tek tada važi.",
          done: "Praćenje važi", doneText: "Mejl stiže ujutru posle dana kad ima novog. Prekidaš ga u svakom mejlu.",
-         gone: "Link je istekao", goneText: "Praćenje nije potvrđeno u 48 sati ili je već potvrđeno. Zatraži ga ponovo na strani poslanika.",
+         gone: "Link je istekao", goneText: "Praćenje nije potvrđeno u 48 sati ili je već potvrđeno. Zatraži ga ponovo na sajtu, na strani poslanika ili oblasti.",
          end: "Prestani da pratiš", endText: "Jedan klik i praćenje uz koje je bio ovaj link se briše.", ended: "Praćenje je obrisano",
          all: "Prestani sve da pratiš", allText: "Jedan klik i sva tvoja praćenja se brišu. Sažetak dana ostaje ako si se prijavio.", allEnded: "Praćenja su obrisana",
          out: "Odjavi me sa svega", outText: "Jedan klik i tvoja adresa se briše: ne stižu ti ni praćenje ni sažetak dana.", outEnded: "Tvoja adresa je obrisana i više ti ne pišemo.",
@@ -50,12 +54,21 @@ const SAID = {
          bad: "Пријава није успела: провери адресу и покушај поново мало касније.",
          confirmTitle: "Последњи корак", confirmText: "Кликни на дугме: тиме пристајеш на праћење које пише у мејлу. Тек тада важи.",
          done: "Праћење важи", doneText: "Мејл стиже ујутру после дана кад има новог. Прекидаш га у сваком мејлу.",
-         gone: "Линк је истекао", goneText: "Праћење није потврђено у 48 сати или је већ потврђено. Затражи га поново на страни посланика.",
+         gone: "Линк је истекао", goneText: "Праћење није потврђено у 48 сати или је већ потврђено. Затражи га поново на сајту, на страни посланика или области.",
          end: "Престани да пратиш", endText: "Један клик и праћење уз које је био овај линк се брише.", ended: "Праћење је обрисано",
          all: "Престани све да пратиш", allText: "Један клик и сва твоја праћења се бришу. Сажетак дана остаје ако си се пријавио.", allEnded: "Праћења су обрисана",
          out: "Одјави ме са свега", outText: "Један клик и твоја адреса се брише: не стижу ти ни праћење ни сажетак дана.", outEnded: "Твоја адреса је обрисана и више ти не пишемо.",
          back: "Назад на сајт", home: SITE + "/cir/" },
 };
+
+// What changes in the confirmation for an area (the approved words of its sign-up): what comes, and "what" for "whom".
+const AREA = {
+  lat: { what: "Kad zakon iz ove oblasti uđe u proceduru, dođe na dnevni red ili bude usvojen · najviše jedan mejl dnevno",
+         consent: SAID.lat.consent.replace("Koga pratiš", "Šta pratiš") },
+  cir: { what: "Кад закон из ове области уђе у процедуру, дође на дневни ред или буде усвојен · највише један мејл дневно",
+         consent: SAID.cir.consent.replace("Кога пратиш", "Шта пратиш") },
+};
+const said = (s, kind) => kind === "o" ? { ...s, ...(s === SAID.cir ? AREA.cir : AREA.lat) } : s;
 
 // A page of the worker's own in the summary's look; the way back is the site's.
 function shown(s, title, text, button) {
@@ -83,13 +96,14 @@ export function confirmMail(s, name, link) {
   return { html, text };
 }
 
-let sitting = { at: 0, map: null };
-async function listed() {
-  if (!sitting.map || Date.now() - sitting.at > 3600e3) {
-    const r = await fetch(LIST, { cf: { cacheTtl: 600 } });
-    if (r.ok) sitting = { at: Date.now(), map: new Map(Object.entries(await r.json())) };
+const lists = {};  // by kind: { at, map }
+async function listed(kind) {
+  const had = lists[kind];
+  if (!had || Date.now() - had.at > 3600e3) {
+    const r = await fetch(KINDS[kind], { cf: { cacheTtl: 600 } });
+    if (r.ok) lists[kind] = { at: Date.now(), map: new Map(Object.entries(await r.json())) };
   }
-  return sitting.map || new Map();
+  return (lists[kind] || {}).map || new Map();
 }
 
 // A link's code: a hash with the secret of what it ends, so that none can be made up for another row.
@@ -109,10 +123,10 @@ async function ask(request, env, from) {
   const b = await form(request);
   const s = b.pismo === "cir" ? SAID.cir : SAID.lat;
   const refused = (what, status) => b.json ? json({ error: what }, status) : shown(s, s.bad, "", "");
-  const address = String(b.adresa || "").trim(), slug = String(b.sta || "");
-  const names = /^[a-z0-9-]{1,80}$/.test(slug) ? (await listed()).get(slug) : null;
+  const address = String(b.adresa || "").trim(), slug = String(b.sta || ""), kind = String(b.vrsta || "p");
+  const names = Object.hasOwn(KINDS, kind) && /^[a-z0-9-]{1,80}$/.test(slug) ? (await listed(kind)).get(slug) : null;
   const padded = ADDRESS.test(address) ? pad(address, PAD.adresa) : null;
-  const what = Array.isArray(names) ? pad(`p|${slug}|${names[0]}`, PAD.sta) : null;
+  const what = Array.isArray(names) ? pad(`${kind}|${slug}|${names[0]}`, PAD.sta) : null;
   if (!padded || !what) return refused("adresa", 400);
   const key = await sha(env.SALT + "|mejl|" + address.toLowerCase());
   const now = new Date().toISOString(), day = now.slice(0, 10);
@@ -133,7 +147,7 @@ async function ask(request, env, from) {
     reader ? env.DB.prepare("UPDATE pratioci SET n = CASE WHEN dan = ?1 THEN n + 1 ELSE 1 END, dan = ?1, cir = ?2 WHERE id = ?3").bind(day, cir, id)
            : env.DB.prepare("INSERT INTO pratioci (id, kljuc, adresa, cir, dan, n) VALUES (?, ?, ?, ?, ?, 1)").bind(id, key, await seal(jwk, padded), cir, day),
     env.DB.prepare("INSERT INTO prati (id, citalac, sta, prijava, kod) VALUES (?, ?, ?, ?, ?)").bind(row, id, await seal(jwk, what), now, await sha(token))]);
-  const mail = confirmMail(s, names[cir] || names[0], `${SELF}/m/prati/potvrdi?k=${token}`);
+  const mail = confirmMail(said(s, kind), names[cir] || names[0], `${SELF}/m/prati/potvrdi?k=${token}`);
   try {
     await env.MEJL.send({ from: FROM, to: address, replyTo: REPLY, subject: s.subject, html: mail.html, text: mail.text });
   } catch (e) {  // it did not go: nothing is kept of it, and the same address may ask again at once
