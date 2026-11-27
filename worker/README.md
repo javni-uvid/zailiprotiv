@@ -109,7 +109,13 @@ rows go after 48 hours (the hourly run); `/pregled` gives the counts only.
 followed: sealed, the day asked and confirmed) and `prati_dani` (confirming mails a day, from all). Both are sealed with `MEJL_JAVNI`, padded first to
 one length; there is no hash or column from which an MP can be told, and nothing counts by MP. `POST /m/prati {adresa, sta, pismo}` from the site only,
 for a sitting MP of the site's `prati-poslanici.json`, rate-limited: a mail that names the MP and asks for consent, at most one a day to an address not
-confirmed, five to one that is, twenty followed at once, 300 such mails a day in all. `/m/prati/potvrdi` confirms that one by a button on its page;
+confirmed, five to one that is, forty followed at once, 300 such mails a day in all. `/m/prati/potvrdi` confirms that one by a button on its page;
 `/m/prati/kraj`, `/sve` and `/svega` end one, all, or all and the day's summary, each by a button, and the mail reader's own button (`/sve`) at once; the row is deleted, the
 reader's with the last. `GET /m/prati/spisak`, with the push's token, gives the live service the confirmed, sealed, with their links and the row of the
 day's summary of the same address. Not confirmed in 48 hours: deleted. `/pregled` gives how many readers and how many wait, in all.
+
+**An area of laws too** (27 Nov 2026): `vrsta=o` with `sta` an area's address of the site's `prati-oblasti.json` (the 17 points of Article
+97). What is followed is sealed as `<kind>|<address>|<name>` (`p` an MP, `o` an area), padded to the same 256 bytes, so the base tells neither
+which nor what kind; another kind is one more entry in `KINDS`, no change to the tables. The confirmation names the area with its own words
+("Šta pratiš …"). Forty followed at once (seventeen areas and MPs beside them). The live service tells an area from its own pull request; until then
+a confirmed area waits in the base and nothing is sent for it.

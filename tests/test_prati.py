@@ -44,7 +44,10 @@ const made = (sql, a = []) => ({ sql, a,
   run: async () => ({ meta: { changes: Number(db.prepare(sql).run(...a).changes) } }) });
 const DB = { prepare: (sql) => made(sql), batch: async (xs) => { const out = []; for (const x of xs) out.push(await x.run()); return out; } };
 const mails = []; let broken = false, listCalls = 0;
-globalThis.fetch = async () => { listCalls++; return new Response(JSON.stringify({ "anic-ana": ["Ana Anić", "Ана Анић"], "peric-pera": ["Pera Perić", "Пера Перић"],
+globalThis.fetch = async (url) => { listCalls++; return new Response(JSON.stringify(String(url).endsWith("/prati-oblasti.json") ? {
+  "saobracaj": ["Saobraćaj", "Саобраћај"],
+  "zdravstvo-socijalna-zastita-obrazovanje-kultura-sport-javno-informisanje": ["Zdravstvo, socijalna zaštita, obrazovanje, kultura, sport, javno informisanje", "Здравство, социјална заштита, образовање, култура, спорт, јавно информисање"] } :
+  { "anic-ana": ["Ana Anić", "Ана Анић"], "peric-pera": ["Pera Perić", "Пера Перић"],
   "jovic-jova": ["Jova Jović", "Јова Јовић"], "a-b": ["A B", "А Б"], "c-d": ["C D", "Ц Д"], "e-f": ["E F", "Е Ф"], "g-h": ["G H", "Г Х"] })); };
 const env = { DB, SALT: "so", PUSH_TOKEN: "t", MEJL_JAVNI: process.argv[1],
   MEJL: { send: async (m) => { if (broken) throw Object.assign(new Error("x"), { code: "E_X" }); mails.push(m); } } };
@@ -99,6 +102,34 @@ out.long = pad("x".repeat(500), 416);
     assert "Ana Anić" in out["mail"]["html"] and "Koga pratiš može da govori o tvom političkom mišljenju." in out["mail"]["html"]
     assert "Prekidaš kad hoćeš, dugmetom u svakom mejlu: tada se odmah briše." in out["mail"]["text"]
     assert "<img" not in out["mail"]["html"] and out["long"] is None
+
+
+@needs_worker
+def test_an_area_is_followed_as_an_mp_is_and_the_base_cannot_tell_them_apart():
+    """27 Nov 2026: an area (vrsta "o") sealed the same way and to the same length as an MP, confirmed by a mail that
+    names it with the area's words; a kind or an area the site does not list is refused."""
+    long = "zdravstvo-socijalna-zastita-obrazovanje-kultura-sport-javno-informisanje"
+    out = worker(f"""
+await follow("anic-ana"); await follow("{long}", "druga@primer.rs", "&vrsta=o&js=1");
+await confirm(mails[0]); await confirm(mails[1]);
+out.lengths = db.prepare("SELECT DISTINCT length(sta) AS n FROM prati").all().length;
+out.list = await list(); out.mail = mails[1];
+out.refused = [(await follow("saobracaj", "x@primer.rs", "&vrsta=x&js=1")).status,     // no such kind
+               (await follow("anic-ana", "x@primer.rs", "&vrsta=o&js=1")).status,      // an MP is no area
+               (await follow("nema-je", "x@primer.rs", "&vrsta=o&js=1")).status,       // not on the site's list
+               (await follow("saobracaj", "x@primer.rs", "&js=1")).status];             // an area is no MP
+out.cir = (await follow("saobracaj", "treca@primer.rs", "&vrsta=o&pismo=cir&js=1"), mails.at(-1));
+""")
+    assert out["lengths"] == 1  # an MP and an area: one length
+    opened = {pretplata.unseal(KEY, r["adresa"]).rstrip(): pretplata.unseal(KEY, r["prati"][0]["sta"]).rstrip() for r in out["list"]}
+    assert opened["druga@primer.rs"] == f"o|{long}|Zdravstvo, socijalna zaštita, obrazovanje, kultura, sport, javno informisanje"
+    m = out["mail"]
+    assert m["subject"] == "Potvrdi praćenje: klikni na dugme u ovom mejlu"  # no name in a subject
+    assert "Zdravstvo, socijalna zaštita" in m["html"] and "Šta pratiš može da govori o tvom političkom mišljenju." in m["text"]
+    assert "Kad zakon iz ove oblasti uđe u proceduru, dođe na dnevni red ili bude usvojen · najviše jedan mejl dnevno" in m["text"]
+    assert "Kad govori u sali" not in m["text"] and "Prekidaš kad hoćeš, dugmetom u svakom mejlu: tada se odmah briše." in m["text"]
+    assert out["refused"] == [400, 400, 400, 400]
+    assert "Саобраћај" in out["cir"]["text"] and "Шта пратиш" in out["cir"]["text"] and "Кад закон из ове области" in out["cir"]["text"]
 
 
 @needs_worker
@@ -176,7 +207,7 @@ db.prepare("UPDATE prati_dani SET n = 300").run();
 out.day = [(await follow("anic-ana", "e@f.rs")).status, mails.length, n("pratioci")];
 db.prepare("DELETE FROM prati_dani").run();
 await confirm(mails[0]);
-for (let i = 0; i < 25; i++) { later(); await follow("anic-ana"); }
+for (let i = 0; i < 45; i++) { later(); await follow("anic-ana"); }
 out.together = n("prati");
 out.noscript = await (await follow("anic-ana", "g@h.rs", "&pismo=cir")).text();
 out.cir = mails.at(-1);
@@ -187,7 +218,7 @@ out.cleaned = [n("prati"), n("pratioci")];
 """)
     assert out["failed"] == [502, 0, 0] and out["then"] == [200, 1]  # a mail that did not go leaves nothing, and may be asked again
     assert out["origin"] == 403 and out["token"] == 403 and out["limited"] == 429
-    assert out["day"] == [429, 1, 1] and out["together"] == 20
+    assert out["day"] == [429, 1, 1] and out["together"] == 40  # 17 areas and MPs beside them (27 Nov 2026)
     assert "Провери сандуче" in out["noscript"] and 'href="https://zailiprotiv.rs/cir/"' in out["noscript"]
     assert out["cir"]["subject"] == "Потврди праћење: кликни на дугме у овом мејлу" and "Ана Анић" in out["cir"]["html"]
     assert "Линк је истекао" in out["expired"] and out["cleaned"] == [1, 1]
@@ -195,9 +226,10 @@ out.cleaned = [n("prati"), n("pratioci")];
 
 def test_the_workers_words_are_written_in_one_script_each():
     js = (ROOT / "worker" / "prati.js").read_text(encoding="utf-8")
-    said = js[js.index("const SAID"):js.index("// A page of the worker's own")]
-    lat, cir = said.split("  cir: {")
-    assert not re.search(r"[Ѐ-ӿ]", lat) and not mejl.mixed_words(cir)
+    for said in (js[js.index("const SAID"):js.index("// What changes in the confirmation")],
+                 js[js.index("const AREA"):js.index("const said")]):
+        lat, cir = said.split("  cir: {")
+        assert not re.search(r"[Ѐ-ӿ]", lat) and not mejl.mixed_words(cir)
     main = (ROOT / "worker" / "worker.js").read_text(encoding="utf-8")
     assert "prati.cleanup(env)" in main and "prati: await prati.count(env)" in main
     assert main.index('path === "/m/prati"') < main.index('if (path === "/m" ||')
