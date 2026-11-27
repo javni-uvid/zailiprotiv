@@ -1337,6 +1337,9 @@ def test_an_mps_votes_by_area_and_kind_read_on_a_phone():
         assert len(re.findall(r"<th[ >]", table)) == table.count('<th role="columnheader"')
     assert t.count('<span class="gv-k" aria-hidden="true">{{ vote_label[k] }} </span>') == 2
     assert '<span class="gv-k" aria-hidden="true">Glasao </span>' in t and '<span class="gv-k" aria-hidden="true">Njegova grupa </span>' in t
+    # the record tables keep a table's layout everywhere, so they need no roles said (27 Nov 2026: ~23 MB of the site)
+    for table in t.split('<table class="record')[1:]:
+        assert 'role="' not in table[:table.index("</table>")]
 
 
 def test_a_sections_pages_are_one_switch_and_their_section_is_marked(built):
