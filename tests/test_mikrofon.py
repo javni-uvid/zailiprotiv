@@ -217,6 +217,11 @@ def test_the_page_while_the_service_is_down_is_the_live_page_drawn_from_real_day
             assert not re.search(r'(?:href|src|data-share)="/(?!/)', html)  # the edge's <base> would send them to the site
             assert not re.search(r'<(?:img|script|link)\b[^>]*\b(?:src|href)="https?://', html)  # nothing loaded from elsewhere
             assert len(html.encode()) < 1_000_000
+            # the part is asked for only under the edge, on the service's host; not on the site's (a 404 every 30 s)
+            assert '<body data-base="' in html and 'data-uzivo-host="mikrofon.zailiprotiv.rs"' in html
+        assert 'own && location.hostname !== own)) return;' in live_page.SCRIPT and 'getAttribute("data-uzivo-host")' in live_page.SCRIPT
+        from zoneinfo import ZoneInfo
+        assert 'data-uzivo-host="' not in live_page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
 
 
 def test_a_day_the_service_cannot_read_fails_the_build_rather_than_draw_an_empty_page():

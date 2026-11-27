@@ -1611,12 +1611,13 @@ def _site_name(url: str) -> str:
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
          live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "",
-         sample: bool = False, speech: int | None = None, sent: bool = False, off: bool = False) -> str:
+         sample: bool = False, speech: int | None = None, sent: bool = False, off: bool | str = False) -> str:
     """`speech`: the second a shared speech began, when its link was opened (deljenje.py): the same page, with that
     link's preview, and the script's button for it. `off`: the page the site builds from its last day read from the
     recording, shown at this address while this service is down (the site's pages_mikrofon, live/edge; 27 Nov 2026):
     the line on top says the broadcast is not followed, and what needs this service (the notification, the app) is
-    left out; not for a search engine."""
+    left out; not for a search engine. As this service's host name ("mikrofon.zailiprotiv.rs"), the script asks for the part
+    only there (under the edge), not on the site's host."""
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -1698,7 +1699,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
 <style>{CSS}</style>
 </head>
-<body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
+<body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}{f' data-uzivo-host="{escape(off)}"' if isinstance(off, str) and off else ""}>
 <header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="top-support" href="{escape(home + "podrzi")}" aria-label="{t("support_cta")}"><img src="{escape(site) + "caslav-srce.webp" if off else "/caslav.webp"}" alt="" width="36" height="33"><span>{sup[0]}<span class="lg"> {sup[1]}</span></span></a><a class="top-script" href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}" aria-label="{other_label}"><span class="lg">{other_label}</span><span class="sm">{"Lat" if cyr else "Ћир"}</span></a></span></header>
 <main>
 <p class="sr" id="ko" aria-live="polite"></p>

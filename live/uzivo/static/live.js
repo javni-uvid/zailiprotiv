@@ -160,8 +160,11 @@
     });
     return m;
   }
+  // The site's copy of the page (page.page's `off`) asks only on the service's own host, under the edge: opened on the
+  // site's host there is no part to ask for (27 Nov 2026).
+  var own = document.body.getAttribute("data-uzivo-host");
   function load() {
-    if (document.hidden) return;
+    if (document.hidden || (own && location.hostname !== own)) return;
     fetch(base + "deo", { cache: "no-cache" }).then(function (r) { return r.ok ? r.text() : null; })
       .then(function (html) {
         if (!html) return;

@@ -535,6 +535,7 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
   not known then; the notification and the app (the service's own worker and manifest) are left out; noindex. The
   mail card stays (it posts to the counter). The site's links are relative (`./`, `../` for Cyrillic), right both
   under the edge's `<base>` and at zailiprotiv.rs/mikrofon; the page's own addresses (`/cir/`, `/govor/<second>`)
-  lead to `live_page`. The script still asks for `/deo` every 30 s: under the edge a 503, kept as it is, and when
-  the service is back the live part takes its place. What the old page had and this one has not: the quiz (off the
+  lead to `live_page`. The script asks for `/deo` every 30 s only on the service's own host (`data-uzivo-host`,
+  from `live_page`; the conductor, the same day): under the edge a 503, kept as it is, and when the service is back
+  the live part takes its place; opened at zailiprotiv.rs/mikrofon it asks nothing (it was a 404 every 30 s a tab). What the old page had and this one has not: the quiz (off the
   live page since 22 Nov), the line on why it is down and the list of links (Prenos, Sednice, Varnice, Glasaj).

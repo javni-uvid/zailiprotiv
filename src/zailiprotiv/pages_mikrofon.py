@@ -22,6 +22,7 @@ import sys
 from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
 from zailiprotiv import jsonfile, months, offices
@@ -564,7 +565,7 @@ def offline_page(snap: dict, *, cyr: bool, waiting_: dict, api: str = "", analyt
     for Cyrillic), and the page's links to the service's own addresses ("/cir/", "/govor/<second>") lead there."""
     live_page, _ = _uzivo()
     html = live_page.page(snap, cyr=cyr, site="../" if cyr else "./", tz=TZ, waiting=waiting_, api=api.rstrip("/"),
-                          analytics=analytics, off=True)
+                          analytics=analytics, off=urlparse(live).hostname or True)
     own = live.rstrip("/")
     return re.sub(r'\b(href|data-share)="/(?!/)', lambda m: f'{m[1]}="{own}/', html) if own else html
 
