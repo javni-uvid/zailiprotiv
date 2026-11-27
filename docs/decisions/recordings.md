@@ -5,6 +5,9 @@ for word from AGENTS.md on 20 Nov 2026 (the maintainer's decision, so that an ag
 decisions of the part it works on). **Keep it current:** a decision made or changed is added here, at the end of the
 section it belongs to, in the same commit as the change. The principles and the rules of work are in AGENTS.md.
 
+**Changed since written:** the summary on a day's page is the mail's card on top (27 Nov 2026, "A day's page opens with the
+day's summary as the mail tells it"): the decisions are no longer a line of time of their own ("Šta se desilo …") there.
+
 ## Broadcasts and recordings
 
 The Assembly broadcasts its sittings live and keeps the recordings with its broadcaster (videonet.co.rs), linked
@@ -465,3 +468,18 @@ records and recordings stays here:
   Two of the site's own rules are undone under them in the day page (a vote's words on a coloured ground, folds
   underlined). The heading "Sažetak dana" gives way to the line of time's own ("Šta se desilo …") where there is one: it
   stood over it and again as the folded summary under it (the conductor's note). The bars "Po govorniku" and "Po listi", "Između govora" and the summary in words are as they were.
+- **A day's page opens with the day's summary as the mail tells it** (27 Nov 2026, the maintainer, over three drafts:
+  "Želim da strane sa starim arhivskim snimcima sadrže i summary koji sastavimo za mejl", then "Da li imamo tekstualni
+  summary koji bi mogli prikazati na vrhu pre svega?", then "B može"). The summary the mail is made of
+  (`data/<N>/sazetak/<day>.json`, the same file) stands on top of `govornici/<day>` as a dark card like the mail's top:
+  "Sažetak dana", the day's title (`naslov`, when it has one) and its paragraph (`ukratko`), open; then two folded rows,
+  "Dan u Skupštini, po satu" (the summary's steps as the mail shortens them, `mejl.short_steps`, and its decisions with
+  their votes, oldest first, each time a link to that minute of the day's recording) and "Govorili su" (the speakers it
+  names, a band per list, the lists by their seats in the convocation and then the alphabet, within one the longest
+  first; the portrait, the minutes, the line on what they spoke about, the name a link to their first speech on the
+  page); the label under them as before. Under the card, "Sažetak dana na mejl", the live page's own card
+  (`page.mail_card`, its styles marked `kartice` in `live.css`). "Šta se desilo …" and the folded "Sažetak dana" and "O
+  čemu je ko govorio" are gone: what they said is in the card, once. A day with no summary has no card and the mail's
+  offer under the lead. The new words are the mail's: "Govorili su", "N poslanika", "Dan u Skupštini, po satu". What
+  the site has no record of is not shown: the chair's measures (the mail's are from the chair's own words, `mere.py`,
+  in the service only), and a step of the summary that tells one (`steps.MEASURE`).

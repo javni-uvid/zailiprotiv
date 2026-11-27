@@ -15,7 +15,7 @@ from . import config
 from .deljenje import turn_at
 from .names import cyrillic, given_first, latin
 from .prenosi import place
-from .steps import STEP_TITLES, steps_shown
+from .steps import STEP_TITLES, decisions as real_decisions, steps_shown
 from .texts import MONTHS, MONTHS_OF, TEXT, WEEKDAYS, _fill, _name, _t  # noqa: F401
 
 
@@ -410,7 +410,7 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
     heard = [e for e in every if e["izvor"] != "sajt"]
     written = [e for e in every if e["izvor"] == "sajt"]
     summary = snap.get("sazetak") if isinstance(snap.get("sazetak"), dict) else {}
-    decisions = [o for o in summary.get("odluke") or [] if isinstance(o, dict) and o.get("sta")] if summary.get("vrsta") == "dan" else []
+    decisions = real_decisions(summary) if summary.get("vrsta") == "dan" else []  # a chair's measure is none (steps.MEASURE)
     if not heard and not written and not decisions:
         return ""
     t = lambda k: escape(_t(k, cyr))
@@ -1612,6 +1612,25 @@ def _site_name(url: str) -> str:
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace("<", "\\u003c") + "</script>"
 
 
+def mail_card(api: str, *, cyr: bool, site: str, now_: str = "svake", see: str = "") -> str:
+    """"Sažetak dana na mejl": the card that offers the day's mail, folded in a row (the live page; and the site's day
+    page, 27 Nov 2026, under the day's summary). `now_` is the line it says first (mail_line), `see` the sample's link."""
+    t = lambda k: escape(_t(k, cyr))
+    lines = "".join(f'<span class="meta" data-k="{k}"{"" if k == now_ else " hidden"}>{t(w)}</span>' for k, w in
+                    (("svake", "ml_slim"), ("danas", "ml_today"), ("gotov", "ml_soon"), ("sledeci", "ml_next")))
+    return f"""<details class="ml" id="mejl"><summary><span class="ml-n"><b>{t("ml_kicker")}</b>{lines}</span><span class="ml-p">{t("ml_button")}</span></summary>
+<form class="ml-box" method="post" action="{escape(api)}/m">
+<h2>{t("ml_title")}</h2>
+<ul class="ml-list"><li>{t("ml_1")}</li><li>{t("ml_2")}</li><li>{t("ml_3")}</li></ul>
+<p class="ml-when">{t("ml_when")}{see}</p>
+<label for="ml-adresa">{t("ml_label")}</label>
+<div class="ml-row"><input type="email" id="ml-adresa" name="adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="pismo" value="{"cir" if cyr else "lat"}"><button type="submit" class="ml-go">{t("ml_button")}</button></div>
+<p class="ml-done" role="status" hidden>{t("ml_done")}</p><p class="ml-err" role="alert" hidden>{t("ml_err")}</p>
+<p class="ml-fine">{t("ml_fine")} <a href="{escape(site)}privatnost">{t("ml_privacy")}</a></p>
+</form></details><button type="button" class="ml-x" hidden aria-label="{t("ml_hide")}">×</button>
+"""
+
+
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
          live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "",
          sample: bool = False, speech: int | None = None, sent: bool = False, off: bool | str = False) -> str:
@@ -1664,19 +1683,7 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
         # mail's own marks (23 Nov 2026, the maintainer: a card that stands out)
         see = f' <a class="ml-see" href="{base}mejl/primer">{t("ml_sample")} →</a>' if sample else ""
         now_ = mail_line(snap, sent, speech=bool(speech))  # the script shows another as the day goes on
-        lines = "".join(f'<span class="meta" data-k="{k}"{"" if k == now_ else " hidden"}>{t(w)}</span>' for k, w in
-                        (("svake", "ml_slim"), ("danas", "ml_today"), ("gotov", "ml_soon"), ("sledeci", "ml_next")))
-        add += f"""<details class="ml" id="mejl"><summary><span class="ml-n"><b>{t("ml_kicker")}</b>{lines}</span><span class="ml-p">{t("ml_button")}</span></summary>
-<form class="ml-box" method="post" action="{escape(api)}/m">
-<h2>{t("ml_title")}</h2>
-<ul class="ml-list"><li>{t("ml_1")}</li><li>{t("ml_2")}</li><li>{t("ml_3")}</li></ul>
-<p class="ml-when">{t("ml_when")}{see}</p>
-<label for="ml-adresa">{t("ml_label")}</label>
-<div class="ml-row"><input type="email" id="ml-adresa" name="adresa" autocomplete="email" inputmode="email" required maxlength="254"><input type="hidden" name="pismo" value="{"cir" if cyr else "lat"}"><button type="submit" class="ml-go">{t("ml_button")}</button></div>
-<p class="ml-done" role="status" hidden>{t("ml_done")}</p><p class="ml-err" role="alert" hidden>{t("ml_err")}</p>
-<p class="ml-fine">{t("ml_fine")} <a href="{escape(site)}privatnost">{t("ml_privacy")}</a></p>
-</form></details><button type="button" class="ml-x" hidden aria-label="{t("ml_hide")}">×</button>
-"""
+        add += mail_card(api, cyr=cyr, site=site, now_=now_, see=see)
         mail_back = f'<p class="ml-back" hidden><span>{t("ml_off")}</span> <button type="button">{t("ml_show")}</button></p>\n'
     mail_back = mail_back if api.startswith("https://") else ""
     uses = (f'. <a href="{escape(site)}{"cir/" if cyr else ""}kako-racunamo#posetioci">{t("uses_counter")}</a> {t("uses_counted")}'

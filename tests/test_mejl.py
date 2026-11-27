@@ -248,3 +248,18 @@ def test_the_corrections_file_is_read_into_the_mail_and_one_that_cannot_be_is_sa
         assert build(day, False, "https://x.test/o") == plain and "ispravkama" in build.hints(day)
     f.write_text(json.dumps([one, {"dan": "2026-11-18"}]), encoding="utf-8")
     assert "Odbor nije glasao." in build(day, False, "").text and "ispravkama" in build.hints(day)
+
+
+def test_a_chairs_measure_among_the_summarys_decisions_is_no_decision():
+    """27 Nov 2026 (the maintainer: "Ispravi"): 25 Nov's summary had three warnings among its decisions, drawn as "Odluka";
+    one rule for everybody (steps.MEASURE), in the mail, on the live page and on the site's day page."""
+    from uzivo import steps
+    for told in ("Predsedavajući je izrekao opomenu poslaniku Mirkoviću.", "Predsedavajući je povukao opomenu izrečenu Milimiru Vujadinoviću.",
+                 "Predsedavajući je oduzeo reč poslaniku.", "Poslanik je udaljen sa sednice."):
+        assert steps.is_measure(told), told
+    for told in ("Usvojena je odluka o sastavu delegacije.", "Skupština je odlučila da nije povređen Poslovnik.", "Izabran je predsednik."):
+        assert not steps.is_measure(told), told
+    day = {**SUMMARY, "odluke": SUMMARY["odluke"] + [{"vreme": "10:31", "sta": "Predsedavajući je izrekao opomenu poslaniku Mirkoviću."}]}
+    assert [o["sta"] for o in steps.decisions(day)] == [o["sta"] for o in SUMMARY["odluke"]]
+    m = mejl.build(date(2026, 11, 19), day, [], ROLL)
+    assert "opomenu poslaniku Mirkoviću" not in m.html and "opomenu poslaniku Mirkoviću" not in m.text

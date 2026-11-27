@@ -9,12 +9,15 @@
 {% from "macros.html" import trail %}{{ trail(root, root ~ "govornici.html", "Ko koliko govori") }}
 <h1>Ko je koliko govorio u Skupštini, {{ when }}</h1>
 <p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika.</p>
-{% if summary %}<section class="day-summary" id="sazetak">
-{% if steps %}{{ steps|safe }}{% else %}<h2>Sažetak dana</h2>{% endif %}
-<details class="one"><summary>Sažetak dana</summary><p>{{ summary.ukratko }}</p></details>
-{% if summary.govornici %}<details><summary class="label">O čemu je ko govorio ({{ summary.govornici|length }})</summary><ul class="plain">{% for g in summary.govornici %}<li><b>{{ g.ime|given_first }}</b>{% if g.lista %} <span class="label">{{ g.lista }}</span>{% endif %}: {{ g.o_cemu }}</li>{% endfor %}</ul></details>{% endif %}
-<p class="label">Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
-</section>{% endif %}
+{% if summary %}<section class="day-summary" id="sazetak"><div class="sz-card">
+<p class="sz-k">Sažetak dana</p>
+{% if summary.naslov %}<h2 class="sz-h">{{ summary.naslov }}</h2>{% endif %}
+<p class="sz-p">{{ summary.ukratko }}</p>
+{% if line %}<details class="sz-f"><summary>Dan u Skupštini, po satu <span>{{ n_steps }}</span></summary>{{ line|safe }}</details>{% endif %}
+{% if bands %}<details class="sz-f"><summary>Govorili su <span>{{ n_people }}</span></summary>{{ bands|safe }}</details>{% endif %}
+<p class="label sz-lab">Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
+</div></section>{% endif %}
+{{ mail|safe }}
 <h2>Po govorniku</h2>
 {{ bars(people, true) }}
 <h2>Po listi</h2>
@@ -41,6 +44,32 @@
 {{ card_css|safe }}
 /* the site's own rules that the live page has not: a vote's words in colour, not on a ground; its folds not underlined */
 .st-v b { background: none; } .steps-sec summary { text-decoration: none; }
+/* The day's summary as the mail's top (27 Nov 2026, the maintainer's choice B): dark in either theme, the text open, the
+   day by the clock and who spoke folded in it; the speakers' bands light, as the mail's */
+.sz-card { border-radius: 16px; background: #111318; color: #fff; margin: 1rem 0 0; padding: 1.1rem 1.1rem .4rem;
+  --fg: #fff; --bg: #111318; --line: #3a3f4a; --muted: #c9ccd3; }
+@media (prefers-color-scheme: dark) { .sz-card { border: 1px solid #3a3f4a; } }
+.sz-k { margin: 0; font-size: var(--t-1); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #7cc0f5; }
+.sz-card .sz-h { font-size: var(--t-7); line-height: 1.18; margin: .3rem 0 .6rem; color: #fff; text-wrap: balance; }
+.sz-p { font-size: var(--t-4); line-height: 1.6; margin: .2rem 0 .8rem; color: #e9eaee; max-width: 42rem; }
+.sz-f { border-top: 1px solid #3a3f4a; } .sz-f > summary { cursor: pointer; padding: .85rem 0; font-weight: 700; text-decoration: none;
+  display: flex; gap: .5rem; align-items: center; list-style: none; min-height: 2.75rem; box-sizing: border-box; }
+.sz-f > summary::-webkit-details-marker { display: none; } .sz-f > summary span { font-weight: 400; color: #c9ccd3; }
+.sz-f > summary::after { content: "▾"; margin-left: auto; color: #7cc0f5; } .sz-f[open] > summary::after { content: "▴"; }
+.sz-card a { color: inherit; } .sz-card .steps a.time { color: #fff; } .sz-card .st-v { color: #c9ccd3; }
+.sz-card .steps li.mk-korak > i { border-color: #c9ccd3; }
+.sz-band { border-radius: 12px; margin: 0 0 .8rem; overflow: hidden; background: #fff; color: #111;
+  --fg: #111; --bg: #fff; --muted: #5b616b; --line: #e3e5ea; }
+.sz-band > p { margin: 0; padding: .55rem .9rem; font-weight: 700; display: flex; gap: .5rem; align-items: center; border-bottom: 1px solid var(--line); }
+.sz-band > p i { flex: none; width: .7rem; height: .7rem; border-radius: 50%; background: var(--muted); }
+.sz-band > p i.c-av { background: var(--c-av); } .sz-band > p i.c-sl { background: var(--c-sl); } .sz-band > p i.c-mn { background: var(--c-mn); }
+.sz-band > p span { font-weight: 400; color: var(--muted); font-size: var(--t-2); margin-left: auto; white-space: nowrap; }
+.sz-band ul { list-style: none; margin: 0; padding: 0; }
+.sz-band li { display: grid; grid-template-columns: 48px 1fr; gap: .2rem .8rem; padding: .75rem .9rem; border-top: 1px solid var(--line); }
+.sz-band li:first-child { border-top: 0; } .sz-band li .meta { float: right; padding-left: .5rem; color: var(--muted); }
+.sz-band li p { margin: .15rem 0 0; line-height: 1.5; }
+.sz-lab.label { color: #c9ccd3; border-top: 1px solid #3a3f4a; padding-top: .7rem; margin: 0; padding-bottom: .7rem; }
+.ml-x, .ml-back { display: none; } .ml { margin: 1rem 0 0; } .ml > summary { text-decoration: none; }
 {% include "mikrofon.css" %}
 </style>
 <script>

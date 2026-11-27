@@ -56,8 +56,10 @@ name. Every page is also in Cyrillic, under `cir/`.
   time per list, the time between turns, quick exchanges, every speech with its place in the Assembly's archive, a
   link to share it (opened, it starts the recording there where the browser lets it) and, until the notes, an automatic transcript; the convocation's days summed (`govornici.html`). While the
   recording plays, a card under it says who spoke at that place ("Na snimku"), as on the live page. The speeches
-  and the summary's decisions are drawn as the live page draws them (its cards and line of time, its styles).
-  With the model's summary of the day from the live page ("Sažetak dana", labelled). A day whose broadcast shows no speaker's caption is read from what was said: the notes lined up with the
+  are drawn as the live page draws them (its cards, its styles). On top, the day's summary as the day's mail tells it
+  ("Sažetak dana", labelled, from the same file): its title and paragraph open, "Dan u Skupštini, po satu" (steps and
+  decisions, each time a link to the recording) and "Govorili su" (by list, with portraits) folded, and under it the
+  mail's offer. A chair's measure is never drawn as a decision. A day whose broadcast shows no speaker's caption is read from what was said: the notes lined up with the
   recording written down word by word (`zailiprotiv govor <day> <folder>`, the words from `live/uzivo/zvuk_dana.py`). How right the live record of who spoke when was on such a day: `zailiprotiv tacnost [day]`. Until the notes, a day can be read from its recording (`zailiprotiv glas-dan <day> <folder> --uzorci <folders of other days>`, with numpy): the sound cut where the voice changes, each piece named by the caption, the chair's words or a known voice.
 - **Glasaj i ti:** the visitor's ballot ("Moj listić", kept in the browser) beside the Assembly's results and the
   MPs and groups that voted the same; a quiz on the laws that divided the chamber and one per area; the newest bills
