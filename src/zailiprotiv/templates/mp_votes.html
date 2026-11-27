@@ -91,7 +91,7 @@
   <details id="ostala-{{ sittings[0].rows[0].o.conv }}"{% if others_by_conv|length == 1 %} open{% endif %}>
     <summary>{{ name }} saziv · {{ n }} {{ plural(n, "glasanje", "glasanja", "glasanja") }}</summary>
     <div class="scroll">
-    <table class="record">
+    <table class="record others">
       <thead role="rowgroup"><tr role="row"><th role="columnheader">Datum</th><th role="columnheader">Sednica</th><th role="columnheader">Tačka: glas</th></tr></thead>
       <tbody role="rowgroup">
       {% for s in sittings %}
