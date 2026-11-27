@@ -64,6 +64,11 @@ the change. The principles and the rules of work are in AGENTS.md.
   `said`), no longer its markup. **pages** warns over 850 MB. The next steps, if it grows on: the `-glasovi` pages
   (noindex, some 250 MB) to a bucket with the notes' pages, or the Cyrillic edition elsewhere; both change addresses, so
   the maintainer decides.
+- **No ARIA roles where a table stays a table** (27 Nov 2026, the conductor, from the size note: the site near the 850 MB
+  warning). The record tables of an MP's "-glasovi" page (every final vote, by convocation; some 500,000 rows with the
+  Cyrillic twins) said `role="row"`/`"cell"`/`"rowgroup"`/`"columnheader"` on every element, which a native table already
+  says; they keep their layout on every screen. Left out there, 23 bytes a row; the "group-votes" tables, whose cells
+  become blocks on a phone, keep theirs. Nothing seen or heard changes.
 - **A branch's real pages without a build here: pregled** (27 Nov 2026, the conductor: the workers' computer, 16 GB with
   other workers on it, has no room for a build). `pregled` (workflow_dispatch on the branch, `--ref`, with the pages) builds the branch on
   a runner over the repository's data as **pages** does (the share pictures and downloads moved out as there, the search

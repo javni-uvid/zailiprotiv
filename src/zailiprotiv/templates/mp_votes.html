@@ -71,10 +71,10 @@
     <summary>{{ c.name }} saziv · {{ c.n }} {{ plural(c.n, "glasanje", "glasanja", "glasanja") }} · {{ c.tally.za or 0 }} za, {{ c.tally.protiv or 0 }} protiv</summary>
     <div class="scroll">
     <table class="record">
-      <thead role="rowgroup"><tr role="row"><th role="columnheader">Datum</th><th role="columnheader">Zakon</th><th role="columnheader">Glas</th></tr></thead>
-      <tbody role="rowgroup">
+      <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
+      <tbody>
       {% for r in c.record %}
-        <tr role="row"><td role="cell">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
+        <tr><td>{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
       {% endfor %}
       </tbody>
     </table>
@@ -93,7 +93,7 @@
     <div class="scroll">
     <table class="record others">
       <thead><tr><th>Datum</th><th>Sednica</th><th>Tačka: glas</th></tr></thead>
-      <tbody role="rowgroup">
+      <tbody>
       {% for s in sittings %}
         <tr><td>{{ s.day|day }}</td><td><a href="../sednica/{{ s.page }}.html#ostala">{{ s.rows|length }} {{ plural(s.rows|length, "glasanje", "glasanja", "glasanja") }}</a></td><td>{% for x in s.runs %}{{ x.points|join(", ") }}: <span class="v-text-{{ x.vote }}">{{ vote_label[x.vote] }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</td></tr>
       {% endfor %}
