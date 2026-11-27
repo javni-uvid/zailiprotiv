@@ -988,10 +988,11 @@ def test_a_new_convocations_notes_are_counted_before_it_has_a_law(tmp_path, monk
 
 def test_letter_sizes_are_the_scale():
     """Every letter size in the stylesheet is a step of the one scale (the --t- variables), so a page does not grow
-    twenty sizes again; the menu's and the tabs' letters, sized to fit a phone's row, and an SVG's are the exceptions."""
+    twenty sizes again; the menu's and the tabs' letters, sized to fit a phone's row, and an SVG's are the exceptions,
+    and the phone's bar's words while it is a row of icons (0: still the links' names, not seen; 27 Nov 2026)."""
     from pathlib import Path
     css = (Path(site.__file__).parent / "static" / "style.css").read_text(encoding="utf-8")
-    fit = {"clamp(.72rem, 4.3vw, 1rem)", "clamp(.68rem, 3.55vw, .95rem)", "clamp(.68rem, 3.65vw, 1rem)", "clamp(.64rem, 3.05vw, .95rem)", "clamp(.8rem, 3.7vw, .95rem)", "inherit", ".8em", "25px", "28px"}
+    fit = {"clamp(.72rem, 4.3vw, 1rem)", "clamp(.68rem, 3.55vw, .95rem)", "clamp(.68rem, 3.65vw, 1rem)", "clamp(.64rem, 3.05vw, .95rem)", "clamp(.8rem, 3.7vw, .95rem)", "inherit", ".8em", "25px", "28px", "0"}
     sizes = {v.strip() for v in re.findall(r"font-size:\s*([^;}]+)", css)}
     assert {v for v in sizes if not re.fullmatch(r"var\(--t-(\d|h1|d1|d2)\)", v)} <= fit
     assert not re.search(r"font:\s*\d+\s+[\d.]+rem", css)
@@ -1253,3 +1254,20 @@ def test_a_thin_sitting_waits_outside_the_sitemap(built):
     assert not downloads.in_sitemap("sednica/x.html", short.replace("reč ", "", 2))
     assert downloads.in_sitemap("zakon/x.html", "<main>kratko</main>")  # other kinds are not judged by length
     assert not downloads.in_sitemap("404.html", "<main>" + "reč " * 400 + "</main>")
+
+
+def test_the_phones_bar_stays_and_turns_to_icons_while_read():
+    """27 Nov 2026 (variant 4 of the drafts): the bar never goes away; read down it is a 44 px row of icons, the page's
+    room at the bottom stays that of the full bar (no layout shift), and with less motion asked for it stays full."""
+    from pathlib import Path
+    root = Path(__file__).parents[1]
+    css = (root / "src/zailiprotiv/static/style.css").read_text(encoding="utf-8")
+    js = (root / "src/zailiprotiv/static/site.js").read_text(encoding="utf-8")
+    assert "--dno: 60px; --dno-low: 44px;" in css
+    assert "translateY(calc(100% + 40px))" not in css  # it no longer goes away
+    low = css[css.index("@media (max-width: 640px) and (prefers-reduced-motion: no-preference)"):]
+    low = low[:low.index("\n}\n")]
+    assert ".dno-away .dno:not(:focus-within):not(:has(details[open]))" in low and "height: var(--dno-low)" in low
+    assert "body" not in low  # the page's room is the full bar's at all times
+    assert "body { padding-bottom: calc(var(--dno) + env(safe-area-inset-bottom)); }" in css
+    assert 'y > end - 40' in js and 'root.classList.add("dno-away")' in js  # full again at the end of the page

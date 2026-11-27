@@ -1246,31 +1246,43 @@ main:has(> .home-hero) > .mic.to-rules { margin-top: 0; }
 
 /* The phone's menu: a bar at the bottom, under the thumb, away while the page is read down and back at the first move
    up (site.js; without the script it stays). The microphone in the middle, red while a sitting is on (23 Nov 2026, the
-   maintainer's choice B). 52 px, where the row it replaces held 46 px at all times. */
-:root { --live: #dc2626; --dno: 52px; }
+   maintainer's choice B). 52 px, where the row it replaces held 46 px at all times.
+   Since 27 Nov 2026 (variant 4 of the drafts) it never goes away: 60 px with its words, and while the page is read down
+   a 44 px row of icons, the words still the links' names; full again at the first move up, at either end of the page,
+   with the focus in it or "Još" open. The page keeps room for the full bar, so nothing moves when it changes. */
+:root { --live: #dc2626; --dno: 60px; --dno-low: 44px; }
 .dno { display: none; }
 @media (max-width: 640px) {
   body { padding-bottom: calc(var(--dno) + env(safe-area-inset-bottom)); }
-  .dno { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; height: var(--dno);
-    padding-bottom: env(safe-area-inset-bottom); background: var(--bg); border-top: 1px solid var(--line); transition: transform .22s; }
-  .dno > a, .dno summary { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; height: var(--dno); text-decoration: none; font-size: var(--t-1);
-    font-weight: 600; line-height: 1.15; color: var(--muted); cursor: pointer; list-style: none; white-space: nowrap; }
-  .dno details, .dno details[open] { margin: 0; padding: 0; border: 0; } .dno summary, .dno details[open] summary { margin: 0; padding: 0; border: 0; } .dno summary::before, .dno summary::after { content: none; }
+  .dno { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: start; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    height: calc(var(--dno) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--bg); border-top: 1px solid var(--line); }
+  .dno > a, .dno summary { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: var(--dno); padding-bottom: 6px; text-decoration: none;
+    font-size: var(--t-2); letter-spacing: -.01em; font-weight: 600; line-height: 1.15; color: var(--muted); cursor: pointer; list-style: none; white-space: nowrap; }
+  .dno details, .dno details[open] { margin: 0; padding: 0; border: 0; } .dno summary, .dno details[open] summary { margin: 0; padding: 0 0 6px; border: 0; } .dno summary::before, .dno summary::after { content: none; }
   .dno summary::-webkit-details-marker { display: none; }
   .dno > a[aria-current], .dno details[open] summary, .dno > a.dno-live { color: var(--fg); }
-  .dno i { width: 1.3rem; height: 1.3rem; background: currentColor; -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
-  .dno > a.dno-live { justify-content: flex-end; padding-bottom: 4px; }
-  .dno-live b { width: 46px; height: 46px; box-sizing: content-box; margin-top: -28px; border: 4px solid var(--bg); border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); }
+  .dno i { width: 1.5rem; height: 1.5rem; flex: none; background: currentColor; -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+  .dno-live b { width: 46px; height: 46px; box-sizing: content-box; margin-top: -24px; border: 4px solid var(--bg); border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); }
   .dno > a.dno-live.on { color: var(--live); } .dno-live.on b { background: var(--live); color: #fff; }
   .dno details > div { position: absolute; left: 0; right: 0; bottom: 100%; display: flex; flex-direction: column; padding: .4rem 16px .9rem; background: var(--bg); border-top: 2px solid var(--fg); max-height: 70vh; overflow-y: auto; z-index: 1; }
   .dno details > div a { padding: .7rem 0; border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 550; }
   .dno details > div a:last-child { border-bottom: 0; }
-  .dno:has(details[open]) .dno-live b { margin-top: -28px; position: relative; z-index: 2; }
+  .dno:has(details[open]) .dno-live b { position: relative; z-index: 2; }
   .dno :focus-visible { outline: 3px solid var(--za); outline-offset: -3px; }
-  .dno-away .dno:not(:focus-within) { transform: translateY(calc(100% + 40px)); }
   body:has(.q-item:not(.answered) .q-answers) { padding-bottom: 0; } body:has(.q-item:not(.answered) .q-answers) .dno { display: none; }  /* the answers stand there */
 }
-@media (prefers-reduced-motion: reduce) { .dno { transition: none; } }
+@media (max-width: 359px) { .dno > a, .dno summary { font-size: var(--t-1); letter-spacing: -.02em; } }
+/* The row of icons while the page is read down (site.js sets .dno-away); never where motion is to be spared: the bar
+   then stays full. */
+@media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+  .dno, .dno > a, .dno summary { transition: height .18s; }
+  .dno-live b { transition: width .18s, height .18s, margin .18s; }
+  .dno-away .dno:not(:focus-within):not(:has(details[open])) { height: calc(var(--dno-low) + env(safe-area-inset-bottom)); }
+  .dno-away .dno:not(:focus-within):not(:has(details[open])) > a, .dno-away .dno:not(:focus-within):not(:has(details[open])) summary {
+    height: var(--dno-low); font-size: 0; gap: 0; justify-content: center; padding-bottom: 0; }
+  .dno-away .dno:not(:focus-within):not(:has(details[open])) .dno-live b { width: 34px; height: 34px; margin-top: 0; border-width: 0; }
+  .dno-away .dno:not(:focus-within):not(:has(details[open])) .dno-live b i { width: 1.25rem; height: 1.25rem; }
+}
 @media print { .dno { display: none; } }
 .dno .i-zak { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3h9l4 4v14H6zM9 11h7M9 15h7'/%3E%3C/svg%3E"); }
 .dno .i-pos { --i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c1-5 4-7 8-7s7 2 8 7'/%3E%3C/svg%3E"); }

@@ -321,6 +321,19 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
     page. The reader takes them now. A file without "listed" is read again (some 30 pages a convocation, a second apart); what
     was added is in the run's log. Rows are only added: were one to be lost, the file keeps its own, names it under
     `lost`, the run warns, and no other archive is read until that is looked at.
+- **The phone's bar stays, larger, and turns to icons while the page is read** (27 Nov 2026; the maintainer: "Ne znam
+  dodatno da li poboljšamo navigaciju na glavnom telefonu ako stalno držimo i uvećamo donji tab i damo drugu opciju za
+  spuštanje tog bara?", then "Napravi nacrte / Ne bih zadrzavao izmenu, pustio bih je"; of the five drafts he named none,
+  the conductor took the one they recommended, variant 4). The bar of 23 Nov went away whole while the page was read
+  down. Now it is 60 px with its words (icons 24 px, words `--t-2`, `--t-1` under 360 px), always there; read down,
+  it becomes a 44 px row of the same icons and the microphone sits in it, the words kept as the links' names; it is
+  full again at the first move up, within 80 px of the top or 40 px of the end, with the focus in it or "Još" open.
+  The page's room at the bottom stays that of the full bar, so nothing on the page moves when the bar changes
+  (layout shift), and the foot is never under it. Where the reader's system asks for less motion it stays full and
+  never changes; without the script it is full. No new words. The quiz keeps it away while its answers stand there,
+  as before; the live page (`mikrofon`) has its own page and no bar, so nothing there changed. What was looked at:
+  the drafts' pictures (`donja-traka/galerija.html`, the conductor's folder) and the built bar's at 360, 390 and 430 px
+  in both scripts.
 
 ## Design rules
 
