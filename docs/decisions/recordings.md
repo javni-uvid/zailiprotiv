@@ -463,4 +463,5 @@ records and recordings stays here:
   `kartice { … } kartice` (`pages_govornici.card_css`, with the lists' colours from its own `:root`), so a change there
   changes both; the markers are comments, and the live page's HTML over every day read is the same as before them.
   Two of the site's own rules are undone under them in the day page (a vote's words on a coloured ground, folds
-  underlined). The bars "Po govorniku" and "Po listi", "Između govora" and the summary in words are as they were.
+  underlined). The heading "Sažetak dana" gives way to the line of time's own ("Šta se desilo …") where there is one: it
+  stood over it and again as the folded summary under it (the conductor's note). The bars "Po govorniku" and "Po listi", "Između govora" and the summary in words are as they were.

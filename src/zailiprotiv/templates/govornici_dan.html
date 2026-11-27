@@ -10,8 +10,7 @@
 <h1>Ko je koliko govorio u Skupštini, {{ when }}</h1>
 <p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika.</p>
 {% if summary %}<section class="day-summary" id="sazetak">
-<h2>Sažetak dana</h2>
-{{ steps|safe }}
+{% if steps %}{{ steps|safe }}{% else %}<h2>Sažetak dana</h2>{% endif %}
 <details class="one"><summary>Sažetak dana</summary><p>{{ summary.ukratko }}</p></details>
 {% if summary.govornici %}<details><summary class="label">O čemu je ko govorio ({{ summary.govornici|length }})</summary><ul class="plain">{% for g in summary.govornici %}<li><b>{{ g.ime|given_first }}</b>{% if g.lista %} <span class="label">{{ g.lista }}</span>{% endif %}: {{ g.o_cemu }}</li>{% endfor %}</ul></details>{% endif %}
 <p class="label">Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
