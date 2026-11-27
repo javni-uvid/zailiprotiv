@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "poslanici" %}
 {# The newest convocation's MPs before its first roll call (pages_members.py). #}
 {% block title %}Poslanici, {{ conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block description %}Svih {{ rows|length }} poslanika u {{ conv_name|locative }} sazivu Narodne skupštine Srbije, od {{ since|day_of }}, po poslaničkim grupama: stranka na čiji su predlog izabrani, mesto, godište i ko je već bio poslanik.{% endblock %}

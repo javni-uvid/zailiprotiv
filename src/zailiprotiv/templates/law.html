@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "zakoni" %}
 {% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox, term with context %}
 {% block title %}{{ law.title }}{% if law.title in twice and law.passed %} ({{ law.passed|day }}){% elif law.title|length < 25 %}: kako su glasali poslanici{% endif %} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.short }}{% if law.passed %} (usvojen {{ law.passed|day }}){% endif %}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}

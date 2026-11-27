@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "poslanici" %}
 {% from "macros.html" import bar, plural, how with context %}
 {% block title %}{{ g.name }}, {{ g.conv_name }} saziv — Za ili Protiv{% endblock %}
 {% block description %}Poslanička grupa {{ g.name }} u {{ g.conv_name|lower }} sazivu: članovi, kako glasa po oblastima i na kojim zakonima se podelila.{% endblock %}

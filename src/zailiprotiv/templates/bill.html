@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "zakoni" %}
 {% from "macros.html" import plural, how, votebox with context %}
 {# A bill in procedure: what is known of it before the Assembly votes. Once passed, the page sends on to the law's. #}
 {% set name = b.title|latin %}

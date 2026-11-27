@@ -348,6 +348,17 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   take the same form (`group-votes`, roles written out, the columns' words `aria-hidden`); by area, the words
   "Glasao" and "Njegova grupa" go before theirs too, in a row under the area's name, the area's "od toga … ugovora"
   stays on the name's line and the fold of laws voted against follows right under it, without the gap of its margin.
+- **A section's pages as one switch, and the section marked** (27 Nov 2026, the maintainer, of three drafts: "Može 2
+  prekidač za grupe/jezičke"; he had asked whether Poslanici, Grupe and Prisustvo, and Zakoni, U proceduri and Oblasti,
+  could be under one address, and was answered that the addresses stay, as GitHub Pages has no redirect and the domain is
+  young, and that the pages show the grouping instead). Those pages already shared their section's heading and a row of
+  boxed buttons; the row is now one rounded switch with the page's own part filled, each part a finger high, on one
+  line at every width, and Skupština's row (Nedelje, Sednice, Sazivi, U brojkama) is the same component. The names are
+  the buttons' own; nothing else moves. The section a page belongs to (its template's `section`: zakoni, poslanici,
+  skupstina, also on a law's, a bill's, an area's, a group's and an MP's pages, a sitting and a week) is marked with
+  `aria-current="true"` in the top bar on a wide screen (underlined) and in the phone's bar, written into the page:
+  the script marked the bar by the address, so Grupe, Prisustvo, U proceduri and Oblasti marked nothing and the top bar
+  never did. Drafts and pictures: `zailiprotiv-dirigent\jezicci\`.
 
 ## Design rules
 

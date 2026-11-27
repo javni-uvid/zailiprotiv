@@ -71,6 +71,8 @@ name. Every page is also in Cyrillic, under `cir/`.
   other pages from the day before a sitting until it starts.
 - **On a phone** the menu is a bar at the bottom (Zakoni, Poslanici, Uživo, Glasaj, Još), always there: a row of
   icons while a page is read down, with its words again at the first move up.
+- **Sections** (Zakoni, Poslanici, Skupština): their pages share a heading and a switch between them, and the
+  section is marked in the top bar and in the phone's bar on each of its pages.
 - **Search** over the site and every speech; **feeds** (new laws, bills, per area, per MP, weeks); **downloads**
   (CSV, JSON) under CC BY 4.0; **method** ("Kako računamo"): how every figure is made.
 
