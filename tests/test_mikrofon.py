@@ -267,6 +267,9 @@ def test_the_day_pages_summary_card_is_the_mails_and_agrees_with_the_page_while_
     folded, from the same file the mail is made of; over every real day with a summary. No chair's measure stands as a
     decision, here or on the page while the service is down, and both show the same decisions."""
     import re
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent.parent / "live"))
+    from uzivo.steps import decisions as real_decisions
     from zailiprotiv import pages_govornici as gv
     facts = {}
     seen = 0
@@ -280,7 +283,7 @@ def test_the_day_pages_summary_card_is_the_mails_and_agrees_with_the_page_while_
         line, n, bands, people = gv.summary_parts(day, summary, facts=facts, seats_=gv.seats(DATA, conv))
         assert line.count("<li") == n > 0 and people == len(summary["govornici"]) == bands.count("<li>")
         decided = re.findall(r'<p class="st-title">Odluka</p><p class="st-what st-said">([^<]*)</p>', line)
-        assert decided and not any("opomen" in x.lower() for x in decided)
+        assert len(decided) == len(real_decisions(summary)) and not any("opomen" in x.lower() for x in decided)  # 18 Nov: none
         times = re.findall(r'class="time"[^>]*>(\d\d:\d\d)<', line)
         assert times and re.search(r'href="https://arhiva\.videonet\.co\.rs/[^"]+#t=\d+" data-file="[^"]+" data-t="\d+"', line)  # a time is its moment on the recording
         listed = gv.cards(day, gv.day_turns({**day, "govori": [t for t in day["govori"] if t.get("okvira", 0) >= 2]}), facts=facts, summary=summary)

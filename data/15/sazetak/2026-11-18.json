@@ -1,0 +1,199 @@
+{
+ "dan": {
+  "naslov": "Nastavljena rasprava o izboru predsednika Skupštine",
+  "kratko": "Skupština tog dana nije donela odluke. Nastavljena je rasprava o izboru predsednika Narodne skupštine između kandidata Stojana Radenovića i Aleksandra Čupića. Rad je prekinut u 18 časova i nastavlja se sutradan u 10 časova.",
+  "ukratko": "Nastavljena je konstitutivna sednica, sa raspravom o izboru predsednika Narodne skupštine. Kandidati su Stojan Radenović i Aleksandar Čupić. Na početku je, posle prijave povrede Poslovnika, održan minut ćutanja za poginulog pilota. Poslanici liste Aleksandar Vučić - Srbija pobeđuje podržali su Radenovića i postavljali pitanja o Čupićevom zvanju i imovini. Poslanici Studentske liste, SVM i SPP podržali su Čupića, a Šaip Kamberi je preneo da će Ahmedin Škrijelj glasati za njega. Bilo je mnogo prijava povrede Poslovnika. U popodnevnom delu Jugoslav Gašić je saopštio da Studentska lista odustaje od svih prijavljenih govornika, a Aleksandar Vučić je rekao da će njegova grupa završiti sutra do 13 časova. Glasanja nije bilo, a rad je prekinut u 18 časova.",
+  "odluke": [],
+  "tok": [
+   {
+    "vreme": "10:03",
+    "sta": "Predsedavajući je nastavio sednicu i utvrdio da je u sali prisutno 128 poslanika, što je dovoljno za rad. Nastavljen je pretres o izboru predsednika Narodne skupštine."
+   },
+   {
+    "vreme": "10:08",
+    "sta": "Ilija Srdanović je prijavio povredu Poslovnika i predložio minut ćutanja za vojnika poginulog prethodnog dana."
+   },
+   {
+    "vreme": "10:12",
+    "sta": "Milenko Jovanov je rekao da je to zloupotreba povrede Poslovnika i tražio oduzimanje vremena poslaničkoj grupi."
+   },
+   {
+    "vreme": "10:14",
+    "sta": "Predsedavajući je pozvao poslanike da odaju počast poginulom pilotu i održan je minut ćutanja."
+   },
+   {
+    "vreme": "10:19",
+    "sta": "Aleksandar Vučić je, kao predstavnik predlagača, govorio o ponašanju Studentske liste i o njenom kandidatu."
+   },
+   {
+    "vreme": "11:03",
+    "sta": "Petar Mitov, Vera Radović i Sanja Fric prijavili su povrede Poslovnika zbog načina vođenja sednice."
+   },
+   {
+    "vreme": "11:13",
+    "sta": "Balint Pastor je rekao da će SVM glasati za Aleksandra Čupića. Predložio je izmenu Poslovnika koja bi manjinama omogućila poslaničku grupu."
+   },
+   {
+    "vreme": "11:22",
+    "sta": "Miloš Vučević je izrazio podršku Stojanu Radenoviću."
+   },
+   {
+    "vreme": "11:36",
+    "sta": "Miroslav Andrić je obrazložio predlog Studentske liste da Aleksandar Čupić bude predsednik Skupštine."
+   },
+   {
+    "vreme": "11:40",
+    "sta": "Vučić je rekao da je RTS prenos sednice premestio sa prvog na drugi program."
+   },
+   {
+    "vreme": "12:53",
+    "sta": "Usame Zukorlić je rekao da Stranka pravde i pomirenja podržava Čupića."
+   },
+   {
+    "vreme": "12:59",
+    "sta": "Biljana Pantić Pilja je pitala Čupića da li poseduje sedam stanova. Rekla je da će se izviniti ako greši."
+   },
+   {
+    "vreme": "13:34",
+    "sta": "Željko Hubač je u replici rekao Vučiću da je izrekao laž i da će to raspraviti na sudu."
+   },
+   {
+    "vreme": "13:46",
+    "sta": "Šaip Kamberi je govorio o položaju Albanaca u Preševskoj dolini. Rekao je da će Ahmedin Škrijelj glasati za kandidata Studentske liste."
+   },
+   {
+    "vreme": "13:58",
+    "sta": "Predsedavajući je odredio pauzu do 15 časova."
+   },
+   {
+    "vreme": "15:45",
+    "sta": "Jugoslav Gašić je pozvao predsedavajućeg da produži rad posle 18 časova kako bi predsednik bio izabran te večeri."
+   },
+   {
+    "vreme": "16:48",
+    "sta": "Predsedavajući je odgovorio na pitanja Slobodana Bubnjevića o svom radu za univerzitet u Saudijskoj Arabiji."
+   },
+   {
+    "vreme": "17:24",
+    "sta": "Gašić je saopštio da Studentska lista odustaje od svih prijavljenih govornika u raspravi."
+   },
+   {
+    "vreme": "17:27",
+    "sta": "Vučić je rekao da će njegova poslanička grupa završiti raspravu sutra do 13 časova i da glasanje može biti posle podne."
+   },
+   {
+    "vreme": "17:58",
+    "sta": "Predsedavajući je prekinuo rad u 18 časova. Nastavak je zakazan za sutradan u 10 časova."
+   }
+  ],
+  "govornici": [
+   {
+    "ime": "Vučić Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Kritikovao je Studentsku listu, tvrdio da je Čupić docent a ne profesor i pitao o njegovim stanovima. Govorio je o premeštanju prenosa na RTS 2 i o potpredsedničkim mestima."
+   },
+   {
+    "ime": "Mitov Petar",
+    "lista": "Studentska lista",
+    "o_cemu": "Prijavljivao je povrede Poslovnika zbog načina vođenja sednice. Rekao je da u predlogu jasno piše da je Čupić docent."
+   },
+   {
+    "ime": "Fric Sanja",
+    "lista": "Studentska lista",
+    "o_cemu": "Tražila je da predsedavajući prepusti predsedavanje. Kritikovala ga je, navodeći da je izjavio da televiziju Informer treba kandidovati za Nobelovu nagradu."
+   },
+   {
+    "ime": "Pastor Balint",
+    "lista": "SVM-VMSZ",
+    "o_cemu": "Najavio je da će SVM glasati za Čupića jer iza njega stoji većina. Tražio je izmenu Poslovnika da manjine sa tri poslanika mogu da formiraju poslaničku grupu."
+   },
+   {
+    "ime": "Vučević Miloš",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Podržao je Radenovića. Govorio je o, kako je rekao, najavama hapšenja i progona, i o uskraćivanju mesta opoziciji u skupštinskim telima."
+   },
+   {
+    "ime": "Andrić Miroslav",
+    "lista": "Studentska lista",
+    "o_cemu": "Obrazložio je predlog da Čupić bude predsednik, kako bi Skupština promenila način rada i kontrolisala izvršnu vlast."
+   },
+   {
+    "ime": "Brnabić Ana",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Uporedila je naučne reference Radenovića i Čupića. Tražila je izvinjenje zbog predstavljanja Čupića kao profesora i govorila o prisustvu studenata na galeriji."
+   },
+   {
+    "ime": "Raguš Marina",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Podržala je Radenovića kao čoveka i naučnika. Govorila je o podelama, reketiranju i geopolitičkim pritiscima, kako ih je opisala."
+   },
+   {
+    "ime": "Belić Sanja",
+    "lista": "Studentska lista",
+    "o_cemu": "Predložila je Čupića zbog njegovog profesorskog iskustva i kulture govora. Govorila je o zaštiti prava dece."
+   },
+   {
+    "ime": "Zukorlić Usame",
+    "lista": "SPP",
+    "o_cemu": "Najavio je podršku SPP Čupiću kao kandidatu većine. Podržao je predlog o poslaničkoj grupi manjina i govorio o odlasku mladih iz Sandžaka."
+   },
+   {
+    "ime": "Pantić Pilja Biljana",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Optužila je Studentsku listu za nasilje i pitala Čupića da li poseduje sedam stanova. Rekla je da će se izviniti ako to nije istina, a posle pauze tražila je da se izjasni."
+   },
+   {
+    "ime": "Hubač Željko",
+    "lista": "Studentska lista",
+    "o_cemu": "Podržao je Čupića zbog kulture dijaloga. U replici je rekao Vučiću da je izrekao laž i da će to raspraviti na sudu."
+   },
+   {
+    "ime": "Kamberi Šaip",
+    "lista": "",
+    "o_cemu": "Izneo je zahteve za položaj Albanaca u Preševskoj dolini. Preneo je da Škrijelj glasa za kandidata Studentske liste i podržao izmenu Poslovnika."
+   },
+   {
+    "ime": "Šešelj Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Najavio je podršku Radenoviću zbog njegovih demokratskih manira. Pitao je zašto se Čupić nije obratio i šta misli o pravima opozicije."
+   },
+   {
+    "ime": "Vasiljević Blagojević Milica",
+    "lista": "Studentska lista",
+    "o_cemu": "Objasnila je da je docent profesorsko zvanje i podržala Čupića. Iznela je podatke kojima je osporila citiranost Radenovićevih radova."
+   },
+   {
+    "ime": "Gašić Jugoslav",
+    "lista": "Studentska lista",
+    "o_cemu": "Tražio je produženje rada posle 18 časova radi izbora predsednika. Saopštio je da Studentska lista odustaje od svih prijavljenih govornika."
+   },
+   {
+    "ime": "Mirković Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Kritikovao je kašljanje poslanika Studentske liste i govorio o, kako je rekao, njihovim lažima. Rekao je da Radenović neće biti izabran."
+   },
+   {
+    "ime": "Vukelić Nikola",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Najavio je podršku Zavetnika Radenoviću. Pitao je za Čupićeve stavove i govorio o napadima na svoju porodicu na društvenim mrežama."
+   },
+   {
+    "ime": "Bubnjević Slobodan",
+    "lista": "Studentska lista",
+    "o_cemu": "Podržao je Čupića i rekao da su kolege ukazale da predsedavajući ne ume da vodi sednicu. Pitao je Radenovića o prelasku na univerzitet u Saudijskoj Arabiji."
+   },
+   {
+    "ime": "Bakarec Nebojša",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Podržao je Radenovića i tvrdio da je Čupić član DS. Govorio je o blanko ostavkama, finansiranju Studentske liste i ranijem stranačkom članstvu njenih kandidata."
+   }
+  ],
+  "t": 1795819102,
+  "model": "claude-opus-5-5",
+  "izvor": "beleske"
+ },
+ "delovi": [],
+ "greske": 0,
+ "model": "claude-opus-5-5",
+ "izvor": "beleske"
+}

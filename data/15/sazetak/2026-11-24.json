@@ -1,257 +1,4 @@
 {
- "dan": {
-  "naslov": "Skupština je izabrala članove i zamenike odbora",
-  "kratko": "Skupština je usvojila predlog odluke o izboru članova i zamenika članova odbora, u celini, javnim glasanjem. Konstatovala je i ostavke Adrijane Mesarović i Nikole Selakovića na funkcije članova vlade.",
-  "ukratko": "Sednica je nastavljena posle minuta ćutanja zbog smrti vladike Irineja Bulovića, uz pauze tokom dana. Poslanici su u jedinstvenom pretresu raspravljali o petoj tački dnevnog reda, izboru članova radnih tela, uz brojne povrede poslovnika, replike i opomene predsedavajućeg. Predsedavajući je zatim konstatovao ostavke Adrijane Mesarović i Nikole Selakovića na funkcije članova vlade. U 19:28 Skupština je usvojila predlog odluke o izboru članova i zamenika članova odbora, u celini, javnim glasanjem. Nastavak sednice najavljen je za sutra u 10 časova.",
-  "odluke": [
-   {
-    "vreme": "19:26",
-    "sta": "Konstatovane ostavke Adrijane Mesarović na funkciju potpredsednice vlade i ministarke privrede i Nikole Selakovića na funkciju ministra kulture.",
-    "glasanje": null
-   },
-   {
-    "vreme": "19:28",
-    "sta": "Usvojen predlog odluke o izboru članova i zamenika članova odbora, u celini, javnim glasanjem.",
-    "glasanje": {
-     "za": 133,
-     "protiv": 93,
-     "uzdrzano": 0,
-     "nije_glasalo": 3,
-     "prisutno": 229
-    },
-    "glasovi": "za 133, protiv 93, uzdržano 0, nije glasalo 3, prisutno 229"
-   }
-  ],
-  "tok": [
-   {
-    "vreme": "10:00",
-    "sta": "Otvoren nastavak prve konstitutivne sednice i konstatovano prisustvo poslanika."
-   },
-   {
-    "vreme": "10:03",
-    "sta": "Održan minut ćutanja zbog smrti vladike Irineja Bulovića."
-   },
-   {
-    "vreme": "10:05",
-    "sta": "Utvrđeno da postoje uslovi za rad Skupštine; pozdravljeni studenti na galeriji."
-   },
-   {
-    "vreme": "10:07",
-    "sta": "Proglašena pauza od jednog sata."
-   },
-   {
-    "vreme": "11:23",
-    "sta": "Nastavak rada i prelazak na petu tačku dnevnog reda, izbor članova radnih tela."
-   },
-   {
-    "vreme": "11:31",
-    "sta": "Otvoren jedinstveni pretres o predlogu odluke o izboru članova i zamenika članova odbora."
-   },
-   {
-    "vreme": "12:10",
-    "sta": "Izrečena opomena poslaniku zbog govora bez date reči."
-   },
-   {
-    "vreme": "14:10",
-    "sta": "Proglašena pauza do 15:10."
-   },
-   {
-    "vreme": "15:10",
-    "sta": "Nastavljen pretres po petoj tački dnevnog reda posle pauze."
-   },
-   {
-    "vreme": "15:38",
-    "sta": "Najavljen rad i posle 18 časova, radi što bržeg donošenja akata iz dnevnog reda."
-   },
-   {
-    "vreme": "17:15",
-    "sta": "Izrečena opomena poslanici zbog dobacivanja bez date reči."
-   },
-   {
-    "vreme": "18:08",
-    "sta": "Proglašena pauza od deset minuta."
-   },
-   {
-    "vreme": "18:24",
-    "sta": "Konstatovan kvorum; nastavljen pretres o sastavu odbora i zastupljenosti poslaničkih grupa."
-   },
-   {
-    "vreme": "19:26",
-    "sta": "Konstatovane ostavke Adrijane Mesarović i Nikole Selakovića na funkcije članova vlade."
-   },
-   {
-    "vreme": "19:27",
-    "sta": "Zaključen jedinstveni pretres i predlog stavljen na glasanje u celini."
-   },
-   {
-    "vreme": "19:28",
-    "sta": "Skupština je usvojila predlog odluke o izboru članova i zamenika članova odbora."
-   },
-   {
-    "vreme": "19:29",
-    "sta": "Najavljen nastavak sednice sutra u 10 časova."
-   }
-  ],
-  "govornici": [
-   {
-    "ime": "Brnabić Ana",
-    "o_cemu": "Govorila je o kragujevačkim žrtvama i traženju izvinjenja, o uvredama građana u raspravi, opomenama predsedavajućeg i isključivanju opozicije iz rukovođenja Skupštinom."
-   },
-   {
-    "ime": "Radeta Vjerica",
-    "o_cemu": "Govorila je o pauzi, prisustvu studenata i gostiju u Skupštini, navodnom pušenju, ulozi odbora kao kontrolnih tela i skidanju imuniteta potpredsednicima."
-   },
-   {
-    "ime": "Đukanović Vladimir",
-    "o_cemu": "Tvrdio je da je predsedavajući obmanuo javnost o pozivu studenata i prisustvu aktivista, te kritikovao vođenje sednice i izricanje opomena."
-   },
-   {
-    "ime": "Vučić Aleksandar",
-    "o_cemu": "Govorio je o sastavu odbora i zastupljenosti opozicije, ekonomskim rezultatima, železničkom projektu, projektu Rio Tinto, bezbednosti građana i optužbama upućenim opoziciji i studentima."
-   },
-   {
-    "ime": "Jovanov Milenko",
-    "o_cemu": "Ukazivao je na povrede poslovnika i Ustava u vođenju sednice i u pravima poslanika i opozicije te na optužbe bez dokaza o organizovanoj kriminalnoj grupi."
-   },
-   {
-    "ime": "Vujadinović Milimir",
-    "o_cemu": "Govorio je o istorijskim temama, odnosu prema Srpskoj pravoslavnoj crkvi, tvrdnjama o progonu crkve i rodoljuba i o izboru organa skupštine."
-   },
-   {
-    "ime": "Đajić Zoran",
-    "o_cemu": "Nabrajao je nadležnosti odbora, tvrdio da prethodni sazivi nisu vršili kontrolnu funkciju i izneo niz optužbi prema vlasti te govorio o povredi poslovnika."
-   },
-   {
-    "ime": "Fric Sanja",
-    "o_cemu": "Rekla je da nema veze sa projektom pruge Novi Sad - Subotica i da je do 2020. bila član Republičke revizione komisije. Govorila je i o nadležnostima predsednika, ubrzavanju radova i radu odbora za prostorno planiranje."
-   },
-   {
-    "ime": "Krizmanić Imre",
-    "o_cemu": "Odgovarao je na tvrdnje o svom radu na projektu Rio Tinto, navodeći da je istraživanje plaćeno po cenovniku, i o sumnjama u izveštaje."
-   },
-   {
-    "ime": "Nedeljković Marina",
-    "o_cemu": "Objasnila je da Srpska radikalna stranka neće učestvovati u radu odbora i kritikovala vlast, navodeći svoje iskustvo u skupštinama i na fakultetu."
-   },
-   {
-    "ime": "Šćepanović Katarina",
-    "o_cemu": "Govorila je o dobacivanjima prema studentima, navodnom nasilnom oduzimanju deteta u školi na Voždovcu i bezbednosti škola i institucija."
-   },
-   {
-    "ime": "Kuburović Nina",
-    "o_cemu": "Govorila je o odanosti i poslušnosti u politici, patronažnom sistemu u institucijama, odboru za poljoprivredu i subvencijama poslaniku Kokanoviću."
-   },
-   {
-    "ime": "Lesjak Marija",
-    "o_cemu": "Govorila je o ulozi odbora u parlamentarnoj kontroli vlasti, radu odbora za zdravlje i zaštitu životne sredine, izborima u Novom Sadu i finansiranju naučnog projekta."
-   },
-   {
-    "ime": "Vučinić Dina",
-    "o_cemu": "Odgovarala je na izlaganje poslanice Lesjak o izborima za mesne zajednice, finansiranju projekata i udruženja i o statutima mesnih zajednica."
-   },
-   {
-    "ime": "Krkobabić Stefan",
-    "o_cemu": "Govorio je o potrebi dijaloga, reprezentativnosti poslaničke grupe u odborima i pozvao na nove konsultacije i ponovno razmatranje predloga."
-   },
-   {
-    "ime": "Valentik Sara",
-    "o_cemu": "Govorila je o izvinjenju zbog izjave o pravu na izražavanje i o sedenju u Skupštini."
-   },
-   {
-    "ime": "Bakić Jovo",
-    "o_cemu": "Govorio je o povredi poslovnika zbog neizricanja opomene za uvredu, ulozi organa gonjenja, optužbama o fašizmu i diktaturi i o davanju reči."
-   },
-   {
-    "ime": "Mirković Aleksandar",
-    "o_cemu": "Govorio je o optužbama za poziv na uriniranje po poslanicima sa galerije na društvenoj mreži i tražio otkrivanje identiteta objavljivača."
-   },
-   {
-    "ime": "Radović Vera",
-    "o_cemu": "Govorila je o zahtevu za sastanak Odbora za zdravlje i o nadležnostima za njegovo sazivanje."
-   },
-   {
-    "ime": "Andrić Miroslav",
-    "o_cemu": "Govorio je o tvrdnjama o zloupotrebi prava na repliku i o odlučivanju o njegovom korišćenju."
-   },
-   {
-    "ime": "Kokanović Zlatko",
-    "o_cemu": "Govorio je o nepristojnom ponašanju gostiju, javnom objavljivanju imovinske karte, izboru u odbore, reviziji Ministarstva poljoprivrede i zloupotrebama subvencija."
-   },
-   {
-    "ime": "Radin Milan",
-    "o_cemu": "Govorio je o sastavu Odbora za evropske integracije i stavu vlasti prema pregovorima o Kosovu i Metohiji."
-   },
-   {
-    "ime": "Ilić Aleksandra",
-    "o_cemu": "Govorila je o brzom donošenju izmena pravosudnih zakona i tvrdnjama o neustavnosti zakona o Pravosudnoj akademiji."
-   },
-   {
-    "ime": "Vukelić Nikola",
-    "o_cemu": "Govorio je o navodnom isključivanju opozicije iz predsedništava odbora i potpredsedništva Skupštine."
-   },
-   {
-    "ime": "Drašković Dražen",
-    "o_cemu": "Govorio je o sastavu skupštinskih odbora, stručnosti njihovih članova i ulozi odbora u kontroli izvršne vlasti."
-   },
-   {
-    "ime": "Rističević Marijan",
-    "o_cemu": "Govorio je o studentskim protestima, navodnim krivičnim delima i navodnoj osveti vlasti."
-   },
-   {
-    "ime": "Milošević Stanislav",
-    "o_cemu": "Govorio je o sastavu skupštinskih odbora, mestima opozicije u njima i tumačenju rezultata izbora."
-   },
-   {
-    "ime": "Raguš Marina",
-    "o_cemu": "Govorila je o ulozi predsedavajućeg u vođenju odbora i o radu Odbora za spoljne poslove tokom skraćenog mandata."
-   },
-   {
-    "ime": "Pantić Pilja Biljana",
-    "o_cemu": "Govorila je o raspodeli predsedavanja odborima između većine i opozicije i o radu parlamenta u prvim danima."
-   },
-   {
-    "ime": "Đorđijević Milena",
-    "o_cemu": "Govorila je o radu Odbora za kulturu i informisanje, položaju zaposlenih u kulturnim ustanovama i slobodi medija."
-   },
-   {
-    "ime": "Tasić Knežević Nataša",
-    "o_cemu": "Govorila je o predlogu zakona o koeficijentima plata u kulturi i položaju radnika u kulturi."
-   },
-   {
-    "ime": "Selaković Nikola",
-    "o_cemu": "Govorio je o Generalštabu, zaštiti kulturnog nasleđa, garaži kod Narodne biblioteke i zatvaranju muzeja."
-   },
-   {
-    "ime": "Milovanović Živojin",
-    "o_cemu": "Govorio je o zaštiti radnika, izmenama zakona o radu i štrajku i navodnim otkazima zbog otpora pritiscima."
-   },
-   {
-    "ime": "Tandir Samir",
-    "o_cemu": "Govorio je o kandidatima za odbore, predlogu za ukidanje odbora i optužbama za govor mržnje."
-   },
-   {
-    "ime": "Stanarević Svetlana",
-    "o_cemu": "Govorila je o radu novog saziva bezbednosnih odbora i navodnim razgovorima sa komandantima vojske i policije."
-   },
-   {
-    "ime": "Vučević Miloš",
-    "o_cemu": "Govorio je o izboru članova radnih tela i potpredsedničkih mesta u Narodnoj skupštini i o bezbednosti građana."
-   },
-   {
-    "ime": "Bajić Boris",
-    "o_cemu": "Govorio je o predlogu dopune poslovnika o formiranju poslaničkih grupa i učešću poslanika sa manjinskih lista u odborima i delegacijama."
-   },
-   {
-    "ime": "Zukorlić Usame",
-    "o_cemu": "Govorio je o mestu manjina u Odboru za spoljne poslove, prioritetima spoljne politike i nazivu odbora za dijasporu."
-   },
-   {
-    "ime": "Škrijelj Ahmedin",
-    "o_cemu": "Govorio je o reformi poslovnika Narodne skupštine i zastupljenosti manjinskih stranaka u odborima."
-   }
-  ],
-  "t": 1795547995
- },
  "delovi": [
   {
    "od": "10:00",
@@ -560,7 +307,292 @@
    "t_do": 1795544946
   }
  ],
+ "dan": {
+  "naslov": "Skupština je izabrala članove svojih odbora",
+  "kratko": "Narodna skupština je usvojila odluku o izboru članova i zamenika članova svojih odbora. Konstatovala je i ostavke Adrijane Mesarović i Nikole Selakovića na funkcije u vladi.",
+  "ukratko": "Sednica je počela minutom ćutanja za preminulog vladiku Irineja, a zatim je predsedavajući pozdravio studente na galeriji i proglasio pauzu od sat vremena. U raspravi o petoj tački Aleksandar Vučić je saopštio da njegova poslanička grupa neće učestvovati u radu odbora jer opozicija nije dobila ni potpredsednike ni predsednike odbora. Poslanici Studentske liste govorili su o nadležnostima odbora i o tome da raniji odbori nisu radili svoj posao, a poslanici liste Aleksandar Vučić - Srbija pobeđuje o urušavanju demokratske prakse. Dan su obeležile brojne replike i povrede poslovnika, nekoliko opomena i incident sa gostom na galeriji, koji je udaljen i kome je zabranjen pristup. Poslanici manjinskih lista najavili su podršku i zatražili izmenu poslovnika. Skupština je konstatovala ostavke dvoje članova vlade i usvojila odluku o izboru članova i zamenika članova odbora. Nastavak sednice zakazan je za sutra u 10 časova.",
+  "odluke": [
+   {
+    "vreme": "19:27",
+    "sta": "Skupština je konstatovala ostavke Adrijane Mesarović na funkciju potpredsednika vlade i ministra privrede i Nikole Selakovića na funkciju ministra kulture, jer su izabrani za narodne poslanike.",
+    "glasanje": null
+   },
+   {
+    "vreme": "19:28",
+    "sta": "Usvojena je odluka o izboru članova i zamenika članova odbora Narodne skupštine sa ispravkom, u celini.",
+    "glasanje": {
+     "za": 133,
+     "protiv": 93,
+     "uzdrzano": 0,
+     "nije_glasalo": 3,
+     "prisutno": 229
+    },
+    "glasovi": "za 133, protiv 93, uzdržano 0, nije glasalo 3, prisutno 229"
+   }
+  ],
+  "tok": [
+   {
+    "vreme": "10:04",
+    "sta": "Na predlog Milenka Jovanova poslanici su minutom ćutanja odali počast preminulom vladiki Irineju Buloviću."
+   },
+   {
+    "vreme": "10:05",
+    "sta": "Utvrđeno je da je prisutna većina poslanika. Predsedavajući je pozdravio studente na galeriji, nazvao ih simbolom stradanja i pomenuo preminulog novinara Milana Jovanovića."
+   },
+   {
+    "vreme": "10:07",
+    "sta": "Predsedavajući je proglasio pauzu od sat vremena jer materijali za nastavak sednice nisu bili spremni."
+   },
+   {
+    "vreme": "11:23",
+    "sta": "Počeo je pretres o petoj tački, izboru članova radnih tela. Usledile su povrede poslovnika o studentima na galeriji."
+   },
+   {
+    "vreme": "11:32",
+    "sta": "Otvoren je jedinstveni pretres o predlogu odluke o izboru članova i zamenika članova odbora."
+   },
+   {
+    "vreme": "12:00",
+    "sta": "Potpredsednica Sara Valentik izvinila se zbog ranije izjave, posle čega su usledile replike."
+   },
+   {
+    "vreme": "12:10",
+    "sta": "Predsedavajući je izrekao opomenu poslaniku ili poslanici jer je uporno govorio bez date reči."
+   },
+   {
+    "vreme": "12:50",
+    "sta": "Predsedavajući je najavio da će dozvoliti još jedan krug replika i tu stati."
+   },
+   {
+    "vreme": "13:24",
+    "sta": "Predsedavajući je izrekao opomenu poslaniku ili poslanici zbog obraćanja drugoj poslanici posle upozorenja."
+   },
+   {
+    "vreme": "13:48",
+    "sta": "Aleksandar Mirković je izneo da je gost sa galerije na društvenoj mreži pozvao na uriniranje po poslanicima. Predsedavajući je rekao da će stvar biti ispitana."
+   },
+   {
+    "vreme": "14:10",
+    "sta": "Proglašena je pauza do 15 časova i 10 minuta."
+   },
+   {
+    "vreme": "15:12",
+    "sta": "Predsedavajući je saopštio da je osoba koja je fotografisala identifikovana, udaljena i da će joj biti zabranjen pristup Skupštini, i izvinio se zbog propusta."
+   },
+   {
+    "vreme": "15:38",
+    "sta": "Predsedavajući je najavio da bi se moglo raditi i posle 18 časova."
+   },
+   {
+    "vreme": "16:50",
+    "sta": "Predsedavajući je upozorio Biljanu Pantić Pilju zbog upotrebe reči fašizam."
+   },
+   {
+    "vreme": "17:10",
+    "sta": "Predsedavajući je izrekao opomenu Vjerici Radeti jer je posle upozorenja nastavila da govori bez date reči."
+   },
+   {
+    "vreme": "18:08",
+    "sta": "Posle dobacivanja u sali predsedavajući je proglasio pauzu od deset minuta."
+   },
+   {
+    "vreme": "18:24",
+    "sta": "Rad je nastavljen uz kvorum od 197 poslanika."
+   },
+   {
+    "vreme": "18:43",
+    "sta": "Aleksandar Vučić je imao završno izlaganje kao predstavnik poslaničke grupe."
+   },
+   {
+    "vreme": "19:09",
+    "sta": "Govorili su poslanici manjinskih lista Boris Bajić, Usame Zukorlić i Ahmedin Škrijelj."
+   },
+   {
+    "vreme": "19:28",
+    "sta": "Pretres je zaključen i obavljeno je glasanje. Predsedavajući je izrazio žaljenje zbog incidenta i zakazao nastavak za sutra u 10 časova."
+   }
+  ],
+  "govornici": [
+   {
+    "ime": "Jovanov Milenko",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Jovanov je predložio minut ćutanja za vladiku Irineja i u povredama poslovnika rekao da predsednik Skupštine ćuti na kršenje Ustava i prava poslanika da predlažu zakone."
+   },
+   {
+    "ime": "Brnabić Ana",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Brnabić je rekla da su simbol stradanja kragujevački mučenici, a ne studenti, da je opozicija isključena iz rukovođenja Skupštinom i da je njenom detetu prećeno."
+   },
+   {
+    "ime": "Radeta Vjerica",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Radeta je kritikovala pauzu i ponašanje gostiju u Skupštini, rekla da očekuje da tužilaštvo zatraži skidanje imuniteta dvojici potpredsednika i rekla da odbori nemaju kontrolnu ulogu."
+   },
+   {
+    "ime": "Đukanović Vladimir",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Đukanović je tvrdio da gosti na galeriji nisu pozvani studenti, nego aktivisti, i tražio da predsednik opominje poslanike Studentske liste zbog uvreda."
+   },
+   {
+    "ime": "Vučić Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Vučić je rekao da njegova grupa odbija ponudu i neće učestvovati u radu odbora jer opozicija nije dobila potpredsednike ni predsednike odbora, a u replikama je branio rezultate bivše vlasti."
+   },
+   {
+    "ime": "Bakić Jovo",
+    "lista": "Studentska lista",
+    "o_cemu": "Bakić je rekao da su njegove reči pogrešno protumačene i da birači zaslužuju poštovanje, a da će pripadnici kriminalne grupe biti gonjeni. Odbacio je da njegova lista uvodi fašizam ili totalitarizam."
+   },
+   {
+    "ime": "Vujadinović Milimir",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Vujadinović je stanje u Skupštini i društvu i izbor rukovodilaca odbora uporedio sa vremenom posle 1945. godine i progonom crkve i rodoljuba."
+   },
+   {
+    "ime": "Đajić Zoran",
+    "lista": "Studentska lista",
+    "o_cemu": "Đajić je čitao nadležnosti odbora, rekao da raniji odbori nisu reagovali na korupciju i zloupotrebe i rekao da će, kad stignu prijave tužilaštva, mnogima morati da se skida imunitet."
+   },
+   {
+    "ime": "Fric Sanja",
+    "lista": "Studentska lista",
+    "o_cemu": "Fric je poricala da je učestvovala u projektu pruge Novi Sad - Subotica i govorila o radu odbora za prostorno planiranje i neusvojenom prostornom planu."
+   },
+   {
+    "ime": "Kokanović Zlatko",
+    "lista": "Studentska lista",
+    "o_cemu": "Kokanović je odgovorio na tvrdnje o subvencijama da su one zakonom predviđene i da će imovinsku kartu predati agenciji, a najavio je reviziju Ministarstva poljoprivrede."
+   },
+   {
+    "ime": "Nedeljković Marina",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Nedeljković je rekla da srpski radikali neće učestvovati u radu odbora, govorila je o svom radu i podsetila na prisajedinjenje Srema i Vojvodine 1918. godine."
+   },
+   {
+    "ime": "Šćepanović Katarina",
+    "lista": "Studentska lista",
+    "o_cemu": "Šćepanović je govorila o odnosu prema gostima, slučaju u školi na Voždovcu i bezbednosti škola, i rekla da odgovorni za urušavanje institucija ne mogu predsedavati odborima."
+   },
+   {
+    "ime": "Kuburović Nina",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Kuburović je govorila o fašizmu i podanicima i iznela tvrdnju da je poslanik Kokanović dobio subvencije od države, postavljajući pitanje šta je uradio sa novcem."
+   },
+   {
+    "ime": "Lesjak Marija",
+    "lista": "Studentska lista",
+    "o_cemu": "Lesjak je rekla da raniji odbori za zdravlje i životnu sredinu nisu radili, kritikovala neraspisivanje izbora za mesne zajednice u Novom Sadu i objasnila da je projekat dobio fakultet."
+   },
+   {
+    "ime": "Mirković Aleksandar",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Mirković je rekao da je gost sa galerije na društvenoj mreži pozvao na uriniranje po poslanicima i tražio izvinjenje i ime te osobe."
+   },
+   {
+    "ime": "Vučinić Dina",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Vučinić je odgovorila da izbori za mesne zajednice u Novom Sadu zavise od usklađivanja njihovih statuta i govorila o finansiranju poslanice Lesjak."
+   },
+   {
+    "ime": "Krkobabić Stefan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Krkobabić je pozvao većinu da povuče predloge i ponovo organizuje konsultacije, kako bi opozicija bila zastupljena u vođenju odbora."
+   },
+   {
+    "ime": "Radin Milan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Radin je govorio o odboru za evropske integracije sastavljenom samo od većine i kritikovao odnos nove većine prema Prištini i Zagrebu."
+   },
+   {
+    "ime": "Ilić Aleksandra",
+    "lista": "Studentska lista",
+    "o_cemu": "Ilić je govorila o ulozi odbora za pravosuđe i ustavna pitanja, kritikovala česte izmene krivičnog zakonodavstva i izostanak reakcije ranijih odbora."
+   },
+   {
+    "ime": "Vukelić Nikola",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Vukelić je rekao da je želeo da učestvuje u odborima, ali da opozicija neće dobiti predsednike odbora, i govorio o regionalnim pitanjima i stradanju Srba."
+   },
+   {
+    "ime": "Drašković Dražen",
+    "lista": "Studentska lista",
+    "o_cemu": "Drašković je rekao da struka treba da bude iznad politike u odborima i predložio anketne odbore o Alta banci, državnim firmama i Ekspu."
+   },
+   {
+    "ime": "Rističević Marijan",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Rističević je rekao da je sastav odbora deo osvete, govorio o subvencijama u poljoprivredi i zatražio da odbori razmotre hrvatsku rezoluciju o Vukovaru."
+   },
+   {
+    "ime": "Milošević Stanislav",
+    "lista": "Studentska lista",
+    "o_cemu": "Milošević je objasnio zašto opozicija nije dobila mesta, rekavši da ne deli iste demokratske vrednosti i da bi njen izbor bio bizaran."
+   },
+   {
+    "ime": "Raguš Marina",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Raguš je navela rad odbora za spoljne poslove koji je vodila i objasnila zašto nije osnovana anketna komisija o slučaju Ribnikar."
+   },
+   {
+    "ime": "Pantić Pilja Biljana",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Pantić Pilja je rekla da je uveden jednopartijski sistem i da se krše preporuke Saveta Evrope o proporcionalnoj raspodeli predsedavanja odborima."
+   },
+   {
+    "ime": "Đorđijević Milena",
+    "lista": "Studentska lista",
+    "o_cemu": "Đorđijević je rekla da rezolucija Saveta Evrope nije obavezujuća i da odbor za kulturu nije reagovao na garažu kod Narodne biblioteke i na slučaj Generalštaba."
+   },
+   {
+    "ime": "Tasić Knežević Nataša",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Tasić Knežević je govorila o svom radu u odboru, saradnji sa udruženjima i predlogu za usklađivanje koeficijenata plata u kulturi."
+   },
+   {
+    "ime": "Selaković Nikola",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Selaković je odgovorio da istinu o Generalštabu utvrđuje sud i da su odluku o garaži kod Narodne biblioteke doneli politički prethodnici 2002. godine."
+   },
+   {
+    "ime": "Milovanović Živojin",
+    "lista": "Studentska lista",
+    "o_cemu": "Milovanović je govorio o položaju radnika, najavio promenu zakona o radu i agencijskom zapošljavanju i rekao da odgovorni ne mogu voditi odbore."
+   },
+   {
+    "ime": "Tandir Samir",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Tandir je rekao da Sara Valentik nije dostojna funkcije, kritikovao kašnjenje sednice i ironično predložio da se ukine odbor za ljudska i manjinska prava, jer manjine nemaju potpredsednika."
+   },
+   {
+    "ime": "Stanarević Svetlana",
+    "lista": "Studentska lista",
+    "o_cemu": "Stanarević je predložila plan rada bezbednosnih odbora i zatražila da odbori ispitaju izjavu nosioca liste protivnika o razgovorima sa komandantima vojske i policije."
+   },
+   {
+    "ime": "Vučević Miloš",
+    "lista": "Aleksandar Vučić - Srbija pobeđuje",
+    "o_cemu": "Vučević je rekao da većina uvodi jednopartijski sistem u Skupštini i pozvao predsednika Skupštine da zaštiti građane od nasilja i pretnji."
+   },
+   {
+    "ime": "Bajić Boris",
+    "lista": "",
+    "o_cemu": "Bajić je predstavio predlog dopune poslovnika da tri poslanika manjinskih lista mogu da obrazuju poslaničku grupu i najavio glasanje za predlog odluke."
+   },
+   {
+    "ime": "Zukorlić Usame",
+    "lista": "SPP",
+    "o_cemu": "Zukorlić je govorio o radu u odboru za spoljne poslove, odnosima sa BiH, Turskom i EU, i predložio novi naziv odbora za dijasporu."
+   },
+   {
+    "ime": "Škrijelj Ahmedin",
+    "lista": "",
+    "o_cemu": "Škrijelj je najavio da će njegova grupa glasati za odluku, pozdravio ustupanje mesta manjinskim listama i zatražio izmenu poslovnika o poslaničkim klubovima."
+   }
+  ],
+  "t": 1795819429,
+  "model": "claude-opus-5-5"
+ },
  "greske": 0,
- "model": "claude-haiku-5-5",
+ "model": "claude-opus-5-5",
  "javljeno": 1795547995
 }

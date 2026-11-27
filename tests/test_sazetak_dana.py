@@ -66,13 +66,15 @@ def test_the_tool_writes_the_days_file_marked_by_its_source_and_puts_nothing_in_
     _, need, _, said = tool.notes_material("2026-11-17", conv, json.loads((conv / "snimak" / "2026-11-17.json").read_text(encoding="utf-8")))
     monkeypatch.setattr(sudija.config, "MODEL_KEY", "test")
     monkeypatch.setattr(sudija, "ask_claude", lambda *a: _reply(need, said))
+    kept_in_repo = DATA / "15" / "sazetak" / "2026-11-17.json"
+    before = kept_in_repo.read_bytes() if kept_in_repo.exists() else None
     assert tool.main(["beleske", "2026-11-17", "--izlaz", str(tmp_path)]) == 0
     kept = json.loads((tmp_path / "sazetak" / "2026-11-17.json").read_text(encoding="utf-8"))
     assert kept["izvor"] == kept["dan"]["izvor"] == "beleske" and kept["dan"]["model"] == sudija.config.DAY_MODEL
     basis = json.loads((tmp_path / "osnova" / "2026-11-17.json").read_text(encoding="utf-8"))
     assert set(basis["oslonac"]) == set(need) and basis["bez_oslonca"] == []
     assert "nađeno" in capsys.readouterr().out
-    assert not (DATA / "15" / "sazetak" / "2026-11-17.json").exists() or "izvor" not in (DATA / "15" / "sazetak" / "2026-11-17.json").read_text(encoding="utf-8")
+    assert (kept_in_repo.read_bytes() if kept_in_repo.exists() else None) == before  # the repo's copy is not touched
 
 
 def test_a_reply_whose_sentence_is_not_the_speakers_own_is_asked_again_and_said():
