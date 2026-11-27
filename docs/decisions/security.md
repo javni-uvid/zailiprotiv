@@ -34,6 +34,11 @@ The site is static and public, with no accounts and nothing private about a visi
   `cloudflare/wrangler-action` may run, and only named by commit, so a workflow that names another action or a
   tag doesn't start. A new action is first allowed there (Settings → Actions → General), by the maintainer or
   an agent with their rights, and said in the pull request.
+  **pregled** (27 Nov 2026, the conductor) builds a branch that is not merged: started by hand only, with a branch
+  name of this repository (checked to be a name, never a ref or a fork's pull request, and checked out as
+  `refs/heads/<name>`), its job may only read the repository, has no secret and keeps no token, and its inputs reach the
+  scripts through `env` only; it publishes nothing and keeps the pages asked for three days. What a branch's code does
+  in it can reach nothing but that job's own runner.
 - **The live service (`live/`).** Behind Cloudflare's tunnel with no port open to the network; not root, no
   capabilities, images and packages named by content (`live-service.md`). Two containers (25 Nov 2026): what reads video
   from outside (ffmpeg, yt-dlp, tesseract) has neither the key of the readers' addresses nor the maintainer's own address; what

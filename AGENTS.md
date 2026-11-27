@@ -34,6 +34,10 @@ it. Dates are the maintainer's decisions unless said otherwise.
   each part's decisions (`docs/decisions/live-*.md`): a decision about `live/` or the live page goes at the end of
   that file. Agents get the short one when they work in `live/`; read it too before changing what the service takes
   from the site (`pages_mikrofon.py`, `mikrofon.js`, the counter's push).
+- **A branch's real pages: the pregled workflow** (27 Nov 2026). Workers on the maintainer's computer don't build the
+  site (its memory is shared); `gh workflow run pregled -f branch=<branch> -f pages="<path> <path>"`, then
+  `gh run download <id> -n pregled`: the pages open from disk, and the log has the site's size by folder
+  (`docs/decisions/code.md`).
 - **The tests are `uv run pytest -q`.** The **test** workflow runs them again on every pull request and on
   `main`; a red run is fixed first. On Windows the roll-call and bill tests need poppler's `pdftotext` (`winget install
   oschwartz10612.Poppler`), named by `PDFTOTEXT` where Git's (xpdf's, whose columns fall elsewhere) is first on the PATH,
