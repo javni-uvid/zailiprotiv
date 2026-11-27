@@ -407,3 +407,9 @@ issue #7 once the Fifteenth is current.
   saziva" of the Fourteenth's laws: now by rule (`pages_quiz`, `of_words`) "ovog" while the quiz's convocation is the newest
   (`common["newest"]`: the newest with a list of MPs, else `config.NEWEST`), "prethodnog" while it is the one before it, the
   words the home page already uses, else its name ("trinaestog").
+- **The search box suggests the sitting MPs first** (27 Nov 2026, the same request). `podaci.json` listed every MP since 2012
+  by name and the newest convocation's new MPs after them, and the box shows the first six names that match: 30 of the 250
+  sitting MPs were not among them when their own surname was typed (five Jovanovićs, Nikolić Marko). Now the sitting ones
+  (the Assembly's list, `member_rows`) first, then the rest, each part by name; no entry added or changed. The live page reads
+  the same file and matches by name: with both orders over the real data its `Roster` gives the same groups and the same MP
+  for every name, reversed name, surname and first two words of every MP.
