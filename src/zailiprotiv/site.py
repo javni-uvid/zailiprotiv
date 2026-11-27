@@ -1198,6 +1198,18 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv.cyrillic import cyr
     (out / pages_mikrofon.FOLLOW_FILE).write_text(json.dumps(pages_mikrofon.followable(
         member_rows, latin=latin, given_first=given_first, cyr=cyr), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # Following an area of laws by mail (27 Nov 2026): the areas the counter accepts, and the events the live service
+    # tells, public and the same for everyone.
+    from zailiprotiv import oblasti
+    from zailiprotiv.config import NEWEST
+    (out / oblasti.FOLLOW_FILE).write_text(json.dumps(oblasti.followable(latin=latin, cyr=cyr, area_slug=area_slug),
+        ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    law_pages = {it["law"].get("bill_pdf") or it["key"]: (f"zakon/{it['slug']}", it["law"]["short"])
+                 for it in items_by_conv.get(current, [])}
+    (out / oblasti.EVENTS_FILE).write_text(json.dumps(oblasti.published(
+        oblasti.events(root, current, NEWEST), today=dt.date.today(), laws=law_pages,
+        bills={r["pdf"]: f"predlog/{r['slug']}" for r in waiting + gone}, latin=latin, cyr=cyr),
+        ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     items = items_by_conv[active]
     votes = loaded[active][1]
@@ -1278,7 +1290,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_lists
     by_area = pages_lists.render(area_slug=area_slug, common=common, conv_list=conv_list, env=env,
         items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp,
-        recordings=src.recordings, floor_by_sitting=floor.by_sitting, quiz_themes=quiz.themes)
+        recordings=src.recordings, floor_by_sitting=floor.by_sitting, quiz_themes=quiz.themes, waiting=waiting)
     from zailiprotiv import downloads
     downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
     from zailiprotiv import feeds

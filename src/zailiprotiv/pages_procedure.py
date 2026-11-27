@@ -42,7 +42,7 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
                "kind": kinds.KINDS.get(kinds.kind(b["title"]), ""), "kind_key": kinds.kind(b["title"]),
                "days": days_between(b["submitted"], today.isoformat()), "law": by_bill_pdf.get(pdf),
                "gist": ((bill_data.get(b.get("bill_file", ""), {}).get("summary") or {}).get("summary") or {}).get("ukratko", ""),
-               "areas": b.get("areas") or [],
+               "areas": b.get("areas") or [], "area_names": [kinds.AREAS[a] for a in b.get("areas") or [] if a in kinds.AREAS],
                "sitting": on_agenda.get(link_.act_name(b["title"]))}
         (waiting if b["last_seen"] == proc["fetched"] and not row["law"] else gone).append(row)
     # Every bill gets a page of its own (predlog/<name>.html): what is known of it while it waits. The name comes

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "zakoni" %}
-{% from "macros.html" import plural, how, votebox with context %}
+{% from "macros.html" import plural, how, votebox, area_follow with context %}
 {# A bill in procedure: what is known of it before the Assembly votes. Once passed, the page sends on to the law's. #}
 {% set name = b.title|latin %}
 {% block title %}{{ b.title|latin }}{% if shared and b.submitted %} (podnet {{ b.submitted|day }}){% endif %} — Za ili Protiv{% endblock %}
@@ -20,6 +20,7 @@
 <section class="outcome bill-state" aria-label="Stanje">
   <p class="score"><span class="bill-wait">Poslanici još nisu glasali</span></p>
   <p class="meta">{% if b.sitting %}<b>Na dnevnom redu: {% if b.sitting.url %}<a href="{{ b.sitting.url }}">{{ b.sitting.title|latin }}</a>{% else %}{{ b.sitting.title|latin }}{% endif %}{% if b.sitting.starts %}, {{ b.sitting.starts[:10]|day }}{% endif %}.</b> {% else %}Još nije na dnevnom redu nijedne sazvane sednice. {% endif %}{% if b.days is not none %}U proceduri {{ b.days }} {{ plural(b.days, "dan", "dana", "dana") }}.{% endif %}</p>
+  {% if b.area_names %}<p class="meta">Oblast: {% for a in b.area_names %}<a href="../oblast/{{ a|area_slug }}.html">{{ a|latin }}</a>{{ area_follow(a, "../") }}{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
 </section>
 {% if votes_api %}{{ votebox("p." ~ b.slug, lead="Glasaj pre poslanika. Kad Skupština odluči, na svom listiću ćeš videti da li je tvoj glas isti kao većine u sali.") }}
 <script src="{{ root }}glas.js?v={{ css }}" defer></script>{% endif %}

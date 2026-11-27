@@ -1492,3 +1492,4 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
 .prati-box .prati-done, .prati-box .prati-err { margin: .5rem 0 .6rem; color: var(--fg); font-size: var(--t-3); }
 .prati-fine a { color: inherit; }
 @media (max-width: 600px) { .prati { margin-bottom: .6rem; } .prati-box { width: calc(100% + 6.5rem); margin-left: -6.5rem; } }
+@media (max-width: 600px) { .prati-o .prati-box { width: auto; margin-left: 0; } } /* an area's page has no portrait to reach under */
