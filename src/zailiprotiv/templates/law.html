@@ -106,11 +106,11 @@
   <h2>Kako su glasale poslaničke grupe</h2>
   <p class="label">Grupe kako ih Skupština piše u listingu glasanja. {{ how("grupe") }}</p>
   <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Grupa</th><th class="vote-cell"><span class="sr">Udeo kao traka</span></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
-    <tbody>
+  <table class="groups group-votes" role="table">
+    <thead role="rowgroup"><tr role="row"><th role="columnheader">Grupa</th><th role="columnheader" class="vote-cell"><span class="sr">Udeo kao traka</span></th>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<th role="columnheader" class="num">{{ vote_label[k] }}</th>{% endif %}{% endfor %}</tr></thead>
+    <tbody role="rowgroup">
     {% for g in groups %}
-      <tr><td>{% set now = group_now.get((it.conv, g.group.strip("() ")), g.group.strip("() ")) %}{% if group_slug.get((it.conv, now)) %}<a href="../grupa/{{ group_slug[(it.conv, now)] }}.html">{{ g.group }}</a>{% else %}{{ g.group|grp }}{% endif %} <span class="meta nowrap">glasalo {{ g.za + g.protiv + g.uzdrzan }} od {{ g.total }}</span></td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
+      <tr role="row"><td role="cell">{% set now = group_now.get((it.conv, g.group.strip("() ")), g.group.strip("() ")) %}{% if group_slug.get((it.conv, now)) %}<a href="../grupa/{{ group_slug[(it.conv, now)] }}.html">{{ g.group }}</a>{% else %}{{ g.group|grp }}{% endif %} <span class="meta nowrap">glasalo {{ g.za + g.protiv + g.uzdrzan }} od {{ g.total }}</span></td><td role="cell" class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}{% if report or k != "nije_prisutan" %}<td role="cell" class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{% if g[k] %}<span class="gv-k" aria-hidden="true">{{ vote_label[k] }} </span>{% endif %}{{ g[k] or "" }}</td>{% endif %}{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table>
