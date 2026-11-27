@@ -359,6 +359,14 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   `aria-current="true"` in the top bar on a wide screen (underlined) and in the phone's bar, written into the page:
   the script marked the bar by the address, so Grupe, Prisustvo, U proceduri and Oblasti marked nothing and the top bar
   never did. Drafts and pictures: `zailiprotiv-dirigent\jezicci\`.
+- **The phone's bar counted** (27 Nov 2026, the maintainer: "Stavi svakako tracker"). Before the bar changed only
+  "Uživo" from it (`sajt.mikrofon-meni`, which the wide screen's menu sends too) and "Podrži sajt" from "Još"
+  (`podrzi.klik-meni`, as the header's heart) were counted. Now each of its ways, as the other uses, a sum per day and
+  at most once per page opened, nothing of who: `meni.zakoni`, `meni.poslanici`, `meni.uzivo`, `meni.glasaj`,
+  `meni.jos` ("Još" opened), `meni.jos-izbor` (a row of it taken). The bar is only on screens up to 640 px, so these
+  are taps on phones, with nothing about the device. **visits** prints them by day (`tools/uses.py`); read beside the
+  phones' page views from Cloudflare (taps per 1,000 views). "Kako računamo" says so. A name the counter does not take
+  is refused (400) and costs the bar nothing.
 
 ## Design rules
 

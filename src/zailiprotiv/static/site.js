@@ -29,6 +29,20 @@ document.addEventListener("click", function (e) {
   var a = e.target.closest && e.target.closest("a[data-don]");
   if (a && DON[a.getAttribute("data-don")]) zipCount(DON[a.getAttribute("data-don")]);
 }, true);
+// The phone's bar (27 Nov 2026, the maintainer: "Stavi svakako tracker"), as the other uses: a sum per day, nothing of
+// who. Which of its ways was taken, "Još" opened, a row of "Još" taken; each once per page opened. "Uživo" from the bar
+// is also counted as before (sajt.mikrofon-meni, which the wide screen's menu sends too).
+var MENI = { zakon: "meni.zakoni", poslani: "meni.poslanici", glasaj: "meni.glasaj" };
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest(".dno a[href]");
+  if (!a) return;
+  if (a.classList.contains("dno-live")) zipCount("meni.uzivo");
+  else if (a.closest("details")) zipCount("meni.jos-izbor");
+  else if (MENI[a.getAttribute("data-at")]) zipCount(MENI[a.getAttribute("data-at")]);
+}, true);
+document.addEventListener("toggle", function (e) {  // toggle does not bubble: heard on the way down
+  if (e.target.matches && e.target.matches(".dno details") && e.target.open) zipCount("meni.jos");
+}, true);
 (function () {
   function start() {
     var codes = document.querySelector("#ips.support");
