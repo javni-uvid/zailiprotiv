@@ -72,6 +72,8 @@ def test_site_builds_every_page(built):
     assert "Odbrana i bezbednost" in law and "Ilić-Stošić Biljana" in law
     assert "Zakon uređuje nabavku oružja, prema predlagaču." in law and "AI model (claude-sonnet-5-5)" in law
     assert "Oružje i municija" in (out / "zakoni.html").read_text()  # the short name in lists
+    # a date after "do" in the month's genitive, as the site's other sentences have it (27 Nov 2026)
+    assert "Glasanja do 10. jula 2026 · " in (out / "poslanik" / "abramovic-nenad.html").read_text()
     assert "<h1>Oružje i municija</h1>" in law and '<p class="official">Zakon o oružju</p>' in law
     index = json.loads((out / "podaci.json").read_text())
     assert index["laws"][0]["t"] == "Oružje i municija" and index["laws"][0]["s"] == "zakon-o-oruzju"

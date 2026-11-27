@@ -405,6 +405,9 @@ show otherwise, unlike the six principles above). A change to a page is checked 
     is indigo for that reason), the same hues on both pages, a key always names them, and they differ in
     lightness for colour-blind readers. They follow the same rules as everything else: the same for every group
     (principle 1), no judgement in the words beside them, and never the only way a fact is told.
+- **A date after "od" and "do" takes the month's genitive** (27 Nov 2026, seen on the real pages of the Fifteenth's first
+  sitting: "od 19. novembar 2026. do 25. novembar 2026."): a sitting's span and an MP's "Glasanja do …" use `day_of`
+  ("od 19. novembra 2026 do 25. novembra 2026"), as the site's other sentences already did; a date standing alone keeps `day`.
 
 ## Visitors' votes ("Glasaj i ti")
 
