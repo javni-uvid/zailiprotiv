@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 
 from . import config
 from .mere import MP, Measure, Roll
+from .steps import decisions as real_decisions
 from .names import cyrillic, given_first
 
 SITE = "https://zailiprotiv.rs/"
@@ -134,7 +135,7 @@ def build(day: date, summary: dict, measures: list[Measure] | None = None, roll:
     e = lambda s: html.escape(t(s))  # noqa: E731
     measures, spoke = measures or [], spoke or {}
     weekday, when = DAYS[day.weekday()], f"{day.day}. {MONTHS[day.month - 1]}"
-    decisions = summary.get("odluke") or []
+    decisions = real_decisions(summary)  # a chair's measure is none: the measures are the chair's own words (mere.py)
     speakers = summary.get("govornici") or []
     flow = summary.get("tok") or []
     warning = next((m.vreme for m in measures if "opomena" in m.mera), "")

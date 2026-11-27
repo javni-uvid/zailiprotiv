@@ -2,6 +2,8 @@
 and read on the Assembly's page are shown, and as what. No HTML here: page._steps draws them."""
 from __future__ import annotations
 
+import re
+
 from .mere import given, reason
 from .names import given_first
 
@@ -18,6 +20,25 @@ STEP_TERM = {"Sednica otvorena": "otvaranje-sednice", "Nastavak rada": "radno-vr
              "Kraj rada": "radno-vreme", "Tačka dnevnog reda": "dnevni-red", "Pretres otvoren": "tok-pretresa",
              "Pretres zaključen": "tok-pretresa", "Glasanje": "dan-za-glasanje", "Glasanje zaključeno": "dan-za-glasanje",
              "Rezultat glasanja": "dan-za-glasanje", "Mera predsedavajućeg": "mere"}
+# A chair's measure (a warning, the floor taken away, a removal from the sitting) or its withdrawal is no decision of
+# the Assembly (27 Nov 2026, the maintainer: "Ispravi", of the 25 Nov summary's three warnings drawn as "Odluka"): a
+# line of the day summary's "odluke" that tells one is not drawn as a decision, on the live page, the site's day page
+# or in the mail (which tells the measures by the chair's own words, mere.py). The same words for everybody.
+MEASURE = re.compile(r"\bopomen|\boduz\w* (?:\w+ )?re[čc]|\budalj\w* (?:\w+ )?(?:sa|iz) (?:sednic|sal)", re.I)
+
+
+def is_measure(text: str) -> bool:
+    """Whether a line of the summary tells a chair's measure (MEASURE), not a decision."""
+    return bool(MEASURE.search(str(text or "")))
+
+
+def decisions(summary: dict | None) -> list[dict]:
+    """The day summary's decisions that are decisions: each with what was decided, no chair's measure among them."""
+    if not isinstance(summary, dict):
+        return []
+    return [o for o in summary.get("odluke") or [] if isinstance(o, dict) and o.get("sta") and not is_measure(o["sta"])]
+
+
 WHY_SOON = 60  # seconds: a measure said again this soon with its reason is the same measure
 STEP_SAME = 900  # the same step heard again within this many seconds is one line (the chair repeats the phrases)
 STEP_QUIET = 240  # a break (or the day's end) is one when nobody is at the rostrum for this long after it is said

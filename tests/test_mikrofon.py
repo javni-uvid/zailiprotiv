@@ -253,10 +253,44 @@ def test_the_day_pages_draw_their_turns_with_the_live_pages_cards_and_styles():
     turns = day_turns(day)
     turns[0].update(point=[107], said="Поштовани", said_note="nije citat")
     turns.append({"chair": True, "od": turns[0]["od"] - 60, "dur": "1 min", "from": "09:59"})
-    listed, steps = gv.cards(day, turns, facts={}, summary=None)
+    listed = gv.cards(day, turns, facts={}, summary=None)
     rows = re.findall(r'<li id="g(\d+)" data-od="\1"', listed)
     assert [int(x) for x in rows] == sorted(t["od"] for t in day["govori"])  # every turn, oldest first, the page's own address
     assert f'data-share="#govor-{turns[0]["od"]}"' in listed and 'class="tf-w' in listed
     assert "Povreda Poslovnika · čl. <a" in listed and "Automatski prepis" in listed and "Poštovani" in listed
     chair = re.search(r'<li class="chair"[^>]*>', listed).group(0)
     assert "data-od" not in chair and listed.index(chair) < listed.index(f'id="g{turns[0]["od"]}"')
+
+
+def test_the_day_pages_summary_card_is_the_mails_and_agrees_with_the_page_while_the_service_is_down():
+    """27 Nov 2026 (the maintainer's choice B): the summary's text on top, then "Dan u Skupštini, po satu" and "Govorili su"
+    folded, from the same file the mail is made of; over every real day with a summary. No chair's measure stands as a
+    decision, here or on the page while the service is down, and both show the same decisions."""
+    import re
+    from zailiprotiv import pages_govornici as gv
+    facts = {}
+    seen = 0
+    for f in sorted(DATA.glob("*/snimak/*.json")):
+        conv = f.parent.parent.name
+        day = json.loads(f.read_text(encoding="utf-8"))
+        summary = gv.day_summary(DATA, conv, day["dan"])
+        if not summary:
+            continue
+        seen += 1
+        line, n, bands, people = gv.summary_parts(day, summary, facts=facts, seats_=gv.seats(DATA, conv))
+        assert line.count("<li") == n > 0 and people == len(summary["govornici"]) == bands.count("<li>")
+        decided = re.findall(r'<p class="st-title">Odluka</p><p class="st-what st-said">([^<]*)</p>', line)
+        assert decided and not any("opomen" in x.lower() for x in decided)
+        times = re.findall(r'class="time"[^>]*>(\d\d:\d\d)<', line)
+        assert times and re.search(r'href="https://arhiva\.videonet\.co\.rs/[^"]+#t=\d+" data-file="[^"]+" data-t="\d+"', line)  # a time is its moment on the recording
+        listed = gv.cards(day, gv.day_turns({**day, "govori": [t for t in day["govori"] if t.get("okvira", 0) >= 2]}), facts=facts, summary=summary)
+        for anchor in re.findall(r'<a href="#(g\d+)">', bands):
+            assert f'id="{anchor}"' in listed  # each name leads to that MP's first speech on the page
+        names = [m for m in re.findall(r'<p><i class="[^"]*"></i>([^<]+)<span>', bands)]
+        seats = gv.seats(DATA, conv)
+        assert [seats.get(x, 0) for x in names if x != gv.NO_LIST] == sorted((seats.get(x, 0) for x in names if x != gv.NO_LIST), reverse=True)
+        snap = pages_mikrofon.live_snapshot(day, facts=facts, waiting_={"kviz": [], "cinjenice": []}, summary=summary)
+        off = pages_mikrofon.offline_page(snap, cyr=False, waiting_={"kviz": [], "cinjenice": []}, live="https://mikrofon.zailiprotiv.rs/")
+        shown = re.findall(r'<p class="st-title">Odluka</p><p class="st-what st-said">([^<]*)</p>', off)
+        assert sorted(shown) == sorted(decided)  # the page while the service is down tells the same decisions
+    assert seen >= 1 or not list(DATA.glob("*/sazetak/*.json"))

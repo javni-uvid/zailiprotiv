@@ -326,6 +326,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .rules-cta { order: 16; }
 .gt-said { grid-column: 1 / -1; font-size: var(--t-1); color: var(--muted); }
 /* "Sažetak dana na mejl" (23 Nov 2026): a dark card in either theme, with colours of its own, as the one thing on the
    page that asks something of the reader; the list's marks are the mail's (a decision, a warning, a speaker) */
+/* kartice { */
 .ml-box { --ml-bg: #111318; --ml-fg: #ffffff; --ml-soft: #c9ccd3; --ml-line: #3a3f4a; --ml-go: #7cc0f5; --ml-dot: #ff9a52; --ml-stop: #f87171;
   order: 36; margin: 1.4rem 0 0; border-radius: 14px; padding: 1.3rem 1.25rem 1.15rem; background: var(--ml-bg); color: var(--ml-fg); border: 1px solid var(--ml-line); scroll-margin-top: 1rem; }
 @media (prefers-color-scheme: dark) { .ml-box { --ml-bg: #222834; } }
@@ -345,6 +346,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
 .ml-row input:focus-visible, .ml-go:focus-visible, .ml-box a:focus-visible { outline: 3px solid var(--ml-go); outline-offset: 2px; }
 .ml-done { margin: .2rem 0 0; font-weight: 650; color: #86efac; } .ml-err { margin: .6rem 0 0; color: #fca5a5; } .ml-fine { margin: .8rem 0 0; font-size: var(--t-1); color: var(--ml-soft); }
 @media (max-width: 480px) { .ml-go { flex: 1 1 100%; } }
+/* } kartice */
 /* The top of the page (23 Nov 2026, the maintainer's choice B): the header in one row, the sitting as a card */
 .sm { display: none; } .top-script { white-space: nowrap; }
 @media (max-width: 560px) { .top { flex-wrap: nowrap; gap: 0 .6rem; } .top .lg { display: none; } .top .sm { display: inline; } .top-r { gap: .45rem; } .top-script { border: 1px solid var(--line); border-radius: 8px; padding: .25rem .5rem; text-decoration: none; font-weight: 600; font-size: var(--t-2); } }
@@ -371,6 +373,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
 .pill-b svg { width: 1.15rem; height: auto; } .pill-b svg path { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; } .pill-m svg { width: 1.3rem; } .ah-row { display: contents; }
 .nt-off { min-height: 2.75rem; }
 /* The day's summary by mail: a slim row with the form folded in it and a cross (24 Nov 2026). */
+/* kartice { */
 .ml { order: 36; position: relative; margin: 1rem 0 0; border: 1px solid var(--line); border-radius: 12px; } main:has(#deo[data-stanje="nema_prenosa"]) > .ml { order: 7; }
 .ml > summary { display: flex; align-items: center; gap: .7rem; padding: .5rem 3.2rem .5rem .9rem; cursor: pointer; list-style: none; min-height: 3.2rem; } .ml > summary::-webkit-details-marker { display: none; }
 .ml-n { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; } .ml-p { background: var(--za); color: #fff; font-weight: 600; font-size: var(--t-2); border-radius: 8px; padding: .6rem .9rem; }
@@ -380,6 +383,7 @@ main:has(#deo[data-stanje="nema_prenosa"]) > .ml-box { order: 7; }
 main:has(#deo[data-stanje="nema_prenosa"]) > .ml-x { order: 7; } .ml[open] + .ml-x { display: none; }
 .ml-back { order: 95; text-align: center; color: var(--muted); font-size: var(--t-2); margin: 1.2rem 0 0; } .ml-back button { font: inherit; background: none; border: 0; color: var(--fg); text-decoration: underline; cursor: pointer; min-height: 2.75rem; padding: 0 .4rem; }
 .ml[hidden], .ml-x[hidden], .ml-back[hidden], .ml-n [hidden] { display: none; }
+/* } kartice */
 /* In a break, when the day is over, once a shared speech is started: the row under the player (25 Nov 2026; live.js). */
 html[data-ml-gore] main > .ml, html[data-ml-gore] main > .ml-x { order: 11; }
 html[data-ml-gore] main:has(#deo[data-stanje="nema_prenosa"]) > .ml, html[data-ml-gore] main:has(#deo[data-stanje="nema_prenosa"]) > .ml-x { order: 4; }

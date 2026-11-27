@@ -231,7 +231,7 @@ def transcript(root: Path, conv: str, day: str) -> tuple[dict, str]:
 
 def day_summary(root: Path, conv: str, day: str) -> dict | None:
     """The model's summary of the day (data/<N>/sazetak/<day>.json, from the live page; uzivo.summary), when the day's
-    one was written: {"kratko", "ukratko", "odluke", "govornici", "model"}; a decision with a vote has `glasovi`, its
+    one was written: {"naslov", "kratko", "ukratko", "odluke", "tok", "govornici", "model"}; a decision with a vote has `glasovi`, its
     figures told in one form, which add up (live/uzivo/sudija.py checked them: for + against + abstained = voted)."""
     path = root / conv / "sazetak" / f"{day}.json"
     if not path.exists():
@@ -240,7 +240,7 @@ def day_summary(root: Path, conv: str, day: str) -> dict | None:
     whole = kept.get("dan")
     if not isinstance(whole, dict) or not whole.get("ukratko"):
         return None
-    return {**{k: whole.get(k) for k in ("kratko", "ukratko", "odluke", "govornici")}, "model": kept.get("model", "")}
+    return {**{k: whole.get(k) for k in ("naslov", "kratko", "ukratko", "odluke", "tok", "govornici")}, "model": kept.get("model", "")}
 
 
 _TEXTS: dict = {}
@@ -303,13 +303,13 @@ CHAIR = "Predsedavajući"
 CHAIR_SAYS = "Vodi sednicu. Ovo vreme ne pripada nijednoj poslaničkoj grupi."
 
 
-def cards(day: dict, turns: list[dict], *, facts: dict, summary: dict | None) -> tuple[str, str]:
+def cards(day: dict, turns: list[dict], *, facts: dict, summary: dict | None) -> str:
     """A day's turns as the live page draws them (page._turn, from the live service's own snapshot of the day,
     pages_mikrofon.live_snapshot: the portrait, the list's colour, the moment as a button), in the day page's order
     (oldest first, under the hour), each with the page's own address (#g<second>), its link to share (#govor-<second>),
     and under it what the day page adds: a point of order with its articles, the automatic transcript. The chair's
     stretches stand between them as rows of their own, with no data-od (a shared link or ⏮ ⏭ never lands on one).
-    And the summary's decisions on the live page's line of time (page._steps). Returns (the list, the line)."""
+    The summary's decisions are in its card (summary_parts), since 27 Nov 2026 no longer on a line of time of their own."""
     from html import escape
     from zailiprotiv.translit import latin
     live, _ = pages_mikrofon._uzivo()
@@ -337,7 +337,94 @@ def cards(day: dict, turns: list[dict], *, facts: dict, summary: dict | None) ->
                     f'<p class="ts meta">{CHAIR_SAYS}</p></div><span class="time tp">{c["from"]}</span></li>')
     paired = sorted(zip(order, rows), key=lambda x: x[0]["od"])
     listed = live._by_hour([o for o, _ in paired], [r for _, r in paired], 0, len(paired), TZ, False)
-    return listed, live._steps(snap, cyr=False, tz=TZ, site="../")
+    return listed
+
+
+def seats(root: Path, conv: str) -> dict[str, int]:
+    """Each parliamentary group's seats in the convocation (members.json), by its Latin name."""
+    from zailiprotiv.translit import latin
+    try:
+        members = json.loads((root / conv / "members.json").read_text(encoding="utf-8"))["members"]
+    except (OSError, ValueError, KeyError):
+        return {}
+    count: dict[str, int] = {}
+    for m in members:
+        g = latin(m.get("group") or "")
+        if g:
+            count[g] = count.get(g, 0) + 1
+    return count
+
+
+def summary_parts(day: dict, summary: dict, *, facts: dict, seats_: dict[str, int]) -> tuple[str, int, str, int]:
+    """The two folded rows of the day's summary card (27 Nov 2026, the maintainer's choice B of three: the mail's summary
+    on the day's page, its text on top): "Dan u Skupštini, po satu", the summary's steps and decisions oldest first as the
+    mail tells them (mejl.short_steps), each time a link to that moment of the recording; and "Govorili su", the speakers
+    the summary names, a band per list (the lists by their seats, then the alphabet; within one the longest first), each
+    with the portrait, the minutes heard, the line on what they spoke about, and the name a link to their first speech
+    on the page. A chair's measure is no step and no decision here (steps.MEASURE): the site has no record of the
+    measures of its own yet. Returns (the line, its steps, the bands, the speakers)."""
+    from html import escape
+    live, _ = pages_mikrofon._uzivo()
+    from uzivo import mejl, steps
+    from zailiprotiv.site import given_first
+    hhmm = lambda x: mejl._clock(str(x or ""))  # noqa: E731
+    decided = steps.decisions(summary)
+    told = {o.get("vreme") for o in decided}
+    rows = [(o.get("vreme", ""), 0, o) for o in decided]
+    rows += [(f.get("vreme", ""), 1, f) for f in mejl.short_steps(summary.get("tok") or [])
+             if f.get("vreme") not in told and not steps.is_measure(f.get("sta"))]
+    start = next((hhmm(f.get("vreme")) for f in summary.get("tok") or [] if hhmm(f.get("vreme")) >= 0), 0)
+    rows.sort(key=lambda r: ((hhmm(r[0]) - start) % 1440, r[1]))  # a day that ends after midnight stays in order
+    files = [p for p in day.get("datoteke") or [] if p.get("url") and p.get("od") and p.get("trajanje")]
+
+    def at(when: str) -> str:
+        t = live._at_clock(day["dan"], when, TZ)
+        f = next((p for p in files if p["od"] <= t < p["od"] + p["trajanje"]), None) if t else None
+        if not f:
+            return f'<span class="time">{escape(when)}</span>'
+        sec = int(t - f["od"])
+        return (f'<a class="time" data-e="sajt.snimak" href="{escape(f["url"])}#t={sec}" data-file="{escape(f["url"])}" data-t="{sec}">{escape(when)}</a>')
+
+    line = ""
+    for when, kind, x in rows:
+        if kind == 0:
+            votes = f'<p class="st-v">{live._votes(x["glasovi"], x.get("glasanje"), False)}</p>' if x.get("glasovi") else ""
+            body, mark = f'<p class="st-title">Odluka</p><p class="st-what st-said">{escape(x["sta"])}</p>{votes}', "mk-odluka"
+        else:
+            body, mark = f'<p class="st-what">{escape(str(x["sta"]).rstrip("."))}</p>', "mk-korak"
+        line += f'<li class="{mark}">{at(when)}<i aria-hidden="true"></i><div>{body}</div></li>'
+    line = f'<ol class="steps">{line}</ol>' if line else ""
+    # the speakers: the page's own sums (the list each spoke for most, their seconds), their first speech, portrait
+    people, _, _ = sums(day["govori"])
+    by_name = {p["name"]: p for p in people}
+    first: dict[str, dict] = {}
+    for t in sorted(day["govori"], key=lambda t: t["od"]):
+        if t.get("okvira", 0) >= 2:
+            first.setdefault(t["ime"], t)
+    bands: dict[str, list] = {}
+    for g in summary.get("govornici") or []:
+        if not isinstance(g, dict) or not g.get("ime"):
+            continue
+        p = by_name.get(g["ime"], {"list": g.get("lista") or "", "sec": 0, "slug": ""})
+        bands.setdefault(p["list"] or NO_LIST, []).append((g, p))
+    out = ""
+    for name in sorted(bands, key=lambda n: (n == NO_LIST, -seats_.get(n, 0), n)):
+        shade = live.LIST_COLOURS.get(name, "l1")
+        lis = ""
+        for g, p in sorted(bands[name], key=lambda x: -x[1]["sec"]):
+            t = first.get(g["ime"])
+            foto = (facts.get(t.get("adresa", "")) or {}).get("foto", "") if t else ""
+            initials = "".join(w[:1] for w in given_first(g["ime"]).split()[:2])
+            face = (f'<img class="tf" src="../foto/{escape(foto)}" width="44" height="44" alt="" loading="lazy">'
+                    if foto and str(foto).replace(".", "").replace("-", "").isalnum() else f'<span class="tf" aria-hidden="true">{escape(initials)}</span>')
+            who = escape(given_first(g["ime"]))
+            who = f'<a href="#g{t["od"]}">{who}</a>' if t else who
+            lis += (f'<li><span class="tf-w {shade}">{face}</span><div><span class="meta">{escape(mejl._minutes(p["sec"]))}</span>'
+                    f'<b>{who}</b><p>{escape(g.get("o_cemu") or "")}</p></div></li>')
+        n = len(bands[name])
+        out += (f'<div class="sz-band"><p><i class="{shade}"></i>{escape(name)}<span>{n} {mejl.plural(n, "poslanik", "poslanika", "poslanika")}</span></p>'
+                f'<ul>{lis}</ul></div>')
+    return line, len(rows), out, sum(len(v) for v in bands.values())
 
 
 def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None, notes: dict | None = None) -> list[dict]:
@@ -354,6 +441,7 @@ def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None
     except (OSError, ValueError):
         facts = {}
     css = card_css()
+    live, _ = pages_mikrofon._uzivo()
     for conv, days in convs.items():
         noted = noted_in(notes[conv].values()) if notes is not None and conv in notes else noted_days(root, conv)
         for day in days:
@@ -379,7 +467,10 @@ def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None
                                       + ") sa snimka; može da sadrži greške i nije citat. Zvaničan tekst je stenogram "
                                       "Skupštine, koji ovde zamenjuje prepis kad bude objavljen.")
             summary = day_summary(root, conv, day["dan"])
-            listed_html, steps_html = cards(day, turns, facts=facts, summary=summary)
+            listed_html = cards(day, turns, facts=facts, summary=summary)
+            line, n_steps, bands, n_people = summary_parts(day, summary, facts=facts, seats_=seats(root, conv)) if summary else ("", 0, "", 0)
+            api = str(env.globals.get("votes_api") or "")  # the day's mail is offered under the card, as on the live page
+            mail = live.mail_card(api, cyr=False, site="../") if api.startswith("https://") else ""
             when = day_name(day["dan"])
             picture(out / DIR / f"{day['dan']}.png", "Ko je koliko govorio u Skupštini", when, people, whole)
             quick = exchanges(day["govori"])
@@ -389,7 +480,8 @@ def render(*, common: dict, env, out: Path, root: Path, days: dict | None = None
                 gap=dur(between(day["govori"])), quick=quick,
                 **common, root="../", day=day["dan"], when=when, people=people, lists=lists, whole=dur(whole),
                 turns=turns, day_parts=parts(day), source=day.get("izvor", "snimak"), conv=conv, model=model,
-                summary=summary, cards=listed_html, steps=steps_html, card_css=css),
+                summary=summary, cards=listed_html, card_css=css, line=line, n_steps=n_steps, bands=bands,
+                n_people=n_people, mail=mail),
                 encoding="utf-8")
             listed.append({"day": day["dan"], "when": when, "conv": conv, "whole": dur(whole), "people": len(people)})
     newest = max(convs, key=int)

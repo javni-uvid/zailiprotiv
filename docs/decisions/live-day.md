@@ -263,3 +263,9 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   from the picture's noise. A frame costs about 1.3 ms, and 1.4 ms more while the graphic is up. The share of each frame is
   kept with the day's lines (`/data/ulazi`, a number), to be scored again. What the 14th convocation's graphic looked like,
   and a technical fault's picture, were not seen.
+- **A chair's measure is no decision** (27 Nov 2026, the maintainer: "Ispravi", of 25 Nov's summary, which had three
+  warnings and the withdrawal of one among its `odluke`, drawn as "Odluka" on the day's page, on the page while the
+  service is down and in the mail). `steps.decisions`: a line of `odluke` that tells a warning, the floor taken away or a
+  removal from the sitting, or takes one back (`steps.MEASURE`, the same words for everybody), is not drawn as a
+  decision on the live page (`page._steps`), the site's day page or in the mail (`mejl.build`, where the measures are the
+  chair's own words, `mere.py`). Of the kept summaries only 25 Nov's had them (three); a real decision none.
