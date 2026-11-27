@@ -4,7 +4,7 @@
 {% block description %}Svi govori poslanika {{ mp.name|given_first }} u Narodnoj skupštini, sednica po sednica, od reči do reči iz stenografskih beleški.{% endblock %}
 {% block robots %}<meta name="robots" content="noindex">{% endblock %}{# the MP's page is the one to find; this one is linked from it (docs/decisions/site.md, "Search engines") #}
 {% block main %}
-<p class="crumbs"><a href="../poslanici.html">Poslanici</a> › <a href="{{ mp.slug }}.html">{{ mp.name }}</a></p>
+<p class="crumbs"><a href="../{{ newer15.mps_page if newer15 else "poslanici.html" }}">Poslanici</a> › <a href="{{ mp.slug }}.html">{{ mp.name }}</a></p>
 <h1>Govori: {{ mp.name|given_first }}</h1>
 <p class="standfirst">{{ total }} {{ plural(total, "govor", "govora", "govora") }} u stenografskim beleškama koje smo pročitali, sednica po sednica, najnovija prvo. Broj vodi do govora, od reči do reči.</p>
 <section id="govori">

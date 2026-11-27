@@ -902,6 +902,13 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     # the newest convocation has its tab on the MPs' pages, the menu leads to it, and the groups' page lists its groups
     assert '<a href="poslanici-15.html">2026–<span>Petnaesti saziv</span></a>' in (out / "poslanici.html").read_text()
     assert 'aria-current="page">2026–<span>Petnaesti saziv</span>' in listing and '<a href="poslanici-15.html">Poslanici</a>' in listing
+    # the crumbs of an MP's pages and the home page's "Nađi svog poslanika" lead where the menu does (27 Nov 2026)
+    # (a new MP's page has "Poslanici › Petnaesti saziv", its second crumb leading there already)
+    crumbs = {f.name: f.read_text() for f in (out / "poslanik").glob("*.html")
+              if '<p class="crumbs">' in f.read_text() and "Petnaesti saziv</a></p>" not in f.read_text()}
+    assert crumbs and all('<p class="crumbs"><a href="../poslanici-15.html">Poslanici</a>' in t for t in crumbs.values())
+    assert any(n.endswith("-glasovi.html") for n in crumbs)
+    assert '<a class="side-box" href="poslanici-15.html">' in (out / "index.html").read_text()
     groups_page = (out / "grupe.html").read_text()
     assert 'id="saziv-15"' in groups_page and "Poslaničke grupe u petnaestom sazivu" in groups_page
     assert 'id="saziv-15"' in (out / "sednice.html").read_text()

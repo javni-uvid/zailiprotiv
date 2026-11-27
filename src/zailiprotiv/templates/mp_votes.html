@@ -7,7 +7,7 @@
 {% block feeds %}
 <link rel="alternate" type="application/atom+xml" title="Glasovi: {{ mp.name }}" href="{{ mp.slug }}.xml">{% endblock %}
 {% block main %}
-<p class="crumbs"><a href="../poslanici.html">Poslanici</a> › <a href="{{ mp.slug }}.html">{{ mp.name }}</a></p>
+<p class="crumbs"><a href="../{{ newer15.mps_page if newer15 else "poslanici.html" }}">Poslanici</a> › <a href="{{ mp.slug }}.html">{{ mp.name }}</a></p>
 <h1>{{ mp.name }}: svi glasovi</h1>
 <p class="mp-groups">{% for c in by_conv %}{{ c.name }} saziv: {% for g in c.groups %}{% if group_slug.get((c.conv, g)) %}<a href="../grupa/{{ group_slug[(c.conv, g)] }}.html">{{ g }}</a>{% else %}{{ g|grp }}{% endif %}{% if not loop.last %}, {% endif %}{% else %}—{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
 <section class="outcome mp-outcome">

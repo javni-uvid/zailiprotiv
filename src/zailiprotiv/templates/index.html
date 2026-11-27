@@ -101,7 +101,7 @@
     <span>{{ plural(stats.waiting, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }} u proceduri{% if votes_api %}. <u>Glasaj o njima pre poslanika</u>{% endif %}</span>
     {% if coming %}<span class="side-note">Sazvano: {{ coming[0].title|latin }}{% if coming[0].starts %}, {{ coming[0].starts[:10]|day }}{% endif %}</span>{% endif %}
   </a>
-  <a class="side-box" href="poslanici.html">
+  <a class="side-box" href="{{ newer15.mps_page if newer15 else "poslanici.html" }}">
     <b>Nađi svog poslanika</b>
     <span>Svaki glas, šta najčešće govori i s kim se prepire.</span>
   </a>
