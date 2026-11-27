@@ -44,6 +44,6 @@
 </table></div>
 {% endif %}
 <p class="label">{{ conv_name }} saziv Narodne skupštine konstituisan je {{ since|day_of }}. Ovde je svih {{ rows|length }} poslanika sa spiska Skupštine; {{ new }} {{ "je" if new % 10 == 1 and new % 100 != 11 else "su" }} prvi put u Skupštini od 2012. godine, a ostali vode na svoje stranice sa glasanjima i govorima iz ranijih saziva.</p>
-<p class="label">Glasanja i govori ovog saziva biće na stranicama poslanika od prve sednice na kojoj se glasa.</p>
+<p class="label">Glasanja o zakonima ovog saziva biće na stranicama poslanika od prvog zakona.</p>
 <p class="meta foot-note">Izvor: <a href="{{ source }}">spisak poslanika na sajtu Narodne skupštine</a>{% if listed_on %}, preuzet {{ listed_on[:10]|day }}{% endif %}. Stranka je ona na čiji je predlog poslanik izabran, kako je Skupština navodi („bez stranke“: navedena nije nijedna). „Prvi put“: nije na poimeničnim glasanjima od 2012, pa je moguće da je poslanik bio ranije. Ko je već bio poslanik prepoznato je po imenu i godištu iz arhive Skupštine.</p>
 {% endblock %}

@@ -400,3 +400,10 @@ issue #7 once the Fifteenth is current.
   roll calls) while the menu led to the Fifteenth's list: now where the menu leads (`newer15.mps_page`), and back to
   `poslanici` by themselves when the Fifteenth becomes the current one. A new MP's page keeps "Poslanici › Petnaesti saziv".
   No words changed and no address; the built pages differ in these links only.
+- **Two sentences made true again** (27 Nov 2026, the maintainer: "Idi sa tvojim predlozima", of the worker's proposals). The
+  Fifteenth's list said "Glasanja i govori ovog saziva biće na stranicama poslanika od prve sednice na kojoj se glasa": its
+  first sitting had five roll calls, none on a law, and the pages show votes on laws only. Now "Glasanja o zakonima ovog saziva
+  biće na stranicama poslanika od prvog zakona." The quizzes' description and the areas' way to their quiz said "iz ovog
+  saziva" of the Fourteenth's laws: now by rule (`pages_quiz`, `of_words`) "ovog" while the quiz's convocation is the newest
+  (`common["newest"]`: the newest with a list of MPs, else `config.NEWEST`), "prethodnog" while it is the one before it, the
+  words the home page already uses, else its name ("trinaestog").

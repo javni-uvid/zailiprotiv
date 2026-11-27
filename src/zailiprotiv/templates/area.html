@@ -8,7 +8,7 @@
 <p class="crumbs"><a href="../oblasti.html">Oblasti</a></p>
 <h1>{{ area|latin }}</h1>
 <p class="meta">{{ laws|length }} {{ plural(laws|length, "zakon", "zakona", "zakona") }} u svim sazivima. Oblast je tačka člana 97. Ustava na koju se predlagač poziva. {{ how("vrste") }} · <a href="{{ area|area_slug }}.xml">Prati ovu oblast (RSS)</a></p>
-{% set q = (quiz_themes or {}).get(area|area_slug) %}{% if q %}<p class="note"><a href="../kviz/{{ q.slug }}.html">Kviz: kako ti glasaš o {{ q.n }} {{ plural(q.n, "zakonu", "zakona", "zakona") }} ove oblasti iz ovog saziva?</a></p>{% endif %}
+{% set q = (quiz_themes or {}).get(area|area_slug) %}{% if q %}<p class="note"><a href="../kviz/{{ q.slug }}.html">Kviz: kako ti glasaš o {{ q.n }} {{ plural(q.n, "zakonu", "zakona", "zakona") }} ove oblasti iz {{ q.of_words }} saziva?</a></p>{% endif %}
 <ul class="rows">
 {% for it in laws %}
 <li class="row">

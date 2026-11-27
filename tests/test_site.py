@@ -909,6 +909,9 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
     assert crumbs and all('<p class="crumbs"><a href="../poslanici-15.html">Poslanici</a>' in t for t in crumbs.values())
     assert any(n.endswith("-glasovi.html") for n in crumbs)
     assert '<a class="side-box" href="poslanici-15.html">' in (out / "index.html").read_text()
+    # what the quiz and the new list say of their convocation (27 Nov 2026, the maintainer: "Idi sa tvojim predlozima")
+    assert "iz prethodnog saziva i vidi" in (out / "kviz" / "podelili-salu.html").read_text()
+    assert "Glasanja o zakonima ovog saziva biće na stranicama poslanika od prvog zakona." in listing
     groups_page = (out / "grupe.html").read_text()
     assert 'id="saziv-15"' in groups_page and "Poslaničke grupe u petnaestom sazivu" in groups_page
     assert 'id="saziv-15"' in (out / "sednice.html").read_text()

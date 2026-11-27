@@ -36,6 +36,11 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
     active = next((c for c, _ in convs if sum(1 for it in items_by_conv[c] if it["final"]) >= 5), current)
     # "Glasaj i ti": the visitor votes on the current convocation's key laws; the page's own script compares the
     # answers with every group's line and every MP's votes. Nothing leaves the browser.
+    # Which convocation the quizzes are of, in words (27 Nov 2026, the maintainer: "Idi sa tvojim predlozima"): "ovog"
+    # while it is the newest, "prethodnog" while the newest one before it has no law to quiz on, else its name.
+    newest = common.get("newest") or active
+    of_words = ("ovog" if active == newest else "prethodnog" if int(newest) - int(active) == 1
+                else ORDINAL_NAME.get(active, active).lower()[:-1] + "og")
     quiz_laws = list(key_votes[active])
     for r in most_against(items_by_conv[active], len(items_by_conv[active])):
         it = by_key_all[r["key"]]
@@ -72,7 +77,7 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
     # The quiz has its own page; "Glasaj i ti" (glasaj.html, pages_ballot) leads to it and holds the visitor's ballot.
     (out / "kviz").mkdir(exist_ok=True)
     (out / "kviz" / "podelili-salu.html").write_text(env.get_template("quiz.html").render(
-        **common, laws=quiz_laws, chosen_by_hand=chosen_by_hand, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+        **common, laws=quiz_laws, chosen_by_hand=chosen_by_hand, of_words=of_words, of_conv=None if active == current else ORDINAL_NAME.get(active, active), votes_api=settings.get("votes_api", ""), quiz=json.dumps(quiz, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         root="../"), encoding="utf-8")
     # A quiz per area of the convocation (the point of Article 97 the bill names): its laws with votes against, the
     # most divided first, ten at most, by the same rule as the main quiz; treaties left out.
@@ -96,9 +101,9 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
         point = next((k for k, v in kinds.AREAS.items() if v == a), None)
         if point not in THEMES:
             continue
-        theme = {"name": THEMES[point], "slug": slug(THEMES[point]), "area": slug(latin(a))[:80], "n": len(laws), "of": len(its)}
+        theme = {"name": THEMES[point], "slug": slug(THEMES[point]), "area": slug(latin(a))[:80], "n": len(laws), "of": len(its), "of_words": of_words}
         (out / "kviz" / f"{theme['slug']}.html").write_text(env.get_template("quiz.html").render(
-            **common, laws=laws, theme=theme, chosen_by_hand=False, of_conv=None if active == current else ORDINAL_NAME.get(active, active),
+            **common, laws=laws, theme=theme, chosen_by_hand=False, of_words=of_words, of_conv=None if active == current else ORDINAL_NAME.get(active, active),
             votes_api=settings.get("votes_api", ""), quiz=json.dumps(data(laws), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
             root="../"), encoding="utf-8")
         themes.append(theme)
