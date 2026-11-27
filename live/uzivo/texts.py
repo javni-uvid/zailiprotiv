@@ -17,6 +17,7 @@ TEXT = {
     "status_live": "Uživo",
     "status_break": "Pauza",  # in its place while a break is known
     "status_off": "Ne zaseda",
+    "status_down": "Trenutno ne pratimo prenos",  # the site's copy while this service is down (page's `off`)
     "h1": "Za ili Protiv: Jutrić, Kafica, Skupštinica",
     "title_tail": "Skupština uživo",  # after a speech's title in the tab
     "st_today": "Sednica danas u %1",

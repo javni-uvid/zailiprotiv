@@ -175,8 +175,8 @@ In Cloudflare (Zero Trust → Networks → Tunnels), the tunnel's public hostnam
 
 While the computer is off, Cloudflare would answer with its own error (530). A worker in front of the hostname
 (`edge/`, published by the `worker` workflow) passes every request to the tunnel and, when it fails, shows the site's
-page for that instead (zailiprotiv.rs/mikrofon: why it is down, the broadcast, the next sitting, a few facts from the
-site). Nothing changes in the tunnel or the DNS.
+page for that instead (zailiprotiv.rs/mikrofon: this page itself, drawn by the site's build with this code from the
+site's last day, `pages_mikrofon.offline_page`, saying the broadcast is not followed). Nothing changes in the tunnel or the DNS.
 
 **Putting a new image live doesn't break the page** (20 Nov 2026): `uzivo` waits for the turn on to end (at most
 `-Cekaj` minutes, 10 by default; `-Odmah` at once); during the restart the edge worker gives the page's last answers

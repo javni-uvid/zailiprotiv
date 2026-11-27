@@ -184,3 +184,54 @@ def test_the_waiting_file_lists_the_days_made_from_the_notes():
     w = pages_mikrofon.waiting([], [], days_=["2026-11-25", "2026-11-24"], notes_=["2026-11-25"])
     assert w["dani"] == ["2026-11-24", "2026-11-25"] and w["iz_beleski"] == ["2026-11-25"]
     assert "iz_beleski" not in pages_mikrofon.waiting([], [], days_=["2026-11-25"])
+
+
+# The page while the live service is down is the live page itself (27 Nov 2026).
+
+DATA = Path(__file__).resolve().parents[1] / "data"
+
+
+def _real_days() -> list[Path]:
+    days = sorted(DATA.glob("*/snimak/*.json"), key=lambda f: f.stem)
+    return [days[0], days[-1]] if days else []
+
+
+def test_the_page_while_the_service_is_down_is_the_live_page_drawn_from_real_days():
+    import re
+    from zailiprotiv import pages_govornici
+    live_page, _ = pages_mikrofon._uzivo()
+    told = {"kviz": [], "cinjenice": [{"text": "Na sajtu je 2097 zakona.", "href": "zakoni", "key": "laws"}]}
+    for f in _real_days():  # the oldest day read from a recording and the newest, as the data has them
+        day = pages_govornici.with_points(DATA, json.loads(f.read_text(encoding="utf-8")))
+        snap = pages_mikrofon.live_snapshot(day, facts={}, waiting_=told,
+                                            summary=pages_govornici.day_summary(DATA, f.parent.parent.name, day["dan"]))
+        assert snap["dan"] == day["dan"] and snap["stanje"] == "nema_prenosa" and snap["snimak"]
+        assert len(snap["danas"]) == sum(1 for t in day["govori"] if t.get("okvira", 0) >= 2) > 0
+        for cyr in (False, True):
+            html = pages_mikrofon.offline_page(snap, cyr=cyr, waiting_=told, live="https://mikrofon.zailiprotiv.rs/")
+            # one source: the live page's own styles and script, its own part, its own day's list
+            assert live_page.CSS in html and live_page.SCRIPT in html and '<div id="deo"' in html
+            assert html.count('<li id="t') == len(snap["danas"]) and 'class="turns"' in html
+            assert ("Тренутно не пратимо пренос" if cyr else "Trenutno ne pratimo prenos") in html
+            assert '<meta name="robots" content="noindex">' in html and "Ne zaseda" not in html and "Не заседа" not in html
+            assert not re.search(r'(?:href|src|data-share)="/(?!/)', html)  # the edge's <base> would send them to the site
+            assert not re.search(r'<(?:img|script|link)\b[^>]*\b(?:src|href)="https?://', html)  # nothing loaded from elsewhere
+            assert len(html.encode()) < 1_000_000
+            # the part is asked for only under the edge, on the service's host; not on the site's (a 404 every 30 s)
+            assert '<body data-base="' in html and 'data-uzivo-host="mikrofon.zailiprotiv.rs"' in html
+        assert 'own && location.hostname !== own)) return;' in live_page.SCRIPT and 'getAttribute("data-uzivo-host")' in live_page.SCRIPT
+        from zoneinfo import ZoneInfo
+        assert 'data-uzivo-host="' not in live_page.page(snap, cyr=False, site="https://zailiprotiv.rs/", tz=ZoneInfo("Europe/Belgrade"))
+
+
+def test_a_day_the_service_cannot_read_fails_the_build_rather_than_draw_an_empty_page():
+    import pytest
+    told = {"kviz": [], "cinjenice": []}
+    turn = {"ime": "Petrović Petar", "adresa": "", "grupa": "", "uloga": "Lista A", "od": 1794920657, "do": 1794926412,
+            "okvira": 9}
+    assert len(pages_mikrofon.live_snapshot({"dan": "2026-11-17", "govori": [turn]}, facts={}, waiting_=told)["danas"]) == 1
+    with pytest.raises(KeyError):  # a turn without its end
+        pages_mikrofon.live_snapshot({"dan": "2026-11-17", "govori": [{k: v for k, v in turn.items() if k != "do"}]},
+                                     facts={}, waiting_=told)
+    with pytest.raises(ValueError):  # a day the service would not list (here: not a day)
+        pages_mikrofon.live_snapshot({"dan": "2026-11-17", "govori": "nije spisak"}, facts={}, waiting_=told)

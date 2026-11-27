@@ -120,6 +120,10 @@ def test_site_builds_every_page(built):
         if page.name == "pretraga.html":  # and the search's two scripts, both from the site itself
             assert re.findall(r'<script src="(?!site\.js)([^"?]+)', text) == ["pagefind/pagefind-ui.js", "pretraga.js"]
             text = re.sub(r'<script src="(?:pagefind/pagefind-ui|pretraga)\.js[^>]*>', "", text)
+        if page.name == "mikrofon.html":  # the live page itself (pages_mikrofon.offline_page): its one script, inline
+            assert re.findall(r"<script\b[^>]*>", text, re.I) == ["<script>"] and "youtube-nocookie.com/embed/" in text
+            assert "http://" not in text and not re.search(r'(?:src|href)="https?://[^"]*\.(?:js|css|woff2?)', text)
+            continue
         v = re.search(r'data-v="(\w+)"', text).group(1)
         if page.name == "podelili-salu.html":  # the quiz: and its own data and script, both from the site itself
             assert re.findall(r"<script\b[^>]*>", text, re.I)[1:] == ["<script>", '<script type="application/json" id="quiz-data">',
@@ -132,9 +136,6 @@ def test_site_builds_every_page(built):
             text = text.replace(f'<script src="listic.js?v={v}" defer>', "").replace("<script>", "", 1)
         if page.parent.name == "govornici" and "<script>" in text:  # a day's turns: the player and the share, inline
             assert text.count("<script>") == 1
-            text = text.replace("<script>", "", 1)
-        if page.name == "mikrofon.html" and "<script>" in text:  # the player and the quiz: one script of its own, inline
-            assert text.count("<script>") == 1 and "youtube-nocookie.com/embed/" in text
             text = text.replace("<script>", "", 1)
         text = re.sub(r'<script type="application/ld\+json">.*?</script\s*>', "", text, flags=re.S | re.I)  # data for search engines, not code
         here = "/" if page.name == "404.html" else "../" if page.parent != out else ""  # the 404 page is served at any depth
@@ -755,10 +756,18 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
          "okvira": 1152, "video": "qkm", "snimak": 14527}]}
     (root / "15" / "snimak").mkdir(parents=True)
     (root / "15" / "snimak" / "2026-11-17.json").write_text(json.dumps(day))
+    (root / "settings.json").write_text(json.dumps({"live_page": "https://mikrofon.zailiprotiv.rs/"}))
     site.build(root, out, "zailiprotiv.rs", cyrillic=True)
     page = (out / "mikrofon.html").read_text()
-    assert "Poslednji dan sednice, 17. novembar 2026." in page and "Petar Petrović" in page and "· 96 min" in page
-    assert "youtube.com/watch?v=qkm&amp;t=14527s" in page and "Петар Петровић" in (out / "cir" / "mikrofon.html").read_text()
+    # the live page as the service draws it between sittings (27 Nov 2026), its YouTube link gone as the service's is
+    # once the broadcast is over and not known to be public (prenosi.py)
+    assert "Poslednji dan sednice, 17. novembar 2026." in page and "Petar Petrović" in page and '"meta">96 min' in page
+    assert "Trenutno ne pratimo prenos" in page and "Ne zaseda" not in page and "youtube.com/watch" not in page
+    assert '<meta name="robots" content="noindex">' in page and '<link rel="manifest"' not in page and 'class="pill-b nt' not in page
+    cir = (out / "cir" / "mikrofon.html").read_text()
+    assert "Петар Петровић" in cir and "Тренутно не пратимо пренос" in cir and 'lang="sr-Cyrl"' in cir
+    assert 'href="https://mikrofon.zailiprotiv.rs/cir/"' in page and 'href="https://mikrofon.zailiprotiv.rs/"' in cir
+    assert not re.search(r'(?:href|src|data-share)="/(?!/)', page + cir)  # under the edge's <base> they would lead to the site
     assert json.loads((out / "mikrofon-dan.json").read_text())["dan"] == "2026-11-17"
     told = json.loads((out / "mikrofon-cekanje.json").read_text())
     assert set(told) == {"kviz", "cinjenice", "dani"} and told["dani"] == ["2026-11-17"]  # where a shared speech may lead
@@ -777,6 +786,7 @@ def test_the_last_day_read_from_the_recording_is_on_the_mikrofon_page_and_publis
     page = (out / "mikrofon.html").read_text()
     assert 'class="play" data-file="https://arhiva.videonet.co.rs/f/1.mp4" data-t="0"' in page
     assert "Deo 2 · 13:56–15:52" in page
+    assert "mikrofon" not in (out / "sitemap.xml").read_text()
     assert site.check(out) == []
 
 

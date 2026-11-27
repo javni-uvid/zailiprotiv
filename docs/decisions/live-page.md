@@ -519,3 +519,23 @@ until the next ▶. To measure after a sitting week against 20 Nov: the share in
     written down). Compared on 24-25 Nov, the live rule's against the notes' of the same turns: the kind 24 right, 1
     wrong, 8 missed of 32; the article 20, 2, 9 of 31 (the table above); once a day's notes come, theirs replace it.
   - The rows carry `data-adresa`, `data-lc` (the list's colour) and `data-povreda`; `data-strana` in the page's script.
+- **The page while the service is down is the live page itself** (27 Nov 2026, the maintainer: "Popravi da mikrofon
+  stranica kada je lajv doker ugašen mnogo više liči na trenutnu lajv verziju mikrofona"; the conductor's choice of how,
+  under it). The site's `mikrofon.html`, which the edge shows while the tunnel is down, was a page of the site
+  (its nav and footer, a numbered list of plain rows, the quiz) and no longer looked like the live page. Now the site
+  builds it with the service's own code: `pages_mikrofon.live_snapshot` gives the site's last day read from the
+  recording (`mikrofon-dan.json`), the MPs' lines (`mikrofon-poslanici.json`) and "Dok čekate" (`mikrofon-cekanje.json`) to
+  the service's own state (`state.Tracker`: `use_recording`, `use_facts`, `use_waiting`, `snapshot`), taken on the day
+  after the shown one, as the service shows an earlier day between sittings; the day's summary where the site has it, as
+  the service shows it. `offline_page` draws it with `page.page(..., off=True)`, in both scripts (Cyrillic the service's
+  own, written over the edition's). **One source:** the styles, the script, the part and the cards are the live page's;
+  a test checks that the page carries `page.CSS` and `page.SCRIPT` whole, over the oldest and the newest real day, and a
+  day the service could not read fails the build instead of drawing an empty list. `off` changes only this: the
+  line on top says "Trenutno ne pratimo prenos" (the old page's words) instead of whether the Assembly sits, which is
+  not known then; the notification and the app (the service's own worker and manifest) are left out; noindex. The
+  mail card stays (it posts to the counter). The site's links are relative (`./`, `../` for Cyrillic), right both
+  under the edge's `<base>` and at zailiprotiv.rs/mikrofon; the page's own addresses (`/cir/`, `/govor/<second>`)
+  lead to `live_page`. The script asks for `/deo` every 30 s only on the service's own host (`data-uzivo-host`,
+  from `live_page`; the conductor, the same day): under the edge a 503, kept as it is, and when the service is back
+  the live part takes its place; opened at zailiprotiv.rs/mikrofon it asks nothing (it was a 404 every 30 s a tab). What the old page had and this one has not: the quiz (off the
+  live page since 22 Nov), the line on why it is down and the list of links (Prenos, Sednice, Varnice, Glasaj).
