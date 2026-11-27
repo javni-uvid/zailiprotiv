@@ -124,7 +124,9 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   // the page "Podrži" (23 Nov 2026): the way to it (the menu's heart, the footer, the home page's box), opened, opened
   // from the live page, the codes in view, a code's picture saved, the account's details copied, PayPal opened
   "podrzi.klik-meni", "podrzi.klik-podnozje", "podrzi.klik-pocetna", "podrzi.otvori", "podrzi.od-mikrofona",
-  "podrzi.kod", "podrzi.slika", "podrzi.kopiraj", "podrzi.paypal"]);
+  "podrzi.kod", "podrzi.slika", "podrzi.kopiraj", "podrzi.paypal",
+  // the phone's bar (27 Nov 2026): Zakoni, Poslanici, Uživo, Glasaj taken, "Još" opened, a row of "Još" taken
+  "meni.zakoni", "meni.poslanici", "meni.uzivo", "meni.glasaj", "meni.jos", "meni.jos-izbor"]);
 
 // Of these, summed per hour too (UTC, as the day is): the broadcast and the sound started, and the page in view after
 // 1 and 5 minutes (25 Nov 2026, the maintainer's decision). A sum and nothing with it, as the day's. An hour's sum

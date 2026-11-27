@@ -37,5 +37,24 @@ def main(hours: int):
     print("\n".join(lines))
 
 
+MENU = ("zakoni", "poslanici", "uzivo", "glasaj", "jos", "jos-izbor")
+
+
+def menu(by_day: dict) -> list[str]:
+    """The phone's bar (27 Nov 2026): a line per day of its ways taken, each once per page opened."""
+    lines = [f"  {day}" + "".join(f"{by_day[day].get('meni.' + m, 0):>10}" for m in MENU)
+             for day in sorted(by_day) if any(by_day[day].get("meni." + m) for m in MENU)]
+    return ["  day       " + "".join(f"{m:>10}" for m in MENU)] + lines if lines else ["  nothing counted"]
+
+
+def print_menu():
+    req = urllib.request.Request(OVERVIEW, headers={"User-Agent": AGENT})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        by_day = json.load(r).get("uses") or {}
+    print("\nThe phone's bar, by day (UTC; each way once per page opened)")
+    print("\n".join(menu(by_day)))
+
+
 if __name__ == "__main__":
     main(int(sys.argv[1]) if len(sys.argv) > 1 else 24)
+    print_menu()
