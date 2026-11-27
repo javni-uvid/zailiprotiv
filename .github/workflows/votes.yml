@@ -99,10 +99,14 @@ jobs:
           # A newer convocation with no law yet is read beside the current one; with its first law it becomes the
           # current one (config.CURRENT). Its sittings were read above. Each command by itself: the page of laws is empty
           # until the first one, `laws` says so with a 1, and for that its roll calls went unread from 17 to 25 Nov 2026.
+          # The Assembly's page of bills in procedure lists the newest convocation's only (since 17 Nov 2026), so they are
+          # read into its folder, with their memoranda (`bills`), not the current one's (28 Nov 2026).
           if [ -n "$beside" ]; then
             for what in laws votes link; do
               uv run zailiprotiv --convocation "$beside" "$what" || echo "::notice::$what of convocation $beside gave an error, or nothing"
             done
+            uv run zailiprotiv --convocation "$beside" procedure  # an error here stops the run, as it did for the current one
+            uv run zailiprotiv --convocation "$beside" bills
           fi
           c="--convocation $conv"
           # The newest, once it is the current one, was read in the step above: not asked for twice.
@@ -111,8 +115,8 @@ jobs:
           uv run zailiprotiv $c laws
           uv run zailiprotiv $c votes ${IN_AGAIN_FLAG} --reread "${IN_REREAD}"
           uv run zailiprotiv $c link
-          # The bills in procedure are the current convocation's only; `bills` reads them too.
-          if [ "$conv" = "$current" ]; then uv run zailiprotiv $c procedure; fi
+          # The bills in procedure are the newest convocation's only; `bills` reads them too.
+          if [ "$conv" = "$current" ] && [ "$conv" = "$newest" ]; then uv run zailiprotiv $c procedure; fi
           uv run zailiprotiv $c bills
       - name: Commit the roll calls
         if: always()  # keep what was read even when a later command failed

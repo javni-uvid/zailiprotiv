@@ -55,6 +55,20 @@ def proposer_kind(proposer: str) -> str:
     return "drugi"
 
 
+def shown(root, current: str, newest: str) -> dict:
+    """The bills the site shows as in procedure: the current convocation's store and, while a newer convocation has no
+    law yet, the newer one's too, where its bills are read (28 Nov 2026: the Assembly's page lists only the newest
+    convocation's bills, which were filed under the current one). A bill waits when it was listed at the last reading,
+    which is the newest store's."""
+    from zailiprotiv import jsonfile
+    stores = [jsonfile.load(root / c / "procedure.json", {}) for c in dict.fromkeys((current, newest))]
+    bills = {}
+    for s in stores:
+        bills.update(s.get("bills") or {})
+    last = next((s for s in reversed(stores) if s.get("fetched")), {})
+    return {"fetched": last.get("fetched", ""), "source": last.get("source", PAGE), "bills": bills}
+
+
 def merge(store: dict, found: list[Bill], today: str) -> dict:
     """The store after today's reading: every bill ever seen, by its PDF, with the first and last day it was listed."""
     bills = dict(store.get("bills") or {})

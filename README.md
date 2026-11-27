@@ -93,7 +93,7 @@ uv sync
 uv run zailiprotiv status              # what the data still lacks, per convocation; batches running or refused
 uv run zailiprotiv index               # the convocation's sittings and their roll calls → index.json
 uv run zailiprotiv laws                # the laws it passed → laws.json
-uv run zailiprotiv procedure           # bills in procedure now → procedure.json
+uv run zailiprotiv procedure           # bills in procedure now → procedure.json (the newest convocation's)
 uv run zailiprotiv votes               # every roll call not read yet → votes/ (needs pdftotext)
 uv run zailiprotiv unread              # the roll calls listed and not read, if any
 uv run zailiprotiv offices --unread    # the committees and delegations whose members were not all read

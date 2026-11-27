@@ -183,8 +183,27 @@ def test_site_builds_every_convocation(tmp_path):
         "mp": "ненад абрамовић", "model": "claude-opus-5-5", "read": 5, "speeches": 5, "sittings": 2, "points": [
             {"tekst": "Говори о ловцима.", "govora": 2, "sazivi": ["13"], "citat": quote},
             {"tekst": "Говори о оружју.", "govora": 3, "sazivi": ["14", "15"], "citat": quote}]}))
+    # The newest convocation, with no law yet, where the bills in procedure are read (28 Nov 2026): its bill waits on
+    # "U proceduri" with the memorandum's summary from its own folder, beside the current one's bill no longer listed.
+    from zailiprotiv.config import NEWEST
+    newer = root / NEWEST if NEWEST != "14" else root / "15"
+    (newer / "summaries").mkdir(parents=True)
+    (newer / "laws.json").write_text(json.dumps({"fetched": "2026-11-28", "laws": {}}))
+    (newer / "procedure.json").write_text(json.dumps({"fetched": "2026-11-28", "bills": {"n.pdf": {
+        "title": "Predlog zakona o novom", "pdf": "n.pdf", "submitted": "2026-11-27", "proposer": "Vlada",
+        "first_seen": "2026-11-28", "last_seen": "2026-11-28", "bill_file": "n.json", "areas": [10]}}}))
+    (newer / "summaries" / "n.json").write_text(json.dumps({"model": "claude-sonnet-5-5", "summary": {
+        "ukratko": "Предлог уређује ново, према предлагачу.", "razlozi": [], "promene": [], "sredstva": ""}}))
+    (root / "14" / "procedure.json").write_text(json.dumps({"fetched": "2026-11-27", "bills": {"s.pdf": {
+        "title": "Predlog zakona o starom", "pdf": "s.pdf", "submitted": "2026-03-03", "proposer": "Vlada",
+        "first_seen": "2026-11-13", "last_seen": "2026-11-17", "areas": []}}}))
     out = tmp_path / "_site"
     stats = site.build(root, out, None)
+    proc = (out / "u-proceduri.html").read_text()
+    assert "Predlog zakona o novom" in proc and "Predlog zakona o starom" in proc
+    assert proc.index("Predlog zakona o novom") < proc.index("Predlog zakona o starom")  # waiting, then no longer listed
+    assert "Predlog uređuje novo, prema predlagaču." in (out / "predlog" / "zakon-o-novom.html").read_text()
+    assert (out / "predlog" / "zakon-o-starom.html").exists()
     assert stats["laws"] == 1 and stats["all_laws"] == 2
     assert (out / "zakon" / "zakon-o-oruzju.html").exists()  # the current convocation keeps the plain address
     assert "Trinaesti saziv" in (out / "zakon" / "zakon-o-oruzju-2.html").read_text()
