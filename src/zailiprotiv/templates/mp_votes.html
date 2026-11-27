@@ -30,11 +30,11 @@
 <section{% if first %} id="oblasti"{% endif %} data-pagefind-ignore>
   <h2>Po oblasti</h2>
   <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Oblast</th><th>Glasao</th><th>Njegova grupa</th><th class="vote-cell"><span class="sr">Udeo kao traka</span></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
-    <tbody>
+  <table class="groups group-votes" role="table">
+    <thead role="rowgroup"><tr role="row"><th role="columnheader">Oblast</th><th role="columnheader">Glasao</th><th role="columnheader">Njegova grupa</th><th role="columnheader" class="vote-cell"><span class="sr">Udeo kao traka</span></th>{% for k in VOTES %}<th role="columnheader" class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <tbody role="rowgroup">
     {% for g in p.areas %}
-      <tr><td><a href="../oblast/{{ g.label|area_slug }}.html">{{ g.label|latin }}</a>{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}{% if g.treaties %}<span class="meta small"> · od toga {{ g.treaties }} {{ plural(g.treaties, "ugovor", "ugovora", "ugovora") }}</span>{% endif %}</td><td class="lean">{{ g.word or "—" }}</td><td class="lean meta">{{ g.group_word or "—" }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+      <tr role="row"><td role="cell"><a href="../oblast/{{ g.label|area_slug }}.html">{{ g.label|latin }}</a>{% if g.against %}<details class="inline"><summary>protiv ({{ g.against|length }})</summary><ul class="plain">{% for r in g.against %}<li><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></li>{% endfor %}</ul></details>{% endif %}{% if g.treaties %}<span class="meta small"> · od toga {{ g.treaties }} {{ plural(g.treaties, "ugovor", "ugovora", "ugovora") }}</span>{% endif %}</td><td role="cell" class="lean"><span class="gv-k" aria-hidden="true">Glasao </span>{{ g.word or "—" }}</td><td role="cell" class="lean meta"><span class="gv-k" aria-hidden="true">Njegova grupa </span>{{ g.group_word or "—" }}</td><td role="cell" class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td role="cell" class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{% if g[k] %}<span class="gv-k" aria-hidden="true">{{ vote_label[k] }} </span>{% endif %}{{ g[k] or "" }}</td>{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table>
@@ -47,11 +47,11 @@
 <section{% if first %} id="vrste"{% endif %}>
   <h2>Po vrsti zakona</h2>
   <div class="scroll">
-  <table class="groups">
-    <thead><tr><th>Vrsta</th><th class="vote-cell"><span class="sr">Udeo kao traka</span></th>{% for k in VOTES %}<th class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
-    <tbody>
+  <table class="groups group-votes" role="table">
+    <thead role="rowgroup"><tr role="row"><th role="columnheader">Vrsta</th><th role="columnheader" class="vote-cell"><span class="sr">Udeo kao traka</span></th>{% for k in VOTES %}<th role="columnheader" class="num">{{ vote_label[k] }}</th>{% endfor %}</tr></thead>
+    <tbody role="rowgroup">
     {% for g in p.kinds %}
-      <tr><td>{{ g.label|latin }}</td><td class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{{ g[k] or "" }}</td>{% endfor %}</tr>
+      <tr role="row"><td role="cell">{{ g.label|latin }}</td><td role="cell" class="vote-cell">{{ bar(g, g.total) }}</td>{% for k in VOTES %}<td role="cell" class="num{% if g[k] %} v-text-{{ k }}{% endif %}">{% if g[k] %}<span class="gv-k" aria-hidden="true">{{ vote_label[k] }} </span>{% endif %}{{ g[k] or "" }}</td>{% endfor %}</tr>
     {% endfor %}
     </tbody>
   </table>
@@ -70,10 +70,10 @@
     <summary>{{ c.name }} saziv · {{ c.n }} {{ plural(c.n, "glasanje", "glasanja", "glasanja") }} · {{ c.tally.za or 0 }} za, {{ c.tally.protiv or 0 }} protiv</summary>
     <div class="scroll">
     <table class="record">
-      <thead><tr><th>Datum</th><th>Zakon</th><th>Glas</th></tr></thead>
-      <tbody>
+      <thead role="rowgroup"><tr role="row"><th role="columnheader">Datum</th><th role="columnheader">Zakon</th><th role="columnheader">Glas</th></tr></thead>
+      <tbody role="rowgroup">
       {% for r in c.record %}
-        <tr><td>{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
+        <tr role="row"><td role="cell">{{ r.it.final.when[:10]|day }}</td><td><a href="../zakon/{{ r.it.slug }}.html">{{ r.it.law.short }}</a></td><td class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</td></tr>
       {% endfor %}
       </tbody>
     </table>

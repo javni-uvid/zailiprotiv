@@ -343,6 +343,10 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   header, kept but not seen on a phone; the table's roles are written out (`role="table"`, `row`,
   `cell`, …), as some browsers forget a table whose cells are laid out as blocks. On a wide screen the table is as it was. Only this table (`group-votes`):
   an MP's votes by area and kind have the same columns and are left for a look of their own.
+- **An MP's votes by area and by kind, the same on a phone** (27 Nov 2026, the conductor, after a law's groups): the two
+  tables on an MP's page of votes had the same columns and the same fault, "Protiv" and the rest out of sight. They
+  take the same form (`group-votes`, roles written out, the columns' words `aria-hidden`); by area, the words
+  "Glasao" and "Njegova grupa" go before theirs too, in a row under the area's name.
 
 ## Design rules
 

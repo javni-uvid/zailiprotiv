@@ -117,7 +117,7 @@ summary { cursor: pointer; font-weight: 600; text-decoration: underline; text-un
 .quote footer { max-width: none; margin: 0; padding: 0; border: 0; font-size: var(--t-2); color: var(--muted); }
 .groups .vote-cell { width: 30%; min-width: 110px; }
 .groups .vote-cell .bar { margin: .35rem 0; }
-/* A law's groups on a phone (27 Nov 2026): the four columns of numbers did not fit, and "protiv" and the rest were out
+/* A law's groups on a phone (27 Nov 2026; an MP's votes by area and by kind, the same day): the four columns of numbers did not fit, and "protiv" and the rest were out
    of sight to the right. There each group is a block: its name, its bar, then its numbers in a row in the columns'
    order, each with the column's word (which a screen reader does not hear twice: the header still names it). */
 .gv-k { display: none; }
@@ -129,6 +129,7 @@ summary { cursor: pointer; font-weight: 600; text-decoration: underline; text-un
   .group-votes td:first-child, .group-votes td.vote-cell { flex: 1 0 100%; width: auto; min-width: 0; }
   .group-votes td.num { text-align: left; font-weight: 600; }
   .group-votes td.num:empty { display: none; }
+  .group-votes td.lean { white-space: normal; }  /* an MP's votes by area: "Glasao …", "Njegova grupa …" in a row */
   .gv-k { display: inline; font-weight: 400; }
 }
 .debate ul, .memo ul { padding-left: 1.1rem; }

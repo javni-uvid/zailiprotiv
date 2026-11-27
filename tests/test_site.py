@@ -1285,3 +1285,17 @@ def test_a_laws_groups_read_on_a_phone_without_a_sideways_swipe(built):
     assert '<th role="columnheader" class="num">Za</th>' in table  # the header stays for wide screens and screen readers
     # its roles said outright, as a phone's layout makes the cells blocks and some browsers then forget the table
     assert table.count('role="row"') == table.count("<tr") and table.count('role="cell"') == table.count("<td")
+
+
+def test_an_mps_votes_by_area_and_kind_read_on_a_phone():
+    """27 Nov 2026, as a law's groups: each number and word carries its column's word on a phone, hidden from screen
+    readers, and the table says its roles outright."""
+    from pathlib import Path
+    t = (Path(site.__file__).parent / "templates" / "mp_votes.html").read_text(encoding="utf-8")
+    assert t.count('<table class="groups group-votes" role="table">') == 2 and '<table class="groups">' not in t
+    for table in t.split('<table class="groups group-votes" role="table">')[1:]:
+        table = table[:table.index("</table>")]
+        assert table.count("<tr") == table.count('<tr role="row"') and table.count("<td") == table.count('<td role="cell"')
+        assert len(re.findall(r"<th[ >]", table)) == table.count('<th role="columnheader"')
+    assert t.count('<span class="gv-k" aria-hidden="true">{{ vote_label[k] }} </span>') == 2
+    assert '<span class="gv-k" aria-hidden="true">Glasao </span>' in t and '<span class="gv-k" aria-hidden="true">Njegova grupa </span>' in t
