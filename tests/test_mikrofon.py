@@ -235,3 +235,28 @@ def test_a_day_the_service_cannot_read_fails_the_build_rather_than_draw_an_empty
                                      facts={}, waiting_=told)
     with pytest.raises(ValueError):  # a day the service would not list (here: not a day)
         pages_mikrofon.live_snapshot({"dan": "2026-11-17", "govori": "nije spisak"}, facts={}, waiting_=told)
+
+
+def test_the_day_pages_draw_their_turns_with_the_live_pages_cards_and_styles():
+    import re
+    from zailiprotiv import pages_govornici as gv
+    from zailiprotiv.pages_mikrofon import turns as day_turns
+    live = (Path(__file__).resolve().parents[1] / "live/uzivo/static/live.css").read_text(encoding="utf-8")
+    assert live.count("/* kartice { */") == live.count("/* } kartice */") >= 5  # every part opened is closed
+    css = gv.card_css()
+    for rule in (".turns li[id]", ".tf-w", ".tf {", ".share-turn", ".steps li", ".dl-bar", ".st-v", ".rk-l", ".chip > summary",
+                 ".c-sl", "--c-sl: #e11d48", "--c-sl: #ef3a5d"):
+        assert rule in css, rule
+    f = _real_days()[-1]
+    day = json.loads(f.read_text(encoding="utf-8"))
+    day["govori"] = [t for t in day["govori"] if t.get("okvira", 0) >= 2]
+    turns = day_turns(day)
+    turns[0].update(point=[107], said="Поштовани", said_note="nije citat")
+    turns.append({"chair": True, "od": turns[0]["od"] - 60, "dur": "1 min", "from": "09:59"})
+    listed, steps = gv.cards(day, turns, facts={}, summary=None)
+    rows = re.findall(r'<li id="g(\d+)" data-od="\1"', listed)
+    assert [int(x) for x in rows] == sorted(t["od"] for t in day["govori"])  # every turn, oldest first, the page's own address
+    assert f'data-share="#govor-{turns[0]["od"]}"' in listed and 'class="tf-w' in listed
+    assert "Povreda Poslovnika · čl. <a" in listed and "Automatski prepis" in listed and "Poštovani" in listed
+    chair = re.search(r'<li class="chair"[^>]*>', listed).group(0)
+    assert "data-od" not in chair and listed.index(chair) < listed.index(f'id="g{turns[0]["od"]}"')

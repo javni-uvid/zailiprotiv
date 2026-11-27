@@ -11,7 +11,7 @@
 <p class="lead">Ukupno {{ whole }} govora s imenom govornika u potpisu prenosa, {{ people|length }} govornika.</p>
 {% if summary %}<section class="day-summary" id="sazetak">
 <h2>Sažetak dana</h2>
-{% if summary.odluke %}<ul class="plain">{% for o in summary.odluke %}<li><span class="label">{{ o.vreme }}</span> {{ o.sta }}{% if o.glasovi %}<br><span class="label">{{ o.glasovi }}</span>{% endif %}</li>{% endfor %}</ul>{% endif %}
+{{ steps|safe }}
 <details class="one"><summary>Sažetak dana</summary><p>{{ summary.ukratko }}</p></details>
 {% if summary.govornici %}<details><summary class="label">O čemu je ko govorio ({{ summary.govornici|length }})</summary><ul class="plain">{% for g in summary.govornici %}<li><b>{{ g.ime|given_first }}</b>{% if g.lista %} <span class="label">{{ g.lista }}</span>{% endif %}: {{ g.o_cemu }}</li>{% endfor %}</ul></details>{% endif %}
 <p class="label">Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
@@ -30,20 +30,18 @@
 {% if day_parts or first %}
 <section class="player"><div class="screen" id="screen"><button type="button" class="play" data-e="sajt.snimak" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">▶ Pusti snimak dana</button><button type="button" class="play listen" data-zvuk data-e="sajt.snimak" data-file="{{ day_parts[0].url if day_parts else first.file }}" data-t="{{ 0 if day_parts else first.t }}">🎧 Slušaj samo zvuk</button></div>
 {% if day_parts|length > 1 %}<ul class="parts">{% for p in day_parts %}<li><button type="button" class="part" data-e="sajt.snimak" data-file="{{ p.url }}" data-t="0">Deo {{ loop.index }} · {{ p.from }}–{{ p.to }}</button></li>{% endfor %}</ul>{% endif %}
-<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik; samo iz linka ka podeljenom govoru kreće sam, ako pregledač to dozvoli. Klik na „▶ snimak“ kod govora pušta ga od tog mesta. Samo zvuk svira i kad je ekran zaključan; tamo piše ko govori, a ⏮ i ⏭ vode na prethodni i sledeći govor.</p></section>
+<p class="label">Snimak iz arhive Skupštine (videonet.co.rs), pušta se tek na klik; samo iz linka ka podeljenom govoru kreće sam, ako pregledač to dozvoli. Samo zvuk svira i kad je ekran zaključan; tamo piše ko govori, a ⏮ i ⏭ vode na prethodni i sledeći govor.</p></section>
 {% endif %}
 <section class="rc" id="rc" hidden data-clan="{{ root }}poslovnik-clanovi.html#clan-"></section>
 <div id="rc-w" hidden><span data-w="na">Na snimku</span><span data-w="izmedju">Između govora</span><span data-w="u">u</span><span data-w="pov">Povreda Poslovnika</span><span data-w="cl">čl.</span><span data-w="i">i</span><span data-w="dan">{{ day|day_of }}</span></div>
 <div id="deljen" hidden><span data-w="p">Pusti govor</span><span data-w="d">{{ day|day_of }} u</span><span data-w="s">Narodna skupština</span><span data-w="c">link je kopiran</span><span data-w="n">Mesto ovog govora na snimku još nije poznato.</span></div>
-<ol class="plain turns">
-  {% for t in turns %}{% if t.chair %}<li class="chair"><span class="label">{{ t.from }}–{{ t.to }}</span> <span class="ko">Predsedavajući</span> <span class="label">· {{ t.dur }}</span> <span class="label">Vodi sednicu. Ovo vreme ne pripada nijednoj poslaničkoj grupi.</span></li>
-  {% else %}<li id="{{ t.id }}" data-od="{{ t.od }}" data-do="{{ t.do }}"{% if t.point is not none %} data-povreda="{{ t.point|join(',') }}"{% endif %}><span class="label">{{ t.from }}–{{ t.to }}</span> <span class="ko">{% if t.slug %}<a href="{{ root }}poslanik/{{ t.slug }}.html">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</span>{% if t.side %} <span class="label">{{ t.side }}</span>{% endif %}{% if t.point is not none %} <span class="label">Povreda Poslovnika{% if t.point %} · čl. {% for n in t.point %}<a href="{{ root }}poslovnik-clanovi.html#clan-{{ n }}">{{ n }}</a>{{ " i " if loop.revindex == 2 else (", " if not loop.last else "") }}{% endfor %}{% endif %}</span>{% endif %} <span class="label">· {{ t.minutes }} min</span>{% if t.recording %} <a class="label" href="{{ t.recording }}"{% if t.file %} data-e="sajt.snimak" data-file="{{ t.file }}" data-t="{{ t.t }}"{% endif %}>▶ snimak</a>{% endif %} <button type="button" class="share-turn label" data-share="#govor-{{ t.od }}">podeli</button>{% if t.said %}
-    <details class="prepis"><summary class="label">Automatski prepis</summary><p>{{ t.said|latin }}</p><p class="label">Zapisao AI model za prepoznavanje govora (Whisper{% if model %}, {{ model }}{% endif %}) sa snimka; može da sadrži greške i nije citat. Zvaničan tekst je stenogram Skupštine, koji ovde zamenjuje prepis kad bude objavljen.</p></details>{% endif %}</li>
-  {% endif %}{% endfor %}
-</ol>
+{{ cards|safe }}
 <p class="label">Isto pravilo za svakog: govor traje od prvog do poslednjeg kadra s imenom u potpisu. Predsedavajući nema potpis i nije uračunat. Automatsko čitanje može da pogreši.</p>
 <p class="label">Izvor: {% if source == "uzivo" %}zapis stranice „Ko sada govori“, poravnat sa snimkom u arhivi{% elif source == "govor" %}stenografske beleške, poravnate sa zvukom snimka u arhivi{% elif source == "glas" %}potpis u prenosu, a gde ga nije bilo, reč predsedavajućeg kad daje reč i glas govornika (do objave stenografskih beleški; deo bez jasnog znaka nije imenovan){% else %}ceo snimak prenosa, pročitan posle sednice{% endif %}. <a href="{{ root }}kako-racunamo.html#govornici">Kako merimo</a></p>
 <style>
+{{ card_css|safe }}
+/* the site's own rules that the live page has not: a vote's words in colour, not on a ground; its folds not underlined */
+.st-v b { background: none; } .steps-sec summary { text-decoration: none; }
 {% include "mikrofon.css" %}
 </style>
 <script>

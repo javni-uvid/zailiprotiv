@@ -53,9 +53,12 @@ def _hms(sec: int) -> str:
     return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
 
 
-def _turn(d: dict, snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
+def _turn(d: dict, snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, share: str = "", more: str = "",
+          anchor: str = "") -> str:
     """A turn in the day's list (24 Nov 2026, the maintainer's choice of three): the portrait, the name, how long, the line
-    on its topic, and the moment it began as a button that plays it."""
+    on its topic, and the moment it began as a button that plays it. The site's day pages draw theirs with it too
+    (pages_govornici, 27 Nov 2026): `share` the speech's own link there ("#govor-<second>"), `more` what they add under
+    the line (a point of order, the automatic transcript), `anchor` the row's id ("g<second>" there, "t<second>" here)."""
     t = lambda k: escape(_t(k, cyr))
     name = escape(_name(given_first(d["ime"]), cyr))
     nm = f'<a href="{escape(site + ("cir/" if cyr else "") + "poslanik/" + d["adresa"])}">{name}</a>' if d["adresa"] else name
@@ -79,17 +82,17 @@ def _turn(d: dict, snap: dict, *, cyr: bool, site: str, tz: ZoneInfo) -> str:
     topic = f'<p class="rz">{escape(_name(d["rezime"], cyr))}</p>' if d.get("rezime") else ""
     shade = LIST_COLOURS.get(d.get("lista") or "", "l1")
     # the speech's own link (25 Nov 2026, the maintainer; deljenje.py): the same beside every finished speech
-    share = (f'<button type="button" class="share-turn" data-share="{"/cir" if cyr else ""}/govor/{int(d["od"])}">'
+    share = (f'<button type="button" class="share-turn" data-share="{escape(share or ("/cir" if cyr else "") + "/govor/" + str(int(d["od"])))}">'
              f'{SHARE}<span>{t("sp_share")}</span></button>')
     # what the card needs while the turn's recording plays (mikrofon.js, 26 Nov 2026): the MP's address, the list's
     # colour, a point of order's articles ("" for one with none; no attribute for none)
     point = d.get("povreda")
     card = (f' data-adresa="{escape(d["adresa"])}"' if d["adresa"] else "") + f' data-lc="{shade}"' + (
         f' data-povreda="{",".join(str(int(n)) for n in point if str(n).isdigit())}"' if isinstance(point, list) else "")
-    return (f'<li id="t{int(d["od"])}" data-od="{int(d["od"])}" data-do="{int(d["do"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(_name(side, cyr))}"{card}>'
+    return (f'<li id="{escape(anchor) if anchor else "t" + str(int(d["od"]))}" data-od="{int(d["od"])}" data-do="{int(d["do"])}" data-ime="{escape(d["ime"])}" data-strana="{escape(_name(side, cyr))}"{card}>'
             f'<span class="tf-w {shade}">{face}</span>'
             f'<div class="tm"><p class="tn"><span class="ko">{nm}</span> <span class="meta">{_minutes(d["sekundi"])} {t("min")}</span></p>{topic}'
-            f'<p class="ts meta">{escape(_name(side, cyr))}{how}{said} {share}</p></div>{play}</li>')
+            f'<p class="ts meta">{escape(_name(side, cyr))}{how}{said} {share}</p>{more}</div>{play}</li>')
 
 
 def _by_hour(turns: list[dict], rows: list[str], a: int, b: int, tz: ZoneInfo, cyr: bool) -> str:
