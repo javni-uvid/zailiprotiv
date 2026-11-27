@@ -11,7 +11,7 @@
 {% block share %}{% if site_url and tally %}<meta property="og:image" content="{{ site_url }}poslanik/{{ mp.slug }}.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">{% else %}{{ super() }}{% endif %}{% endblock %}
 {% block main %}
-<p class="crumbs"><a href="../poslanici.html">Poslanici</a></p>
+<p class="crumbs"><a href="../{{ newer15.mps_page if newer15 else "poslanici.html" }}">Poslanici</a></p>
 <div class="mp-hero">
 {% if photo %}<img class="mp-photo" src="../foto/{{ photo }}" alt="{{ mp.name }}, portret sa sajta Narodne skupštine" width="150" height="200" loading="eager">{% else %}<img class="mp-photo" src="../bez-slike.svg" alt="" width="150" height="200">{% endif %}
 <div class="mp-head">

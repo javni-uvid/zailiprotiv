@@ -383,3 +383,10 @@ issue #7 once the Fifteenth is current.
   and such a run would have read the Fourteenth alone, every hour, with nobody told. `scheduled` now means the current
   one; a run by hand is for the convocation it names. The first step (the sittings, the alert, the early commit) goes on when
   the newest is the current one, and its listing is not asked for twice.
+- **What leads to "the MPs" leads to the sitting ones** (27 Nov 2026, the maintainer: "Dodatno pomeraj stvari da ukazuju na
+  najnoviji saziv polako"; the places that still lead to the Fourteenth as if it were the present one were listed first, each
+  with what it would show for the Fifteenth). The crumb "Poslanici" on an MP's page, their votes and their speeches (and so the
+  BreadcrumbList search engines read from it), and the home page's "Nađi svog poslanika", led to `poslanici` (the Fourteenth by
+  roll calls) while the menu led to the Fifteenth's list: now where the menu leads (`newer15.mps_page`), and back to
+  `poslanici` by themselves when the Fifteenth becomes the current one. A new MP's page keeps "Poslanici › Petnaesti saziv".
+  No words changed and no address; the built pages differ in these links only.
