@@ -142,8 +142,9 @@ def _moment(snap: dict, at: float, text: str, cyr: bool) -> str:
 TURNS_SHOWN = 8  # of a day's turns, the latest this many are listed open; the earlier ones are folded under them
 
 
-def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = False) -> str:
-    """The part of the page that changes: who speaks now, and today's turns."""
+def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = False, off: bool = False) -> str:
+    """The part of the page that changes: who speaks now, and today's turns. `off`: the site's copy shown while this
+    service is down (page's `off`)."""
     t = lambda k: escape(_t(k, cyr))
     if not config.SHOW_TRANSCRIPT:  # the transcript is written down but not shown (config.SHOW_TRANSCRIPT)
         bare = lambda d: {k: v for k, v in d.items() if k not in ("prepis", "reci")}
@@ -159,7 +160,7 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = Fal
     if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(snap.get("dan", ""))):  # the day of the list, for the card of a recording
         y_, m_, d_ = (int(x) for x in snap["dan"].split("-"))
         shown_day = f' data-dan-ime="{escape(_name(f"{d_}. {MONTHS_OF[m_ - 1]}", cyr))}"'
-    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}"{shown_day}{_mail_attrs(snap, sent, tz)}>', _status(snap, cyr=cyr)]
+    out = [f'<div id="deo"{lc} data-checked="{snap["provereno"]}" data-stanje="{escape(snap.get("stanje", ""))}"{shown_day}{_mail_attrs(snap, sent, tz)}>', _status(snap, cyr=cyr, off=off)]
     # On the page in this order (the styles' `order`): who is on, the broadcast, the box about the speaker, what is
     # being said, the day. The name and the picture come first on a phone, 86% of the visits (19 Nov 2026).
     for n in sorted(snap.get("obavestenja") or [], key=lambda n: str(n.get("od", "")))[-1:]:
@@ -239,10 +240,12 @@ def fragment(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, sent: bool = Fal
 
 
 
-def _status(snap: dict, *, cyr: bool) -> str:
+def _status(snap: dict, *, cyr: bool, off: bool = False) -> str:
     """The first line of the page (22 Nov 2026, the maintainer's choice: the first screen says what is now): whether
     the Assembly sits ("Uživo", while the broadcast is on) or not, and the agenda's item under way or next."""
     t = lambda k: escape(_t(k, cyr))
+    if off:  # the site's copy while this service is down: whether the Assembly sits is not known then (27 Nov 2026)
+        return f'<div class="status"><p><span class="pill off">{t("status_down")}</span></p></div>'
     items = (snap.get("dnevni_red") or {}).get("tacke") or []
     word = t("status_break" if _paused(snap) else "status_live")  # "Pauza" while a break is known (25 Nov 2026, the maintainer)
     off = snap["stanje"] == "nema_prenosa"  # nothing is under way then, whatever was heard last (25 Nov 2026)
@@ -1608,9 +1611,12 @@ def _site_name(url: str) -> str:
 
 def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiting: dict | None = None,
          live: str = "", analytics: str = "", api: str = "", push_key: str = "", version: str = "",
-         sample: bool = False, speech: int | None = None, sent: bool = False) -> str:
+         sample: bool = False, speech: int | None = None, sent: bool = False, off: bool = False) -> str:
     """`speech`: the second a shared speech began, when its link was opened (deljenje.py): the same page, with that
-    link's preview, and the script's button for it."""
+    link's preview, and the script's button for it. `off`: the page the site builds from its last day read from the
+    recording, shown at this address while this service is down (the site's pages_mikrofon, live/edge; 27 Nov 2026):
+    the line on top says the broadcast is not followed, and what needs this service (the notification, the app) is
+    left out; not for a search engine."""
     t = lambda k: escape(_t(k, cyr))
     lang = "sr-Cyrl" if cyr else "sr-Latn"
     base = "/cir/" if cyr else "/"
@@ -1625,7 +1631,9 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
         alt, title = '<meta name="robots" content="noindex">', escape(speech_title(snap, speech, cyr=cyr, tz=tz)) + " · " + t("title_tail")
     brand = _brand(cyr)
     sup = [escape(w) for w in _t("support_cta", cyr).split(" ", 1)]  # "Podrži", and " sajt" where there is room
-    day = fragment(snap, cyr=cyr, site=site, tz=tz, sent=sent)
+    if off:
+        alt = '<meta name="robots" content="noindex">'
+    day = fragment(snap, cyr=cyr, site=site, tz=tz, sent=sent, off=off)
     # "Obavesti me kad sednica počne": under the speaker's box while a broadcast is on; between sittings above the
     # day, which had put it half a phone's screens down, under the last day's summary (20 Nov 2026: one device asked)
     # each with a tile of its own, the app's as it will stand on the home screen, and what it gives under its name
@@ -1642,6 +1650,8 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 <p class="add-ios meta" hidden>{SHARE} {t("add_ios")}</p>
 </div><p class="in-app meta" hidden>{t("in_app")}</p></section>
 """
+    if off:  # the notification and the app need this service's own worker (sw.js, the manifest)
+        pills = ""
     add = ""
     # "Sažetak dana na mejl" (23 Nov 2026, the maintainer's decision): the address goes to the counter, sealed there for
     # the maintainer's key (worker/mejl.js); the form works without the script, which only keeps the reader on the page
@@ -1680,16 +1690,16 @@ def page(snap: dict, *, cyr: bool, site: str, tz: ZoneInfo, url: str = "", waiti
 {_og(snap, cyr=cyr, url=url, tz=tz, speech=speech)}
 {_site_name(url) if url and not cyr and not speech else ""}
 <link rel="icon" type="image/svg+xml" href="{escape(site)}favicon.svg">
-<link rel="manifest" href="{base}manifest.webmanifest">
+{"" if off else f"""<link rel="manifest" href="{base}manifest.webmanifest">
 <link rel="apple-touch-icon" href="/ikona-180.png">
 <meta name="apple-mobile-web-app-title" content="{t("app_name")}">
-<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">"""}
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
 <style>{CSS}</style>
 </head>
 <body data-base="{base}"{f' data-api="{escape(api)}"' if api.startswith("https://") else ""}>
-<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="top-support" href="{escape(home + "podrzi")}" aria-label="{t("support_cta")}"><img src="/caslav.webp" alt="" width="36" height="33"><span>{sup[0]}<span class="lg"> {sup[1]}</span></span></a><a class="top-script" href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}" aria-label="{other_label}"><span class="lg">{other_label}</span><span class="sm">{"Lat" if cyr else "Ћир"}</span></a></span></header>
+<header class="top"><a class="brand" href="{escape(home)}">{brand}</a><span class="top-r"><a class="top-support" href="{escape(home + "podrzi")}" aria-label="{t("support_cta")}"><img src="{escape(site) + "caslav-srce.webp" if off else "/caslav.webp"}" alt="" width="36" height="33"><span>{sup[0]}<span class="lg"> {sup[1]}</span></span></a><a class="top-script" href="{other}" hreflang="{"sr-Latn" if cyr else "sr-Cyrl"}" aria-label="{other_label}"><span class="lg">{other_label}</span><span class="sm">{"Lat" if cyr else "Ћир"}</span></a></span></header>
 <main>
 <p class="sr" id="ko" aria-live="polite"></p>
 <section class="hero"><h1>{t("h1")}</h1></section>

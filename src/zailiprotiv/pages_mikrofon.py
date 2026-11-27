@@ -2,8 +2,8 @@
 
 "Ko sada govori" (live/) runs on the maintainer's computer behind a Cloudflare tunnel; when the computer is off,
 Cloudflare answers with its own error. The edge worker (live/edge/) then shows this page instead, built with the
-site: what the page is and why it is down, where the broadcast is, the next sitting convened, and a few facts from
-the site's data, each by the same rule as on the page it links to, about no MP in particular.
+site: since 27 Nov 2026 the live page itself, drawn by the service's own code from the site's last day
+(`live_snapshot`, `offline_page`), saying the broadcast is not followed.
 
 The last sitting day read from the whole recording afterwards (`data/<N>/snimak/<date>.json`, 18 Nov 2026) is listed
 on this page and published as `mikrofon-dan.json`, which the live service shows between sittings in place of its own,
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -518,17 +519,77 @@ def waiting(facts_: list[dict], quiz_: list[dict], coming: list[dict] | None = N
     return out
 
 
+LIVE_DIR = Path(__file__).resolve().parents[2] / "live"  # the live service's code (live/uzivo), as ko.py takes it
+
+
+def _uzivo():
+    """The live service's page and state (live/uzivo): only the standard library, as the repository's tests render it."""
+    if str(LIVE_DIR) not in sys.path:
+        sys.path.insert(0, str(LIVE_DIR))
+    from uzivo import page as live_page, state
+    return live_page, state
+
+
+def live_snapshot(day: dict | None, *, facts: dict, waiting_: dict, summary: dict | None = None,
+                  now: float | None = None) -> dict:
+    """What the live service shows between sittings with the site's last day read from the recording, made by the
+    service's own state (state.Tracker, its `use_recording`, `use_facts`, `use_waiting` and `snapshot`, as it takes
+    mikrofon-dan.json, mikrofon-poslanici.json and mikrofon-cekanje.json from the site), so the page drawn from it is
+    the live page's own (27 Nov 2026, the maintainer: the page while the service is off to look like the live one).
+    Taken on the day after the shown one at the earliest, as the service lists an earlier day. The day's summary,
+    where the site has it, as the service shows it (state_view._summary_shown). A day with turns that comes out with
+    none fails the build here rather than draw an empty list."""
+    if day and (not isinstance(day.get("dan"), str) or not isinstance(day.get("govori"), list)):
+        raise ValueError("the last day read from the recording is not shaped as the live service takes it")  # it ignores it
+    _, state = _uzivo()
+    t = state.Tracker(None, "Europe/Belgrade")
+    t.use_facts(facts)
+    t.use_waiting(waiting_)
+    if day:
+        t.use_recording(day)
+    after = datetime.fromisoformat(day["dan"]).replace(tzinfo=TZ) + timedelta(days=1) if day else datetime.now(TZ)
+    snap = t.snapshot(max(now or datetime.now(TZ).timestamp(), after.timestamp()))
+    if summary and summary.get("ukratko"):
+        snap["sazetak"] = {"vrsta": "dan", **{k: summary.get(k) for k in ("kratko", "ukratko", "odluke", "model")}}
+    shown = [x for x in (day or {}).get("govori") or [] if x.get("okvira", 0) >= 2]
+    if shown and (snap.get("dan") != day["dan"] or len(snap.get("danas") or []) != len(shown)):
+        raise ValueError(f"the live service's snapshot of {day['dan']} lists {len(snap.get('danas') or [])} turns of {len(shown)}")
+    return snap
+
+
+def offline_page(snap: dict, *, cyr: bool, waiting_: dict, api: str = "", analytics: str = "", live: str = "") -> str:
+    """mikrofon.html (and cir/mikrofon.html): the live page itself (page.page, `off`), drawn from `live_snapshot`. Shown
+    at mikrofon.zailiprotiv.rs by the edge worker (live/edge) while the service is down, under a <base> that points
+    relative links to the site, and at zailiprotiv.rs/mikrofon: so the site's links are relative (one folder down
+    for Cyrillic), and the page's links to the service's own addresses ("/cir/", "/govor/<second>") lead there."""
+    live_page, _ = _uzivo()
+    html = live_page.page(snap, cyr=cyr, site="../" if cyr else "./", tz=TZ, waiting=waiting_, api=api.rstrip("/"),
+                          analytics=analytics, off=True)
+    own = live.rstrip("/")
+    return re.sub(r'\b(href|data-share)="/(?!/)', lambda m: f'{m[1]}="{own}/', html) if own else html
+
+
 def render(*, common: dict, env, out, facts_: list[dict], coming: list[dict], day: dict | None = None,
            quiz_: list[dict] | None = None, notices_: list[dict] | None = None,
            sittings_: list[str] | None = None, agenda_: list[dict] | None = None, fixes_: dict | None = None,
-           next_: list[dict] | None = None, days_: list[str] | None = None, notes_: list[str] | None = None) -> None:
-    """mikrofon.html: an ordinary page of the site (its links relative), which the edge worker (live/edge) shows at
-    mikrofon.zailiprotiv.rs with a <base> pointing them back to the site; noindex, so out of the sitemap. With the
-    last day read from a recording, its list too, and the day as mikrofon-dan.json for the live service."""
-    (out / PAGE).write_text(env.get_template("mikrofon.html").render(
-        **common, facts=besides(facts_, quiz_ or []), quiz=quiz_ or [], coming=coming[:1], broadcast=LIVE, root="",
-        day=day["dan"] if day else "", day_turns=turns(day) if day else [], day_parts=parts(day) if day else []),
-        encoding="utf-8")
-    (out / WAIT_FILE).write_text(json.dumps(waiting(facts_, quiz_ or [], coming if next_ is None else next_, notices_, sittings_, agenda_, fixes_, days_=days_, notes_=notes_), ensure_ascii=False), encoding="utf-8")
+           next_: list[dict] | None = None, days_: list[str] | None = None, notes_: list[str] | None = None,
+           summary: dict | None = None) -> str:
+    """mikrofon.html, the live page as the service draws it between sittings (`offline_page`), noindex, so out of the
+    sitemap; with the last day read from a recording, the day as mikrofon-dan.json for the live service, and "Dok
+    čekate" as mikrofon-cekanje.json. Returns cir/mikrofon.html, written after the site's Cyrillic edition (which
+    would write it again from the Latin)."""
+    told = waiting(facts_, quiz_ or [], coming if next_ is None else next_, notices_, sittings_, agenda_, fixes_,
+                   days_=days_, notes_=notes_)
+    (out / WAIT_FILE).write_text(json.dumps(told, ensure_ascii=False), encoding="utf-8")
     if day:
         (out / DAY_FILE).write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
+    try:
+        facts = json.loads((out / SPEAKERS_FILE).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        facts = {}
+    snap = live_snapshot(day, facts=facts, waiting_=told, summary=summary)
+    g = env.globals
+    draw = lambda cyr: offline_page(snap, cyr=cyr, waiting_=told, api=g.get("votes_api", ""),
+                                    analytics=common.get("analytics", ""), live=g.get("live_page", ""))
+    (out / PAGE).write_text(draw(False), encoding="utf-8")
+    return draw(True)

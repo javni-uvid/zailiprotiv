@@ -1255,7 +1255,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     _gv.render(common=common, env=env, out=out, root=root, days=src.recorded, notes=floor_debates)
     # what mikrofon.zailiprotiv.rs shows while "Ko sada govori" is down
     floor_totals = floor.totals
-    pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=_gv.with_points(root, pages_mikrofon.last_day(root)),
+    _last = _gv.with_points(root, pages_mikrofon.last_day(root))
+    _last_conv = next((f.parent.parent.name for f in root.glob(f"*/snimak/{_last['dan']}.json")), "") if _last else ""
+    mikrofon_cir = pages_mikrofon.render(common=common, env=env, out=out, coming=coming, day=_last,
+                          summary=_gv.day_summary(root, _last_conv, _last["dan"]) if _last_conv else None,
                           next_=pages_mikrofon.upcoming(root, coming, NEWEST_),
                           days_=[d["dan"] for days_ in src.recorded.values() for d in days_],
                           notes_=[d["dan"] for days_ in src.recorded.values() for d in days_ if d.get("izvor") == "govor"],
@@ -1279,6 +1282,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     if cyrillic:  # every page again under cir/, in Cyrillic
         from zailiprotiv import cyrillic as cyrillic_
         cyrillic_.edition(out)
+        (out / "cir" / pages_mikrofon.PAGE).write_text(mikrofon_cir, encoding="utf-8")  # the live page's own Cyrillic
     if clean:
         clean_urls(out)
     return stats
