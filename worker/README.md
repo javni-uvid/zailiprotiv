@@ -35,7 +35,10 @@ voted on is read from the site's `glasanje.json`. The quiz's old sums stay in `v
 
 ## Uses of the quiz and the ballot
 
-`POST /e {e}` adds one to a sum per day for one of a fixed list of uses: `kviz.kraj` (the quiz's result reached), and
+`POST /e {e, k?}` adds one to a sum per day for one of a fixed list of uses: `kviz.kraj` (the quiz's result reached),
+`kviz.pocetak`, `kviz.pola`, `kviz.sve` (an answer given, half the quiz's laws answered, every one; each once per page
+opened; 26 Nov 2026), each of the quiz's uses also under the quiz's name (`kviz.kraj:podelili-salu`) when `k` is a quiz
+the site lists in `glasanje.json` (`kviz`), and
 for the quiz's picture (`kviz.`) and the ballot's (`listic.`): `otvori` (the ballot's picture opened), `podeli` (the
 share button), `podeljeno` (the share sheet finished), `kopiraj`, `sacuvaj`; and `mikrofon.pusti` (the live
 page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.zailiprotiv.rs`, which may send only
@@ -48,7 +51,8 @@ strip, the announcement before a sitting, the bar of a sitting, an MP at the ros
 shown, pressed, refused at the browser's question, failed). The page "Podrži" (23 Nov 2026):
 `podrzi.klik-meni`, `-podnozje`, `-pocetna` (the way to it from the site), `podrzi.otvori`, `podrzi.od-mikrofona`
 (opened from the live page), `podrzi.kod` (the codes in view), `podrzi.slika` (a code's picture saved),
-`podrzi.kopiraj` (the account's details copied), `podrzi.paypal`. Nothing else is stored with it, not even
+`podrzi.kopiraj` (the account's details copied), `podrzi.paypal`; the phone's bar (27 Nov 2026): `meni.zakoni`,
+`meni.poslanici`, `meni.uzivo`, `meni.glasaj` (taken), `meni.jos` ("Još" opened), `meni.jos-izbor` (a row of it taken). Nothing else is stored with it, not even
 the device's mark. `GET /pregled` lists them under `uses`, by day, for the last two weeks. Each page sends each use at
 most once.
 
@@ -109,7 +113,13 @@ rows go after 48 hours (the hourly run); `/pregled` gives the counts only.
 followed: sealed, the day asked and confirmed) and `prati_dani` (confirming mails a day, from all). Both are sealed with `MEJL_JAVNI`, padded first to
 one length; there is no hash or column from which an MP can be told, and nothing counts by MP. `POST /m/prati {adresa, sta, pismo}` from the site only,
 for a sitting MP of the site's `prati-poslanici.json`, rate-limited: a mail that names the MP and asks for consent, at most one a day to an address not
-confirmed, five to one that is, twenty followed at once, 300 such mails a day in all. `/m/prati/potvrdi` confirms that one by a button on its page;
+confirmed, five to one that is, forty followed at once, 300 such mails a day in all. `/m/prati/potvrdi` confirms that one by a button on its page;
 `/m/prati/kraj`, `/sve` and `/svega` end one, all, or all and the day's summary, each by a button, and the mail reader's own button (`/sve`) at once; the row is deleted, the
 reader's with the last. `GET /m/prati/spisak`, with the push's token, gives the live service the confirmed, sealed, with their links and the row of the
 day's summary of the same address. Not confirmed in 48 hours: deleted. `/pregled` gives how many readers and how many wait, in all.
+
+**An area of laws too** (27 Nov 2026): `vrsta=o` with `sta` an area's address of the site's `prati-oblasti.json` (the 17 points of Article
+97). What is followed is sealed as `<kind>|<address>|<name>` (`p` an MP, `o` an area), padded to the same 256 bytes, so the base tells neither
+which nor what kind; another kind is one more entry in `KINDS`, no change to the tables. The confirmation names the area with its own words
+("Šta pratiš …"). Forty followed at once (seventeen areas and MPs beside them). The live service tells an area from its own pull request; until then
+a confirmed area waits in the base and nothing is sent for it.

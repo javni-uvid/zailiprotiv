@@ -240,7 +240,8 @@ def day_summary(root: Path, conv: str, day: str) -> dict | None:
     whole = kept.get("dan")
     if not isinstance(whole, dict) or not whole.get("ukratko"):
         return None
-    return {**{k: whole.get(k) for k in ("naslov", "kratko", "ukratko", "odluke", "tok", "govornici")}, "model": kept.get("model", "")}
+    return {**{k: whole.get(k) for k in ("naslov", "kratko", "ukratko", "odluke", "tok", "govornici")}, "model": kept.get("model", ""),
+            "izvor": whole.get("izvor") or "prepis"}  # "beleske": written from the notes (tools/sazetak_dana.py), labelled so
 
 
 _TEXTS: dict = {}

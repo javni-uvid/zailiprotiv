@@ -359,6 +359,14 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   `aria-current="true"` in the top bar on a wide screen (underlined) and in the phone's bar, written into the page:
   the script marked the bar by the address, so Grupe, Prisustvo, U proceduri and Oblasti marked nothing and the top bar
   never did. Drafts and pictures: `zailiprotiv-dirigent\jezicci\`.
+- **The phone's bar counted** (27 Nov 2026, the maintainer: "Stavi svakako tracker"). Before the bar changed only
+  "Uživo" from it (`sajt.mikrofon-meni`, which the wide screen's menu sends too) and "Podrži sajt" from "Još"
+  (`podrzi.klik-meni`, as the header's heart) were counted. Now each of its ways, as the other uses, a sum per day and
+  at most once per page opened, nothing of who: `meni.zakoni`, `meni.poslanici`, `meni.uzivo`, `meni.glasaj`,
+  `meni.jos` ("Još" opened), `meni.jos-izbor` (a row of it taken). The bar is only on screens up to 640 px, so these
+  are taps on phones, with nothing about the device. **visits** prints them by day (`tools/uses.py`); read beside the
+  phones' page views from Cloudflare (taps per 1,000 views). "Kako računamo" says so. A name the counter does not take
+  is refused (400) and costs the bar nothing.
 
 ## Design rules
 
@@ -452,6 +460,16 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   the mail's card is "kept in this browser only" (`live-page.md`, 24 Nov) and the code beside it says nothing is sent, so the sending
   is gone rather than the name added. Nothing asks for that sum. The words on the method page hold as they are.
   The test of the names sent missed it because it read `use("…")` only: it reads `mikrofonUse("…")` too.
+- **How far a quiz is taken** (26 Nov 2026, the maintainer: "Ubaci tracker na kvizu"): the counter had the results
+  reached (`kviz.kraj`: 208 in eleven days, 158 of them on 18-19 Nov) but not the starts, so no share. Now, each once
+  per page opened and as a sum per day, as the other uses: an answer given (`kviz.pocetak`, also a vote brought from the
+  home page's band), half the quiz's laws answered (`kviz.pola`, where the page says "Na pola si"), every law answered
+  (`kviz.sve`), the result reached (as before). Half and all fit every quiz, of 6 to 10 laws, without a count per
+  question. Each quiz use is also summed under the quiz's name, public anyway (`kviz.kraj:podelili-salu`), for a name the
+  site lists in `glasanje.json` only: the same table, `/pregled` the same shape. Nothing about a reader, no mark, nothing
+  more kept in the browser; never which answer or how many. The result opens after three answers, so a "finished" quiz
+  is the result reached. **visits** (`tools/uses.py`) prints the steps by day and by quiz, with the results reached per
+  quiz started. "Kako računamo" says so.
 
 ## Search engines
 
@@ -596,6 +614,14 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   (`prati.js`) only keeps the reader on the page. On a phone the box takes the page's width from under the portrait by a margin, as a `<details>`
   can't leave its column. It is no `section` with a heading, which a phone would fold. The hidden field says the script of the edition
   (`data-cir-value`, `cyrillic.page`). `prati-poslanici.json` names the sitting MPs for the counter, which takes nobody else.
+- **"Prati mejlom" on every area's page** (27 Nov 2026, the maintainer, of the proposal for following an area of laws: "5 moze /
+  6 vazi"). All 17 points of Article 97 have a page now, one with no law yet saying so, as each can be followed. The same
+  `<details>` as an MP's (`follow_part(slug, "o")`, its hidden `vrsta`), under the line with the RSS feed, with the area's own
+  words and the line that a law of no area is not told. A law's page and a waiting bill's link to it beside each area ("prati
+  oblast mejlom"). The build writes `prati-oblasti.json` (the 17 areas, both scripts, for the counter) and
+  `oblasti-dogadjaji.json` (`oblasti.py`: the events of the last 30 days, the same for everyone, for the live service's
+  sender); what an event is and why: the module's docstring. On a year of the Fourteenth it gives the mails the proposal
+  counted, per area (`test_oblasti.py`).
 - **The day pages of who spoke when show the card of the speech playing** (26 Nov 2026, the maintainer, "4 da", of the
   live page's card that follows a recording; live-page.md). On `govornici/<day>`, under the player, while its recording
   plays: "Na snimku · <day> u <hour>", the name, the list, the time into the speech, a point of order's label with its

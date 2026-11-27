@@ -65,6 +65,9 @@ def built(tmp_path_factory):
 def test_site_builds_every_page(built):
     out, stats = built
     assert stats["laws"] == 1 and stats["mps"] == 3 and stats["linked"] == 1
+    import json as json_
+    listed = json_.loads((out / "glasanje.json").read_text(encoding="utf-8"))  # the counter's list: laws, and quizzes by name
+    assert listed["kviz"][0] == "podelili-salu" and all((out / "kviz" / f"{k}.html").exists() for k in listed["kviz"])
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text()
     assert "Odbrana i bezbednost" in law and "Ilić-Stošić Biljana" in law
     assert "Zakon uređuje nabavku oružja, prema predlagaču." in law and "AI model (claude-sonnet-5-5)" in law
@@ -237,7 +240,7 @@ def test_groups_numbers_quiz_and_share_picture(built):
     assert (out / "grupe.html").exists() and (out / "glasaj.js").exists()
     quiz = json.loads(re.search(r'id="quiz-data">(.*?)</script>', (out / "kviz" / "podelili-salu.html").read_text(), re.S).group(1))
     assert quiz["laws"] == [{"s": "zakon-o-oruzju"}] and "groups" in quiz and "mps" not in quiz  # groups only (17 Nov 2026)
-    area = next((out / "oblast").glob("*.xml")).read_text()
+    area = (out / "oblast" / "odbrana-i-bezbednost-vanredne-mere.xml").read_text()  # the law's area (point 4)
     assert "<feed" in area and "zakon-o-oruzju.html" in area
 
 
@@ -1072,7 +1075,7 @@ def test_every_use_a_page_sends_is_one_the_counter_takes():
     worker = (root / "worker/worker.js").read_text(encoding="utf-8")
     events = set(re.findall(r'"([a-z]+\.[a-z-]+)"', worker[worker.index("const EVENTS"):worker.index("]);", worker.index("const EVENTS"))]))
     sent = set()
-    for f in ("src/zailiprotiv/static/site.js", "src/zailiprotiv/static/pretraga.js"):
+    for f in ("src/zailiprotiv/static/site.js", "src/zailiprotiv/static/pretraga.js", "src/zailiprotiv/static/glasaj.js"):
         sent |= set(re.findall(r'"((?:pretraga|sajt|kviz|listic)\.[a-z-]+)"', (root / f).read_text(encoding="utf-8")))
     sent |= set(re.findall(r'data-e="([^"{]+)"', (root / "src/zailiprotiv/templates/govornici_dan.html").read_text(encoding="utf-8")))
     live = (root / "live/uzivo/static/live.js").read_text(encoding="utf-8")
@@ -1080,6 +1083,7 @@ def test_every_use_a_page_sends_is_one_the_counter_takes():
     player = (root / "src/zailiprotiv/templates/mikrofon.js").read_text(encoding="utf-8")
     sent |= set(re.findall(r'count\("([a-z0-9.-]+)"\)', player))
     assert {"pretraga.polje-ceo", "sajt.snimak", "mikrofon.slusaj", "mikrofon.mejl", "sajt.mikrofon", "mikrofon.obavesti-odbijeno"} <= sent
+    assert {"kviz.pocetak", "kviz.pola", "kviz.sve", "kviz.kraj"} <= sent  # how far a quiz was taken (26 Nov 2026)
     assert sent <= events, sent - events
 
 

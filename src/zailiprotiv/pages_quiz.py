@@ -108,5 +108,11 @@ def render(*, by_key_all, common, profiles=None, convs, current, env, group_rows
             root="../"), encoding="utf-8")
         themes.append(theme)
     themes.sort(key=lambda t: (-t["of"], t["name"]))
+    # The quizzes the counter keeps a sum for by name (26 Nov 2026): added to the list the build wrote.
+    allowed_path = out / "glasanje.json"
+    if allowed_path.exists():
+        allowed = json.loads(allowed_path.read_text(encoding="utf-8"))
+        allowed["kviz"] = ["podelili-salu"] + sorted(t["slug"] for t in themes)
+        allowed_path.write_text(json.dumps(allowed, separators=(",", ":")), encoding="utf-8")
     return Quiz(active=active, laws=quiz_laws, by_hand=chosen_by_hand,
                 themes={t["area"]: t for t in themes})

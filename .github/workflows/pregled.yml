@@ -1,0 +1,53 @@
+# A branch's real pages, to look at before its pull request is merged (27 Nov 2026, the conductor: the workers' computer
+# has no memory for a build). Started by hand ON the branch to see (`gh workflow run pregled --ref <branch> -f pages=…`),
+# so the run, its token and anything it could leave in GitHub's cache belong to that branch and never to main's (CodeQL:
+# a run of main's that checked out a branch's code could poison the cache **pages** reads); only a branch or tag of this
+# repository can be named. Builds it over the repository's data as **pages** does, but with no secret (so without the notes
+# only the bucket holds, and uploading nothing), keeps ".html" in links so the pages open from disk, and uploads the chosen
+# pages with their styles, scripts and fonts for three days. Prints the site's size, folder by folder. Publishes nothing.
+name: pregled
+
+on:
+  workflow_dispatch:
+    inputs:
+      pages:
+        description: "Pages inside the site, separated by spaces or commas (e.g. sednica/x.html cir/poslanik/y.html)"
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: pregled
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Build
+        run: |
+          pip install uv==0.13.9 && uv sync --frozen
+          git log -1 --format='%h %s'
+          uv run zailiprotiv site --out _site --domain zailiprotiv.rs --html-links
+          uv run zailiprotiv files-split --site _site --out _podaci  # as pages does: these live in a bucket, not counted
+          npx -y pagefind@1.5.0 --site _site --glob "{*.html,{zakon,poslanik,grupa,sednica,nedelja,predlog,oblast,kviz}/**/*.html}" | tail -3
+          uv run zailiprotiv lighten --site _site
+      - name: The pages asked for
+        env:
+          PREGLED_PAGES: ${{ inputs.pages }}
+        run: python3 tools/pregled.py _site _pregled
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: pregled
+          path: _pregled
+          retention-days: 3

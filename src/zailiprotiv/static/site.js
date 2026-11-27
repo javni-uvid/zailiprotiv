@@ -7,11 +7,13 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
 // Only on the project's own hosts (25 Nov 2026), here and in every script that sends: a local build, a test or a copy
 // opened from disk sends nothing, neither this nor a vote nor a visit (base.html).
 var zipOwn = /^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname), zipCounted = {};
-function zipCount(what) {
+// A quiz's uses also name the quiz (its address's last part, public anyway), for a sum per quiz (26 Nov 2026).
+function zipCount(what, quiz) {
   var api = document.body && (document.body.dataset.api || "").replace(/\/$/, "");
   if (!zipOwn || !api || zipCounted[what]) return;
   zipCounted[what] = 1;
-  try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
+  var body = quiz ? { e: what, k: quiz } : { e: what };
+  try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify(body), keepalive: true }).catch(function () {}); } catch (e) {}
 }
 // A way taken from the site to the live page, counted by where it was taken (22 Nov 2026: the menu, the home page's
 // strip, the announcement before a sitting, the bar of a sitting, an MP at the rostrum; any other link as one).
@@ -28,6 +30,20 @@ var DON = { meni: "podrzi.klik-meni", podnozje: "podrzi.klik-podnozje", pocetna:
 document.addEventListener("click", function (e) {
   var a = e.target.closest && e.target.closest("a[data-don]");
   if (a && DON[a.getAttribute("data-don")]) zipCount(DON[a.getAttribute("data-don")]);
+}, true);
+// The phone's bar (27 Nov 2026, the maintainer: "Stavi svakako tracker"), as the other uses: a sum per day, nothing of
+// who. Which of its ways was taken, "Još" opened, a row of "Još" taken; each once per page opened. "Uživo" from the bar
+// is also counted as before (sajt.mikrofon-meni, which the wide screen's menu sends too).
+var MENI = { zakon: "meni.zakoni", poslani: "meni.poslanici", glasaj: "meni.glasaj" };
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest(".dno a[href]");
+  if (!a) return;
+  if (a.classList.contains("dno-live")) zipCount("meni.uzivo");
+  else if (a.closest("details")) zipCount("meni.jos-izbor");
+  else if (MENI[a.getAttribute("data-at")]) zipCount(MENI[a.getAttribute("data-at")]);
+}, true);
+document.addEventListener("toggle", function (e) {  // toggle does not bubble: heard on the way down
+  if (e.target.matches && e.target.matches(".dno details") && e.target.open) zipCount("meni.jos");
 }, true);
 (function () {
   function start() {

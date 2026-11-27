@@ -11,7 +11,7 @@
 //   GET  /z/<law>     → {"z": 12, "p": 30, "u": 2, "c": {"<quote>": 5, …}}       one law, and its marked quotes
 //   POST /z           ← {"d": "<device>", "item": "<law>", "v": "z" | "p" | "u"} one vote, replacing the device's last
 //   POST /c           ← {"d": "<device>", "item": "<law>", "q": "<quote>", "on": true | false}   mark a quote
-//   POST /e           ← {"e": "kviz.kraj" | "listic.podeljeno" | …}               one use of the quiz or the ballot, counted
+//   POST /e           ← {"e": "kviz.kraj" | "listic.podeljeno" | …, "k"?: "<quiz>"} one use of the quiz or the ballot, counted
 //   GET  /pregled     → what today's votes look like, law by law, for the watch against inflated counts, and the
 //                       uses of the last two weeks by day (four of them by hour too)
 //   POST /p           ← {"endpoint": "<push address>", "cir": bool}   from the live page: notify this device when a
@@ -69,25 +69,33 @@ async function sendMail(env, messages) {
   }
   return { poslato: sent, greske: failed };
 }
-let laws = { at: 0, map: new Map() };  // law → the quotes of its page that may be marked
+let laws = { at: 0, map: new Map(), quizzes: new Set() };  // law → the quotes of its page that may be marked; the quizzes
 
 async function allowed() {
   if (Date.now() - laws.at > 3600e3 || !laws.map.size) {
     let map = null;
     const r = await fetch(SITE + "/glasanje.json", { cf: { cacheTtl: 600 } });
-    if (r.ok) map = new Map(Object.entries((await r.json()).laws));
-    else {  // the site before it listed every law: the quiz's laws
+    let quizzes = new Set();
+    if (r.ok) {
+      const listed = await r.json();
+      map = new Map(Object.entries(listed.laws));
+      quizzes = new Set(Array.isArray(listed.kviz) ? listed.kviz : []);  // the site's quizzes, by name (26 Nov 2026)
+    } else {  // the site before it listed every law: the quiz's laws
       const old = await fetch(SITE + "/glasaj.json", { cf: { cacheTtl: 600 } });
       if (old.ok) map = new Map((await old.json()).laws.map((l) => [l, []]));
     }
-    if (map) laws = { at: Date.now(), map };
+    if (map) laws = { at: Date.now(), map, quizzes };
   }
   return laws.map;
 }
 
 // What the quiz and the ballot count when it happens (a sum per day, nothing with it): the quiz's result shown, and
 // for each picture to share, opened, the share sheet opened, shared, the text copied, the picture saved.
+// How far a quiz was taken, each once per page opened (26 Nov 2026, the maintainer: "Ubaci tracker na kvizu"): an answer
+// given, half its laws answered, every one answered. A quiz's uses are also summed under its name ("kviz.kraj:<name>"),
+// for a quiz the site lists only; never which answer or how many.
 const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopiraj", "kviz.sacuvaj",
+  "kviz.pocetak", "kviz.pola", "kviz.sve",
   "listic.otvori", "listic.podeli", "listic.podeljeno", "listic.kopiraj", "listic.sacuvaj",
   // the live page (mikrofon.zailiprotiv.rs): its ▶ on the broadcast pressed
   "mikrofon.pusti",
@@ -124,7 +132,9 @@ const EVENTS = new Set(["kviz.kraj", "kviz.podeli", "kviz.podeljeno", "kviz.kopi
   // the page "Podrži" (23 Nov 2026): the way to it (the menu's heart, the footer, the home page's box), opened, opened
   // from the live page, the codes in view, a code's picture saved, the account's details copied, PayPal opened
   "podrzi.klik-meni", "podrzi.klik-podnozje", "podrzi.klik-pocetna", "podrzi.otvori", "podrzi.od-mikrofona",
-  "podrzi.kod", "podrzi.slika", "podrzi.kopiraj", "podrzi.paypal"]);
+  "podrzi.kod", "podrzi.slika", "podrzi.kopiraj", "podrzi.paypal",
+  // the phone's bar (27 Nov 2026): Zakoni, Poslanici, Uživo, Glasaj taken, "Još" opened, a row of "Još" taken
+  "meni.zakoni", "meni.poslanici", "meni.uzivo", "meni.glasaj", "meni.jos", "meni.jos-izbor"]);
 
 // Of these, summed per hour too (UTC, as the day is): the broadcast and the sound started, and the page in view after
 // 1 and 5 minutes (25 Nov 2026, the maintainer's decision). A sum and nothing with it, as the day's. An hour's sum
@@ -473,6 +483,11 @@ export default {
       if (!EVENTS.has(body.e) || (uses && !body.e.startsWith("mikrofon."))) return reply({ error: "event" }, 400, origin);
       const sums = [env.DB.prepare("INSERT INTO events (day, what, n) VALUES (?, ?, 1) ON CONFLICT (day, what) DO UPDATE SET n = n + 1")
         .bind(today(), body.e)];
+      if (body.e.startsWith("kviz.") && typeof body.k === "string" && body.k.length <= 80) {
+        await allowed();
+        if (laws.quizzes.has(body.k)) sums.push(env.DB.prepare("INSERT INTO events (day, what, n) VALUES (?, ?, 1) ON CONFLICT (day, what) DO UPDATE SET n = n + 1")
+          .bind(today(), body.e + ":" + body.k));
+      }
       if (HOURLY.has(body.e)) sums.push(env.DB.prepare("INSERT INTO events_hours (hour, what, n) VALUES (?, ?, 1) ON CONFLICT (hour, what) DO UPDATE SET n = n + 1")
         .bind(thisHour(), body.e));
       await env.DB.batch(sums);

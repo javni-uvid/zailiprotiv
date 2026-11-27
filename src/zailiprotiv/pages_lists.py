@@ -29,7 +29,7 @@ def recorded(dates, recordings, latin):
 
 
 def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbers, out, rows_mp, recordings=None,
-           floor_by_sitting=None, quiz_themes=None, others_by_sitting=None):
+           floor_by_sitting=None, quiz_themes=None, waiting=(), others_by_sitting=None):
     # A page per area (the point of Article 97), every convocation, newest first.
     by_area = defaultdict(list)
     for its in items_by_conv.values():
@@ -37,10 +37,16 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
             for a in it.get("areas") or []:
                 by_area[a].append(it)
     (out / "oblast").mkdir(exist_ok=True)
+    # Every area of Article 97 has its page, also one with no law yet (27 Nov 2026, following an area by mail: each
+    # of the 17 can be followed).
+    from zailiprotiv import kinds
+    for a in kinds.AREAS.values():
+        by_area.setdefault(a, [])
     for a, its in by_area.items():
         its.sort(key=lambda it: it["law"].get("passed") or "", reverse=True)
         (out / "oblast" / f"{area_slug(a)}.html").write_text(env.get_template("area.html").render(
-            **common, area=a, laws=its, quiz_themes=quiz_themes, root="../"), encoding="utf-8")
+            **common, area=a, laws=its, quiz_themes=quiz_themes, root="../",
+            waiting_here=[r for r in waiting if a in r.get("area_names", [])]), encoding="utf-8")
     (out / "oblasti.html").write_text(env.get_template("areas.html").render(
         **common, areas=[{"name": a, "slug": area_slug(a), "n": len(by_area[a])}
                          for a in sorted(by_area, key=lambda a: (-len(by_area[a]), collate(a)))], root=""), encoding="utf-8")

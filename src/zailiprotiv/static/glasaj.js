@@ -9,7 +9,18 @@
   var ROOT = document.body.dataset.root || "";
   // Addresses are made only of what the site's own data may hold: a slug, or a portrait's file name.
   var slug = function (s) { return /^[a-z0-9][a-z0-9-]*$/.test(s || "") ? s : ""; };
-  var used = function (what) { if (window.zipCount && ready) window.zipCount(what); }, ready = false;  // site.js
+  // Uses are counted per page opened (site.js), with the quiz's name: kviz/<name> in the address.
+  var QUIZ = slug((location.pathname.match(/\/kviz\/([a-z0-9-]+?)(?:\.html)?$/) || [])[1]);
+  var used = function (what) { if (window.zipCount && ready) window.zipCount(what, QUIZ); }, ready = false;  // site.js
+  // How far the visitor came on this page (26 Nov 2026, the maintainer: "Ubaci tracker na kvizu"): an answer given,
+  // half the laws answered (where the page says "Na pola si"), every law answered; "kviz.kraj" is the result shown.
+  // Each once per page opened, as a sum per day; how many answers or which is never sent.
+  function progress() {
+    var n = done();
+    used("kviz.pocetak");
+    if (n >= Math.ceil(answers.length / 2)) used("kviz.pola");
+    if (n === answers.length) used("kviz.sve");
+  }
   var slugs = function () { return data.laws.map(function (l) { return l.s; }); };
   // What is kept for the tab: the answers by law (so the order of the laws may change), and the law to show first.
   var KEY = "glasaj:" + slugs().sort().join("|"), FIRST = "glasaj:prvi", at = 0;
@@ -189,6 +200,7 @@
       b.addEventListener("click", function () {
         answers[i] = b.dataset.a;
         keep();
+        progress();
         reveal(item, i, true); go(i); showCrowd();
         next.focus({ preventScroll: true });
         // On a phone the result opens under the buttons, often below the screen: bring "next" and the result into it.
@@ -455,4 +467,5 @@
   go(cameWith >= 0 ? cameWith : (first < 0 ? "kraj" : first));
   if (cameWith >= 0) { showCrowd(); soon(items[cameWith], cameWith); }
   ready = true;
+  if (cameWith >= 0) progress();  // the first answer, given on the home page's band
 })();
