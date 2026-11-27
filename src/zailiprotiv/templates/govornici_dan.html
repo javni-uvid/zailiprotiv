@@ -15,7 +15,7 @@
 <p class="sz-p">{{ summary.ukratko }}</p>
 {% if line %}<details class="sz-f"><summary>Dan u Skupštini, po satu <span>{{ n_steps }}</span></summary>{{ line|safe }}</details>{% endif %}
 {% if bands %}<details class="sz-f"><summary>Govorili su <span>{{ n_people }}</span></summary>{{ bands|safe }}</details>{% endif %}
-<p class="label sz-lab">Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.</p>
+<p class="label sz-lab">{% if summary.izvor == "beleske" %}Napisao AI model ({{ summary.model or 'Claude Opus' }}) iz privremenih stenografskih beleški Skupštine (neredigovanih i neautorizovanih): može da pogreši, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.{% else %}Napisao AI model ({{ summary.model or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat. Isto pravilo za svakog: svaki govornik sa bar dva minuta, redom javljanja, bez ocena. Zvaničan tekst je stenogram Skupštine.{% endif %}</p>
 </div></section>{% endif %}
 {{ mail|safe }}
 <h2>Po govorniku</h2>

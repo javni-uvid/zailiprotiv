@@ -91,7 +91,7 @@ $Parts = @{
 }
 # The modules of live/uzivo only one of the two loads (a test compares them with what they import): for `stanje`. The
 # rest of what an image is made of is both's.
-$OnlyPage = @("deljenje", "main", "mejl", "mere", "page", "picture", "prati", "pretplata", "steps", "texts")
+$OnlyPage = @("deljenje", "main", "mejl", "page", "picture", "prati", "pretplata", "texts")
 $OnlyMeasuring = @("dnevnik", "glas", "grafika", "komadi", "merenje", "ocr", "sada", "worker")
 $PageFiles = @("live/uzivo/static", "src/zailiprotiv/static/fonts", "src/zailiprotiv/og", "src/zailiprotiv/templates/mikrofon.js", "src/zailiprotiv/templates/mikrofon.css")
 $ImageFiles = @("live/uzivo", "live/Dockerfile", "live/requirements.txt", "live/constraints.txt", "live/ulaz.sh", "live/deno.sh", "live/docker-compose.yml", "src/zailiprotiv/cyrillic.py", "data/settings.json")

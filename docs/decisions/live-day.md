@@ -269,3 +269,19 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   removal from the sitting, or takes one back (`steps.MEASURE`, the same words for everybody), is not drawn as a
   decision on the live page (`page._steps`), the site's day page or in the mail (`mejl.build`, where the measures are the
   chair's own words, `mere.py`). Of the kept summaries only 25 Nov's had them (three); a real decision none.
+- **A day's summary after the fact: from the notes, or again from the kept transcript** (27 Nov 2026, the maintainer, of the
+  findings on the day's mail and the day pages: "17 i 18 iz stenograma"; the paid run his word, the conductor runs it).
+  `sudija.whole_day` is the whole day's call and checks, taken out of `Judge._whole` unchanged (the service still calls it);
+  `tools/sazetak_dana.py` calls it from the repository on a computer, with no container. Who spoke when is the site's record
+  of the day (`data/<N>/snimak`), so the speakers it must name are those with two minutes or more there, as in the service.
+  `beleske`: for a day the service never heard (17 and 18 Nov), the day's speeches from the Assembly's stenographic notes in
+  Latin letters, each at its recording's second where the record found it (never earlier than the speech before: the
+  notes' order stands), with `sudija.NOTES`, the whole day's rules said of the notes; each line still rests on a sentence
+  of the speaker's own found word for word, and no quote is shown (the notes are a primary source, so quotes from them
+  could be shown one day, checked by a person: not now). The file says `"izvor": "beleske"`, and the day's page and the
+  live page label it so (`sum_note_notes`, `st_brief_src_notes`: "iz privremenih stenografskih beleški Skupštine";
+  proposed, for the maintainer). `prepis`: a day the weaker model summed up (19 and 24 Nov) or whose decisions held
+  measures (25 Nov), again from the service's own transcript copied out of `/data`, its stretches kept. Nothing is put in
+  place: the tool writes the day's file and what each line rests on into a folder, prints each line with its sentences
+  and whether they were found, and the conductor puts it in `/data/sazetak` and `data/<N>/sazetak`. A chair's measure the
+  model puts among the decisions is moved to the steps when written (`settle_votes`), and the rules say so (WHOLE 11, DAY 9).

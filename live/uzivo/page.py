@@ -483,7 +483,7 @@ def _steps(snap: dict, *, cyr: bool, tz: ZoneInfo, site: str = "") -> str:
                      f'<ol class="steps">{"".join(r[1] for r in rest)}</ol></details>')
         full = t("steps_model" if any(e.get("model") for e in heard) else "steps_said")
         if decisions:
-            full = full.rstrip(".") + ". " + escape(_fill(_t("sum_note", cyr), _model(summary)))
+            full = full.rstrip(".") + ". " + escape(_fill(_t("sum_note_notes" if summary.get("izvor") == "beleske" else "sum_note", cyr), _model(summary)))
         chip = _chip(t("dl_src"), full)
         if site:
             body += (f'<p class="dl-foot rk-f"><a class="rk-l" href="{escape(site + ("cir/" if cyr else "") + "poslovnik-clanovi#pojmovi")}">'
@@ -863,7 +863,7 @@ def _cards_of_the_day(snap: dict, card, *, cyr: bool) -> list[str]:
     out = []
     s = snap.get("sazetak")
     if isinstance(s, dict) and s.get("vrsta") == "dan" and s.get("kratko"):
-        out.append(card(t("st_brief"), f'<p class="st-text">{n(s["kratko"])}</p><p class="st-src">{escape(_fill(_t("st_brief_src", cyr), _model(s)))}</p>', s["kratko"]))
+        out.append(card(t("st_brief"), f'<p class="st-text">{n(s["kratko"])}</p><p class="st-src">{escape(_fill(_t("st_brief_src_notes" if s.get("izvor") == "beleske" else "st_brief_src", cyr), _model(s)))}</p>', s["kratko"]))
     done = [x for x in (snap.get("dnevni_red") or {}).get("tacke") or []
             if x.get("stanje") == "gotova" and x.get("izvor") == "sajt" and x.get("kada") == snap.get("dan")]
     for x in done[:3]:

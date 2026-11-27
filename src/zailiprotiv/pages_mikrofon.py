@@ -551,7 +551,7 @@ def live_snapshot(day: dict | None, *, facts: dict, waiting_: dict, summary: dic
     after = datetime.fromisoformat(day["dan"]).replace(tzinfo=TZ) + timedelta(days=1) if day else datetime.now(TZ)
     snap = t.snapshot(max(now or datetime.now(TZ).timestamp(), after.timestamp()))
     if summary and summary.get("ukratko"):
-        snap["sazetak"] = {"vrsta": "dan", **{k: summary.get(k) for k in ("kratko", "ukratko", "odluke", "model")}}
+        snap["sazetak"] = {"vrsta": "dan", **{k: summary.get(k) for k in ("kratko", "ukratko", "odluke", "model", "izvor")}}
     shown = [x for x in (day or {}).get("govori") or [] if x.get("okvira", 0) >= 2]
     if shown and (snap.get("dan") != day["dan"] or len(snap.get("danas") or []) != len(shown)):
         raise ValueError(f"the live service's snapshot of {day['dan']} lists {len(snap.get('danas') or [])} turns of {len(shown)}")
