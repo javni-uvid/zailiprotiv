@@ -65,7 +65,7 @@ def since(conv: str) -> str:
 
 
 def render(*, env, common: dict, out: Path, conv: str, listed: dict, rows: list[dict], convs_of: dict,
-           photo_of: dict, conv_name: str) -> None:
+           photo_of: dict, conv_name: str, others_of: dict | None = None) -> None:
     """The list page and a page for each new member."""
     for r in rows:
         r["party_"] = party(r["party"])
@@ -85,7 +85,8 @@ def render(*, env, common: dict, out: Path, conv: str, listed: dict, rows: list[
         if r["new"]:
             (out / "poslanik" / f"{r['slug']}.html").write_text(env.get_template("mp_new.html").render(
                 **common, m=r, conv=conv, conv_name=conv_name, since=since(conv), source=listed.get("source", ""),
-                list_page=PAGE.format(conv=conv), root="../"), encoding="utf-8")
+                list_page=PAGE.format(conv=conv), others=(others_of or {}).get("new:" + r["slug"], []), root="../"),
+                encoding="utf-8")
 
 
 def by_group(rows: list[dict]) -> list[dict]:

@@ -68,6 +68,7 @@
   {% for st in v.sittings %}
   <h3><a href="{{ st.url }}">{{ st.title }}</a></h3>
   <ol class="hc-agenda">{% for a in st.agenda %}<li>{{ a }}</li>{% endfor %}</ol>
+  {% if st.page %}<p><a href="{{ root }}sednica/{{ st.page }}.html#ostala">Ostala glasanja na ovoj sednici ({{ st.others }})</a></p>{% endif %}
   {% endfor %}
   {% if v.days %}<ul class="plain np-days">{% for d in v.days %}<li><a href="govornici/{{ d.day }}.html">{{ d.when }}</a> <span class="label">· {{ d.time }} za govornicom · {{ d.people }} govornika · snimak i prepis</span></li>{% endfor %}</ul>{% endif %}
   {% elif part == "varnice" %}
@@ -86,7 +87,7 @@
 
 {# Where a panel's numbers come from, at the foot of its page. #}
 {% macro newer_note(part) -%}
-{% if newer15 %}{% set v = newer15 %}{% if part == "grupe" %}<p class="label">Mandati sa spiska Skupštine. „Prvi put“: bez ijednog glasanja u sazivima od 2012. Vreme za govornicom je mereno sa snimka prenosa ({{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }}), isto za svakog govornika. Kako grupe glasaju biće ovde od prvog glasanja.</p>{% elif part == "sednice" %}<p class="label">Dnevni red je sa sajta Skupštine; dani su pročitani sa snimka prenosa. Glasanja će biti ovde čim Skupština objavi rezultate.</p>{% endif %}{% endif %}
+{% if newer15 %}{% set v = newer15 %}{% if part == "grupe" %}<p class="label">Mandati sa spiska Skupštine. „Prvi put“: bez ijednog glasanja u sazivima od 2012. Vreme za govornicom je mereno sa snimka prenosa ({{ v.days|length }} {{ "dan" if v.days|length == 1 else "dana" }}), isto za svakog govornika. Kako grupe glasaju o zakonima biće ovde od prvog zakona.</p>{% elif part == "sednice" %}<p class="label">Dnevni red je sa sajta Skupštine; dani su pročitani sa snimka prenosa. Ostala glasanja su na strani sednice; glasanja o zakonima biće ovde od prvog zakona.</p>{% endif %}{% endif %}
 {%- endmacro %}
 
 {# The newest convocation's quick exchanges on the days read from the recordings: what they are, and each. #}
@@ -258,3 +259,19 @@
    sa B"): the site, then the list the page belongs to, both by the names their pages have. Its BreadcrumbList is made
    of this line and the heading (publish.structured): Google takes a trail only as readers see it, on a phone too. #}
 {% macro trail(root, href, name) %}<p class="crumbs trail"><a href="{{ root }}index.html">Za ili Protiv</a> › <a href="{{ href }}">{{ name }}</a></p>{% endmacro %}
+
+{# The roll calls that are not a final vote on an adopted law (other_votes.py, 27 Nov 2026, the maintainer: "Možemo sa
+   tvojim predlozima"): the line under their heading, and an MP's latest ten, the rest on their "-glasovi" page. #}
+{% macro other_line() %}<p class="meta">Sva glasanja osim konačnih o usvojenim zakonima: izbori i imenovanja, odluke, zaključci, autentična tumačenja i predlozi zakona koji nisu usvojeni, kako ih Skupština naziva.</p>{% endmacro %}
+{% macro other_part(rows, more="") -%}
+{% if rows %}
+<section id="ostala" data-pagefind-ignore>
+  <h2>Ostala glasanja <span class="count">{{ rows|length }}</span></h2>
+  {{ other_line() }}
+  <ul class="plain other-votes">
+  {% for r in (rows[:10] if more else rows) %}<li><span class="meta">{{ r.o.when[:10]|day }}</span> <a href="{{ root }}sednica/{{ r.o.page }}.html#{{ r.o.anchor }}">{{ r.o.subject|latin }}</a> <b class="v-text-{{ r.vote }}">{{ vote_label[r.vote] }}</b></li>
+  {% endfor %}</ul>
+  {% if more and rows|length > 10 %}<p><a href="{{ more }}#ostala">Svih {{ rows|length }} ostalih glasanja</a></p>{% endif %}
+</section>
+{% endif %}
+{%- endmacro %}

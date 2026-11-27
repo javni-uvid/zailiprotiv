@@ -413,3 +413,30 @@ issue #7 once the Fifteenth is current.
   (the Assembly's list, `member_rows`) first, then the rest, each part by name; no entry added or changed. The live page reads
   the same file and matches by name: with both orders over the real data its `Roster` gives the same groups and the same MP
   for every name, reversed name, surname and first two words of every MP.
+- **Ostala glasanja: the roll calls that are not on an adopted law** (27 Nov 2026, the maintainer, of the conductor's
+  proposal and its words: "Možemo sa tvojim predlozima"). The Fifteenth's first sitting had five roll calls, none on a law, and
+  the site showed none: no convocation's roll calls but the final votes on adopted laws were shown anywhere. Now, by one rule
+  for every convocation (`other_votes.py`): every roll call no adopted law lists among its votes, 1,336 of them (9th 139,
+  10th 260, 11th 366, 12th 205, 13th 129, 14th 232, 15th 5), under the heading "Ostala glasanja" and the line "Sva glasanja
+  osim konačnih o usvojenim zakonima: izbori i imenovanja, odluke, zaključci, autentična tumačenja i predlozi zakona koji
+  nisu usvojeni, kako ih Skupština naziva." (some 64 of them are on bills not adopted or on interpretations of laws, so
+  "not on laws" would be untrue). The subject is written once, on the sitting's page, with its counts and the Assembly's
+  PDF; 172 sittings' pages gain the part and 57 sittings that adopted no law get a page (the 15th's first among them,
+  linked from its panel on "Sednice"; the list of sittings names them by their count; a thin one stays out of the sitemap
+  by the rule of 26 Nov). An MP's page has their latest ten with the subject, the rest on their "-glasovi" page, a row per
+  sitting with the same vote in a row written once ("4, 5, 6.1: Za"), linked to the sitting's part: the subject on every
+  row would have been 114 MB more of pages with the Cyrillic twins, this some 40 MB (MP pages 10.4, "-glasovi" 26.8,
+  sittings 3.0, measured by rendering the parts over the real data), the largest "-glasovi" part 60 KB. They enter no
+  count: presence, a group's line, agreement, the quiz, the numbers, rankings, feeds and the share picture stay on final
+  votes on laws, and their "nije prisutan" is summed nowhere. The newest convocation's roll calls are read for this
+  before its first law (`Sources.newest_votes`), a new MP's rows going to their own page (a name two members share, to
+  neither).
+- **An MP's page is open to search engines when it has something of the MP's own** (27 Nov 2026, the same proposal): a vote
+  shown (on a law or another), a speech in the notes or a turn read from the recording; the same rule for every MP's page,
+  the new MPs' too, which were all `noindex`. Of the Fifteenth's 193 new MPs, 42 had a turn in the recordings; with
+  their roll calls shown, all 193. Sentences the first roll calls made untrue were changed with it: a new MP's page
+  ("Glasanja o zakonima biće ovde od prvog zakona"; "nije ni na jednom poimeničnom glasanju ranijih saziva"), the
+  groups' note ("Kako grupe glasaju o zakonima biće ovde od prvog zakona."), the sittings' note ("Ostala glasanja su na
+  strani sednice; glasanja o zakonima biće ovde od prvog zakona."), the sittings' list's description ("na kojima se
+  glasalo") and a sitting's foot when it has such roll calls ("… o amandmanima Skupština ne objavljuje poimenična
+  glasanja").

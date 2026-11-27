@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% set section = "poslanici" %}
-{% from "macros.html" import bar, plural, how, brief, floor_now_part, offices_part, next_steps, follow_part with context %}
+{% from "macros.html" import bar, plural, how, brief, floor_now_part, offices_part, next_steps, follow_part, other_part with context %}
 {% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}, poslanik: kako glasa — Za ili Protiv{% endblock %}
 {# The MP's own counts first (a search result shows the first 160 characters), the same sentence for every MP. #}{% block description %}{{ mp.name|given_first }}, poslanik{% if record %}: od {{ record|length }} {{ plural(record|length, "konačnog glasanja", "konačna glasanja", "konačnih glasanja") }} o zakonima {{ tally.za or 0 }} za, {{ tally.protiv or 0 }} protiv{% for k, label in [("uzdrzan", "uzdržan"), ("nije_prisutan", "nije prisutan"), ("nije_glasao", "nije glasao")] if tally[k] %}, {{ tally[k] }} {{ label }}{% endfor %}{% set t_s = floor|sum(attribute="speeches") %}{% if t_s %}; {{ t_s }} {{ plural(t_s, "govor", "govora", "govora") }} u sali{% endif %}{% if by_conv and by_conv[0].groups %}. {{ by_conv[0].groups[0]|grp }}, {{ by_conv[0].name|lower }} saziv{% endif %}.{% else %} {{ mp.name }} u Narodnoj skupštini.{% endif %}{% endblock %}
-{% block robots %}{% if not record %}<meta name="robots" content="noindex">{% endif %}{% endblock %}{# no vote of theirs is on any list: little to find #}
+{% block robots %}{% if not (record or others or spoke or floor or floor_now.get(mp.slug)) %}<meta name="robots" content="noindex">{% endif %}{% endblock %}{# open to search engines when it has something of the MP's own: a vote shown or a speech (27 Nov 2026) #}
 {% block feeds %}{% if site_url %}
 {% set person = {"@context": "https://schema.org", "@type": "Person", "name": mp.name|given_first, "url": site_url ~ "poslanik/" ~ mp.slug} %}{% if mp.name != mp.name|given_first %}{% set person = dict(person, alternateName=mp.name) %}{% endif %}{% if photo %}{% set person = dict(person, image=site_url ~ "foto/" ~ photo) %}{% endif %}{% if member_now %}{% set person = dict(person, jobTitle="narodni poslanik", memberOf={"@type": "GovernmentOrganization", "name": "Narodna skupština Republike Srbije", "url": "https://www.parlament.gov.rs/"}) %}{% endif %}
 <script type="application/ld+json">{{ person|tojson }}</script>{% endif %}
@@ -38,7 +38,7 @@
 {{ floor_now_part(mp.slug) }}
 
 {% set shown = by_conv|selectattr("present")|list %}
-{% set menu = [("funkcije", "Funkcije", offices), ("kljucna", "Izdvojena glasanja", key_votes),("aktivnost", "Aktivnost", shown or spoke or floor), ("govori", "Govori", floor|selectattr("spoken")|list), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list)] %}
+{% set menu = [("funkcije", "Funkcije", offices), ("kljucna", "Izdvojena glasanja", key_votes),("aktivnost", "Aktivnost", shown or spoke or floor), ("govori", "Govori", floor|selectattr("spoken")|list), ("replike", "Replike", exchanges), ("mere", "Mere", floor|selectattr("measure_events")|list), ("reci", "Teške reči", floor|selectattr("said")|list), ("iznosi", "Šta iznosi", profile), ("rasprave", "Iz rasprava", said), ("drugacije", "Drugačije od grupe", apart), ("slaganje", "Sa kim glasa isto", by_conv|selectattr("agree")|list), ("ostala", "Ostala glasanja", others)] %}
 <nav class="page-menu" aria-label="Na ovoj strani">{% for a, t, on in menu if on %}<a href="#{{ a }}">{{ t }}</a>{% endfor %}{% if record %}<a href="{{ mp.slug }}-glasovi.html">Svi glasovi →</a>{% endif %}</nav>
 {% if key_votes %}
 <section id="kljucna">
@@ -188,6 +188,7 @@
 
 
 
+{{ other_part(others, mp.slug ~ "-glasovi.html" if record else "") }}
 {% if record %}
 <section class="more" id="svi">
   <h2>Svi glasovi</h2>

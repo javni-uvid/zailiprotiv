@@ -1366,3 +1366,51 @@ def test_a_sections_pages_are_one_switch_and_their_section_is_marked(built):
     assert ".top nav > a[aria-current] { text-decoration: underline;" in css
     assert "border-radius: 999px" in css[css.index(".subtabs.law-kinds {"):][:200]
     assert "location.pathname" not in (root / "src/zailiprotiv/static/site.js").read_text(encoding="utf-8").split("phone's menu at the bottom")[1][:900]
+
+
+def test_roll_calls_not_on_an_adopted_law_are_shown_as_they_are(tmp_path):
+    """"Ostala glasanja" (other_votes.py, 27 Nov 2026): every roll call no adopted law lists, on its sitting's page (a
+    page of its own where the sitting adopted no law) and on each MP's page, the newest convocation's before its first
+    law too; counted nowhere."""
+    from zailiprotiv import members
+    out, root = tmp_path / "_site", data(tmp_path)
+    store = json.loads((root / "votes" / "1.json").read_text())
+    store["votes"][BASE + "2.pdf#0"] = {"when": "2026-07-10T16:00:00", "item": " 4. Именовање генералног секретара",
+        "kind": "", "session": "", "counts": {"za": 2, "protiv": 0, "uzdrzan": 0, "nije_glasao": 0, "nije_prisutan": 1},
+        "problems": [], "rows": [[1, "АБРАМОВИЋ НЕНАД", "za", "ПГ А"], [2, "ИЛИЋ-СТОШИЋ БИЉАНА", "za", "ПГ Б"],
+                                 [3, "ЧОЛАКОВИЋ ЈОВАН", "nije_prisutan", "ПГ Б"]]}
+    (root / "votes" / "1.json").write_text(json.dumps(store))
+    (root / "15" / "votes").mkdir(parents=True)
+    found = [{"name": "ПЕТРОВИЋ ПЕТАР", "party": "-", "place": "Ниш", "year": 1970},
+             {"name": "ЛАЗИЋ ЛАЗА", "party": "-", "place": "Бор", "year": 1985}]
+    (root / "15" / "members.json").write_text(members.dumps("2026-11-18T10:00:00+00:00", found))
+    first = "https://www.parlament.gov.rs/Прва_седница_Народне_скупштине.54098.43.html"
+    (root / "15" / "votes" / "54098.json").write_text(json.dumps({"sitting": first, "pdfs": {},
+        "title": "Прва седница Народне скупштине Републике Србије у Петнаестом сазиву", "votes": {
+            BASE + "15.pdf#0": {"when": "2026-11-19T23:56:54", "item": "5. Избор чланова радних тела Народне скупштине",
+                "kind": "", "session": "", "problems": [],
+                "counts": {"za": 1, "protiv": 0, "uzdrzan": 0, "nije_glasao": 0, "nije_prisutan": 1},
+                "rows": [[1, "Петровић Петар", "za", ""], [2, "Лазић Лаза", "nije_prisutan", ""]]}}}))
+    (root / "15" / "index.json").write_text(json.dumps({"fetched": "", "sittings": {first: {
+        "agenda": ["Избор чланова радних тела Народне скупштине"], "listed": 0, "starts": "",
+        "title": "Прва седница Народне скупштине Републике Србије у Петнаестом сазиву", "votes": []}}}))
+    site.build(root, out, "zailiprotiv.rs", cyrillic=True)
+    # the sitting that adopted the law: its roll call beside the law, the subject without the PDF's bullet
+    sitting = next((out / "sednica").glob("sedmo-*.html")).read_text()
+    assert 'id="ostala"' in sitting and "4. Imenovanje generalnog sekretara</span>" in sitting and "" not in sitting
+    assert "Sva glasanja osim konačnih o usvojenim zakonima" in sitting
+    # the Fifteenth's first sitting, which adopted no law, gets a page; the list leads to it from the newest panel
+    new_sitting = next((out / "sednica").glob("prva-sednica-*-54098.html")).read_text()
+    assert "1 glasanje" in new_sitting and "5. Izbor članova radnih tela" in new_sitting and "Petnaesti saziv" in new_sitting
+    assert "sednica/prva-sednica-" in (out / "sednice.html").read_text()
+    # an MP's page: the part, linked to the sitting's anchor; a new MP's page too, then open to search engines
+    old = (out / "poslanik" / "abramovic-nenad.html").read_text()
+    assert 'id="ostala"' in old and "#glasanje-" in old and "Imenovanje generalnog sekretara" in old
+    assert 'id="ostala"' in (out / "poslanik" / "abramovic-nenad-glasovi.html").read_text()
+    new = (out / "poslanik" / "petrovic-petar.html").read_text()
+    assert 'id="ostala"' in new and "Izbor članova radnih tela" in new and 'content="noindex"' not in new
+    lazic = (out / "poslanik" / "lazic-laza.html").read_text()  # "nije prisutan" is the Assembly's record, shown as it is
+    assert "Nije prisutan" in lazic and 'content="noindex"' not in lazic
+    # counted nowhere: the law's final vote alone makes the MP's tally, presence and the numbers
+    assert "Od 1 konačnih glasanja o zakonima" in old
+    assert (out / "cir" / "poslanik" / "petrovic-petar.html").exists() and site.check(out) == []
