@@ -549,7 +549,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                   "mps_page": mps_page(c, current), "years": years(c), "saziv_page": f"saziv-{c}.html",
                   "laws": len(loaded[c][0]["laws"])} for c, _ in convs]
     common = {"analytics": settings.get("analytics_token", ""), "css": css_version, "built": built, "fetched": loaded[current][0].get("fetched", "")[:10], "vote_label": VOTE_LABEL,
-              "VOTES": VOTES, "convs": conv_list, "current": current, "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic,
+              "VOTES": VOTES, "convs": conv_list, "current": current, "newest": str(members_conv or NEWEST), "site_url": f"https://{domain}/" if domain else "", "cyrillic": cyrillic,
               # The terms explained from the Rules, where they are (macros.term links there; 20 Nov 2026).
               "rule_terms": {t["id"] for t in src.rule_terms},
               # "Podrži" (pages_support), linked from the footer and the home page when settings has it (22 Nov 2026)

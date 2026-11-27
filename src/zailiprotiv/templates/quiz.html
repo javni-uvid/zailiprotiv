@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "macros.html" import bar, plural, how, trail with context %}
 {% block title %}{% if theme %}Kviz: {{ theme.name }}, kako ti glasaš{% else %}Kviz: zakoni koji su podelili Skupštinu{% endif %} — Za ili Protiv{% endblock %}
-{% block description %}Glasaj o {{ laws|length }} zakona {% if theme %}iz oblasti „{{ theme.name }}“ {% endif %}iz ovog saziva i vidi koliko puta glasaš kao većina u sali, a koliko puta mimo nje.{% endblock %}
+{% block description %}Glasaj o {{ laws|length }} zakona {% if theme %}iz oblasti „{{ theme.name }}“ {% endif %}iz {{ of_words }} saziva i vidi koliko puta glasaš kao većina u sali, a koliko puta mimo nje.{% endblock %}
 {% block main %}
 {{ trail(root, root ~ "glasaj.html", "Glasaj i ti") }}
 <h1 class="q-h1">{% if theme %}{{ theme.name }}: kako ti glasaš?{% else %}Kako ti glasaš?{% endif %}</h1>
