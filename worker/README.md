@@ -35,7 +35,10 @@ voted on is read from the site's `glasanje.json`. The quiz's old sums stay in `v
 
 ## Uses of the quiz and the ballot
 
-`POST /e {e}` adds one to a sum per day for one of a fixed list of uses: `kviz.kraj` (the quiz's result reached), and
+`POST /e {e, k?}` adds one to a sum per day for one of a fixed list of uses: `kviz.kraj` (the quiz's result reached),
+`kviz.pocetak`, `kviz.pola`, `kviz.sve` (an answer given, half the quiz's laws answered, every one; each once per page
+opened; 26 Nov 2026), each of the quiz's uses also under the quiz's name (`kviz.kraj:podelili-salu`) when `k` is a quiz
+the site lists in `glasanje.json` (`kviz`), and
 for the quiz's picture (`kviz.`) and the ballot's (`listic.`): `otvori` (the ballot's picture opened), `podeli` (the
 share button), `podeljeno` (the share sheet finished), `kopiraj`, `sacuvaj`; and `mikrofon.pusti` (the live
 page's ▶ on the broadcast pressed; the one use taken from `https://mikrofon.zailiprotiv.rs`, which may send only

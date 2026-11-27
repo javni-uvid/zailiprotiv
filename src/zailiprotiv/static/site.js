@@ -7,11 +7,13 @@ var CYR = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "đ", "
 // Only on the project's own hosts (25 Nov 2026), here and in every script that sends: a local build, a test or a copy
 // opened from disk sends nothing, neither this nor a vote nor a visit (base.html).
 var zipOwn = /^(mikrofon\.)?zailiprotiv\.rs$/.test(location.hostname), zipCounted = {};
-function zipCount(what) {
+// A quiz's uses also name the quiz (its address's last part, public anyway), for a sum per quiz (26 Nov 2026).
+function zipCount(what, quiz) {
   var api = document.body && (document.body.dataset.api || "").replace(/\/$/, "");
   if (!zipOwn || !api || zipCounted[what]) return;
   zipCounted[what] = 1;
-  try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ e: what }), keepalive: true }).catch(function () {}); } catch (e) {}
+  var body = quiz ? { e: what, k: quiz } : { e: what };
+  try { fetch(api + "/e", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify(body), keepalive: true }).catch(function () {}); } catch (e) {}
 }
 // A way taken from the site to the live page, counted by where it was taken (22 Nov 2026: the menu, the home page's
 // strip, the announcement before a sitting, the bar of a sitting, an MP at the rostrum; any other link as one).
