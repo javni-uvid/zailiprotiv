@@ -574,8 +574,9 @@ document.addEventListener("DOMContentLoaded", function () {
   if (row && row.scrollWidth > row.clientWidth) row.scrollLeft = Math.max(0, on.offsetLeft - row.offsetLeft - 16);
 })();
 
-// The phone's menu at the bottom (23 Nov 2026): away while the page is read down, back at the first move up or near the
-// top; "Još" closes on a press elsewhere and keeps the bar while open. The part of the site the page is in is marked.
+// The phone's menu at the bottom (23 Nov 2026): a row of icons while the page is read down (27 Nov 2026; it went away
+// whole until then), full again at the first move up or near either end; "Još" closes on a press elsewhere and keeps
+// the bar full while open. The part of the site the page is in is marked.
 (function () {
   var bar = document.querySelector(".dno"), root = document.documentElement;
   if (!bar) return;
@@ -586,11 +587,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   window.addEventListener("scroll", function () {
     // held within the page: the bounce at either end of an iPhone's page is no move of the reader's
-    var y = Math.max(0, Math.min(window.scrollY, root.scrollHeight - window.innerHeight)), d = y - at;
+    var end = root.scrollHeight - window.innerHeight, y = Math.max(0, Math.min(window.scrollY, end)), d = y - at;
     at = y;
     if (!d || more.open) return;
     moved = (d > 0) === (moved > 0) ? moved + d : d;
-    if (y < 80 || moved < -12) root.classList.remove("dno-away");
+    if (y < 80 || y > end - 40 || moved < -12) root.classList.remove("dno-away");
     else if (moved > 24) root.classList.add("dno-away");
   }, { passive: true });
   document.addEventListener("click", function (e) { if (more.open && !more.contains(e.target)) more.open = false; });
