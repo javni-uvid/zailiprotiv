@@ -48,6 +48,10 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
 - **Skupština:** weeks, sittings, convocations, the Assembly in numbers.
+- **Ostala glasanja:** every roll call that is not the final vote on an adopted law (elections and appointments,
+  decisions, conclusions, authentic interpretations, bills not adopted), as the Assembly names it: on its sitting's page
+  (a page of its own where the sitting adopted no law), an MP's latest ten on their page and all of them on their
+  "-glasovi" page. Counted in no figure of the site.
 - **Podrži:** readers' support by bank transfer, NBS IPS QR codes drawn in the page (`podrzi.html`, `settings.json` `support`).
 - **Poslovnik:** the Assembly's Rules of Procedure, article by article, every version kept (`data/poslovnik/`), for the
   articles invoked in the debates, the terms the site explains and the order of a sitting's steps.

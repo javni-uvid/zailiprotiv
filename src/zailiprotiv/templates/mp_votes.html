@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "poslanici" %}
-{% from "macros.html" import bar, plural, how with context %}
+{% from "macros.html" import bar, plural, how, other_line with context %}
 {% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}: svi glasovi — Za ili Protiv{% endblock %}
 {% block description %}Svi glasovi poslanika {{ mp.name|given_first }} ({{ mp.name }}): zakoni za i protiv, po oblasti, po vrsti zakona i po sazivima Narodne skupštine.{% endblock %}
@@ -83,4 +83,25 @@
   {% endfor %}
   <p class="meta">Konačna glasanja o usvojenim zakonima na kojima je poslanik na spisku. Za 2024. i prvu polovinu 2025. Skupština nije objavljivala odsutne, pa se ta glasanja ovde ne vide.</p>
 </section>
+{% if others %}
+<section class="more" id="ostala" data-pagefind-ignore>
+  <h2>Ostala glasanja <span class="count">{{ others|length }}</span></h2>
+  {{ other_line() }}
+  {% for name, n, sittings in others_by_conv %}
+  <details id="ostala-{{ sittings[0].rows[0].o.conv }}"{% if others_by_conv|length == 1 %} open{% endif %}>
+    <summary>{{ name }} saziv · {{ n }} {{ plural(n, "glasanje", "glasanja", "glasanja") }}</summary>
+    <div class="scroll">
+    <table class="record others">
+      <thead><tr><th>Datum</th><th>Sednica</th><th>Tačka: glas</th></tr></thead>
+      <tbody role="rowgroup">
+      {% for s in sittings %}
+        <tr><td>{{ s.day|day }}</td><td><a href="../sednica/{{ s.page }}.html#ostala">{{ s.rows|length }} {{ plural(s.rows|length, "glasanje", "glasanja", "glasanja") }}</a></td><td>{% for x in s.runs %}{{ x.points|join(", ") }}: <span class="v-text-{{ x.vote }}">{{ vote_label[x.vote] }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </details>
+  {% endfor %}
+</section>
+{% endif %}
 {% endblock %}

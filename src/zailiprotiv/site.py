@@ -21,7 +21,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from zailiprotiv import family, jsonfile, kinds, members, mps, skupstina
+from zailiprotiv import family, jsonfile, kinds, members, mps, other_votes, skupstina
 from zailiprotiv.config import CONVOCATIONS
 from zailiprotiv.months import day, day_of  # noqa: F401  (site.day, as other modules use it)
 from zailiprotiv.translit import latin
@@ -93,14 +93,20 @@ class MP:
     votes: dict[str, str] = field(default_factory=dict)  # vote key → za, protiv, …
 
 
-def load(data: Path) -> tuple[dict, dict, dict]:
-    laws = json.loads((data / "laws.json").read_text(encoding="utf-8"))
+def load_votes(data: Path) -> dict:
+    """A convocation's roll calls, by key, each with its sitting's address and title."""
     votes = {}
     for path in sorted((data / "votes").glob("*.json")):
         store = json.loads(path.read_text(encoding="utf-8"))
         for key, v in store["votes"].items():
             rows = [[n, mps.split(name, data.name), how, group] for n, name, how, group in v["rows"]]
             votes[key] = {**v, "rows": rows, "sitting": store["sitting"], "sitting_title": store["title"], "key": key}
+    return votes
+
+
+def load(data: Path) -> tuple[dict, dict, dict]:
+    laws = json.loads((data / "laws.json").read_text(encoding="utf-8"))
+    votes = load_votes(data)
     bills = {}
     for path in sorted((data / "bills").glob("*.json")) if (data / "bills").exists() else []:
         bills[path.name] = json.loads(path.read_text(encoding="utf-8"))
@@ -442,6 +448,7 @@ class Sources:
     members_conv: str | None  # the newest convocation with a list of MPs (pages_members)
     members_listed: dict | None  # that list
     newest_notes: dict  # its notes, when it is not among `convs` yet (19 Nov 2026: counted before its first law)
+    newest_votes: dict  # its roll calls then (27 Nov 2026: shown as "Ostala glasanja", other_votes.py)
     recorded: dict  # convocation → the days read from the recordings (pages_govornici.load)
     settings: dict
     aliases: dict  # names the public uses for a law (data/aliases.json)
@@ -472,9 +479,10 @@ def read(root: Path) -> Sources:
     for c, _ in convs:  # speakers' names the stenographers mistyped, set right before anything counts by speaker
         debates_.mend(debates[c], loaded[c][1])
     members_conv, members_listed = pages_members.load(root)
-    newest_notes = {}
+    newest_notes, newest_votes = {}, {}
     if members_conv and members_conv not in dict(convs):
         newest_notes = load_transcripts(root / members_conv)
+        newest_votes = load_votes(root / members_conv)
         if newest_notes:
             debates_.mend(newest_notes, {})
     try:
@@ -495,7 +503,7 @@ def read(root: Path) -> Sources:
             pass
     return Sources(
         convs=convs, current=convs[0][0], loaded=loaded, debates=debates, members_conv=members_conv,
-        members_listed=members_listed, newest_notes=newest_notes, recorded=pages_govornici.load(root),
+        members_listed=members_listed, newest_notes=newest_notes, newest_votes=newest_votes, recorded=pages_govornici.load(root),
         settings=jsonfile.load(root / "settings.json", {}), aliases=jsonfile.load(root / "aliases.json", {}),
         notes_sent=jsonfile.load(root / "notes_manifest.json", []),
         profiles=[json.loads(f.read_text(encoding="utf-8")) for f in sorted((root / "profiles").glob("*.json"))],
@@ -776,6 +784,15 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     # convocation, in one fixed order for everyone. A name two members of the newest convocation share gets none.
     offices_by: dict[str, dict[str, list[dict]]] = {}
     twice = {k for k, n in Counter(r["key"] for r in member_rows).items() if n > 1}
+    # The roll calls that are not a final vote on an adopted law (other_votes.py, 27 Nov 2026): every convocation's, the
+    # newest one's before its first law too. Its roll calls name a new MP by the key their page is under; a name two
+    # of its members share is given to neither.
+    linked = {k for laws_, _, _ in loaded.values() for law_ in laws_["laws"].values() for k in (law_.get("votes") or [])}
+    others = other_votes.collect({**{c: loaded[c][1] for c in loaded}, **({members_conv: src.newest_votes} if src.newest_votes else {})},
+                                 linked, sitting_page)
+    new_key = {r["key"]: "new:" + r["slug"] for r in member_rows if r["new"]}
+    others_of = other_votes.by_mp(others, lambda name, conv: None if conv == members_conv and mps.key(name) in twice
+                                  else new_key.get(mps.key(name), mps.key(name)) if conv == members_conv else mps.key(name))
     for c, rows in src.offices.items():
         for o in rows:
             k = mp_years.key(members.clean(o["name"]), c)  # "ПЕТРОВИЋ - РОПРЕТ" as the list of MPs is read
@@ -850,6 +867,10 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         for g in _groups:
             g["share"] = round(100 * g["sec"] / _whole)
         _sit = [s for s in pages_mikrofon.sittings(root, members_conv) if s["agenda"]]  # the latest first
+        _ob = other_votes.by_sitting(others)
+        for s in _sit:  # its roll calls so far, on the sitting's own page (other_votes.py)
+            if _ob.get(s["url"]):
+                s.update(others=len(_ob[s["url"]]), page=sitting_page(s["url"], _ob[s["url"]][0]["sitting_title"]))
         _daysv = [{"day": d["dan"], "when": _gv.day_name(d["dan"]), "time": _gv.dur(sum(max(0, t["do"] - t["od"]) for t in d["govori"])),
                    "people": len({t["ime"] for t in d["govori"]}),
                    "exchanges": [{"a": x["a"], "b": x["b"], "n": x["n"], "id": f"g{x['od']}"} for x in _gv.exchanges(d["govori"])]}
@@ -1083,7 +1104,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         page_args = dict(**common, mp=mp, record=record, tally=tally, by_conv=by_conv, kinds_table=kinds_table,
                          areas_table=areas_table, periods=periods, group_slug=group_slug, photo=photo_of.get(mp.key, ""),
                          against=[r for r in record if r["vote"] == "protiv"], for_=[r for r in record if r["vote"] == "za"],
-                         apart=apart_mp, root="../")
+                         apart=apart_mp, others=others_of.get(mp.key, []),
+                         others_by_conv=other_votes.by_conv(others_of.get(mp.key, []), ORDINAL_NAME),
+                         root="../")
         (out / "poslanik" / f"{mp.slug}.html").write_text(env.get_template("mp.html").render(
             **page_args, facts=card_facts,
             timeline=timeline, key_votes=keys_, exchanges=exchanges_of.get(mp.slug, []),
@@ -1095,7 +1118,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
             said=sorted(said_by.get(mp.key, []), key=lambda x: x["it"]["law"].get("passed") or "", reverse=True)),
             encoding="utf-8")
         # Every vote, by period, area and kind, on a page of its own: the lists that grow with every sitting.
-        if record:
+        if record:  # (with them, the MP's roll calls that are not on a law: other_votes.py)
             (out / "poslanik" / f"{mp.slug}-glasovi.html").write_text(env.get_template("mp_votes.html").render(**page_args),
                                                                      encoding="utf-8")
         # Every speech of the MP's, sitting by sitting, on a page of its own when the MP's page shows only the latest.
@@ -1143,7 +1166,7 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                       for mp in people.values()}
         pages_members.render(env=env, common=common, out=out, conv=members_conv, listed=members_listed, rows=member_rows,
                              convs_of=convs_seen, photo_of=photo_of,
-                             conv_name=ORDINAL_NAME.get(members_conv, members_conv))
+                             conv_name=ORDINAL_NAME.get(members_conv, members_conv), others_of=others_of)
 
     from zailiprotiv import pages_groups
     group_rows, numbers = pages_groups.render(common=common, conv_list=conv_list, env=env, finals=finals,
@@ -1290,7 +1313,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv import pages_lists
     by_area = pages_lists.render(area_slug=area_slug, common=common, conv_list=conv_list, env=env,
         items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp,
-        recordings=src.recordings, floor_by_sitting=floor.by_sitting, quiz_themes=quiz.themes, waiting=waiting)
+        recordings=src.recordings, floor_by_sitting=floor.by_sitting, quiz_themes=quiz.themes, waiting=waiting,
+        others_by_sitting=other_votes.by_sitting(others))
     from zailiprotiv import downloads
     downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
     from zailiprotiv import feeds
