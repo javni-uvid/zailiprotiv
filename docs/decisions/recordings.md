@@ -451,3 +451,17 @@ records and recordings stays here:
   convocation's notes: the mentions linked in the notes' pages 3,437 → 3,439, the articles invoked (per speech, summed,
   `pages_floor`) 3,140 → 3,142, all in the Fifteenth, one speech (24 Nov 2026, 12:05); its turn on the day page now reads
   "Povreda Poslovnika · čl. 27 i 107" where it read "Povreda Poslovnika". "члан" still wants its space.
+- **A day's page draws its speeches as the live page does** (27 Nov 2026, the maintainer: "…kao i stranice bivših
+  dana", of the page looking like the live one; the conductor's choice: the day page stays a page of the site, its
+  list and its decisions take the live page's form). "Svi govori, redom" on `govornici/<day>` is the live page's cards
+  (`page._turn`, from the service's own snapshot of the day, `pages_mikrofon.live_snapshot`): the portrait in its
+  list's colour, the name, the minutes, the list, "podeli", the moment as a ▶ button, under the hour. What the day page
+  has besides stays, in the same order (oldest first): the chair's stretches as rows of their own (no portrait, no
+  `data-od`), "Povreda Poslovnika · čl. N", the automatic transcript, the addresses `#g<second>` and the shared link
+  `#govor-<second>`, the count `sajt.snimak`. The summary's decisions are the live page's line of time with each vote's
+  bar (`page._steps`). **One source of the look:** the styles are the parts of `live/uzivo/static/live.css` marked
+  `kartice { … } kartice` (`pages_govornici.card_css`, with the lists' colours from its own `:root`), so a change there
+  changes both; the markers are comments, and the live page's HTML over every day read is the same as before them.
+  Two of the site's own rules are undone under them in the day page (a vote's words on a coloured ground, folds
+  underlined). The heading "Sažetak dana" gives way to the line of time's own ("Šta se desilo …") where there is one: it
+  stood over it and again as the folded summary under it (the conductor's note). The bars "Po govorniku" and "Po listi", "Između govora" and the summary in words are as they were.

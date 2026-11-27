@@ -1201,7 +1201,7 @@ def test_a_phone_shows_the_same_first_tiles_and_offices_of_every_mp():
     day = (here / "templates/govornici_dan.html").read_text(encoding="utf-8")
     folded = day.index('<details class="one"><summary>Sažetak dana</summary>')
     note = day.index("Napisao AI model ({{ summary.model")
-    assert day.index("summary.odluke") < folded < day.index("</details>", folded) < note  # decisions and the model's note in sight
+    assert day.index("{{ steps|safe }}") < folded < day.index("</details>", folded) < note  # decisions and the model's note in sight
     for f in ("govornici_dan.html", "govornici.html"):
         t = (here / "templates" / f).read_text(encoding="utf-8")
         assert "{{ r.share }} %<i" in t and "Automatsko čitanje može da pogreši" in t and "kako-racunamo" in t + macros
