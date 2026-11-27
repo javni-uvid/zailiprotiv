@@ -1179,6 +1179,12 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                       "g": latin(member_now[r["mp"].key]["group"]) if r["mp"].key in member_now and "group" in member_now[r["mp"].key]
                       else r["mp"].group or ""} for r in rows_mp]
              + [{"n": r["name"], "s": r["slug"], "g": latin(r.get("group", ""))} for r in member_rows if r["new"]]}
+    # The sitting MPs first, then the rest, each part by name (27 Nov 2026): the search box suggests six names, and the
+    # newest convocation's new MPs, last on the list, were never among them for a common surname (30 of 250 sitting MPs
+    # were not, typing their own surname). The live page reads the same list and matches by name, not by order.
+    sitting = {r["slug"] for r in member_rows}
+    index["mps"] = (sorted((m for m in index["mps"] if m["s"] in sitting), key=lambda m: collate(m["n"]))
+                    + [m for m in index["mps"] if m["s"] not in sitting])
     (out / "podaci.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     # The live page ("Ko sada govori") shows the speaker's final votes and the first facts of their page's card, and
     # for a new MP where they come from: a reason to open the MP's page while they speak. The newest convocation only.

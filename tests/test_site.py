@@ -921,7 +921,11 @@ def test_a_new_convocations_members_before_its_first_roll_call(tmp_path):
         if f.exists():
             assert "np-links" not in f.read_text() and f.read_text().count('id="saziv-15"') <= 1, n
     assert 'class="np-line" id="saziv-15"' in (out / "nedelje.html").read_text()
-    assert any(m["s"] == "pastor-balint" for m in json.loads((out / "podaci.json").read_text())["mps"])
+    found_mps = json.loads((out / "podaci.json").read_text())["mps"]
+    assert any(m["s"] == "pastor-balint" for m in found_mps)
+    # the sitting MPs first in what the search box suggests, by name, then the rest (27 Nov 2026)
+    assert [m["n"] for m in found_mps[:3]] == ["Pastor Balint", "Petrović Petar", "Živković-Obradović Dragana"]
+    assert len(found_mps) == 3 + 3
     assert site.check(out) == []
     # A namesake of an earlier MP whose year of birth the archive gives otherwise is another person.
     assert not members.same_person("петар петровић", 1970, {"петар петровић": {1951}})
