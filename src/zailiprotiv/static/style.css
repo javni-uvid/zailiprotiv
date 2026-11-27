@@ -130,6 +130,10 @@ summary { cursor: pointer; font-weight: 600; text-decoration: underline; text-un
   .group-votes td.num { text-align: left; font-weight: 600; }
   .group-votes td.num:empty { display: none; }
   .group-votes td.lean { white-space: normal; }  /* an MP's votes by area: "Glasao …", "Njegova grupa …" in a row */
+  /* by area, the laws voted against folded under the name: the name and its "od toga … ugovora" on one line, the
+     fold right under them, with no gap of its own */
+  .group-votes td:first-child:has(> details.inline) { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .3rem; }
+  .group-votes td:first-child > details.inline { order: 1; flex: 1 0 100%; margin: .1rem 0 .2rem; }
   .gv-k { display: inline; font-weight: 400; }
 }
 .debate ul, .memo ul { padding-left: 1.1rem; }

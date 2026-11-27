@@ -346,7 +346,8 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
 - **An MP's votes by area and by kind, the same on a phone** (27 Nov 2026, the conductor, after a law's groups): the two
   tables on an MP's page of votes had the same columns and the same fault, "Protiv" and the rest out of sight. They
   take the same form (`group-votes`, roles written out, the columns' words `aria-hidden`); by area, the words
-  "Glasao" and "Njegova grupa" go before theirs too, in a row under the area's name.
+  "Glasao" and "Njegova grupa" go before theirs too, in a row under the area's name, the area's "od toga … ugovora"
+  stays on the name's line and the fold of laws voted against follows right under it, without the gap of its margin.
 
 ## Design rules
 
