@@ -305,7 +305,7 @@ class View:
         kept = self.summary_of(day)
         whole = kept.get("dan")
         if isinstance(whole, dict) and whole.get("ukratko"):
-            return {"vrsta": "dan", **{k: whole.get(k) for k in ("kratko", "ukratko", "odluke", "model")}}
+            return {"vrsta": "dan", **{k: whole.get(k) for k in ("kratko", "ukratko", "odluke", "model", "izvor")}}
         parts = [p for p in kept.get("delovi") or [] if p.get("ukratko")]
         if parts:
             return {"vrsta": "deo", "do": parts[-1].get("do"), "ukratko": parts[-1]["ukratko"],
