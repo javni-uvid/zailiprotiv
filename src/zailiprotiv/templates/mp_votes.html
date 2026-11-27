@@ -92,10 +92,10 @@
     <summary>{{ name }} saziv · {{ n }} {{ plural(n, "glasanje", "glasanja", "glasanja") }}</summary>
     <div class="scroll">
     <table class="record others">
-      <thead role="rowgroup"><tr role="row"><th role="columnheader">Datum</th><th role="columnheader">Sednica</th><th role="columnheader">Tačka: glas</th></tr></thead>
+      <thead><tr><th>Datum</th><th>Sednica</th><th>Tačka: glas</th></tr></thead>
       <tbody role="rowgroup">
       {% for s in sittings %}
-        <tr role="row"><td role="cell">{{ s.day|day }}</td><td><a href="../sednica/{{ s.page }}.html#ostala">{{ s.rows|length }} {{ plural(s.rows|length, "glasanje", "glasanja", "glasanja") }}</a></td><td>{% for x in s.runs %}{{ x.points|join(", ") }}: <span class="v-text-{{ x.vote }}">{{ vote_label[x.vote] }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</td></tr>
+        <tr><td>{{ s.day|day }}</td><td><a href="../sednica/{{ s.page }}.html#ostala">{{ s.rows|length }} {{ plural(s.rows|length, "glasanje", "glasanja", "glasanja") }}</a></td><td>{% for x in s.runs %}{{ x.points|join(", ") }}: <span class="v-text-{{ x.vote }}">{{ vote_label[x.vote] }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</td></tr>
       {% endfor %}
       </tbody>
     </table>
