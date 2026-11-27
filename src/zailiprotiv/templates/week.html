@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "skupstina" %}
 {% from "macros.html" import bar, chamber, plural, how with context %}
 {% block title %}U Skupštini, {{ w.span }} — Za ili Protiv{% endblock %}
 {% block description %}Nedelja u Narodnoj skupštini, {{ w.span }}: {{ w.n }} {{ plural(w.n, "usvojen zakon", "usvojena zakona", "usvojenih zakona") }}{% if w.bills %}, {{ w.bills|length }} {{ plural(w.bills|length, "novi predlog", "nova predloga", "novih predloga") }}{% endif %}.{% endblock %}

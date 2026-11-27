@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "poslanici" %}
 {% from "macros.html" import bar, plural, how with context %}
 {% from "mp_macros.html" import rows, block with context %}
 {% block title %}{{ mp.name|given_first }}: svi glasovi — Za ili Protiv{% endblock %}

@@ -31,6 +31,7 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 20px 4rem; }
 .brand .w-za { color: var(--za); } .brand .w-protiv { color: var(--protiv); }
 .top nav { display: flex; flex-wrap: wrap; gap: 0 1.6rem; }
 .top nav a { text-decoration: none; font-weight: 500; font-size: var(--t-3); padding: .6rem 0; }
+.top nav > a[aria-current] { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .5em; } /* the page's section (base.html) */
 footer { max-width: 1080px; margin: 0 auto; padding: 1.5rem 20px 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--t-2); }
 h1, h2 { font-family: var(--serif); font-weight: 700; letter-spacing: -.015em; }
 h1 { font-size: var(--t-h1); line-height: 1.12; margin: 1.2rem 0 .7rem; }
@@ -787,10 +788,20 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .method > summary, details.inline > summary { padding: .5rem 0; }
   .fn-turns a, .speech-n a, .rec-part, .np-line a { min-width: 2.75rem; min-height: 2.75rem; display: inline-flex; align-items: center; justify-content: center; }
   .subtabs a { flex: 1 1 100%; }
-  .subtabs.law-kinds a { flex: 1 1 0; }
 }
-.subtabs.law-kinds { max-width: 26rem; margin: .2rem 0 1.2rem; }
-.subtabs.law-kinds a { flex: 1 1 0; padding: .55rem 1rem; }
+/* A section's pages (Zakoni, Poslanici, Skupština): one switch under the section's heading, the page's own part filled
+   (27 Nov 2026, the maintainer: "Može 2 prekidač"). Each part a finger high; one line at every width. */
+.subtabs.law-kinds { display: flex; flex-wrap: nowrap; gap: 3px; max-width: 30rem; margin: .2rem 0 1.2rem; padding: 3px;
+  border: 2px solid var(--fg); border-radius: 999px; }
+.subtabs.law-kinds.four { max-width: 36rem; }
+.subtabs.law-kinds a { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; min-height: 2.75rem;
+  box-sizing: border-box; padding: 0 .6rem; border: 0; border-radius: 999px; font-size: var(--t-3); white-space: nowrap; }
+.subtabs.law-kinds a:not([aria-current]):hover { background: var(--card); }
+@media (max-width: 640px) {
+  .subtabs.law-kinds, .subtabs.law-kinds.four { max-width: none; margin-bottom: .8rem; }
+  .subtabs.law-kinds a { padding: 0 .3rem; font-size: var(--t-2); }
+}
+@media (max-width: 380px) { .subtabs.law-kinds.four a { padding: 0 .15rem; font-size: var(--t-1); } }
 
 /* The search page: Pagefind's interface in the site's own colours, light and dark. */
 #search { --pagefind-ui-primary: var(--fg); --pagefind-ui-text: var(--fg); --pagefind-ui-background: var(--bg); --pagefind-ui-border: var(--line);
@@ -825,17 +836,12 @@ p.measure-pre { margin: .2rem 0 .3rem; }
   .foot-brand { grid-column: 1 / -1; }
   .foot-col a { padding: .7rem 0; }
 }
-.subtabs.law-kinds.four { max-width: 40rem; }
-@media (max-width: 640px) { .subtabs.law-kinds.four a { flex: 1 1 40%; } }
-.subtabs.law-kinds.three { max-width: 34rem; }
 
 /* The head's tools: search as a magnifying glass, and the switch of script. */
 .nav-tools { display: inline-flex; align-items: center; gap: .7rem; align-self: center; }
 .top nav .nav-search { display: inline-flex; align-items: center; justify-content: center; width: 2.3rem; height: 2.3rem; padding: 0; color: var(--fg); }
 .top nav .nav-search:hover { color: var(--za); }
 @media (max-width: 640px) {
-  .subtabs.law-kinds.three { flex-wrap: nowrap; gap: .35rem; }
-  .subtabs.law-kinds.three a { flex: 1 1 0; min-width: 0; padding: .6rem .2rem; font-size: clamp(.8rem, 3.7vw, .95rem); white-space: nowrap; }
 }
 @media (max-width: 350px) { .top .brand { font-size: var(--t-4); } .top .brand-mark { width: 1.6rem; } .nav-tools { gap: .15rem; } .top nav .nav-support img { width: 1.6rem; } }
 
@@ -1005,7 +1011,6 @@ table.ballot { width: 100%; border-collapse: collapse; border-top: 2px solid var
   .pr-bar { display: none; } .pr-share b { min-width: 0; }
   .subtabs .w { display: none; }
   .finder .chips select { flex: 1 1 100%; margin-left: 0; }
-  .subtabs.law-kinds.three a { padding: .55rem .3rem; font-size: var(--t-2); white-space: nowrap; }
 }
 .subtabs .n { display: none; }
 @media (max-width: 640px) { .subtabs .n { display: inline; } }
@@ -1457,15 +1462,12 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
   details.conv-row { margin: .4rem 0 1rem; } .conv-row > summary { font-size: var(--t-4); } .conv-row small { color: var(--muted); font-size: var(--t-2); font-weight: 400; margin-left: .5rem; }
   .conv-row .parts-list a { justify-content: space-between; } .conv-row .parts-list a[aria-current] { font-weight: 700; }
   .conv-row .parts-list a span { color: var(--muted); font-size: var(--t-2); }
-  .subtabs.law-kinds a, .subtabs.law-kinds.three a, .subtabs.law-kinds.four a { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; box-sizing: border-box; }
-  .subtabs.law-kinds { margin-bottom: .6rem; }
   .np-tiles { gap: .5rem 1rem; } .np-tiles li > div { border: 0; padding: 0; flex-direction: row; align-items: baseline; gap: .5rem; } .np-tiles span { margin: 0; }
   .np-tiles.np-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .finder.on ~ .lead-laws { display: none; }
   .chips-row > summary { display: flex; } .chips-row .chips { flex-wrap: wrap; overflow: visible; margin-right: 0; padding: 0 0 .4rem; } .chips-row .chip { min-height: 2.75rem; } .chips-row .chips select { flex: 1 1 100%; min-height: 2.75rem; }
   .finder .chips select { min-height: 2.75rem; }
   .members-h { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .subtabs.law-kinds.four { display: grid; grid-template-columns: auto auto auto auto; gap: .3rem; } .subtabs.law-kinds.four a { padding: .3rem .25rem; font-size: var(--t-2); }
   .week-lead .week-span { font-size: var(--t-6); } .week-lead .lead-nums { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; padding: .7rem 0; } .week-lead .lead-nums b { font-size: var(--t-6); } .week-lead .lead-nums span > span { font-size: var(--t-1); overflow-wrap: anywhere; } .week-lead .lead-nums > :last-child:nth-child(odd) { grid-column: auto; }
   .year > summary { display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; border-bottom: 1px solid var(--line); } .year > summary::after { content: "+"; color: var(--muted); font-size: var(--t-5); } .year[open] > summary::after { content: "–"; } .year > summary h2 { margin: 0; font-size: var(--t-5); }
   main > section:has(> .year) { margin: 0; }
@@ -1473,7 +1475,7 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
   .np-days, .sittings-list { list-style: none; padding: 0; } .np-days li, .sittings-list li { margin: 0; padding: .55rem 0; border-bottom: 1px solid var(--line); } .sittings-list li:has(.meta:first-child) { padding: .3rem 0; }
   .faces .face-who:not(:has(.row-meta)) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
 }
-@media (max-width: 345px) { .subtabs.law-kinds.four { grid-template-columns: 1fr 1fr; } .week-lead .lead-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 345px) { .week-lead .lead-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Following an MP by mail (25 Nov 2026, variant B): a quiet row under the name, opening in place. On a phone the box
    takes the page's width, from under the portrait. */

@@ -1299,3 +1299,36 @@ def test_an_mps_votes_by_area_and_kind_read_on_a_phone():
         assert len(re.findall(r"<th[ >]", table)) == table.count('<th role="columnheader"')
     assert t.count('<span class="gv-k" aria-hidden="true">{{ vote_label[k] }} </span>') == 2
     assert '<span class="gv-k" aria-hidden="true">Glasao </span>' in t and '<span class="gv-k" aria-hidden="true">Njegova grupa </span>' in t
+
+
+def test_a_sections_pages_are_one_switch_and_their_section_is_marked(built):
+    """27 Nov 2026 (the maintainer: "Može 2 prekidač"): the pages of Zakoni, Poslanici and Skupština share a switch under
+    the section's heading, and every page of a section marks it in the top bar and the phone's bar, written in the page
+    (it was the script's, by the address, so Grupe, Prisustvo, U proceduri and Oblasti marked nothing)."""
+    import re
+    from pathlib import Path
+    out, _ = built
+    marked = {"zakoni": ("zakoni.html", "u-proceduri.html", "oblasti.html"),
+              "poslanici": ("grupe.html", "prisustvo.html"), "skupstina": ("nedelje.html", "sednice.html")}
+    seen = 0
+    for section, pages in marked.items():
+        for name in pages:
+            if not (out / name).exists():
+                continue
+            seen += 1
+            html = (out / name).read_text(encoding="utf-8")
+            on = re.findall(r'<a [^>]*aria-current="true"[^>]*>', html)
+            top = {"zakoni": ">Zakoni<", "poslanici": ">Poslanici<", "skupstina": ">Skupština<"}[section]
+            assert any(html.count(a + top[1:]) for a in on), (name, on)
+            if section != "skupstina":
+                assert any(f'data-at="{"zakon" if section == "zakoni" else "poslani"}"' in a for a in on), name
+            assert len(on) == (1 if section == "skupstina" else 2), (name, on)
+            assert re.search(r'<nav class="subtabs law-kinds[^"]*"[^>]*>.*?aria-current="page"', html), name
+    assert seen >= 6, seen
+    home = (out / "index.html").read_text(encoding="utf-8")
+    assert 'aria-current="true"' not in home  # the home page is in no section
+    root = Path(__file__).parents[1]
+    css = (root / "src/zailiprotiv/static/style.css").read_text(encoding="utf-8")
+    assert ".top nav > a[aria-current] { text-decoration: underline;" in css
+    assert "border-radius: 999px" in css[css.index(".subtabs.law-kinds {"):][:200]
+    assert "location.pathname" not in (root / "src/zailiprotiv/static/site.js").read_text(encoding="utf-8").split("phone's menu at the bottom")[1][:900]

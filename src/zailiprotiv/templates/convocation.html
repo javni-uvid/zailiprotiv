@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "skupstina" %}
 {% from "macros.html" import chamber, bar, plural, tabs, how, term with context %}
 {% block title %}{{ cv.name }} saziv ({{ cv.years }}) — Za ili Protiv{% endblock %}
 {% block description %}{{ cv.name }} saziv Narodne skupštine Srbije ({{ cv.years }}): zakoni, poslanici, poslaničke grupe, sednice i izdvojena glasanja.{% endblock %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "poslanici" %}
 {% from "macros.html" import plural, how with context %}
 {% block title %}Prisustvo poslanika na glasanjima — Za ili Protiv{% endblock %}
 {% block description %}Koliko je koji poslanik bio prisutan na konačnim glasanjima o zakonima, {{ conv_name|lower }} saziv: rang lista svih poslanika i poslaničkih grupa, iz listinga glasanja Skupštine.{% endblock %}

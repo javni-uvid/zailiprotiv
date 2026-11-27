@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set section = "poslanici" %}
 {# A new MP of the newest convocation, before their first vote (pages_members.py). #}
 {% from "macros.html" import how, brief, floor_now_part, offices_part, next_steps, follow_part with context %}
 {% block title %}{{ m.name|given_first }}, poslanik u {{ conv_name|locative }} sazivu — Za ili Protiv{% endblock %}

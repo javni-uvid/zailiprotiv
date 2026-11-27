@@ -576,15 +576,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // The phone's menu at the bottom (23 Nov 2026): a row of icons while the page is read down (27 Nov 2026; it went away
 // whole until then), full again at the first move up or near either end; "Još" closes on a press elsewhere and keeps
-// the bar full while open. The part of the site the page is in is marked.
+// the bar full while open.
 (function () {
   var bar = document.querySelector(".dno"), root = document.documentElement;
   if (!bar) return;
   var more = bar.querySelector("details"), at = window.scrollY, moved = 0;
-  var path = location.pathname.replace(/^\/cir\//, "/").slice(1);
-  Array.prototype.forEach.call(bar.querySelectorAll("a[data-at]"), function (a) {
-    if (path.indexOf(a.getAttribute("data-at")) === 0) a.setAttribute("aria-current", "true");
-  });
+  // the section the page belongs to is marked in the page itself (base.html, `section`)
   window.addEventListener("scroll", function () {
     // held within the page: the bounce at either end of an iPhone's page is no move of the reader's
     var end = root.scrollHeight - window.innerHeight, y = Math.max(0, Math.min(window.scrollY, end)), d = y - at;
