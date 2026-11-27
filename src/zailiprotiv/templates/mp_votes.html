@@ -15,7 +15,7 @@
   <div class="big"><div class="t-za"><b>{{ tally.za or 0 }}</b><span>za</span></div><div class="t-protiv"><b>{{ tally.protiv or 0 }}</b><span>protiv</span></div></div>
   {{ bar({"za": tally.za or 0, "protiv": tally.protiv or 0, "uzdrzan": tally.uzdrzan or 0, "nije_glasao": tally.nije_glasao or 0, "nije_prisutan": tally.nije_prisutan or 0}) }}
   <p class="row-meta">Od {{ record|length }} konačnih glasanja o zakonima na kojima je na spisku: {{ tally.uzdrzan or 0 }} uzdržan · {{ tally.nije_glasao or 0 }} nije glasao · {{ tally.nije_prisutan or 0 }} nije prisutan</p>
-  <p class="meta follow">Glasanja do {{ record[0].it.final.when[:10]|day }} · <a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
+  <p class="meta follow">Glasanja do {{ record[0].it.final.when[:10]|day_of }} · <a href="{{ mp.slug }}.xml">Prati nove glasove (RSS)</a></p>
 </section>
 <nav class="page-menu" aria-label="Na ovoj strani"><a href="#glasovi">Za i protiv</a>{% if apart %}<a href="#drugacije">Drugačije od grupe</a>{% endif %}{% if areas_table %}<a href="#oblasti">Po oblasti</a>{% endif %}{% if kinds_table %}<a href="#vrste">Po vrsti</a>{% endif %}<a href="#svi">Po sazivima</a><a href="{{ mp.slug }}.html">← Poslanik</a></nav>
 <div class="periods">
