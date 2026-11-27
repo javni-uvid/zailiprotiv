@@ -138,6 +138,16 @@ as the change. The principles and the rules of work are in AGENTS.md.
   convocation), remembering when each was first and last listed; read and summarised like adopted laws, a page each
   (`predlog/<slug>.html`); one no longer listed and not adopted is "no longer listed", with no reason given.
   Convened sittings: a sitting with an agenda and no roll calls yet (`u-proceduri.html`, `u-proceduri.xml`).
+- **The bills in procedure are read into the newest convocation's folder** (28 Nov 2026, the conductor, as the first
+  step of following an area of laws by mail). Since 17 Nov the Assembly's page lists the Fifteenth's bills only, and
+  **votes** read it for the current convocation: a bill of the Fifteenth would have been filed in `data/14/` (its
+  memorandum and summary there too), and when the Fifteenth became the current one its bills would have started
+  again in an empty `data/15/procedure.json`, first seen that day. The reading of 27 Nov found none listed ("Trenutno
+  nema dokumenata"). Now `procedure` and `bills` run for `config.NEWEST`, beside the current one while it has no
+  law: the same one request to the page an hour, a bill's PDF once. `procedure.shown` gives the site the current
+  convocation's bills and the newer one's together ("U proceduri", a bill's page, the weeks), waiting when listed at
+  the newest reading; the Fourteenth's stay as they were, no longer listed. The newer one's memoranda and summaries are
+  loaded from its own folder while the build shows no laws of it.
 
 ## Debates and the notes
 
@@ -323,7 +333,7 @@ The Fifteenth convocation was constituted on 17 November 2026. `config.CONVOCATI
 the Fourteenth's end; both read the same listings and keep only their own dates. `config.CURRENT` is the newest
 convocation with a law that has its final vote, so the Fifteenth becomes the current one by itself with its first
 law, and the site never opens on a convocation with no MPs (17 Nov). Until then **votes** reads `config.NEWEST`
-beside the current one each hour (no bills in procedure, no notes), and the "no roll calls" check applies to the
+beside the current one each hour (its bills in procedure from 28 Nov 2026, no notes), and the "no roll calls" check applies to the
 current one only. On 17 Nov the Assembly's listings of sittings and laws and its page of bills in procedure began
 showing the Fifteenth only (the Fourteenth's 91 waiting bills are no longer listed); the files keep the Fourteenth's
 data. **Its MPs before its first roll call** (18 Nov 2026, the maintainer's request; `members.py`, `pages_members.py`):

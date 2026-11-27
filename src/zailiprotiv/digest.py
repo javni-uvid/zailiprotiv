@@ -7,7 +7,6 @@ sign-up page (`newsletter_url`), shown as a link."""
 from __future__ import annotations
 
 import datetime as dt
-import json
 from collections import defaultdict
 from pathlib import Path
 from xml.sax.saxutils import escape as x
@@ -38,13 +37,13 @@ def render(*, env, common, out: Path, root: Path, current: str, items_by_conv: d
                 key, monday = week_of(it["law"]["passed"])
                 weeks[key]["laws"].append(it)
                 weeks[key]["monday"] = monday
-    proc = root / current / "procedure.json"
-    if proc.exists():
-        for pdf, b in json.loads(proc.read_text(encoding="utf-8"))["bills"].items():
-            if b.get("submitted"):
-                key, monday = week_of(b["submitted"])
-                weeks[key]["bills"].append({**b, "pdf": pdf})
-                weeks[key]["monday"] = monday
+    from zailiprotiv import procedure
+    from zailiprotiv.config import NEWEST
+    for pdf, b in procedure.shown(root, current, NEWEST)["bills"].items():  # the newer convocation's too
+        if b.get("submitted"):
+            key, monday = week_of(b["submitted"])
+            weeks[key]["bills"].append({**b, "pdf": pdf})
+            weeks[key]["monday"] = monday
     settings = jsonfile.load(root / "settings.json", {})
     listed = []
     for key, w in sorted(weeks.items(), reverse=True):

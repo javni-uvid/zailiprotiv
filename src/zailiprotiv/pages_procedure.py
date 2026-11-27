@@ -7,7 +7,7 @@ from __future__ import annotations
 from zailiprotiv import jsonfile
 from zailiprotiv.config import NEWEST
 from zailiprotiv.site import (  # noqa: F401
-    days_between, dt, json, kinds, slug
+    days_between, dt, json, kinds, load, slug
 )
 
 
@@ -15,8 +15,13 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
     # Bills in procedure (the current convocation): what waits now, what is no longer listed, and the sittings
     # convened whose votes are not out yet, with their agenda.
     from zailiprotiv import link as link_, procedure as procedure_
-    proc_path, index_path = root / current / "procedure.json", root / current / "index.json"
-    proc = jsonfile.load(proc_path, {"bills": {}, "fetched": ""})
+    index_path = root / current / "index.json"
+    proc = procedure_.shown(root, current, NEWEST)
+    # The newer convocation's bills are read and summarised in its own folder (its bills/ and summaries/), which the
+    # build does not load while it has no law.
+    newer = root / NEWEST
+    bill_data = ({**loaded[current][2], **load(newer)[2]} if NEWEST not in loaded and (newer / "laws.json").exists()
+                 else loaded[current][2])
     # With the newest convocation's, while its first law has not made it the current one (25 Nov 2026): its sittings
     # are the ones being convened, and the bills now listed are theirs.
     sittings_index = {**jsonfile.load(index_path, {"sittings": {}})["sittings"],
@@ -36,7 +41,7 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
         row = {**b, "pdf": pdf, "who": procedure_.proposer_kind(b["proposer"]),
                "kind": kinds.KINDS.get(kinds.kind(b["title"]), ""), "kind_key": kinds.kind(b["title"]),
                "days": days_between(b["submitted"], today.isoformat()), "law": by_bill_pdf.get(pdf),
-               "gist": ((loaded[current][2].get(b.get("bill_file", ""), {}).get("summary") or {}).get("summary") or {}).get("ukratko", ""),
+               "gist": ((bill_data.get(b.get("bill_file", ""), {}).get("summary") or {}).get("summary") or {}).get("ukratko", ""),
                "areas": b.get("areas") or [],
                "sitting": on_agenda.get(link_.act_name(b["title"]))}
         (waiting if b["last_seen"] == proc["fetched"] and not row["law"] else gone).append(row)
@@ -54,8 +59,8 @@ def render(*, common, current, env, items_by_conv, loaded, out, root):
             row["slug"] = base if len(rows) == 1 else f"{base}-{slug(row['pdf'].rsplit('/', 1)[-1].removesuffix('.pdf'))}"
     shared = {row["slug"] for rows in names.values() if len(rows) > 1 for row in rows}  # one title, several bills
     for row in waiting + gone:
-        row["summary"] = loaded[current][2].get(row.get("bill_file", ""), {}).get("summary")
-        row["ocr"] = bool(loaded[current][2].get(row.get("bill_file", ""), {}).get("ocr"))
+        row["summary"] = bill_data.get(row.get("bill_file", ""), {}).get("summary")
+        row["ocr"] = bool(bill_data.get(row.get("bill_file", ""), {}).get("ocr"))
         (out / "predlog" / f"{row['slug']}.html").write_text(page.render(  # a title shared by several: with its day
             **common, b=row, waits=row in waiting, checked=proc["fetched"], root="../",
             shared=row["slug"] in shared), encoding="utf-8")

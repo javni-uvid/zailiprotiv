@@ -114,3 +114,27 @@ def test_a_reading_with_far_fewer_entries_does_not_replace_the_file(tmp_path, ca
     assert cli._shrunk(path, "laws", 0) and cli._shrunk(path, "laws", 79) and "::warning::" in capsys.readouterr().out
     assert not cli._shrunk(path, "laws", 80) and not cli._shrunk(path, "laws", 130)
     assert not cli._shrunk(tmp_path / "none.json", "laws", 0)
+
+
+def test_the_site_shows_the_newer_convocations_bills_beside_the_current_ones(tmp_path):
+    """The Assembly's page lists the newest convocation's bills only; they are read into its folder, and the site shows
+    them with the current one's, waiting when listed at the newest reading (28 Nov 2026)."""
+    import json
+    for conv, fetched, bills in (("14", "2026-11-27", {"a.pdf": {"title": "A", "last_seen": "2026-11-17"}}),
+                                 ("15", "2026-11-28", {"b.pdf": {"title": "B", "last_seen": "2026-11-28"}})):
+        (tmp_path / conv).mkdir()
+        (tmp_path / conv / "procedure.json").write_text(json.dumps({"fetched": fetched, "bills": bills}), encoding="utf-8")
+    shown = procedure.shown(tmp_path, "14", "15")
+    assert shown["fetched"] == "2026-11-28" and set(shown["bills"]) == {"a.pdf", "b.pdf"}
+    assert [k for k, b in shown["bills"].items() if b["last_seen"] == shown["fetched"]] == ["b.pdf"]
+    # Before the newer one's first reading, and once it is the current one: its own store alone, as before.
+    (tmp_path / "15" / "procedure.json").unlink()
+    assert procedure.shown(tmp_path, "14", "15")["fetched"] == "2026-11-27"
+    assert set(procedure.shown(tmp_path, "14", "14")["bills"]) == {"a.pdf"}
+
+
+def test_votes_reads_the_bills_in_procedure_for_the_newest_convocation():
+    text = (Path(__file__).parents[1] / ".github/workflows/votes.yml").read_text(encoding="utf-8")
+    assert 'uv run zailiprotiv --convocation "$beside" procedure' in text
+    assert 'uv run zailiprotiv --convocation "$beside" bills' in text
+    assert '[ "$conv" = "$newest" ]; then uv run zailiprotiv $c procedure' in text
