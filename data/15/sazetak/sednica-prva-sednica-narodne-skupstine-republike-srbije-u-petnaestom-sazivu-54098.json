@@ -1,0 +1,15 @@
+{
+ "naslov": "Skupština je konstituisana i izabrala svoje rukovodstvo",
+ "kratko": "Narodna skupština je konstituisana potvrđivanjem mandata svim poslanicima. Za predsednika je izabran Aleksandar Čupić, izabrano je šest potpredsednika, a za generalnu sekretarku imenovana je Mirjana Radaković. Skupština je izabrala i članove odbora i stalnih delegacija.",
+ "ukratko": "Prvog dana Skupština je obrazovala komisiju za proveru uverenja, potvrđeni su mandati svim poslanicima i Skupština je konstituisana, a poslanici su položili zakletvu. Drugog dana nastavljena je rasprava o izboru predsednika Skupštine, bez glasanja. Trećeg dana Skupština je javnim glasanjem prozivkom za predsednika izabrala Aleksandra Čupića, utvrdila da ima šest potpredsednika, izabrala šest potpredsednika sa Studentske liste i imenovala Mirjanu Radaković za generalnu sekretarku. Četvrtog dana Skupština je konstatovala ostavke Adrijane Mesarović i Nikole Selakovića na funkcije u vladi, jer su izabrani za narodne poslanike, i usvojila odluku o izboru članova i zamenika članova odbora. Poslanička grupa liste Aleksandar Vučić - Srbija pobeđuje saopštila je da neće učestvovati u radu odbora, jer opozicija nije dobila ni potpredsednike ni predsednike odbora. Poslednjeg dana Skupština je usvojila tri odluke o sastavu stalnih delegacija u međunarodnim parlamentarnim institucijama i odlučila o ukazanim povredama Poslovnika iz prethodnih dana. Time je zaključena prva sednica.",
+ "dani": [
+  "2026-11-17",
+  "2026-11-18",
+  "2026-11-19",
+  "2026-11-24",
+  "2026-11-25"
+ ],
+ "model": "claude-opus-5-5",
+ "izvor": "dani",
+ "t": 1795870231
+}
