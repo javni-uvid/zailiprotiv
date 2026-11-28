@@ -134,6 +134,12 @@ The project's promises to its readers. Never change them without the maintainer.
      for each one; the area kept sealed and padded to the same length as an MP, with no hash or count per area, until the reader
      ends it (one press in every mail); no name in a subject, no picture, no model's sentence but the site's short names of laws;
      the links are the site's own pages, the same for every reader;
+   - **following one bill or one law by mail, only to who asks** (27 Nov 2026, the maintainer: "Može se nekom i samo na taj
+     zakon prijaviti"; 28 Nov 2026, of the proposal: "Možemo sa tvojim preporukama"): from a waiting bill's page, the morning
+     after it came on a convened sitting's agenda, was passed in its final roll call, was no longer listed (no reason given, as
+     the Assembly gives none) or was published in the Gazette, and then as its law; from a law's page, a bill whose title names
+     that law, and that bill's steps; with an area or none; in the same mail as the other following, at most one a day and none
+     on a day with nothing new; the same consent, sealing, padding and ending as an area's, with no count per bill or law;
    - things of others' making **served from the project itself**: the search (Pagefind), MPs' portraits from the
      Assembly (`photos.py`, `data/photos/`), and the project's own subdomains for the notes' pages and the downloads.
 6. **What MPs say is not censored and not shaped** (13 Nov 2026). Quotes are word for word, checked against the

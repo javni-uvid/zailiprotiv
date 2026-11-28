@@ -49,13 +49,14 @@ def test_adopted_by_its_roll_call_the_next_morning_and_once(tmp_path):
     evs = oblasti.events(tmp_path, "15", "15")
     adopted = [e for e in evs if e["vrsta"] == "usvojen"]
     # 140 for: passed whatever majority it needed. 120: it waits for the page of adopted laws. No area: no one.
-    assert [(e["naslov"], e["dan"], e["za"]) for e in adopted] == [("Predlog zakona o gasu", "2026-12-10", 140)]
-    assert {e["vrsta"] for e in evs if e["predlog"] == "ugovoru.pdf"} == set()
+    assert [(e["naslov"], e["dan"], e["za"]) for e in adopted if e["oblasti"]] == [("Predlog zakona o gasu", "2026-12-10", 140)]
+    # A bill of no area has its events (for who follows that bill), and they name no area.
+    assert all(e["oblasti"] == [] for e in evs if e["predlog"] == "ugovoru.pdf")
     # Listed later among the adopted laws: the same event, not a second one.
     _store(tmp_path, "15", **{"laws.json": {"laws": {"z.pdf": {
         "title": "Zakon o gasu", "bill_title": "Predlog zakona o gasu", "bill_pdf": "gasu.pdf", "passed": "2026-12-10",
         "areas": [6], "final_vote": BASE + "#0"}}}})
-    again = [e for e in oblasti.events(tmp_path, "15", "15") if e["vrsta"] == "usvojen"]
+    again = [e for e in oblasti.events(tmp_path, "15", "15") if e["vrsta"] == "usvojen" and e["oblasti"]]
     assert [e["id"] for e in again] == [adopted[0]["id"]]
 
 
@@ -104,6 +105,10 @@ def test_every_area_page_has_the_sign_up_and_a_law_links_to_it(tmp_path):
     from zailiprotiv import site
     out, root = tmp_path / "_site", data(tmp_path)
     (root / "settings.json").write_text(json.dumps({"votes_api": "https://glasovi.example/"}))
+    (root / "14").mkdir()  # where the build reads the bills in procedure, beside the single folder's laws
+    (root / "14" / "procedure.json").write_text(json.dumps({"fetched": "2026-11-27", "bills": {"g.pdf": {
+        "title": "Predlog zakona o izmenama Zakona o oružju", "pdf": "g.pdf", "submitted": "2026-11-20", "proposer": "Vlada",
+        "first_seen": "2026-11-20", "last_seen": "2026-11-27"}}}), encoding="utf-8")
     site.build(root, out, "zailiprotiv.rs", cyrillic=True)
     assert len(json.loads((out / oblasti.FOLLOW_FILE).read_text(encoding="utf-8"))) == 17
     assert "dogadjaji" in json.loads((out / oblasti.EVENTS_FILE).read_text(encoding="utf-8"))
@@ -119,5 +124,16 @@ def test_every_area_page_has_the_sign_up_and_a_law_links_to_it(tmp_path):
     assert 'name="pismo" value="cir"' in cir and "Шта пратиш чувамо шифровано." in cir
     law = (out / "zakon" / "zakon-o-oruzju.html").read_text(encoding="utf-8")
     assert re.search(r'href="\.\./oblast/odbrana-i-bezbednost-vanredne-mere(\.html)?#prati">prati oblast mejlom</a>', law)
+    # Following one bill or one law (28 Nov 2026): the bill that waits and the law, each with its words and key.
+    assert 'name="sta" value="zakon-o-oruzju"' in law and 'name="vrsta" value="z"' in law
+    assert "Kad bude predložena izmena ovog zakona, i dalje kako ona napreduje" in law
+    bill = (out / "predlog" / "zakon-o-izmenama-zakona-o-oruzju.html").read_text(encoding="utf-8")
+    assert 'name="sta" value="zakon-o-izmenama-zakona-o-oruzju"' in bill and 'name="vrsta" value="b"' in bill
+    assert "Kad bude usvojen, praćenje se nastavlja kao praćenje zakona." in bill
+    assert json.loads((out / oblasti.BILLS_FILE).read_text(encoding="utf-8")) == {
+        "zakon-o-izmenama-zakona-o-oruzju": ["Predlog zakona o izmenama Zakona o oružju", "Предлог закона о изменама Закона о оружју"]}
+    assert json.loads((out / oblasti.LAWS_DIR / "zakon-o-oruzju.json").read_text(encoding="utf-8")) == ["Zakon o oružju", "Закон о оружју"]
+    events = json.loads((out / oblasti.EVENTS_FILE).read_text(encoding="utf-8"))
+    assert events["predlozi"]["zakon-o-izmenama-zakona-o-oruzju"]["zakoni"][0][0] == "zakon-o-oruzju"
     mp = (out / "poslanik" / "abramovic-nenad.html").read_text(encoding="utf-8")
     assert 'name="vrsta"' not in mp  # an MP's sign-up as it was

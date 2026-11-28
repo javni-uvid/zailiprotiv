@@ -935,6 +935,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                       trim_blocks=True, lstrip_blocks=True)
     env.filters.update(latin=latin, day=day, day_of=day_of, vote_label=lambda v: VOTE_LABEL.get(v, v), area_slug=area_slug)
     env.filters["qid"] = qid
+    from zailiprotiv import oblasti as oblasti_  # following one bill or law by mail: the key the counter takes
+    env.filters.update(follow_key=oblasti_.follow_key, law_follow=oblasti_.law_key)
     env.filters["office_cards"] = lambda rows: office_cards.cards(rows, latin, env.filters["day_of"])
     env.globals["office_cards_shown"] = office_cards.SHOWN
     env.filters["grp"] = lambda g: g if any(ch.isalnum() for ch in g or "") else "Bez poslaničke grupe"  # a roll call's empty or "()"
@@ -1227,6 +1229,14 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     from zailiprotiv.config import NEWEST
     (out / oblasti.FOLLOW_FILE).write_text(json.dumps(oblasti.followable(latin=latin, cyr=cyr, area_slug=area_slug),
         ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # Following one bill or one law (28 Nov 2026): the bills that wait, and every law of the site by the law it is or
+    # changes, a file each, as the counter asks for one at a time and the whole list would be over half a megabyte.
+    (out / oblasti.BILLS_FILE).write_text(json.dumps(oblasti.bills_followable(waiting, latin=latin, cyr=cyr),
+        ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    (out / oblasti.LAWS_DIR).mkdir(exist_ok=True)
+    for k, names in oblasti.laws_followable([it["law"]["title"] for its in items_by_conv.values() for it in its],
+                                            latin=latin, cyr=cyr).items():
+        (out / oblasti.LAWS_DIR / f"{k}.json").write_text(json.dumps(names, ensure_ascii=False), encoding="utf-8")
     law_pages = {it["law"].get("bill_pdf") or it["key"]: (f"zakon/{it['slug']}", it["law"]["short"])
                  for it in items_by_conv.get(current, [])}
     (out / oblasti.EVENTS_FILE).write_text(json.dumps(oblasti.published(

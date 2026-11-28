@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "zakoni" %}
-{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox, term, area_follow with context %}
+{% from "macros.html" import bar, chamber, tally, quote, plural, how, votebox, term, area_follow, follow_part with context %}
 {% block title %}{{ law.title }}{% if law.title in twice and law.passed %} ({{ law.passed|day }}){% elif law.title|length < 25 %}: kako su glasali poslanici{% endif %} — Za ili Protiv{% endblock %}
 {% block description %}{{ law.short }}{% if law.passed %} (usvojen {{ law.passed|day }}){% endif %}: kako su glasali poslanici, šta predlagač navodi i šta je rečeno u raspravi.{% endblock %}
 {% block share %}{% if final and site_url %}<meta property="og:image" content="{{ site_url }}zakon/{{ it.slug }}.png">
@@ -18,6 +18,7 @@
 {% if law.short != law.title %}<p class="official">{{ law.title }}</p>{% endif %}
 {% if it.aka %}<p class="meta aka">U javnosti i: {% for a in it.aka %}„{{ a }}“{% if not loop.last %}, {% endif %}{% endfor %}{% if it.aka_source %} (<a href="{{ it.aka_source }}" rel="nofollow">primer</a>){% endif %}</p>{% endif %}
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
+{{ follow_part(law.title|law_follow, "z") }}
 </div>
 {% if final %}<div class="law-chamber" id="sala">{{ chamber(final.counts) }}<p class="chamber-key js-only" hidden></p></div>{% endif %}
 </div>
