@@ -147,3 +147,17 @@ def test_a_year_of_real_events_for_who_follows_a_law_or_a_bill(tmp_path):
         expected[f"b{key[p]}"] = len(days)
     assert {k: v for k, v in mails.items()} == {k: v for k, v in expected.items() if v}
     assert max(mails[f"z{k}"] for k in laws) == 11 and len(laws) == 144  # 67 changed, the rest new laws
+
+
+def test_the_maintainers_preview_with_only_a_bills_event(service):
+    """No speech and no event of an area: the morning's preview shows a bill's mail, and the rest go on his click."""
+    service.days.kept = {}
+    service.people = [row("r", "c@primer.rs", follows("b", BILL, "Predlog zakona o izmenama Zakona o radu", "b1"))]
+    service.events = {"oblasti": {}, "predlozi": bills(), "dogadjaji": [
+        event(1, "dnevni_red", "2026-11-26", "Predlog zakona o izmenama Zakona o radu", BILL, sednica="Druga sednica",
+              pocinje="2026-11-26T10:00")]}
+    assert service.follow.step(NEXT)
+    [m] = service.sent
+    assert m["to"] == "urednik@primer.rs" and "Spremno: 1" in m["html"] and "kod predloga i zakona: 1" in m["html"]
+    assert "Druga sednica" in m["html"] and "c@primer.rs" not in m["html"] + m["text"]
+    assert service.click() == ("ok", 1) and service.sent[-1]["to"] == "c@primer.rs"
