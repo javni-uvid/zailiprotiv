@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{# DRAFT A (28 Nov 2026): "Skupština danas". The newest first: the live page's strip, then the latest sitting's card,
+   then what comes next, the day's mail, the site's parts as four doors. Lists live on their own pages. #}
+{% from "_home_drafts.html" import sitting_card, next_tiles, doors, mail_card, support_line, styles with context %}
+{% block title %}Za ili Protiv: Skupština Srbije iz prve ruke{% endblock %}
+{% block soon %}{% endblock %}
+{% block main %}
+{{ styles() }}
+{% from "macros.html" import mic_strip with context %}{% if live_page %}{{ mic_strip() }}{% endif %}
+<section class="hd-intro">
+  <h1>Za ili Protiv: Skupština Srbije iz prve ruke</h1>
+  <p class="standfirst">Svaki zakon, svaki poslanik, svaki glas i svaki govor. Iz dokumenata same Skupštine.</p>
+</section>
+{{ sitting_card(lead) }}
+{{ next_tiles() }}
+{{ mail_card() }}
+{{ doors() }}
+{{ support_line() }}
+<p class="meta foot-note">Glasovi su iz poimeničnih rezultata koje Skupština objavljuje; uz svaki zakon je link na izvor. Šta zakon menja navodi predlagač, ne mi; sažetke i preglede rasprave piše AI model i tako su označeni.</p>
+{% endblock %}

@@ -1,0 +1,90 @@
+{# DRAFTS of the home page (28 Nov 2026), not for merging: the parts the three structures share. The sitting's card is
+   the one of "Sednice" (sittings.html), its macros copied here so that the drafts stand on their own. #}
+{% from "macros.html" import plural, chamber, how, card_tokens, opens_on_target %}
+{% macro face(f, big=false) %}<span class="tf-w {{ f.cls or 'c-mn' }}{{ ' nb' if big }}">{% if f.foto %}<img class="tf" src="foto/{{ f.foto }}" width="44" height="44" alt="" loading="lazy">{% else %}<span class="tf" aria-hidden="true">{{ f.initials }}</span>{% endif %}</span>{% endmacro %}
+{% macro by_list(split, cls="", key=true) %}{% if split %}<span class="sc-lb{{ cls }}" role="img" aria-label="{% for x in split %}{{ x.name }} {{ x.pct|round|int }}%{{ ', ' if not loop.last }}{% endfor %}">{% for x in split %}<i class="{{ x.cls }}" style="width:{{ x.pct }}%"></i>{% endfor %}</span>{% if key %}<span class="sc-lk">{% for x in split %}<span><i class="{{ x.cls }}"></i>{{ x.name }} {{ x.time }}</span>{% endfor %}</span>{% endif %}{% endif %}{% endmacro %}
+{% macro marked() %}<p class="sc-mark">Napisao AI model · {{ how("sazetak-dana") }}</p>{% endmacro %}
+{% macro days_list(days) %}<ul class="sc-dl">{% for d in days %}<li id="dan-{{ d.day }}"><a href="govornici/{{ d.day }}.html">
+  <span class="meta">{{ d.when }}</span>{% if d.title %}<b class="sc-dt">{{ d.title }}</b>{% endif %}
+  <span class="sc-dw" style="width:{{ d.width }}%">{{ by_list(d.split, "", false) }}</span>
+  <span class="sc-df"><span class="sc-fc">{% for f in d.top %}{{ face(f) }}{% endfor %}</span><span class="meta">{{ d.time }} · {{ d.people }} govornika</span></span>
+</a></li>{% endfor %}</ul>
+{% if days|selectattr("title")|list %}{{ marked() }}{% endif %}{% endmacro %}
+{% macro days_fold(days, id, open_=false) %}<details class="sc-days" id="{{ id }}" data-wide{% if open_ %} open{% endif %}>
+  <summary><span class="sc-dn">Dani sednice <span class="count">{{ days|length }}</span></span><span class="sc-mini" aria-hidden="true">{% for d in days|reverse %}<i style="height:{{ [d.width, 12]|max }}%"></i>{% endfor %}</span></summary>
+  {{ days_list(days) }}
+</details>{{ opens_on_target() }}{% endmacro %}
+
+{# The latest sitting as the dark card of "Sednice". full: with its summary, faces, bar and days; else a short card. #}
+{% macro sitting_card(L, full=true, days=true) %}{% if L %}{% set S = L.summary %}{% set link_s = ("sednica/" ~ L.slug ~ ".html") if L.slug else L.url %}
+{% set now_on = live and L.conv == floor_now_conv|string %}
+<section class="st-card hd-card{{ ' has-days' if L.days and days }}{{ ' hd-short' if not full }}" aria-labelledby="hd-s">
+ <div class="sc-main">
+  <p class="sz-k">{{ L.conv_name }} saziv · {{ L.short }}</p>
+  {% if S %}<h2 class="sz-h" id="hd-s"><a href="{{ link_s }}">{{ S.naslov }}</a></h2>{% if full %}<p class="sz-p">{{ S.kratko }}</p>{% endif %}{{ marked() }}
+  {% else %}<h2 class="sz-h" id="hd-s"><a href="{{ link_s }}">{{ L.short }}</a></h2>{% endif %}
+  <ul class="sc-chips">{% if now_on and live_page %}<li class="on"><a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">● Uživo</a></li>{% endif %}{% if L.days|length > 1 %}<li><b>{{ L.days|length }}</b> dana</li>{% endif %}{% if L.people %}<li><b>{{ L.people }}</b> govornika</li>{% endif %}{% if L.time %}<li><b>{{ L.time }}</b> za govornicom</li>{% endif %}{% if L.n %}<li><b>{{ L.n }}</b> {{ "zakon" if L.n == 1 else "zakona" }}</li><li class="z"><b>{{ L.za }}</b> za</li><li class="p"><b>{{ L.against }}</b> protiv</li>{% elif L.others %}<li><b>{{ L.others }}</b> {{ plural(L.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}</li>{% endif %}</ul>
+  {% if L.top %}<ul class="sc-faces">{% for f in (L.top if full else L.top[:3]) %}<li>{% if f.slug %}<a href="poslanik/{{ f.slug }}.html">{% endif %}{{ face(f, true) }}<b>{{ f.name }}</b><span>{{ f.time }}</span>{% if f.slug %}</a>{% endif %}</li>{% endfor %}</ul>{% endif %}
+  {% if L.split %}{{ by_list(L.split, " big") }}{% endif %}
+  {% if full and L.lead_law %}<a class="law-chamber sitting-lead sc-law" href="zakon/{{ L.lead_law.slug }}.html">{{ chamber(L.lead_law.counts) }}<span class="hero-meta">Najviše glasova protiv na ovoj sednici:</span> <span class="sitting-lead-law">{{ L.lead_law.short }}</span></a>{% endif %}
+  <p class="sc-go"><a href="{{ link_s }}">{{ L.short }} →</a></p>
+ </div>
+ {% if L.days and days %}{{ days_fold(L.days, "dani-sednice", now_on) }}{% endif %}
+</section>
+{% endif %}{% endmacro %}
+
+{# What comes next: a sitting convened, the bills that wait (when there are any), the quiz. Each only when it has
+   something to say; no tile says "0". #}
+{% macro next_tiles(quiz=true) %}
+<ul class="hd-next">
+  {% if coming %}<li><a href="{{ live_page or 'u-proceduri.html' }}"{% if live_page %} data-cir-href="{{ live_page }}cir/"{% endif %}><span class="hd-k">Sazvano</span><b>{{ coming[0].title|latin }}</b>{% if coming[0].starts %}<span>{{ coming[0].starts[:10]|day }}</span>{% endif %}</a></li>{% endif %}
+  {% if stats.waiting %}<li><a href="{{ "glasaj.html" if votes_api else "u-proceduri.html" }}"><span class="hd-k">U proceduri</span><b>{{ stats.waiting }}</b><span>{{ plural(stats.waiting, "predlog zakona čeka", "predloga zakona čekaju", "predloga zakona čeka") }}{% if votes_api %}. Glasaj o njima pre poslanika{% endif %}</span></a></li>{% endif %}
+  {% if quiz and quiz_laws %}<li><a href="glasaj.html"><span class="hd-k">Kviz</span><b>Kako ti glasaš?</b><span>{{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }}, tri dugmeta.</span></a></li>{% endif %}
+</ul>{% endmacro %}
+
+{# The site's parts as four doors, each with what it holds; the words are the menu's. #}
+{% macro doors() %}
+<nav class="hd-doors" aria-label="Delovi sajta">
+  <a href="{{ newer15.mps_page if newer15 else 'poslanici.html' }}"><b>Poslanici</b>{% if newer %}<span class="hc-seats" aria-hidden="true">{% for g in newer.seats %}<i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}" style="flex-grow:{{ g.n }}"></i>{% endfor %}</span><span>{{ newer.n }} poslanika, {{ newer.name|lower }} saziv</span>{% else %}<span>Svaki glas, šta najčešće govori i s kim se prepire.</span>{% endif %}</a>
+  <a href="zakoni.html"><b>Zakoni</b>{% if divisive %}<span class="hd-ch" aria-hidden="true">{{ chamber(divisive.final.counts) }}</span>{% endif %}<span>{{ stats.all_laws }} zakona od 2012.</span></a>
+  <a href="{{ (newer15.notes.page if newer15 and newer15.notes else (floor_top.page if floor_top else 'replike.html')) }}"><b>Varnice</b><span>Replike, opomene i teške reči, doslovno iz stenograma.</span></a>
+  <a href="poslovnik-clanovi.html"><b>Poslovnik</b><span>Šta znače kvorum, replika, opomena i hitni postupak.</span></a>
+</nav>{% endmacro %}
+
+{# The day's summary by mail: the live page's own words, and a link to its form (no form of ours here). #}
+{% macro mail_card() %}{% if live_page %}
+<a class="hd-mail" href="{{ live_page }}#mejl" data-cir-href="{{ live_page }}cir/#mejl">
+  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M3 5h18v14H3zM3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+  <span><span class="hd-k">Sažetak dana na mejl</span><b>Dan u Skupštini, u jednom mejlu</b><span>šta je odlučeno · ko je dobio opomenu · ko je šta rekao. Stiže kad se sednica završi.</span></span>
+  <span class="hd-btn">Prijavi me</span>
+</a>{% endif %}{% endmacro %}
+
+{% macro support_line() %}{% if support %}<p class="hd-support"><a class="support-cta" data-don="pocetna" href="podrzi.html"><svg class="heart" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.2C1.1 8.6 3 5 6.6 5c2.1 0 3.6 1.2 4.4 2.6h2C13.8 6.2 15.3 5 17.4 5 21 5 22.9 8.6 21.5 11.8 19.5 16.4 12 21 12 21z" fill="currentColor"/></svg> Podrži sajt</a> <span>Besplatan, bez reklama, bez ičega od trećih strana.</span></p>{% endif %}{% endmacro %}
+
+{% macro styles() %}<style>{{ card_css|safe }}
+.hd-intro h1 { font-size: var(--t-7); line-height: 1.12; margin: .2rem 0 .3rem; }
+.hd-intro .standfirst { margin: 0 0 1rem; color: var(--muted); }
+.hd-card { margin: 0 0 1.4rem; }
+.hd-short .sz-h { font-size: var(--t-5); }
+.hd-next { list-style: none; padding: 0; margin: 0 0 1.4rem; display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.hd-next a, .hd-doors a, .hd-mail { display: flex; flex-direction: column; gap: .2rem; padding: .9rem 1rem; border: 2px solid var(--fg); border-radius: 12px; text-decoration: none; color: inherit; min-height: 44px; }
+.hd-next b { font-family: var(--serif); font-size: var(--t-5); line-height: 1.2; }
+.hd-next span:not(.hd-k), .hd-doors span:not(.hc-seats):not(.hd-ch) { font-size: var(--t-2); color: var(--muted); line-height: 1.35; }
+.hd-k { font-size: var(--t-1); letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.hd-doors { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin: 0 0 1.4rem; }
+.hd-doors a { border-width: 1px; }
+.hd-doors b { font-size: var(--t-4); }
+.hd-doors .hc-seats { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin: .25rem 0; }
+.hd-doors .hc-seats i { display: block; }
+.hd-ch svg { width: 100%; max-width: 8rem; height: auto; }
+.hd-ch .chamber-score, .hd-ch b { display: none; }
+@media (min-width: 900px) { .hd-doors { grid-template-columns: repeat(4, 1fr); } }
+.hd-mail { flex-direction: row; align-items: center; gap: .9rem; background: var(--card); border-width: 1px; margin: 0 0 1.4rem; }
+.hd-mail > span:nth-of-type(1) { display: flex; flex-direction: column; gap: .15rem; flex: 1; }
+.hd-mail b { font-size: var(--t-4); }
+.hd-mail span span:last-child { font-size: var(--t-2); color: var(--muted); }
+.hd-btn { flex: none; padding: .6rem .9rem; border-radius: 8px; background: var(--fg); color: var(--bg); font-weight: 700; font-size: var(--t-2); }
+@media (max-width: 480px) { .hd-mail { flex-wrap: wrap; } .hd-btn { width: 100%; text-align: center; } }
+.hd-support { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; margin: 0 0 1.4rem; color: var(--muted); font-size: var(--t-2); }
+.hd-h2 { font-size: var(--t-6); margin: 1.6rem 0 .6rem; }
+</style>{{ card_tokens() }}{% endmacro %}

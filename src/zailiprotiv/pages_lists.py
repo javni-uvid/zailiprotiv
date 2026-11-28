@@ -218,6 +218,8 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
     look = {"facts": json.loads(speakers.read_text(encoding="utf-8")) if speakers.exists() else {},
             "colours": pages_mikrofon._uzivo()[0].LIST_COLOURS}
     top = lead(**lead_from, sittings=sittings_list, latin=latin, **look) if lead_from else None
+    global LEAD
+    LEAD = top  # DRAFT: the home page's drafts take the same card
     if lead_from:
         for url, own in own_days(lead_from["listed"], lead_from["days"]).items():
             row = next((x for x in sittings_list if x["url"] == url), None)

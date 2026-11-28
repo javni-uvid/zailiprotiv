@@ -1280,8 +1280,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
                           "photo": photo_of.get(by_slug[sl]["key"], "") or (photo_of.get(by_slug[sl]["mp"].key, "") if by_slug[sl]["mp"] else "")}
                          for sl, x in top],
                  "days": len(_days_now), "sitting": sitting}
-    (out / "index.html").write_text(env.get_template("index.html").render(
-        **common, divisive=divisive, newer=newer,
+    home_ctx = dict(
+        divisive=divisive, newer=newer,
         notices_now=[n for n in pages_mikrofon.notices(root) if n["od"] <= built[:10] <= (n["do"] or "9999")],
         quiz_laws=quiz.laws, floor_top=floor.top.get(active),
         last_sitting=last_sitting, last_sitting_slug=sitting_page(last_sitting[0]["final"]["sitting"], last_sitting[0]["final"]["sitting_title"]) if last_sitting else "",
@@ -1294,7 +1294,8 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         ranked=most_against([it for its in items_by_conv.values() for it in its], 8),
         kinds_count=[(k, kinds.KINDS[k], n) for k, n in sorted(Counter(it["law"].get("kind", "other") for it in items)
                                                                 .items(), key=lambda kv: -kv[1]) if k in kinds.KINDS],
-        debated=sum(1 for it in items if it["said"])), encoding="utf-8")
+        debated=sum(1 for it in items if it["said"]))
+    (out / "index.html").write_text(env.get_template("index.html").render(**common, **home_ctx), encoding="utf-8")
     # What was corrected on the site, by hand, newest first (data/ispravke.json: [{"date", "text", "url", "where"}]).
     fixes = sorted(src.fixes, key=lambda c: c["date"], reverse=True)
     from zailiprotiv import pages_support
@@ -1327,6 +1328,17 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
         others_by_sitting=other_votes.by_sitting(others),
         lead_from={"listed": pages_mikrofon.sittings(root, members_conv or NEWEST_), "root": root,
                    "days": src.recorded.get(members_conv or NEWEST_, []), "conv": members_conv or NEWEST_})
+    # DRAFTS of the home page (28 Nov 2026, not for merging): three structures, each in two states, beside index.html.
+    from zailiprotiv import pages_govornici as _pg
+    _lead = getattr(pages_lists, "LEAD", None)
+    _now = dict(common)
+    _now["live"] = common.get("live") or ([_lead["short"]] if _lead else ["Sednica Skupštine"])
+    if _lead:
+        _now["floor_now_conv"] = _lead["conv"]
+    for _v in ("a", "b", "c"):
+        for _name, _c in ((f"index-{_v}.html", common), (f"index-{_v}-uzivo.html", _now)):
+            (out / _name).write_text(env.get_template(f"index_{_v}.html").render(
+                **_c, **home_ctx, lead=_lead, card_css=_pg.card_css()), encoding="utf-8")
     from zailiprotiv import downloads
     downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
     from zailiprotiv import feeds

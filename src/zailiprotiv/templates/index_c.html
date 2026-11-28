@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{# DRAFT C (28 Nov 2026): "Ti i Skupština". The reader acts first: a law and its three buttons, then the ways to be told
+   (the day's mail, an MP, an area), then the latest sitting, then the doors. #}
+{% from "_home_drafts.html" import sitting_card, doors, support_line, styles with context %}
+{% from "macros.html" import plural with context %}
+{% block title %}Za ili Protiv: glasaj i ti, pa vidi kako je glasala Skupština{% endblock %}
+{% block soon %}{% endblock %}
+{% block main %}
+{{ styles() }}
+<style>
+.hc-follow { list-style: none; padding: 0; margin: 0 0 1.4rem; display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.hc-follow a { display: flex; gap: .8rem; align-items: center; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; color: inherit; min-height: 44px; background: var(--card); }
+.hc-follow b { display: block; font-size: var(--t-4); } .hc-follow span span { font-size: var(--t-2); color: var(--muted); }
+.hc-follow svg { flex: none; }
+main > .home-quiz { border-radius: 14px; margin: 0 0 1.4rem; }
+</style>
+{% from "macros.html" import mic_strip with context %}{% if live_page %}{{ mic_strip() }}{% endif %}
+<section class="hd-intro">
+  <h1>Za ili Protiv: glasaj i ti, pa vidi kako je glasala Skupština</h1>
+</section>
+{% if quiz_laws %}{% set q = quiz_laws[0] %}
+<section class="home-quiz" aria-labelledby="hq">
+  <div class="hq-text">
+    <h2 id="hq">Kako ti glasaš?</h2>
+    <p>{{ quiz_laws|length }} {{ plural(quiz_laws|length, "zakon", "zakona", "zakona") }}, tri dugmeta. Na kraju vidiš šta bi prošlo da se ti pitaš i koliko puta glasaš kao većina u sali.</p>
+  </div>
+  <div class="hq-try">
+    <p class="hq-law">{% if q.opis %}{{ q.opis }}{% else %}{{ q.gist|latin|truncate(180, killwords=False, end="…") }}{% endif %}</p>
+    <p class="hq-buttons"><a class="hq-btn hq-za" href="kviz/podelili-salu.html?z={{ q.slug }}&amp;g=z" rel="nofollow">Za</a><a class="hq-btn hq-protiv" href="kviz/podelili-salu.html?z={{ q.slug }}&amp;g=p" rel="nofollow">Protiv</a><a class="hq-btn hq-uzd" href="kviz/podelili-salu.html?z={{ q.slug }}&amp;g=u" rel="nofollow">Uzdržan</a></p>
+  </div>
+</section>
+{% endif %}
+<h2 class="hd-h2">Prati mejlom</h2>
+{% set env_ic %}<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3 5h18v14H3zM3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>{% endset %}
+<ul class="hc-follow">
+  {% if live_page %}<li><a href="{{ live_page }}#mejl" data-cir-href="{{ live_page }}cir/#mejl">{{ env_ic }}<span><b>Dan u Skupštini, u jednom mejlu</b><span>Stiže kad se sednica završi.</span></span></a></li>{% endif %}
+  <li><a href="{{ newer15.mps_page if newer15 else 'poslanici.html' }}">{{ env_ic }}<span><b>Jednog poslanika</b><span>Kad govori u sali · najviše jedan mejl dnevno</span></span></a></li>
+  <li><a href="oblasti.html">{{ env_ic }}<span><b>Oblast zakona</b><span>Kad zakon iz oblasti uđe u proceduru, dođe na dnevni red ili bude usvojen</span></span></a></li>
+</ul>
+{{ sitting_card(lead, full=false, days=true) }}
+{{ doors() }}
+{{ support_line() }}
+{% endblock %}

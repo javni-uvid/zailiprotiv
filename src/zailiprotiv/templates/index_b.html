@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{# DRAFT B (28 Nov 2026): "Nađi". The site as a reference: what it is, a search for a person or a law, the MPs and the
+   laws as the two big doors, and the latest sitting as one short card. #}
+{% from "_home_drafts.html" import sitting_card, mail_card, support_line, styles with context %}
+{% from "macros.html" import chamber, plural with context %}
+{% block title %}Za ili Protiv: kako glasa i šta govori svaki poslanik{% endblock %}
+{% block soon %}{% endblock %}
+{% block main %}
+{{ styles() }}
+<style>
+.hb-top h1 { font-size: var(--t-8); line-height: 1.08; margin: .3rem 0 .4rem; }
+.hb-top .standfirst { margin: 0 0 .8rem; }
+.hb-top .finder { margin: 0 0 .6rem; }
+.hb-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.2rem; padding: 0; list-style: none; }
+.hb-chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem; border: 1px solid var(--line); border-radius: 22px; text-decoration: none; color: inherit; font-weight: 600; }
+.hb-mps { border: 1px solid var(--line); border-radius: 12px; padding: 1rem; margin: 0 0 1.2rem; }
+.hb-mps h2, .hb-laws h2 { font-size: var(--t-6); margin: 0 0 .5rem; }
+.hb-mps .hc-seats { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin: .4rem 0; }
+.hb-mps .hc-seats i { display: block; }
+.hb-mps .hc-key { list-style: none; padding: 0; margin: 0 0 .6rem; display: flex; flex-wrap: wrap; gap: .2rem 1rem; font-size: var(--t-2); }
+.hb-mps .hc-key li { display: flex; gap: .35rem; align-items: center; } .hb-mps .hc-key i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.hb-faces { list-style: none; padding: 0; margin: .6rem 0 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem; }
+.hb-faces a { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; color: inherit; font-size: var(--t-1); line-height: 1.2; }
+.hb-faces img { width: 56px; height: 75px; object-fit: cover; border-radius: 8px; margin-bottom: .25rem; }
+.hb-faces em { font-style: normal; color: var(--muted); }
+.hb-laws { margin: 0 0 1.2rem; }
+.hb-laws .hero-card { border: 1px solid var(--line); border-radius: 12px; padding: 1rem; }
+</style>
+<section class="hb-top">
+  <h1>Za ili Protiv: kako glasa i šta govori svaki poslanik</h1>
+  <p class="standfirst">Svaki zakon, svaki poslanik, svaki glas i svaki govor. Iz dokumenata same Skupštine.</p>
+  <div class="finder hero-finder js-only" hidden>
+    <label class="sr" for="q">Zakon ili poslanik</label>
+    <input id="q" type="search" placeholder="Zakon ili poslanik, npr. budžet ili Jovanov" autocomplete="off">
+    <ul id="hits" class="hits" hidden></ul>
+  </div>
+  <ul class="hb-chips"><li><a href="{{ newer15.mps_page if newer15 else 'poslanici.html' }}">Poslanici</a></li><li><a href="zakoni.html">Zakoni</a></li><li><a href="oblasti.html">Oblasti</a></li><li><a href="sednice.html">Sednice</a></li><li><a href="poslovnik-clanovi.html">Poslovnik</a></li></ul>
+</section>
+{% from "macros.html" import mic_strip with context %}{% if live_page %}{{ mic_strip() }}{% endif %}
+{% if newer %}
+<section class="hb-mps" aria-labelledby="hb-m">
+  <h2 id="hb-m"><a href="{{ newer.page }}">{{ newer.name }} saziv: {{ newer.n }} poslanika</a></h2>
+  <div class="hc-seats" role="img" aria-label="Mandati po poslaničkim grupama">{% for g in newer.seats %}<i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}" style="flex-grow:{{ g.n }}"></i>{% endfor %}</div>
+  <ul class="hc-key">{% for g in newer.seats %}<li><i class="{{ g.cls or "hc-s" ~ (loop.index0 if loop.index0 < 4 else 4) }}"></i><span>{{ g.name }}</span><b>{{ g.n }}</b></li>{% endfor %}</ul>
+  {% if newer.top %}<h3 class="hd-k">Ko je do sada najviše govorio</h3>
+  <ol class="hb-faces">{% for t in newer.top %}<li><a href="poslanik/{{ t.slug }}.html"><img src="{{ "foto/" ~ t.photo if t.photo else "bez-slike.svg" }}" alt="" width="56" height="75" loading="lazy"><b>{{ t.name|given_first }}</b><em>{{ t.time }}</em></a></li>{% endfor %}</ol>{% endif %}
+</section>
+{% endif %}
+{% if divisive %}{% set c = divisive.final.counts %}
+<section class="hb-laws" aria-labelledby="hb-l">
+  <h2 id="hb-l"><a href="zakoni.html">Zakoni</a></h2>
+  <div class="hero-card">
+    <a class="hero-vote" href="zakon/{{ divisive.slug }}.html">
+      <span class="hero-kicker">Zakon koji je najviše podelio salu u poslednjih godinu dana{% if newer %} <em class="prev">prethodni saziv</em>{% endif %}</span>
+      {{ chamber(c) }}
+      <span class="hero-law">{% if divisive.aka %}{{ divisive.aka[0][:1]|upper }}{{ divisive.aka[0][1:] }}{% else %}{{ divisive.law.short }}{% endif %}</span>
+      <span class="hero-meta">{{ divisive.law.passed|day }}{% if divisive.urgent %} · hitan postupak{% endif %}</span>
+    </a>
+    <p class="hero-more"><a href="zakon/{{ divisive.slug }}.html">Ceo zakon, glasanje i rasprava</a> · <a href="zakoni.html">Svi zakoni</a></p>
+  </div>
+</section>
+{% endif %}
+{{ sitting_card(lead, full=false, days=false) }}
+{{ mail_card() }}
+{{ support_line() }}
+{% endblock %}
