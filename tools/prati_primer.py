@@ -1,11 +1,12 @@
 """What following an area of laws would have sent on a morning, without sending anything and with nobody's address.
 
-    uv run python tools/prati_primer.py 2025-12-04 [<folder>] [--cir]
+    uv run python tools/prati_primer.py 2025-12-04 [<folder>] [--cir] [--zakoni]
 
 The site's events (oblasti.py over data/) as they stood that morning, told by the live service's own rules (prati.py:
 area_news, build) to a reader who follows one area, a mail per area with something new, written as HTML files to the
 folder (default: prati-primer/ here). The counter is not asked and no mail goes. Each event is taken as known the day
-it happened, as the proposal counted (27 Nov 2026).
+it happened, as the proposal counted (27 Nov 2026). With --zakoni, instead a mail to a follower of each law with
+something new (one bill or one law, 28 Nov 2026): `<day>-z-<key>.html`.
 """
 from __future__ import annotations
 
@@ -36,6 +37,8 @@ def main(argv: list[str]) -> int:
     shown = oblasti.published(evs, today=day, laws={}, bills={}, latin=latin, cyr=cyr)
     for i, e in enumerate(shown["dogadjaji"], 1):
         e["seq"] = i
+    if "--zakoni" in argv:
+        return laws(shown, day, out, "--cir" in argv)
     points = {v[0]: int(k) for k, v in shown["oblasti"].items()}
     wrote = 0
     for name, point in sorted(points.items(), key=lambda kv: kv[1]):
@@ -46,6 +49,25 @@ def main(argv: list[str]) -> int:
             mail = prati.build(reader, prati.Told([], told), day)
             (out / f"{day.isoformat()}-{point:02d}.html").write_text(mail.html, encoding="utf-8")
             print(f"{point:2d} {name}: {sum(len(x) for _, x in told)} · {mail.subject}")
+            wrote += 1
+    print(f"{wrote} mails, in {out}" if wrote else "nothing that morning")
+    return 0
+
+
+def laws(shown: dict, day: date, out: Path, cir: bool) -> int:
+    names = {}
+    for e in shown["dogadjaji"]:
+        for k, n in zip(e.get("zakoni") or [], oblasti.named(e["naslov"])):
+            names.setdefault(k, n)
+    wrote = 0
+    for key, name in sorted(names.items()):
+        law = prati.Followed(key, name, day - timedelta(days=prati.KEEP_DAYS), ("#",), "z")
+        reader = prati.Follower("", "", cir, "", "#", "#", (law,))
+        told = prati.law_news(reader, shown["dogadjaji"], shown["predlozi"], 0, day)
+        if told:
+            mail = prati.build(reader, prati.Told([], [], 0, told), day)
+            (out / f"{day.isoformat()}-z-{key}.html").write_text(mail.html, encoding="utf-8")
+            print(f"{name}: {sum(len(x) for _, x in told)} · {mail.subject}")
             wrote += 1
     print(f"{wrote} mails, in {out}" if wrote else "nothing that morning")
     return 0
