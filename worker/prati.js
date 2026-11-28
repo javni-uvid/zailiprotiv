@@ -1,16 +1,17 @@
-// Following a sitting MP (25 Nov 2026) or an area of laws (27 Nov 2026) by mail: who asked, and whom or what they
-// follow, kept so that this worker can write both and read neither.
+// Following a sitting MP (25 Nov 2026), an area of laws (27 Nov 2026), or one bill or law (28 Nov 2026) by mail: who
+// asked, and whom or what they follow, kept so that this worker can write both and read neither.
 //
 // The address and what is followed are each sealed with the public half of the maintainer's key (mejl.js, seal),
 // padded first to one length, so that the length of neither says anything. Beside them: the same hash of the address
 // as the summary's (to know it again, and to leave everything at once), the script, the day asked and confirmed.
 // There is no column, hash or count from which an MP or an area can be told: two hundred and fifty names are guessed
 // in a moment. What is followed is sealed as "<kind>|<address>|<name>", every kind padded to the same length, so the
-// kind does not show either: "p" a sitting MP, "o" an area (a point of Article 97); another kind is one more entry in
-// KINDS, with no change to the tables.
+// kind does not show either: "p" a sitting MP, "o" an area (a point of Article 97), "b" a bill that waits, "z" a law
+// (by the law it is or changes); another kind is one more entry in KINDS, with no change to the tables. A name too long
+// for the padded length (a loan's title runs to 1,000 bytes) is sealed cut at a word, with "…"; the mail names it whole.
 // What is asked for is confirmed by a mail that names it, each one anew, as anybody can write anybody's address.
 //
-//   POST /m/prati          ← {"adresa", "sta": the address on the site, "vrsta": "p" (none) or "o", "pismo"}, from the site's own pages
+//   POST /m/prati          ← {"adresa", "sta": the key on the site, "vrsta": "p" (none), "o", "b" or "z", "pismo"}, from the site's own pages
 //   GET  /m/prati/potvrdi  ?k= → a page with one button; POST (the button) is the consent
 //   GET  /m/prati/kraj     ?i=&k= (repeated, when one MP was asked for twice) → a button; POST ends those
 //   GET  /m/prati/sve      ?i=&k= → a button; POST ends all of them (also the mail reader's own button: One-Click)
@@ -20,8 +21,10 @@
 import { ADDRESS, KEEP_UNCONFIRMED, REPLY, FROM, SELF, PRIVACY, WORDS, seal, sha, random, page, form, esc } from "./mejl.js";
 
 const SITE = "https://zailiprotiv.rs";
-// What can be followed, by kind: the site's list of each, {address: [name, the name in Cyrillic]}.
-export const KINDS = { p: SITE + "/prati-poslanici.json", o: SITE + "/prati-oblasti.json" };
+// What can be followed, by kind: the site's list of each, {key: [name, the name in Cyrillic]}, or, ending in "/", a
+// folder of a file per key, [name, the name in Cyrillic] (the laws: over 1,300, too many for one list).
+export const KINDS = { p: SITE + "/prati-poslanici.json", o: SITE + "/prati-oblasti.json", b: SITE + "/prati-predlozi.json",
+                       z: SITE + "/prati-zakoni/" };
 const PAD = { adresa: 416, sta: 256 };  // bytes: longer than any that is taken
 export const MOST = { unconfirmed: 1, confirmed: 5, together: 40, mails: 300 };  // a day, a day, at once, a day from all
 
@@ -30,6 +33,13 @@ const enc = new TextEncoder();
 export function pad(text, n) {
   const over = n - enc.encode(text).length;
   return over < 0 ? null : text + " ".repeat(over);
+}
+
+// What is sealed of what is followed: whole, or the name cut at a word, with "…", to fit the padded length.
+export function sealable(kind, key, name) {
+  let n = name;
+  while (n && pad(`${kind}|${key}|${n}`, PAD.sta) === null) n = n.replace(/\s*\S+\s*$/, "").replace(/…$/, "") + "…";
+  return n === "…" ? null : pad(`${kind}|${key}|${n}`, PAD.sta);
 }
 
 const SAID = {
@@ -41,7 +51,7 @@ const SAID = {
          bad: "Prijava nije uspela: proveri adresu i pokušaj ponovo malo kasnije.",
          confirmTitle: "Poslednji korak", confirmText: "Klikni na dugme: time pristaješ na praćenje koje piše u mejlu. Tek tada važi.",
          done: "Praćenje važi", doneText: "Mejl stiže ujutru posle dana kad ima novog. Prekidaš ga u svakom mejlu.",
-         gone: "Link je istekao", goneText: "Praćenje nije potvrđeno u 48 sati ili je već potvrđeno. Zatraži ga ponovo na sajtu, na strani poslanika ili oblasti.",
+         gone: "Link je istekao", goneText: "Praćenje nije potvrđeno u 48 sati ili je već potvrđeno. Zatraži ga ponovo na sajtu, na strani poslanika, oblasti ili zakona.",
          end: "Prestani da pratiš", endText: "Jedan klik i praćenje uz koje je bio ovaj link se briše.", ended: "Praćenje je obrisano",
          all: "Prestani sve da pratiš", allText: "Jedan klik i sva tvoja praćenja se brišu. Sažetak dana ostaje ako si se prijavio.", allEnded: "Praćenja su obrisana",
          out: "Odjavi me sa svega", outText: "Jedan klik i tvoja adresa se briše: ne stižu ti ni praćenje ni sažetak dana.", outEnded: "Tvoja adresa je obrisana i više ti ne pišemo.",
@@ -54,21 +64,33 @@ const SAID = {
          bad: "Пријава није успела: провери адресу и покушај поново мало касније.",
          confirmTitle: "Последњи корак", confirmText: "Кликни на дугме: тиме пристајеш на праћење које пише у мејлу. Тек тада важи.",
          done: "Праћење важи", doneText: "Мејл стиже ујутру после дана кад има новог. Прекидаш га у сваком мејлу.",
-         gone: "Линк је истекао", goneText: "Праћење није потврђено у 48 сати или је већ потврђено. Затражи га поново на сајту, на страни посланика или области.",
+         gone: "Линк је истекао", goneText: "Праћење није потврђено у 48 сати или је већ потврђено. Затражи га поново на сајту, на страни посланика, области или закона.",
          end: "Престани да пратиш", endText: "Један клик и праћење уз које је био овај линк се брише.", ended: "Праћење је обрисано",
          all: "Престани све да пратиш", allText: "Један клик и сва твоја праћења се бришу. Сажетак дана остаје ако си се пријавио.", allEnded: "Праћења су обрисана",
          out: "Одјави ме са свега", outText: "Један клик и твоја адреса се брише: не стижу ти ни праћење ни сажетак дана.", outEnded: "Твоја адреса је обрисана и више ти не пишемо.",
          back: "Назад на сајт", home: SITE + "/cir/" },
 };
 
-// What changes in the confirmation for an area (the approved words of its sign-up): what comes, and "what" for "whom".
+// What changes in the confirmation for an area, a bill and a law (the approved words of each sign-up): what comes, and
+// "what" for "whom".
 const AREA = {
   lat: { what: "Kad zakon iz ove oblasti uđe u proceduru, dođe na dnevni red ili bude usvojen · najviše jedan mejl dnevno",
          consent: SAID.lat.consent.replace("Koga pratiš", "Šta pratiš") },
   cir: { what: "Кад закон из ове области уђе у процедуру, дође на дневни ред или буде усвојен · највише један мејл дневно",
          consent: SAID.cir.consent.replace("Кога пратиш", "Шта пратиш") },
 };
-const said = (s, kind) => kind === "o" ? { ...s, ...(s === SAID.cir ? AREA.cir : AREA.lat) } : s;
+const BILL = {
+  lat: { what: "Kad dođe na dnevni red, bude usvojen ili više ne bude na spisku · najviše jedan mejl dnevno", consent: AREA.lat.consent },
+  cir: { what: "Кад дође на дневни ред, буде усвојен или више не буде на списку · највише један мејл дневно", consent: AREA.cir.consent },
+};
+const LAW = {
+  lat: { what: "Kad bude predložena izmena ovog zakona, i dalje kako ona napreduje · najviše jedan mejl dnevno", consent: AREA.lat.consent },
+  cir: { what: "Кад буде предложена измена овог закона, и даље како она напредује · највише један мејл дневно", consent: AREA.cir.consent },
+};
+const said = (s, kind) => {
+  const more = { o: AREA, b: BILL, z: LAW }[kind];
+  return more ? { ...s, ...(s === SAID.cir ? more.cir : more.lat) } : s;
+};
 
 // A page of the worker's own in the summary's look; the way back is the site's.
 function shown(s, title, text, button) {
@@ -106,6 +128,14 @@ async function listed(kind) {
   return (lists[kind] || {}).map || new Map();
 }
 
+// The names of one key: from its kind's list, or from its own file in its kind's folder (none when there is none).
+async function namesOf(kind, key) {
+  if (!KINDS[kind].endsWith("/")) return (await listed(kind)).get(key);
+  const r = await fetch(KINDS[kind] + key + ".json", { cf: { cacheTtl: 600 } });
+  const names = r.ok ? await r.json().catch(() => null) : null;
+  return Array.isArray(names) && names.length === 2 && names.every((n) => typeof n === "string" && n) ? names : null;
+}
+
 // A link's code: a hash with the secret of what it ends, so that none can be made up for another row.
 const code = async (env, what, id) => (await sha(`${env.SALT}|${what}|${id}`)).slice(0, 32);
 const link = async (env, path, id) => `${SELF}/m/prati/${path}?i=${id}&k=${await code(env, "prati-" + path, id)}`;
@@ -124,9 +154,9 @@ async function ask(request, env, from) {
   const s = b.pismo === "cir" ? SAID.cir : SAID.lat;
   const refused = (what, status) => b.json ? json({ error: what }, status) : shown(s, s.bad, "", "");
   const address = String(b.adresa || "").trim(), slug = String(b.sta || ""), kind = String(b.vrsta || "p");
-  const names = Object.hasOwn(KINDS, kind) && /^[a-z0-9-]{1,80}$/.test(slug) ? (await listed(kind)).get(slug) : null;
+  const names = Object.hasOwn(KINDS, kind) && /^[a-z0-9-]{1,80}$/.test(slug) ? await namesOf(kind, slug) : null;
   const padded = ADDRESS.test(address) ? pad(address, PAD.adresa) : null;
-  const what = Array.isArray(names) ? pad(`${kind}|${slug}|${names[0]}`, PAD.sta) : null;
+  const what = Array.isArray(names) ? sealable(kind, slug, names[0]) : null;
   if (!padded || !what) return refused("adresa", 400);
   const key = await sha(env.SALT + "|mejl|" + address.toLowerCase());
   const now = new Date().toISOString(), day = now.slice(0, 10);
