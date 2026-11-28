@@ -1494,4 +1494,4 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
 .prati-fine a { color: inherit; }
 .prati-box .prati-also { margin-top: .5rem; }  /* an area's second note, a line of its own */
 @media (max-width: 600px) { .prati { margin-bottom: .6rem; } .prati-box { width: calc(100% + 6.5rem); margin-left: -6.5rem; } }
-@media (max-width: 600px) { .prati-o .prati-box { width: auto; margin-left: 0; } } /* an area's page has no portrait to reach under */
+@media (max-width: 600px) { .prati-o .prati-box, .prati-b .prati-box, .prati-z .prati-box { width: auto; margin-left: 0; } } /* an area's, a bill's and a law's page have no portrait to reach under */
