@@ -1423,3 +1423,29 @@ def test_roll_calls_not_on_an_adopted_law_are_shown_as_they_are(tmp_path):
     # counted nowhere: the law's final vote alone makes the MP's tally, presence and the numbers
     assert "Od 1 konačnih glasanja o zakonima" in old
     assert (out / "cir" / "poslanik" / "petrovic-petar.html").exists() and site.check(out) == []
+
+
+def test_the_sittings_page_opens_on_the_latest_sitting_and_folds_by_year(built, tmp_path):
+    """28 Nov 2026: "Sednice" leads with the newest convocation's latest begun sitting, its days with the day's title,
+    then each convocation's numbers and its sittings by year, the newest year open; the sittings by their short names."""
+    out, _ = built
+    html = (out / "sednice.html").read_text(encoding="utf-8")
+    assert html.count('<details class="year st-year" data-wide open>') == 1
+    assert 'class="st-lead"' in html and 'class="st-name"' in html and "Narodne skupštine" not in html.split("st-list\">")[1][:400]
+    from zailiprotiv import pages_lists
+    (tmp_path / "15" / "sazetak").mkdir(parents=True)
+    (tmp_path / "15" / "sazetak" / "2026-11-25.json").write_text(json.dumps(
+        {"model": "claude-opus-5-5", "dan": {"naslov": "Izabrane delegacije", "ukratko": "…"}}), encoding="utf-8")
+    turn = lambda a, b, who: {"od": a, "do": b, "ime": who}
+    days = [{"dan": "2026-11-24", "govori": [turn(0, 60, "A")]}, {"dan": "2026-11-25", "govori": [turn(0, 30, "A"), turn(30, 90, "B")]},
+            {"dan": "2026-12-02", "govori": [turn(0, 10, "A")]}]
+    listed = [{"title": "Druga sednica Narodne skupštine Republike Srbije", "url": "u2", "starts": "2026-12-09T10:00", "agenda": ["x"]},
+              {"title": "Prva sednica Narodne skupštine Republike Srbije u Petnaestom sazivu", "url": "u1", "starts": "", "agenda": ["a"]}]
+    row = {"url": "u1", "slug": "prva", "n": 0, "against": 0, "others": 5}
+    lead = pages_lists.lead(listed=listed, days=days, sittings=[row], root=tmp_path, conv="15", latin=str, today="2026-12-03")
+    assert lead["short"] == "Prva sednica" and lead["conv_name"] == "Petnaesti" and lead["slug"] == "prva" and lead["others"] == 5
+    assert [d["day"] for d in lead["days"]] == ["2026-12-02", "2026-11-25", "2026-11-24"]  # the later sitting is not begun
+    assert lead["days"][1]["title"] == "Izabrane delegacije" and lead["days"][1]["people"] == 2 and lead["days"][2]["title"] == ""
+    later = pages_lists.lead(listed=listed, days=days, sittings=[row], root=tmp_path, conv="15", latin=str, today="2026-12-09")
+    assert later["short"] == "Druga sednica" and later["days"] == [] and later["slug"] is None
+    assert pages_lists.lead(listed=[], days=[], sittings=[], root=tmp_path, conv="15", latin=str) is None

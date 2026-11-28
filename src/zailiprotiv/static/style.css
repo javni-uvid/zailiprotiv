@@ -1495,3 +1495,29 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
 .prati-box .prati-also { margin-top: .5rem; }  /* an area's second note, a line of its own */
 @media (max-width: 600px) { .prati { margin-bottom: .6rem; } .prati-box { width: calc(100% + 6.5rem); margin-left: -6.5rem; } }
 @media (max-width: 600px) { .prati-o .prati-box, .prati-b .prati-box, .prati-z .prati-box { width: auto; margin-left: 0; } } /* an area's, a bill's and a law's page have no portrait to reach under */
+/* "Sednice", the Assembly section's front page (28 Nov 2026): the latest sitting on top, its days with their titles,
+   then each convocation's three numbers and its sittings folded by year, as "Nedelje" folds weeks. */
+.st-lead { margin: .4rem 0 1.6rem; padding: 1rem 0 .4rem; border-top: 2px solid var(--fg); }
+.st-lead .hero-kicker { margin: 0; }
+.st-lead-h { font-size: var(--t-h1); margin: .1rem 0 .2rem; line-height: 1.15; }
+.st-lead > .meta { margin: 0 0 .6rem; }
+.st-days, .st-list { list-style: none; padding: 0; }
+.st-days { margin: 0 0 .6rem; }
+.st-days a { display: flex; flex-direction: column; gap: .1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; min-height: 2.75rem; }
+.st-days li:first-child a { border-top: 1px solid var(--line); }
+.st-days .st-dw { text-decoration: underline; text-underline-offset: 3px; }
+.st-days .st-dt { font-family: var(--serif); font-size: var(--t-4); line-height: 1.25; }
+.st-days a:hover .st-dt { text-decoration: underline; }
+.st-agenda > summary { min-height: 2.75rem; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.st-agenda .hc-agenda { display: block; }
+.st-list li { display: flex; flex-direction: column; gap: .05rem; padding: .55rem 0; border-bottom: 1px solid var(--line); margin: 0; }
+.st-list .st-name { font-weight: 600; }
+.st-year > summary { display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; border-bottom: 1px solid var(--line); }
+.st-year > summary h3 { margin: 0; font-size: var(--t-4); }
+.st-year > summary::after { content: "+"; color: var(--muted); font-size: var(--t-5); } .st-year[open] > summary::after { content: "–"; }
+.st-nums { margin-top: .4rem; }
+@media (max-width: 640px) {
+  .st-nums { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; padding: .7rem 0; }
+  .st-nums > :last-child:nth-child(odd) { grid-column: auto; }
+  .st-nums b { font-size: var(--t-6); } .st-nums span { font-size: var(--t-1); overflow-wrap: anywhere; }
+}

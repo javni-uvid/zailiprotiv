@@ -1324,7 +1324,9 @@ def build(root: Path, out: Path, domain: str | None = None, clean: bool = False,
     by_area = pages_lists.render(area_slug=area_slug, common=common, conv_list=conv_list, env=env,
         items_by_conv=items_by_conv, key_votes=key_votes, numbers=numbers, out=out, rows_mp=rows_mp,
         recordings=src.recordings, floor_by_sitting=floor.by_sitting, quiz_themes=quiz.themes, waiting=waiting,
-        others_by_sitting=other_votes.by_sitting(others))
+        others_by_sitting=other_votes.by_sitting(others),
+        lead_from={"listed": pages_mikrofon.sittings(root, members_conv or NEWEST_), "root": root,
+                   "days": src.recorded.get(members_conv or NEWEST_, []), "conv": members_conv or NEWEST_})
     from zailiprotiv import downloads
     downloads.write(common=common, domain=domain, env=env, items_by_conv=items_by_conv, out=out, people=people)
     from zailiprotiv import feeds

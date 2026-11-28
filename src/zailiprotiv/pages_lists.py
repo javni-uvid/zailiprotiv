@@ -4,6 +4,7 @@ Moved out of `site.build` (13 Nov 2026); it takes what it needs from the build a
 """
 from __future__ import annotations
 
+from zailiprotiv.pages_mikrofon import label
 from zailiprotiv.site import (  # noqa: F401
     ORDINAL_NAME, collate, defaultdict, most_against, sitting_page
 )
@@ -28,8 +29,46 @@ def recorded(dates, recordings, latin):
     return rows
 
 
+def lead(*, listed, days, sittings, root, conv, latin, today=None):
+    """The sitting the sittings page opens on (28 Nov 2026): of the newest convocation's sittings as the Assembly lists
+    them (`pages_mikrofon.sittings`, the latest first), the latest begun; else the newest of the list with roll calls.
+    With its short name, its days read from the recording (a day page each, with the model's title of the day when one
+    was written) and, when it has roll calls, its place in the list ("n", "against", "others", "slug"). The same rule
+    whatever the convocation; None when there is nothing to show."""
+    from datetime import date
+    from zailiprotiv import pages_govornici as gv
+    from zailiprotiv.pages_mikrofon import label
+    today = today or date.today().isoformat()
+    begun = [s for s in listed if (s.get("starts") or "")[:10] <= today]  # a page that gives no day: begun, it is listed
+    by_url = {s["url"]: s for s in sittings if s.get("url")}
+    if begun:
+        s = begun[0]
+        later = [x["starts"][:10] for x in listed if (x.get("starts") or "") > (s.get("starts") or "")]
+        until = min(later, default="9999")
+        row = by_url.get(s["url"], {})
+        out = {"title": s["title"], "url": s["url"], "agenda": s.get("agenda") or [], "conv": str(conv),
+               "starts": (s.get("starts") or "")[:10], **{k: row.get(k) for k in ("slug", "n", "against", "others")}}
+        own = [d for d in days if out["starts"] <= d["dan"] < until]
+    elif sittings:
+        row = sittings[0]
+        out = {"title": latin(row["title"]), "url": row.get("url", ""), "agenda": [], "conv": str(row["conv"]),
+               "starts": row["day"], **{k: row.get(k) for k in ("slug", "n", "against", "others")}}
+        own = []
+    else:
+        return None
+    out["short"], out["conv_name"] = label(out["title"]), ORDINAL_NAME.get(out["conv"], out["conv"])
+    out["days"] = []
+    for d in sorted(own, key=lambda d: d["dan"], reverse=True):
+        sm = gv.day_summary(root, str(conv), d["dan"]) or {}
+        out["days"].append({"day": d["dan"], "when": gv.day_name(d["dan"]),
+                            "time": gv.dur(sum(max(0, t["do"] - t["od"]) for t in d["govori"])),
+                            "people": len({t["ime"] for t in d["govori"]}),
+                            "title": sm.get("naslov") or "", "izvor": sm.get("izvor") or "", "model": sm.get("model") or ""})
+    return out
+
+
 def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbers, out, rows_mp, recordings=None,
-           floor_by_sitting=None, quiz_themes=None, waiting=(), others_by_sitting=None):
+           floor_by_sitting=None, quiz_themes=None, waiting=(), others_by_sitting=None, lead_from=None):
     # A page per area (the point of Article 97), every convocation, newest first.
     by_area = defaultdict(list)
     for its in items_by_conv.values():
@@ -73,7 +112,7 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
             lead=max(its, key=lambda it: (it["final"]["counts"]["protiv"] or 0)), floor=floor, others=others,
             recordings=recorded(days, recordings or {}, env.filters["latin"]),
             first=its[0]["final"]["when"][:10], last=its[-1]["final"]["when"][:10], root="../"), encoding="utf-8")
-    sittings_list = sorted(({"slug": sitting_slug[u], "title": its[0]["final"]["sitting_title"], "n": len(its),
+    sittings_list = sorted(({"slug": sitting_slug[u], "url": u, "title": its[0]["final"]["sitting_title"], "n": len(its),
                              "day": its[0]["final"]["when"][:10], "conv": its[0]["conv"], "conv_name": its[0]["conv_name"],
                              "against": sum((it["final"]["counts"]["protiv"] or 0) for it in its),
                              "others": len((others_by_sitting or {}).get(u, []))}
@@ -92,12 +131,16 @@ def render(*, area_slug, common, conv_list, env, items_by_conv, key_votes, numbe
             **common, title=first["sitting_title"], url=url, laws=[], conv_name=conv_name, lead=None, floor=floor,
             others=others, recordings=recorded(days, recordings or {}, env.filters["latin"]),
             first=others[0]["when"][:10], last=others[-1]["when"][:10], root="../"), encoding="utf-8")
-        sittings_list.append({"slug": name, "title": first["sitting_title"], "n": 0, "day": others[0]["when"][:10],
+        sittings_list.append({"slug": name, "url": url, "title": first["sitting_title"], "n": 0, "day": others[0]["when"][:10],
                               "conv": first["conv"], "conv_name": conv_name, "against": 0, "others": len(others)})
     sittings_list.sort(key=lambda x: x["day"], reverse=True)
+    latin = env.filters["latin"]
+    for x in sittings_list:
+        x["short"], x["year"] = label(latin(x["title"])), x["day"][:4]
+    top = lead(**lead_from, sittings=sittings_list, latin=latin) if lead_from else None
+    by_conv = [(cv, [x for x in sittings_list if x["conv"] == cv["n"]]) for cv in conv_list]
     (out / "sednice.html").write_text(env.get_template("sittings.html").render(
-        **common, by_conv=[(cv, [x for x in sittings_list if x["conv"] == cv["n"]]) for cv in conv_list], root=""),
-        encoding="utf-8")
+        **common, by_conv=by_conv, lead=top, root=""), encoding="utf-8")
     # A page per convocation: its figures, key votes, groups and sittings, and the way to its laws and MPs.
     for n in numbers:
         c = n["conv"]["n"]

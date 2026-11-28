@@ -3,32 +3,50 @@
 {% from "macros.html" import plural %}
 {% block title %}Sednice Narodne skupštine — Za ili Protiv{% endblock %}
 {% block description %}Sednice Narodne skupštine na kojima se glasalo, po sazivima i datumu.{% endblock %}
-{% block main %}
-<h1>Skupština</h1>
-{% from "macros.html" import live_bar with context %}{{ live_bar() }}
-{% from "macros.html" import assembly_tabs with context %}{{ assembly_tabs("sednice") }}
-<p><a href="govornici.html">Ko koliko govori u sali</a>: vreme govora svakog govornika, po danima sednica, merenje sa snimka prenosa.</p>
-<nav class="page-menu" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav>
-<details class="one parts-row phone-list" data-pagefind-ignore><summary>Saziv</summary><nav class="parts-list" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav></details>
-{% for cv, ss in by_conv if ss %}
-<section id="saziv-{{ cv.n }}">
-  <h2><a href="{{ cv.saziv_page }}">{{ cv.name }} saziv</a> <span class="count">{{ cv.years }} · {{ ss|length }} {{ "sednica" if ss|length % 10 == 1 and ss|length % 100 != 11 else ("sednice" if ss|length % 10 in [2, 3, 4] and ss|length % 100 not in [12, 13, 14] else "sednica") }}</span></h2>
-  <ul class="plain sittings-list" data-more="30">
-  {% for s in ss %}<li><span class="meta">{{ s.day|day }}</span> <a href="sednica/{{ s.slug }}.html">{{ s.title|latin }}</a> <span class="meta">· {% if s.n %}{{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span>{% else %}{{ s.others }} {{ plural(s.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}{% endif %}</span></li>{% endfor %}
-  </ul>
-</section>
-{% endfor %}
-{% set now = (by_conv[0][1] if by_conv else [])|selectattr("n")|list %}
-{% if now %}
-{% set most = (now|sort(attribute="against", reverse=true))[0] %}
-{% set big = (now|sort(attribute="n", reverse=true))[0] %}
-<div class="lead-nums">
-  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "sednica", "sednice", "sednica") }} sa usvojenim zakonima u {{ by_conv[0][0].name|locative }} sazivu</span></p>
+{% macro sednica_n(n) %}{{ n }} {{ plural(n, "sednica", "sednice", "sednica") }}{% endmacro %}
+{% macro tally(s) %}{% if s.n %}{{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span>{% elif s.others %}{{ s.others }} {{ plural(s.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}{% endif %}{% endmacro %}
+{# A convocation's three numbers: of its sittings with laws, how many, the most laws and the most votes against at one. #}
+{% macro conv_nums(ss, cv, cls="") %}{% set now = ss|selectattr("n")|list %}{% if now %}
+{% set most = (now|sort(attribute="against", reverse=true))[0] %}{% set big = (now|sort(attribute="n", reverse=true))[0] %}
+<div class="lead-nums{{ cls }}">
+  <p><b>{{ now|length }}</b><span>{{ plural(now|length, "sednica", "sednice", "sednica") }} sa usvojenim zakonima u {{ cv.name|locative }} sazivu</span></p>
   <p><b>{{ big.n }}</b><span>{{ plural(big.n, "zakon", "zakona", "zakona") }} na jednoj sednici, najviše: <a href="sednica/{{ big.slug }}.html">{{ big.day|day }}</a></span></p>
   <p><b class="t-protiv">{{ most.against }}</b><span>glasova protiv na jednoj sednici, najviše: <a href="sednica/{{ most.slug }}.html">{{ most.day|day }}</a></span></p>
-</div>
+</div>{% endif %}{% endmacro %}
+{% macro row(s) %}<li><a class="st-name" href="sednica/{{ s.slug }}.html">{{ s.short }}</a> <span class="meta">{{ s.day|day }}{% if s.n or s.others %} · {{ tally(s) }}{% endif %}</span></li>{% endmacro %}
+{% block main %}
+<h1>Skupština</h1>
+{% from "macros.html" import live_bar, mic_soon with context %}{{ live_bar() }}{{ mic_soon() }}
+{% from "macros.html" import assembly_tabs with context %}{% set own = lead and newer15 and lead.conv == newer15.conv|string %}{# the newest convocation's panel, unless the lead block is its sitting #}
+{{ assembly_tabs("sednice", panel=not own) }}
+{% set shown = by_conv|selectattr(1)|map(attribute=0)|map(attribute="n")|map("string")|list %}
+{% if lead %}{% set L = lead %}
+<section class="st-lead"{% if L.conv not in shown and (own or not newer15) %} id="saziv-{{ L.conv }}"{% endif %}>
+  <p class="hero-kicker">{{ L.conv_name }} saziv</p>
+  <h2 class="st-lead-h">{% if L.slug %}<a href="sednica/{{ L.slug }}.html">{{ L.short }}</a>{% else %}<a href="{{ L.url }}">{{ L.short }}</a>{% endif %}</h2>
+  <p class="meta">{% if L.days|length > 1 %}od {{ L.days[-1].day|day_of }} do {{ L.days[0].day|day_of }}{% elif L.days %}{{ L.days[0].day|day }}{% else %}{{ L.starts|day }}{% endif %}{% if L.n or L.others %} · {{ tally(L) }}{% endif %}{% if L.days|length > 1 %} · {{ L.days|length }} dana{% endif %}</p>
+  {% if L.days %}<ul class="plain st-days">{% for d in L.days %}<li><a href="govornici/{{ d.day }}.html"><span class="st-dw">{{ d.when }}</span>{% if d.title %}<b class="st-dt">{{ d.title }}</b>{% endif %}<span class="label">{{ d.time }} za govornicom · {{ d.people }} govornika · snimak i prepis</span></a></li>{% endfor %}</ul>{% endif %}
+  {% if L.agenda %}<details class="st-agenda"><summary>Dnevni red</summary><ol class="hc-agenda">{% for a in L.agenda %}<li>{{ a }}</li>{% endfor %}</ol></details>{% endif %}
+  {% set srcs = L.days|selectattr("title")|map(attribute="izvor")|unique|list %}{% set mdl = (L.days|selectattr("title")|first or {}).model %}
+  {% if srcs %}<p class="label">{% if "beleske" in srcs %}Napisao AI model ({{ mdl or 'Claude Opus' }}) iz privremenih stenografskih beleški Skupštine (neredigovanih i neautorizovanih): može da pogreši, i nije citat. {% endif %}{% if srcs|reject("equalto", "beleske")|list %}Napisao AI model ({{ mdl or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat.{% endif %}</p>{% endif %}
+</section>
 {% endif %}
+<nav class="page-menu" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav>
+<details class="one parts-row phone-list" data-pagefind-ignore><summary>Saziv</summary><nav class="parts-list" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav></details>
+{% for cv, ss in by_conv if ss %}{% set first = loop.first %}
+<section id="saziv-{{ cv.n }}">
+  <h2><a href="{{ cv.saziv_page }}">{{ cv.name }} saziv</a> <span class="count">{{ cv.years }} · {{ sednica_n(ss|length) }}</span></h2>
+  {{ conv_nums(ss, cv, " st-nums") }}
+  {% set years = ss|map(attribute="year")|unique|list %}
+  {% for y in years %}{% set ys = ss|selectattr("year", "equalto", y)|list %}
+  <details class="year st-year" data-wide{% if first and loop.first %} open{% endif %}><summary><h3>{{ y }}. <span class="count">{{ sednica_n(ys|length) }}</span></h3></summary>
+  <ul class="plain sittings-list st-list">{% for s in ys %}{{ row(s) }}{% endfor %}</ul>
+  </details>
+  {% endfor %}
+</section>
+{% endfor %}
 {% from "macros.html" import newer_note with context %}{{ newer_note("sednice") }}
+<p><a href="govornici.html">Ko koliko govori u sali</a>: vreme govora svakog govornika, po danima sednica, merenje sa snimka prenosa.</p>
 <details class="method"><summary>Kako je ovo nastalo</summary>
 <p>Sednice na kojima su usvajani zakoni, po sazivima, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv. Sazvane sednice čiji rezultati još nisu objavljeni su na strani <a href="u-proceduri.html#sednice">U proceduri</a>.</p>
 </details>
