@@ -173,7 +173,7 @@ src/zailiprotiv/
   digest.py, feeds.py, downloads.py, card.py, photos.py, publish.py
   cli/                        commands, by what they work on: assembly, recordings, writing, buckets, build
 tools/                        reports run by the workflows: visits, blocked, search; indexnow (sitemap dates); prati_primer
-                              (what following an area would have sent on a past morning, sending nothing);
+                              (what following an area, or with --zakoni a law, would have sent on a past morning, sending nothing);
                               pretplate: subscribers counted by sitting day, run by hand
 worker/                       the visitors' votes counter (Cloudflare Worker, D1)
 live/                         "Ko sada govori": the live broadcast's caption read, a page of its own (Docker; README there)

@@ -230,3 +230,20 @@ The mail's look and what it loads are as the last entry says (25 Nov 2026): "no 
   `state_base.GRAPHIC`). A graphic standing 30 minutes (`obavesti.SLATE`) is told anyway, rather than never: two and a half
   times the longest seen, and a sitting called for an hour rarely begins half an hour late; a frame whose share cannot be read
   counts as before. Once a day, in the same hours.
+- **Following one bill or one law, the sender** (27 Nov 2026, the maintainer: "Može se nekom i samo na taj zakon prijaviti"; 28 Nov
+  2026, of the proposal: "Možemo sa tvojim preporukama"). `prati.py` opens kinds `b` (a bill, by its page's key) and `z` (a law, by
+  the law it is or changes) beside `p` and `o`, from the same `oblasti-dogadjaji.json`, in the same mail, by the same numbers and
+  `o_do`: nothing new is kept, and nothing on disk says which bill or law.
+  - **What is told** (`law_news`): a bill's own events but its listing (it was followed from its page, so listed by then): on the
+    agenda, passed (with "Dalje pratiš zakon: …" once), in the Gazette, no longer listed ("… poslednji put na spisku: <day>", the
+    day we last saw it, as the bill's page says; the conductor agreed on 28 Nov). Once passed (the file's `predlozi`), the events of
+    any bill naming its laws, from that day, under the law's short name. A law's: every event of a bill naming it, a listing as
+    "Predložena izmena", with each bill's title. Each event once for a reader, under the first bill or law; an area's card leaves
+    out what a bill's or law's card tells. The same three days and the same "not before the following"; a law in the Gazette counts
+    from the day the service first saw it, as its own day is the day it passed and the page of adopted laws lists it later.
+  - **The morning's preview** counts the events of areas and of all, and, with no speech and no area's event, shows a bill's mail as
+    the sample (before, a day with only an event of no area would have failed the preview).
+  - **Checked on a year** (`tests/test_prati_zakoni.py`): the sender's rules each morning over 28 Nov 2025 – 27 Nov 2026, to a
+    follower of each of 144 laws a bill named and of each bill listed: a mail on exactly the days with an event of theirs, counted
+    from the events alone, at most 11 for one law, no event twice. A day with nothing new sends nothing and asks no one.
+    `tools/prati_primer.py <day> --zakoni` writes a morning's mail to a follower of each law, asking no one.

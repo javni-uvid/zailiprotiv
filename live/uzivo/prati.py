@@ -1,6 +1,9 @@
 """Following a sitting MP by mail (25 Nov 2026): the morning after a day on which the MP spoke in the hall. And an
 area of laws (27 Nov 2026): the morning after a bill of the area entered procedure, came on a sitting's agenda or was
-passed, by the site's events (`oblasti-dogadjaji.json`, the site's oblasti.py), in the same mail.
+passed, by the site's events (`oblasti-dogadjaji.json`, the site's oblasti.py), in the same mail. And one bill or one
+law (28 Nov 2026, the maintainer: "Može se nekom i samo na taj zakon prijaviti"; "Možemo sa tvojim preporukama"): a
+bill's steps (on the agenda, passed, no longer listed, published in the Gazette) and then its law's; a law's, any bill
+whose title names it and that bill's steps; from the same file, in the same mail.
 
 The counter keeps who follows whom sealed (`worker/prati.js`); both are opened here, in memory, only to send, and never
 written down or logged. What is kept (`/data/mejl/prati/stanje.json`) is by the counter's row id: the day up to which a
@@ -51,7 +54,7 @@ class Followed:
     name: str
     since: date
     end: tuple[str, ...]  # the links that end it: more than one when the same MP was asked for twice
-    kind: str = "p"  # "p" a sitting MP, "o" an area of laws (its address and name on the site)
+    kind: str = "p"  # "p" a sitting MP, "o" an area of laws, "b" a bill, "z" a law (its key and name on the site)
 
 
 @dataclass(frozen=True)
@@ -74,7 +77,7 @@ def opened(rows: list[dict]) -> list[Follower]:
             found: dict[str, Followed] = {}
             for p in r.get("prati") or []:
                 kind, slug, name = pretplata.unseal(config.MAIL_KEY, p["sta"]).rstrip().split("|", 2)
-                if kind not in ("p", "o"):
+                if kind not in ("p", "o", "b", "z"):
                     continue  # a kind this service does not tell yet
                 had = found.get(f"{kind}|{slug}")
                 since = date.fromisoformat(p["od"])
@@ -146,25 +149,36 @@ def _order(name: str) -> list[int]:
 # An area's events a reader is told: each followed area with its events, each event once (under the first area by its
 # point that the reader follows).
 AreaNews = list[tuple[Followed, list[dict]]]
-KINDS_ORDER = ("usvojen", "dnevni_red", "procedura")
+KINDS_ORDER = ("usvojen", "objavljen", "dnevni_red", "procedura", "nije_na_spisku")
+# A bill's or a law's events: each followed bill or law with its events, each event once.
+LawNews = list[tuple[Followed, list[dict]]]
 
 
 @dataclass(frozen=True)
 class Told:
-    """What one mail tells a reader: the MPs' speeches and the areas' events, and the number of the newest event in it."""
+    """What one mail tells a reader: the MPs' speeches, the areas' events and the bills' and laws', and the number of the
+    newest event in it."""
     speeches: News
     areas: AreaNews
     seq: int = 0
+    laws: LawNews = ()
 
     def __bool__(self) -> bool:
-        return bool(self.speeches or self.areas)
+        return bool(self.speeches or self.areas or self.laws)
 
     def last(self, today: date) -> date:
         """The day the mail is of: the last day of a speech in it, else the day before the mail."""
         return max((d for _, rows in self.speeches for d, _ in rows), default=today - timedelta(days=1))
 
 
-def area_news(reader: Follower, events: list[dict], points: dict[str, int], told_seq: int, today: date) -> AreaNews:
+def _own(e: dict) -> str:
+    """The day an event counts from: its own, or the day it was first listed or first seen here (a law in the Gazette,
+    whose day is the day it passed), or a sitting to come."""
+    return max(e.get("dan") or "", e.get("poznato") or "", e.get("prvi") or "" if e.get("vrsta") == "objavljen" else "")
+
+
+def area_news(reader: Follower, events: list[dict], points: dict[str, int], told_seq: int, today: date,
+              skip: frozenset = frozenset()) -> AreaNews:
     """The events of the areas the reader follows not told yet: numbered after `told_seq`, of the last KEEP_DAYS days (by
     the event's own day, or the day it was first listed, or a sitting to come), and not older than the following."""
     areas = sorted((f for f in reader.follows if f.kind == "o"), key=lambda f: (points.get(f.name, 99), f.name))
@@ -173,14 +187,43 @@ def area_news(reader: Follower, events: list[dict], points: dict[str, int], told
     order = lambda e: (KINDS_ORDER.index(e["vrsta"]) if e["vrsta"] in KINDS_ORDER else 9, e.get("naslov") or "")  # noqa: E731
     for e in sorted(events, key=order):
         mine = [by_point[a] for a in e.get("oblasti") or [] if a in by_point]
-        if not mine or e.get("seq", 0) <= told_seq:
+        if not mine or e.get("seq", 0) <= told_seq or e["id"] in skip:
             continue
         first = min(mine, key=lambda f: (points.get(f.name, 99), f.name))
-        own = max(e.get("dan") or "", e.get("poznato") or "")
+        own = _own(e)
         if own < max(first.since, today - timedelta(days=KEEP_DAYS)).isoformat():
             continue
         out.setdefault(first.slug, []).append({**e, "i_u": [f.name for f in mine if f is not first]})
     return [(f, out[f.slug]) for f in areas if f.slug in out]
+
+
+def law_news(reader: Follower, events: list[dict], bills: dict, told_seq: int, today: date) -> LawNews:
+    """The events of the bills and laws the reader follows not told yet, by the same numbers and days as an area's: a
+    bill's own, and once it passed (`bills`, the site's `predlozi`) those of its laws after that day; a law's, every bill
+    that names it. Each event once, under the first bill or law (bills, then laws, by name)."""
+    mine = sorted((f for f in reader.follows if f.kind in ("b", "z")), key=lambda f: (f.kind, f.name))
+    out: dict[str, list[dict]] = {}
+    seen: set[str] = set()
+    order = lambda e: (KINDS_ORDER.index(e["vrsta"]) if e["vrsta"] in KINDS_ORDER else 9, e.get("naslov") or "")  # noqa: E731
+    for f in mine:
+        laws, since_law, head = {f.slug} if f.kind == "z" else set(), "", ""
+        if f.kind == "b":
+            b = bills.get(f.slug) or {}
+            if b.get("usvojen"):
+                laws, since_law = {z[0] for z in b.get("zakoni") or [] if z}, b["usvojen"]
+                head = next((z[1] for z in b.get("zakoni") or [] if len(z) > 1), "")
+        for e in sorted(events, key=order):
+            if e["id"] in seen or e.get("seq", 0) <= told_seq:
+                continue
+            own_bill = f.kind == "b" and e.get("predlog") == f.slug
+            if own_bill and e["vrsta"] == "procedura":
+                continue  # its own listing: it was followed from its page, so listed by then
+            of_law = bool(laws & set(e.get("zakoni") or [])) and (e.get("dan") or "") >= since_law and not own_bill
+            if not (own_bill or of_law) or _own(e) < max(f.since, today - timedelta(days=KEEP_DAYS)).isoformat():
+                continue
+            seen.add(e["id"])
+            out.setdefault(f"{f.kind}|{f.slug}", []).append({**e, "svoj": own_bill, "glava": head})
+    return [(f, out[f"{f.kind}|{f.slug}"]) for f in mine if f"{f.kind}|{f.slug}" in out]
 
 
 def _day(d: date) -> str:
@@ -222,7 +265,12 @@ AREA_NOTE = ("Oblast je tačka člana 97. Ustava na koju se predlagač poziva. Z
              "međunarodnih ugovora, ovde se ne javljaju.")
 AREA_SOURCE = "Iz spiska zakona u proceduri, dnevnog reda i poimeničnih glasanja koje objavljuje Narodna skupština."
 _GROUP = {"usvojen": ("Usvojen", "Usvojeno {n}"), "dnevni_red": ("Na dnevnom redu", "Na dnevnom redu"),
-          "procedura": ("Ušao u proceduru", "Ušlo u proceduru {n}")}
+          "procedura": ("Ušao u proceduru", "Ušlo u proceduru {n}"), "objavljen": ("Objavljen", "Objavljeno {n}"),
+          "nije_na_spisku": ("Više nije na spisku", "Više nije na spisku")}
+LAW_GROUP = {**_GROUP, "procedura": ("Predložena izmena", "Predložene izmene {n}")}  # in a law's card
+LAW_NOTE = "Dalje pratiš zakon: javljamo kad bude predložena njegova izmena."  # once, when a followed bill passed
+LAW_SOURCE = ("Iz spiska zakona u proceduri, dnevnog reda, poimeničnih glasanja i spiska donetih zakona koje objavljuje "
+              "Narodna skupština.")
 
 
 def _when(at: str) -> str:
@@ -245,6 +293,11 @@ def _event_lines(x: dict) -> list[str]:
             out += [f"za {x['za']}", f"protiv {x['protiv']}", f"uzdržan {x['uzdrzan']}"]
     elif k == "dnevni_red":
         out = [f"sednica počinje: {_when(x.get('pocinje') or x['dan'])}"] + ([x["sednica"]] if x.get("sednica") else [])
+    elif k == "objavljen":
+        out = [f"u „Službenom glasniku RS“ br. {x.get('glasnik') or ''}".rstrip()]
+    elif k == "nije_na_spisku":
+        out = ["povučen je, ili mu je postupak prestao; Skupština ne navodi razlog",
+               f"poslednji put na spisku: {_day(date.fromisoformat(x['dan']))}"]
     else:
         out = ([f"podneo: {x['predlagac']}"] if x.get("predlagac") else []) + [_day(date.fromisoformat(x["dan"]))]
     if x.get("i_u"):
@@ -295,10 +348,67 @@ def _area_rows(told: AreaNews, cyr: bool) -> tuple[str, list[str]]:
     return "".join(html), text
 
 
+def _law_rows(told: LawNews, cyr: bool) -> tuple[str, list[str]]:
+    """The bills' and laws' cards: the bill's or law's name, its events by kind; a bill's own without its name again,
+    another bill's (a change of the law) with its title, as in an area's card."""
+    t = cyrillic if cyr else (lambda s: s)
+    e = lambda s: escape(t(s))  # noqa: E731
+    font, pre = f"font-family:{mejl.SANS};", "cir/" if cyr else ""
+    html, text = [], []
+    for f, evs in told:
+        own = [x for x in evs if x.get("svoj")]
+        # A bill's name as the Assembly gives it (whole: what is sealed may be cut); once passed, the law's short name.
+        named = [x["naslov"] for x in own if x["vrsta"] in ("usvojen", "objavljen")] or \
+                [x["naslov"] for x in own if x["vrsta"] not in ("usvojen", "objavljen")] or                 [x["glava"] for x in evs if x.get("glava")] or [f.name]
+        page = next((x["strana"] for x in own if x.get("strana")), "")
+        head = e(named[0])
+        if page:
+            head = (f'<a href="{escape(mejl.SITE + pre + page)}" style="color:{mejl.INK};font-weight:bold">{head}</a>')
+        html.append(f'<div style="{font}font-size:16px;line-height:1.4;color:{mejl.INK};padding:22px 20px 2px"><b>{head}</b></div>')
+        text += ["", t(named[0]) + (f": {mejl.SITE}{pre}{page}" if page else "")]
+        groups = LAW_GROUP if f.kind == "z" else _GROUP
+        for kind in KINDS_ORDER:
+            mine = [x for x in evs if x["vrsta"] == kind]
+            if not mine:
+                continue
+            one, many = (LAW_GROUP if not all(x.get("svoj") for x in mine) else groups)[kind]
+            label = one if len(mine) == 1 else many.format(n=len(mine))
+            html.append(f'<div style="{font}font-size:12px;letter-spacing:.06em;font-weight:bold;color:{mejl.MUTED};padding:12px 20px 0">{e(label.upper())}</div>')
+            text.append(t(label.upper()))
+            for x in mine[:AREA_MOST]:
+                parts = [t(p) for p in _event_lines(x)]
+                shown = [escape(p) for p in parts]
+                if "za" in x:
+                    shown[1] = f'<b style="color:{mejl.ZA}">{shown[1]}</b>'
+                    shown[2] = f'<b style="color:{mejl.PROTIV}">{shown[2]}</b>'
+                href = f"{mejl.SITE}{pre}{x['strana']}" if x.get("strana") else ""
+                if x.get("svoj"):
+                    html.append(f'<div style="{font}font-size:15px;line-height:1.45;color:{mejl.MUTED};padding:8px 20px">{" · ".join(shown)}</div>')
+                    text.append("  " + " · ".join(parts))
+                else:
+                    name = escape(t(x.get("naslov") or ""))
+                    name = f'<a href="{escape(href)}" style="color:{mejl.INK};font-weight:bold;text-decoration:underline">{name}</a>' if href else f"<b>{name}</b>"
+                    html.append(f'<div style="{font}font-size:15px;line-height:1.45;color:{mejl.INK};padding:8px 20px">{name}<br>'
+                                f'<span style="color:{mejl.MUTED};font-size:14px">{" · ".join(shown)}</span></div>')
+                    text.append(f"  {t(x.get('naslov') or '')} · " + " · ".join(parts) + (f": {href}" if href else ""))
+            if len(mine) > AREA_MOST:
+                more = f"još {len(mine) - AREA_MOST}"
+                html.append(f'<div style="{font}font-size:15px;color:{mejl.MUTED};padding:6px 20px">{e(more)}</div>')
+                text.append(f"  {t(more)}")
+        if f.kind == "b" and any(x.get("svoj") and x["vrsta"] == "usvojen" for x in evs):
+            html.append(f'<div style="{font}font-size:15px;line-height:1.5;color:{mejl.INK};padding:8px 20px">{e(LAW_NOTE)}</div>')
+            text.append("  " + t(LAW_NOTE))
+    if told:
+        html.append(f'<div style="{font}font-size:13px;line-height:1.5;color:{mejl.MUTED};padding:18px 20px 0">{e(LAW_SOURCE)}</div>')
+        text += ["", t(LAW_SOURCE)]
+    return "".join(html), text
+
+
 def _all_rows(told: Told, cyr: bool) -> tuple[str, list[str]]:
     html, text = _rows(told.speeches, cyr) if told.speeches else ("", [])
     more, lines = _area_rows(told.areas, cyr)
-    return html + more, text + lines
+    laws, law_lines = _law_rows(told.laws, cyr)
+    return html + more + laws, text + lines + law_lines
 
 
 def _manage(reader: Follower, cyr: bool) -> tuple[str, list[str]]:
@@ -309,9 +419,10 @@ def _manage(reader: Follower, cyr: bool) -> tuple[str, list[str]]:
     a = lambda href, words: f'<a href="{escape(href)}" style="color:{mejl.MUTED}">{e(words)}</a>'  # noqa: E731
     html = [f'<div style="{font}font-size:16px;font-weight:bold;color:{mejl.INK};padding:16px 20px 4px">{e("Sve što pratiš")}</div>']
     text = [t("Sve što pratiš")]
-    # The MPs by surname, then the areas by name: an area as "Oblast: …".
-    for f in sorted(reader.follows, key=lambda f: (f.kind != "p", _order(f.name) if f.kind == "p" else f.name)):
-        shown = f.name if f.kind == "p" else f"Oblast: {f.name}"
+    # The MPs by surname, then the areas, the bills and the laws by name: "Oblast: …", "Predlog: …", "Zakon: …".
+    kinds = {"p": "", "o": "Oblast: ", "b": "Predlog: ", "z": "Zakon: "}
+    for f in sorted(reader.follows, key=lambda f: ("pobz".index(f.kind), _order(f.name) if f.kind == "p" else f.name)):
+        shown = kinds[f.kind] + f.name
         html.append(f'<div style="{font}font-size:15px;line-height:1.5;color:{mejl.INK};padding:8px 20px">{e(shown)} · {a(ends(f.end), "Prestani da pratiš")}</div>')
         text.append(t(f"  {shown} · Prestani da pratiš: ") + ends(f.end))
     html.append(f'<div style="{font}font-size:15px;line-height:1.5;color:{mejl.MUTED};padding:8px 20px">{a(reader.all_end, "Prestani sve da pratiš")} · '
@@ -385,6 +496,7 @@ class Following(threading.Thread):
         self._lock = threading.Lock()  # the state's
         self.fetch = lambda: json.loads(mreza.site(config.AREAS_URL))  # the site's file of the areas' events
         self.points: dict[str, int] = {}  # an area's name: its point of Article 97, from the same file
+        self.bills: dict = {}  # a bill's key: the laws it changes and the day it passed, from the same file
         mailer.following = self
 
     # What is kept.
@@ -407,6 +519,7 @@ class Following(threading.Thread):
             got = self.fetch()
             evs = [e for e in got.get("dogadjaji") or [] if isinstance(e, dict) and e.get("id")]
             self.points = {v[0]: int(k) for k, v in (got.get("oblasti") or {}).items() if isinstance(v, list) and v}
+            self.bills = {k: v for k, v in (got.get("predlozi") or {}).items() if isinstance(v, dict)}
         except Exception as exc:  # noqa: BLE001
             log.warning("praćenje oblasti: spisak događaja nije stigao (%s)", type(exc).__name__)
             return []
@@ -426,13 +539,15 @@ class Following(threading.Thread):
             if ids != kept.get("ids") or n != kept.get("n"):
                 self.numbers.parent.mkdir(parents=True, exist_ok=True)
                 _write(self.numbers, {"n": n, "ids": ids})
-        return [{**e, "seq": ids[e["id"]][0]} for e in evs]
+        return [{**e, "seq": ids[e["id"]][0], "prvi": ids[e["id"]][1]} for e in evs]
 
     def told(self, p: Follower, days: dict[date, dict], events: list[dict], state: dict, today: date) -> Told:
         """What a reader is to be told now: speeches since the day told, events since the number told."""
         speeches = news(p, days, self._facts(), self._told(state, p.id))
-        areas = area_news(p, events, self.points, self._told_seq(state, p.id), today)
-        return Told(speeches, areas, max((e["seq"] for _, evs in areas for e in evs), default=0))
+        laws = law_news(p, events, self.bills, self._told_seq(state, p.id), today)
+        areas = area_news(p, events, self.points, self._told_seq(state, p.id), today,
+                          frozenset(e["id"] for _, evs in laws for e in evs))  # a bill's or law's event under its own card
+        return Told(speeches, areas, max((e["seq"] for _, evs in [*areas, *laws] for e in evs), default=0), laws)
 
     def _told(self, state: dict, rid: str) -> date | None:
         try:
@@ -491,7 +606,7 @@ class Following(threading.Thread):
             return {}
         state, days = self._state(), self.days(day)
         now = datetime.now(TZ).date()
-        events = self.events(now) if any(f.kind == "o" for p in people for f in p.follows) else []
+        events = self.events(now) if any(f.kind != "p" for p in people for f in p.follows) else []
         out = {}
         for p in people:
             if (state.get("citaoci") or {}).get(p.id, {}).get("poslat") == now.isoformat():
@@ -516,7 +631,7 @@ class Following(threading.Thread):
             m = {**(before.get(p.id) or {}), "poslat": today}
             if told.speeches:
                 m["do"] = max(d for _, rows in told.speeches for d, _ in rows).isoformat()
-            if told.areas:
+            if told.areas or told.laws:
                 m["o_do"] = max(told.seq, m.get("o_do", 0) if isinstance(m.get("o_do"), int) else 0)
             marks[p.id] = m
         self._mark(marks)
@@ -533,7 +648,7 @@ class Following(threading.Thread):
         days = self.days(today - timedelta(days=1))
         ready, waits, seen = [], 0, set()
         people = self.followers()
-        events = self.events(today) if any(f.kind == "o" for p in people for f in p.follows) else []
+        events = self.events(today) if any(f.kind != "p" for p in people for f in p.follows) else []
         for p in people:
             if p.to.lower() in seen or (state.get("citaoci") or {}).get(p.id, {}).get("poslat") == today.isoformat():
                 continue
@@ -588,24 +703,29 @@ class Following(threading.Thread):
             slug = min(days[last], key=lambda s: _order(name(s)))
             one = Followed(slug, name(slug), last, ("#",))
             shown = build(Follower("", "", False, "", "#", "#", (one,)), Told([(one, [(last, days[last][slug])])], []), now.date())
-        else:  # no MP spoke: the first area by its point with something new, as its follower would get it
+        elif any(e.get("oblasti") for e in new):  # no MP spoke: the first area by its point with something new
             point = min(a for e in new for a in e.get("oblasti") or [])
             area = next(n for n, k in self.points.items() if k == point)
             one = Followed(area, area, now.date() - timedelta(days=KEEP_DAYS), ("#",), "o")
             reader = Follower("", "", False, "", "#", "#", (one,))
             shown = build(reader, Told([], area_news(reader, new, self.points, 0, now.date())), now.date())
+        else:  # nor an area's: the first bill with something new, as its follower would get it
+            key = next((e["predlog"] for e in sorted(new, key=lambda e: e.get("naslov") or "") if e.get("predlog")), "")
+            one = Followed(key, key, now.date() - timedelta(days=KEEP_DAYS), ("#",), "b")
+            reader = Follower("", "", False, "", "#", "#", (one,))
+            shown = build(reader, Told([], [], 0, law_news(reader, new, self.bills, 0, now.date())), now.date())
         url = f"{config.PUBLIC_URL.rstrip('/')}/mejl/prati?dan={now.date().isoformat()}&k={code(now.date())}"
         top = ('<div style="font-family:sans-serif;padding:12px;background:#fbf0dc"><p><a href="' + escape(url) + '"><b>Pošalji onima koji prate</b></a> '
                f'(do {TO_HOUR} h). Spremno: {ready}; čekaju sažetak dana: {waits}.</p>'
                + (f"<p>Po natpisu su govorili:</p><ul>{heard}</ul>" if days else "")
-               + (f"<p>Novo u oblastima zakona: {len(new)}.</p>" if new else "")
+               + (f"<p>Novo u oblastima zakona: {sum(1 for e in new if e.get('oblasti'))}; kod predloga i zakona: {len(new)}.</p>" if new else "")
                + "<p>Primer, prvi po azbuci ili po tački člana 97. (linkovi za prekid ne vode nikuda):</p></div>")
         return "[za tebe] " + shown.subject, pretplata._with_top(shown.html, top), f"Pošalji onima koji prate: {url}\n\n{shown.text}"
 
     def new_events(self, today: date) -> list[dict]:
-        """The areas' events that some reader could still be told: of the last KEEP_DAYS days."""
+        """The events that some reader could still be told: of the last KEEP_DAYS days."""
         since = (today - timedelta(days=KEEP_DAYS)).isoformat()
-        return [e for e in self.events(today) if max(e.get("dan") or "", e.get("poznato") or "") >= since]
+        return [e for e in self.events(today) if _own(e) >= since]
 
     def step(self, now: datetime | None = None) -> bool:
         """A look: in the morning, the maintainer's mail once; then, when he clicked (or on its own), who is to be told."""
