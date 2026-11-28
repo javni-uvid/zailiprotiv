@@ -13,6 +13,11 @@
 </div>
 {% if lead and lead.final.counts.protiv %}<a class="law-chamber sitting-lead" href="../zakon/{{ lead.slug }}.html">{{ chamber(lead.final.counts) }}<span class="hero-meta">Najviše glasova protiv na ovoj sednici:</span> <span class="sitting-lead-law">{{ lead.law.short }}</span></a>{% endif %}
 </div>
+{% if summary %}<section class="st-card sc-solo" id="sazetak"><div class="sc-main">
+<p class="sz-k">Sažetak</p><h2 class="sz-h">{{ summary.naslov }}</h2><p class="sz-p">{{ summary.kratko }}</p>
+{% if summary.ukratko %}<details class="sz-f"><summary>Ukratko</summary><p class="sz-p">{{ summary.ukratko }}</p></details>{% endif %}
+<p class="sc-mark">Napisao AI model · {{ how("sazetak-dana") }}</p>
+</div></section>{% endif %}
 <ul class="rows">
 {% for it in laws %}
 <li class="row">

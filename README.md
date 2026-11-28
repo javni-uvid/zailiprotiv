@@ -50,8 +50,10 @@ name. Every page is also in Cyrillic, under `cir/`.
   shows the speaker's under their portrait ("O govorniku").
 - **Varnice:** from the notes, by rule, with no model: the chair's measures, exchanges of replies, harsh words, who
   speaks most; per convocation and over all of them.
-- **Skupština:** sittings, weeks, convocations, the Assembly in numbers. "Sednice" opens on the latest sitting, its days
-  read from the recording each with the title of its day's summary, then each convocation's numbers and its sittings by year.
+- **Skupština:** sittings, weeks, convocations, the Assembly in numbers. "Sednice" opens on the latest sitting as a card:
+  its summary written from its days' summaries, its numbers, its longest speakers and its time by list, and its days folded
+  in it, each with its title, time and faces; then each convocation's numbers and its sittings by year. A sitting's page
+  shows its summary too.
 - **Ostala glasanja:** every roll call that is not the final vote on an adopted law (elections and appointments,
   decisions, conclusions, authentic interpretations, bills not adopted), as the Assembly names it: on its sitting's page
   (a page of its own where the sitting adopted no law), an MP's latest ten on their page and all of them on their

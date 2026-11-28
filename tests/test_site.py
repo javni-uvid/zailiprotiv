@@ -1431,7 +1431,7 @@ def test_the_sittings_page_opens_on_the_latest_sitting_and_folds_by_year(built, 
     out, _ = built
     html = (out / "sednice.html").read_text(encoding="utf-8")
     assert html.count('<details class="year st-year" data-wide open>') == 1
-    assert 'class="st-lead"' in html and 'class="st-name"' in html and "Narodne skupštine" not in html.split("st-list\">")[1][:400]
+    assert 'class="st-card' in html and 'class="st-rows"' in html and "Narodne skupštine" not in html.split('class="st-rows"')[1][:400]
     from zailiprotiv import pages_lists
     (tmp_path / "15" / "sazetak").mkdir(parents=True)
     (tmp_path / "15" / "sazetak" / "2026-11-25.json").write_text(json.dumps(
@@ -1449,3 +1449,13 @@ def test_the_sittings_page_opens_on_the_latest_sitting_and_folds_by_year(built, 
     later = pages_lists.lead(listed=listed, days=days, sittings=[row], root=tmp_path, conv="15", latin=str, today="2026-12-09")
     assert later["short"] == "Druga sednica" and later["days"] == [] and later["slug"] is None
     assert pages_lists.lead(listed=[], days=[], sittings=[], root=tmp_path, conv="15", latin=str) is None
+    # a sitting's own summary, written from its days', on its card and its page; its days fold under the card
+    (tmp_path / "15" / "sazetak" / "sednica-prva.json").write_text(json.dumps({"naslov": "N", "kratko": "K", "ukratko": "U"}), encoding="utf-8")
+    again = pages_lists.lead(listed=listed, days=days, sittings=[row], root=tmp_path, conv="15", latin=str, today="2026-12-03",
+                             colours={"Studentska lista": "c-sl"})
+    assert again["summary"]["naslov"] == "N" and again["people"] == 2 and [x["width"] for x in again["days"]] == [11, 100, 67]
+    assert pages_lists.own_days(listed, days, "2026-12-10") == {"u2": [], "u1": days}
+    split = pages_lists.floor_card([{"dan": "2026-11-25", "govori": [{"od": 0, "do": 30, "ime": "A", "uloga": "Studentska lista"},
+                                    {"od": 30, "do": 90, "ime": "B", "uloga": "X"}, {"od": 90, "do": 120, "ime": "C", "grupa": "Y"}]}],
+                                   root=tmp_path, conv="15", colours={"Studentska lista": "c-sl"})["split"]
+    assert [(x["name"], x["cls"], x["pct"]) for x in split] == [("Studentska lista", "c-sl", 25.0), ("ostali", "c-mn", 75.0)]

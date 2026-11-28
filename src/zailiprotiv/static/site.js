@@ -197,11 +197,12 @@ document.addEventListener("DOMContentLoaded", function () {
     unfold(); window.addEventListener("hashchange", unfold);
   }
 
-  // A link to a folded list opens it.
+  // A link to a folded list opens it, and so does a link to something inside a fold (a sitting's day, 28 Nov 2026).
   window.addEventListener("hashchange", openTarget); openTarget();
   function openTarget() {
     var t = location.hash && document.getElementById(location.hash.slice(1));
-    if (t && t.tagName === "DETAILS") t.open = true;
+    for (var d = t; d; d = d.parentElement) if (d.tagName === "DETAILS") d.open = true;
+    if (t && t.tagName !== "DETAILS" && t.closest && t.closest("details")) t.scrollIntoView();
   }
 
   // MP page: tabs by period (every convocation, or one); without the script the page shows every convocation.

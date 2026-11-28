@@ -1,34 +1,58 @@
 {% extends "base.html" %}
 {% set section = "skupstina" %}
-{% from "macros.html" import plural %}
+{% from "macros.html" import plural, chamber, how %}
 {% block title %}Sednice Narodne skupštine — Za ili Protiv{% endblock %}
 {% block description %}Sednice Narodne skupštine na kojima se glasalo, po sazivima i datumu.{% endblock %}
 {% macro sednica_n(n) %}{{ n }} {{ plural(n, "sednica", "sednice", "sednica") }}{% endmacro %}
-{% macro tally(s) %}{% if s.n %}{{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }} · <span class="t-protiv">{{ s.against }} protiv</span>{% elif s.others %}{{ s.others }} {{ plural(s.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}{% endif %}{% endmacro %}
 {# A convocation's three numbers: of its sittings with laws, how many, the most laws and the most votes against at one. #}
-{% macro conv_nums(ss, cv, cls="") %}{% set now = ss|selectattr("n")|list %}{% if now %}
+{% macro conv_nums(ss, cv) %}{% set now = ss|selectattr("n")|list %}{% if now %}
 {% set most = (now|sort(attribute="against", reverse=true))[0] %}{% set big = (now|sort(attribute="n", reverse=true))[0] %}
-<div class="lead-nums{{ cls }}">
+<div class="lead-nums st-nums">
   <p><b>{{ now|length }}</b><span>{{ plural(now|length, "sednica", "sednice", "sednica") }} sa usvojenim zakonima u {{ cv.name|locative }} sazivu</span></p>
   <p><b>{{ big.n }}</b><span>{{ plural(big.n, "zakon", "zakona", "zakona") }} na jednoj sednici, najviše: <a href="sednica/{{ big.slug }}.html">{{ big.day|day }}</a></span></p>
   <p><b class="t-protiv">{{ most.against }}</b><span>glasova protiv na jednoj sednici, najviše: <a href="sednica/{{ most.slug }}.html">{{ most.day|day }}</a></span></p>
 </div>{% endif %}{% endmacro %}
-{% macro row(s) %}<li><a class="st-name" href="sednica/{{ s.slug }}.html">{{ s.short }}</a> <span class="meta">{{ s.day|day }}{% if s.n or s.others %} · {{ tally(s) }}{% endif %}</span></li>{% endmacro %}
+{# A portrait in its list's colour, as on the day pages. #}
+{% macro face(f, big=false) %}<span class="tf-w {{ f.cls or 'c-mn' }}{{ ' nb' if big }}">{% if f.foto %}<img class="tf" src="foto/{{ f.foto }}" width="44" height="44" alt="" loading="lazy">{% else %}<span class="tf" aria-hidden="true">{{ f.initials }}</span>{% endif %}</span>{% endmacro %}
+{# Time by list as one bar in the lists' colours; the key names each. #}
+{% macro by_list(split, cls="", key=true) %}{% if split %}<span class="sc-lb{{ cls }}" role="img" aria-label="{% for x in split %}{{ x.name }} {{ x.pct|round|int }}%{{ ', ' if not loop.last }}{% endfor %}">{% for x in split %}<i class="{{ x.cls }}" style="width:{{ x.pct }}%"></i>{% endfor %}</span>{% if key %}<span class="sc-lk">{% for x in split %}<span><i class="{{ x.cls }}"></i>{{ x.name }} {{ x.time }}</span>{% endfor %}</span>{% endif %}{% endif %}{% endmacro %}
+{% macro marked() %}<p class="sc-mark">Napisao AI model · {{ how("sazetak-dana") }}</p>{% endmacro %}
+{# A sitting's days, each a way to its day page: its date, its summary's title, its time by list (the bar as long as
+   the day was, against the sitting's longest) and its three longest speakers. #}
+{% macro days_list(days) %}<ul class="sc-dl">{% for d in days %}<li id="dan-{{ d.day }}"><a href="govornici/{{ d.day }}.html">
+  <span class="meta">{{ d.when }}</span>{% if d.title %}<b class="sc-dt">{{ d.title }}</b>{% endif %}
+  <span class="sc-dw" style="width:{{ d.width }}%">{{ by_list(d.split, "", false) }}</span>
+  <span class="sc-df"><span class="sc-fc">{% for f in d.top %}{{ face(f) }}{% endfor %}</span><span class="meta">{{ d.time }} · {{ d.people }} govornika</span></span>
+</a></li>{% endfor %}</ul>
+{% if days|selectattr("title")|list %}{{ marked() }}{% endif %}{% endmacro %}
+{% macro days_fold(days, id, open_=false) %}<details class="sc-days" id="{{ id }}" data-wide{% if open_ %} open{% endif %}>
+  <summary><span class="sc-dn">Dani sednice <span class="count">{{ days|length }}</span></span><span class="sc-mini" aria-hidden="true">{% for d in days|reverse %}<i style="height:{{ [d.width, 12]|max }}%"></i>{% endfor %}</span></summary>
+  {{ days_list(days) }}
+</details>{% endmacro %}
+{% macro pills(s) %}{% if s.n %}<span class="pill">{{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }}</span>{% if s.against %}<span class="pill p">{{ s.against }} protiv</span>{% endif %}{% elif s.others %}<span class="pill o">{{ s.others }} {{ plural(s.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}</span>{% endif %}{% endmacro %}
 {% block main %}
 <h1>Skupština</h1>
 {% from "macros.html" import live_bar, mic_soon with context %}{{ live_bar() }}{{ mic_soon() }}
-{% from "macros.html" import assembly_tabs with context %}{% set own = lead and newer15 and lead.conv == newer15.conv|string %}{# the newest convocation's panel, unless the lead block is its sitting #}
+{% from "macros.html" import assembly_tabs with context %}{% set own = lead and newer15 and lead.conv == newer15.conv|string %}{# the newest convocation's panel, unless the card is its sitting #}
 {{ assembly_tabs("sednice", panel=not own) }}
 {% set shown = by_conv|selectattr(1)|map(attribute=0)|map(attribute="n")|map("string")|list %}
-{% if lead %}{% set L = lead %}
-<section class="st-lead"{% if L.conv not in shown and (own or not newer15) %} id="saziv-{{ L.conv }}"{% endif %}>
-  <p class="hero-kicker">{{ L.conv_name }} saziv</p>
-  <h2 class="st-lead-h">{% if L.slug %}<a href="sednica/{{ L.slug }}.html">{{ L.short }}</a>{% else %}<a href="{{ L.url }}">{{ L.short }}</a>{% endif %}</h2>
-  <p class="meta">{% if L.days|length > 1 %}od {{ L.days[-1].day|day_of }} do {{ L.days[0].day|day_of }}{% elif L.days %}{{ L.days[0].day|day }}{% else %}{{ L.starts|day }}{% endif %}{% if L.n or L.others %} · {{ tally(L) }}{% endif %}{% if L.days|length > 1 %} · {{ L.days|length }} dana{% endif %}</p>
-  {% if L.days %}<ul class="plain st-days">{% for d in L.days %}<li><a href="govornici/{{ d.day }}.html"><span class="st-dw">{{ d.when }}</span>{% if d.title %}<b class="st-dt">{{ d.title }}</b>{% endif %}<span class="label">{{ d.time }} za govornicom · {{ d.people }} govornika · snimak i prepis</span></a></li>{% endfor %}</ul>{% endif %}
-  {% if L.agenda %}<details class="st-agenda"><summary>Dnevni red</summary><ol class="hc-agenda">{% for a in L.agenda %}<li>{{ a }}</li>{% endfor %}</ol></details>{% endif %}
-  {% set srcs = L.days|selectattr("title")|map(attribute="izvor")|unique|list %}{% set mdl = (L.days|selectattr("title")|first or {}).model %}
-  {% if srcs %}<p class="label">{% if "beleske" in srcs %}Napisao AI model ({{ mdl or 'Claude Opus' }}) iz privremenih stenografskih beleški Skupštine (neredigovanih i neautorizovanih): može da pogreši, i nije citat. {% endif %}{% if srcs|reject("equalto", "beleske")|list %}Napisao AI model ({{ mdl or 'Claude Haiku' }}) iz automatskog prepisa zvuka prenosa, ne iz stenograma: može da pogreši u imenima i brojevima, i nije citat.{% endif %}</p>{% endif %}
+{% if lead %}{% set L = lead %}{% set S = L.summary %}{% set link_s = ("sednica/" ~ L.slug ~ ".html") if L.slug else L.url %}
+{% set now_on = live and L.conv == floor_now_conv|string %}
+<section class="st-card{{ ' has-days' if L.days }}"{% if L.conv not in shown and (own or not newer15) %} id="saziv-{{ L.conv }}"{% endif %}>
+ <div class="sc-main">
+  <p class="sz-k">{{ L.conv_name }} saziv · {{ L.short }}</p>
+  {% if S %}<h2 class="sz-h">{{ S.naslov }}</h2><p class="sz-p">{{ S.kratko }}</p>
+  {% if S.ukratko %}<details class="sz-f"><summary>Ukratko</summary><p class="sz-p">{{ S.ukratko }}</p></details>{% endif %}
+  {{ marked() }}
+  {% else %}<h2 class="sz-h"><a href="{{ link_s }}">{{ L.short }}</a></h2>{% if not L.days %}<p class="sc-when">{{ L.starts|day }}</p>{% endif %}{% endif %}
+  <ul class="sc-chips">{% if now_on and live_page %}<li class="on"><a href="{{ live_page }}" data-cir-href="{{ live_page }}cir/">● Uživo</a></li>{% endif %}{% if L.days|length > 1 %}<li><b>{{ L.days|length }}</b> dana</li>{% endif %}{% if L.people %}<li><b>{{ L.people }}</b> govornika</li>{% endif %}{% if L.time %}<li><b>{{ L.time }}</b> za govornicom</li>{% endif %}{% if L.n %}<li><b>{{ L.n }}</b> {{ "zakon" if L.n == 1 else "zakona" }}</li><li class="z"><b>{{ L.za }}</b> za</li><li class="p"><b>{{ L.against }}</b> protiv</li>{% elif L.others %}<li><b>{{ L.others }}</b> {{ plural(L.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}</li>{% endif %}</ul>
+  {% if L.top %}<ul class="sc-faces">{% for f in L.top %}<li>{% if f.slug %}<a href="poslanik/{{ f.slug }}.html">{% endif %}{{ face(f, true) }}<b>{{ f.name }}</b><span>{{ f.time }}</span>{% if f.slug %}</a>{% endif %}</li>{% endfor %}</ul>{% endif %}
+  {% if L.split %}{{ by_list(L.split, " big") }}{% endif %}
+  {% if L.lead_law %}<a class="law-chamber sitting-lead sc-law" href="zakon/{{ L.lead_law.slug }}.html">{{ chamber(L.lead_law.counts) }}<span class="hero-meta">Najviše glasova protiv na ovoj sednici:</span> <span class="sitting-lead-law">{{ L.lead_law.short }}</span></a>{% endif %}
+  {% if L.agenda %}<details class="sz-f"><summary>Dnevni red</summary><ol class="hc-agenda">{% for a in L.agenda %}<li>{{ a }}</li>{% endfor %}</ol></details>{% endif %}
+  <p class="sc-go"><a href="{{ link_s }}">{{ L.short }} →</a></p>
+ </div>
+ {% if L.days %}{{ days_fold(L.days, "dani-sednice", now_on) }}{% endif %}
 </section>
 {% endif %}
 <nav class="page-menu" aria-label="Saziv">{% for cv, ss in by_conv if ss %}<a href="#saziv-{{ cv.n }}">{{ cv.name }} saziv ({{ cv.years }})</a>{% endfor %}</nav>
@@ -36,11 +60,11 @@
 {% for cv, ss in by_conv if ss %}{% set first = loop.first %}
 <section id="saziv-{{ cv.n }}">
   <h2><a href="{{ cv.saziv_page }}">{{ cv.name }} saziv</a> <span class="count">{{ cv.years }} · {{ sednica_n(ss|length) }}</span></h2>
-  {{ conv_nums(ss, cv, " st-nums") }}
-  {% set years = ss|map(attribute="year")|unique|list %}
-  {% for y in years %}{% set ys = ss|selectattr("year", "equalto", y)|list %}
+  {{ conv_nums(ss, cv) }}
+  {% for y in ss|map(attribute="year")|unique|list %}{% set ys = ss|selectattr("year", "equalto", y)|list %}
   <details class="year st-year" data-wide{% if first and loop.first %} open{% endif %}><summary><h3>{{ y }}. <span class="count">{{ sednica_n(ys|length) }}</span></h3></summary>
-  <ul class="plain sittings-list st-list">{% for s in ys %}{{ row(s) }}{% endfor %}</ul>
+  <ul class="st-rows">{% for s in ys %}<li><a href="sednica/{{ s.slug }}.html"><span class="sr-t"><b>{{ s.short }}</b><span class="meta">{{ s.day|day }}</span></span><span class="sr-p">{{ pills(s) }}</span></a>
+  {% if s.floor and s.floor.days %}{{ days_fold(s.floor.days, "dani-" ~ s.slug) }}{% endif %}</li>{% endfor %}</ul>
   </details>
   {% endfor %}
 </section>
@@ -50,4 +74,5 @@
 <details class="method"><summary>Kako je ovo nastalo</summary>
 <p>Sednice na kojima su usvajani zakoni, po sazivima, najnovije prve. Uz svaku: broj zakona i ukupan broj glasova protiv. Sazvane sednice čiji rezultati još nisu objavljeni su na strani <a href="u-proceduri.html#sednice">U proceduri</a>.</p>
 </details>
+<style>{{ card_css|safe }}</style>
 {% endblock %}

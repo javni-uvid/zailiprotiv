@@ -390,6 +390,26 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   three for every convocation; they were the current one's alone, at the foot), and its sittings folded by year as
   "Nedelje" folds weeks (the newest year of the newest convocation open; on a wide screen all open), each a row of its
   short name and "date · zakona · protiv". The full title stays on the sitting's page. No new sentence.
+- **"Sednice" as cards: the latest sitting's card, its days folded in it** (28 Nov 2026; the maintainer, of the first
+  look: "I dalje mise uopšte ne sviđa / Samo tekst je tu i skloni taj velik opis o AI"; of three directions, "kartice mi
+  se dopada"; of three ways of them: "Voleo bih da npr možemo info kao A i onda da proširimo da vidimo sve dane iz te
+  sednice"; galleries in `zailiprotiv-dirigent\sednice-lepse\runda2`, `runda3`). The latest sitting (`pages_lists.lead`,
+  the rule of the first round) is one dark card, as the day page's "Sažetak dana": its own summary where its days have
+  summaries (`tools/sazetak_sednice.py`, `summary_of`): title, the short text, the paragraph folded under "Ukratko"; its
+  numbers as pills (days, speakers, time at the lectern, laws with for and against summed over them, or other roll
+  calls); its five longest speakers with their portraits and time; its time by list as one bar in the live page's
+  lists' colours, the lists with no colour of their own one part, "ostali", and a key naming each; for a sitting with
+  laws the chamber of the one most voted against, as on the sitting's page; and its agenda folded. Model-written text is
+  marked "Napisao AI model" beside the site's "Kako računamo" link to the day summary's section (the long sentences went:
+  "skloni taj velik opis o AI"; a sentence of its own on the method page was refused: "Ne, stavi samo kako računamo i
+  link"). At the card's foot "Dani sednice" with their count and a small column per day folds the days (`floor_card`):
+  each its date, its summary's title, its time by list as long as the day was against the sitting's longest, its three
+  longest speakers, and a way to its day page; open beside the card on a wide screen (`data-wide`), open on a phone
+  while the sitting is on, since a reader comes then for today. Any other sitting whose days were read from the recording
+  (`own_days`: the Assembly's listing, each from its start to the next) opens its days the same way under its row; the
+  rest are rows of their short name, date and pills. A link to a day (`#dan-<date>`) opens its fold: `site.js` opens
+  every fold around a link's target, not only a target that is a fold. The sitting's page shows its summary too. No
+  "decisions" count: a day summary's decisions include each ruling on a point of order (22 on 25 Nov).
 
 ## Design rules
 
@@ -427,7 +447,9 @@ show otherwise, unlike the six principles above). A change to a page is checked 
     rule 2 on the home page and the live page only: each hue stands apart from blue and orange (the first list's
     is indigo for that reason), the same hues on both pages, a key always names them, and they differ in
     lightness for colour-blind readers. They follow the same rules as everything else: the same for every group
-    (principle 1), no judgement in the words beside them, and never the only way a fact is told.
+    (principle 1), no judgement in the words beside them, and never the only way a fact is told. Widened on 28 Nov 2026 (the
+    maintainer: "Širi ih generalno, nema potrebe da generalno toliko se bojimo boja"): the lists' colours are on
+    "Sednice" too, and the site need not be so afraid of colour; the same rules hold wherever they go.
 - **A date after "od" and "do" takes the month's genitive** (27 Nov 2026, seen on the real pages of the Fifteenth's first
   sitting: "od 19. novembar 2026. do 25. novembar 2026."): a sitting's span and an MP's "Glasanja do …" use `day_of`
   ("od 19. novembra 2026 do 25. novembra 2026"), as the site's other sentences already did; a date standing alone keeps `day`.
