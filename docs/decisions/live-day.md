@@ -295,5 +295,5 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   more with what failed, and nothing is written if it still fails. It writes `data/<N>/sazetak/sednica-<name>.json`
   (`naslov`, `kratko`, `ukratko`, `dani`, `model`, `"izvor": "dani"`), which no reader of the day files takes for a day.
   `--bez-modela` prints the prompt and the material. Days with a summary exist so far only for the Fifteenth's first
-  sitting (17, 18, 19, 24 and 25 Nov 2026), so the rule is "where the sitting's days have summaries". How the site shows it
-  waits for the maintainer's pick of the sittings page's look.
+  sitting (17, 18, 19, 24 and 25 Nov 2026), so the rule is "where the sitting's days have summaries". The site shows it on
+  the sittings page's card and on the sitting's page (28 Nov 2026, `docs/decisions/site.md`).

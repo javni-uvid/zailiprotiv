@@ -1495,23 +1495,74 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
 .prati-box .prati-also { margin-top: .5rem; }  /* an area's second note, a line of its own */
 @media (max-width: 600px) { .prati { margin-bottom: .6rem; } .prati-box { width: calc(100% + 6.5rem); margin-left: -6.5rem; } }
 @media (max-width: 600px) { .prati-o .prati-box, .prati-b .prati-box, .prati-z .prati-box { width: auto; margin-left: 0; } } /* an area's, a bill's and a law's page have no portrait to reach under */
-/* "Sednice", the Assembly section's front page (28 Nov 2026): the latest sitting on top, its days with their titles,
-   then each convocation's three numbers and its sittings folded by year, as "Nedelje" folds weeks. */
-.st-lead { margin: .4rem 0 1.6rem; padding: 1rem 0 .4rem; border-top: 2px solid var(--fg); }
-.st-lead .hero-kicker { margin: 0; }
-.st-lead-h { font-size: var(--t-h1); margin: .1rem 0 .2rem; line-height: 1.15; }
-.st-lead > .meta { margin: 0 0 .6rem; }
-.st-days, .st-list { list-style: none; padding: 0; }
-.st-days { margin: 0 0 .6rem; }
-.st-days a { display: flex; flex-direction: column; gap: .1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; min-height: 2.75rem; }
-.st-days li:first-child a { border-top: 1px solid var(--line); }
-.st-days .st-dw { text-decoration: underline; text-underline-offset: 3px; }
-.st-days .st-dt { font-family: var(--serif); font-size: var(--t-4); line-height: 1.25; }
-.st-days a:hover .st-dt { text-decoration: underline; }
-.st-agenda > summary { min-height: 2.75rem; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
-.st-agenda .hc-agenda { display: block; }
-.st-list li { display: flex; flex-direction: column; gap: .05rem; padding: .55rem 0; border-bottom: 1px solid var(--line); margin: 0; }
-.st-list .st-name { font-weight: 600; }
+/* "Sednice", the Assembly section's front page (28 Nov 2026, the maintainer: "kartice mi se dopada", "Voleo bih da npr
+   možemo info kao A i onda da proširimo da vidimo sve dane iz te sednice"): the latest sitting as one dark card, as the
+   day page's "Sažetak dana" (its summary, numbers, longest speakers, time by list), its days folded at its foot and
+   open beside it on a wide screen; then each convocation's numbers and its sittings by year. */
+.st-card { border-radius: 16px; background: #111318; color: #fff; margin: .6rem 0 1.6rem; overflow: hidden; }
+@media (prefers-color-scheme: dark) { .st-card { border: 1px solid #3a3f4a; } }
+.st-card a { color: inherit; }
+.sc-main { padding: 1.1rem 1.1rem .6rem; }
+.st-card .sz-k { margin: 0; font-size: var(--t-1); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #7cc0f5; }
+.st-card .sz-h { font-size: var(--t-7); line-height: 1.18; margin: .3rem 0 .6rem; color: #fff; text-wrap: balance; }
+.st-card .sz-p { font-size: var(--t-4); line-height: 1.55; margin: .2rem 0 .5rem; color: #e9eaee; max-width: 42rem; }
+.st-card .sz-f { border-top: 1px solid #3a3f4a; margin-top: .4rem; }
+.st-card .sz-f > summary { cursor: pointer; padding: .7rem 0; font-weight: 700; display: flex; align-items: center; list-style: none; min-height: 2.75rem; box-sizing: border-box; text-decoration: none; }
+.st-card .sz-f > summary::-webkit-details-marker { display: none; }
+.st-card .sz-f > summary::after { content: "▾"; margin-left: auto; color: #7cc0f5; } .st-card .sz-f[open] > summary::after { content: "▴"; }
+.st-card .hc-agenda { display: block; color: #e9eaee; }
+.sc-mark { margin: .2rem 0 .7rem; font-size: var(--t-1); color: #c9ccd3; }
+.sc-when { color: #c9ccd3; margin: 0 0 .6rem; }
+.st-card .sc-chips { list-style: none; padding: 0; margin: .4rem 0 .7rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+.st-card .sc-chips li { border: 1px solid #3a3f4a; border-radius: 99px; padding: .3rem .7rem; font-size: var(--t-2); color: #c9ccd3; }
+.st-card .sc-chips b { color: #fff; } .st-card .sc-chips li.z b { color: #7cc0f5; } .st-card .sc-chips li.p b { color: #ff9a6b; }
+.st-card .sc-chips li.on { border-color: #ff5a5a; } .st-card .sc-chips li.on a { color: #ff7a7a; font-weight: 700; text-decoration: none; }
+.sc-faces { list-style: none; padding: 0; margin: .4rem 0 .6rem; display: flex; gap: .8rem; overflow-x: auto; }
+.sc-faces li { flex: none; width: 4.8rem; text-align: center; } .sc-faces a { text-decoration: none; display: block; }
+.sc-faces .tf-w.nb { width: 60px; height: 60px; margin: 0 auto .3rem; } .sc-faces .nb .tf { width: 54px; height: 54px; }
+.sc-faces b { display: block; font-size: var(--t-1); line-height: 1.2; } .sc-faces li span:last-child { font-size: var(--t-1); color: #c9ccd3; }
+.sc-law { display: block; margin: .6rem 0 .3rem; color: #fff; text-decoration: none; } .sc-law .hero-meta { color: #c9ccd3; }
+.sc-go { margin: .2rem 0 0; font-weight: 700; } .sc-go a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+/* time by list: one bar in the lists' colours (the live page's, from its stylesheet), a key that names them */
+.sc-lb { display: flex; gap: 0; height: 8px; border-radius: 4px; overflow: hidden; background: var(--line); } .sc-lb.big { height: 12px; margin: .3rem 0 .4rem; }
+.sc-lb i { display: block; height: 100%; }
+.sc-lb i.c-av, .sc-lk i.c-av { background: var(--c-av); } .sc-lb i.c-sl, .sc-lk i.c-sl { background: var(--c-sl); } .sc-lb i.c-mn, .sc-lk i.c-mn { background: var(--c-mn); }
+.sc-lk { display: flex; flex-wrap: wrap; gap: .2rem .9rem; font-size: var(--t-1); color: var(--muted); margin: 0 0 .6rem; }
+.sc-lk i { display: inline-block; width: .65rem; height: .65rem; border-radius: 50%; margin-right: .3rem; }
+/* the days, folded at the card's foot: a light panel, as the day page's speakers in its dark card */
+.st-card > .sc-days { margin: 0; }
+.sc-days { background: #fff; color: #111; }
+@media (prefers-color-scheme: dark) { .sc-days { background: #1b1e25; color: #eee; } }
+.sc-days > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.2rem; padding: .4rem 1.1rem; cursor: pointer; list-style: none; font-weight: 700; text-decoration: none; }
+.sc-days > summary::-webkit-details-marker { display: none; }
+.sc-days > summary::after { content: "▾"; color: var(--muted); } .sc-days[open] > summary::after { content: "▴"; }
+.sc-dn .count { font-weight: 400; color: var(--muted); }
+.sc-mini { display: flex; align-items: flex-end; gap: 3px; height: 1.6rem; margin-left: auto; } .sc-mini i { display: block; width: 7px; background: var(--fg); border-radius: 2px 2px 0 0; }
+.sc-days[open] .sc-mini { visibility: hidden; }
+.sc-dl { list-style: none; margin: 0; padding: 0; }
+.sc-dl a { display: flex; flex-direction: column; gap: .3rem; padding: .75rem 1.1rem; border-top: 1px solid var(--line); text-decoration: none; color: inherit; }
+.sc-dl a:hover .sc-dt { text-decoration: underline; }
+.sc-dt { font-family: var(--serif); font-size: var(--t-4); line-height: 1.25; }
+.sc-dw { display: block; min-width: 1.5rem; }
+.sc-df { display: flex; align-items: center; gap: .9rem; }
+.sc-fc { display: inline-flex; flex: none; } .sc-fc .tf-w { width: 36px; height: 36px; margin-right: -8px; } .sc-fc .tf { width: 32px; height: 32px; }
+.sc-days > .sc-mark { color: var(--muted); padding: .5rem 1.1rem .8rem; margin: 0; border-top: 1px solid var(--line); }
+/* a wide screen: the days beside the card's text, open (data-wide) */
+@media (min-width: 900px) {
+  .st-card.has-days { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .st-card.has-days .sc-main { padding-bottom: 1rem; }
+  .st-card.has-days .sc-days { border-radius: 0; }
+}
+.sc-solo { margin-top: 1rem; }
+/* the sittings below: a row each, its numbers as pills; a sitting with days read opens them the same way */
+.st-rows { list-style: none; padding: 0; margin: 0 0 .8rem; }
+.st-rows > li { border-bottom: 1px solid var(--line); }
+.st-rows > li > a { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding: .55rem 0; text-decoration: none; color: inherit; min-height: 2.75rem; }
+.sr-t { display: flex; flex-direction: column; } .sr-t b { text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+.sr-p { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .3rem; flex: none; max-width: 45%; }
+.pill { border: 1px solid var(--line); border-radius: 99px; padding: .15rem .55rem; font-size: var(--t-2); white-space: nowrap; }
+.pill.p { color: var(--protiv); border-color: currentColor; } .pill.o { color: var(--muted); }
+.st-rows .sc-days { border-radius: 10px; margin: 0 0 .6rem; border: 1px solid var(--line); }
 .st-year > summary { display: flex; justify-content: space-between; align-items: center; min-height: 2.75rem; border-bottom: 1px solid var(--line); }
 .st-year > summary h3 { margin: 0; font-size: var(--t-4); }
 .st-year > summary::after { content: "+"; color: var(--muted); font-size: var(--t-5); } .st-year[open] > summary::after { content: "–"; }
