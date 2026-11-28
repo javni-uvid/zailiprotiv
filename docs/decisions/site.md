@@ -374,6 +374,9 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   of their own between Varnice and Pretraga. Now: Skupština (to "Nedelje", whose switch leads to Sednice, Sazivi and
   U brojkama, as the top bar's "Skupština"), Varnice, Pretraga, Podrži sajt, O projektu. The groups are a button of
   "Poslanici". The footer keeps its full list.
+- **"Skupština" opens on the sittings** (28 Nov 2026, the maintainer: "Stavi da sednice budu početno obeleženo"): the
+  top bar's and the sheet's "Skupština" lead to `sednice` (they led to `nedelje`), and the switch begins with it:
+  Sednice, Nedelje, Sazivi, U brojkama.
 
 ## Design rules
 

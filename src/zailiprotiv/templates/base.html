@@ -28,7 +28,7 @@
     <a href="{{ root }}zakoni.html"{{ here("zakoni") }}>Zakoni</a>
     <a href="{{ root }}{{ newer15.mps_page if newer15 else "poslanici.html" }}"{{ here("poslanici") }}>Poslanici</a>
     <a href="{{ root }}replike.html">Varnice</a>
-    <a href="{{ root }}nedelje.html"{{ here("skupstina") }}>Skupština</a>
+    <a href="{{ root }}sednice.html"{{ here("skupstina") }}>Skupština</a>
     {% if live_page %}<a class="nav-live{% if live %} on{% endif %}" href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="meni"><i aria-hidden="true"></i>Uživo</a>{% endif %}
     <span class="nav-tools">{% if support %}<a class="nav-support" data-don="meni" href="{{ root }}podrzi.html" aria-label="Podrži sajt" title="Podrži sajt"><img src="{{ root }}caslav-srce.webp" alt="" width="36" height="33" decoding="async"><span class="wide-only">Podrži</span></a>{% endif %}<a class="nav-search" href="{{ root }}pretraga.html" aria-label="Pretraga" title="Pretraga"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>{% if cyrillic %}<a class="script-switch" href="#pismo" hreflang="sr-Cyrl" aria-label="Ћирилица"><span class="wide-only">Ћирилица</span><span class="phone-only">Ћир</span></a>{% endif %}</span>
     <a class="nav-cta" href="{{ root }}glasaj.html">Glasaj<span class="wide-only"> i ti</span></a>
@@ -41,7 +41,7 @@
   {% if live_page %}<a class="dno-live{% if live %} on{% endif %}" href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="meni"{% if live or next_sitting %} data-src="{{ live_page }}stanje.js" data-od="{{ 0 if live else next_sitting.u }}"{% endif %}><b aria-hidden="true"><i class="i-mik"></i></b>Uživo</a>{% endif %}
   <a href="{{ root }}glasaj.html" data-at="glasaj"><i class="i-gl" aria-hidden="true"></i>Glasaj</a>
   <details><summary><i class="i-jos" aria-hidden="true"></i>Još</summary><div>
-    <a href="{{ root }}nedelje.html">Skupština</a>
+    <a href="{{ root }}sednice.html">Skupština</a>
     <a href="{{ root }}replike.html">Varnice</a>
     <a href="{{ root }}pretraga.html">Pretraga</a>
     {% if support %}<a data-don="meni" href="{{ root }}podrzi.html">Podrži sajt</a>{% endif %}
