@@ -37,6 +37,9 @@ name. Every page is also in Cyrillic, under `cir/`.
 - **Oblasti:** a page for each of the 17 areas of Article 97, with "Prati mejlom": a mail the morning after a bill of the
   area entered procedure, came on a sitting's agenda or was passed (`oblasti.py`, `prati-oblasti.json`,
   `oblasti-dogadjaji.json`; the counter and the live service's sender take it in their own steps).
+- **Praćenje jednog zakona:** "Prati mejlom" on a waiting bill's page (on the agenda, passed, no longer listed, published
+  in the Gazette, then as its law) and on every law's page (a bill whose title names the law, and its steps);
+  `prati-predlozi.json`, `prati-zakoni/<key>.json`, the same `oblasti-dogadjaji.json`.
 - **A new convocation's MPs** before its first roll call: `poslanici-<N>.html`, from the Assembly's list (party, place, year of birth; who was an MP before), a page for each new one.
 - **Poslanici:** a page per MP, opening with a card of facts by one rule for all (presence, votes unlike the group,
   hours spoken, the longest speech, exchange partners, the most alike group), then key votes, votes against the

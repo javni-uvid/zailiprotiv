@@ -631,3 +631,16 @@ show otherwise, unlike the six principles above). A change to a page is checked 
   articles (the page's own, `data-povreda`), "Između govora" where no speech holds the place. No portrait and no sheet
   (the rows have neither). The player stands far below a phone's first screen (some 4,300 px on 24 Nov), so the first
   screen is unchanged; while a recording plays the card (~136 px) pushes the list under it down.
+- **"Prati mejlom" on a waiting bill's page and on every law's page** (28 Nov 2026, the maintainer: "Može se nekom i samo
+  na taj zakon prijaviti" (27 Nov), and of the proposal's seven decisions "Možemo sa tvojim preporukama"). Variant A of three:
+  the same `<details>` as an MP's and an area's, under the title (`follow_part(key, "b")`, `follow_part(key, "z")`), with the
+  approved words and a second line (a bill: it goes on as its law once passed; a law: a change is a bill whose title names
+  it). A bill's key is its page's address, a law's the law it changes or is (`oblasti.named`: "Zakon o izmenama Zakona o
+  radu" follows "Zakon o radu", "Zakon o izmeni Krivičnog zakonika" "Krivični zakonik"), both through `oblasti.follow_key`,
+  which keeps an address over the counter's 80 characters to its first words and a digest. The build writes
+  `prati-predlozi.json` (the bills that wait) and `prati-zakoni/<key>.json` (every law of the site, one file each: the whole
+  list would be over 600 KB, and the counter asks for one); `oblasti-dogadjaji.json` now has the events of every bill, with
+  an area or none, two more kinds (no longer listed; published in the Gazette), each event's bill and laws, and `predlozi`
+  (each bill's laws, its day passed) so that a bill's follower goes on with its law. An area's follower is told only the
+  three kinds as before. On a year of the Fourteenth: 94 of 173 bills change a law their title names, 67 laws, at most 4 a
+  law, at most 11 days with a mail for one law (`test_pracenje_zakona.py`).

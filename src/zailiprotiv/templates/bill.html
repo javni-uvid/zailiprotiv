@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "zakoni" %}
-{% from "macros.html" import plural, how, votebox, area_follow with context %}
+{% from "macros.html" import plural, how, votebox, area_follow, follow_part with context %}
 {# A bill in procedure: what is known of it before the Assembly votes. Once passed, the page sends on to the law's. #}
 {% set name = b.title|latin %}
 {% block title %}{{ b.title|latin }}{% if shared and b.submitted %} (podnet {{ b.submitted|day }}){% endif %} — Za ili Protiv{% endblock %}
@@ -13,6 +13,7 @@
 <h1>{{ name }}</h1>
 {% if sm %}<p class="gist">{{ sm.ukratko|latin }}</p>{% endif %}
 </div>
+{% if waits and not b.law %}{{ follow_part(b.slug|follow_key, "b") }}{% endif %}
 
 {% if b.law %}
 <p class="note">Ovaj predlog je usvojen {{ b.law.law.passed|day }}. <a href="../zakon/{{ b.law.slug }}.html">Zakon, glasanje i rasprava</a></p>
