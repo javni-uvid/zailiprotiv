@@ -1459,3 +1459,22 @@ def test_the_sittings_page_opens_on_the_latest_sitting_and_folds_by_year(built, 
                                     {"od": 30, "do": 90, "ime": "B", "uloga": "X"}, {"od": 90, "do": 120, "ime": "C", "grupa": "Y"}]}],
                                    root=tmp_path, conv="15", colours={"Studentska lista": "c-sl"})["split"]
     assert [(x["name"], x["cls"], x["pct"]) for x in split] == [("Studentska lista", "c-sl", 25.0), ("ostali", "c-mn", 75.0)]
+
+
+def test_a_fold_that_links_lead_to_opens_as_the_page_is_read(tmp_path):
+    """29 Nov 2026: a law's "prati oblast mejlom" leads to its area's "#prati"; site.js opened the fold after the first
+    paint and the list of laws below it jumped (layout shift 0.15 on a wide screen). The fold now opens right after its
+    own markup, before anything below it is drawn: every page a link leads to with "#prati" has the opener there."""
+    root = data(tmp_path)
+    (root / "settings.json").write_text(json.dumps({"votes_api": "https://glasovi.example/"}))
+    out = tmp_path / "_site"
+    site.build(root, out, "zailiprotiv.rs")
+    opener = "</details><script>(function (d) { try { var t = location.hash"
+    led = set()
+    for page in out.rglob("*.html"):
+        html = page.read_text(encoding="utf-8")
+        for href in re.findall(r'href="([^"#]+)#prati"', html):
+            led.add((page.parent / href).resolve())
+        if 'id="prati"' in html:
+            assert html.count(opener) >= 1 and html.index(opener) > html.index('id="prati"'), page
+    assert led and all(p.exists() and opener in p.read_text(encoding="utf-8") for p in led)
