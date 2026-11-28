@@ -1531,6 +1531,7 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
 .sc-lk { display: flex; flex-wrap: wrap; gap: .2rem .9rem; font-size: var(--t-1); color: var(--muted); margin: 0 0 .6rem; }
 .sc-lk i { display: inline-block; width: .65rem; height: .65rem; border-radius: 50%; margin-right: .3rem; }
 /* the days, folded at the card's foot: a light panel, as the day page's speakers in its dark card */
+.st-card > .sc-days { margin: 0; }
 .sc-days { background: #fff; color: #111; --fg: #111; --bg: #fff; --muted: #5b616b; --line: #e3e5ea; }
 @media (prefers-color-scheme: dark) { .sc-days { background: #1b1e25; color: #eee; --fg: #eee; --bg: #1b1e25; --muted: #aab0bb; --line: #343946; } }
 .sc-days > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.2rem; padding: .4rem 1.1rem; cursor: pointer; list-style: none; font-weight: 700; text-decoration: none; }
