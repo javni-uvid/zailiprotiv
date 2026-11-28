@@ -41,11 +41,8 @@
   {% if live_page %}<a class="dno-live{% if live %} on{% endif %}" href="{{ live_page }}" data-cir-href="{{ live_page }}cir/" data-mik="meni"{% if live or next_sitting %} data-src="{{ live_page }}stanje.js" data-od="{{ 0 if live else next_sitting.u }}"{% endif %}><b aria-hidden="true"><i class="i-mik"></i></b>Uživo</a>{% endif %}
   <a href="{{ root }}glasaj.html" data-at="glasaj"><i class="i-gl" aria-hidden="true"></i>Glasaj</a>
   <details><summary><i class="i-jos" aria-hidden="true"></i>Još</summary><div>
+    <a href="{{ root }}nedelje.html">Skupština</a>
     <a href="{{ root }}replike.html">Varnice</a>
-    <a href="{{ root }}nedelje.html">Nedelja u Skupštini</a>
-    <a href="{{ root }}sednice.html">Sednice</a>
-    <a href="{{ root }}grupe.html">Poslaničke grupe</a>
-    <a href="{{ root }}brojke.html">Skupština u brojkama</a>
     <a href="{{ root }}pretraga.html">Pretraga</a>
     {% if support %}<a data-don="meni" href="{{ root }}podrzi.html">Podrži sajt</a>{% endif %}
     <a href="{{ root }}o-projektu.html">O projektu</a>

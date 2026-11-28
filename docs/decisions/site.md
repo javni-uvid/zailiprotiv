@@ -367,6 +367,13 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   are taps on phones, with nothing about the device. **visits** prints them by day (`tools/uses.py`); read beside the
   phones' page views from Cloudflare (taps per 1,000 views). "Kako računamo" says so. A name the counter does not take
   is refused (400) and costs the bar nothing.
+- **"Još" holds one row for the Assembly** (28 Nov 2026, the maintainer: "Pod tri tačke još je jako loše sortirano /
+  Stvari za skupštinu trebaju biti vezane (u brojkama, nedelje, sednice, sazivi) isto kao zakoni što sadrže tri
+  prekidača, tako i ovde / Glavni link nek se zove skupština"; "poslanicke grupe skloni iz jos, već postoje u
+  poslanici"). The sheet had "Nedelja u Skupštini", "Sednice", "Poslaničke grupe" and "Skupština u brojkama" as rows
+  of their own between Varnice and Pretraga. Now: Skupština (to "Nedelje", whose switch leads to Sednice, Sazivi and
+  U brojkama, as the top bar's "Skupština"), Varnice, Pretraga, Podrži sajt, O projektu. The groups are a button of
+  "Poslanici". The footer keeps its full list.
 
 ## Design rules
 
