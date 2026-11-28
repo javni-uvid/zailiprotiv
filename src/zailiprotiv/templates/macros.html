@@ -33,6 +33,11 @@
 {# A term of the Rules (data/poslovnik/pojmovi.json) leads to what the Rules say of it, where the page has it. #}
 {% macro term(id, text) %}{% if id in rule_terms %}<a href="{{ root }}poslovnik-clanovi.html#pojam-{{ id }}">{{ text }}</a>{% else %}{{ text }}{% endif %}{% endmacro %}
 
+{# The sittings' dark card and its light panel of days (28 Nov 2026) set the theme's names for what is inside them, as
+   the day page's "Sažetak dana" does in its own page: the site's stylesheet takes the base colours from the family only. #}
+{% macro card_tokens() %}<style>.st-card { --fg: #fff; --bg: #111318; --line: #3a3f4a; --muted: #c9ccd3; }
+.sc-days { --fg: #111; --bg: #fff; --muted: #5b616b; --line: #e3e5ea; }
+@media (prefers-color-scheme: dark) { .sc-days { --fg: #eee; --bg: #1b1e25; --muted: #aab0bb; --line: #343946; } }</style>{% endmacro %}
 {% macro how(anchor) %}<a class="how" href="{{ root }}kako-racunamo.html#{{ anchor }}">Kako računamo</a>{% endmacro %}
 
 {# The chamber: the count of a vote as 250 seats, for from the left, against from the right. Each vote's seats are

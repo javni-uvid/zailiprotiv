@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "skupstina" %}
-{% from "macros.html" import bar, chamber, plural, how, other_line with context %}
+{% from "macros.html" import bar, chamber, plural, how, card_tokens, other_line with context %}
 {% block title %}{{ title|latin }} — Za ili Protiv{% endblock %}
 {% block description %}{% if not laws %}Ostala glasanja na sednici „{{ title|latin }}" i kako su glasali poslanici.{% else %}Zakoni usvojeni na sednici „{{ title|latin }}" i kako su glasali poslanici.{% endif %}{% endblock %}
 {% block main %}
@@ -17,7 +17,7 @@
 <p class="sz-k">Sažetak</p><h2 class="sz-h">{{ summary.naslov }}</h2><p class="sz-p">{{ summary.kratko }}</p>
 {% if summary.ukratko %}<details class="sz-f"><summary>Ukratko</summary><p class="sz-p">{{ summary.ukratko }}</p></details>{% endif %}
 <p class="sc-mark">Napisao AI model · {{ how("sazetak-dana") }}</p>
-</div></section>{% endif %}
+</div></section>{{ card_tokens() }}{% endif %}
 <ul class="rows">
 {% for it in laws %}
 <li class="row">

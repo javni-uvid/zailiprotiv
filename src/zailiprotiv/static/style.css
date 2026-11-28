@@ -1499,8 +1499,7 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
    možemo info kao A i onda da proširimo da vidimo sve dane iz te sednice"): the latest sitting as one dark card, as the
    day page's "Sažetak dana" (its summary, numbers, longest speakers, time by list), its days folded at its foot and
    open beside it on a wide screen; then each convocation's numbers and its sittings by year. */
-.st-card { border-radius: 16px; background: #111318; color: #fff; margin: .6rem 0 1.6rem; overflow: hidden;
-  --fg: #fff; --bg: #111318; --line: #3a3f4a; --muted: #c9ccd3; }
+.st-card { border-radius: 16px; background: #111318; color: #fff; margin: .6rem 0 1.6rem; overflow: hidden; }
 @media (prefers-color-scheme: dark) { .st-card { border: 1px solid #3a3f4a; } }
 .st-card a { color: inherit; }
 .sc-main { padding: 1.1rem 1.1rem .6rem; }
@@ -1532,8 +1531,8 @@ details.year { margin: 0; } .year > summary { list-style: none; cursor: pointer;
 .sc-lk i { display: inline-block; width: .65rem; height: .65rem; border-radius: 50%; margin-right: .3rem; }
 /* the days, folded at the card's foot: a light panel, as the day page's speakers in its dark card */
 .st-card > .sc-days { margin: 0; }
-.sc-days { background: #fff; color: #111; --fg: #111; --bg: #fff; --muted: #5b616b; --line: #e3e5ea; }
-@media (prefers-color-scheme: dark) { .sc-days { background: #1b1e25; color: #eee; --fg: #eee; --bg: #1b1e25; --muted: #aab0bb; --line: #343946; } }
+.sc-days { background: #fff; color: #111; }
+@media (prefers-color-scheme: dark) { .sc-days { background: #1b1e25; color: #eee; } }
 .sc-days > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.2rem; padding: .4rem 1.1rem; cursor: pointer; list-style: none; font-weight: 700; text-decoration: none; }
 .sc-days > summary::-webkit-details-marker { display: none; }
 .sc-days > summary::after { content: "▾"; color: var(--muted); } .sc-days[open] > summary::after { content: "▴"; }
