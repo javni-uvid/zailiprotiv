@@ -38,6 +38,11 @@
 {% macro card_tokens() %}<style>.st-card { --fg: #fff; --bg: #111318; --line: #3a3f4a; --muted: #c9ccd3; }
 .sc-days { --fg: #111; --bg: #fff; --muted: #5b616b; --line: #e3e5ea; }
 @media (prefers-color-scheme: dark) { .sc-days { --fg: #eee; --bg: #1b1e25; --muted: #aab0bb; --line: #343946; } }</style>{% endmacro %}
+{# A fold that links lead to opens as the page is read, right after its own markup, when the link's target is the fold or
+   inside it: nothing below it is drawn yet, so nothing moves (29 Nov 2026: arriving at an area's "#prati" from a law,
+   the script opened it after the first paint and the list of laws jumped 244 px). site.js still opens it on a later
+   change of the address. Without the script the fold stays closed, as before. #}
+{% macro opens_on_target() %}<script>(function (d) { try { var t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (t && d && d.contains(t)) d.open = true; } catch (e) {} })(document.currentScript.previousElementSibling);</script>{% endmacro %}
 {% macro how(anchor) %}<a class="how" href="{{ root }}kako-racunamo.html#{{ anchor }}">Kako računamo</a>{% endmacro %}
 
 {# The chamber: the count of a vote as 250 seats, for from the left, against from the right. Each vote's seats are
@@ -263,7 +268,7 @@
 <p class="prati-fine prati-also">Oblast je tačka člana 97. Ustava na koju se predlagač poziva; zakon bez nje (najčešće potvrđivanje ugovora) ne javljamo.</p>{% elif kind == "b" %}
 <p class="prati-fine prati-also">Kad bude usvojen, praćenje se nastavlja kao praćenje zakona.</p>{% elif kind == "z" %}
 <p class="prati-fine prati-also">Izmena je predlog čiji naslov imenuje ovaj zakon.</p>{% endif %}
-</form></details>
+</form></details>{{ opens_on_target() }}
 <script src="{{ root }}prati.js?v={{ css }}" defer></script>
 {% endif %}{% endmacro %}
 

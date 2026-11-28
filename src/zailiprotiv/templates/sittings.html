@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set section = "skupstina" %}
-{% from "macros.html" import plural, chamber, how, card_tokens %}
+{% from "macros.html" import plural, chamber, how, card_tokens, opens_on_target %}
 {% block title %}Sednice Narodne skupštine — Za ili Protiv{% endblock %}
 {% block description %}Sednice Narodne skupštine na kojima se glasalo, po sazivima i datumu.{% endblock %}
 {% macro sednica_n(n) %}{{ n }} {{ plural(n, "sednica", "sednice", "sednica") }}{% endmacro %}
@@ -28,7 +28,7 @@
 {% macro days_fold(days, id, open_=false) %}<details class="sc-days" id="{{ id }}" data-wide{% if open_ %} open{% endif %}>
   <summary><span class="sc-dn">Dani sednice <span class="count">{{ days|length }}</span></span><span class="sc-mini" aria-hidden="true">{% for d in days|reverse %}<i style="height:{{ [d.width, 12]|max }}%"></i>{% endfor %}</span></summary>
   {{ days_list(days) }}
-</details>{% endmacro %}
+</details>{{ opens_on_target() }}{% endmacro %}
 {% macro pills(s) %}{% if s.n %}<span class="pill">{{ s.n }} {{ "zakon" if s.n == 1 else "zakona" }}</span>{% if s.against %}<span class="pill p">{{ s.against }} protiv</span>{% endif %}{% elif s.others %}<span class="pill o">{{ s.others }} {{ plural(s.others, "ostalo glasanje", "ostala glasanja", "ostalih glasanja") }}</span>{% endif %}{% endmacro %}
 {% block main %}
 <h1>Skupština</h1>

@@ -410,6 +410,16 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
   rest are rows of their short name, date and pills. A link to a day (`#dan-<date>`) opens its fold: `site.js` opens
   every fold around a link's target, not only a target that is a fold. The sitting's page shows its summary too. No
   "decisions" count: a day summary's decisions include each ruling on a point of order (22 on 25 Nov).
+- **A fold a link leads to opens as the page is read** (29 Nov 2026, the conductor, the maintainer: "Uradi"; **visits**:
+  an area's page on a wide screen good in layout shift in 70% of 43 loads, its list of laws in 52%). A law's and a bill's
+  "prati oblast mejlom" lead to the area's `#prati`, and `site.js` opened that fold after the first paint, so the list
+  below it moved down 244 px: measured on the published page, 0.151 at 1280 px and 0.120 at 1440 in nearly every load
+  (one in five escaped the race). A small script right after the fold (`opens_on_target`) opens it while the page is
+  read, when the address's target is the fold or inside it, before anything below it is drawn: 0.004 and 0.003, all of
+  it the font settling. The same on every page with "Prati mejlom" (an area, a law, a bill, a sitting MP) and on the
+  sittings page's days (`#dan-<date>`); `site.js` still opens a fold on a later change of the address. Without the script
+  the fold stays closed, as before. Not the cause, measured: the font arriving late (the fallback's measures match, 0.004
+  with it held back 3 s), and the folds that stand open on a wide screen (`data-wide`; "Sednice", "Nedelje", at most 0.002).
 
 ## Design rules
 
