@@ -285,3 +285,15 @@ changes an earlier one says so. Dates are the maintainer's decisions unless said
   place: the tool writes the day's file and what each line rests on into a folder, prints each line with its sentences
   and whether they were found, and the conductor puts it in `/data/sazetak` and `data/<N>/sazetak`. A chair's measure the
   model puts among the decisions is moved to the steps when written (`settle_votes`), and the rules say so (WHOLE 11, DAY 9).
+- **A sitting's summary from its days' summaries** (28 Nov 2026, the maintainer: "Dodatno želim summary za sednicu na
+  osnovu tekstova summary za specifične dane"; the paid run his word, the conductor runs it). `tools/sazetak_sednice.py
+  <sitting's page name> <days>` sends the day's model (DAY_MODEL) only the days' published files (`data/<N>/sazetak/<day>.json`:
+  title, short, paragraph, decisions), never a transcript or the notes, with the day summary's rules said of those texts,
+  no list of speakers and no votes; a name only where it is part of a decision. It asks for a title, two or three sentences
+  and a paragraph of five to seven. Before anything is written, every figure and every name (a word in capitals not opening
+  a sentence; its first letters, as Serbian names change their endings) must occur in the days' texts; the reply is asked once
+  more with what failed, and nothing is written if it still fails. It writes `data/<N>/sazetak/sednica-<name>.json`
+  (`naslov`, `kratko`, `ukratko`, `dani`, `model`, `"izvor": "dani"`), which no reader of the day files takes for a day.
+  `--bez-modela` prints the prompt and the material. Days with a summary exist so far only for the Fifteenth's first
+  sitting (17, 18, 19, 24 and 25 Nov 2026), so the rule is "where the sitting's days have summaries". How the site shows it
+  waits for the maintainer's pick of the sittings page's look.
