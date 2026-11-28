@@ -123,3 +123,9 @@ day's summary of the same address. Not confirmed in 48 hours: deleted. `/pregled
 which nor what kind; another kind is one more entry in `KINDS`, no change to the tables. The confirmation names the area with its own words
 ("Šta pratiš …"). Forty followed at once (seventeen areas and MPs beside them). The live service tells an area from its own pull request; until then
 a confirmed area waits in the base and nothing is sent for it.
+
+**One bill or one law too** (28 Nov 2026, the maintainer: "Može se nekom i samo na taj zakon prijaviti"; "Možemo sa tvojim
+preporukama"): `vrsta=b` with `sta` a waiting bill's key of the site's `prati-predlozi.json`, `vrsta=z` with a law's key, whose
+names are the site's `prati-zakoni/<key>.json` (a file per law: over 1,300 laws, a list would be over 600 KB). Sealed the same way and to
+the same 256 bytes; a name too long for them (a loan's title runs to 1,000 bytes) is sealed cut at a word with "…" (`sealable`), and
+the confirmation names it whole, with the bill's or the law's own words. No change to the tables, and the forty at once stay.

@@ -34,7 +34,7 @@ needs_worker = pytest.mark.skipif(not node_with_sqlite(), reason="needs a Node w
 WORKER = r"""
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
-import { handle, cleanup, count, confirmMail, pad } from %(module)s;
+import { handle, cleanup, count, confirmMail, pad, sealable } from %(module)s;
 const db = new DatabaseSync(":memory:");
 db.exec(readFileSync(%(schema)s, "utf8"));
 const made = (sql, a = []) => ({ sql, a,
@@ -44,7 +44,13 @@ const made = (sql, a = []) => ({ sql, a,
   run: async () => ({ meta: { changes: Number(db.prepare(sql).run(...a).changes) } }) });
 const DB = { prepare: (sql) => made(sql), batch: async (xs) => { const out = []; for (const x of xs) out.push(await x.run()); return out; } };
 const mails = []; let broken = false, listCalls = 0;
-globalThis.fetch = async (url) => { listCalls++; return new Response(JSON.stringify(String(url).endsWith("/prati-oblasti.json") ? {
+const LAWS = { "zakon-o-radu": ["Zakon o radu", "Закон о раду"], "zakon-o-potvrdjivanju-ugovora-o-kreditu": ["Zakon o potvrđivanju Ugovora o kreditu koji se odnosi na neobezbeđeni zajam u iznosu do 400.000.000 evra uz osiguranje od strane Multilateralne agencije za garantovanje investicija u cilju finansiranja određenih građevinskih usluga od strane Bechtel Enka UK Limited", "Закон о потврђивању уговора"] };
+globalThis.fetch = async (url) => { listCalls++; url = String(url);
+  if (url.includes("/prati-zakoni/")) { const k = url.split("/prati-zakoni/")[1].replace(/\.json$/, "");
+    return Object.hasOwn(LAWS, k) ? new Response(JSON.stringify(LAWS[k])) : new Response("Not found", { status: 404 }); }
+  if (url.endsWith("/prati-predlozi.json")) return new Response(JSON.stringify({
+    "zakon-o-izmenama-zakona-o-radu": ["Predlog zakona o izmenama Zakona o radu", "Предлог закона о изменама Закона о раду"] }));
+  return new Response(JSON.stringify(url.endsWith("/prati-oblasti.json") ? {
   "saobracaj": ["Saobraćaj", "Саобраћај"],
   "zdravstvo-socijalna-zastita-obrazovanje-kultura-sport-javno-informisanje": ["Zdravstvo, socijalna zaštita, obrazovanje, kultura, sport, javno informisanje", "Здравство, социјална заштита, образовање, култура, спорт, јавно информисање"] } :
   { "anic-ana": ["Ana Anić", "Ана Анић"], "peric-pera": ["Pera Perić", "Пера Перић"],
@@ -192,6 +198,39 @@ out.everything = [(await (await ask(at(r.svega), "POST", "strana=1")).text()).in
 
 
 @needs_worker
+def test_a_bill_and_a_law_are_followed_as_an_area_is():
+    """28 Nov 2026: a bill that waits ("b", from the site's list) and a law ("z", from its own file in the site's folder),
+    sealed as an MP is, to the same length; a loan's title too long for it is sealed cut at a word, the mail names it
+    whole; what the site does not list is refused."""
+    out = worker("""
+await follow("anic-ana"); await follow("zakon-o-izmenama-zakona-o-radu", "a@primer.rs", "&vrsta=b&js=1");
+await follow("zakon-o-radu", "b@primer.rs", "&vrsta=z&js=1");
+await follow("zakon-o-potvrdjivanju-ugovora-o-kreditu", "c@primer.rs", "&vrsta=z&js=1");
+for (const m of mails) await confirm(m);
+out.lengths = db.prepare("SELECT DISTINCT length(sta) AS n FROM prati").all().length;
+out.list = await list(); out.mails = mails.map((m) => m.text);
+out.refused = [(await follow("zakon-o-radu", "x@primer.rs", "&vrsta=b&js=1")).status,        // a law is no bill
+               (await follow("nema-ga", "x@primer.rs", "&vrsta=z&js=1")).status,             // no file of it
+               (await follow("zakon-o-radu/../x", "x@primer.rs", "&vrsta=z&js=1")).status];  // no such key
+out.cir = (await follow("zakon-o-radu", "d@primer.rs", "&vrsta=z&pismo=cir&js=1"), mails.at(-1).text);
+out.short = sealable("z", "k", "Zakon o radu");
+""")
+    assert out["lengths"] == 1
+    opened = {pretplata.unseal(KEY, r["adresa"]).rstrip(): pretplata.unseal(KEY, r["prati"][0]["sta"]).rstrip() for r in out["list"]}
+    assert opened["a@primer.rs"] == "b|zakon-o-izmenama-zakona-o-radu|Predlog zakona o izmenama Zakona o radu"
+    assert opened["b@primer.rs"] == "z|zakon-o-radu|Zakon o radu"
+    cut = opened["c@primer.rs"]
+    assert cut.startswith("z|zakon-o-potvrdjivanju-ugovora-o-kreditu|Zakon o potvrđivanju Ugovora o kreditu") and cut.endswith("…")
+    assert len(cut.encode()) <= 256 and "Bechtel Enka UK Limited" in out["mails"][3]  # the mail names it whole
+    assert "Kad dođe na dnevni red, bude usvojen ili više ne bude na spisku · najviše jedan mejl dnevno" in out["mails"][1]
+    assert "Kad bude predložena izmena ovog zakona, i dalje kako ona napreduje · najviše jedan mejl dnevno" in out["mails"][2]
+    assert "Šta pratiš može da govori o tvom političkom mišljenju." in out["mails"][2]
+    assert out["refused"] == [400, 400, 400]
+    assert "Закон о раду" in out["cir"] and "Кад буде предложена измена овог закона" in out["cir"]
+    assert out["short"].rstrip() == "z|k|Zakon o radu"
+
+
+@needs_worker
 def test_floods_failed_mails_and_other_pages():
     out = worker("""
 broken = true;
@@ -227,7 +266,8 @@ out.cleaned = [n("prati"), n("pratioci")];
 def test_the_workers_words_are_written_in_one_script_each():
     js = (ROOT / "worker" / "prati.js").read_text(encoding="utf-8")
     for said in (js[js.index("const SAID"):js.index("// What changes in the confirmation")],
-                 js[js.index("const AREA"):js.index("const said")]):
+                 js[js.index("const AREA"):js.index("const BILL")], js[js.index("const BILL"):js.index("const LAW")],
+                 js[js.index("const LAW"):js.index("const said")]):
         lat, cir = said.split("  cir: {")
         assert not re.search(r"[Ѐ-ӿ]", lat) and not mejl.mixed_words(cir)
     main = (ROOT / "worker" / "worker.js").read_text(encoding="utf-8")
