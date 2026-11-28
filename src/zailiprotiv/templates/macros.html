@@ -42,9 +42,9 @@
 {%- endmacro %}
 
 {# The Assembly's own pages share one heading and these buttons, as the laws' and the MPs' pages do. #}
-{% macro assembly_tabs(now) -%}
+{% macro assembly_tabs(now, panel=true) -%}
 <nav class="subtabs law-kinds four" aria-label="Skupština">{% for key, page, label in [("sednice", "sednice.html", "Sednice"), ("nedelje", "nedelje.html", "Nedelje"), ("sazivi", "saziv-" ~ current ~ ".html", "Sazivi"), ("brojke", "brojke.html", "U brojkama")] %}<a href="{{ page }}"{% if key == now %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}</nav>
-{{ newer_panel(now) }}
+{% if panel %}{{ newer_panel(now) }}{% endif %}
 {%- endmacro %}
 
 {# The newest convocation before its first law, on every page that has a place for it (site.py, `newer15`): what the

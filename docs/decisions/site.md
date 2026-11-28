@@ -377,6 +377,19 @@ same commit as the change. The principles and the rules of work are in AGENTS.md
 - **"Skupština" opens on the sittings** (28 Nov 2026, the maintainer: "Stavi da sednice budu početno obeleženo"): the
   top bar's and the sheet's "Skupština" lead to `sednice` (they led to `nedelje`), and the switch begins with it:
   Sednice, Nedelje, Sazivi, U brojkama.
+- **"Sednice", the front of the Assembly's section** (28 Nov 2026, the maintainer: "Dodatno celu tu stranicu sednica
+  ulepšaj"; of three drafts the conductor's worker built the one it recommended, B, as the maintainer wants no work held
+  for a pick; drafts and pictures: `zailiprotiv-dirigent\sednice-lepse\`). The page was a line, the convocations, then
+  hundreds of rows of the Assembly's full titles, with its three numbers at the foot. Now: on top the latest sitting, by
+  one rule for any convocation (`pages_lists.lead`: of the newest convocation's sittings as the Assembly lists them, the
+  latest begun, a page that gives no day counting as begun; else the newest with roll calls), with its convocation, its
+  short name (`pages_mikrofon.label`: "Deseto vanredno zasedanje"), its span and tallies, its days read from the recording
+  (a day page each; the day summary's title where one was written, with the day pages' own sentences that a model wrote
+  it, by source) and its agenda folded. It takes the place of the newest convocation's panel on this page when it is that
+  convocation's sitting, and carries its `#saziv-N`. Then each convocation: its three numbers under its heading (the same
+  three for every convocation; they were the current one's alone, at the foot), and its sittings folded by year as
+  "Nedelje" folds weeks (the newest year of the newest convocation open; on a wide screen all open), each a row of its
+  short name and "date · zakona · protiv". The full title stays on the sitting's page. No new sentence.
 
 ## Design rules
 
